@@ -1,0 +1,283 @@
+
+
+
+FILERUNNER 
+==========
+
+    - a simple and efficient file manager with FTP
+
+(C) 1996-1998 Henrik Harmsen
+
+
+
+FEATURES
+========
+
+  * Simple and powerful interface.
+  * History and Hotlist (bookmarks).
+  * Recursive directory menu of entire file system tree.
+  * Browse FTP directories as easy as normal directories.
+  * FTP capabilities:
+    - Copy: FTP files/directories upload/download (recursive).
+    - FTP Delete (recursive), FTP Makedir, FTP Rename.
+    - Supports FTP through proxy.
+    - FTP resume download function.
+    - Rule based configuration of FTP site logins (password/user/proxy).
+    - Asynchronous file transfer.
+    - Cached directory listings.
+  * Asynchronous file operations.
+  * Built-in command shell windows. Synchronized with file panels.
+    These have history, aliases and file name completion.
+  * Extendable by adding your own command buttons.
+  * Very configurable.
+  * User defined file pattern / actions. (*.jpg -> launch image viewer etc.)
+
+  New in 2.4:
+  * Tcl/Tk 8.0 support. (Older versions of Tcl/Tk will not work anymore).
+  * Batch FTP downloading. Works by selecting a number of files and then
+    downloading them all in a large batch at a later time.
+  * HTTP downloading.
+  * And lots more of minor enhancements and bug fixes. 
+    (See the online Help->History)
+
+  New in 2.4.1:
+  * Now distributed under the GNU General Public License.
+  * Support for "wheel"-mice. Scroll lists and text using the mouse wheel.
+  * And some minor enhancements and bug fixes. 
+    (See the online Help->History)
+
+REQUIREMENTS
+============
+
+* A standard Unix platform.
+* Tcl/Tk 8.0 or later.
+* An ANSI C compiler if you can not use the precompiled binaries.
+
+FileRunner does not need rebuilding the wish binary. It uses the
+binary extension mechanism in Tcl to add commands written in C.
+
+
+COMPATIBLE PLATFORMS
+====================
+
+It should run on any platform that meets the requirements above. It
+has been tested on the following platforms:
+
+ - Linux 2.x with an ELF gcc compiler
+ - SunOS 4.1.4 with the acc compiler
+ - Solaris 2.x with the cc compiler
+ - Irix 5.3
+ - UnixWare-2.x (Intel-SVR4.2MP)
+ - HP-UX
+ - Dec Alpha OSF (Digital Unix) 3.2 and 4.0
+ - FreeBSD 2.1.5.
+ - SCO OpenServer v5.0
+ - AIX
+ - NetBSD
+
+Tell me if you get it up and running on something else!
+
+
+INSTALLATION
+============
+
+Installation is fairly simple. The main thing to note here is that you
+unpack directly to where the stuff is to be installed. You never do a
+"make install".
+
+
+  1. Unpacking in the right place
+
+Unpack the FileRunner archive somewhere where you want it installed,
+like for example under /usr/local/lib. When you unpack it, a directory
+called "FileRunner_x.x" is created and the files are placed underneath
+it. Cd to this directory.
+
+
+  2. Fixing an ext.so file
+                                   
+FileRunner needs a library of functions that have been written in C. The
+necessary library has been precompiled on a few platforms:
+
+- If you are running Linux on an Intel machine, copy ext.so.linux_x86
+  to ext.so.
+
+- If you are running SunOS 4.1.x on a Sparc machine, copy
+  ext.so.sunos41x_sparc to ext.so.
+
+- If you are running Solaris 2.5 or later on a Sparc machine, copy
+  ext.so.sunos55_sparc to ext.so.
+
+- If you don't have any of the above, you should try to build it
+  yourself. There are a bunch of Makefiles available to try:
+
+- Makefile.gcc      This uses the gcc compiler and has been tried 
+                    on Linux.
+- Makefile.acc      This uses the acc compiler and has been tried 
+                    on SunOS 4.1.4/4.1.3.
+- Makefile.cc       This uses the cc compiler (ANSI version on 
+                    Solaris 2.x) and has been tried on Solaris 
+                    2.5 and UnixWare-2.x.
+- Makefile.hpux     For the HP-UX platform.
+- Makefile.osf      For the OSF platform. Or use Makefile.gcc 
+                    instead (?).
+- Makefile.irix     For the IRIX platform.
+- Makefile.irix2    Another one for the IRIX platform if the first
+                    one doesn't work.
+- Makefile.freebsd  For the FreeBSD platform.
+- Makefile.aix      For IBM AIX platforms.
+- For SCO, see note 1 below.
+
+The Makefiles are all located under Makefiles/ in the FileRunner
+distribution directory.
+
+Pick one of the Makefiles you think might work and edit it to reflect
+the platform you are using. It's a tiny Makefile, so it shouldn't be
+too difficult. Then make it: "make -f Makefiles/Makefile.xxx"
+
+When you have an ext.so file you can try it out by running the "fr"
+script: "./fr &"
+
+One day when I have loads of time on my hands I might consider using
+the GNU autoconf utility to avoid this mess of Makefiles... :-)
+
+
+  3. Making a soft link
+
+The final stage of installation is to soft-link the fr script to where
+you want installed in your path. If you want it in /usr/local/bin, and
+you unpacked the FileRunner archive under /usr/local/lib, you do the
+following:
+
+> ln -s /usr/local/lib/FileRunner_x.x/fr /usr/local/bin/fr
+
+It's important you make this a soft link and not just copy it. If you
+don't, FileRunner will not find the rest of itself and will not start
+up. It uses the link to find the necessary stuff it needs.
+
+Last note: There is an icon GIF file "fr.gif" you can use if you need an
+icon for FileRunner. I've tried to make a color icon default for
+FileRunner but I can not figure out how to do this in Tcl/Tk...
+
+
+WHERE TO GET FILERUNNER
+=======================
+
+Use one of these sites:
+
+http://www.cd.chalmers.se/~hch/filerunner.html
+ftp://sunsite.unc.edu/pub/Linux/Incoming/FileRunner_x.x.tar.gz
+ftp://sunsite.unc.edu/pub/Linux/X11/desktop/FileRunner_x.x.tar.gz
+ftp://ftp.x.org/contrib/utilities/FileRunner_x.x.tar.gz
+
+
+WHERE TO GET TCL/TK
+===================
+
+For all platforms:
+  ftp://ftp.sunlabs.com/pub/tcl
+
+For Linux, prebuilt binaries are usually in:
+  ftp://sunsite.unc.edu/pub/Linux/devel/lang/tcl
+
+Don't use beta Tcl/Tk versions with FileRunner.
+
+Tcl/Tk is really easy to build yourself. (Easier than FileRunner :-)
+See the FAQ.
+
+
+COMMON PROBLEMS
+===============
+
+See the FAQ-file in the installation. Please see chapter 13 in the
+online guide too.
+
+
+KNOWN BUGS
+==========
+
+FileRunner cannot handle files or directories that start with a
+~-character. This looks like a bug in Tcl actually. Tcl parses a file
+called "~foo" as the home directory of user "foo", which is not
+correct if you really mean the file "~foo"...
+
+Files with spaces in the filename will sort incorrectly.
+
+If your timezone is set to GMT+xx then you might get incorrect dates
+when you view FTP listings. This is because the Tcl/Tk clock scan
+function cannot deal with GMT+xx elements in the date string. Don't
+know why. Use another timezone notation instead, like PST or MET etc.
+
+Marking an entry in the hotlist and pressing the middle mouse button
+will yield an error.
+
+Also see the FAQ.
+
+
+E-MAIL LIST WITH ANNOUNCEMENTS
+==============================
+
+Mail me if you are interested to be on the FileRunner announcement
+mailing list. I won't send announcements of every release to the
+newsgroups so if you want to know if a new release is out you should
+either check the web page regularly or join the list.
+
+
+FILERUNNER IS FREE SOFTWARE
+===========================
+
+FileRunner is distributed under the GNU General Public License so 
+it's freely distributable. If you like it, send me a cool postcard
+so I can fill the front of my fridge :-) See the end of the User's
+Guide for my address.
+
+FileRunner is Copyright (C) 1996-1998 Henrik Harmsen.
+
+
+  Henrik Harmsen
+
+Email:
+  hch@cd.chalmers.se
+  Henrik.Harmsen@erv.ericsson.se
+
+For more contact info see online guide.
+
+
+ADDENDUM
+========
+
+Note 1, fix to build on SCO OpenServer 5.0
+------------------------------------------
+
+For SCO OpenServer I have not fixed specific changes in the ext.c file
+since it was getting too complicated already with the zillion
+implementations of the statfs() call. Anyway, here is a description
+for changes you need for this platform (thanks to Daniel Cox):
+
+1. Start with Makefile.cc (I think)
+2. Add -lc to the Makefile
+3. Change include <sys/statvfs.h> to <sys/statfs.h>
+4. change all calls statvfs to statfs
+5. change all calls f_bavail to f_bfree
+
+
+Note 2, The Debian distribution
+-------------------------------
+
+This note is to the manager of the Debian distribution.
+
+To have the documentation for FileRunner somewhere other than in the
+distribution directory (where all the other FileRunner stuff is):
+Create a file in the distribution directory called "config" and put
+the following line into this:
+
+set glob(doclib_fr) /usr/local/doc/FileRunner
+
+(Adjust it to the correct location). Then copy over the documentation
+to this directory. See the online guide, chapter 6, about the
+system-wide config file.
+
+
+
+
+

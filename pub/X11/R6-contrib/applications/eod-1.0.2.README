@@ -1,0 +1,40 @@
+This is EodPlot 1.0.2 Beta Release.
+
+1. What is EodPlot
+
+	EodPlot is a small and fast software to plot stocks, mutual funds, and index.
+It has the ability to plot 1. Moving average 2. Moving average oscillator 3. Relative
+Strength (registered version only). with the function of Stochastic coming really soon
+(before the end of 1996).
+
+2. What EodPlot is NOT
+	
+	EodPlot is NOT a fancy software. It will not be able to do Elliott Wave (I can't
+even figure out how to do it myself). It is NOT a Trading Station (ie. It's NOT
+programmable but some people used this as model to build his own plotting
+sofware). And it is NOT expensive.
+
+3. What do I need to run EodPlot
+
+	1. xforms. EodPlot will not run without lib.forms.a 
+	   you can obtain the xforms-0.81 from ftp://laue.phys.uwm.edu/pub/xforms
+       	   or ftp://ftp.cs.ruu.nl/pub/XFORMS
+	2. X11R5 or higher.
+	
+4. How do I install EodPlot
+
+	just tar the stuff out. It will be put in dir ./eodplot you will have a sub dir ./eodplot/data this is your data file dir
+
+5. How do I contact the idiot who wrote this fubar program
+
+	I can be reached by 
+	ned@mail.utexas.edu or
+	mail me at Ned Zhang
+		   5402 Duval st.
+		   Austin, TX 78751
+	or call me at 512-459-8104 (I will only help the registered owner on the phone).
+
+6. BTW. How do I print the stuff out?
+
+	EodPlot does NOT come with printing ability by itself. So you have to use XV or
+similar program to grab the screen of EodPlot and print it out.

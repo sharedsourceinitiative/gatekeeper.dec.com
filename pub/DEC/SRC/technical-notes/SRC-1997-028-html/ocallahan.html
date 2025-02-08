@@ -1,0 +1,125 @@
+<html>
+<head><title>Vis: A Unified Graphical User Interface for DCPI</title></head>
+<body>
+<center>
+<h1><b>Vis: A Unified Graphical User Interface for DCPI</b></h1><br>
+<h2><A HREF="http://www.cs.cmu.edu/~roc">Robert O'Callahan,</a> Carnegie Mellon University</h2>
+</center>
+
+<h2>Background</h2>
+
+I'm a third year PhD student at Carnegie Mellon. My work is primarily in
+large-scale program analysis tools. I chose SRC because I thought it
+would be a fun place to spend a summer and it has many interesting
+people and projects. I was looking forward to getting experience working
+as part of a group, and at doing something a little different from my
+main line of work.<P>
+
+<h2>The Project</h2>
+
+The Digital Continuous Profiling Infrastructure (DCPI) is a suite of tools
+that performs sample-based profiling with very low overhead. The
+profiles cover the entire system, including the kernel, and the system
+is very convenient to set up and operates transparently. There are many
+tools for reviewing the data, including tools that estimate execution
+frequencies, average instruction stall times and reasons for those
+stalls. Thus DCPI gives the user access to a lot of information at the
+level of entire binaries right down to individual instructions.<P>
+
+One problem with the system is that there are many distinct tools used
+to view and interpret the data, and these tools are not integrated.
+Furthermore, they are mostly text-based, which limits the ways
+information can be displayed, and they mostly do not give the user ways
+to interact with the data. Therefore I was given the job of creating a
+graphical user interface that would: <P> 
+<ol>
+<li> subsume the displays of most of the tools
+<li> use graphics to increase the density of information
+display and make the interface easier to use
+<li> provide interaction and integration so that all features would be easily
+accessible.
+</ol><P>
+
+<h2>Approach</h2>
+
+I created a Java application that communicates with the DCPI libraries
+using HTTP. The libraries are packaged up into a CGI server that answers
+queries sent by the application. The resulting Java application can be
+run on any JVM, including inside a Web browser, and can view profile
+data from any machine on the network.<P>
+
+For the interface itself, I used Scott Hudson's Subarctic toolkit. This
+is basically a widget library on top of AWT that provides easy handling
+of common input behaviours such as dragging, a constraint system that
+provides powerful ways to position UI elements dynamically, and some
+other useful hacks such as double-buffering.<P>
+
+When designing the interface, we focused on a few design principles. One
+was consistency. We made globally consistent choices of colors for
+different elements (e.g. cycle counts). Globally choosing scales is
+impractical because the scales of instruction counts can be orders of
+magnitude different from the scales of counts for entire programs, so we
+chose scales to be consistent within windows but not necessarily between
+windows. Of course, we followed standard guidelines in trying to make
+all the UI widgets behave in similar (and generally familiar) ways.<P>
+
+Another principle was configurability. Colors, fonts, sizes and
+orientations of almost everything in the interface can be easily
+modified by the user, often by directly manipulating the interface
+itself using the mouse.<P>
+
+Another principle was economy. The display is organised as a set of
+views of five different kinds (lists of binary images, lists of
+procedures, lists of basic blocks, listings of entire procedures, and
+control-flow graphs of entire procedures). Each view displays a limited
+amount of data about just the objects in that view. More details about
+objects in the view can be obtained by holding the mouse cursor steady
+over an object; a temporary "tip" will pop up to display the
+information. Furthermore, when the user clicks on an object in one view
+to highlight it, other views will automatically scroll to and highlight
+any related objects. Thus the multiple views work together to display
+more information.<P>
+
+<h2>Results</h2>
+
+
+It was fun to build the system and try out different ways of displaying
+the data. We learned that simple displays were often the best fit for
+people's needs. While complex visualizations could have looked prettier,
+in this case they don't seem to be required.<P>
+
+Subarctic encourages the programmer to use the "structured graphics"
+model, where each graphical element has an underlying widget. Thus, in
+applications such as Vis that can have thousands of data items to
+display, the number of widgets can become very large. This can easily
+lead to performance problems due to the large amount of space and time
+required to manage these data structures. In Vis, these problems are
+barely manageable. An interesting question (outside the scope of my
+work) is whether there is a way to maintain the ease of programming and code
+reuse that derive from the structured graphics model while eliminating
+the need for huge data structures that cause the performance
+problems.<P>
+
+In order to get the tool to work acceptably on large data sets, we had
+to do a fair amount of tuning. It turned out that different Java VMs
+have greatly different performance characteristics; relative speeds vary
+a lot depending on the kind of code being executed. In other words, in
+addition to the architectural innovations that make performance ever
+harder to understand, we now have an extra software layer that also adds
+to the problem, and the number of architecture/VM combinations is
+significantly larger than the number of architectures.
+
+<h2>Future Work</h2>
+
+Some of the lower-level lessons I learned, such as how large Java programs
+are structured and how their performance can behave, will help me in my
+work at CMU as I apply my program analysis techniques to Java. I hope
+that the Vis tool itself will be used by the DCPI group and its users.
+As DCPI evolves, the tool will need to be updated; in particular, when
+new kinds of information become available, new views may have to be
+created.<P>
+
+</BODY>
+</HTML>
+
+

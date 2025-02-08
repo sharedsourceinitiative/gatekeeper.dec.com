@@ -1,0 +1,46 @@
+<HTML><HEAD><TITLE>
+Compaq Systems Research Center: Report 165</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/SRC/pics/cpq-logo.gif" ALT="Compaq">
+ SRC Research Report 165</H1>
+"A Practical, Robust Method for Generating Variable Range Tables"
+Caroline Tice and Prof. Susan L. Graham
+Report #165, September 15, 2000. 16 pages
+
+In optimized programs the location in which the current value of a
+single source variable may reside typically varies as the computation
+progresses.  A debugger for optimized code needs to know all of the
+locations -- both registers and memory addresses -- in which a
+variable resides, and which locations are valid for which portions of
+the computation.  Determining this information is known as the data
+location problem.  Because optimizations frequently move variables
+around (between registers and memory or from one register to another)
+the compiler must build a table to keep track of this information.
+Such a table is known as a variable range table. Once a variable range
+table has been constructed, finding a variable's current location
+reduces to the simple task of looking up the appropriate entry in the
+table.
+
+The difficulty lies in collecting the data for building the table.
+Previous methods for collecting this data depend on which
+optimizations the compiler performs and how those optimizations are
+implemented.  In these methods the code for collecting the variable
+location data is distributed throughout the optimizer code, and is
+therefore easy to break and hard to fix.  This paper presents a
+different approach.  By taking advantage of key instructions, our
+approach allows the collection of all of the variable location data in
+a single dataflow-analysis pass over the program.  This approach
+results in code for collecting the variable location information that
+is easier to maintain than previous approaches and that is almost
+entirely independent of which optimizations the compiler performs and
+of how the optimizations are implemented.
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-165.ps.Z">PostScript compressed with UNIX compress</A></B> -- 144 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-165.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 88 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-165.ps.zip">PostScript compressed with ZIP</A></B> -- 80 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-165.ps">PostScript</A></B> -- 328 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-165.pdf">Portable Document Format (PDF)</A></B> -- 80 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

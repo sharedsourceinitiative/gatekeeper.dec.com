@@ -1,0 +1,21 @@
+
+		AVAILABLE ELECTRONICALLY
+
+    "An Introduction to Programming with Threads."
+    Andrew D. Birrell.
+    January 6, 1989.  35 pages.
+
+Author's Abstract
+
+    This paper provides an introduction to writing concurrent programs
+    with "threads". A threads facility allows you to write programs
+    with multiple simultaneous points of execution, synchronizing
+    through shared memory. The paper describes the basic thread and
+    synchronization primitives, then for each primitive provides a
+    tutorial on how to use it. The tutorial sections provide advice
+    on the best ways to use the primitives, give warnings about what
+    can go wrong and offer hints about how to avoid these pitfalls.
+    The paper is aimed at experienced programmers who want to acquire
+    practical expertise in writing concurrent programs.
+
+

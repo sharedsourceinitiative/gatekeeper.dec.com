@@ -1,0 +1,15 @@
+This directory contains nightly CVS checkouts of modules in the
+Tcl Dev Xchange CVS repository.  You can expect that the file
+has been updated within the last 24 hours, with the timestamp
+on the file being the exact checkout time.
+
+If you do not find a module here that you believe is in the
+Tcl Dev Xchange CVS repository and would like to obtain, please
+notify webmater@ajubasolutions.com.
+
+These checkouts are based on the head (main development track)
+of each module, and thus may represent unstable code.  Use at
+your own risk.
+
+For more information see:
+    http://dev.scriptics.com/software/tcltk/netcvs.html

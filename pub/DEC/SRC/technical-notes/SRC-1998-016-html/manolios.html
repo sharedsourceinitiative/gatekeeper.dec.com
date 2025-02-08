@@ -1,0 +1,204 @@
+<html>
+  <head><title>Towards TLA+ Model Checking</title></head>
+  <body>
+    <center>
+      <h1><b>Towards TLA+ Model Checking</b></h1><br>
+      <h2>Panagiotis (Pete) Manolios, University of Texas at Austin</h2>
+    </center>
+    
+    
+    <P>
+      This page describes a summer project undertaken by Panagiotis
+      (Pete) Manolios (UT Austin) while a 1998 intern at SRC.  Pete
+      was hosted by <A
+      HREF="http://www.research.digital.com/SRC/people/yuanyu">Yuan
+      Yu</A>.
+    </P>
+    
+    <H2>Overview</H2>
+    
+    <p>
+      <A HREF="http://www.research.digital.com/SRC/tla/">TLA</A>, the
+      Temporal Logic of Actions, is a logic designed for reasoning
+      about concurrent and reactive systems.  TLA+ is a language based
+      on TLA; it has many syntactic extensions (e.g.  <A
+      HREF="http://www.research.digital.com/SRC/tla/papers.html#DefinitionsAndModules">modules</A>
+      and <A
+      HREF="http://www.research.digital.com/SRC/tla/papers.html#TLA+Operators">operators</A>)
+      that make it a useful and powerful specification language.
+    </P>
+
+    <p>
+      "Model Checking" is a term used to refer to algorithms that
+      decide if structures are models of formulae.  In practice, model
+      checking algorithms are mostly used to verify that finite state,
+      reactive programs satisfy properties written in some temporal
+      logic.  Much work has been done in developing efficient and
+      practical model checking algorithms.
+    </P>
+    
+    <p>
+      TLA+ contains the natural numbers and quantifiers, hence we
+      cannot model check arbitrary TLA+ specifications.  We decided to
+      focus on finite state systems and invariance properties.  Our
+      model checker accepts as input an arbitrary TLA+ spec
+      (specification) and a <i>restrictions file</i>.  The
+      restrictions file provides "type" information about the state
+      variables; this restricts the TLA+ spec so that it is finite
+      state.  The restrictions file also contains invariance
+      properties to be checked.  The model checker proceeds to check
+      that the TLA+ spec, appropriately restricted, satisfies the
+      properties.  Our checker is disk-based, that is, it is not
+      limited by the size of main memory.  Another notable feature of
+      the checker is that it can efficiently convert states to a
+      canonical and compact representation.  This representation is
+      used for equality checking and for space-efficient disk usage.
+    </P>
+
+
+
+    <H2>Model Checking</H2> 
+
+    <p> 
+      Model checkers, in the worst case, work by exhaustively
+      exploring the state space.  Some model checkers are symbolic,
+      that is, they use BDD's to represent sets of states, whereas
+      others represent sets of states explicitly.  Due to the
+      complexity of deciding the next state relation of a TLA+ spec
+      and because the main application in mind is a cache coherence
+      protocol, we chose to use an explicit representation.  Roughly,
+      our model checker starts from the initial state of a spec and
+      generates a tree of reachable states (it is a tree because
+      duplicate states are ignored) in stages.  At each stage we check
+      that the new states satisfy the invariants.  We proceed until
+      there are no new states, or until a "bad" state is discovered.
+    </p>
+
+    <p>
+      The main problems with designing and implementing the model
+      checker are: parsing the input, constructing the next state
+      relation, checking for equality of states, and making effective
+      use of disk.  We will not discuss the parsing or next state
+      relation issues.  Equality checking is important because it
+      allows us to throw away states already visited and it is
+      difficult because the representation of states is not unique.
+      For example, a variable in a TLA+ spec can be a set containing
+      functions, strings, numbers, and sets.  Finally, model checkers
+      tend to run out of memory, hence a disk based approach can be
+      very useful.
+    </p>
+
+    
+    <H2>Canonical and Compact States</H2>
+
+    <p>
+      Any (hereditarily) finite set can be specified as a type in the
+      restrictions file.  We provide support for enumerated types,
+      intervals (of integers), functions, subsets, subsets with size
+      restrictions (for example, all subsets of a set which have less
+      that eleven elements), sequences, tuples, and records.
+    </p>
+
+    <p>
+      The main idea for converting a variable (or state) into a space
+      efficient representation is that a tuple of numbers in mixed
+      radix notation can be converted to a number and back.  We place
+      the elements of an enumerated type into a bijection with an
+      initial segment of the naturals.  For more complicated types, we
+      can use the already constructed bijections of the "component
+      types" to build the appropriate bijection--e.g., a
+      function is a sequence of numbers, representing elements in the
+      co-domain; the length of the sequence is the size of the domain.
+      This sequence can be converted to a single number, as mentioned
+      above.  Proceeding in this fashion, we can think of the state as
+      a single number.  We show that the number of bits required to
+      represent a state is minimal in the following sense: it is the
+      ceiling of the log of the size of the state space (which is the
+      product of the sizes of the types of the state variables).
+    </p>
+
+    <H2>Using Disk</H2>
+    
+    <p> 
+      As mentioned previously, the main limitation of most model
+      checkers is main memory.  A disk based approach will work only
+      if the disk is accessed in a disciplined way such
+	as follows: Essentially, we use three
+      files: <tt>old</tt>, <tt>new</tt>, and <tt>next</tt> and proceed
+      in rounds.  At the beginning of a round, <tt>old</tt> and
+      <tt>new</tt> are sorted and disjoint; <tt>next</tt> is empty.
+      The set of successors of the states in <tt>new</tt> is generated
+      and placed into <tt>next</tt>, which is then sorted.
+      <tt>old</tt> and <tt>new</tt> are merged (to produce next
+      round's <tt>old</tt>) and used to filter the states in
+      <tt>next</tt>; the filtered states become the next round's
+      <tt>new</tt>.
+    </p>
+
+    <H2>Some Experimental results</H2>
+    
+    <p> 
+      Preliminary experiments show that the overhead for placing
+      states into canonical representations is between 10%-25%.  The
+      resulting space savings can be drastic, e.g., the
+      alternating bit protocol required 750 bytes per state to be
+      represented, using Java's serialize. The canonical state
+      required only 5 bytes.
+    </p>
+
+    <p>
+      Preliminary experiments also show that using the disk adds about
+      50% overhead.  Although not mentioned above, various caches and
+      data structures have been used to reduce disk usage.
+    </p>
+
+    <P> 
+      The model checker was used to verify various versions of the
+      alternating bit protocol.  The tested versions of the alternating bit
+      protocol have about 64M states.
+    </P>
+
+    <H2>Conclusions, Future Work</H2>
+    <p>
+      The project has reached a point where it would be a good idea to
+      try verifying more examples in an effort to streamline the model
+      checking process.  When the system is stable we can try a really
+      huge example, namely the cache coherence protocol.  This may
+      require many disks and a few weeks (months?), but I expect it
+      will be worth it.
+    </p>
+
+    <p>
+      Some possible enhancements are: adding error reporting
+      capabilities (if an invariant fails, we should
+      print a sequence of actions that lead to a bad state); allowing
+      various search strategies; multi-threaded/distributed
+      implementations; allowing various modes of operation
+      (How much hashing? Do we record parent information?); and, using
+      even more compact representations (storing offsets
+      instead of numbers).
+    </p>
+
+    <p>
+      It will be a good idea to encourage engineers to use the tool.  I
+      expect unintended applications may result, one of which may
+be to use the model checker to find out how to put a system in a
+      certain state. One might accomplish this by trying to prove that 
+the system can never get
+      into the state and by waiting for the model checker to produce a
+      counterexample.
+    </p>
+
+    <p>
+      Another idea is to extend the model checker so that it can check
+      arbitrary temporal TLA+ properties.  This will require storing
+      the entire transition graph (as opposed to a spanning tree,
+      which is what is currently done) of the system.  It has been
+      shown that model checking arbitrary TLA+ properties (on finite
+      structures) is an NP-complete problem.
+    </p>
+
+  </BODY>
+</HTML>
+
+

@@ -1,0 +1,44 @@
+<HTML><HEAD><TITLE>
+Digital Systems Research Center: Report 64</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Research Report 64</H1>
+<P>
+<H1>Experience with Concurrent Garbage Collectors for Modula-2+</H1>
+<HR>
+<H2>John DeTreville</H2>
+<b>November 22, 1990</b><BR><i> 54 pages</i>
+<P>
+ Garbage collection is an integral component of Modula-2+, the principal
+systems programming language at SRC.  The initial Modula-2+ collector
+was a concurrent reference-counting collector; it did not reclaim cyclic
+structures, and the cost of assigning references  was
+relatively high.
+<P>
+I implemented three experimental collectors for Modula-2+ and tested
+them to explore alternatives to the initial collector: first a
+simple concurrent mark-and-sweep collector; then a modified
+concurrent mark-and-sweep collector that used VM synchronization
+between the mutator and the collector; and then a concurrent
+mostly-copying collector that also used VM synchronization.
+<P>
+These collectors had advantages and disadvantages compared to the
+initial Modula-2+ collector.  They reclaimed cyclic structures and
+tended to reduce the cost of  assignments, but they
+provoked VM thrashing far more readily and sometimes produced noticeable
+interruptions of service.  For this reason, we adopted a combined
+reference-counting and mark-and-sweep collector for Modula-2+ at SRC,
+in which the reference-counting collector reclaims most garbage and
+the mark-and-sweep collector executes infrequently to reclaim cyclic
+garbage.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-064.ps.Z">PostScript compressed with UNIX compress</A></B> -- 3088 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-064.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 2624 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-064.ps.zip">PostScript compressed with ZIP</A></B> -- 2624 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-064.ps">PostScript</A></B> -- 3288 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-064.pdf">Portable Document Format (PDF)</A></B> -- 2536 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

@@ -1,0 +1,28 @@
+
+			AVAILABLE ELECTRONICALLY
+
+"On-line Data Compression in a Log-structured File System"
+Michael Burrows, Charles Jerian, Butler Lampson, Timothy Mann
+April 15, 1992.  20 pages
+
+Authors' abstract
+
+We have incorporated on-line data compression into the low levels of a
+log-structured file system (Rosenblum's Sprite LFS).  Each
+block of data or meta-data is compressed as it is written to the disk
+and decompressed as it is read.   The log-structuring overcomes the
+problems of allocation and fragmentation for variable-sized blocks.  We
+observe compression factors ranging from 1.6 to 2.2, using algorithms
+running from 1.7 to 0.4 MBytes per second in software on a DECstation
+5000/200.  System performance is degraded by a few percent for normal
+activities (such as compiling or editing), and as much as a factor of
+1.6 for file system intensive operations (such as copying
+multi-megabyte files).
+
+Hardware compression devices mesh well with this design.  Chips are
+already available that operate at speeds exceeding disk transfer rates,
+which indicates that hardware compression would not only remove the
+performance degradation we observed, but might well increase the
+effective disk transfer rate beyond that obtainable from a system
+without compression.
+

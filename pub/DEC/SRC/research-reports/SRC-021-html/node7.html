@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Guidelines for Multithreaded Interfaces</TITLE>
+<META NAME="description" CONTENT="Guidelines for Multithreaded Interfaces">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node11.html">
+<LINK REL="previous" HREF="node6.html">
+<LINK REL="up" HREF="node4.html">
+<LINK REL="next" HREF="node8.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html195"
+ HREF="node8.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html191"
+ HREF="node4.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html185"
+ HREF="node6.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html193"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html194"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html196"
+ HREF="node8.html">Sharing Mutable State</A>
+<B> Up:</B> <A NAME="tex2html192"
+ HREF="node4.html">Evolving the UNIX System</A>
+<B> Previous:</B> <A NAME="tex2html186"
+ HREF="node6.html">Topaz Overview</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H1><A NAME="SECTION02030000000000000000">
+Guidelines for Multithreaded Interfaces</A>
+</H1>
+<A NAME="sec-guidelines">&#160;</A>
+<A NAME="154">&#160;</A>
+<A NAME="155">&#160;</A>
+By a <I>multithreaded interface</I> we mean one usable by multithreaded
+clients.  Good interface design is a challenging art, and has a whole
+literature of its own (for example, see Parnas [<A
+ HREF="node19.html#parnas:criteria">11</A>] and
+Lampson [<A
+ HREF="node19.html#lampson:hints">9</A>]).  We have not found designing multithreaded
+interfaces to be very much more difficult than designing single-threaded
+ones.  In one respect it is harder: care must be taken that serializing
+access to shared mutable state defined by the interface does not restrict
+the usefulness of that interface.  In another respect it is easier: a
+multithreaded interface can avoid the various ad hoc techniques used when
+a single-threaded interface must deal with concurrency inherent in the
+application.  Threads provide a convenient framework for designing
+solutions to the problem of cancelling undesired computations.
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS">&#160;</A>
+<UL>
+<LI><A NAME="tex2html197"
+ HREF="node8.html#SECTION02031000000000000000">
+Sharing Mutable State</A>
+<LI><A NAME="tex2html198"
+ HREF="node9.html#SECTION02032000000000000000">
+Avoiding Ad Hoc Multiplexing</A>
+<LI><A NAME="tex2html199"
+ HREF="node10.html#SECTION02033000000000000000">
+Cancelling Operations</A>
+</UL>
+<!--End of Table of Child-Links-->
+<BR><HR>
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,18 @@
+-------------------------------------------------------------------------------
+MPEGLIB-11-VMS.ZIP                Mpeg decoding engine and front end library
+                                  version 1.1
+                                  Front end author: Gregory P. Ward
+                                                    (greg@pet.mni.mcgill.ca)
+                                  Decoding engine: (c) 1992 The Regents of the
+                                                   University of California
+VAX                               Language: VAX C or DEC C
+AXP                               Language: DEC C
+-------------------------------------------------------------------------------
+
+OpenVMS VAX & AXP port of Mpeg lib version 1.1
+
+Patrick Moreau - CENA/Athis-Mons (France)
+
+pmoreau@cena.dgac.fr
+
+

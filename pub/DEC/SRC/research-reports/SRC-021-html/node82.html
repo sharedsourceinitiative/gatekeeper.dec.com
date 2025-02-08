@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>System Operation</TITLE>
+<META NAME="description" CONTENT="System Operation">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node83.html">
+<LINK REL="previous" HREF="node81.html">
+<LINK REL="up" HREF="node74.html">
+<LINK REL="next" HREF="node83.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html1213"
+ HREF="node83.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html1209"
+ HREF="node74.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html1203"
+ HREF="node81.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html1211"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html1212"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1214"
+ HREF="node83.html">Taos-only Kernel Calls</A>
+<B> Up:</B> <A NAME="tex2html1210"
+ HREF="node74.html">Running Ultrix Applications on</A>
+<B> Previous:</B> <A NAME="tex2html1204"
+ HREF="node81.html">Resource Allocation and Accounting</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04098000000000000000">
+System Operation</A>
+</H2>
+<P><A NAME="1968">&#160;</A>
+<A NAME="1820">&#160;</A>
+<A NAME="1821">&#160;</A>
+<A NAME="1822">&#160;</A>
+<A NAME="1823">&#160;</A>
+<A NAME="1824">&#160;</A>
+<A NAME="1825">&#160;</A>
+<A NAME="1826">&#160;</A>
+<A NAME="1969">&#160;</A>
+<A NAME="1828">&#160;</A>
+<A NAME="1829">&#160;</A>
+<A NAME="1830">&#160;</A>
+<A NAME="1831">&#160;</A>
+<A NAME="1832">&#160;</A>
+<A NAME="1833">&#160;</A>
+<A NAME="1834">&#160;</A>
+<A NAME="1835">&#160;</A>
+<A NAME="1836">&#160;</A>
+<A NAME="1837">&#160;</A>
+<A NAME="1838">&#160;</A>
+<A NAME="1839">&#160;</A>
+<A NAME="1840">&#160;</A>
+<A NAME="1841">&#160;</A>
+Taos handles many aspects of system operation differently than Ultrix.
+This has little effect on normal user programs, but does mean that most of
+the programs documented in Section 8 of the Ultrix Programmer's Manual
+won't run on Taos.  (For Taos analogues, see backup<TT>&#95;</TT>ff(1), cron(1), df(1),
+expandpath(1), homeserver(1), lpr(1), mailq(1), pwd(1), restore<TT>&#95;</TT>ff(1),
+servername(1), setpgrpme(1), stripcp(1), automount(8), cleardisks(8),
+crontab(8), dismount(8), givevm(8), installboot(8), mkinit(8),
+sendmail(8), setconfigurationparameter(8), startrfs(8), tsh(n), and <I>The
+Firefly Companion</I>.)
+<P><A NAME="1845">&#160;</A>
+<A NAME="1846">&#160;</A>
+The Taos file flushing daemon runs every 60 seconds and doesn't flush
+changes to file access times, whereas the analogous Ultrix update system
+operation command runs every 30 seconds and flushes all attributes
+including file access times.
+<P><A NAME="1847">&#160;</A>
+<A NAME="1848">&#160;</A>
+On Taos, there are no block devices or raw disk devices; the mount and
+umount kernel calls always raise SIGSYS. Analogous facilities are
+available through the OSFriends interface (see Appendix
+<A HREF="node59.html#Hillsborough">A.5</A>, page <A HREF="node59.html#Hillsborough"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).
+<P><A NAME="1851">&#160;</A>
+<A NAME="1852">&#160;</A>
+On Taos, there is no /dev/kmem or /dev/mem file; see instead the
+OS.GetProcessInfo procedure described in Section <A HREF="node53.html#Benecia">5.5</A>.
+<P><A NAME="1854">&#160;</A>
+On Taos, the swapon kernel call always raises SIGSYS; VMFriends.Donate
+serves an analogous purpose.
+<P><A NAME="1855">&#160;</A>
+On Taos, the reboot kernel call always raises SIGSYS. (However, its
+functionality would be convenient for the remote operation of servers).
+<P><A NAME="1856">&#160;</A>
+On Taos, the vhangup kernel call always raises SIGSYS.
+<P><A NAME="1857">&#160;</A>
+On Taos, the settimeofday kernel call always returns EPERM (the tsh
+settime command can be used instead; see tsh(n)).
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1213"
+ HREF="node83.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html1209"
+ HREF="node74.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html1203"
+ HREF="node81.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html1211"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html1212"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1214"
+ HREF="node83.html">Taos-only Kernel Calls</A>
+<B> Up:</B> <A NAME="tex2html1210"
+ HREF="node74.html">Running Ultrix Applications on</A>
+<B> Previous:</B> <A NAME="tex2html1204"
+ HREF="node81.html">Resource Allocation and Accounting</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,11 @@
+"The Operators of TLA+"
+Leslie Lamport
+Note #1997-006a. April 12, 1997. Corrected June 8, 1997. 20 pages 
+
+This document is an introduction to the syntax and semantics of the
+operators of TLA+. It assumes that you are familiar with ordinary
+mathematics (sets and functions) and are at least acquainted with TLA. It
+should enable you to understand the expressions that appear in TLA+
+specifications.
+
+This is a preliminary document; suggestions are welcome. 

@@ -1,0 +1,65 @@
+<HTML><HEAD><TITLE>
+Digital Systems Research Center: Report 145</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Research Report 145</H1>
+<H1>Modularity in the Presence of Subclassing</H1>
+<HR>
+<H2>Raymie Stata</H2>
+<b>Report #145, April 28, 1997</b><BR><i>98 pages</i>
+<P>
+Classes are harder to subclass than they need be.  This report
+addresses this problem, showing how to design classes that are more
+modular and easier to subclass without sacrificing the extensibility
+that makes subclassing useful to begin with.
+<P>
+We argue that a class should have two interfaces, an "instance
+interface" used by programmers manipulating instances of the class,
+and a "specialization interface" used by programmers building
+subclasses of the class.  Instance interfaces are relatively well
+understood, but design principles for specialization interfaces
+are not.
+<P>
+In the context of single inheritance, we argue that specialization
+interfaces should be partitioned into "class components".  A class
+component groups part of a class's state together with methods to
+maintain that state.  Class components establish abstraction
+boundaries within classes, allowing modular replacement of
+components by subclasses.  Achieving this replaceability requires
+reasoning about each component as an independent unit that depends
+only on the specifications of other components and not on their
+implementations.
+<P>
+We introduce the concept of "abstract representation" to denote
+the view of a class's state given in its specialization interface.
+This view is more detailed than the view used to describe instances of
+the class, revealing details that describe the interfaces between
+class components.  It is less detailed than the actual implementation,
+hiding implementation details that should not be exposed even to
+specializers.
+<P>
+We also consider multiple inheritance, specifically, Snyder's model of
+encapsulated multiple inheritance.  We advocate separating class
+components into individual classes called "mixins".  Instantiable
+classes are built by combining multiple mixins.  With the mixin style
+of design, class hierarchies have more classes than in equivalent
+single-inheritance designs.  These classes have smaller, simpler
+interfaces and can be reused more flexibly.
+<P>
+To explore the impact our ideas might have on program design, we
+consider classes from existing libraries in light of the proposed
+single- and multiple-inheritance methodologies.  To explore the
+impact our ideas might have on language design, we present two
+different extensions to Java, one that provides a level of static
+checking for single-inheritance designs, and another that adds the
+encapsulated model of multiple inheritance.
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-145.ps.Z">PostScript compressed with UNIX compress</A></B> -- 280 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-145.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 224 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-145.ps.zip">PostScript compressed with ZIP</A></B> -- 224 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-145.ps">PostScript</A></B> -- 632 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-145.pdf">Portable Document Format (PDF)</A></B> -- 520 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

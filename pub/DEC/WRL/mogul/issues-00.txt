@@ -1,0 +1,192 @@
+"Issues List" for "Delta encoding in HTTP"
+
+Last Revised: 21 April 2000
+
+========================================================================
+Unresolved substantive issues
+
++----------------------------------------------------------------------+
+Issue-Name: DCLUSTER-ORDERING
+Document-section: 8 (Delta-encoding and clustering)
+Reported-By: danielh@crosslink.net
+Reported-Date: Thu, 06 Apr 2000 22:52:48
+Description:
+   Once a cluster-eligible response is cached, when the client is about
+   to make a subsequent request, it would match the request-URI against
+   all of the URL-prefixes in its cache.  The ``If-None-Match'' field in
+   its request could then list the entity tags for all of the matching
+   entries.  In some cases, it might be more efficient to list only a
+   subset (such as the most recently received cache entries), to avoid
+   excessive request header lengths.
+
+If I correctly recollect earlier discussion of this point, then the  above
+doesn't read broadly enough. How about...
+
+   Once  cluster-eligible responses are cached, when the client is about
+   to make a subsequent request, it would:
+     a) match the request-URI against all of the URL-prefixes
+       in its cache. 
+     b) the client would then find all cache entires that started
+        with one of these URL-prefixes; and only use cached entries
+        recieved AFTER the URL-prefix was identified (that is, after 
+        the response containing the DCluster that identifies the 
+        URL-prefix).
+   The ``If-None-Match'' field in ......
+
+   [Note from Jeff Mogul: this is clearly a problem, but it's
+	not quite clear how to resolve it.  The reason for the
+	ordering constraint (in section 12.4.2) is to prevent
+	accidents with very old cache entries, but the rule
+	might not stated unambiguously, and it might be very
+	difficult to implement as stated.  Needs more work!]
+
+Suggested resolution:
+Resolution-Date:
++----------------------------------------------------------------------+
+
++----------------------------------------------------------------------+
+Issue-Name: CACHE-SAFETY
+Document-section: not clear (12.7?)
+Reported-By: Koen Holtman
+Reported-Date: Sun, 16 Apr 2000
+Description:
+	The existing draft doesn't provide a 100% safe way to
+	prevent a non-delta-aware cache from trying to validate
+	and then use a cached 226 response, if it includes (e.g.)
+	   Cache-control: max-age=30
+	Further analysis shows that "Vary" cannot solve this.
+Suggested resolution:
+	Two possible solutions:
+	(1) Use the cache-control extension mechanism from RFC2616:
+	    Cache-Control: no-store, im, max-age=30
+	and define "im" to mean "if you comply with the specification
+	for the IM and A-IM headers, you can ignore the no-store
+	cache-directive.  RISK: some non-IM caches might also ignore
+	no-store.
+	(2) Define a new "Extended cache control" (ECC) header, and
+	send instead:
+	    ECC: x=im, max-age=30
+	which says "if you comply with the specification for the 'im'
+	cache-directive, ignore any Cache-control header, and follow
+	the cache-directives in the ECC header.  Otherwise, ignore
+	the ECC header."
+
+	In either case: warn origin-server implementors that
+		Vary: If-Non-Match, A-IM
+	is NOT sufficient protection.
+Resolution-Date:
++----------------------------------------------------------------------+
+
++----------------------------------------------------------------------+
+Issue-Name: SPOOFING
+Document-section: 14.1
+Reported-By: Koen Holtman
+Reported-Date: Sun, 16 Apr 2000
+Description:
+	The current draft is not sufficiently strict about requiring
+	implementations to prevent or detect spoofing using DCluster.
+Suggested resolution:
+	First, include a note that we would appreciate a formal
+	security review, supervised by the IESG, to determine:
+	   (1) whether there are any other security holes.
+	   (2) whether our proposed resolutions are sound.
+	   (3) how strict the specification needs to be (i.e.,
+	   	does the IESG require MUST or merely SHOULD
+		for anti-spoofing mechanisms)?
+
+	Second, say something like:
+	"Implementations of the DCluster header SHOULD use
+	an effective mechanism to protect against spoofing
+	attacks.  Implementations MAY provide a configuration
+	option to disable this mechanism, but the default
+	configuration SHOULD be to enable it."
+
+	Third, make a list of (we hope!) effective anti-spoofing
+	mechanisms, including at least one of:
+	   (1) instance digests (e.g., MD5)
+	   (2) or, require hostname portions of DCluster and Request-URI
+		   to match.
+	   (3) or, require base instance and new instance to have
+	   	mutually-compatible DCluster headers (this needs
+		to be refined.)
+Resolution-Date:
++----------------------------------------------------------------------+
+
+========================================================================
+Unresolved editorial issues
+
++----------------------------------------------------------------------+
+Issue-Name: INSTANCE-DEF-CIRCULARITY
+Document-section: 3
+Reported-By: Balachander Krishnamurthy <bala@research.att.com>
+Reported-Date: Sun, 16 Apr 2000
+Description:
+   . am not happy with the definition of 'instance' - for one it is circular.
+
+   instance         The entity that would be returned in a status-200
+                   response to a GET request, at the current time, for
+                   the selected variant of the specified resource, with
+                   the application of zero or more content-codings, but
+                   without the application of any instance manipulations
+                   or transfer-codings.
+
+    instance manipulation is only defined later. at this point of
+    defining instance we should leave instance manipulations out.
+    
+Suggested resolution: ??
+Resolution-Date:
++----------------------------------------------------------------------+
+
++----------------------------------------------------------------------+
+Issue-Name: FORMALIZATION
+Document-section: 4
+Reported-By: Balachander Krishnamurthy <bala@research.att.com>
+Reported-Date: Sun, 16 Apr 2000
+Description:
+    . page [11] "This formalization of the HTTP message"
+    
+    well it is not really formalization of THE HTTP message since
+    instances are not discussed in 2616. is it clear that we are
+    talking about our notion of HTTP message? we say just prior to
+    instance definition
+	    It is too late to fix the terminological failure in the HTTP/1.1
+	    specification, so we instead define a new term, for use in this
+	    document:
+    should the interpretation be that everything is relative to this
+    document and not, say, 2616?
+
+    my specific concern with "the HTTP message" is in relation to the
+    following sentence in Section 4
+       This formalization of the HTTP message generation sequence has not
+       previously been described. 
+    this would lead readers (it led me) to believe that we are talking
+    about generic HTTP (2616) message generation sequence. of course it
+    could not have been described this way since 'instance' didn't
+    exist.  please note that am not complaining about introduction of
+    'instance'.
+
+Suggested resolution: ???
+Resolution-Date:
++----------------------------------------------------------------------+
+
+========================================================================
+Resolved substantive issues
+
+
+========================================================================
+Resolved editorial issues
+
+
+========================================================================
+Template for issue list items:
+
++----------------------------------------------------------------------+
+Issue-Name:
+Document-section:
+Reported-By:
+Reported-Date:
+Description:
+Suggested resolution:
+Resolution-Date:
++----------------------------------------------------------------------+
+

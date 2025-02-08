@@ -1,0 +1,37 @@
+Ftptool is wriiten be Mike Sullivan (Mike.Sullivan@sun.com) of Sun.
+He has used Berkeley's ftp code.
+
+The latest version (4.5) is portable to Ultrix.
+NOTE:  the Ultrix version works under the OpenLook window manager or
+       the mwm window manager (I haven't tried it under DECwindows).
+       The OpenLook fonts are DESIRABLE but ftptool will work without
+       them.   The will be lots of font warnings but the program will
+       work.
+       Xview error.   Sometimes an Xview connection error is reported.
+       This seems to go away if you  start ftptool with font Courier10
+       set explicitly:
+
+       ftptool -fn Courier10
+
+       or if you have
+       Font.Name:   Courier10
+       in your .Xdefaults or .Xresources file.
+
+The following files are available via anonymous ftp from ftp.cm.cf.ac.uk
+(131.251.42.18):
+
+Ftptool4.5-ultrix-bin.tar.Z  binary image of ftptool for ultrix & man page
+Ftptool4.5-ultrix-Makefile   makefile for ultrix (will need a bit of tailoring)
+Ftptool4.5.tar.Z             sunos/ultrix compatible source of ftptool4.5
+                             with makefile and readme
+Ftptool4.5-ultrix.readme     this file
+
+When I tried it, xmkmf produced an invalid Makefile.  I have amended
+Makefile.sunpro into Makefile.ultrix which works for me.  Copy it to Makefile
+and edit the definitions of OPENWINHOME and the include path for X11 Release 4
+header files.
+
+Robert Evans.   Decemeber 1992
+University of Wales College of Cardiff
+Dept of Computing Mathematics
+Robert.Evans@cm.cf.ac.uk

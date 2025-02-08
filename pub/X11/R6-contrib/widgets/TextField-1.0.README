@@ -1,0 +1,149 @@
+README for TextField Widget, version 1.0
+Rob McMullen <rwmcm@orion.ae.utexas.edu>
+10 Oct 1995
+
+
+SOURCE LOCATION
+
+Source code for the TextField Widget is available via anonymous ftp on
+ftp.x.org in /contrib/widgets as TextField-?.?.tar.gz.  I have also set up the
+Offical ListTree Web Site (tm) at http://www.ae.utexas.edu/~rwmcm/TextField.html
+that should always include the latest patchlevel update.
+
+
+OVERVIEW
+
+The TextField Widget is a low resource single line text input widget designed
+to mimic the functionality of the Motif XmTextField widget. Most of the
+functionality of the XmTextField widget is available in my TextField, as well
+as most of the XmTextField* convenience functions. 
+
+To benefit freeware programmers who may now be using the Athena widget set,
+this widget was also designed to be as compatible as possible with the Athena
+Text widget (in single line mode). It shares many of the resources with the
+Athena Text widget, and few code modifications are necessary to change to the
+TextField. As an added bonus, this widget is very small compared to the
+Athena Text. 
+
+My goal was a powerful free line editor that was similarly powerful to the
+Motif single line text widget. In particular, I wanted pending delete
+(replacing text selection with next entry) and scrolling, two features not
+available in the Athena Text widget. But, besides the small size of the
+widget and freely available source, there are no obvious advantages to using
+this widget if you program with Motif (actually, the opposite would be true).
+Therefore, I have made no attempt to make this widget deal with the
+idiosyncrasies of Motif. It will certainly operate (to some extent: minus
+keyboard traversal, highlight borders, etc.) with Motif, but if you use
+Motif: 
+
+ 1. You'll use the XmTextField widget 
+ 2. You shouldn't be writing free programs 
+
+
+FEATURES
+
+Features provided in the widget include the following: 
+
+   Variable width fonts 
+   Optimized drawing routines 
+   Highlighting 
+   ICCCM selections 
+   Scrolling text 
+   Pending delete mode (ala Motif) 
+   Activate Callback (called when Return pressed) 
+   Editable or non-editable mode 
+   Echo or non-echo mode 
+   Optional maximum length for text string 
+   Many convenience functions (based on the XmTextField* functions) 
+
+
+TO DO LIST
+
+Possible items to include in future revisions: 
+
+   User specifiable pointer cursor 
+   Blinking text cursor 
+   More Motif callbacks (ModifyVerify, etc.) 
+   More text translations (vi or emacs modes?) 
+   The rest of the Motif-style convenience functions 
+   ... 
+
+
+REQUIREMENTS
+
+The TextField code requires X11R4 or later and an ANSI C compiler. The code
+may compile on a non-ANSI compiler if it supports new style function
+definitions. 
+
+
+BUILDING THE DEMO PROGRAMS
+
+Shipped with the source code distribution is one demo program that simply
+displays several TextField widgets in a window.  Each TextField shows off
+different features of the widgets, and all have an activate callback that
+will echo the current text in the widget to standard output when you press
+the return key.
+
+If you have the program imake installed, you may use the supplied Imakefile to
+generate a Makefile by typing "xmkmf".  Otherwise, copy the file
+Makefile.noImake to Makefile, and edit that to conform to your system. 
+Actually, other than specifying the C compiler to use, the Makefile should
+require little customization.
+
+Once you have set up the Makefile, type "make" to build the demo.  You will
+need the Athena library to compile the program.
+
+Type "./demo" to run the program.
+
+
+USING THE WIDGET
+
+Instructions on how to use the TextField widget in your own code is documented
+in the manual page (TextField.html) included with the source code.  The
+documentation provided only in HTML format.
+
+
+IMPROVEMENTS/PATCHES/BUG REPORTS
+
+If you make improvements in this widget (or, YIKES!, if you find bugs)
+please let me know at rwmcm@orion.ae.utexas.edu, or through the TextField
+Widget home page at http://www.ae.utexas.edu/~rwmcm/TextField.html
+
+
+AUTHOR
+
+Rob McMullen <rwmcm@orion.ae.utexas.edu>
+
+This widget is supplied as free software, in the hope that it will be useful
+for developers in the X community. It is licensed under the GNU Library
+General Public License, which is a less restristive version of the GPL. It
+doesn't prevent the code from being used in commercial codes, as long as you
+also ship source to the TextField widget. See the file LICENSE in the source
+distribution for more information. 
+
+Patches, improvements, suggestions, bug reports, job offers, volleyball games,
+and money you love donating to programmers who make your life so much easier
+are welcome at  <rwmcm@orion.ae.utexas.edu>. I will periodically post patches
+and improvements to ftp.x.org and the TextField web page at
+http://www.ae.utexas.edu/~rwmcm/TextField.html 
+
+
+
+COPYRIGHT
+
+Copyright (c) 1995 Robert W. McMullen 
+
+This library is free software; you can redistribute it and/or modify it under
+the terms of the GNU Library General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option) any
+later version. 
+
+This library is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Library General Public License for more
+details. 
+
+You should have received a copy of the GNU Library General Public License
+along with this library; if not, write to the Free Software Foundation, Inc.,
+675 Mass Ave, Cambridge, MA 02139, USA. 
+

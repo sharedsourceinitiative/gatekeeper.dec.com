@@ -1,0 +1,401 @@
+<html>
+<head>
+<title>NTDCPI-V1.4 Release Notes</title>
+</head>
+<body>
+<!--#include file="includes/title.html" -->
+<br>
+NTDCPI-V1.4 Release Notes
+</h1>
+<pre>
+DIGITAL Continuous Profiling Infrastructure
+for Windows NT (TM) version V1.4a
+Copyright (C) 1996, 1997 DIGITAL Equipment Corporation
+
+**********************************************************
+** NOTE:  THE "Error 42" during install has been fixed. **
+**********************************************************
+
+This is the README.TXT file for the Windows NT version of DCPI.
+
+------------------------------------------------------------------------------
+Upgrade Instructions
+------------------------------------------------------------------------------
+
+When upgrading or reinstalling DCPI, it is best to remove the 
+old version before installing the new version.  To uninstall
+an old release:
+
+    * Stop the DCPI Daemon (DCPISVC).  Use the DCPI control panel, 
+      or type "NET STOP DCPISVC" in a command prompt window.
+
+    * Stop the DCPI Driver (CPIDRV).  Use the Windows control panel,
+      or type "NET STOP CPIDRV" in a command prompt window.
+
+    * Remove DCPI programs.  Go into the Windows NT Control
+      Panel, run "Add/Remove Programs", choose "Digital 
+      Continuous Profiling", and then click "Remove."
+
+Now, follow the installation instructions below:
+
+------------------------------------------------------------------------------
+Installation Instructions
+------------------------------------------------------------------------------
+
+
+* To install DCPI for Windows NT, you will need the following:
+
+    Alpha AXP processor (EV4, EV45, EV5, or EV56)
+    Windows NT 4.0 FREE BUILD (any service pack level)
+    At least 20MB free disk space
+    At least  5MB free memory
+    Administrator Privileges on the local system.
+
+    Note: DCPI does not work on the checked build of NT.  We're
+          currently investigating this.
+
+* Unpack the kit using PKZIP(tm), WinZIP(tm), or other similar
+  archive unacking software.  Run the installation program
+  SETUP.EXE which can be found inside the .ZIP file.
+
+  The SETUP utility will ask you where to place the installed
+  kit files.  Choose a directory with sufficient space (the
+  default is \DCPI on your system disk).  DCPI SETUP will
+  install the software, create some program icons for the
+  control panel applet and release notes, then ask you to 
+  reboot your system to complete the installation of the
+  device driver.  By default, the following directory
+  tree is created:
+
+	\DCPI		Main directory containing release notes
+			and uninstall information.  The 
+			DCPI Daemon's log file is created here.
+	\DPCI\BIN	Program binaries.  You can add this 
+			directory to your search path.
+	\DCPI\HELP	HTML files containing online help.
+	\DCPI\DB	Database files.
+
+  DCPI for Windows NT is uninstallable by using the NT control
+  panel.  Select 'Settings' from the start menu, then 'Control
+  Panel', and then 'Add/Remove Programs'.  Choose DCPI from
+  the list of installed programs and click "Install/Remove", and
+  DCPI will be removed from your system.
+
+* To provide profiles of Kernel code, it is very useful to
+  install the symbols to your system disk.  These files
+  are usually found on the SUPPORT\DEBUG\SYMBOLS\ALPHA directory
+  of the CD, but you may need to obtain them from Microsoft's
+  web site if you have installed any of the NT Service Packs.
+  To install the symbols, XCOPY the symbol tree to your
+  system root:
+
+  XCOPY Q:\SUPPORT\DEBUG\SYMBOLS\ALPHA\*.* %SystemRoot%\SYMBOLS\*.* /S
+
+  Then, add a system-wide environment variable to help DCPI and
+  other NT tools find the symbols:
+
+  _NT_SYMBOL_PATH=%SystemRoot%\SYMBOLS
+
+  Environment variables are added by going to the property
+  sheet (right button menu) of "My Computer".
+
+
+-------------------------------------------------------------------------------
+Starting DCPI
+-------------------------------------------------------------------------------
+
+* Run the DCPI "control panel" applet (DCPICPL.EXE) and select
+  the events you want to monitor, and any other options for the
+  daemon (you'll notice they are very similar to the Unix version).
+
+  Note that you can select more than one event per counter.  If
+  you do this, DCPI will "multiplex" the different events,
+  reducing the effective sampling rate for the counter.
+  If you multiplex events, counter #0 must always be set
+  to measure 'cycles', since the cycle counter interrupts are
+  used to control the multiplexing of the other counters.
+
+  When you click OK to exit the dialog, these options will be saved
+  in the registry.
+
+* After selecting the counters and other options, go to the
+  'Start' tab in the control panel and press the "Start Sampling"
+  button.  The NT Service Control Manager should then start the
+  DCPI Daemon.  As an alternative, you can start and stop DCPI
+  from the Command Prompt window by using the "NET START DCPISVC"
+  and "NET STOP DCPISVC" commands.
+
+* To view the log file, stop the sampling process and press the
+  "View Log" button on the 'Start' tab in the control panel.
+
+* It is possible to start DCPISVC as a console application.  This
+  can be useful if you wish to run the service in the foreground
+  and specify the options as command-line parameters.  To start
+  DPCISVC in the foreground, use the following command:
+
+     dcpisvc -console <... dcpid parameters, same as Unix ...>
+
+  For example, to run the daemon and monitor "cycles" and "imiss"
+  events, use the following command:
+
+     dcpisvc -console -t cycles -t imiss c:\dcpi\db
+
+  Note: If you start DCPISVC in this way, you *must* use the
+  "dcpiquit" command to shut the daemon down.  It will not
+  respond to the control panel applet when started in console mode.
+
+
+-------------------------------------------------------------------------------
+Basic Procedures
+-------------------------------------------------------------------------------
+
+Once DCPI is running, you can follow these basic procedures to
+get an overview of where the time is being spent:
+
+* Run an application whose performance you wish to monitor.  This
+  works best on applications that have symbolic information
+  in the executable images, but you can use any image.
+
+* On the DCPI Control Panel, press the "Flush Samples" button,
+  or run the "dcpiflush" command.  This command extracts any
+  unread samples from the driver and merges them with the profiles
+  already stored on the disk.
+
+* Use the command "DCPIPROF -i" to get a listing of active images
+  and the total samples collected for each image.
+
+* Use the command "DCPIPROF <image-name>" to get a list of procedures
+  within the image and the sample counts for each procedure.
+
+* Use the command "DCPILIST -asm -p <procedure-name> <image-name>"
+  to display a disassembled procedure with sample counts and calculated
+  CPI information for each instruction in a procedure.
+
+-------------------------------------------------------------------------------
+DCPI Utilities Included
+-------------------------------------------------------------------------------
+
+
+The following DCPI utilities have been ported to Windows NT:
+
+     dcpisvc
+	   Continuous profiling daemon.  Extracts raw samples from kernel
+           device driver, associates them with executable images, and stores
+           them in profiles on disk.  This service can be started
+	   and stopped from the control panel, or by typing
+	   "net start|stop dcpisvc"
+
+     dcpiprof
+           Analyzes profile data collected by dcpisvc.  Produces a 
+           breakdown of cpu time by image, or by procedures within images.
+
+     dcpilist
+           List the contents of a procedure and annotate the listing with
+           samples collected during profiling via dcpid.  The listing can
+           contain either machine instructions, or source lines, or both.
+           The listing is annotated with the samples collected during
+           profiling, as well as the average number of cycles required to
+           execute each instruction or source line.
+
+     dcpicalc
+           Annotates each instruction in a procedure's basic-block graph with
+           the average number of cycles for that instruction, and computes
+           the overall average cycle-per-instruction for that procedure.
+
+     dcpix Measure execution frequencies for basic blocks and control-flow
+           edges directly; output can be used by dcpicalc instead of
+           estimating frequencies from sample counts.
+
+     dcpisumxct
+           Aggregates execution counts measured using dcpix from multiple
+           runs of an instrumented program.  This makes it possible for
+           dcpicalc to analyze counts from multiple runs of a program.
+
+     dcpiwhatcg
+           Produces a program-level summary breakdown of where time has been
+           spent (percent of cycles spent in, e.g., memory delays, static
+           stalls, branch mispredicts, and useful execution).
+
+     dcpidiff
+           Compares two sets of profiles for a procedure, highlighting basic
+           blocks or source lines with the largest differences.
+
+     dcpi2ps
+           Formats a basic-block graph into Postscript.
+
+     dcpictl
+           Controls the operation of dcpid.  This subsumes dcpiepoch,
+           dcpiflush, and dcpiquit (which are still provided for backward
+           compatibility).  Adds functionality to tell the daemon about
+           specific images loaded into processes when necessary (e.g., when
+           an image is loaded via mmap).
+
+     dcpiepoch
+           Starts a new profiling epoch.  All samples are associated with a
+           time interval called an epoch.  The analysis tools typically
+           operate on a set of profiles from a single epoch.
+
+     dcpiflush
+           Flushes all unsaved samples from dcpid to profiles on disk.
+
+     dcpiquit
+           Terminates the dcpid daemon, flushing all unsaved samples to disk.
+
+     dcpiscan
+           Scans filesystem directories to find executables and associate
+           executables with filesystem pathnames.
+
+     dcpicat
+           Prints the contents of one or more profile files in an ASCII
+           format.
+
+     dcpiflow
+           Generates a basic-block graph for a procedure annotated with
+           samples collected during profiling via dcpid.  The functionality
+           of this program has been subsumed by dcpicalc.
+
+     dcpidis
+           Disassembles a procedure and annotates the disassembly with
+           samples collected during profiling via dcpid.  This program is
+           obsolete.  Use dcpilist instead.
+
+
+The following DCPI commands are available on Digital Unix
+but not on Windows NT:
+
+
+     dcpistats
+           Compares multiple sets of raw sample counts and prints various
+           statistics about them.  Dcpistats is useful for comparing
+           variations across multiple runs of the same program, or for
+           comparing differences between slightly different versions of a
+           program.
+
+           Status: This is currently implemented as a shell script on Unix.
+
+     dcpisource
+           Augments a basic-block graph generated by dcpiflow with source
+           code.
+
+           Status: This is currently implemented as a shell script on Unix.
+     dcpicc
+           Compiles C programs to produce object code that helps dcpisource
+           in identifying which source token each instruction corresponds to.
+
+           Status: This is currently implemented as a shell script on Unix.
+
+     dcpiversion
+           Print the version string and creation date of the installed
+           DIGITAL continuous profiling release.
+
+           Status: This is currently implemented as a shell script on Unix.
+
+     dcpiuninstall
+           Uninstalls DCPI binaries and man pages, and restores the original
+           version of /sbin/loader.
+
+           Status: Use the Windows NT Control Panel's "Add/Remove Programs" 
+           icon to remove DCPI for Windows NT.
+
+     dcpiloader
+           A modified version of the standard dynamic loader that provides
+           dcpid with information about where executables are loaded.
+
+           Status: The "modified loader" is implemented in the device
+           driver on Windows NT.
+
+     dcpi2pix
+           Converts DCPI profile data to pixie format.
+
+     dcpikdiff
+           Creates a new image based on both vmunix and kmem(7) that captures
+           the true running kernel image after Digital Unix dynamically
+           patches itself using self-modifying code.
+
+The following additional files are part of this kit:
+
+      CPILIB.DLL	Access library for CPIDRV driver
+      CPIDRV.SYS	Performance counter driver
+      README.TXT	This file
+
+------------------------------------------------------------------------------
+BUGS FIXED IN THIS RELEASE
+------------------------------------------------------------------------------
+
+* The device driver would not correctly program the CPU's 
+  counter registers for certain events on EV5 (21164) processors.
+
+  The affected events are the external "mux" events on 
+  counters 1 and 2.
+
+  This has been corrected, all events are correctly programmed
+  into the CPU's registers.
+  
+* DCPI will now read CodeView symbols from image files via the
+  IMAGEHLP library supplied with Windows NT. 
+
+* Numerous improvements have been made to the device driver,
+  improving its efficiency.
+
+* PCA56 (21165) machines are now supported.
+
+* You can start the daemon as a console application (similar
+  to the way the Unix version does) by using the "dcpisvc -console"
+  command.
+
+
+-------------------------------------------------------------------------------
+CAVEATS
+-------------------------------------------------------------------------------
+
+* The install procedure does not place the DCPI tools on the path.
+  You can do this yourself by going to 'Properties' on 'My Computer',
+  selecting "Environment", and adding the install directory to the path.
+
+* On some occasions, InstallSHIELD fails to create the program group
+  icons for the DCPI control panel and help files.  Installing DCPI
+  a second time will usually fix this.
+
+* If you want to set DCPISVC to 'Automatic' to start it at
+  system boot time, we advise you to create a separate
+  boot configuration that does NOT include DCPISVC.
+  NT will prompt you to select a boot configuration
+  at startup time.
+
+* Profiles for images loaded after the daemon starts are
+  likely to be stored as "unknown..." in the database.  The
+  image IDs are correct, however, so the tools should be able
+  to find them in most cases. 
+
+* Occasionally, when stopping the DCPI Daemon, the service control
+  manager will report that the daemon is not responding to the 
+  control function.  DCPISVC does a flush before it shuts down,
+  and the flush can often take long enough that the service control
+  manager thinks the daemon has gone away.  
+
+* The DCPI Control Panel is not very smart about what events
+  can/should be multiplexed with others.  In particular,
+  it currently does not ensure that 'cycles' is selected
+  on counter 0 if multiplexing is happening on the other
+  counters.
+
+* Don't try to uninstall the software while it is running,
+  do 'NET STOP DCPISVC' and 'NET STOP CPIDRV'  before running 
+  the uninstall procedure.
+
+* If you include only CodeView information in your executables,
+  DCPI will not be able to display source file information, since
+  COFF is still used for matching source files with code.
+
+* "Stripped" COFF symbols are supported, provided the DCPI tools
+  can find the symbol files (.DBG) in the same directory as the
+  executable, along _NT_SYMBOL_PATH, or along the regular search PATH.
+
+</pre>
+</body>
+</html>
+
+
+
+
+

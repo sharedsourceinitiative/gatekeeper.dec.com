@@ -1,0 +1,15 @@
+"WebCard: Integrated and Uniform Access to Mail, News, and the Web"
+Marc H. Brown
+Report #139a, July 15, 1996. 10 pages.
+
+
+This report describes WebCard, an integrated mail/news reader and Web
+browser.  As a mail/news reader, WebCard is fairly conventional; the
+innovation is that Web pages are fully integrated into the mail/news
+reader. The user interface is based on folders, which can contain mail
+messages, news articles or Web pages.  Folders can be used to organize
+material and to present the pages returned by commands such as
+"search" and "auto surf."
+
+A videotape (139b) associated with this work is available.
+

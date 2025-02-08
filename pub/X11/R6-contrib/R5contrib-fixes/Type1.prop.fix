@@ -1,0 +1,74 @@
+
+		Contributed by John L. Cwikla, Wolfram Research, Inc
+			Sun Nov 28 22:38:26 CST 1993
+
+To apply this patch:
+
+cd to the mit directory
+        patch -s < ThisFile
+Patch will work silently unless an error occurs.
+If you want to watch patch do its thing, leave out the "-s" argument to patch.
+
+After applying this patch, you will need to rebuild the font library,
+font server, and X server.
+
+
+This patch fixes the following problems in the version on
+the R5 contrib tape:
+
+Type1:  Adds FONT_NAME property to Type1 fonts (This is the PostScript
+	font name.  Very useful for programs that want to have printed output.
+  This will make life easier when you want to remap screen fonts to printer
+ (PostScript) fonts, instead of guessing from the XLFD.
+
+	Now if we can just get everyone to use it...
+
+
+
+*** mit/fonts/lib/font/Type1/t1info.c.orig	Sun Nov 28 13:27:13 1993
+--- mit/fonts/lib/font/Type1/t1info.c	Sun Nov 28 20:36:25 1993
+***************
+*** 1,4 ****
+--- 1,5 ----
+  /* $XConsortium: t1info.c,v 1.9 92/03/20 16:00:13 eswu Exp $ */
++ /**/
+  /* Copyright International Business Machines,Corp. 1991
+   * All Rights Reserved
+   *
+***************
+*** 95,105 ****
+--- 96,108 ----
+  static fontProp extraProps[] = {
+      "FONT", 0, atom,
+      "COPYRIGHT", 0, atom,
++     "FONT_NAME", 0, atom,
+  };
+   
+  /* this is a bit kludgy */
+  #define FONTPROP        0
+  #define COPYRIGHTPROP   1
++ #define FONT_NAMEPROP   2
+   
+  #define NNAMEPROPS (sizeof(fontNamePropTable) / sizeof(fontProp))
+  #define NEXTRAPROPS (sizeof(extraProps) / sizeof(fontProp))
+***************
+*** 323,328 ****
+--- 326,343 ----
+              QueryFontLib(Filename, "Notice", &infostrP, &rc);
+              if (rc || !infostrP) {
+                  infostrP = "Copyright Notice not available";
++             }
++             pp->value = MakeAtom(infostrP, strlen(infostrP), TRUE);
++             break;
++          case FONT_NAMEPROP:
++             /*
++             ** This is a great property to have if we ever want to map screen fonts
++             ** to the correct printer font.
++             */
++             *is_str = TRUE;
++             QueryFontLib(Filename, "FontName", &infostrP, &rc);
++             if (rc || !infostrP) {
++                 infostrP = "Unknown"; 
+              }
+              pp->value = MakeAtom(infostrP, strlen(infostrP), TRUE);
+              break;

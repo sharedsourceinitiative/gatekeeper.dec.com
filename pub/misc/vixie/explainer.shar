@@ -1,0 +1,412 @@
+#! /bin/sh
+# This is a shell archive.  Remove anything before this line, then unpack
+# it by saving it into a file and typing "sh file".  To overwrite existing
+# files, type "sh file -c".  You can also feed this as standard input via
+# unshar, or by typing "sh <file", e.g..  If this archive is complete, you
+# will see the following message at the end:
+#		"End of shell archive."
+# Contents:  README.explainer explainer sgid-explainer.c
+# Wrapped by vixie@gw.home.vix.com on Wed Nov 17 01:32:22 1993
+PATH=/bin:/usr/bin:/usr/ucb ; export PATH
+if test -f 'README.explainer' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'README.explainer'\"
+else
+echo shar: Extracting \"'README.explainer'\" \(8636 characters\)
+sed "s/^X//" >'README.explainer' <<'END_OF_FILE'
+Xexplainer V1.0 16nov93
+Xpaul vixie <paul@vix.com>
+X
+X			COPYRIGHT 1993 VIXIE ENTERPRISES
+X	THIS SOFTWARE CAN BE USED WITHOUT RESTRICTION, BUT IT MAY NOT
+X	BE SOLD FOR PROFIT AND OR OTHERWISE REDISTRIBUTED IN ANY FORM,
+X	WITH OR WITHOUT FEE.  CONTACT THE AUTHOR FOR MORE INFORMATION.
+X
+Xthis is the tool i use to generate automatic mail replies to all usenet
+Xcomp.sources.unix submissions.  it keeps a database of remote addresses and
+Xlast response sent, and can be told to only send one per week per source
+Xaddress.
+X
+Xas an example, consider a departed employee whose login was "paul".  in 
+Xyour /etc/aliases database, put something like this:
+X
+X	paul: "|/usr/local/adm/mail/sgid-explainer paul"
+X
+Xsgid-explainer is a binary generated as follows:
+X
+X	cc -o /usr/local/adm/mail/sgid-explainer sgid-explainer.c
+X	chmod 2755 /usr/local/adm/mail/sgid-explainer
+X	chgrp games /usr/local/adm/mail/sgid-explainer
+X
+Xall sgid-explainer does is to set its real GID to its effective ("set") gid
+Xand then exec the explainer perl script.  this script is neccessary because
+Xperl scripts are not able to be setuid or setgid.  the choice of "games" as
+Xthe group is arbitrary; as long as it matches the gid of the "explainers"
+Xsubdirectory it can be any group.  i use "games" because it's relatively
+Xsafe.  truly secure systems would make a unique group for this purpose.
+X
+X	mkdir /usr/local/adm/mail/explainers
+X	chmod 775 /usr/local/adm/mail/explainers
+X	chgrp games /usr/local/adm/mail/explainers
+X
+Xinside the "explainers" subdirectory, you should put one file per address.
+Xfor example, if you use explainer in your /etc/aliases database with an
+Xargument of "paul", you will need something like this:
+X
+X	echo paul has left; try vixie@bsdi.com from now on. \
+X		> /usr/local/adm/mail/explainers/paul
+X
+Xexplainers files need no special modes or ownership.  the "explainers" 
+Xdirectory is used to maintain per-recipient databases of source addresses
+Xif you configure explainer to only send one response per week.  these
+Xdatabases are maintained with "dbm", which means they will actually have
+Xnames ending in ".dir" and ".pag" (on older systems) or ".db" (on newer
+Xones).  the full name of such a database might be:
+X
+X	/usr/local/adm/mail/explainers/paul.database.db
+X
+Xyou will need to install explainer itself:
+X
+X	cp explainer /usr/local/adm/mail/explainer
+X	chmod 755 /usr/local/adm/mail/explainer
+X
+Xafter having created the sgid-explainer binary as shown above, and installing
+Xexplainer itself, and creating the "explainers" directory as shown above, and
+Xcreating at least one "explainers" file, you are ready to start adding aliases
+Xto feed explainer.  you could use the form shown at the top of this document,
+Xbut it turns out that a slight variant is actually a whole lot more useful.
+Xfirst, though, here is the full glory of the explainer command syntax:
+X
+X	explainer [ { -noreturn | -noreturnbody } ] recipient [ aliases ]
+X
+Xthe -noreturn and -noreturnbody options are exclusive.  either or neither can
+Xbe specified, but not both.  specifying both will have undefined results.  the
+X-noreturn option tells explainer that the incoming message that triggers
+Xexplainer for this recipient should not be included in the automatic response.
+Xlikewise, -noreturnbody causes explainer to include only the headers of the
+Xinbound message; this is a helpful thing since it lets a sender determine
+Xwhich message they sent caused explainer to answer them.  if either -noreturn
+Xor -noreturnbody is specified, explainer assumes that you only want to send
+Xone such message per week per sender/recipient pair.  if neither is specified,
+Xexplainer answers all incoming mail for this address.  this seems bizarre but
+Xit is almost always the right combination of features for the real mail world.
+X
+Xa recipient must be specified, since this is what tells explainer which file
+Xfrom "explainers" to use when sending back the automatic response.  this file
+Xalso forms the base of the sender/time database, used to limit responses to 
+Xone per week per sender/recipient pair.  
+X
+Xyou can specify any number of additional "aliases", which are other names by
+Xwhich this user is known.  since explainer will only send a response if the
+Xrecipient's name or an alias is discovered in the headers of the incoming
+Xmessage, it is often neccessary to include several alternative names if the
+Xrecipient could have been reached indirectly.  for example if you have aliases:
+X
+X	vix: paul
+X	vixie: paul
+X
+Xthen when adding an explainer for this user, you would do something like this:
+X
+X	paul: "|/usr/local/adm/mail/explainer -noreturnbody paul vix vixie"
+X
+Xhowever, as mentioned earlier, there is actually a better way to accomplish
+Xthis.  it is common to have many hosts in a local network, and a recipient
+Xfor which you wish to install an explainer might have had accounts or at least
+Xmail reachability on most or all of these.  assuming that you are sharing your
+X/etc/aliases database using "rdist" or (gag me) YP/NIS, you probably already
+Xhave a way to cause all of a user's mail to be sent to a single host for local
+Xdelivery, by sharing some kind of global alias such as:
+X
+X	paul: paul@mailhub
+X
+Xif you change this to the form suggested above, then you will have to install
+Xexplainer and its data files on every host in your network, since local 
+Xdelivery (here, piping to a program called "sgid-explainer") will happen
+Xliterally everywhere.  this is bad.  the alternative is to only install
+Xexplainer on one host, even though the alias is visible on all other hosts
+Xas well; this causes unsightly mail bounces unless one happens to send the
+Xmail on or explicitly to the lucky host that actually has an explainer.  this
+Xis worse.  if, however, you change the shared, global alias to read:
+X
+X	paul: paul-gone@mailhub
+X
+Xthen you can add an alias, either locally on "mailhub" or globally, that says:
+X
+X	paul-gone:	"|/usr/local/adm/mail/explainer
+X			 -noreturnbody
+X			 paul
+X			 vix vixie"
+X
+X(note that sendmail will accept newlines as whitespace inside quotes in the
+Xaliases file, so the last example is quite legal.)
+X
+Xsince the paul-gone alias will only be evaluated on "mailhub", only that
+Xhost needs to have explainer and an explainers database.  
+X
+Xthe other helpful trick is to share an explainers file among multiple
+Xrecipients.  since it is likely that you have more than one former employee,
+Xit might be possible to use a single boiler plate message to handle all of
+Xthem.  to facilitate this, explainer will transform the string ``ALIASNAME''
+X(without the quotes, please) into the actual recipient while composing its
+Xreply to a sender.  so if you have an explainers file created as...
+X
+X	echo ALIASNAME has left vixie enterprises.  have a nice day. \
+X		>/usr/local/adm/mail/explainers/generic-goner
+X
+Xthen you can create any number of recipient-named symlinks to this file:
+X
+X	( cd /usr/local/adm/mail/explainers; ln -s generic-goner paul )
+X
+Xsince the explainers text file is never written on by explainer itself, it
+Xis safe to share them in this manner.  the sender/time database is still
+Xcreated on a per-recipient basis, so you might end up with a lot of those.
+Xin practice this is no big deal.
+X
+Xone last trick, then you can go play with it all.  since the response message
+Xfrom explainer will include the hostname that explainer runs on, it is often
+Xconvenient to give your recipients fuller names than we've shown so far since
+Xthe host which runs explainer might not be obviously related to the one the
+Xsender thought they were sending to.  getting mail saying that some user called
+X"paul@office.home.vix.com" is sending you an automated response is not as
+Xuseful as getting it from "paul@vix.com", which is more likely to be the
+Xaddress you sent your mail to in the first place.  explainer makes this hard,
+Xsince it was written for a network without this particular constraint in its
+Xtopology.  however, you can fool it by using the "%-hack" notation in your
+Xrecipient names.  that is, an alias of the form:
+X
+X	paul-gone:	"|/usr/local/adm/mail/explainer
+X			 -noreturnbody
+X			 paul%vix.com
+X			 vix vixie"
+X
+Xand then make your explainers text file have a % in its name, as in:
+X
+X	( cd /usr/local/adm/mail/explainers; ln -s generic-goner paul%vix.com )
+X
+XUNIX(tm) systems are extremely permissive about special characters in file
+Xnames, so this will actually work.  the sender/time database would be called:
+X
+X	/usr/local/adm/mail/explainers/paul%vix.com.database.db
+X
+Xwhich is ugly, true.  but it's better than nothing, and explainer's replies
+Xwill now appear to come from "paul%vix.com@office.home.vix.com" which is not
+Xpretty but conveys more of the actual intent of the sender and is therefore
+Xlikely to be more useful.
+END_OF_FILE
+if test 8636 -ne `wc -c <'README.explainer'`; then
+    echo shar: \"'README.explainer'\" unpacked with wrong size!
+fi
+# end of 'README.explainer'
+fi
+if test -f 'explainer' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'explainer'\"
+else
+echo shar: Extracting \"'explainer'\" \(3932 characters\)
+sed "s/^X//" >'explainer' <<'END_OF_FILE'
+X#! /usr/bin/perl
+X
+X# $Id: explainer,v 1.1 1993/07/29 19:06:27 vixie Exp vixie $
+X
+X#			COPYRIGHT 1993 VIXIE ENTERPRISES
+X#	THIS SOFTWARE CAN BE USED WITHOUT RESTRICTION, BUT IT MAY NOT
+X#	BE SOLD FOR PROFIT AND OR OTHERWISE REDISTRIBUTED IN ANY FORM,
+X#	WITH OR WITHOUT FEE.  CONTACT THE AUTHOR FOR MORE INFORMATION.
+X
+X# explainer - tell folks not to use some mailing list
+X# vixie 16nov93 [made database only affect reply if -noreturn[body] is set]
+X# vixie 08apr93 [added -noreturnbody option, additional recipient checking]
+X# vixie 05apr93 [generalized, added -noreturn option]
+X# vixie 16jul92 [added recipient substitution in explainer file text]
+X# vixie 18apr92 [added %DoNotReply]
+X# vixie 17apr92 [generalized from gatekeepers-explainer]
+X# vixie 17apr92 [cloned from ftpmail's mail-target]
+X
+X$| = 1 if $debug;
+Xchop($hostname = `/bin/hostname`);
+X
+X$noReturn = 0;
+X$noReturnBody = 0;
+X$minHistoryAge = 7*24*60*60;
+X$ExplainFileFmt = '/usr/local/adm/mail/explainers/%s';
+X%DoNotReply = (
+X	'mailer-daemon', '',
+X	'nobody', '',
+X	'postmaster', '',
+X	'post-mast', '',
+X	'vacation', '',
+X	'listserv', '',
+X	'list-serv', ''
+X);
+X($LOCK_EX, $LOCK_UN) = (2, 8);
+X@Aliases = ();
+X
+Xforeach (@ARGV) {
+X	if (/^\-/) {
+X		$_ = $';
+X		if ($_ eq 'noreturn') {
+X			$noReturn++;
+X		} elsif ($_ eq 'noreturnbody') {
+X			$noReturnBody++;
+X		} else {
+X			die "bad argument to $0: '-$_'\n";
+X		}
+X	} else {
+X		if (defined($Recip)) {
+X			push(@Aliases, $_);
+X		} else {
+X			$Recip = $_;
+X		}
+X	}
+X}
+Xdie "usage: $0 {-noreturn[body]} recip [alias ...]\n" unless defined($Recip);
+X
+X$explainer = sprintf($ExplainFileFmt, $Recip);
+Xopen(explainer) || die "$explainer: $!";
+Xflock(explainer, $LOCK_EX);
+Xif ($noReturn || $noReturnBody) {
+X	$useHistory = dbmopen(history, "$explainer.history", 0664);
+X} else {
+X	$useHistory = 0;
+X}
+X
+X#
+X# grab headers. this is standard code that ought to be in a library
+X#
+X$full_header = "";
+X$prev_header = "";
+Xwhile (<stdin>) {
+X	if (/^\n$/) { last; }		# blank line ends headers
+X	$full_header .= $_;
+X	if (/^[ \t]/) {
+X		# leading whitespace means continuation
+X		$header = $prev_header;
+X		$value = $_;
+X	} else {
+X		/^([\w-]*):(.*\n)$/;
+X		$header = $1;
+X		$value = $2;
+X	}
+X	$prev_header = $header;
+X	$header =~ tr/A-Z/a-z/;		# make header lower-case
+X	$headers{$header} .= $value;
+X}
+X#
+X# got headers, next line read will be first body line, blank line was eaten
+X#
+X
+X# --- find default reply address ---
+X#
+X$reply = "nobody\n";
+Xif ($headers{"reply-to"} ne undef) {
+X	$reply = $headers{"reply-to"};
+X} elsif ($headers{"from"} ne undef) {
+X	$reply = $headers{"from"};
+X} elsif ($headers{"sender"} ne undef) {
+X	$reply = $headers{"sender"};
+X}
+Xchop $reply;
+X$reply = &ExtractAddr($reply);
+X
+Xexit 0 if (defined($DoNotReply{$reply}));
+X
+X$toUs = 0;
+Xfor $header ('to', 'cc', 'resent-to', 'resent-cc') {
+X	($us = $_) =~ s/\W/\\$&/g;
+X	for ($Recip, @Aliases) {
+X		$toUs++ if ($headers{$header} =~ /$us/i);
+X	}
+X}
+Xexit 0 unless $toUs;
+X
+Xif ($useHistory && defined($history{$reply})) {
+X	$last = $history{$reply};
+X	exit 0 if (time - $last) < $minHistoryAge;
+X}
+X
+X#
+X# send back an informative message
+X#
+X
+Xif ($debug) {
+X	open(sm, ">&STDOUT");
+X	local($_) = select(sm); $| = 1; select($_);
+X} else {
+X	open(sm, "|/usr/sbin/sendmail -fnobody -oi -t") || die "sendmail: $!";
+X}
+X
+Xprint sm
+X	"From: auto-reply daemon for $Recip <nobody>\n" .
+X	"To: $reply\n" .
+X	"Subject: your mail to <$Recip@$hostname>\n" .
+X	"Precedence: bulk\n" .
+X	"\n";
+X
+Xwhile (<explainer>) {
+X	s/ALIASNAME/$Recip/;
+X	print sm $_;
+X}
+Xclose(explainer);
+X
+Xif (! $noReturn) {
+X	print sm "\n-------- Your Message\n\n";
+X	print sm $full_header;
+X	print sm "\n";
+X	if ($noReturnBody) {
+X		print sm "(message body elided)\n";
+X	} else {
+X		print sm <stdin>;
+X	}
+X	print sm "\n-------- End of Included Message\n";
+X	close(sm);
+X}
+X
+Xif ($useHistory) {
+X	$history{$reply} = time;
+X	dbmclose(history);
+X}
+Xflock(explainer, $LOCK_UN);
+X
+Xexit 0;
+X
+Xsub ExtractAddr {
+X	local($_) = @_;
+X
+X	$_ = $`.$' while (/\(.*\)/);
+X	$_ = $1    while (/\<(.*)\>/);
+X	s/^\s+//;
+X	s/\s+$//;
+X	y/A-Z/a-z/;
+X	return $_;
+X}
+END_OF_FILE
+if test 3932 -ne `wc -c <'explainer'`; then
+    echo shar: \"'explainer'\" unpacked with wrong size!
+fi
+chmod +x 'explainer'
+# end of 'explainer'
+fi
+if test -f 'sgid-explainer.c' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'sgid-explainer.c'\"
+else
+echo shar: Extracting \"'sgid-explainer.c'\" \(394 characters\)
+sed "s/^X//" >'sgid-explainer.c' <<'END_OF_FILE'
+X/*
+X #			COPYRIGHT 1993 VIXIE ENTERPRISES
+X #	THIS SOFTWARE CAN BE USED WITHOUT RESTRICTION, BUT IT MAY NOT
+X #	BE SOLD FOR PROFIT AND OR OTHERWISE REDISTRIBUTED IN ANY FORM,
+X #	WITH OR WITHOUT FEE.  CONTACT THE AUTHOR FOR MORE INFORMATION.
+X */
+X
+Xmain(int argc, char *argv[], char *envp[]) {
+X	extern errno;
+X	setrgid(getegid());
+X	execve("/usr/local/adm/mail/explainer", argv, envp);
+X	exit(errno);
+X}
+END_OF_FILE
+if test 394 -ne `wc -c <'sgid-explainer.c'`; then
+    echo shar: \"'sgid-explainer.c'\" unpacked with wrong size!
+fi
+# end of 'sgid-explainer.c'
+fi
+echo shar: End of shell archive.
+exit 0

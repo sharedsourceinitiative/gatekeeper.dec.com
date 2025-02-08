@@ -1,0 +1,25 @@
+                    CRL Technical Report 93/1
+
+        	A New Presumed Commit Optimization 
+			      for 
+			Two Phase Commit
+
+   	                  Butler Lampson
+			   David Lomet
+
+                        February 10, 1993
+
+Two phase commit (2PC) is used for coordinating the commitment
+of transactions in distributed systems.  The preferred 2PC optimization
+is the presumed abort variant, which reduces the number of messages when
+transactions are aborted, and eliminates the coordinator's need to retain
+information about aborted transactions.  The presumed commit 2PC variant
+provides a larger message reduction, but its coordinator must do additional
+logging.  We describe a new form of presumed commit that reduces the number of
+log writes while preserving the reduction in messages, bringing both these
+costs below those of presumed abort.  The penalty for this is the need to
+retain a small amount of crash related information forever.
+
+Keywords: commit protocol, two phase commit, protocol optimization, 
+presumed commit
+ 

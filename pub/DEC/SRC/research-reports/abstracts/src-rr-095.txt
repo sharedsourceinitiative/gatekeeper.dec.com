@@ -1,0 +1,20 @@
+
+			  AVAILABLE ELECTRONICALLY
+
+"Baby Modula-3 and a Theory of Objects"  
+Martin Abadi
+February 2, 1993.  43 pages
+
+Baby Modula-3 is a small, functional, object-oriented programming
+language.  It is intended as a vehicle for explaining the core
+of Modula-3, from a biased perspective: Baby Modula-3 includes
+the main features of Modula-3 related to objects, but not much
+else. To the theoretician, Baby Modula-3 provides a tractable, concrete 
+example of an object-oriented language, and we use it to study the
+formal semantics of objects.
+
+Baby Modula-3 is defined with a structured operational semantics and 
+with a set of static type rules. A denotational semantics guarantees 
+the soundness of this definition.
+
+

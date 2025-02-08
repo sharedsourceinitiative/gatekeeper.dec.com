@@ -1,0 +1,15 @@
+"WebL -- A Programming Language for the Web"
+Thomas Kistler and Hannes Marais
+Note #1997-029. December 1, 1997.
+
+In this paper we introduce a programming language for Web
+document processing called WebL. WebL is a high level, object-oriented
+scripting language that incorporates two novel features: service combinators
+and a markup algebra. Service combinators are language constructs that
+provide reliable access to web services by mimicking a web surfer's behavior
+when a failure occurs while retrieving a page. The markup algebra extracts
+structured and unstructured values from pages for computation, and is based
+on algebraic operations on sets of markup elements. WebL is used to quickly
+build and experiment with custom web crawlers, meta-search engines, page
+transducers, shopping robots, etc. 
+

@@ -1,0 +1,44 @@
+<HTML><HEAD><TITLE>
+Digital Systems Research Center: Report 63</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Research Report 63</H1>
+<P>
+<H1>Heap Usage in the Topaz Environment</H1>
+<HR>
+<H2>John D. DeTreville</H2>
+<b>August 20, 1990</b><BR><i> 42 pages</i>
+<P>
+Topaz, the experimental computing environment built and used at SRC,
+is implemented in the Modula-2+ programming language, which provides
+garbage collection. Garbage collection simplifies the construction
+of complex systems, and is tied to a number of other Topaz and Modula-2+
+features, such as runtime polymorphism, language safety, information-hiding,
+object cleanup, persistent objects, and network objects.
+<P>
+Although there are costs to using garbage collection, these are  avoided
+or tolerated in Topaz. For example, because Topaz must avoid noticeable
+interruption of service due to garbage collection, it uses a
+concurrent garbage collector.
+<P>
+Measurements show that the use of the REF heap in Topaz is similar
+in many ways to the use of heaps in Lisp-like environments, but different
+in others. For example, in typical large programs, the REF heap contains
+millions of bytes, with tens of thousands of objects from among
+hundreds of statically-declared types; objects of only a few types
+predominate. Although most objects are small, most bytes are in
+relatively large objects. Cycles are rare; most cycles are of size
+2. Most objects are short-lived, but not as short-lived as in Lisp-like
+environments that allocate large amounts of ephemeral data on the
+heap. 
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-063.ps.Z">PostScript compressed with UNIX compress</A></B> -- 320 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-063.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 224 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-063.ps.zip">PostScript compressed with ZIP</A></B> -- 224 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-063.ps">PostScript</A></B> -- 896 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-063.pdf">Portable Document Format (PDF)</A></B> -- 576 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

@@ -1,0 +1,44 @@
+Sun Jan  2 20:56:42 PST 2005
+welch@acm.org
+ 
+exmh is a TCL/TK based interface to the MH mail system.
+MH can be found at http://www.mhost.com/nmh/
+Version 2.7.2 requires Tcl/Tk 8.3 or higher - works with
+the latest (8.4.5)
+
+All the docs have moved into html and are viewable from within
+the installer as well as from within a running exmh.
+The exmh home page is
+http://www.beedub.com/exmh/
+Exmh builds on many related software packages:
+http://www.beedub.com/exmh/software.html
+Exmh sources live at SourceForge under
+http://sourceforge.net/projects/exmh/
+
+To install, run
+
+wish exmh.install
+
+You can send me email with the word "exmh" in the subject,
+but you may get better response from the exmh-users mailing list.
+Subscribe via "exmh-users-request@redhat.com"
+Send a message whose subject line reads 'subscribe' and whose
+From or Reply-To line contains the email address to add.
+
+Thanks to the dozen or so folks that have write access to
+the CVS code base who continue to add features and fix bugs.
+You see these folks listed in the exmh.CHANGES file:
+
+cwg		Chris Garrigues <cwg-exmh@DeepEddy.Com>
+iko		Anders Hammarquist <iko@cd.chalmers.se>
+haldevore	Hal DeVore <haldevore@earthling.net>
+jbeck		John Beck <jbeck@eng.sun.com>
+slipcon		Scott Lipcon <slipcon@mercea.net>
+gruber		Markus Gruber <gruber@eikon.tum.de>
+jrennie		Jason Rennie <jrennie@justresearch.com>
+valdis		Valdis.Kletnieks@vt.edu
+bmah		bmah@CA.Sandia.GOV (Bruce A. Mah)
+kchrist		Kevin.Christian@lsil.com
+jmorzins	Jacob Morzinski <jmorzins@MIT.EDU>
+aer		Anders Eriksson	<aer@users.sourceforge.net>
+stanton		Scott Stanton <stanton@users.sourceforge.net>

@@ -1,0 +1,137 @@
+
+This is an announcement for yet another GUI builder for Motif. At this point
+in time the tool has very little useful functionality (can't save the interface,
+etc...), but what it does show, is the concept.
+What I am really interested in, is if there are any suggestions, improvements,
+critizism, flames ... Since this is only a prototype I can still change, add,
+improve many features. Eventually I will have to rewrite this anyway, since
+at the moment it is a terrible C and C++ HACK !! So don't start complaining
+about the pathetic code :-), you can though, if it makes you feel better :-D
+
+Anyway, useful (or useless) suggestions are welcome.
+
+Unfortunately I have not created any documentation, since this is only
+a prototype. But the initial design was not to allow the user to make any
+fatal mistakes, so if it's an illegal thing under motif, the tool won't let
+you do it (well, most of the time anyway).
+
+A short summary:
+
+  Motif Guide - A graphical approach to UI design.
+
+  "Motif Guide" is a programmers tool to build Motif compliant user
+interfaces by graphically designing the user interface within the 
+tool and then generating the corresponding Motif "C" code to be 
+linked with the rest of the application.
+
+  Essentially "Motif Guide" lets the user (programmer) design a user
+interface through an easy to use point and click GUI that will do a
+certain amount of error checking so that invalid combinations of
+Motif "Widgets" are not allowed. This will prevent the programmer from
+making costly mistakes will would otherwise require large amounts of
+debugging time.
+
+  User Interfaces generated with this application are essentially bug
+free, allowing the programmer to concentrate his efforts on the actual 
+application code.
+
+  "Motif Guide" supports all Motif 1.2.3 widgets and (at the moment) most
+of their resources. I plan to add the Motif 2.0 widgets at some time in
+the future.
+
+  One of the most daunting tasks of a Motif programmer, is keeping track
+of the attachments between widgets ( the relationship of one widget to
+its neighbor(s) and its parent) under the form. "Motif Guide" resolves 
+this issue by supplying a "Constraint(Layout) Editor" which allows the
+programmer to graphically view and modify those attachments. (Left mouse
+button attaches, middle mouse button moves and right mouse button displays
+the current attachments in a dialog).
+
+  Resources can be modified through the use of a "Widget Resource Editor" 
+and a "Core Resource Editor" which seperates each widgets resources based
+on their wether they are core resources or other resources.
+
+(Hmmm... only the core resources are working, haven't gotton around to the
+Widget resources yet)
+
+  A "Callback Editor" and a "Documentation Editor" are currently under
+design. The "Callback Editor" allows programmers to enter code for hooks
+to the main application, and the "Documentation Editor" makes it
+possible to enter documentation about widgets and/or groups of widgets,
+which will then be included in the generates source/resource code.
+
+It will definetly help, if you have the Motif/Xt/X11 manuals.
+
+In order for the code to be generated in the correct place and with the
+correct cflags/includes/libs you must select the Option Editor from the
+main menu and the the code generation option, before you start generating
+code. Otherwise the code would be generated into the current directory.
+
+Have fun playing with it.
+
+
+
+The source code is available from public.x.org in /contrib/devel_tools/
+
+  as Guide.0.4.tar.gz
+  
+  when uncompressed and untarred then following directory structure appears:
+  
+  Guide.0.4/src         <- all source code (C and C++)
+           /src/project <- this is where the tool will put generated code
+             
+  The fun part is compiling this beast. You will most likely need gcc 2.7.2
+with the template patch and the 2.7.2 libg++ library etc...
+
+I haven't had time to play with Gnu's configure utility so in order to
+compile you need to edit the Makefile (only one) to reflect your systems
+library and include file locations. (should be straight forward)
+
+PLEASE DON'T ASK ME ABOUT OTHER COMPILERS! I AM AS CLUELESS AS YOU ! 
+
+   .    _  .     _____________
+   |\_|/__/|    /             \
+  / / \/ \  \  / Happy! Happy! \
+ /__|O||O|__ \ \   Joy! Joy!   /
+|/_ \_/\_/ _\ | \  ___________/
+| | (____) | ||  |/
+\/\___/\__/  // _/
+(_/         ||
+ |          ||\
+  \        //_/
+   \______//
+  __|| __||
+ (____(____) 
+
+(Well at least I will pretend to be clueless)
+
+
+Anyone willing to write extensions for this beast is welcome to do so, I think
+I will need a font editor, a pixmap editor, some kind of color selector...
+
+This may be an awsome college/gradute/undergradute project :-D (...me rolling
+on the ground laughing histerically ...)
+
+Anyway, I won't refuse anyones help.
+
+
+
+Olaf
+
+
+
+      _____                         .     .
+     '    \\                  .                .                      |>>
+         O//             .                        .                   |
+        \_\          .                              .                 |
+        | |      .                                   .    .  .        |
+       /  |  .            Olaf Becker                 . .      .      |
+      /  .|           obecker@mprgate.ca               .        ...o  |
+
+--------------------------------------------------------------------------
+The sight of a bald eagle has thrilled campers for generations.  The
+sight of a bald man, however, does absolutely nothing for the eagle.
+--------------------------------------------------------------------------
+
+
+

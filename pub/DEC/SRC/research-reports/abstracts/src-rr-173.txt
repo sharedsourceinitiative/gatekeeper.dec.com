@@ -1,0 +1,16 @@
+"High-Performance Web Crawling"
+Marc Najork and Allan Heydon
+Report #173, September 26, 2001. <p>
+
+High-performance web crawlers are an important component of many web services.
+For example, search services use web crawlers to populate their indices,
+comparison shopping engines use them to collect product and pricing information
+from online vendors, and the Internet Archive uses them to record a history of the
+Internet. The design of a high-performance crawler poses many challenges, both
+technical and social, primarily due to the large scale of the web. The web crawler
+must be able to download pages at a very high rate, yet it must not overwhelm any
+particular web server. Moreover, it must maintain data structures far too large to
+fit in main memory, yet it must be able to access and update them efficiently. This
+chapter describes our experience building and operating such a high-performance
+crawler.
+

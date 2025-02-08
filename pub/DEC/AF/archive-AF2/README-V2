@@ -1,0 +1,198 @@
+
+
+                      AudioFile Version 2, Release 2
+
+                                README
+
+Introduction
+------------
+
+The AudioFile System (AF) is a device-independent network-transparent
+audio server.  With AudioFile, multiple audio applications can run
+simultaneously, sharing access to the actual audio hardware.
+
+Network transparency means that application programs can run on
+machines scattered throughout the network.  Because AF permits
+applications to be device-independent, applications need not be
+rewritten to work with new audio hardware. AudioFile does for sound
+what the X Window System does for text and graphics.
+
+Development of AudioFile began in 1989 at Digital Equipment
+Corporation's Cambridge Research Laboratory, but it builds on ideas
+from earlier work.  We originally envisioned AudioFile as a server to
+support all the capabilities of the CRL "LoFi" audio hardware running
+on the DECstation 5000 workstation, but we soon began adding support
+for a variety of other platforms and audio hardware.
+
+This distribution of AudioFile includes device drivers for several
+audio devices, server code for a number of platforms, a programming
+API and library, out-of-the-box core applications, and a number of
+"contributed" applications.  The key difference between the core and
+contributed applications is that the many of the contrib clients also
+depend on the TCL/Tk graphics toolkits distributed by the University
+of California.  (The AudioFile distribution does not include TCL/Tk,
+but we tell you where to get it.)
+
+With AudioFile, it is easy to incorporate audio into applications.
+Simple "play" and "record" applications are included, or you can write
+your own using the AudioFile API and client library.  AudioFile allows
+applications to generate and process audio in real-time but it also
+permits more leisurely applications.  AudioFile is quite resistant to
+the vaguaries of scheduling and operating systems that can make
+handling audio difficult.  We have successfully used AudioFile for
+both trivial applications (audio BIFF) and complex applications
+(real-time teleconferencing, speech synthesis and recognition.)
+AudioFile may not be appropriate for all purposes, but we have found
+it to be a versatile and effective tool.
+
+We believe that AudioFile is highly portable, and that it should be
+straightforward to add additional support for other systems equipped
+with audio hardware.
+
+AudioFile is distributed in source form, with a copyright allowing
+unrestricted use for any purpose except sale (see the Copyright
+notice).
+
+We would like to encourage other organizations to add support to
+AudioFile for additional platforms, operating systems, and devices,
+and to contribute additional applications.
+
+We have set up a mailing list for discussions of AudioFile:
+
+	af@crl.dec.com
+
+send mail to af-request@crl.dec.com to be added to this list.
+
+AudioFile Server
+----------------
+This distribution of AudioFile includes server support for Digital
+RISC systems running Ultrix, Digital Alpha AXP systems running OSF/1,
+and Sun Microsystems SPARCstations running SunOS.  The servers support
+audio hardware ranging from the built-in CODEC audio on SPARCstations
+and Personal DECstations to 48 KHz stereo audio using the DECaudio
+TURBOchannel module.  In addition, server support is present for
+telephone access devices such as DECaudio.
+
+AudioFile API
+-------------
+The distribution includes C language bindings to the protocol that
+make it easy to write distributed audio applications.
+
+AudioFile Clients
+-----------------
+This distribution includes a number of core applications for
+recording, playback, telephone control, device control, and access
+control.
+
+AudioFile "Contrib" Clients
+---------------------------
+The distribution includes a number of contributed applications
+including an audio file browser, an FFT spectrogram display, and
+multicast network audio service.
+
+Kit Location
+------------
+
+The kit is located at ftp site crl.dec.com (Internet 192.58.206.2) in
+/pub/DEC/AF.  The kit is contained in a compressed tar file named
+AF2R2.tar.Z.  Use anonymous ftp to retrieve the file,
+
+	% ftp crl.dec.com
+	...
+	ftp> cd /pub/DEC/AF
+	ftp> binary
+	ftp> get AF2R2.tar.Z
+
+The kit is shipped as a compressed tar file.  To unpack the kit,
+
+	% cd <audio_root>
+	% zcat AF2R2.tar.Z | tar xpBf -
+
+We also provide a sample kit of Hi-Fi sound bites for use with
+DECaudio.  If you have a DECaudio, you might considering retrieving
+AF2R2-other.tar.Z and unpack this kit in the same manner as described
+above.
+
+Other files available in this same directory are the release notes,
+copyright notice, and this README file.
+
+Roadmap
+-------
+
+Several directories will be created in your local audio root
+directory.  The "AF" sub-tree contains the source code for the
+AudioFile server, the AudioFile client libary, and several AudioFile
+client programs.  The "devices" sub-tree contain the device specific
+code not related to the AF system.  For example, the LoFi device
+library, LoFi device driver, and test programs are included here.
+Finally, "sound_files" contains several sound bites you can use while
+verifying the kit installation.
+
+The kit requires approximately 6 Megabytes and an additional 8
+Megabytes for building and installing the release.  The HiFi sound
+files require another 4 Megabytes approximately.
+
+Documents
+---------
+
+You should read the following documents prior to installing this software.
+
+o  AF Release Notes - <audio_root>/AF/RELNOTES.{txt,PS}
+
+o  Copyrights information - <audio_root>/COPYRIGHTS
+
+Suggested Sequence
+------------------
+
+o  Retrieve the software package and create a local audio hierarchy.
+
+o  Read the documents mentioned above.
+
+o  Build the AudioFile release (after unpacking the kit.)
+
+	% cd <audio_root>
+
+   Customize the build environment for your local site according to
+   the information contained in the release notes.  Follow the directions
+   there in order to build this release.
+
+   Typing,
+
+	% make Help
+
+   in the <audio_root> directory can be used as a reminder of the steps
+   in the build process.
+
+   You might want to save the output of the build and install session
+   in order to identify problems should any occur.
+
+o  If you are using LoFi/DECaudio or the native audio on DECstations or
+   Alpha AXP workstations for the first time, see the instructions in
+   one of these directories for information about the hardware and 
+   device drivers.
+
+   For the native DECstation audio device,
+		 <audio_root>/devices/maxine/driver/mips.src/bba.4 man page
+
+   For the native Alpha AXP workstation audio device,
+		 <audio_root>/devices/axp/driver/README
+
+   For LoFi/DECaudio,
+
+	On Ultrix/RISC (MIPS):
+		 <audio_root>/devices/lofi/driver/mips.src/lofi.4 man page
+
+	On DEC OSF/1 Alpha:
+		 <audio_root>/devices/lofi/driver/alpha.src/lofi.7 man page
+		 <audio_root>/devices/lofi/driver/alpha.src/README
+
+o  Test the AudioFile server and clients.
+
+o  Have fun!
+
+Copyrights
+----------
+
+See the file <audio_root>/COPYRIGHTS for the full copyright and 
+permission notice.
+

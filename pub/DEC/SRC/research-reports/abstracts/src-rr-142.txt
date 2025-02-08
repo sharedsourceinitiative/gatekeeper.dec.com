@@ -1,0 +1,20 @@
+"Collaborative Active Textbooks: A Web-Based Algorithm Animation
+System for an Electronic Classroom"
+Marc H. Brown and Marc A. Najork
+Report #142, May 31, 1996. 26 pages.
+
+
+This report describes CAT, a Web-based algorithm animation system.  
+CAT augments the expressive power of Web pages for publishing
+passive multimedia information with a full-fledged interactive
+algorithm animation system.  It improves on previous Web-based
+algorithm animations by providing a framework that makes it easy to
+construct new animations, including those that involve multiple views.
+Because views of the same running algorithm may reside on different
+machines, CAT is particularly well-suited for electronic
+classrooms. This strategy is an improvement over the electronic classroom
+systems we are aware of, which simply display the same X window on
+multiple machines. We believe our framework generalizes to electronic
+textbooks in arbitrary domains.
+
+

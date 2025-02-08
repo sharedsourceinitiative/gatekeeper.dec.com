@@ -1,0 +1,117 @@
+XmString Resource Type Converter
+================================
+
+
+Multiple Fonts in Labels and Strings and Help messages,
+specified from the Resource Database.
+
+
+What Is It ?
+------------
+
+This is a Resource Type Converter that converts values of type "String"
+into values of type "XmString".
+
+In addition the input String can contain directives to allow multiple fonts
+in the resulting XmString.
+
+
+Why ?
+-----
+
+An XmString value used in combination with a "FontList" can contain
+multiple fonts.
+
+Having multiple fonts is useful when you have strings with multiple lines,
+to highlight something or just because it looks pretty.
+Especially long text such as "Help" lines look much better when you
+use multiple fonts.
+
+This can be easily done in C with XmStringCreateLtoR() and XmStringConcat().
+
+However there is currently (Motif 1.2.3 or before) no way to specify
+strings with multiple fonts from a Resource File.
+
+Note that you can already specify multiple fonts in the "FontList" entry from
+the Resource File.
+
+Some examples of resources where you can use this Converter:
+
+	messageString		(XmMessageBox)
+	labelString		(XmLabel, XmRowColumn as OptionMenu)
+	promptString		(XmCommand)
+	titleString		(XmScale)
+
+
+Usage
+-----
+
+ 0) register the Converter.
+    It is important that we register our Converter after Motif
+    has registered its Converter.
+    This usually happens on VendorShell's Class Initialize.
+    (so that's after XtVaAppInitialize())
+    Alternatively, you can force Motif's Converters to register before you
+    call "XtVaAppInitialize()" by calling
+    "XtInitializeWidgetClass(applicationShellWidgetClass)" and
+    "XmRegisterConverters()", and then register.
+
+ 1) Have your "fontList" resource contain the Tags for the different fonts
+    you want.  These are simply arbitrary names (BOLD, BIG, OBLIQUE ...)
+    (see XmFontList(3X) man page for more info).
+
+ 2) Use those Tags in any resource of type XmString, start with "<"
+    and end with ">" to set the current Tag. "<>" returns to the default Tag
+    (that's the first Font in the "fontList")
+
+    If you want to enable Multiple Fonts, the input string must start with "<".
+    (this is only for performance reasons, although the penalty is neglectable).
+
+
+Example Usage
+-------------
+
+  *labelFontList:   lucidasans-12,lucidasans-bold-12=BOLD,lucidasans-bold-18=BIG
+
+  *messageString:   <BIG>Warning !<>Do <BOLD> Not <> Continue !
+
+  *messageString:   <>X Windows is <BOLD> Great !
+
+  *labelString:     <BIG>XIT <SLANT>Sample Table\n<>HP Version
+
+
+
+Comments are always welcome.
+
+You can use this source for whatever you like,
+but I would appreciate leaving my name on it.
+Tanx.
+
+
+* I REPRESENT MYSELF AND ONLY MYSELF.					      *
+*									      *
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  *
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,    *
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL     *
+* THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN  *
+* AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN        *
+* CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  *
+
+
+Have fun,
+
+Krist from planet X.
+
+24/2/95
+
+-------------------------------------------------------------------------------
+Krist Paquay
+The Preston Group
+488 Victoria Street
+Richmond Victoria  3121
+Australia
+
+Tel:	+61 (3) 428 88 99
+Fax:	+61 (3) 427 19 69
+E-mail:	krist@tpg.tpg.oz.au
+-------------------------------------------------------------------------------

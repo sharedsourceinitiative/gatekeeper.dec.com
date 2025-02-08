@@ -1,0 +1,54 @@
+$Id: Button.README,v 1.5 1999/09/01 16:14:05 falk Exp $
+
+Button 1.0 -- Various button widgets.
+
+  Button is a generic widget used as a superclass for other widgets
+  RockerSwitch is a button which looks like a panel switch
+  XpmButton is a button which displays arbitrary pixmaps; requires libXpm.
+
+  Includes these handy utility modules:
+    Gcs.c -- utilities for creating shadow colors; used by RockerSwitch
+    pixmap.c -- String to Pixmap resource converter; used by XpmButton.
+
+  You are encouraged to write your own subclasses.  If you
+  create any particularly pretty ones; please send them to me
+  -- falk@falconer.vip.best.com
+
+  To view the man page:  tbl Button.man | nroff -man
+
+
+HOW TO BUILD
+
+  It should be sufficient to type
+	
+	xmkmf ; make
+
+  This will build the widget and a demo program.
+
+  Alternatively, makefiles for Solaris, SunOS and Linux have been
+  provided.
+
+  To view the man page:
+
+  	tbl Button.man | nroff -man
+
+
+AUTHOR
+	Edward A. Falk <falk@falconer.vip.best.com>
+
+
+
+
+LICENSE
+
+    Copyright © 1999    Edward A. Falk
+
+    The X Consortium, and any party obtaining a copy of these files
+    from the X Consortium, directly or indirectly, is granted, free of
+    charge, a full and unrestricted irrevocable, world-wide, paid up,
+    royalty-free, nonexclusive right and license to deal in this
+    software and documentation files (the "Software"), including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and sell copies of the Software, and to
+    permit persons who receive copies from any such party to do so.
+

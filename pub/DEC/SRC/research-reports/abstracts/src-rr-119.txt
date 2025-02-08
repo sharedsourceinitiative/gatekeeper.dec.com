@@ -1,0 +1,12 @@
+
+		AVAILABLE ELECTRONICALLY
+
+"How to Write a Long Formula"
+Leslie Lamport
+December 25, 1993.  6 pages
+
+Standard mathematical notation works well for shortformulas, but not
+for the longer ones often written by computer scientists.  Notations
+are proposed to make one or two-page formulas easier to read and reason
+about.
+

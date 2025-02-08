@@ -1,0 +1,33 @@
+
+			AVAILABLE ELECTRONICALLY
+
+"Heap Usage in the Topaz Environment"
+John D. DeTreville
+ August 20, 1990.  42 pages
+
+Author's abstract
+
+Topaz, the experimental computing environment built and used at SRC,
+is implemented in the Modula-2+ programming language, which provides
+garbage collection. Garbage collection simplifies the construction
+of complex systems, and is tied to a number of other Topaz and Modula-2+
+features, such as runtime polymorphism, language safety, information-hiding,
+object cleanup, persistent objects, and network objects.
+
+Although there are costs to using garbage collection, these are  avoided
+or tolerated in Topaz. For example, because Topaz must avoid noticeable
+interruption of service due to garbage collection, it uses a
+concurrent garbage collector.
+
+Measurements show that the use of the REF heap in Topaz is similar
+in many ways to the use of heaps in Lisp-like environments, but different
+in others. For example, in typical large programs, the REF heap contains
+millions of bytes, with tens of thousands of objects from among
+hundreds of statically-declared types; objects of only a few types
+predominate. Although most objects are small, most bytes are in
+relatively large objects. Cycles are rare; most cycles are of size
+2. Most objects are short-lived, but not as short-lived as in Lisp-like
+environments that allocate large amounts of ephemeral data on the
+heap. 
+
+

@@ -1,0 +1,13 @@
+"Reduction in TLA"
+Ernie Cohen and Leslie Lamport
+Note #1998-005, March 10, 1998
+
+Reduction theorems allow one to deduce properties of a concurrent
+system specification from properties of a simpler, coarser-grained
+version called the reduced specification.  We present reduction
+theorems based upon a more precise relation between the original and
+reduced specifications than earlier ones, permitting the use of
+reduction to reason about a larger class of properties.  In
+particular, we present reduction theorems that handle general 
+liveness properties.
+

@@ -1,0 +1,8 @@
+"Tight Thresholds for the Pure Literal Rule"
+Michael Mitzenmacher
+Note #1997-011. June 17, 1997. 6 pages.
+
+We consider the threshold for the solvability of random k-SAT
+formulas using the pure literal rule.  We demonstrate how this
+threshold can be found by using differential equations to determine
+the appropriate limiting behavior of the pure literal rule.

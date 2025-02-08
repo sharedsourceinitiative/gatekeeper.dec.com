@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>File System</TITLE>
+<META NAME="description" CONTENT="File System">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node14.html">
+<LINK REL="previous" HREF="node12.html">
+<LINK REL="up" HREF="node11.html">
+<LINK REL="next" HREF="node14.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html274"
+ HREF="node14.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html270"
+ HREF="node11.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html264"
+ HREF="node12.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html272"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html273"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html275"
+ HREF="node14.html">Signals</A>
+<B> Up:</B> <A NAME="tex2html271"
+ HREF="node11.html">Topaz Operating System Interface</A>
+<B> Previous:</B> <A NAME="tex2html265"
+ HREF="node12.html">Reporting Errors</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION02042000000000000000">
+File System</A>
+</H2>
+<P><A NAME="262">&#160;</A>
+A UNIX process contains several components of mutable file system state
+that would cause problems for multithreaded programs, including the
+working directory, the table of file descriptor references, and the stream
+position pointer inside each file descriptor.  The Topaz design has made
+adjustments for each of these.
+<P><A NAME="263">&#160;</A>
+<A NAME="264">&#160;</A>
+A UNIX path name is looked up relative to the file system root if it
+begins with ``/''; otherwise it is looked up relative to the working
+directory.  Each process has its own working directory, which is initially
+equal to the parent's and may be changed using the <TT>chdir</TT> system call.
+Since looking up a short relative path name can be significantly faster
+than looking up the corresponding full path name, some UNIX programs use
+the working directory as a sort of ``cursor'', for example when
+enumerating a subtree of the file system.  To facilitate multithreaded
+versions of such programs (and modular programming in general), Topaz
+parameterizes the notion of working directory.  The <TT>OpenDir</TT> procedure
+accepts the path name of a directory, and returns a handle for that
+directory.  Every procedure that accepts a path name argument also accepts
+a directory handle argument that is used when the path name doesn't begin
+with ``/''.  The distinguished directory handle <TT>NIL</TT> can be used to
+refer to the initial working directory supplied when the process was
+created.
+<P><A NAME="268">&#160;</A>
+Part of the state maintained by UNIX for each process is a table with an
+entry for each open file held by the process.  An application program uses
+small nonnegative integer indexes in this table to refer to open files.
+In a multithreaded application it is desirable to avoid the need to
+serialize sequences of operations affecting the allocation of table
+entries (e.g., <TT>open</TT>, <TT>dup</TT>, and <TT>close</TT>).  To achieve this
+goal, the table indexes should be treated as opaque quantities: it should
+not be assumed that there is a deterministic relationship between
+successive values returned by operations such as <TT>open</TT>.
+(Single-threaded UNIX programs actually depend on being able to control
+the allocation of table indices when preparing to start another program
+image.  Topaz avoids this dependency, as described in Section
+<A HREF="node15.html#sec-processcreation">4.4</A>.)
+<P><A NAME="274">&#160;</A>
+<A NAME="275">&#160;</A>
+<A NAME="276">&#160;</A>
+Recall from the example in Section <A HREF="node8.html#sec-sharing">3.1</A> that the stream
+position pointer in a UNIX file descriptor causes interference when
+threads share the descriptor.  Topaz still implements these pointers so
+that Topaz and UNIX programs can share open files, but to allow multiple
+threads to share a file descriptor without having to serialize, Topaz
+provides additional procedures <TT>FRead</TT> and <TT>FWrite</TT> that accept a
+file position as an extra argument.
+<P><A NAME="280">&#160;</A>
+<A NAME="281">&#160;</A>
+<A NAME="282">&#160;</A>
+<A NAME="283">&#160;</A>
+The 4.2BSD UNIX file system interface contains a number of ad hoc
+multiplexing mechanisms that are described in Section <A HREF="node9.html#sec-adhoc">3.2</A>.
+These mechanisms allow a single-threaded UNIX process to overlap
+computation and input/output transfers that involve devices such as
+terminals and network connections.  Topaz simply eliminates these
+mechanisms (non-blocking mode, the <TT>select</TT> procedure, and asynchronous
+mode) and substitutes <TT>Read</TT> and <TT>Write</TT> procedures that block until
+the transfer is complete.  <TT>Read</TT> and <TT>Write</TT> are alertable when a
+transfer is not yet possible.  Note that Topaz violates guideline 2 of
+Section <A HREF="node10.html#sec-cancelling">3.3</A> by not providing nonalertable variants of
+<TT>Read</TT> and <TT>Write</TT>.  (For completeness, Topaz provides a <TT>Wait</TT>
+procedure that waits until a specified open file is ready for a transfer.)
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html274"
+ HREF="node14.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html270"
+ HREF="node11.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html264"
+ HREF="node12.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html272"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html273"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html275"
+ HREF="node14.html">Signals</A>
+<B> Up:</B> <A NAME="tex2html271"
+ HREF="node11.html">Topaz Operating System Interface</A>
+<B> Previous:</B> <A NAME="tex2html265"
+ HREF="node12.html">Reporting Errors</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,31 @@
+"A Practical, Robust Method for Generating Variable Range Tables"
+Caroline Tice and Prof. Susan L. Graham
+Report #165, September 15, 2000. 16 pages
+
+In optimized programs the location in which the current value of a
+single source variable may reside typically varies as the computation
+progresses.  A debugger for optimized code needs to know all of the
+locations -- both registers and memory addresses -- in which a
+variable resides, and which locations are valid for which portions of
+the computation.  Determining this information is known as the data
+location problem.  Because optimizations frequently move variables
+around (between registers and memory or from one register to another)
+the compiler must build a table to keep track of this information.
+Such a table is known as a variable range table. Once a variable range
+table has been constructed, finding a variable's current location
+reduces to the simple task of looking up the appropriate entry in the
+table.
+
+The difficulty lies in collecting the data for building the table.
+Previous methods for collecting this data depend on which
+optimizations the compiler performs and how those optimizations are
+implemented.  In these methods the code for collecting the variable
+location data is distributed throughout the optimizer code, and is
+therefore easy to break and hard to fix.  This paper presents a
+different approach.  By taking advantage of key instructions, our
+approach allows the collection of all of the variable location data in
+a single dataflow-analysis pass over the program.  This approach
+results in code for collecting the variable location information that
+is easier to maintain than previous approaches and that is almost
+entirely independent of which optimizations the compiler performs and
+of how the optimizations are implemented.

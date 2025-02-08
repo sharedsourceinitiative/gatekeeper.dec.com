@@ -1,0 +1,13 @@
+This paper describes an approach for verifying programs in the presence of data
+abstraction and information hiding, which are key features of modern program-ming
+languages with objects and modules. The paper focuses on the property of
+modular soundness, that is, the property that the separate verifications of the indi-vidual
+modules of the program suffice to ensure the correctness of the composite
+program. The paper introduces a new specification language construct, the ab-straction
+dependency, and argues that it is needed to achieve modular soundness
+in the presence of data abstraction and information hiding. This paper discusses
+in detail two varieties of abstraction dependencies: static and dynamic. The paper
+also presents a new technical definition of modular soundness as a monotonicity
+property of verifiability with respect to scope and uses this technical definition
+to formally prove the modular soundness of a programming discipline for static
+dependencies.

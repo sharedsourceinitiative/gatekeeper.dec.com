@@ -1,0 +1,25 @@
+"Dynamic Coscheduling on Workstation Clusters"
+Patrick G. Sobalvarro, Scott Pakin, William E. Weihl, and Andrew A. Chien
+Note #1997-017. March 14, 1997
+
+Coscheduling has been shown to be a critical factor in achieving
+efficient parallel execution in timeshared environments.  However, the
+most common approach, gang scheduling, has limitations in scaling, can
+compromise good interactive response, and requires that communicating
+processes be identified in advance.
+
+We explore a technique called dynamic coscheduling (DCS) which
+produces emergent coscheduling of the processes constituting a
+parallel job.  Experiments are performed in a workstation environment
+with high performance networks and autonomous timesharing schedulers
+for each CPU.  The results demonstrate that DCS can achieve effective,
+robust coscheduling for a range of workloads and background loads.
+Empirical comparisons to implicit scheduling and uncoordinated
+scheduling are presented.  Under spin-block synchronization, DCS
+reduces job response times by up to 20% over implicit scheduling while
+maintaining fairness; and under spinning synchronization, DCS reduces
+job response times by up to two decimal orders of magnitude over
+uncoordinated scheduling.  The results suggest that DCS is a promising
+avenue for achieving coordinated parallel scheduling in an environment
+that coexists with autonomous node schedulers.
+

@@ -1,0 +1,25 @@
+Well, I know there are plenty of editors out there already, but here is the
+one that I'm working on...I'm doing it mainly for the programming experience...
+
+I guess this can be called release 0.1 of browse...pretty straightforward...you
+can jump to a line, open files, save files, close one file to open another,and
+quit...
+
+In the next release, I should have figured out the best way to search for a
+substring in the text...and eventually I'll add a menu with some other Edit
+tools, unless I get a full-time position somewhere that I'm not doing any
+programming work...
+
+compile is straightforward, just type make and it should build with no problems
+but I haven't included all the necessary libraries for it to compile on a
+Solaris machine...
+
+on HP-UX, you may want to use gcc in the Makefile instead of cc if it gives you
+problems compiling the Motif stuff.
+
+Problems, comments and suggestions should be sent to stephen@unity.ncsu.edu
+
+Enjoy!
+
+Stephen Jackson
+

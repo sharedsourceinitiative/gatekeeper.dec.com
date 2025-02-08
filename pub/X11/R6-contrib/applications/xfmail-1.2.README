@@ -1,0 +1,385 @@
+$Id: README,v 2.10 1997/12/19 12:16:57 gena Exp $
+
+                  XFMail - XForms based mail reader for the
+                             X-Windows system
+
+                         Release 1.2 Patchlevel 0
+
+Copyright (c) 1995, 1996, 1997
+  Gennady B. Sorokopud (gena@NetVision.net.il)
+
+Copyright (c) 1995
+  Ugen J. S. Antsilevich (ugen@latte.worldbank.org)
+
+ Please read the Copyright file included in the distribution.
+
+Special thanks to:
+
+Dr. T.C. Zhao and Mark Overmars 
+	For their excellent XForms toolkit 
+
+Also I would like to thank all of the people who helped me debug XFMail
+by submitting bug reports, and also those who help make it more powerful
+by sending me many useful suggestions.
+
+Well done guys!
+
+
+		OVERVIEW
+
+XFMail is an X-Windows application for sending and receiving electronic mail.
+It uses the XForms GUI library toolkit by T.C. Zhao and Mark Overmars.
+
+It is partially compatible with mh style mailboxes but does not require any
+mh tools to be installed on the system.  You can browse your mh folders and
+messages using XFMail.
+
+It has a user-friendly interface and online help to make it easy to use.
+It implements most of the mail functionality in one program and it does not
+require any additional tools.
+
+The package was tested on:
+
+ - FreeBSD-2.x running XFree86-3.1
+ - Linux-1.2.2 and Linux-2.0 running XFree86-3.1.1 and XFree86-3.2
+   (and also on Linux/Alpha, Linux/Sparc and Linux/PPC)
+ - SunOS 4.1.3_U1 and 4.1.4 running OpenWindows.
+ - Solaris-2.x running OpenWindows.
+ - HPUX-10.01 running X11R5
+ - IRIX-5.x
+ - DEC OSF1 v. 3.2
+ - Pyramid DC/OS
+ - AT&T SVR4.0.4
+ - AIX-3.2.5
+ - UnixWare-2.1
+ - NetBSD
+ - BSDI-2.1
+ - DGUX
+
+Also i've got a number of reports about XFMail running on other systems
+(like Ultrix, SCO, ...)
+The development environment is FreeBSD.
+
+For the list of changes since 0.1-beta see the Changelog file included in the
+distribution. (Also check out the KNOWNBUGS file included in the distribution)
+
+XFMail's main features:
+
+ - A user friendly interface
+ - Full MIME support
+ - Configuration via internal dialog windows, instead of dotfiles
+ - Retrieves mail from POP/IMAP servers and the local mail spool
+ - Smart POP features
+ - Mail can be sent using sendmail, an SMTP gateway, or a POP server 
+ - Support for IMAP4 remote folders
+ - Supports MH and elm-style local mailboxes
+ - Multiple address books with mailing list support
+ - Flexible message filtering rules (incoming and outgoing)
+ - Support for faces and picons
+ - Multiple signatures with attachment rules
+ - Multi-lingual support
+ - PGP support (including PGP/MIME and PGP keyserver support)
+ - Configurable internal editor
+ - Nested folders
+ - Internal spell-checker
+ - Drag-and-Drop
+ - On-line help.
+ - Many other little nice features - just take a look!
+
+
+		WHERE TO GET IT
+
+You can FTP XFMail as:
+   ftp://Burka.NetVision.net.il/pub/xfmail/xfmail-1.2.tar.gz
+   ftp://ftp.uni-muenster.de/pub/xfmail/xfmail-1.2.tar.gz
+
+Take a look at XFMail's homepage: 
+http://Burka.NetVision.net.il/xfmail/xfmail.html
+
+
+		REQUIREMENTS
+
+In order to successfully compile XFMail on your system you need:
+
+ - The XForms-0.88 library and include files.  XForms for different platforms
+could be obtained from: ftp://einstein.phys.uwm.edu/pub/xforms/
+As an alternative, you can get the pre-compiled libforms.a/so library for 
+different platforms and the forms.h file from:
+ftp://Burka.NetVision.net.il/pub/xfmail
+
+ - The Xpm library.  This is included with most recent operating systems with
+X-Windows, but it can be obtained from:
+ftp://ftp.x.org/contrib/libraries/xpm-3.4j.tar.gz,
+ftp://avahi.inria.fr/pub/xpm/xpm-3.4j.tar.gz,
+ftp://ftp.wustl.edu/packages/X11R6/contrib-pub/libraries/xpm-3.4j.tar.gz
+
+Also you will need the GNU C compiler (gcc or compatible) to be installed on
+your system.
+
+As of version 1.2 XFMail makes use of a database library (ndbm). It is
+strongly recommended to install and use libgdbm, as some ndbm libraries seem
+to be very buggy. You can obtain libgdbm from:
+ftp://prep.ai.mit.edu/gnu/gdbm-1.7.3.tar.gz
+
+
+		INSTALLATION
+
+You can ftp pre-compiled binaries for the above systems from:
+ftp://Burka.NetVision.net.il/pub/xfmail/<platform>
+
+Also you can find XFMail packages for some OSes (in OS specific format).
+Look at OS distribution sites (like sunsite.unc.edu for Linux and
+freebsd.cdrom.com for FreeBSD) for more details.
+
+If you want to compile the package by yourself:
+
+ - First install the XForms toolkit library:
+gzip -d bxforms-<platform>.tgz
+tar -xf xforms.tar
+
+ - If you have root access on the system then
+su
+cd xforms
+make install
+ - If you don't have root access, go ahead and compile XFMail, but you will
+   have to tell XFMail where to look for the libforms.a and forms.h files.
+   You can do this by using the "--with-extra-includes=dir" and
+   "--with-extra-libraries=dir" options for configure.
+
+ - Unpack the xfmail.tar.gz archive with:
+gzip -d xfmail.tar.gz
+tar -xf xfmail.tar
+
+ - Go to the xfmail directory.
+./configure
+
+As of XFMail-1.2 configuration of XFMail is set up by a configure script.
+You can set a few options specific to XFMail when running configure
+(check out "configure --help" for all options):
+
+  --with-extra-includes=dir
+  --with-extra-libraries=dir
+configure will look at the specified directories for needed libraries and
+include files; this is especially useful, if for example you have installed
+libforms at some point under your home directory.
+
+  --without-faces
+if you don't want faces support to be compiled into XFMail, set this option.
+This disables support only for mailheader faces. Support for faces (picons)
+database is builtin and can be turned on or off using the Faces
+configuration dialog.
+
+  --with-regex
+some systems (such as Solaris-2.4) don't have the regular expression
+functions used by XFMail. If you want regular expression support for these
+systems, you need to set this option. A system not supporting the regular
+expression functions will say "checking for regcomp... no" while configure
+is running.
+It's also recommended to use this option if you expirience problems
+with filtering rules in XFMail (i.e. rules does not work).
+IRIX seems to have this problem.
+
+  --without-sound
+sound support is auto detected. If your system has /dev/audio, sound
+support is enabled by default. If you don't want sound support to be
+compiled into XFMail, set this option for configure. 
+
+  --with-nas-sound
+if you want to use the net audio library, you have to set this option.
+
+  --with-maildir=dir
+if for some reason autodection of your mail spool directory doesn't work,
+you can enter the correct path to your spool directory with this option.
+
+  --with-dead-keys
+add routine to emulate dead keys. if your keyboard has dead keys
+you will be able to enter accented characters with them if this
+option is turned on.
+
+  --with-xkb-dead-keys
+compile with XKB Extension for dead keys
+
+After running configure you may want to check the generated Makefile in
+directory xfmail/ui. If configure ends up saying 
+
+  *** configure has detected some severe problems. Before running
+  *** "make" you should check the following messages:
+
+then this _really_ means, that something isn't installed properly and
+running "make" now will abort at some point! You really should correct the
+reported problems and run configure again. If no errors were reported, you
+can now
+
+ - Type:
+make
+
+- If all goes well, you will soon have an xfmail binary in the ui/ directory.
+  To install the XFMail binary and man page (xfmail.1) system-wide, type:
+make install
+
+ - To run XFMail, type:
+xfmail
+
+   You don't need any additional files besides XFMail's binary (xfmail)
+   to run the program.
+
+                UPGRADE NOTES
+
+If you are upgrading from older versions of XFMail you can remove all folder
+cache directories (XFMail now uses a different caching mechanism). In order
+to remove the cache directories, look for .cache/ directory in each
+directory located under ~/Mail. If such directory exists - remove it with 
+rm -rf .
+
+It is recommended to backup your address book (~/.xfbook or ~/.xfmail/.xfbook)
+and filtering rules file (~/.xfmrules or ~/.xfmail/.xfmrules) before
+upgrading.
+
+During the upgrade you will be asked if you want to keep your old
+configuration file. The recommended answer is "No", it's better
+to reconfigure XFMail since old parameters (especially placement and
+such) can become invalid.
+
+
+		PORTING TO ANOTHER SYSTEM
+
+XFMail can be easily ported to any Unix platform with the X-Windows
+system, XForms, and the Xpm libraries. It contains little system
+dependent code.  As far as I know, the only problematic point might be
+mmap system call in mail/fmail.c (mmap is for faster access to messages).
+Most of the mmap calls can be disabled by undefining MMAP_MSG
+in mail/fmail.h .
+
+To port it:
+
+ - Tweak config/configure.in (if needed at all)
+ - Make all appropriate #ifdef <mysystem> changes
+ - Send me the patches :-)
+
+
+                LIMITATIONS
+
+As any other program XFMail has it's limitations (see mail/fmail.h
+ for more details). Here are the most important ones:
+
+- Name of field in the message header can not be longer than
+   32 characters (MAX_FIELD_NAME_LEN).
+
+- No more than 64 fields in header (MAX_FIELDS_IN_HDR).
+
+- Non-folded field can not be longer than 512 bytes (MAX_FIELD_LEN).
+
+- Folded field can not be longer than 32768 bytes (MAX_SPLIT_FIELD_LEN).
+
+- Limit on number of recipients in To , Cc or Bcc lists is 1024
+   (MAX_ADDR_IN_FIELD).
+
+- XFMail can not have more than 10240 messages in one folder (MAX_MSG_IN_FOLDER)
+
+- XFMail can not have more than 1024 folders (MAX_FOLDERS).
+
+- Each folder can not have more than 64 subfolders (MAX_SUBFOLDERS).
+  (This includes the number of subfolders in all the folder subtree, 
+   and not just folder's "children")
+
+- XFMail can not handle messages bigger than 3Mb (MAX_MSG_LEN).
+  Note: if XFMail encounters message larger than MAX_MSG_LEN it will
+  ignore it and/or display warning or error message. Under no circumstances
+  XFMail will not try to truncate or modify such message unless you're trying
+  to copy/move it manually to another XFMail folder.
+
+- XFMail's internal message viewer will not show more than 4096 lines of message   text (MAX_VIEWABLE_LINES) or 128Kb (MAX_VIEWABLE_SIZE).
+  Use external viewer if you want to view larger message.
+
+- XFMail's internal editor can not edit more than 4096 lines (MAX_EDITABLE_LINES) or 64Kb (MAX_EDITABLE_SIZE).
+  Use external editor if you want to edit larger message.
+
+- You can have no more than 10 different address books (MAX_BOOKS).
+
+- Each address book can hold no more than 1023 addresses (MAX_ADDR_IN_BOOK).
+
+- Each alias can hold no more than 100 recipients (MAX_ADDR_IN_ALIAS).
+  Note: you can create nested aliases , i.e. alias member can be a name
+  of another alias. Aliases will be fully expanded when you add them as
+  recipient name.
+
+- No more than 255 filtering rules (MAX_RULES) are allowed.
+  Note: creating too many filtering rules can significantly slow
+  down message retrieving.
+
+                XFMail and other e-mail clients.
+
+Starting from version 1.0 XFMail supports IMAP (Internet Message
+Access Protocol) remote folders. Only IMAP4 and IMAP4rev1 protocols
+are supported. IMAP is useful if you want to share your folders and
+messages with e-mail clients other then XFMail. There is a way to access
+native XFMail mailboxes through IMAP. You will need to install
+IMAP-4.1 from ftp://ftp.cac.washington.edu/imap/ on system running
+XFMail . After the installation is complete create file called .mh_profile
+in your home directory on that system. The file should contain only one line:
+Path: Mail
+Second step is to configure IMAP access in XFMail running on other system,
+from which you want to access your folders. Go to Config->IMAP dialog,
+fill information about your "master" host and put '#mh/' (without the
+quotes) in List input field. Connect to IMAP server (use 'IMAP connect'
+option from Misc menu). You should see your XFMail folders displayed
+in folder pane. The folders will have names like #mh/<name> .
+Now you can read your XFMail messages, however all status changes
+(i.e. read/unread , mark, etc..) done to the messages through IMAP
+will not be recognized by XFMail.
+
+XFMail folders also can be accessed by any MH-compliant e-mail client,
+like exmh (ftp://ftp.sunlabs.com/pub/tcl/exmh/) or mutt
+(ftp://ftp.cs.hmc.edu/pub/me/mutt/). mutt is especially useful if you
+want to be able to read your e-mail using telnet and use XFMail at the
+same time.
+
+Starting from version 1.2 XFMail has native support for elm-style
+mailboxes, which means that you can share your messages with
+almost any e-mail client. However elm-style mailboxes are handled
+less efftiently by XFMail and they can not have any subfolders.
+
+The limitations on status update mentioned above apply to any other
+e-mail client.
+
+Note: mutt will not recognize XFMail folders unless they have file
+.xmhcache in them (contents of the file is not important,
+you can simply do: touch ~/Mail/<folder>/.xmhcache).
+
+                LOCKING
+
+XFMail uses both dotlock and kernel lock mechanisms in order to lock
+mailbox. Kernel lock is always expected to succeed, however XFMail will
+not attempt to install dotlock if user does not have write permissions
+in (folder) spool directory.
+IMPORTANT!!! If this is the case on your system , make sure that your
+mail delivery program (usualy mail.local or procmail) is compiled with
+kernel lock support. If it's not compiled you're risking to loose or
+corrupt your mailbox!
+
+		CONTACTS
+
+Please send all your suggestions/opinions/patches to:
+Gennady B. Sorokopud <gena@NetVision.net.il>
+
+There is also a mailing list for XFMail.  To subscribe, send mail to
+Majordomo@Burka.NetVision.net.il with the line "subscribe xfmail" in the
+message body (You can also subscribe/unsubscribe to/from mailing list
+using the XFMail help menu).
+
+If you find any bugs please report them to:
+xfmail-bugs@Burka.NetVision.net.il
+or use the "Bug-report" option in the XFMail help menu.
+
+               XFMAIL DEVELOPMENT
+
+If you want to be actively involved in XFMail's development process
+you can do the following:
+
+ - download the latest XFMail alpha/beta from
+   ftp://burka.netvision.net.il/pub/xfmail/work/xfmail-MMDDYY.tar.gz
+
+ - subscribe to xfmail-dev mailing list. To subscribe send mail
+   to Majordomo@Burka.NetVision.net.il with the line "subscribe xfmail-dev"
+   in the message body.
+

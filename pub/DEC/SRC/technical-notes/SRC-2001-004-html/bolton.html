@@ -1,0 +1,135 @@
+<html>
+<head>
+<title>Typsy</title>
+</head>
+<body>
+
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" HEIGHT="1%" >
+
+<tr>
+<td>
+
+<center><b><font size=+1>Typsy: a type-based search tool for java programmers</font></b></center>
+
+</td>
+</tr>
+
+</table>
+</center>
+
+<br>&nbsp;
+
+<center>
+<table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" >
+
+<tr>
+<td>
+
+<center>
+
+<b>Christie Bolton</b>
+<br><b>University of Oxford</b>
+
+</center>
+
+</td>
+</tr>
+
+</table>
+</center>
+
+<br>&nbsp;
+<br>&nbsp;
+
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="70%" HEIGHT="1%" >
+
+<tr>
+<td><b>1. Introduction</b>
+<p>
+This summer I spent a very enjoyable three and a half months at SRC.
+Greg Nelson, my host, and I built Typsy, a type-based tool for java
+programmers.
+
+<p>
+Java programmers using unfamiliar packages often need to spend a
+significant amount of time searching for methods or procedures to
+perform routine tasks.  This search time is spent reading the
+documentation, thumbing through indexes and grepping through interface
+files.  Our goal for the summer was to build a tool to eliminate or
+greatly reduce this search time.
+
+The idea is that even if the programmer doesn't know the name of the
+method they probably know something about its argument types and
+result type.  This suggests a search tool that accepts both the
+signature of the method and a context specifying the relevant
+libraries.  It then returns a list of combinations of methods, fields
+and constructors with the correct signature.
+<p>
+<br>
+
+<tr>
+<td><b>2. Example</b>
+<p>
+
+An example of when the tool might be used arose during its
+construction.  We wished to extract the first word from a stream of
+input.  Had we already built the tool our query would have been as
+follows: our goal type is a string; our given argument is an input
+stream that we shall call ``in''; and our context is the
+<em>java.io</em> package.  The tool comes up with a list of
+type-correct suggestions each with hyper-text links to the java
+documentation.  These suggestions use combinations of methods, fields
+and constructors.  The fifth suggestion, the procedure that we were
+looking for, proposes that we construct a <em>StreamTokenizer</em>
+with our given <em>InputStream</em>, <em>in</em>, as its argument, and
+then call the <em>sval</em> field on the StreamTokenizer.
+<blockquote> <em> (new java.io.StreamTokenizer(java.io.InputStream
+in)).sval </em>
+</blockquote>
+
+<p>
+<br>
+
+<tr>
+<td><b>3. Outline of project</b>
+		<p> Our initial step was a feasibility study: could we build a tool that 
+		  produced a <em>single</em> smallest term of the correct type? We were 
+		  able to use an in-house package, built as part of <a
+href="http://gatekeeper.dec.com/pub/DEC/SRC/technical-notes/abstracts/src-tn-2000-002.html">ESC/Java</a>, 
+		  to extract the methods, fields, constructors and supertypes of classes 
+		  from their java source files. We defined a cost function as a measure 
+		  of the size of each term and then applied an algorithm based on Knuth's 
+		  generalization of Dijkstra's shortest path algorithm. Our tool then 
+		  identified a minimal-cost term of the correct type. Having completed 
+		  our feasibility study and established that it was possible to extract 
+		  a single minimal cost term of our desired goal type, the next step was 
+		  to extend this to finding, say twenty smallest cost terms. We decided 
+		  to adopt a breadth-first search approach. 
+		<p>
+For each query, the tool constructs a tree with the desired goal type
+as its root node and with each layer containing any types that might
+be directly used in the construction of a type in the layer above.
+The tree is <em>pruned</em> so that the bottom layer contains only
+given arguments and every other layer contains only those types that
+can be constructed from the types remaining in the layer below.
+
+Various dynamic adjustment heuristics are applied to ensure an
+appropriate number of suggestions.  If there are too few suggestions
+then a few basic types such as <em>boolean</em> and <em>integer</em>
+may be included in suggested procedures.  If there are too many
+suggestions we <em>snip</em> and <em>flag</em>: we snip the tree at
+any nodes with too many children and flag the fact that we have done
+this in our list of suggestions.  It is then up to the user to
+investigate this branch further if they believe that that is where
+their solution lies.
+
+<p>
+We gave Typsy an html interface with hyper-links from the methods,
+fields and constructors included in suggested procedures to Sun's java
+documentation.  We used perl cgi-script to provide the link between
+the interface and the tool.
+
+<p> <br> &nbsp;&nbsp; </td> </tr> </table> </center>
+
+</body>
+</html>

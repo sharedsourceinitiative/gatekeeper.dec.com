@@ -1,0 +1,29 @@
+<TITLE>Digital Systems Research Center: Note 1997-031</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Technical Note 1997-031</H1>
+<H1>Fast Integrated Tools for Circuit Design with FPGAs</H1>
+<HR>
+<H2>Stephan W. Gehring and Stefan H.-M. Ludwig</H2>
+Note #1997-031. December 16, 1997
+<P>
+To implement high-density and high-speed FPGA circuits, designers 
+need tight control over the circuit implementation process. However, 
+current design tools are unsuited for this purpose as they lack fast 
+turnaround times, interactiveness, and integration. We present a system 
+for the Xilinx XC6200 FPGA, which addresses these issues. It consists 
+of a suite of tightly integrated tools for the XC6200 architecture 
+centered around an architecture-independent tool framework. The system 
+lets the designer easily intervene at various stages of the design
+process and features design cycle times (from an HDL specification to 
+a complete layout) in the order of seconds.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-031.ps.Z">PostScript compressed with UNIX compress</A></B> -- 608 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-031.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 448 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-031.ps.zip">PostScript compressed with ZIP</A></B> -- 448 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-031.ps">PostScript</A></B> -- 1896 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-031.pdf">Portable Document Format (PDF)</A></B> -- 752 Kbytes<BR>
+</UL></P>

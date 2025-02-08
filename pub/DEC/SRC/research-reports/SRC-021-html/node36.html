@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Exceptions</TITLE>
+<META NAME="description" CONTENT="Exceptions">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node37.html">
+<LINK REL="previous" HREF="node35.html">
+<LINK REL="up" HREF="node34.html">
+<LINK REL="next" HREF="node37.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html633"
+ HREF="node37.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html629"
+ HREF="node34.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html623"
+ HREF="node35.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html631"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html632"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html634"
+ HREF="node37.html">Open Array Parameters and</A>
+<B> Up:</B> <A NAME="tex2html630"
+ HREF="node34.html">The OS Interface: Preliminaries</A>
+<B> Previous:</B> <A NAME="tex2html624"
+ HREF="node35.html">OS and Modula-2+</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04032000000000000000">
+Exceptions</A>
+</H2>
+ <A NAME="Soquel">&#160;</A>
+<P><A NAME="779">&#160;</A>
+<A NAME="780">&#160;</A>
+The OS procedures use the Modula-2+ exception mechanism to report abnormal
+conditions such as incorrect actual parameters and failure of underlying
+abstractions.
+<P><A NAME="1986">&#160;</A>
+<PRE>
+TYPE
+  EC =
+    (OkEC, BadExecutableEC, BadFileEC, BadFileNameEC,
+     BadIOCtlOpEC, BadPIDEC, BadStateForSignalEC,
+     CannotLinkToDirectoryEC, CannotWriteADirectoryEC,
+     CrossDeviceLinkEC, DirectoryNotEmptyEC, DirectoryUnlinkEC,
+     FileBusyEC, FileExistsEC, IOErrorEC, InvalidArgumentEC,
+     InvalidCredentialsEC, InvalidObjectEC, LookUpEC,
+     MinorDeviceDoesNotExistEC, NameTooLongEC,
+     NoDriverForDeviceEC, NoMountedVolumesEC, NotADirectoryEC,
+     NotATerminalEC, NotEnoughRoomEC, NotEnoughVMEC,
+     NotImplementedEC, NotOwnerEC, NotSuperUserEC,
+     NotTtyOwnerReadEC, NotTtyOwnerWriteEC, OperationConflictEC,
+     PipeHasNoReaderEC, ProtectionViolationEC, PvOfflineEC,
+     RanOutOfResourcesEC, RemoteFileEC, ServerNotAvailableEC,
+     ShortExecutableEC, TooManyProcessesEC,
+     TooManySymbolicLinksInPathEC, UnseekableObjectEC,
+     VolumeNeedsCheckingEC, WouldBlockEC);
+
+EXCEPTION
+  Error (EC);
+</PRE>
+<P><A NAME="782">&#160;</A>
+A value of type EC is an error code used to describe one of many possible
+error conditions associated with the Error exception.
+<P><A NAME="1987">&#160;</A>
+<A NAME="1988">&#160;</A>
+<A NAME="1989">&#160;</A>
+<A NAME="1990">&#160;</A>
+<A NAME="1991">&#160;</A>
+<PRE>
+TYPE
+  ES = SET OF EC;
+
+CONST
+  FileFailureES =
+    ES{IOErrorEC, PvOfflineEC, VolumeNeedsCheckingEC, RemoteFileEC};
+
+  FailureES = FileFailureES + ES{PipeHasNoReaderEC};
+
+  PathES =
+    ES{BadFileNameEC, LookUpEC, NameTooLongEC, NoMountedVolumesEC,
+       NotADirectoryEC, ProtectionViolationEC, ServerNotAvailableEC,
+       TooManySymbolicLinksInPathEC} + FileFailureES;
+</PRE>
+<P><A NAME="788">&#160;</A>
+Most error codes report an error on the part of the caller, i.e., an
+incorrect combination of parameters, or parameters that are not consistent
+with the internal state of the abstraction.  In these cases, it is as if
+the procedure was never called.  The error codes in the set FailureES
+report a problem that occurred at a lower level of abstraction.  The error
+codes in the set FileFailureES errors are logged to the console device and
+may result in the file system having to be scavenged.  Examples include
+the remote server going down, the disk drive being switched off line, etc.
+<P>
+The error codes raised by an individual procedure are documented by
+listing them (individually, and FailureES and PathES where appropriate) in
+a comment following the RAISES clause.  If a particular error code has
+special significance when raised by a particular procedure, it is
+mentioned in the following text (using the shorthand `raises MumbleEC' to
+stand for `raises Error(MumbleEC)').  Otherwise the standard descriptions
+in Appendix <A HREF="node61.html#Coyote">B</A> apply.  The error codes in the set PathES report
+errors encountered in translating a path name; see Appendix <A HREF="node61.html#Coyote">B</A>,
+page <A HREF="node61.html#Coyote"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>, for details.
+<P><A NAME="1992">&#160;</A>
+<PRE>
+VAR
+  errMessage: ARRAY EC OF Text.T;
+</PRE>
+<P><A NAME="793">&#160;</A>
+The errMessage variable maps each error code value into a descriptive
+message suitable for logging or reporting to the user.  (These messages
+are similar to the descriptions in Appendix <A HREF="node61.html#Coyote">B</A>, page
+<A HREF="node61.html#Coyote"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.  They are constant and so do not include information
+relevant to any particular occurrence of an error.)
+<P><A NAME="1993">&#160;</A>
+<PRE>
+EXCEPTION
+  Alerted = Base.Alerted;
+</PRE>
+<P>
+Alerted means that an alert was sent to the calling thread (usually by
+another client thread); it is only raised by procedures that can block
+indefinitely.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html633"
+ HREF="node37.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html629"
+ HREF="node34.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html623"
+ HREF="node35.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html631"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html632"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html634"
+ HREF="node37.html">Open Array Parameters and</A>
+<B> Up:</B> <A NAME="tex2html630"
+ HREF="node34.html">The OS Interface: Preliminaries</A>
+<B> Previous:</B> <A NAME="tex2html624"
+ HREF="node35.html">OS and Modula-2+</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,45 @@
+<!-- Generated from pcount/makehtml -->
+<html>
+<title>
+pcount - README
+</title>
+<body>
+<pre>
+
+/dev/pcount installation instructions:
+
+Become root and where &lt;config&gt; is the name of your configuration
+(usually the name of the machine in all upper-case):
+
+	# cat pcount.tar.Z  | uncompress | tar xvf -
+	# cd pcount
+	# ./INSTALL &lt;config&gt;
+
+This will put the pcount device driver configuration information into
+/sys/conf/.product.list and /sys/conf/&lt;config&gt;.list, if it exists.  If
+you are using other third party drivers and have other configurations,
+you will have to copy the PCOUNT line from .product.list to the other
+&lt;config&gt;.list files.
+
+Build the new kernel:
+
+	# doconfig -c &lt;config&gt;
+
+Test the new kernel:
+
+	# mv /vmunix{,.good}
+	# mv /sys/&lt;config&gt;/vmunix /
+	# reboot
+
+
+RELEASE NOTES
+
+Kit 15 supports Alpha 21066 and other compatible cpus
+
+Kit 14 supports DU-V5.0
+
+Kit 13 fixes a bug that caused multiprocessors with fast clocks to panic.
+</pre>
+<!--#include file="includes/dcpi-footer.html" -->
+</body>
+</html>

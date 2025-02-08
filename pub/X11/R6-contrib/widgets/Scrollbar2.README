@@ -1,0 +1,102 @@
+$Id: Scrollbar2.README,v 1.2 1999/04/30 22:31:42 falk Rel $
+
+Scrollbar2 v1.0 -- Athena scrollbar with improved callbacks
+
+  The Athena scrollbar widget suffers from a number of flaws:
+
+    1) Client apps have no way to know when the user has finished
+       an interaction.
+
+    2) There is no way to specify the scroll amount for clicks in
+       arrows (Xaw3d).
+
+    3) Thumb is not automatically moved for clicks in the
+       background or arrows (Xaw3d) or button 1,3 clicks (Xaw).
+
+
+  This widget is subclassed from the Athena Scrollbar widget and adds
+  the features needed to correct these problems:
+
+    * New "ArrowJump" resource which controls how far the scrollbar
+      should move in response to button presses in the end arrows (Xaw3d)
+      or keyboard arrow keys.
+
+    * New translation table which allows keyboard keys to move the
+      scrollbar, which works with scrollwheel mice, and most importantly,
+      calls the Notify() action procedure described below:
+
+    * New "Notify()" action proc.  Sends a Scrollbar2Rep structure to
+      the XtNcallback list.  This report informs the client of the
+      following events:
+
+      	SC_JUMP:	scrollbar has moved as a result of a keypress.
+	SC_START:	user has begun to scroll
+	SC_DONE:	user has finished scroll.
+
+      The Scrollbar2Rep also includes the new scrollbar position.
+
+
+    * Scrollbar2Callback() utility function.  Add this to the scrollbar's
+      XtNscrollProc callback list to cause the scrollbar to automatically
+      be adjusted for clicks in the background or arrows.  This function
+      then calls XtNjumpProc.
+
+
+
+  How to use:
+
+    * Create the Scrollbar2 widget the same as a Scrollbar widget.
+
+    * Add a callback to the XtNjumpProc list to receive notification
+      as the scrollbar is adjusted.  (This is the same as for Scrollbar.)
+
+    * Add a callback to the XtNcallback list to receive notification
+      whenever the user starts or finishes adjusting the scrollbar.
+
+    * Put Scrollbar2Callback() in the XtNscrollProc list to provide for
+      automatic scrollbar motion in response to background and arrow clicks.
+
+
+
+  To view the man page:  tbl Scrollbar2.man | nroff -man
+
+
+HOW TO BUILD:
+
+  Edit Imakefile and set EXTRA_INCLUDES and EXTRA_DEFINES as appropriate for
+  your system.
+
+  It should then be sufficient to type
+	
+	xmkmf ; make
+
+  This will build the widget and a demo program.
+
+  Alternatively, makefiles for Solaris, SunOS and Linux have been
+  provided.
+
+
+  IMPORTANT:  Since this widget is subclassed from an Athena widget,
+  it is extremely important that the correct header files be installed
+  in /usr/X11/include/X11/Xaw/.  If you have installed Xaw3d or another
+  Athena variant in your system, you must also install the new header
+  files.  The Makefile should point to the proper location of the
+  header files.
+
+  (This is true for any widget subclassed from an Athena widget, but is
+  a very common mistake so I mention it here.)
+
+  In addition, the -DARROW_SCROLLBAR flag in the Imakefile must match
+  the flag used to compile Xaw3d.
+
+
+
+  When including Scrollbar2 in a library, you may want to add a line
+  to the Imakefile that looks like this:
+
+    SpecialCLibObjectRule(Scrollbar2,,-DARROW_SCROLLBAR -I$(INCDIR)/X11/Xaw)
+
+
+X11 Xt Intrinsics Xaw Athena
+
+Author:		Edward A. Falk <falk@falconer.vip.best.com>

@@ -1,0 +1,426 @@
+<html>
+<head>
+<title>Tcl Resource Center: Changes to Tcl script semantics in Tcl 8.0</title>
+<!-- Author: ::siteview::genpage -->
+<!-- Date Generated: Wed May 20 16:19:52 PST 1998 -->
+</head>
+<Body bgcolor="#ffffff" text="#000000">
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td valign=top bgcolor="#003399" width=130>
+<p>
+<center>
+<br>
+<font size=5 face="Times New Roman, Times" color=#9999ff>
+<b><i>Tcl<br>Resource<br>Center</i></b></font>
+<img src="../images/logoblue.gif" vspace=10 hspace=10 alt="Tcl logo">
+<table align=center><tr><td align=center><b><a href="/" style="color:#9999ff" target="_top">
+<font color=#9999ff>Scriptics</font></a></b>
+</td></tr>
+<tr><td align=center><b><a href="/resource/" style="color:#9999ff" target="_top">
+<font color=#9999ff>Resource&nbsp;Center</font></a></b>
+</td></tr>
+<tr><td align=center><b><a href="/forms/urlnote.html?index=" style="color:#9999ff" target="_top">
+<font color=#9999ff>Add&nbsp;Url</font></a></b>
+</td></tr>
+<tr><td align=center><b><a href="/live/sitemap" style="color:#9999ff" target="_top">
+<font color=#9999ff>Site&nbsp;Map</font></a></b>
+</td></tr>
+<tr><td align=center><b><a href="/live/genhtml" style="color:#9999ff" target="_top">
+<font color=#9999ff>Gen&nbsp;Html</font></a></b>
+</td></tr>
+<tr><td align=center><b><a href="/x/hacks.html" style="color:#9999ff" target="_top">
+<font color=#9999ff>Debug</font></a></b>
+</td></tr>
+</table>
+
+<form method=post action="/cgi-bin/htsearch">
+<input type="text" size="12" name="words" value="">
+<br>
+<input type="submit" value="Search">
+</form>
+
+<br>
+</td>
+<td valign=top width=20>&nbsp;</td>
+<td valign=top>
+<h1>Changes to Tcl script semantics in Tcl 8.0</h1>
+<p>
+This page describes differences in the semantics of Tcl scripts between
+Tcl 8.0 and previous releases of Tcl. Please report any problems you
+discover with this release on the comp.lang.tcl newsgroup. 
+<hr>
+<p>
+A major goal for the Tcl 8.0 compiler is no changes or very few changes
+to Tcl/Tk scripts or C extensions. I have tried very hard to ensure
+that the behavior documented in the man pages is preserved but I have
+made some changes that are visible at the level of Tcl scripts. Most
+of these changes allow Tcl programs to execute faster. The key changes
+are the following. 
+
+<ol>
+<p>
+<li><strong>Compilation errors return errors immediately, before executing
+a script</strong> 
+<p>
+Tcl 8.0 now has separate compilation and execution phases. If an error
+is found during compilation, an error is returned immediately and the
+script is not executed (not even partially). This differs from Tcl
+7.6 where a script would be executed up to the first command with an
+error. 
+<p>
+Compilation errors are now returned for scripts with malformed expression
+words (e.g., words with missing close braces or quotes). In addition,
+several commands are treated specially by the Tcl bytecode compiler
+and are compiled into an inline sequence of instructions for better
+execution speed. In Tcl 8.0, these commands are <code>break</code>,
+<code>catch</code>, <code>continue</code>, <code>expr</code>, <code>for</code>,
+<code>foreach</code>, <code>if</code>, <code>incr</code>, <code>set</code>,
+and <code>while</code>. If a script includes one of these commands
+with the wrong number of argument words (e.g., <code>set a xxx yyy</code>),
+a compilation error is returned immediately and the script is not executed.
+For example, the body of the following procedure has a syntax error:
+
+<pre>
+<code>proc p {} {
+    global x
+    set x 1
+    incr x 1 2   ;# error: wrong number of arguments
+    set x 2
+}</code>
+</pre>
+<p>
+When <code>p</code> is called the first time, its body is compiled.
+In Tcl 8.0, a syntax error is returned immediately and the global variable
+<code>x</code> is never modified. In Tcl 7.6, <code>x</code> would
+be set to 1. 
+<p>
+Returning a compilation error immediately lets you find typos and other
+syntax errors in your scripts as soon as possible. It also avoids the
+Tcl 7.6 problem that a bad procedure body or <code>eval</code>'ed script
+could leave your data structures in an inconsistent state because they
+only executed partially.
+
+<p>
+<li><strong>Catch no longer catches compilation errors</strong> 
+<p>
+One consequence of the fact that in Tcl 8.0 compilation errors in scripts
+are returned immediately is that <code>catch</code> no longer prevents
+compilation errors from aborting command interpretation. For example,
+<p>
+<code>catch {set}</code> 
+<p>
+immediately reports the error 
+<p>
+<code>wrong # args: should be "set varName ?newValue?"</code> 
+<p>
+To have <code>catch</code> handle compile time errors, give it a script
+that is only determined at runtime: for example, 
+<p>
+<code>catch [concat {set}]</code> 
+
+<p>
+<li><strong>Scripts are now completely compiled</strong> 
+<p>
+Tcl 7.6 would ignore any characters in a script after the last command
+executed. This allowed you, for example, to put comments after the
+<code>exit</code> command that terminated a script without having to
+start each comment line with a <code> #</code>: 
+<pre>
+initialize   ;# the commands 
+compute      ;# of the
+finalize     ;# program
+exit         ;# stop execution
+This is the first line in the script's change log.
+A second line in the change log.
+</pre>
+<p>
+Tcl 8.0 now attempts to compile those lines so you should put a<code>
+#</code> at the start of each comment line. 
+
+<p>
+<li><strong>Lists are now aggressively parsed </strong> 
+<p>
+Lists are now a real (and significantly faster) data type and not just
+strings that are rescanned each time. You still use them the same way,
+but strings are converted to a faster internal representation behind
+the scenes on the first list operation. This means that lists are now
+completely parsed. It used to be the case that if you had a misformed
+list but the erroneous part was after the point you inserted or extracted
+an element, then you never saw an error. Tcl 8.0 now reports an error.
+For example, in Tcl 8.0 
+<p>
+<code>lindex {a b "c"d e} 1</code> 
+<p>
+returns the error 
+<p>
+<code>list element in quotes followed by "d" instead of space</code>
+<p>
+while in Tcl 7.6, it returned <code> b</code>. 
+
+<p>
+<li><strong>List operations don't preserve the exact white space between
+elements</strong> 
+<p>
+List operations in Tcl 7.6 always retained the white space between
+list elements. This is no longer true in Tcl 8.0, where list operations
+return lists whose elements are separated by a single space. In the
+following example, the first command sets the variable <code>x</code>
+to a string containing two tab characters: 
+<pre>
+set x {one	two	three}
+lrange $x 0 1
+</pre>
+<p>
+In Tcl 8.0, the <code>lrange</code> command returns <code>one two</code>.
+Programs that need to preserve white space should either use string
+operations or use a combination of the <code>split</code> and <code>join</code>
+commands. For example, 
+<pre>
+join [lrange [split $x {	}] 0 1] {	}
+</pre>
+<p>
+will preserve the tab between the list elements (there is a tab character
+inside each pair of braces). Note that the Tcl man pages never promised
+to preserve the white space. 
+
+<p>
+<li><strong>Fewer floating-to-string conversions (and the associated rounding) may change program behavior</strong>
+<p>
+Both Tcl 8.0 and 7.6 use full IEEE floating-point precision
+(about 17 decimal digits) when computing expressions.
+They both round floating-point values when converting them to strings
+(although by default Tcl 8.0 retains 12 digits
+while Tcl 7.6 keeps 6 digits).
+However, the new object system in Tcl 8.0 causes fewer floating-to-string
+conversions (and the associated rounding) to occur than in Tcl 7.6.
+These changes mean that floating-point computation
+is more accurate and faster in Tcl 8.0,
+but there are sometimes behavioral changes.
+For example, the command 
+<pre><code>for {set x 0.0} {$x != 4.0} {set x [expr $x+0.1]} {puts $x}</code></pre>
+terminates in Tcl 7.6 but loops forever in Tcl 8.0.
+This is because the fraction 0.1 can not be exactly
+represented as an IEEE floating-point value
+and so repeatedly adding it to 0.0 
+will never produce an floating-point value that is exactly 4.0.
+This loop terminated in Tcl 7.6 only because of the rounding
+that was done at every assignment to the variable <code>x</code>.
+The solution in Tcl 8.0 (and most other programming languages)
+is to use approximate comparisons for floating-point.
+That is, when looping until the value of a floating-point expression
+reaches some target value
+you need to test whether the expression is "close enough" to the target.
+For example, 
+<pre><code>for {set x 0.0} {abs($x-4.0) > 0.001} {set x [expr $x+0.1]} {puts $x}</code></pre>
+stops when the variable <code>x</code> reaches 4.0.
+
+<p>
+<li><strong>The original strings in expressions are retained</strong>
+<p>
+For example, 
+<p>
+<code>expr {"0y" &lt; "0x3"}</code> 
+<p>
+yields 0 (not 1) in Tcl 8.0 because the original string for "0x3" is
+not lost. Tcl always tries to convert expression operands to numbers
+if possible. In Tcl 7.6, this meant that the string "0x3" was lost
+when the expression implementation converted it to a number (3) and
+then back into a string when it realized that a string comparison had
+to be done. This meant Tcl 7.6 did a string comparison between "0y"
+and "3". Since Tcl values are now stored in Tcl object that hold an
+internal form as well as a string, the original string isn't lost and
+Tcl 8.0 can do the string comparison between "0y" and "0x3". 
+
+<p>
+<li><strong>info cmdcount is no longer accurate </strong> 
+<p>
+Compiled commands are "compiled away" and their execution is no longer
+counted. In Tcl 8.0, this includes the commands <code>break</code>,
+<code>catch</code>, <code>continue</code>, <code>expr</code>, <code>for</code>,
+<code>foreach</code>, <code>if</code>, <code>incr</code>, <code>set</code>,
+and <code>while</code>. It was felt that the cost of keeping <code>info
+cmdcount</code> accurate is not worth the cost of doing so. 
+
+<p>
+<li><strong>append no longer triggers read traces </strong> 
+<p>
+The <code>append</code> command no longer triggers read traces when
+fetching the old values of variables before doing the append operation.
+It only triggers a write trace after each append. It was felt that
+these read traces were not very useful and not worth the extra execution
+overhead they require. 
+<p>
+Note that the <code>lappend</code> command still triggers read traces
+in this situation. <code>lappend</code> will be changed to behave like
+<code>append</code>. 
+
+<p>
+<li><strong>lappend triggers only one write trace </strong> 
+<p>
+<code>lappend</code> triggers only one write trace after appending
+all arguments to the list. 
+
+<p>
+<li><strong>Error tracebacks are shorter </strong> 
+<p>
+There are fewer recursive calls to Tcl_Eval now since some commands
+like <code>while</code> and <code>if</code> have been "compiled away"
+into a sequence of bytecoded instructions. This means that tracebacks
+often have fewer traceback levels that in the past.
+
+<p>
+<li><strong>Comments and white space are "free" </strong> 
+<p>
+Only the bytecode compiler sees these. They do not effect the execution
+speed of scripts. 
+
+<p>
+<li><strong>The length of (local) variable names doesn't matter.</strong>
+<p>
+For most commands, the compiler looks up local variables in a procedure
+at compile time and emits instructions that, at execution time, take
+the same amount of time regardless of the length of the variable names.
+
+</ol>
+<h2>Frequently asked questions </h2>
+<ol>
+
+<p>
+<li><strong>Will the Tcl 8.0 compiler will support the major extensions
+to Tcl/Tk? </strong> 
+<p>
+The compiler will work with any extension that doesn't modify the Tcl
+core since Tcl 8.0 includes all the old C API's and the old tcl commands.
+These extensions just need recompiling. Extensions that require source
+changes to the core will be delayed because the Tcl 8.0 core is substantially
+different than in Tcl7.6.
+
+<p>
+<li><strong>I tie in to the Tcl event loop to support OLE, etc. Can
+I use the compiler? </strong> 
+<p>
+The Tcl event loop won't be changed and will operate just as before.
+
+
+<p>
+<li><strong>Can I redefine the built-in commands? </strong> 
+<p>
+Yes, but this causes all code that is currently cached for scripts
+and procedure bodies to be thrown away. The scripts and procedure bodies
+will be recompiled the next time they are used. This means you should
+redefine any builtin commands at program startup. 
+
+<p>
+<li><strong>What is slower? </strong> 
+<p>
+Expressions that are not enclosed in braces may be slower in Tcl 8.0.
+The compiler must generate additional code for such expressions.
+Also, the bytecode interpreter
+may need to invoke the <code>expr</code> command for these expressions
+at runtime after doing one round of substitutions in order
+to preserve Tcl's two level substitution semantics for expressions.
+This runtime call to the <code>expr</code> command
+causes code to be generated, executed, and then thrown away,
+which significantly adds to the execution cost.
+The best speed in Tcl 8.0 is always obtained
+by enclosing all expressions, even those in control structure commands,
+inside braces. 
+<p>
+Tk bindings and variable traces are often slower in Tcl 8.0 since they
+compute new scripts that they then <code>eval</code>. Code is generated
+for these scripts, executed once, then thrown away. If the code is
+not iterative or doesn't execute for long, the time to compile it can
+outweigh the savings in execution time. 
+
+<p>
+<li><strong>Is this as fast as things will get with the compiler? </strong>
+<p>
+No, the C command procedures for many Tcl commands such as <code>open</code>
+and <em>all</em> the Tk commands have not been converted to take Tcl
+objects instead of strings. Object-based command procedures are faster
+than string-based ones since they can keep an appropriate internal
+representation in Tcl objects. Also, the bytecode interpreter can call
+object-based command procedures directly; string-based command procedures
+are called by a wrapper procedure that must first convert Tcl objects
+to strings. I expect Tk programs to speed up substantially when Tk
+is modified to use objects. 
+<p>
+Much of the speedup in Tcl programs to date has resulted from a speedup
+in accessing local variables. The compiler allocates an index for each
+local variable in an array of variables in each procedure frame. This
+avoids having to do expensive hashtable lookups at runtime. Variables
+referenced outside of a procedure body would also benefit from doing
+the lookup once at compile-time instead of at each use. The compiler
+could also do this lookup at compile-time for the variables in most
+<code>global</code> commands. 
+<p>
+Many programs are slowed down currently because too many small scripts
+are being compiled. Many are the result of Tk bindings and variable
+traces. Others are the result of programs that must use <code>eval</code>
+to execute a command that they have computed, when those programs have
+already parsed the command into separate command and argument words;
+we will add support to Tcl to avoid unnecessary compilations in this
+situation. 
+<p>
+In Tcl 8.0, ten commands are compiled into an inline sequence of specialized
+instructions. Many additional Tcl commands such as <code>lappend</code>
+and <code>lindex</code> would benefit from being compiled inline. 
+
+<p>
+<li><strong>Can I save the Tcl bytecodes for my program to disk?</strong>
+<p>
+Many people have asked for this feature. It would reduce the time
+needed to run many programs. It might also help companies and
+individuals that want to "hide" their programs.
+Unfortunately, Tcl 8.0 does not currently allow you to save Tcl bytecodes.
+It is not technically hard to implement this,
+but we have been reluctant to do so until the set of Tcl bytecodes
+becomes more stable.
+
+<p>
+<li><strong>Why doesn't Tcl use the Java bytecodes? </strong> 
+<p>
+I had originally hoped to use Java bytecodes because they have a mature
+design and because Java is widely available. I chose to use my own
+Tcl-specific bytecodes because I was concerned that using the Java
+virtual machine would be too slow or take too much memory. The basic
+problem is the semantic mismatch between Java bytecodes and Tcl. Consider
+the Tcl <code>set</code> command. Tcl variables behave very differently
+than Java variables. I can't use a Java instruction like <code>astore</code>
+(store object reference in local variable) to store a Tcl value into
+a Tcl variable since it doesn't handle by itself such Tcl details as
+variable traces, <code>unset</code>, or <code>global</code>. The best
+I could do would be to translate a Tcl <code>set</code> command into
+a sequence of several Java instructions that did the appropriate checks.
+Unfortunately, the number of Java instructions to implement each Tcl
+command would make the compiled program too big. A more realistic scheme
+is to generate Java bytecodes that call one or more Java methods to
+do the actual work for each Tcl command. With this number of Java method
+calls, acceptable performance will depend on using a Java JIT (bytecode-to-machine
+code) compiler. With Java JIT compilers becoming more widely available
+this might be realistic. One possibility would be to translate the
+relatively high-level Tcl bytecodes into Java bytecodes. However, there
+is another problem with using Java bytecodes. Much of the interesting
+code in Tcl/Tk and its extensions is in C. Java code can call native
+methods implemented in C, and vice-versa, but this is awkward, not
+portable, and the capability is disabled in Netscape (and many other
+Java implementations) for safety reasons. 
+</ol>
+<strong></strong>
+<hr>
+<p>
+<address>Brian Lewis, brian.lewis@eng.sun.com</address> <em>Last edited
+August 21, 1997.</em>
+
+<hr><p><center><font size=-1><br><!-- key  --><a href="/">Scriptics</a>
+ | <a href="/resource/">Resource Center</a>
+ | <a href="/forms/urlnote.html">Add Url</a>
+ | <a href="/live/sitemap">Site Map</a>
+ | <a href="/live/genhtml">Gen Html</a>
+ | <a href="/x/hacks.html">Debug</a>
+ | <a href="../search/">Search</a>
+ | <a href="../feedback.html">Feedback</a>
+<P><font size=+1>Sponsored by <a href="http://www.scriptics.com">Scriptics</a></font></td></tr></table>
+</Body>
+</Html>

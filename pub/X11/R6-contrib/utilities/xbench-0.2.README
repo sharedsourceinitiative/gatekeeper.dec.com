@@ -1,0 +1,16 @@
+================================================================================
+Title:          XBench
+Version:        0.2 (patchlevel 2)
+Description:    A graphical benchmarking program for measuring, tuning 
+		and comparing X windows server performance.
+Author:         Claus Gittinger (unido!sinix!claus)
+Maintained-by:  ?
+Maintained-at:  sunsite.unc.edu.
+Platforms:      Any platform that provides the X windowing system.
+		C compiler is required.
+Copying-Policy: Freely Redistributable
+		Copyright 1988, Siemens Munich.
+		free to copy/distribute - but not for money - provided that
+		the above copyright notice appears in all copies.
+Keywords:       benchmarks performance video graphics xbench xstones speed xwindows
+================================================================================

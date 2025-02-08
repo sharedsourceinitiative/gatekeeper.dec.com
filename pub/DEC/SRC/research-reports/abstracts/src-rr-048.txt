@@ -1,0 +1,21 @@
+
+				AVAILABLE ELECTRONICALLY
+
+    "Operations on Records."
+    Luca Cardelli and John C. Mitchell.
+    August 25, 1989.  60 pages.
+      
+Authors' Abstract
+
+    We define a simple collection of operations for creating and
+    manipulating record structures, where records are intended as finite
+    associations of values to labels.  A second-order type system over
+    these operations supports both subtyping and polymorphism.  We
+    provide typechecking algorithms and limited semantic models.
+
+    Our approach unifies and extends previous notions of records,
+    bounded quantification, record extension, and parameterization by
+    row-variables.  The general aim is to provide foundations for
+    concepts found in object-oriented languages, within a framework
+    based on typed lambda-calculus.
+

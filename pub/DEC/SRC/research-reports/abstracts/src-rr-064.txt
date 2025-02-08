@@ -1,0 +1,33 @@
+
+
+
+"Experience with Concurrent Garbage Collectors for Modula-2+"
+John DeTreville
+November 22, 1990.  54 pages
+
+Author's abstract
+
+ Garbage collection is an integral component of Modula-2+, the principal
+systems programming language at SRC.  The initial Modula-2+ collector
+was a concurrent reference-counting collector; it did not reclaim cyclic
+structures, and the cost of assigning references  was
+relatively high.
+
+I implemented three experimental collectors for Modula-2+ and tested
+them to explore alternatives to the initial collector: first a
+simple concurrent mark-and-sweep collector; then a modified
+concurrent mark-and-sweep collector that used VM synchronization
+between the mutator and the collector; and then a concurrent
+mostly-copying collector that also used VM synchronization.
+
+These collectors had advantages and disadvantages compared to the
+initial Modula-2+ collector.  They reclaimed cyclic structures and
+tended to reduce the cost of  assignments, but they
+provoked VM thrashing far more readily and sometimes produced noticeable
+interruptions of service.  For this reason, we adopted a combined
+reference-counting and mark-and-sweep collector for Modula-2+ at SRC,
+in which the reference-counting collector reclaims most garbage and
+the mark-and-sweep collector executes infrequently to reclaim cyclic
+garbage.
+
+

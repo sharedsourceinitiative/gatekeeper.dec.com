@@ -1,0 +1,36 @@
+
+	The XawPlus wiget set, Version 2.0.2
+	May 25th, 1999
+	Author: Roland Krause
+
+
+This is a bugfixed version of the XawPlus release 2.0.1 This release
+contains the following changes:
+
+* Option -Wall of gcc activated to get more warning informations:
+  Everything fixed which looks like a bug.
+
+* Geometry management of the Command widget redesigned: Label got a new
+  private resource lbm_x to support this. Command now calculates the
+  position of the label text, the left bitmap or the bitmap/pixmap inside
+  of the widget by itself. All changes of the justification of the label
+  text, changes of the left pixmap, the pixmap or the label text are now
+  handled correctly if they are set via editres or from the program code.
+
+* Bug in Label.c fixed: SetValues() now calculate the bitmap offsets
+  correctly, if a new left bitmap/pixmap is set into the widget.
+  (This is also a bug in the original Xaw implementation.)
+
+* Data type for the system time in Clock.c changed from 'long' to 'time_t'.
+  The data type long is wrong on 64 bit systems. (Thanks to Detlef !)
+
+* Implementation of LocPixmap.c cleaned up, this was very buggy code.
+
+
+If you have any hints, suggestions or bug reports feel free to mail me:
+
+
+Roland Krause May 25th, 1999
+rokrause@aol.com
+
+

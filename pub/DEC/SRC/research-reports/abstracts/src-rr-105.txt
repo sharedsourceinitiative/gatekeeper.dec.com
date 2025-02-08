@@ -1,0 +1,23 @@
+
+June 14, 1993                           AVAILABLE ELECTRONICALLY
+
+"The Vesta Approach to Precise Configuration of Large Software Systems"
+Roy Levin, Paul R. McJones
+38 pages
+
+
+The problems of software configuration and release management limit the
+size of systems that we can build efficiently. Today's large systems strain 
+the capabilities of traditional development tools. The Vesta system provides 
+a novel repository and system builder that emphasize complete yet
+manageable descriptions of software components. These facilities enable 
+Vesta to eliminate much of the manual and error-prone drudgery of system
+construction without enforcing a particular methodology on its users.
+This paper presents an overview of Vesta, followed by a series of
+detailed examples that illustrate how Vesta's facilities simplify the
+development of large systems. These examples are drawn from a year's use 
+of Vesta by a group of about 25 researchers developing a rapidly
+changing software system of over 1.4 million source lines. That experience clearly
+demonstrates the power and practicality of the Vesta approach and its
+advantages over conventional tools. 
+

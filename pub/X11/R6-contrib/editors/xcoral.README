@@ -1,0 +1,46 @@
+
+        Xcoral-3.14 have been released and now available on the Net.
+
+	EUROPE: ftp.inria.fr (X/contrib-R5/clients). 
+	USA:	ftp.x.org (contrib/editors)
+	
+        Summary :
+        ---------
+        -Xcoral is a multiwindow  mouse-based text editor for
+        the X Window System.
+        -A built-in browser enables you to navigate through
+        C functions,C++ classes, Java Classes, methods and files. 
+        -A SMall Ansi C Interpreter (Smac) is also built-in
+        to dynamically extend the editor's possibilities
+        (user functions, key bindings, modes etc).
+        -Xcoral provides variable width  fonts, menus, toolbar,
+	scrollbars, buttons, search, regions, kill-buffers, macros and
+        undo. An on-line manual box, with a table of contents
+        and an index, helps you to use and customize the editor.
+        -Xcoral also offers facilities to write Latex documents
+        and Html pages.
+        -Commands are accessible from menus or  key bindings. 
+	-Xcoral is a direct Xlib client and runs on color/bw 
+	X Display. 
+
+        And also:
+
+        -Color syntax C/C++/Java mode with auto-indent.
+        -Mode Latex with auto-indent and colors.
+        -Mode edir (edit directory).
+        -Mode Html.
+        -RCS interface.
+        -Unix cmd (make, grep etc) from the editor.
+
+        OS :SunOS 4.1.x, Solaris 2.[45], LINUX, FreeBSD,
+	    AIX, HPUX, IRIX and Digital Unix.
+
+
+	Changes from xcoral-3.1:
+		Few bugs fixed (browser and selection)
+
+        Lionel.
+
+	E-mail : xcoral@aar.alcatel-alsthom.fr
+
+

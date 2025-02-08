@@ -1,0 +1,113 @@
+Revised 2005-01-18
+
+----------------------------------------------------------------------------
+                     The PINE Message System
+----------------------------------------------------------------------------
+
+LATEST PINE VERSION = 4.62, released 2005-01-18
+
+For the latest info on Pine, see:  http://www.washington.edu/pine/.
+
+Unix Pine, Pico, Pilot, imapd, rpload, rpdump, and mailutil
+_binaries_ are only accessible from http://www.washington.edu/pine/.
+
+The PC-Pine distribution is in the pcpine subdirectory.  See pcpine/README
+for more information.
+
+----------------------------------------------------------------------------
+
+What you'll find in this directory:
+
+README               - This file.
+pine.tar.Z           - Pine/Pico/IMAPd source distribution for latest version
+pine4.62.tar.Z       - Same as above
+pine.tar.gz          - Same as above but compressed with gnu zip
+pine4.62.tar.gz      - Same as above
+pine.tar.bz2         - Same as above but compressed with bzip2
+pine4.62.tar.bz2     - Same as above
+pine.intro.txt       - Standard short introduction to Pine
+pine-4.62-1.i386.rpm - RPM built on Red Hat Enterprise Server release 3
+pine-4.62-1.src.rpm  - Source RPM built on Red Hat Enterprise Server release 3
+pine_4.62-1_i386.deb - Debian package built on Debian GNU/Linux 3.0
+
+docs DIRECTORY:
+  Pine external documentation.  Supplements to the help information compiled
+  into Pine and the Unix man page.  The files in this directory are also
+  available in WWW form at http://www.washington.edu/pine/.
+
+  tech-notes.txt    - Text version of Pine Technical notes, about 50 pages
+  release-notes.txt - Release notes for the current version of Pine
+  user-guide.txt    - Based on Pine's online help (for version 3.94)
+  FAQs.txt          - Pointer to Pine FAQ in Pine Information Center
+  QandA.txt         - The Pine FAQ
+  pc-pine.txt       - Notes on PC Pine
+  how2get.txt       - Where to get Pine for different operating systems
+  legal.txt         - Pine Legal Notices
+  chronology.txt    - Release Chronology and Version Changes
+  hist.cred.txt     - Pine Project History and Credits
+  Getting_Started.* - An introductory guide to using Pine for novice 
+                      users, available in several formats.  The guide for each
+                      version (3.90, 3.95, 3.96) is in its own subdirectory.
+                      The guide for Pine version 4 is available in the Pine
+                      Information Center, at:
+                      http://www.washington.edu/pine/tutorial.4/
+
+
+pcpine DIRECTORY:
+  The current PC-Pine distribution.  See pcpine/README for details.
+
+old DIRECTORY:
+  Old versions of the Pine package.
+
+pine-info DIRECTORY:
+  Archives of discussion on the public pine-info list.  Coverage is from 
+  1993 to the present.  Archives dating back to Jan. 1995, also updated 
+  daily and with a searchable full-text index, are available on the World 
+  Wide Web at the URL http://www.washington.edu/pine/pine-info/
+
+
+----------------------------------------------------------------------------
+                GETTING STARTED ON BUILDING UNIX PINE
+----------------------------------------------------------------------------
+
+(Note: source code for PC-Pine is not currently available.)
+
+After downloading one of the compressed "tar" files (pine.tar.gz, _or_
+pine.tar.bz2, _or_ pine.tar.Z) here are the steps to build Unix
+Pine (and the other related programs):
+
+Step 1: Uncompress the downloaded file:
+
+        uncompress pine.tar.Z
+   or
+        gunzip pine.tar.gz
+   or
+        bunzip2 pine.tar.bz2
+        
+Step 2: Extract files from the "tar" archive:
+
+        tar xf pine.tar
+
+Step 3: Change directory to the extracted pineX.XX directory, e.g.
+
+        cd pine4.62
+
+Step 4: Read the distribution's README file for detailed instructions:
+
+        more README
+
+
+
+----------------------------------------------------------------------------
+                              LEGAL NOTICES
+----------------------------------------------------------------------------
+
+ --> All UW Software is copyrighted by the University of Washington
+ --> Pine and Pico are trademarks of the University of Washington
+ --> Use of the Pine-Info message archives for the compilation of email 
+     address lists for commercial purposes is prohibited 
+     (Chapter 42.17 RCW).
+
+----------------------------------------------------------------------------
+                                END README
+----------------------------------------------------------------------------

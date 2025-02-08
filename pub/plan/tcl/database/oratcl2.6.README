@@ -1,0 +1,19 @@
+The oratcl2.6.tar.gz file was created from the CVS repository
+for Oratcl.  This snapshot was made January 27, 2000.
+
+<webmaster@scriptics.com>
+
+Windows Users: We are now supporting TEA (Tcl Extension Architecture)
+compliant makefiles (http://www.scriptics.com/products/tcltk/tea/). See the
+README file for instructions on how to build Oratcl on windows using  TEA.
+
+Oratcl works with TCL8.2. It also works fine with Oracle 8 and 8i databases.
+
+We will no longer be updating the Visual C++ makefile. If you want to use
+that format,  it should be easy to edit. . If using an Oracle 8i database on
+Windows NT, you need to add   -DVERSION8DB to the DEFINES line in the
+makefile. You can also add this flag for an Oracle 8 build, it should work
+with or without it. In either case, leave in the -VERSION7 flag as this
+refers to the version of the Oracle API we are using. For TCL8.2, just point
+TCL and TCLIB to  the respective TCL8.2 locations. Change VER variable to 82.
+

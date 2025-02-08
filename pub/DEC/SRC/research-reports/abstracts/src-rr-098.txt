@@ -1,0 +1,20 @@
+
+                        AVAILABLE ELECTRONICALLY
+
+"The 1992 SRC Algorithm Animation Festival"
+Marc H. Brown
+March 27, 1993.  12 pages
+
+
+Abstract
+
+During the last two weeks of July 1992, twenty researchers at Digital
+Equipment Corporation's Systems Research Center participated in 
+the 1st Annual SRC Algorithm Animation Festival. Only two of the 
+researchers had previously animated an algorithm, and not too many 
+more had ever written an application that involved graphics.  In this 
+paper, we report on the Animation Festival, describing why we did it 
+and what we did, and commenting on what we learned.
+
+
+

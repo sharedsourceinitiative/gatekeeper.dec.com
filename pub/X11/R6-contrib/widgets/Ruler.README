@@ -1,0 +1,64 @@
+$Id: Ruler.README,v 1.4 1999/09/01 15:56:21 falk Exp $
+
+Ruler 1.0 -- A ruler to display along the edge of drawing canvases.
+
+  The Ruler widget displays a ruler, complete with tic marks and
+  labels.  A pointer may be displayed to represent a value along
+  the ruler.
+
+  Further, the ruler can be grabbed with the mouse and scrolled.
+
+  See Ruler.man for more information.
+
+  This package includes Frame widget
+
+
+HOW TO BUILD
+
+  It should be sufficient to type
+	
+	xmkmf ; make
+
+  This will build the Ruler widget and a demo program.
+
+  Alternatively, makefiles for Solaris, SunOS and Linux have been
+  provided.
+
+  To view man page:
+
+  	tbl Ruler.man | nroff -man
+
+
+
+Author:		Edward A. Falk <falk@falconer.vip.best.com>
+
+
+FILES
+	Imakefile	imakefile
+	Makefile.*	sample makefiles for various OSes
+	Ruler.c		Ruler widget
+	Ruler.h
+	RulerP.h
+	Ruler.man	man page
+	rulerdemo.c	demo program
+	Rulerdemo	resources file for demo program
+	Frame.c		Frame widget, part of demo program, not needed for Ruler
+	Frame.h
+	FrameP.h
+	Gcs.c		utility files for Frame widget, not required for Ruler
+	Gcs.h
+
+
+LICENSE
+
+    Copyright © 1999    Edward A. Falk
+
+    The X Consortium, and any party obtaining a copy of these files
+    from the X Consortium, directly or indirectly, is granted,
+    free of charge, a full and unrestricted irrevocable, world-wide,
+    paid up, royalty-free, nonexclusive right and license to deal in
+    this software and documentation files (the "Software"), including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and sell copies of the Software, and to
+    permit persons who receive copies from any such party to do so.
+

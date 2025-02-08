@@ -1,0 +1,61 @@
+This release of xmdiary is mainly a bug fix release.
+
+Home page:
+
+http://www.zurich.ibm.com/XDiary/
+
+You won't find this release there.  The screenshots and
+the documentation are the same.
+
+
+Bugs fixed in 3.0.3 are:
+
+  * Several subtle storage related bugs that become fatal in
+    combination with Doug Lea's malloc implementation (which is the
+    default for Linux systems as of libc-5.something) were fixed.
+
+  * Several Motif 1.x -> 2.x transition incompatibility problems
+    were fixed.  (and I thought Motif 2.x was supposed to be
+    backward-compatible with 1.x ?)
+    However, the code may no longer compile under 1.x.  
+
+  * Lots of unused variables were removed
+
+  * Lots of header files were included were unnecessarily.
+    Many were updated, and several invocations had
+    to be corrected.
+
+  * The resource files XDiary.ad and XDiary.map were updated to
+    prevent error messages at startup.  ("fix2")
+
+  * The alarm window was displayed iconic if XDiary
+    was started with the -iconic option  ("fix2")
+
+  * Quite a lot of bugs assorti were fixed
+
+  * To avoid confusion with release 3.0.1-fix2 versions (released
+    by the official maintainers), version 3.0.2 was skipped.
+
+  * Note that the old SCCS version id's are not updated.
+
+  * Not fixed are some minor problems concerning dealing with dates >1999.
+    It is uncertain how fixing that might interfere with existing
+    agendas.
+
+
+NOTE:
+
+I made these fixes quite some time ago.  Due to popular
+request I want to make them publicly available.  Several
+attempts to contact the original authors of the package
+about this were unsuccessful.  Since somewhere in the
+documentation one of them suggests that they no longer
+care about this program, I feel free to go ahead and 
+create a new release.
+
+I do this even though I am not and will not be the
+maintainer of this package (even though the package would
+deserve it!).
+
+-Raymond Nijssen
+(raymond.nijssen@iname.com)

@@ -1,0 +1,73 @@
+*** sbin/ifconfig/ifconfig.c	1997/01/07 17:46:34	1.1
+--- sbin/ifconfig/ifconfig.c	1997/01/31 06:06:41
+***************
+*** 97,100 ****
+--- 97,104 ----
+  #define	NEXTARG		0xffffff
+  
++ #ifdef IFDEFAULT
++ int	setifdefault();
++ #endif
++ 
+  struct	cmd {
+  	char	*c_name;
+***************
+*** 128,131 ****
+--- 132,141 ----
+  	{ "-link0",	-IFF_LINK0,	setifflags } ,
+  	{ "link1",	IFF_LINK1,	setifflags } ,
++ 
++ #ifdef IFDEFAULT
++ 	{ "default",	NEXTARG,	setifdefault },
++ 	{ "-default",	0,		setifdefault },
++ #endif
++ 
+  	{ "-link1",	-IFF_LINK1,	setifflags } ,
+  	{ "link2",	IFF_LINK2,	setifflags } ,
+***************
+*** 587,590 ****
+--- 597,603 ----
+  			printf("broadcast %s", inet_ntoa(sin->sin_addr));
+  	}
++ #ifdef SIOCSIFROUTE
++ 	/* XXX should print interface default here. */
++ #endif
+  	putchar('\n');
+  }
+***************
+*** 761,764 ****
+--- 774,807 ----
+  	}
+  }
++ 
++ #ifdef IFDEFAULT
++ int
++ setifdefault(addr)
++ 	char *addr;
++ {
++ 	struct hostent *hp;
++ 
++ 	if (addr != NULL && strcmp(addr, "-default") != 0) {
++ 		if (!inet_aton(addr,
++ 			       (struct in_addr *)&ifr.ifr_addr.sa_data [2])) {
++ 			if (hp = gethostbyname(addr))
++ 				memcpy(&ifr.ifr_addr.sa_data[2],
++ 					hp->h_addr, hp->h_length);
++ 			else
++ 				errx(1, "%s: invalid IP address", addr);
++ 		}
++ 		ifr.ifr_addr.sa_family = AF_INET;
++ 		ifr.ifr_addr.sa_len = sizeof(struct sockaddr_in);
++ 		if (ioctl(s, SIOCSIFROUTE, &ifr) < 0)
++ 			err(1, "ioctl (%d, SIOCSIFROUTE, %s %d %s)",
++ 			    s, ifr.ifr_name, ifr.ifr_addr.sa_family,
++ 			    inet_ntoa(*((struct in_addr *)&ifr.ifr_addr.
++ 					sa_data[0])));
++ 	} else {
++ 		if (ioctl(s, SIOCDIFROUTE, &ifr) < 0)
++ 			err(1, "SIOCDIFROUTE");
++ 	}
++ }
++ #endif
+  
+  #define SNS(x) ((struct sockaddr_ns *) &(x))

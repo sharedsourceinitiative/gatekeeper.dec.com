@@ -1,0 +1,10 @@
+"Studying Balanced Allocations with Differential Equations"
+Michael Mitzenmacher
+Note #1997-024. October 1, 1997.
+
+Using differential equations, we examine the GREEDY algorithm studied
+by Azar, Broder, Karlin, and Upfal for distributed load
+balancing. This approach yields accurate estimates of the actual load
+distribution, provides insight into the exponential improvement GREEDY
+offers over simple random selection, and allows one to prove tight
+concentration theorems about the loads in a straightforward manner.

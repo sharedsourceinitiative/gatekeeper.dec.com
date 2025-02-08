@@ -1,0 +1,910 @@
+<HEAD><TITLE>SRC Technical Note 1997-3</TITLE></HEAD>
+<BODY>
+<HR>
+<center>
+<H2><b>SRC Technical Note</b></H2><BR>
+<H3><b>1997-3</b></H3><BR>
+<H3>May 6, 1997</H3><BR>
+
+<HR>
+<H2>Hypermedia Presentation and Authoring System</H2>
+<P>
+<H3>Jin Yu and Yuanyuan Xiang</H3>
+<HR>
+<IMG SRC="http://www.research.digital.com/SRC/pics/DEC-logo.gif"><br>
+<b>Systems Research Center</b><BR>
+130 Lytton Avenue<BR>
+Palo Alto, CA 94301<BR>
+http://www.research.digital.com/SRC/
+<P>
+<HR>
+Copyright 1997 Digital Equipment Corporation. All rights reserved
+<HR>
+</center>
+
+<h2>1. Introduction</h2>
+
+The tremendous growth in the number of Internet applications is driven
+by the use of rich media such as images, audio, and videos for
+representing and exchanging information. The result is the merging of
+hypertext and multimedia, or hypermedia. Hypermedia documents
+(eg. HTML files) function as containers for hypermedia objects, which
+are network transparent entities with a variety of media types, such
+as MPEG, GIF, RTF, etc. The composition and presentation of hypermedia
+documents presents us with many new challenges, because of the dynamic
+nature of multimedia and the large variety of media types.
+Specifically, a hypermedia system must meet the following requirements
+<a href="#r1">[1]</a>:
+
+<ol>
+<li> high-level temporal synchronization between hypermedia objects
+<li> the provision of time-dependent spatial synchronization within the
+     hypermedia document architecture
+<li> the integration and transparent handling of various media types
+<li> network transparency in document and object retrieval
+<li> a simple but powerful user interface manipulating the temporal and
+     spatial information within the hypermedia document
+</ol>
+
+<p>
+
+Existing HTML authoring and browsing tools provide static spatial
+management by using relative geometry based on the underlying
+text. Emerging technologies such as Java Applets, JavaBeans, and
+Netscape Plug-ins extend the basic capabilities of HTML
+tools. However, the combination of the technologies and the HTML tools
+is still not sufficient to represent temporal-based multimedia
+presentations with associated dynamic spatial layout, because they are
+constrained by the static nature of HTML. Although many extensions
+have been made, HTML still provides primarily static layout controls.
+
+<p>
+
+Our approach eliminates the traditional concept of page, and provides
+temporal synchronization of distributed media objects within a
+hypermedia document. With this approach, our system allows the spatial
+layout of the document to be changed dynamically with respect to
+time. In addition, the integration of the browsing and authoring
+environment gives users a powerful yet simple way to graphically
+construct and manage hypermedia objects and their containing
+documents.
+
+<p>
+
+The HPAS environment supports the structure-based composition and the
+dynamic presentation of the HPA (Hypermedia Presentation/Authoring)
+document architecture, which conforms to the <a
+href="http://www.w3.org/pub/WWW/MarkUp/SGML/">SGML</a> standard. An
+HPA document is composed of a list of HPA objects, which are
+identified by Uniform Resource Locators <a href="#r4">[4]</a>.  Each
+object can have an associated media stream (but this is not required)
+with an appropriate MIME type. In addition, the objects within the
+document are temporally related and every object carries its own
+spatial layout information.
+
+<p>
+
+The next section outlines the architecture of the system. Sections 3
+and 4 discuss the temporal and spatial management. Section
+5 describes HPA objects in detail. Finally, we briefly discuss the
+implementation issues and future work in sections 6 and 7.
+
+<h2>2. Architecture and System Overview</h2>
+
+The global picture of HPAS is shown in Fig.1. The presentation
+subsystem comprises the components on the left hand side, and the
+authoring subsystem comprises the components on the right hand
+side. The temporal and spatial managers are shared by both subsystems.
+The network manager provides both uploading and downloading services
+to the rest of the system. Our model permits multiple instances of
+those components. For example, several browser windows, or
+presentation managers may be active at the same time.
+
+<p>
+
+The presentation subsystem is the browser part of HPAS. Coordinating
+with the temporal and spatial manager, the presentation manager drives
+the various object presenters to display objects into the browser
+window. The authoring subsystem allows authors to graphically
+construct HPA documents. The composition manager communicates with
+temporal and spatial managers to synchronize the objects within HPA
+documents. It also manages the object editors, which are responsible
+for the authoring of object media data.
+
+<p>
+
+<center> <img src=arch.gif> </center>
+
+<h2>3. Temporal Synchronization</h2>
+
+A crucial step in designing multimedia applications is to guarantee that the
+composition of multiple monomedia is synchronized temporally.
+There are two distinguished time synchronization levels between
+objects in a hypermedia document, namely low-level media-specific
+synchronization and high-level interobject synchronization. The
+low-level synchronization requires media-specific timing constraints to be
+satisfied. For example, speech (audio) should match the motion
+of lips (video). On the other hand, the interobject
+synchronization specifies only the temporal constraints of the
+construction, lifetime, and destruction of objects. Currently, we are
+concerned only with interobject synchronization, because low-level
+synchronization requires the knowledge of specific media types.
+
+<p>
+
+Traditionally, there have been several approaches to achieving temporal
+synchronization between objects. Scripting-based systems allow authors
+to explicitly program timing information. During presentation, the
+systems interpret the scripts and perform actions specified in the
+scripts. This approach is powerful, but usually requires proficiency
+in programming, which severely limits the range of authors.
+Timeline-based systems model a conceptual timeline. Authors simply place
+objects to be presented on this timeline. However, since this approach
+requires objects to be placed relative to the time axis, it is not
+well suited for operations such as moving, copying, or deleting parts
+of the presentation. Furthermore, neither of the approaches allows
+direct and intuitive manipulations of the temporal structure of the
+hypermedia document. In our approach, temporal information is
+described in terms of object relations; that is, each object is
+described in terms of other related objects. This is well suited for
+presentations with distributed media objects, since the elapsed time of
+each object depends on both the network bandwidth and CPU speed. In
+addition, HPAS also provides users with a powerful interface to access and
+manipulate the temporal information in HPA documents. The following
+sections describe the temporal synchronization mechanism in detail.
+
+<h3>3.1 Temporal Interval and MRG</h3>
+
+In our framework, each object is associated with a temporal interval,
+which is characterized as a nonzero duration of time in seconds.
+Given any two temporal intervals, there are thirteen mutually
+exclusive relationships <a href="#r2">[2]</a>. According to Little and
+Ghafoor <a href="#r7">[7]</a>, the temporal relations can be
+represented as Fig.2a. The figure shows only seven of the thirteen
+relations since the remaining ones are inverse relations. For
+instance, <i>after</i> is the inverse relation of <i>before</i>.
+
+<p>
+
+<center> <img src=relation.gif> </center>
+
+<p>
+
+To represent our temporal model, we define a set of <i>links</i>
+between two objects, <i>p</i><sub>1</sub> and <i>p</i><sub>2</sub>:
+
+<ul>
+<li> (<i>p</i><sub>1</sub> <i>SerialLink</i> <i>p</i><sub>2</sub>):
+     the temporal interval <i>I</i>(<i>p</i><sub>1</sub>) <i>meets</i>
+     <i>I</i>(<i>p</i><sub>2</sub>). In other words,
+     <i>p</i><sub>1</sub> is the parent of <i>p</i><sub>2</sub>, and
+     <i>p</i><sub>2</sub> is the child of <i>p</i><sub>1</sub>.
+<li> (<i>p</i><sub>1</sub> <i>StartSync</i> <i>p</i><sub>2</sub>):
+     the temporal interval <i>I</i>(<i>p</i><sub>1</sub>) and
+     <i>I</i>(<i>p</i><sub>2</sub>) share the same starting point.
+<li> (<i>p</i><sub>1</sub> <i>EndSync</i> <i>p</i><sub>2</sub>):
+     the temporal interval <i>I</i>(<i>p</i><sub>1</sub>) and
+     <i>I</i>(<i>p</i><sub>2</sub>) share the same ending point.
+</ul>
+
+Besides <i>links</i>, each object has a user-defined attribute `time
+to live', or <i>ttl</i>, which specifies how long the object may be
+active on the screen. In addition, our model also defines the notion
+of <i>dummy object</i>. A dummy object does not have any content, nor
+does it have an associated type. Such an object can be used to
+represent a time delay by defining its <i>ttl</i> attribute.
+
+<p>
+
+With the definitions of <i>SerialLink</i>, <i>StartSync</i>,
+<i>EndSync</i>, <i>ttl</i>, and dummy object, we can now introduce the
+notion of Media Relation Graph (MRG), as shown in Fig.2b. The MRG in
+Fig.2b corresponds to the temporal relations illustrated in <a
+href="#r7">[7]</a> (Fig.2a). In our MRG, a one-way arrow denotes the
+<i>SerialLink</i> operator, where the left hand side operand is the
+object at the starting end of the arrow and the right hand side
+operand is the object being pointed to by the arrow. Similarly, the
+<i>StartSync</i> operator is denoted by a two-way solid arrow, and
+the <i>EndSync</i> operator is represented by a two-way dashed
+arrow. Finally, a rectangular node represents a regular object and
+a round node represents a dummy object. By using the notions of
+<i>SerialLink</i>, <i>StartSync</i>, <i>EndSync</i>, <i>ttl</i>, and
+dummy object, we can use MRG to represent all the thirteen temporal
+relationships defined by Allen <a href="#r2">[2]</a>.
+
+<h3>3.2 Object Activation and Deactivation</h3>
+
+This section describes the object activation and deactivation
+policies. Before we state the policies, several concepts need to be
+defined:
+
+<ul>
+<li> The activation time of an object, or <i>atime</i>, is the time when the
+     object <b>appears on the screen</b>. At that time, the object is said
+     to be <i>activated</i>.
+<li> The deactivation time of an object, or <i>dtime</i>, is the time when the
+     object <b>disappears from the screen</b>. At that time, the object is
+     said to be <i>deactivated</i>.
+<li> The elapsed time of an object, or <i>etime</i>, is the difference between
+     <i>dtime</i> and <i>atime</i>; <i>etime</i> is said to be the temporal
+     interval of the object.
+<li> The content time, or <i>ctime</i> of an object, is the time needed to
+     present the object's entire media stream.
+</ul>
+
+Note that if an object's <i>ttl</i> value is greater than its
+<i>ctime</i>, it will stay idly on the screen after <i>ctime</i> is
+reached and before <i>ttl</i> is expired.
+
+<p>
+
+We also define the starting point of an HPA presentation to be the
+root object, which is a dummy object with the value of its <i>ttl</i>
+attribute being zero. The root object is deactivated once the
+presentation starts. In addition, for every object in the presentation
+(excluding the root object itself), an implicit <i>SerialLink</i>
+exists between the root and the object.
+
+<p>
+
+Now we can introduce the activation and deactivation policies:
+<ul>
+<li> An object <b>may</b> be <a name="activate">activated</a> if
+     both of the following hold:
+  <ol>
+  <li> The object's parents and the parents' <i>EndSync</i> peers are all
+       deactivated.
+  <li> All of the object's <i>StartSync</i> peers satisfy the condition above.
+  </ol>
+<li> Object <a name="deactivate">deactivation</a> is governed by the
+     following rules:
+  <ol>
+  <li> The object must be deactivated with all of its <i>EndSync</i> peers
+       at the same time.
+  <li> For the object and all of its <i>EndSync</i> peers,
+       <i>etime</i> is greater than or equal to <i>ttl</i>.
+  <li> The priority of <i>ttl</i> is higher than that of <i>ctime</i>.
+  <li> If <i>ttl</i> is not specified, the value of <i>ctime</i> is
+       assigned to it.
+  </ol>
+</ul>
+
+Even at the time that both activation policies are satisfied, the
+system might not be able to activate the object immediately, since at
+that time the object's media stream may not be readily available from
+the network. This situation will be explained further in section 6.
+
+<h3>3.3 MRG Example</h3>
+
+Let's consider the following sample code from an HPA file:
+
+<pre>
+&ltobj id = 0 name = "Root" ...
+     serialLink = '1 2 3' timeToLive = 0&gt &lt/obj&gt
+&ltobj id = 1 name = "Bird Show" type = "video/mpeg" ...
+     startSync = '2 3' endSync = '2' timeToLive = 10&gt &lt/obj&gt
+&ltobj id = 2 name = "Bird Walk" type = "video/mpeg" ...
+     serialLink = '5'  startSync = '1' endSync = '1' timeToLive = 6&gt &lt/obj&gt
+&ltobj id = 3 name = "Dummy" ...
+     serialLink = '4' startSync = '1' timeToLive = 4&gt &lt/obj&gt
+&ltobj id = 4 name = "Bird Intro" type = "text/html" ...
+     endSync = '6' timeToLive = 20&gt ... &lt/obj&gt
+&ltobj id = 5 name = "Seagull" type = "image/gif" ...
+     seriallink = '6' timeToLive = 5&gt &lt/obj&gt
+&ltobj id = 6 name = "Bird Song" type = "audio/basic" ...
+     endSync = '4' timeToLive = 5&gt &lt/obj&gt
+</pre>
+
+In the code segment above, each <i>obj</i> element describes an HPA
+object.  The <i>serialLink</i> attribute of an object specifies the
+object's children, which are represented by the list of object
+IDs. The syntaxes of <i>startSync</i> and <i>endSync</i> are identical
+to that of <i>serialLink</i>. Object IDs are a sequence of
+non-negative integers starting from zero, which represents the root
+object. The composition manager is responsible for assigning object
+IDs.
+
+<p>
+
+Table 1 shows another representation of the objects described in the code
+fragment, and Table 2 illustrates the temporal relations of the objects,
+defined in terms of the terminologies used by Allen <a href="#r2">[2]</a>.
+
+<p>
+
+<center>
+
+<table width=555 border=0>
+<tr><td>
+<table border=0>
+<tr><td>
+<table border=0>
+<tr align = center><th> Table 1. Object descriptions </th></tr>
+<tr align = center><td>
+  <table border=1>
+    <tr><th align= center>Obj Name </th>
+	<th align= center>Type </th>
+	<th align= center>Obj Id </th>
+	<th align= center>Time To Live</th>
+    </tr>
+    <tr><td align= center> Root </td>
+	<td align= center>  </td>
+	<td align= center> 0 </td>
+	<td align= center> 0 </td>
+    </tr>
+    <tr><td align= center> Bird Show </td>
+	<td align= center> video/mpeg </td>
+	<td align= center> 1 </td>
+	<td align= center> 10 </td>
+    </tr>
+    <tr><td align= center> Bird Walk </td>
+	<td align= center> video/mpeg </td>
+	<td align= center> 2 </td>
+	<td align= center> 6 </td>
+    </tr>
+    <tr><td align= center> Dummy </td>
+	<td align= center>  </td>
+	<td align= center> 3 </td>
+	<td align= center> 4 </td>
+    </tr>
+    <tr><td align= center> Bird Intro </td>
+	<td align= center> text/html </td>
+	<td align= center> 4 </td>
+	<td align= center> 20 </td>
+    </tr>
+    <tr><td align= center> Seagull </td>
+	<td align= center> image/gif </td>
+	<td align= center> 5 </td>
+	<td align= center> 5 </td>
+    </tr>
+    <tr><td align= center> Bird Song </td>
+	<td align= center> audio/basic </td>
+	<td align= center> 6 </td>
+	<td align= center> 5 </td>
+    </tr>
+
+  </table>
+</td></tr>
+<tr align = center><td align = center>
+<table border=0>
+<tr align = center><th> Table 2. Temporal relations </th></tr>
+<tr align = center><td>
+  <table border=1>
+    <tr><td align= center> before </td>
+	<td align= center>  </td>
+    </tr>
+    <tr><td align= center> meets </td>
+	<td align= center> (2,5), (5,6) </td>
+    </tr>
+    <tr><td align= center> overlaps </td>
+	<td align= center> (1,4) </td>
+    </tr>
+    <tr><td align= center> during </td>
+	<td align= center>  </td>
+    </tr>
+    <tr><td align= center> starts </td>
+	<td align= center> (3,1) </td>
+    </tr>
+    <tr><td align= center> finishes </td>
+	<td align= center> (6,4) </td>
+    </tr>
+    <tr><td align= center> equals </td>
+	<td align= center> (1,2) </td>
+    </tr>
+
+  </table>
+</td></tr>
+</table>
+</td>
+</table>
+</td></tr>
+</table>
+<td align = center>
+<center> <img src=mrg.gif> </center>
+</td>
+</tr>
+</table>
+</center>
+
+<p>
+
+Finally, Fig.3 describes the MRG representation which corresponds to
+the temporal relations in Table. 2.
+
+<p>
+
+<h3>3.4 Using Our Temporal Framework</h3>
+
+For supporting authors with editing the temporal structure of HPA
+documents, the composition manager utilizes the services of the
+temporal manager and provides a tree-like temporal editor, whose
+content exactly reflects the temporal graph structure (MRG). The two
+images below are screen shots of the temporal editor. The image on the
+left shows objects by their IDs, and the one on the right shows
+objects by their types, with color pixmaps corresponding to major MIME
+types (text, image, video, audio, etc.). Notice the similarity between
+the screen dumps and Fig.3.
+
+<p>
+<center> <a href=id.gif><img src=id.gif width=265></a>
+         <a href=type.gif><img src=type.gif width=265></a> </center>
+<p>
+
+The temporal editor reflects only the relationships between objects,
+not the content of each object, that is, the content need not exist in the
+temporal authoring process. This property enables authors to choose
+either a <i>top down</i> or a <i>bottom up</i> approach to composition
+<a href="#r6">[6]</a>. In the <i>top down</i> approach, authors first
+build the temporal structure by creating nodes which represent objects
+in the MRG. Authors then create the synchronization links between
+objects by drawing lines between the nodes in the graph. The final
+step is to provide the content of objects by using various media-specific
+object editors. By contrast, the <i>bottom up</i> approach allows
+authors to create the content of objects first, and then
+create the temporal relations between them.
+
+<p>
+
+The temporal authoring process starts with the creation of nodes in
+the MRG (the nodes correspond to the buttons in the screen
+shots). Those nodes represent the objects in an HPA document. Next,
+one-way arrows are drawn between nodes, reflecting the
+<i>SerialLink</i> relationships between corresponding objects.
+Similarly two-way solid arrows and two-way dashed arrows are drawn to
+denote <i>StartSync</i> and <i>EndSync</i> relations, respectively.
+The system also allows authors to create the three types of links in
+different orders; authors may first create <i>StartSync</i>, then
+<i>SerialLink</i>. While adding every link between objects, the
+composition manager verifies that the resulting graph is free of
+temporal conflicts. The attributes of an individual object may be
+specified by right clicking on the corresponding button and selecting
+the appropriate menu option in the temporal editor. This is the
+crucial step where an author specifies the <i>ttl</i> value of the
+object. Finally, the document generator is responsible for generating
+the text representation of the document structure, which has been
+passed to it by the composition manager.  As a side note, authors are
+discouraged from editing HPA documents manually (using a text editor)
+because of the inherent complexity of temporal logic. However, it is
+perfectly legal to change simple object attributes such as <i>src</i>
+(described in section 5) by using a text editor, since it is
+convenient to do this kind of modification offline (without invoking
+HPAS).
+
+<p>
+
+In the presentation process, the presentation manager receives the
+parsed document structure from the document parser, then coordinates
+with the temporal manager to eliminate temporal inconsistencies. This
+is necessary because the manual editing of HPA documents is allowed
+and errors could therefore be introduced. The resulting documents may
+contain temporal relations not verified by the composition manager.
+
+<p>
+
+Its close integration with the temporal manager also allows the
+presentation manager to provide facilities that supports start,
+pause, resume, and step operations. If the temporal validation of the
+document structure is successful (or at least part of the document is
+validated), the presentation will be started and objects will be
+activated according to the temporal information in the document. The
+<i>pause</i> operation temporarily stops the presentation and all the
+active objects, while the <i>resume</i> operation continues the
+presentation and all the objects stopped by <i>pause</i>. Finally,
+performing the <i>step</i> operation immediately terminates
+(<a href="#deactivate"><i>deactivates</i></a>) all the active objects on
+the screen, and their children are started if they satisfy the <a
+href="#activate"> activation</a> policy.
+
+<p>
+
+A screen shot of HPAS' presentation window (browser) is shown in the
+next picture. It shows three video objects (the starship `Enterprise'
+and the two birds), an image object (the flower), two rich text
+objects, and an audio object (at the upper-right corner).
+
+<p>
+
+<center> <a href=browser.gif><img src=browser.gif width=300></a>
+</center>
+
+<h2>4. Spatial Synchronization</h2>
+
+Many approaches exist for managing spatial synchronization in
+hypermedia documents. The simplest approach is using absolute layout
+specification, where the geometry of an object is defined by the
+coordinates(x, y, width, height). HTML takes a different approach.
+Based on the underlying text, it relies on control elements (list,
+table, center, etc.) to manage the document geometry. However, these
+approaches are not sufficient for supporting temporal-based multimedia
+presentations. In particular, HTML's layout elements (such as table)
+are static and do not change over time.
+
+<p>
+
+Our approach allows the dynamic placement of objects by providing a
+time-dependant layout scheme, which uses the notions of <i>cell</i>
+and <i>area</i>. While authoring, the composition manager evenly
+divides the document window into a grid of cells, with the number of
+horizontal and vertical cells specified by the author (so the size of
+each <i>cell</i> is fixed within a presentation). A rectangular group
+of cells forms an <i>area</i>, which may be occupied by one
+object. The object is constrained by the <i>area</i>. The <i>area</i>
+does not resize itself to accommodate the object; instead, the object is
+responsible for resizing itself to fit into the <i>area</i>. The
+layout and the number of <i>area</i>s on the grid change with respect
+to time. At any point in time, there may be zero or more <i>area</i>s
+on the grid, corresponding to zero or more regular objects. Dummy
+objects do not have <i>areas</i>.
+
+<p>
+
+For each object and its associated <i>area</i>, several geometric
+attributes may be defined. Here is an HPA file fragment which
+describes the geometry of an object:
+
+<pre>
+&ltobj id = 1 ... area = '0 0 5 4' geomUnit = grid
+     topOffset = 1 align = hcenter ...&gt ... &lt/obj&gt
+</pre>
+
+The <i>area</i> of the above object starts at the cell in the
+upper-left corner of the document window and spans 5 cells
+horizontally and 4 cells vertically. The top border of the object is 1
+cell from its <i>area</i>'s top border, and the object itself is
+centered horizontally within its <i>area</i>.
+
+<p>
+
+The scheme above specifies only how an object may be placed within its
+<i>area</i>. Since several objects may overlap one another at any
+time, we also need a mechanism for guaranteeing that associating an
+object with its area does not produce the undesired overlapping
+effect. So obviously some form of validation is needed when an author
+uses the spatial manager to define an object's <i>area</i>: <br>
+
+<ul> An object <i>o</i> can occupy an <i>area</i> <i>a</i> if either or
+     both of the following hold:
+<li> <i>a</i> has no intersection with the <i>area</i>s of any other objects.
+<li> For every object <i>c</i> where <i>c</i>'s <i>area</i> intersects with
+     <i>o</i>'s <i>area</i>, <i>c</i> belongs to the union of <i>P</i> and
+     <i>Q</i>, where <i>P</i> is the set of objects formed by <i>o</i>'s
+     ancestors and the ancestors' <i>EndSync</i> peers, and <i>Q</i> is the
+     set of objects formed by <i>o</i>'s descendants and the descendants'
+     <i>StartSync</i> peers.
+</ul>
+
+It is obvious that the objects in <i>P</i> are deactivated
+before or at the activation time of <i>o</i>, and the objects in
+<i>Q</i> are activated at or after the deactivation time of
+<i>o</i>. Therefore, it is not possible for <i>o</i> to overlap the
+objects in <i>P</i> or <i>Q</i>, since they live in different time
+frames.
+
+<p>
+
+With the criteria above, a given object can occupy only a limited set of
+cells. This is too restrictive in some situations. Therefore, we
+further extend our document architecture to incorporate the concept of
+<i>scene</i>. In the spatial aspect, each scene defines its own grid
+layout, therefore objects in one scene are free from the spatial
+constraints associated with objects in another scene. In the temporal
+aspects, each scene has its own temporal graph, and there are no
+temporal relations between objects in two adjacent scenes, except that
+the objects in the later scene are activated at or after the
+deactivation times of the objects in the previous scene.
+
+<p>
+
+In brief, <i>scene</i> provides logical groupings of objects within
+HPA documents, and the objects in each scene form a complete
+presentation. Moreover, the breaking of a complicated HPA document
+into multiple scenes is analogous to the dividing of a book into
+chapters. It provides a better organization of the document and allows
+authors to edit subsections (scenes) of the document in any order.
+Furthermore, viewers may step through scenes or randomly access
+particular scenes at will.
+
+<h2>5. Framework and Objects</h2>
+
+In contrast to traditional large monolithic applications, the HPAS
+environment provides a framework for embedding components. Similar
+component programming models exist, such as CI Labs' OpenDoc and
+Microsoft OLE. However, these models are heavy-weight and are not
+available on many Unix platforms. Netscape's Plug-ins framework is
+light-weight and portable on most platforms, but it does not
+provide native support for media conversion and editing, which are
+essential for the extensibility of the applications on top of the
+framework. Our framework provides a simple but powerful application
+programming interface (API). The API is specific to our environment
+and hence it is small and efficient. The system is not aware of any
+specific media types. This design facilitates the transparent handling
+of different media streams. The components of our framework include
+object presenters, object editors, and object converters. The
+framework itself does not implement any components; it only provides a
+set of basic services to the components. The main ones are network
+management, temporal and spatial synchronization service, which we have
+discussed in the previous sections. We will describe network service in
+the implementation section.
+
+<p>
+
+The basic element of our environment, the HPA object (or <i>hobject</i>
+for short), is a network transparent entity uniquely identified by a
+URL <a href="#r4">[4]</a>. Each hobject has an associated type, which
+conforms to the MIME <a href="#r5">[5]</a> standard. There are two
+major categories of hobjects: ones with media streams and ones
+without media streams. Examples of stream-based hobjects are JPEG
+images and MPEG videos. Streamless hobjects are typically application
+configurations, such as a game setting for a multi-user tank
+game. Hoject attributes are specified in both the temporal and spatial
+authoring processes, but there are several attributes that are not
+related to temporal or spatial management. For example:
+
+<pre>
+&ltobj id = 2 type = "video/mpeg" name = "Love Bird"
+     src = "http://www.some.com/mpeg/bird.mpg"
+     anchor = "http://www.goldfish.com/gold/" ...&gt ... &lt/obj&gt
+</pre>
+
+The <i>type</i> attribute specifies the MIME type of the hobject, the
+<i>src</i> attribute denotes the location of the content of the
+hobject, and the <i>anchor</i> attribute defines the anchor represented by
+the hobject. As a side note, an hobject with no type and no content is a
+dummy object.
+
+<h3>5.1 Media Handler</h3>
+
+Fundamental to our design is the close interaction between hobjects
+and media handlers (or <i>mhandler</i>s for short), which are
+dynamically loaded modules that implement all of HPAS' media-specific
+capabilities. Hobjects are passive entities; they contain only
+attributes and data streams. Mhandlers are active entities; they
+provide operations such as displaying and editing hobjects.  The
+system itself does not implement any mhandlers. All handler modules
+are loaded into the system at run time. Mhandlers use the basic
+network service provided by HPAS, and they are also free to implement
+their own network services. A single mhandler may choose to support
+more than one MIME type, and it may implement presenting features,
+editing features, or both. Finally, any hobject attributes that are
+not understood by HPAS are passed to mhandlers for further
+processing. This allows authors to pass media-specific information to
+the mhandlers.
+
+<h3>5.2 Presenter, Editor, and Converter</h3>
+
+The components of the HPAS framework are object presenters, object
+editors, and object converters. Among them, presenters are
+implemented solely by mhandlers; editors are either existing
+standalone applications or modules implemented by mhandlers.
+Converters are simply external filters. The framework provides a
+plug-and-play configuration interface to these components, so one
+immediate advantage is that adding or removing components
+requires no reconstruction of the system. Furthermore, this design
+greatly increases the system's extensibility, since the types of media
+objects that can be handled by HPAS are virtually unlimited.
+
+<p>
+
+Presenters are responsible for the inline displaying of objects, and
+editors are responsible for authoring the content of objects. To
+implement a presenter, apart from being able to display a particular
+type of object, an mhandler must provide certain operations, such
+as <i>pause</i> and <i>resume</i>. These two operations are called
+when the presentation manager pauses and resumes an HPA
+presentation. To implement an editor, apart from providing editing
+functions, an mhandler must be able to inform HPAS of its
+content modification state. Common operations such as
+construction/destruction, stream downloading/uploading, and printing
+are required for both presenters and editors. If an mhandler
+implements both presenter and editor, it should provide different
+interfaces for the two. In particular, the editing part should have a
+popup window and a menubar.
+
+<p>
+
+Providing an HTML presenter allows HPAS to be used as a normal HTML browser,
+which is necessary because the current Web infrastructure is based on HTML
+files. Also, it is possible to implement a Java Applet presenter. In this
+case the Applet mhandler will implement a singleton Java interpreter,
+which is to be shared by multiple instances of Applet presenters.
+
+<p>
+
+Object editors are usually well developed media-specific applications.
+This allows HPAS to exploit the powerful features of existing applications.
+However, the drawback of this approach is the loose integration between HPAS
+and the editors. For example, when HPAS wants to close an editor, it has
+no way of knowing whether the content of the editor has been saved or not.
+
+<p>
+
+When no presenters or editors exist to handle a particular object stream,
+an object converter will be invoked to operate on the stream, creating
+a stream with a different MIME type. The resulting stream is then
+passed over to an appropriate presenter or editor for further
+processing. Converters are external programs written for generic media
+conversion purposes.
+
+<h3>5.3 User Interaction</h3>
+
+System level user interactions are provided by the presentation manager
+through <i>anchor</i>s.  An anchored object is just like any other
+object, except clicking on it will typically overlay the browser
+window with the content of the entity pointed to by the anchor. The
+anchor is addressed by a URL <a href="#r4">[4]</a>, and may contain a
+fragment ID in the form <i>#fragment_id</i>, which points to a subpart of
+the target entity. If the target entity is an HPA document, the anchor
+may refer to a particular scene or even to an hobject within the
+scene. This allows a viewer to start viewing the presentation from that
+particular scene or hobject.
+
+<p>
+
+Object level user interactions are solely implemented by
+presenters. Presenter writers may provide viewers with any type of
+user interaction, as long as these interactions are permitted by the
+window system.
+
+<h2>6. Implementation Issues</h2>
+
+The framework implements a <i>temporal scheduler</i> to manage the
+activation and deactivation of hobjects. We considered three
+approaches to accomplish this. In the first approach, upon the
+activation of each hobject, we record the system time as the
+<i>atime</i> of the hobject. A polling loop periodically checks
+system time and compares it with the <i>atime</i> of the hobject to decide
+if the hobject's <i>ttl</i> value is expired; among other things, the
+polling loop also examines the three <i>link</i> attributes of the
+hobject, and activates and deactivates various hobjects as
+appropriate. The second approach is completely event-driven.  Since most
+user interface toolkits provide some form of event loop, we rely on
+the event loop to provide scheduling services, in the form of timer
+events. The third approach is to implement each active hobject as a
+thread, and synchronize the threads accordingly.  Using a polling loop
+as in the first approach is a waste of CPU time, since much computation
+is done within the loop, and most rounds of the loop
+are wasted (no hobjects are activated or deactivated). In addition,
+thread interfaces are different on many operating systems, and not all
+systems support re-entrant system calls. Therefore, we decided to use
+the event-driven model to implement our temporal scheduler.
+
+<p>
+
+Besides the temporal scheduler, we also multiplex the network manager
+into the user interface event loop. This approach allows the system to
+provide timer, network, and interface events in a single event
+loop. When timer/network events are dispatched, the corresponding
+timer/network callbacks are called.  An hobject may be activated in
+either a timer callback or a network callback, whichever is later.
+(There are several types of timer and network events; we are talking
+about the ones that may activate hobjects.) On the other hand,
+the deactivation of hobjects can be triggered by timer events, media
+access events (such as end of media), and exception events (such as
+network and media error).
+
+<p>
+
+The network manager is designed to provide generic network services.
+It listens to the network all the time. Depending on the preferences
+of individual mhandlers, it can deliver data in a progressive
+fashion or write all the data into files and then pass the filenames to
+the mhandlers. The most commonly used services from the network
+manager are the HTTP `GET' and `POST' methods <a
+href="#r3">[3]</a>. In addition, mhandlers may implement their
+own network services, such as RTP <a href="#r8">[8]</a> for video
+related mhandlers.
+
+<p>
+
+Mhandlers are implemented as shared libraries, which can be loaded
+into HPAS at runtime. Since HPAS is single-threaded, media handlers
+should avoid using blocking system calls. When implementing a
+presenter, an mhandler is responsible for saving its state while
+paused by the presentation manager. In particular, the mhandler must
+save the excessive stream delivered to it while the presentation is
+paused. The reason is that in order to improve performance, the
+network manager keeps sending bytes to the mhandler regardless of the
+state of the presentation.
+
+<p>
+
+The system is written in C++, with the mhandler API in C, since
+we allow mhandlers to be written in C or C++. The user interface
+is built with OSF/Motif. We have implemented an MPEG mhandler
+based on the MPEG2 decoder from the <a href="http://www.mpeg.org/MSSG/">
+MPEG Software Simulation Group</a>, an image mhandler, a rich text
+mhandler and an audio mhandler based on the <a
+href="http://www.vtt.fi/tte/EuroBridge/Xew/"> EuroBridge Widget
+Set</a>. Finally, an HTML mhandler is implemented by using NCSA
+Mosaic's HTML widget.
+
+<h2>7. Conclusions and Future Work</h2>
+
+In the past one and half years we have been working on the HPAS
+project to support the creation and presentation of hypermedia
+documents. The system provides services for integrating pluggable
+components such as presenters, editors, and converters. The basic
+elements of the environment, hobjects, are synchronized both
+temporally and spatially during the authoring and presenting processes
+of HPA documents. The system is particularly suited for presenting
+dynamic (but not text intensive) information on the Web, such
+as product/service advertising, guided course work, etc.
+
+<p>
+
+In the future, we will enhance the mhandler API. In particular, we
+will try to provide some communication mechanism between different
+mhandlers, which makes low level media-specific synchronization a
+possibility in our framework. A simple example is <i>send</i>, which
+sends a message from one mhandler to another. Using this primitive,
+the source mhandler may transfer data to the target mhandler, or it
+may request certain operations to be performed on the target media
+handler. The <i>send</i> primitive should be flexible enough so that
+both synchronous and asynchronous invocations are allowed. Finally, we
+will provide support for a wider range of applications by developing
+more mhandlers.
+
+<h2>8. Acknowledgment</h2>
+
+We are very grateful to Harrick Vin and Donald Fussell. Without their
+support and encouragement, the project would not exist. We would also
+like to thank Zaijin Guan for his participation in the early stage of
+the project, and Wei Wei and Biao Zhang for their various suggestions
+and help throughout the development of the project. Finally, we would
+like to give special thanks to the reviewers Paul McJones, Marc Brown,
+Marc Najork, Krishna Bharat, Cynthia Hibbard, Hseuping Chen, Xue Lu,
+and Huiqun Liu for their timely advice on the paper.
+
+<hr>
+
+<h2>References</h2>
+
+<a name="r1">[1]</a> Philipp Ackermann. <br>
+Direct Manipulation of Temporal Structures in
+a Multimedia Application Framework. <br>
+<i>ACM Multimedia 94 Proceedings</i>, pp. 51-58, October 1994.
+
+<p>
+
+<a name="r2">[2]</a> James. F. Allen. <br>
+Maintaining Knowledge about Temporal Intervals. <br>
+<i>Communications of the ACM</i>, vol.26. no.11, pp. 832-843. November 1983.
+
+<p>
+
+<a name="r3">[3]</a> T. Berners-Lee, R. Fielding, and H. Frystyk. <br>
+Hypertext Transfer Protocol -- HTTP/1.0, RFC1945. May 1996.
+
+<p>
+
+<a name="r4">[4]</a> T. Berners-Lee, L. Masinter, and M. McCahill. <br>
+Uniform Resource Locators (URL), RFC1738. December 1994.
+
+<p>
+
+<a name="r5">[5]</a> N. Borenstein and N. Freed. <br>
+MIME (Multipurpose Internet Mail Extensions), RFC1341. June 1992.
+
+<p>
+
+<a name="r6">[6]</a> Lynda Hardman, Guido van Rossum,
+and Dick C.A. Bulterman. <br>
+Structured Multimedia Authoring. <br>
+<i>ACM Multimedia 93 Proceedings</i>, pp. 283-290, August 1993.
+
+<p>
+
+<a name="r7">[7]</a> Thomas D.C. Little, and Arif Ghafoor. <br>
+Synchronization and Storage Models for Multimedia Objects. <br>
+<i>IEEE Journal on Selected Areas in Communications</i>, vol.8, no.3,
+pp. 413-427, April 1990.
+
+<p>
+
+<a name="r8">[8]</a> H. Schulzrinne, S. Casner, R. Frederick,
+and V. Jacobson. <br>
+RTP: A Transport Protocol for Real-Time Applications, RFC1889. January 1996.
+
+</body>
+
+</html>

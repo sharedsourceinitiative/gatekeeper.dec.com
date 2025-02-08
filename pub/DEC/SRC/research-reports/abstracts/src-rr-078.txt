@@ -1,0 +1,25 @@
+
+
+
+"Using Transformations and Verification in Circuit Design"
+James B. Saxe, Stephen J. Garland, John V. Guttag, James J. Horning
+September 25, 1991.  36 pages
+
+Authors' abstract
+
+We show how machine-checked verification can support an
+approach to circuit design based on transformations.  This approach starts
+with a conceptually simple (but inefficient) initial design and uses a
+combination of {\it ad hoc} and algorithmic transformations to produce a
+design that is more efficient (but more complex).
+
+We present an example in which we start with a simplified CPU design
+and derive an efficient pipelined form, including circuitry for
+reverting the effects of partially executed instructions when a
+successful branch is detected late in the pipeline.  The algorithmic
+stage of our derivation applies a transformation, retiming, that has
+been proven to preserve functional behavior in the general case.  The
+{\it ad hoc} stage requires special justification, which we supply in
+the form of a machine-checked formal verification.
+
+

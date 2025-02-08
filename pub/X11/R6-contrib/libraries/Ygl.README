@@ -1,0 +1,36 @@
+/*
+ *    Ygl: Run 2d-GL programs with standard X11 routines.
+ *    (C) Fred Hucht 1993/94
+ *    EMail: fred@thp.Uni-Duisburg.DE
+ */
+
+Ygl emulates SGI's GL (Graphics Language) under X11. It compiles fine
+under AIX 3.2, HP-UX 7.0/8.0/9.0, Linux with XFree, SunOS, ConvexOS
+and others, but needs an ANSI-C compiler (gcc is ok).
+
+Ygl is distributed under the GNU CopyLeft. See the included LICENSE
+file for further details.
+
+Included are most of the two-dimensional graphics routines, the queue
+device routines, some query routines, doublebuffering, RGB mode with
+arbitrary visuals and most of the window attribute routines (see below).
+
+Several functions and features are added (see below), some bugs are
+fixed (see below, too).
+
+The newest version of Ygl is always available at
+
+          ftp://ftp.thp.Uni-Duisburg.DE/pub/source/X11/Ygl.tar.gz
+
+The latest version of the ReadMe file is available at the World Wide
+Web: The URL is
+
+          http://WWW.thp.Uni-Duisburg.DE/Ygl/ReadMe.html
+
+Have fun,
+
+   Fred
+
+Fred Hucht, Institute of Theoretical Physics, University of Duisburg, Germany
+Email: fred@thp.Uni-Duisburg.DE                 "Never run a changing system"
+<a href="http://WWW.thp.Uni-Duisburg.DE/">Click Me!</a>

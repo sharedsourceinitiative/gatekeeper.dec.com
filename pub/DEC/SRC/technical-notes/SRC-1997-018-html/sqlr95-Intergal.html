@@ -1,0 +1,323 @@
+<HTML><HEAD>
+<!-- This document was created from RTF source by rtftohtml version $Revision: 3.6 $ -->
+<TITLE>The 1995 SQL Reunion: People, Projects, and Politics - Intergalactic dataspeak: SQL standard, Open SQL, ODBC, DRDA</TITLE></HEAD>
+<BODY BACKGROUND="" BGCOLOR="#FFFFFF" TEXT=#000000>
+<A HREF="sqlr95-And.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="sqlr95-Teradata.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="sqlr95-And.html"><IMG SRC="images/upg.gif" ALT="Up " border=0></A>
+ <A HREF="sqlr95.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="sqlr95-Contents.html"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+ <A HREF="sqlr95-Index.html"><IMG SRC="images/indexg.gif" ALT="Index" border=0></A>
+<hr size=4>
+<H2>
+Intergalactic dataspeak: SQL standard, Open SQL, ODBC, DRDA</H2>
+<b>Pat Selinger:</b> Jim, I have your name next to Sybase, Informix, DEC,
+Teradata, Ingres, Britton-Lee, and Microsoft.<p>
+<b>Jim Gray:</b> Gee, what to say? I'm not going to say anything about most of
+them. I think actually what I'd like to do is talk about the SQL standard<A NAME="Index417"></A>
+...<p>
+<b>various:</b> No.<b>Jim Gray:</b> I'll do it anyway! Here is the original SQL
+manual (from System R). Just about 40 pages in Courier 10 font with lots of
+error numbers and lots of white space. It was real simple. Relational was hot,
+so ANSI started up a Relational Database Task force to define a standard. There
+was a DBTG<A NAME="Index418"></A>
+task force that had a CODASYL network data model, and they were trying to
+standardize the network data model, and Don Chamberlin talked about how much
+fun it was to study the network data model. There were these things called
+currency indicators, and people loved them. You would do a query and it would
+set a currency indicator, and then you could fetch the thing that was pointed
+to by one of these currency indicators. In SQL terms, for every table there was
+a cursor. You could say the magic word, and it would change the cursor for that
+table. It would also change the global cursor. Have I got it sort of right?<p>
+<b>Don Chamberlin:</b> Yes.<p>
+<b>Jim Gray:</b> But you couldn't have two cursors on a table. So if you wanted
+to join a table to itself, then you'd have to remember where you were, and then
+go get the other record. So the Database Task Group<A NAME="Index419"></A>
+basically was in big trouble; nobody really wanted to standardize this thing.
+So it was a standard that was this zombie; it was wandering around; I guess it
+got standardized maybe in 1990 or something like that? About the same time the
+first SQL standard came out, there was sort of this <i>quid pro quo</i> that
+we'll standardize DBTG and relational at the same time. But there was this
+relational task group that was wondering around, and they were getting in
+deeper, and deeper, and deeper water; lots of deep water, right? They'd done
+their own database language. At a certain point, Phil Shaw<A NAME="Index420"></A>
+showed up at one of these meetings and said, "You know, you could do this," and
+he handed them something that was approximately this [holds up IBM's early SQL
+manual]. This is again ten-point type, single-spaced now, instead of
+double-spaced. Still a lot of white paper. These people, who were in hopeless
+deep water, said, "You're right; we could do this, and this is the only way
+we're going to make progress," because they were not making progress in any
+other way. So they glommed on to the ... and I think this was the design
+document that Don was chairman of this committee in IBM that was sort of the
+... you were the Pope of SQL, or something like that? Have I got it twisted?<p>
+<b>Don Chamberlin:</b> Bob Engles<A NAME="Index421"></A>
+had a lot to do with this<a name="fnB71" href="#fn71">[75]</a><A NAME="Index422"></A><A NAME="Index423"></A>.
+I believe that most of the words in that book were written by Bob Engles. And
+what Bob Engles did was to study System R and write a formal specification for
+exactly what it did, warts and all. So there were all sorts of peculiar rules
+that were non-orthogonal: you couldn't do a GROUP BY if you also did a UNION;
+things like that. And there's no special reason for any of those things, except
+somebody didn't have time to build them or something like that.<i>
+[laughter]</i> So Bob Engles studied System R, and he's very meticulous and
+very precise, and he wrote down exactly what it did in a very formal sort of
+way. I think that's the document that you're holding right there. And then the
+standards committee kind of blessed it and they said, "This will be our
+standard."<p>
+<b>Jim Gray:</b> Only way we can make progress.<p>
+<b>Don Chamberlin:</b> They kept all the warts, too. They didn't try to clean
+any of it up.<p>
+<b>Jim Gray:</b> Right. No discussion of how to spell NULL. Chamberlin came
+back from an IBM Santa Teresa meeting one day, and said, "We spent the entire
+day deciding how we should spell NULL. Should it be ABSENT or NOT KNOWN or NULL
+or ?" The ANSI SQL guys did not mess around like the Santa Teresa guys. They
+took this, and this is essentially SQL 1 [holding document] - the standard. And
+this is SQL '86, is that right? ANSI - the Americans proposed this standard,
+but the Americans are just part of the international organization. The
+international organization said, "We'll make you a deal: we'll swallow this
+piece of junk if you'll swallow our referential integrity design" (foreign
+keys). And so there was going to be an appendix that came later, and the
+international standards body (ISO) would swallow this [SQL 1] if they would get
+to write the foreign key design. And so they wrote the foreign key design,
+which was basically SQL '89, so there's an addendum. Am I getting this right?
+Straighten me out if I've gotten it wrong.<p>
+So we're up to 1989; we've got something like this [demonstrates], and an
+addendum which was pretty short.<p>
+<b>C. Mohan:</b> He's eager to get to the next part.<i> [laughter]</i><p>
+<b>Jim Gray:</b> And in fact, here is the whole enchilada [demonstrates]. And
+then we get to SQL 2, and here is SQL 2 [demonstrates], and it's a lot bigger.
+Actually, I don't have SQL 2 very easily; I apologize. But it's on this scale,
+OK? And what it has, is data definition; it has constraints; it has time; it
+has ... what are some of the good things?<p>
+<b>Bruce Lindsay:</b> Outer join.<p>
+<b>Jim Gray:</b> Outer joins. Sort of more complete. But it's very big; it's
+order five hundred pages.<p>
+<b>Bruce Lindsay:</b> It comes in three languages, too.<p>
+<b>Tom Price:</b> Did any of the referential integrity make it into SQL 1?<p>
+<b>Jim Gray:</b> Well, it was SQL 1.1.<p>
+<b>Tom Price:</b> And is it close to what DB2 implemented, or is it
+different?<p>
+<b>Jim Gray:</b> It's Chris Date<A NAME="Index424"></A>'s
+design, is the way I think of it. You know, they have cascading, and RESTRICT,
+and ...<p>
+So now the SQL committee has a life of its own, and it has SQL 3. Now this is
+the current enchilada that is SQL 3 [demonstrates a three-volume set of books].
+And this, you have to appreciate, is nine-point type, and it is very, very
+dense, and it's just full of stuff. I think it's fair to say that most of us
+don't understand what's in there. I think Don Chamberlin maybe has spent a lot
+of ... he understands pages of it, I'm sure. And they're now trying to take SQL
+3, and break it into two parts: SQL 3 and SQL 4. SQL 3 is probably going to get
+approved somewhere in 1997? And SQL 4's up into the next millennium, which I
+really think is a nice way of describing where it is.<p>
+Something else that happened is ODBC<a name="fnB72" href="#fn72">[76]</a><A NAME="Index425"></A><A NAME="Index426"></A><A NAME="Index427"></A><A NAME="Index428"></A>;
+I'm coming to the Microsoft part. Something else that happened is that while we
+- Don Slutz<A NAME="Index429"></A>
+and I, and a fellow named Rao Yendluri<A NAME="Index430"></A>
+- were at Tandem, we said, "We really have a serious problem. We've got this
+database engine; this thing that stores bytes. It remembers things. But getting
+stuff into this computer and getting stuff out of it is virtually impossible.
+We've got no tools; we need to get tools. We can't build tools; we don't build
+tools. We want everybody to build tools that go to our system. How are we going
+to get everybody to build tools that go to our system? Well, we need to have a
+standard way for people to get to our system, just like getting to Oracle or
+getting to Sybase<A NAME="Index431"></A>.
+So Plan A: we'll pretend to be Oracle. Everybody's going to build tools to go
+to Oracle. But that's kind of embarrassing, because that sort of puts us at
+Oracle's mercy. We have to masquerade as Oracle, and they can do things to
+shaft us, and so on. Plus, their externals aren't public. Sybase<A NAME="Index432"></A>
+in fact has something called Tabular Data Stream<A NAME="Index433"></A>,
+and we could masquerade as Sybase, and be a system that eats Tabular Data
+Stream and spits out Tabular Data Stream." So we thought about that and said,
+"What the world really needs is a client/server standard," because the tools
+vendors want to have a standard that they can program against, and know that
+their tool will work with anything. So the tools guys want to be able to go to
+every database server, and the server guys want every tool to come to them. So
+we said, "What we need is an intergalactic dataspeak<A NAME="Index434"></A>."
+An Esperanto that would go on the wire, that would allow everybody to talk to
+everybody. I believe at the same time, in this period, IBM folks had exactly
+the same problem. They said, "We've got great servers, no tools; we need
+intergalactic dataspeak." So Slutz and Rao Yendluri and I wrote a white paper
+called "Open SQL". We said, "What the world needs is Open SQL, which is a wire
+protocol: how to talk SQL across the wire; how to talk tables back." We talked
+this up, and we went to the Sybase guys, and the Sybase guys loved to talk to
+us. Every time we talked to them, a press release would come out, about how
+Sybase and Tandem were working together on this problem. No code came out, just
+Sybase press releases. And every time we met, they said, "If you give us a
+hundred thousand dollars, we'll give you some code." But it was really very
+strange to work with them.<p>
+<b>Don Slutz:</b> They said it had to be TDS<A NAME="Index435"></A><a
+name="fnB73" href="#fn73">[77]</a>, too.<p>
+<b>Jim Gray:</b> Right. And, "Incidentally, whatever it is, it's ours; we'll
+just standardize what we've got. We'll minimize the effort we have to put in."
+So at a certain point, we realized we were being had by Sybase; we were pretty
+slow. All of a sudden, the skies darkened with executives from Digital
+Equipment Corporation<A NAME="Index436"></A>.
+A cloud of DEC vice-presidents appeared on our doorstep at Tandem. They had
+gone through the same thought process, and said, "Rats, we need Open SQL." So
+they said, "Everybody has this problem; we're going to publicize it," and they
+formed the SQL Access Group<A NAME="Index437"></A>.
+Informix was a founding member. We put off founding the SQL Access Group for, I
+think about three months, while IBM decided whether they wanted to join or to
+compete with the SQL Access Group (they had a plan called DRDA<a name="fnB74"
+href="#fn74">[78]</a>). In the end I think they said, "Oracle, Informix,
+Tandem, all these guys: they'll never make any progress." I'm putting words in
+their mouths, but I think they said, "We'll make a lot more progress
+ourselves," and in fact they made pretty good progress. They came up with
+something called DRDA<A NAME="Index438"></A>,
+which was a competitor to what the SQL Access Group did. So the SQL Access
+Group ground and ground and ground, and produced something called a call-level
+interface, and tried to build on top of some international standards, and the
+net that came out of this is something that is called ODBC<a name="fnB75"
+href="#fn75">[79]</a>, which is sort of an implementation of this. It is the
+standard way for clients to talk to servers. So you send me some SQL; what it
+means is defined by those multi-volume books we just saw. And so this is sort
+of how you make SQL requests, and how you send stuff back. And the scary thing
+is that a lot of people are learning how to write this stuff. Learning to
+program in this thing is a real undertaking; I kind of worry. But the good news
+is that the only people who have to learn to program in that way are the people
+who write all the tools. So virtually all the tools vendors are making ODBC
+drivers, which is to say end-users draw stuff on the screen and you make
+circles and arrows and say things that are pretty visual. The tools translate
+the GUI into SQL statements, and they use that call library to ship requests
+down the wire to a server. The server does its thing; sends tables back, and
+the tables do stuff on the screen. ODBC is beginning to have stored procedures
+and various other things.<b>Bruce Lindsay:</b> I'm really confused because ODBC
+is not a server protocol.<p>
+<b>Jim Gray:</b> Right, it's an API.<p>
+<b>Don Slutz:</b> There's no DRDA involved.<p>
+<b>Bruce Lindsay:</b> At the beginning you said you needed a standard way to
+put things on the network that will get to the server, and you don't care which
+server it's going to; it's on the network and it works. And ODBC is not that
+protocol.<p>
+<b>Jim Gray:</b> The tools vendors can write against this interface, and the
+tools vendors don't have to worry. Somehow, magically, bytes will get shipped
+down; bytes will get shipped back. And all the tools vendors run, of course, on
+ODBC platforms.<p>
+<b>Tom Price:</b> Well, there's ODBC drivers for things other than Microsoft.<p>
+<b>Jim Gray:</b> Right. The dual of what's happening is that one of the things
+in ODBC is that you can ask the guy at the other end, "Who are you?" Good
+answers to come back are, "I'm Oracle," or "I'm Sybase," or "I'm Microsoft SQL
+Server." The tools vendors negotiate and, if it's Microsoft SQL server, they do
+things special, and there is a transport that goes to Microsoft SQL Server.
+There's another transport that goes to Oracle; there's another transport that
+goes to Sybase. And Microsoft SQL Server and Sybase are very similar. So we're
+beginning to get intergalactic dataspeak. This hasn't solved Tandem's problem;
+Tandem ends up now having to masquerade as one of those three characters. At
+least it's solved the tool vendors' problems, which is that they have a
+standard programming interface. You're right, and in fact maybe we should now
+tell the DRDA story?<p>
+<b>Pat Selinger:</b> Go ahead.<p>
+<b>Tom Price:</b> IBM doesn't support ODBC yet, do they?<p>
+<b>Jim Gray:</b> Well they do in the UNIX<A NAME="Index439"></A>
+world. The RS/6000 world supports ODBC. I don't know if there's an ODBC driver
+in the MVS<A NAME="Index440"></A>
+world. I think there is in the AS/400 world.<p>
+<b>Pat Selinger:</b> Sure there is.<p>
+<b>Don Slutz:</b> In the SQL Access Group, IBM never joined, but ??? came, and
+they had him send Frank Pellow<A NAME="Index441"></A>,
+who's IBM Toronto, so he was always there.<p>
+<b>Tom Price:</b> And if you have Sybase or Oracle, do they provide drivers, or
+do you have to get them from third parties?<p>
+<b>Jim Gray:</b> When ODBC first started shipping from Microsoft<A NAME="Index442"></A>,
+they put in drivers for Oracle and for Microsoft SQL Server, which is to say
+Sybase, and a few others, and they began to get a lot of push-back from
+customers about the versions and so on. So I think at this point you actually
+have to get the driver from the provider; that Microsoft doesn't ship them, but
+you can download them.<p>
+<b>Pat Selinger:</b> IBM provides versions for themselves, and there're
+companies likes Q+E<A NAME="Index443"></A>
+that have them.<p>
+<b>Shel Finkelstein:</b> The SQL standard decides how ... the foundation part
+of the standard now has these things called parts, one of which is Call-Level
+Interface, which is awfully close to ODBC. So it's not just that ODBC is a
+Microsoft thing; ODBC is part of a standard.<p>
+<b>Jim Gray:</b> And it's actually in the status of draft international
+standard, likely to get approved this year.<p>
+<b>Shel Finkelstein:</b> And there's also persistent stored modules. There's
+this new part proposed for temporal, plus there's a separate standard that's
+being worked out for multimedia. So what Jim has over there is just a small
+part of all the wonderful things that are going on. I got to go to Oklahoma
+City one week after the bombing for a SQL Standard meeting ???<p>
+<b>Jim Gray:</b> This is the SQL Reunion, and I think probably one of the
+important things to mention is how it's turned into intergalactic dataspeak.
+It's how clients talk to servers if they want to send structured data around.
+There is another intergalactic dataspeak called IDL<A NAME="Index444"></A>,
+which is for remote procedure call, and a third one called HTTP<A NAME="Index445"></A>,
+which in fact is being used for the Web and Mosaic, and it looks like HTTP is
+going to win in the end. The surprise for the future is HTTP wins.<p>
+So DRDA<a name="fnB76" href="#fn76">[80]</a> is the approach that IBM took,
+rather than going with the SQL Access Group.<A NAME="Index446"></A>
+It is much more concerned about what the on-the-wire protocol is. So it's
+what's called a formats-and-protocol. The message format's on the wire. What
+you say [gestures?] and the protocol: I say this, you say this. So we
+abbreviate that formats-and-protocols, or FAP. In fact, ODBC has no FAP; it's a
+procedure call, and then what happens underneath is a mystery, magic. In fact,
+what happens underneath is a driver from one or another vendor. This is a
+terrible situation unless there is only one kind of client, and only one
+version of each server, because then you just get the particular thing;
+otherwise you end up with an N-squared problem. One of the surprises to me, and
+I think to many people, is that the number of kinds of clients has dropped off,
+mostly because of the success of Windows. At any rate, DRDA is an IBM standard,
+and it's supported by DB2 and supported by the IBM products and ...<p>
+<b>Pat Selinger:</b> And twenty other vendors.<p>
+<b>Jim Gray:</b> And twenty other vendors, that's right.<p>
+<b>Roger Miller:</b> And X/Open.<p>
+<b>Bruce Lindsay:</b> DRDA fits underneath ODBC. You could use it for the ODBC
+stack.<p>
+<b>Jim Gray:</b> Could be. It's interesting; my impression is that the twenty
+vendors all have been paid to support it. I talked to the people at Informix,
+and they said, "Yes, we support it because IBM paid us to support it."<p>
+<b>Pat Selinger:</b> I don't believe that's the case. That is not the case as
+far as I know.<p>
+<b>C. Mohan:</b> No.<p>
+<b>Roger Miller:</b> I'm pretty sure that we did not pay.<p>
+<b>Jim Gray:</b> OK.<p>
+<b>Roger Miller:</b> We made it as easy as possible. We gave classes in
+attractive places and provided consulting. We certainly worked hard to get
+vendors to use DRDA.<p>
+<b>Jim Gray:</b> But they had to write the code.<p>
+<b>Roger Miller:</b> We had a nominal license, a few thousand dollars, less
+than the class would have cost, to license some pieces of the code. But we
+worked to make DRDA easy to implement and probably twisted some arms, but I
+don't think we paid anybody.<p>
+<b>Jim Gray:</b> So do you think it's going to be successful? Is it going to be
+the intergalactic dataspeak? Is it going to be the FAP do you think?<p>
+<b>Pat Selinger:</b> Who knows? It's certainly gaining some popularity among
+people who are performance conscious.<p>
+<b>Bruce Lindsay:</b> That's the interesting thing about ODBC; it seems to have
+ignored the performance issues. It's a strictly dynamic interface; there's no
+way they're running static SQL through ODBC.<p>
+<b>Jim Gray:</b> Actually, it has stored procedures, so ...<b>Bruce
+Lindsay:</b> Well, stored procedures and bound procedures are not quite the
+same thing, but close enough.<p>
+<b>Jim Gray:</b> They're better.<i> [laughter]</i>
+<p>
+<a name="fn71" href="#fnB71">[75]</a> Bob Engles died June 22, 1995. Roger
+Miller notes: "Bob was the authority on SQL standards; he was the author of the
+original "SQL Control Document," which provided the foundation for the SQL
+ANSI/ISO Standards. He was the DB2 representative to the SQL Language Council
+since its inception, authoring many papers and articles, and providing
+consultations to the world-wide SQL community. He was the designer for many DB2
+features, including referential integrity, code pages and character sets
+support, date time data support as well as the latest SQL '92 work. Throughout
+his career at IBM, and even recently as his illness progressed, he was an
+inspiration to many of us with his commitment to DB2. He was one of the key
+contributors to DB2's success and we will miss him."<p>
+<a name="fn72" href="#fnB72">[76]</a> ODBC stands for Open Database
+Connectivity.<p>
+<a name="fn73" href="#fnB73">[77]</a> TDS stands for Tabular Data Stream.<p>
+<a name="fn74" href="#fnB74">[78]</a> DRDA stands for Distributed Relational
+Database Architecture.<p>
+<a name="fn75" href="#fnB75">[79]</a> Microsoft Corporation. <i>ODBC 2.0
+Programmer's Reference and SDK Guide. </i>Microsoft Press (1994).<p>
+<a name="fn76" href="#fnB76">[80]</a> IBM Corporation. <i>Distributed
+Relational Database Architecture Reference</i>, SC26-4651.
+
+<p>
+<P><hr size=4>
+<A HREF="sqlr95-And.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="sqlr95-Teradata.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="sqlr95-And.html"><IMG SRC="images/upg.gif" ALT="Up " border=0></A>
+ <A HREF="sqlr95.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="sqlr95-Contents.html"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+ <A HREF="sqlr95-Index.html"><IMG SRC="images/indexg.gif" ALT="Index" border=0></A>
+</body></html>

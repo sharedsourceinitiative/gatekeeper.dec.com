@@ -1,0 +1,2042 @@
+#! /bin/sh
+# This is a shell archive.  Remove anything before this line, then unpack
+# it by saving it into a file and typing "sh file".  To overwrite existing
+# files, type "sh file -c".  You can also feed this as standard input via
+# unshar, or by typing "sh <file", e.g..  If this archive is complete, you
+# will see the following message at the end:
+#		"End of shell archive."
+# Contents:  579-579-noscr.psf 579-579-scr.psf 579-tn-noscr.psf
+#   579-tn-scr.psf cisco-9.0.2.psf tn-579-noscr.psf tn-579-scr.psf
+#   tn-tn-noscr.psf tn-tn-scr.psf
+# Wrapped by vixie@gw.home.vix.com on Mon Aug  1 18:24:57 1994
+PATH=/bin:/usr/bin:/usr/ucb ; export PATH
+if test -f '579-579-noscr.psf' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'579-579-noscr.psf'\"
+else
+echo shar: Extracting \"'579-579-noscr.psf'\" \(6821 characters\)
+sed "s/^X//" >'579-579-noscr.psf' <<'END_OF_FILE'
+X%!PS-Adobe-1.0
+X%%Creator: morality.sjc.hw.sony.com:vixie (Paul &)
+X%%Title: PostScript graph file
+X%%CreationDate: Sun May  8 16:41:05 1994
+X%%DocumentFonts: (atend)
+X%%Pages: (atend)
+X%%BoundingBox: (atend)
+X%%EndComments
+X% psgraph.pro -- included prolog for PS graph files
+X% based on lib/psplot.pro, Copyright 1984 Adobe Systems, Inc.
+X% $Header: psgraph.pro,v 1.6 92/08/04 17:55:20 mogul Exp $
+Xsave 500 dict begin /psgraph exch def
+X/StartPSGraph
+X   {newpath 0 0 moveto 0.6 setlinewidth 0 setgray 1 setlinecap
+X    /imtx matrix currentmatrix def 
+X    /fnt /Times-Roman findfont def /fontsize 10 def
+X    72 72 scale
+X    /ex 72 nail def /ey 720 nail def
+X    /smtx matrix def fnt fontsize scalefont setfont}bind def
+X/len{dup mul exch dup mul add sqrt}bind def
+X/nail{0 dtransform len 0 idtransform len}bind def
+X/ljust{0 fontsize -3 div rmoveto}bind def
+X/rjust{dup stringwidth pop neg fontsize -3 div rmoveto}bind def
+X/cjust{dup stringwidth pop -2 div fontsize -3 div rmoveto}bind def
+X/vjust{90 rotate /cjust load exec}bind def
+X/prnt{dup stringwidth pop 6 add /tx exch def /ty fontsize 5 add def
+X    currentpoint /toy exch def /tox exch def 1 setgray
+X    newpath
+X      tox 3 sub toy 5 sub moveto 0 ty rlineto tx 0 rlineto 0 ty neg rlineto
+X    closepath fill tox toy moveto
+X    currentColor fc
+X    show}bind def
+X/m{newpath moveto}bind def
+X/s{pts stroke ins}bind def
+X/fl{pts fill ins}bind def
+X/n{lineto currentpoint s moveto}bind def
+X/nf{lineto}bind def
+X/l{moveto lineto currentpoint s moveto}bind def
+X/pts{smtx currentmatrix pop imtx setmatrix}bind def
+X/ins{smtx setmatrix}bind def
+X/t{pts load exec show ins}bind def
+X/w{pts load exec prnt ins}bind def
+X/e{pts ex ey moveto prnt prnt /ey ey 12 sub def ins}bind def
+X/gs{gsave}bind def
+X/gr{grestore}bind def
+X/c{gs newpath 0 0 3 -1 roll 0 360 arc s gr}bind def
+X/cf{gs newpath 0 0 3 -1 roll 0 360 arc fl gr}bind def
+X/f{dup lineStyles exch known
+X    {lineStyles begin load exec setdash end}
+X    {gs C 20 string cvs (No such line style: ) e gr unC/solid f}ifelse}bind def
+X/fc{dup dup /currentColor exch store lineColors exch known
+X    {lineColors begin load exec aload pop setrgbcolor end}
+X    {gs C 20 string cvs (No such psgraph color: ) e gr unC/black fc}ifelse}bind def
+X/fw{setlinewidth} def
+X/C{/Courier findfont 10 scalefont setfont 
+X    /sfs fontsize def /fontsize 10 def}bind def
+X/unC{/fontsize sfs def}bind def
+X/EX{/exec load}bind def
+X/EndPSGraph{clear psgraph end restore}bind def
+X/lineStyles 10 dict def lineStyles begin
+X/solid{{}0}bind def
+X/dotted{[2 nail 5 nail ] 0}bind def
+X/longdashed{[10 nail] 0}bind def
+X/shortdashed{[6 nail] 0}bind def
+X/dotdashed{[2 nail 6 nail 10 nail 6 nail] 0}bind def
+X/dashed{/shortdashed load exec}bind def
+X%/off{[0 100] 0}bind def
+X%/none{/off load exec}bind def
+Xend
+X/currentColor 0 def
+X/lineColors 10 dict def lineColors begin
+X/red {[1 0 0]}bind def
+X/blue {[0 0 1]}bind def
+X/magenta {[1 0 1]}bind def
+X/green {[0 1 0]}bind def
+X/black {[0 0 0]}bind def
+X/cyan {[0 1 1]}bind def
+X/yellow {[1 1 0]}bind def
+X/gray {[.5 .5 .5]}bind def
+X/orange {[1 .66 0]}bind def
+X/violet {[1 0 1]}bind def
+X/currentColor /black store
+Xend
+X
+X/markers 20 dict def markers begin
+X/none{}bind def
+X/off{}bind def
+X/square{0 0 m 0 1 n 1 1 n 1 -1 n -1 -1 n -1 1 n 0 1 n s}bind def
+X/diamond{0 0 m 0 1.41 n 1.41 0 n 0 -1.41 n -1.41 0 n 0 1.41 n s}bind def
+X/triangle{0 0 m 0 1 n 1 -0.73 n -1 -0.73 n 0 1 n s}bind def
+X/up{triangle}bind def
+X/down{0 0 m 0 -1 n 1 0.73 n -1 0.73 n 0 -1 n s}bind def
+X/right{0 0 m 1 0 n -0.73 1 n -0.73 -1 n 1 0 n s}bind def
+X/left{0 0 m -1 0 n 0.73 1 n 0.73 -1 n -1 0 n s}bind def
+X/circle{0 1 m 0 0 n 1 c s}bind def
+X/x{1 1 m -1 -1 n -1 1 m 1 -1 n s}bind def
+X/plus{0 1 m 0 -1 n -1 0 m 1 0 n s}bind def
+X/cross{plus}bind def
+X/circle-x{1 c .707 .707 m -.707 -.707 n -.707 .707 m .707 -.707 n s}bind def
+X/circle-plus{1 c 0 1 m 0 -1 n -1 0 m 1 0 n s}bind def
+X/filledsquare{0 1 m 1 1 nf 1 -1 nf -1 -1 nf -1 1 nf 0 1 nf fl}bind def
+X/filleddiamond{0 1.41 m 1.41 0 nf 0 -1.41 nf -1.41 0 nf 0 1.41 nf fl}bind def
+X/filledtriangle{0 1 m 1 -0.73 nf -1 -0.73 nf 0 1 nf fl}bind def
+X/filledcircle{0 0 m 1 cf}bind def
+X/marker{}def
+Xend
+X/ms 1.0 def
+X/mg 0 def
+X/sm{dup markers exch known
+X    {markers begin load /marker exch def end}
+X    {gs C 20 string cvs (No such marker type: )e gr unC/off sm}ifelse}bind def
+X/mk{gs translate /solid f
+X    mg 0.0 ne {mg setgray} if
+X    ms .04 mul dup scale markers begin marker end gr}bind def
+X% end fixed prolog
+X%%EndProlog
+X%%Page: 1 1
+XStartPSGraph
+X/saveIt save def
+Xgsave
+X/solid f
+X/Times-Roman findfont 10 scalefont setfont /fontsize 10 def
+X/gt000[
+X{0.000000 0.000000 6.500000 0.000000 l 	}EX
+X{0.000000 6.500000 6.500000 6.500000 l 	}EX
+X{ /black fc
+X0.000000 -0.111111 m (0) /cjust t
+X	}EX
+X{ 6.500000 -0.111111 m (1600) /cjust t
+X	}EX
+X{0.812500 0.000000 0.812500 6.500000 l 	}EX
+X{ 0.812500 -0.111111 m (200) /cjust t
+X	}EX
+X{1.625000 0.000000 1.625000 6.500000 l 	}EX
+X{ 1.625000 -0.111111 m (400) /cjust t
+X	}EX
+X{2.437500 0.000000 2.437500 6.500000 l 	}EX
+X{ 2.437500 -0.111111 m (600) /cjust t
+X	}EX
+X{3.250000 0.000000 3.250000 6.500000 l 	}EX
+X{ 3.250000 -0.111111 m (800) /cjust t
+X	}EX
+X{4.062500 0.000000 4.062500 6.500000 l 	}EX
+X{ 4.062500 -0.111111 m (1000) /cjust t
+X	}EX
+X{4.875000 0.000000 4.875000 6.500000 l 	}EX
+X{ 4.875000 -0.111111 m (1200) /cjust t
+X	}EX
+X{5.687500 0.000000 5.687500 6.500000 l 	}EX
+X{ 5.687500 -0.111111 m (1400) /cjust t
+X	}EX
+X{0.000000 0.000000 0.000000 6.500000 l 	}EX
+X{6.500000 0.000000 6.500000 6.500000 l 	}EX
+X]cvx bind def
+X/drawXaxis {
+X	gt000
+X}def
+X/gt001[
+X{0.000000 0.000000 0.000000 6.500000 l 	}EX
+X{6.500000 0.000000 6.500000 6.500000 l 	}EX
+X{ -0.050000 0.000000 m (0) /rjust t
+X	}EX
+X{ -0.050000 6.500000 m (5000) /rjust t
+X	}EX
+X{0.000000 1.300000 6.500000 1.300000 l 	}EX
+X{ -0.050000 1.300000 m (1000) /rjust t
+X	}EX
+X{0.000000 2.600000 6.500000 2.600000 l 	}EX
+X{ -0.050000 2.600000 m (2000) /rjust t
+X	}EX
+X{0.000000 3.900000 6.500000 3.900000 l 	}EX
+X{ -0.050000 3.900000 m (3000) /rjust t
+X	}EX
+X{0.000000 5.200000 6.500000 5.200000 l 	}EX
+X{ -0.050000 5.200000 m (4000) /rjust t
+X	}EX
+X{0.000000 0.000000 6.500000 0.000000 l 	}EX
+X{0.000000 6.500000 6.500000 6.500000 l 	}EX
+X]cvx bind def
+X/drawYaxis {
+X	gt001
+X}def
+X/drawTitle [
+X{ 3.250000 6.641667 m (579-579, no screen) /cjust t 	}EX
+X] cvx bind def
+X0.416667 0.111111 translate
+XdrawXaxis drawYaxis drawTitle
+X0.360000 5.413200 m (70) /ljust w
+X0.620000 4.800900 m (95) /ljust w
+X1.140000 3.950700 m (98) /ljust w
+X2.180000 2.610400 m (190) /ljust w
+X3.220000 1.838200 m (248) /ljust w
+X4.260000 1.168700 m (338) /ljust w
+X5.300000 1.003600 m (364) /ljust w
+X6.266875 0.798200 m (409) /ljust w
+X/solid f  0.6 fw 0.260000 5.413200 m
+X 0.520000 4.800900 n
+X 1.040000 3.950700 n
+X 2.080000 2.610400 n
+X 3.120000 1.838200 n
+X 4.160000 1.168700 n
+X 5.200000 1.003600 n
+X 6.166875 0.798200 n
+Xgrestore saveIt restore
+X%%Trailer
+XEndPSGraph
+X%%DocumentFonts: Times-Roman
+X%%Pages: 1
+X%%BoundingBox: 0 0 497 496
+END_OF_FILE
+if test 6821 -ne `wc -c <'579-579-noscr.psf'`; then
+    echo shar: \"'579-579-noscr.psf'\" unpacked with wrong size!
+fi
+# end of '579-579-noscr.psf'
+fi
+if test -f '579-579-scr.psf' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'579-579-scr.psf'\"
+else
+echo shar: Extracting \"'579-579-scr.psf'\" \(7085 characters\)
+sed "s/^X//" >'579-579-scr.psf' <<'END_OF_FILE'
+X%!PS-Adobe-1.0
+X%%Creator: morality.sjc.hw.sony.com:vixie (Paul &)
+X%%Title: PostScript graph file
+X%%CreationDate: Sun May  8 16:41:05 1994
+X%%DocumentFonts: (atend)
+X%%Pages: (atend)
+X%%BoundingBox: (atend)
+X%%EndComments
+X% psgraph.pro -- included prolog for PS graph files
+X% based on lib/psplot.pro, Copyright 1984 Adobe Systems, Inc.
+X% $Header: psgraph.pro,v 1.6 92/08/04 17:55:20 mogul Exp $
+Xsave 500 dict begin /psgraph exch def
+X/StartPSGraph
+X   {newpath 0 0 moveto 0.6 setlinewidth 0 setgray 1 setlinecap
+X    /imtx matrix currentmatrix def 
+X    /fnt /Times-Roman findfont def /fontsize 10 def
+X    72 72 scale
+X    /ex 72 nail def /ey 720 nail def
+X    /smtx matrix def fnt fontsize scalefont setfont}bind def
+X/len{dup mul exch dup mul add sqrt}bind def
+X/nail{0 dtransform len 0 idtransform len}bind def
+X/ljust{0 fontsize -3 div rmoveto}bind def
+X/rjust{dup stringwidth pop neg fontsize -3 div rmoveto}bind def
+X/cjust{dup stringwidth pop -2 div fontsize -3 div rmoveto}bind def
+X/vjust{90 rotate /cjust load exec}bind def
+X/prnt{dup stringwidth pop 6 add /tx exch def /ty fontsize 5 add def
+X    currentpoint /toy exch def /tox exch def 1 setgray
+X    newpath
+X      tox 3 sub toy 5 sub moveto 0 ty rlineto tx 0 rlineto 0 ty neg rlineto
+X    closepath fill tox toy moveto
+X    currentColor fc
+X    show}bind def
+X/m{newpath moveto}bind def
+X/s{pts stroke ins}bind def
+X/fl{pts fill ins}bind def
+X/n{lineto currentpoint s moveto}bind def
+X/nf{lineto}bind def
+X/l{moveto lineto currentpoint s moveto}bind def
+X/pts{smtx currentmatrix pop imtx setmatrix}bind def
+X/ins{smtx setmatrix}bind def
+X/t{pts load exec show ins}bind def
+X/w{pts load exec prnt ins}bind def
+X/e{pts ex ey moveto prnt prnt /ey ey 12 sub def ins}bind def
+X/gs{gsave}bind def
+X/gr{grestore}bind def
+X/c{gs newpath 0 0 3 -1 roll 0 360 arc s gr}bind def
+X/cf{gs newpath 0 0 3 -1 roll 0 360 arc fl gr}bind def
+X/f{dup lineStyles exch known
+X    {lineStyles begin load exec setdash end}
+X    {gs C 20 string cvs (No such line style: ) e gr unC/solid f}ifelse}bind def
+X/fc{dup dup /currentColor exch store lineColors exch known
+X    {lineColors begin load exec aload pop setrgbcolor end}
+X    {gs C 20 string cvs (No such psgraph color: ) e gr unC/black fc}ifelse}bind def
+X/fw{setlinewidth} def
+X/C{/Courier findfont 10 scalefont setfont 
+X    /sfs fontsize def /fontsize 10 def}bind def
+X/unC{/fontsize sfs def}bind def
+X/EX{/exec load}bind def
+X/EndPSGraph{clear psgraph end restore}bind def
+X/lineStyles 10 dict def lineStyles begin
+X/solid{{}0}bind def
+X/dotted{[2 nail 5 nail ] 0}bind def
+X/longdashed{[10 nail] 0}bind def
+X/shortdashed{[6 nail] 0}bind def
+X/dotdashed{[2 nail 6 nail 10 nail 6 nail] 0}bind def
+X/dashed{/shortdashed load exec}bind def
+X%/off{[0 100] 0}bind def
+X%/none{/off load exec}bind def
+Xend
+X/currentColor 0 def
+X/lineColors 10 dict def lineColors begin
+X/red {[1 0 0]}bind def
+X/blue {[0 0 1]}bind def
+X/magenta {[1 0 1]}bind def
+X/green {[0 1 0]}bind def
+X/black {[0 0 0]}bind def
+X/cyan {[0 1 1]}bind def
+X/yellow {[1 1 0]}bind def
+X/gray {[.5 .5 .5]}bind def
+X/orange {[1 .66 0]}bind def
+X/violet {[1 0 1]}bind def
+X/currentColor /black store
+Xend
+X
+X/markers 20 dict def markers begin
+X/none{}bind def
+X/off{}bind def
+X/square{0 0 m 0 1 n 1 1 n 1 -1 n -1 -1 n -1 1 n 0 1 n s}bind def
+X/diamond{0 0 m 0 1.41 n 1.41 0 n 0 -1.41 n -1.41 0 n 0 1.41 n s}bind def
+X/triangle{0 0 m 0 1 n 1 -0.73 n -1 -0.73 n 0 1 n s}bind def
+X/up{triangle}bind def
+X/down{0 0 m 0 -1 n 1 0.73 n -1 0.73 n 0 -1 n s}bind def
+X/right{0 0 m 1 0 n -0.73 1 n -0.73 -1 n 1 0 n s}bind def
+X/left{0 0 m -1 0 n 0.73 1 n 0.73 -1 n -1 0 n s}bind def
+X/circle{0 1 m 0 0 n 1 c s}bind def
+X/x{1 1 m -1 -1 n -1 1 m 1 -1 n s}bind def
+X/plus{0 1 m 0 -1 n -1 0 m 1 0 n s}bind def
+X/cross{plus}bind def
+X/circle-x{1 c .707 .707 m -.707 -.707 n -.707 .707 m .707 -.707 n s}bind def
+X/circle-plus{1 c 0 1 m 0 -1 n -1 0 m 1 0 n s}bind def
+X/filledsquare{0 1 m 1 1 nf 1 -1 nf -1 -1 nf -1 1 nf 0 1 nf fl}bind def
+X/filleddiamond{0 1.41 m 1.41 0 nf 0 -1.41 nf -1.41 0 nf 0 1.41 nf fl}bind def
+X/filledtriangle{0 1 m 1 -0.73 nf -1 -0.73 nf 0 1 nf fl}bind def
+X/filledcircle{0 0 m 1 cf}bind def
+X/marker{}def
+Xend
+X/ms 1.0 def
+X/mg 0 def
+X/sm{dup markers exch known
+X    {markers begin load /marker exch def end}
+X    {gs C 20 string cvs (No such marker type: )e gr unC/off sm}ifelse}bind def
+X/mk{gs translate /solid f
+X    mg 0.0 ne {mg setgray} if
+X    ms .04 mul dup scale markers begin marker end gr}bind def
+X% end fixed prolog
+X%%EndProlog
+X%%Page: 1 1
+XStartPSGraph
+X/saveIt save def
+Xgsave
+X/solid f
+X/Times-Roman findfont 10 scalefont setfont /fontsize 10 def
+X/gt000[
+X{0.000000 0.000000 6.500000 0.000000 l 	}EX
+X{0.000000 6.500000 6.500000 6.500000 l 	}EX
+X{ /black fc
+X0.000000 -0.111111 m (0) /cjust t
+X	}EX
+X{ 6.500000 -0.111111 m (1600) /cjust t
+X	}EX
+X{0.812500 0.000000 0.812500 6.500000 l 	}EX
+X{ 0.812500 -0.111111 m (200) /cjust t
+X	}EX
+X{1.625000 0.000000 1.625000 6.500000 l 	}EX
+X{ 1.625000 -0.111111 m (400) /cjust t
+X	}EX
+X{2.437500 0.000000 2.437500 6.500000 l 	}EX
+X{ 2.437500 -0.111111 m (600) /cjust t
+X	}EX
+X{3.250000 0.000000 3.250000 6.500000 l 	}EX
+X{ 3.250000 -0.111111 m (800) /cjust t
+X	}EX
+X{4.062500 0.000000 4.062500 6.500000 l 	}EX
+X{ 4.062500 -0.111111 m (1000) /cjust t
+X	}EX
+X{4.875000 0.000000 4.875000 6.500000 l 	}EX
+X{ 4.875000 -0.111111 m (1200) /cjust t
+X	}EX
+X{5.687500 0.000000 5.687500 6.500000 l 	}EX
+X{ 5.687500 -0.111111 m (1400) /cjust t
+X	}EX
+X{0.000000 0.000000 0.000000 6.500000 l 	}EX
+X{6.500000 0.000000 6.500000 6.500000 l 	}EX
+X]cvx bind def
+X/drawXaxis {
+X	gt000
+X}def
+X/gt001[
+X{0.000000 0.000000 0.000000 6.500000 l 	}EX
+X{6.500000 0.000000 6.500000 6.500000 l 	}EX
+X{ -0.050000 0.000000 m (400) /rjust t
+X	}EX
+X{ -0.050000 6.500000 m (2000) /rjust t
+X	}EX
+X{0.000000 0.812500 6.500000 0.812500 l 	}EX
+X{ -0.050000 0.812500 m (600) /rjust t
+X	}EX
+X{0.000000 1.625000 6.500000 1.625000 l 	}EX
+X{ -0.050000 1.625000 m (800) /rjust t
+X	}EX
+X{0.000000 2.437500 6.500000 2.437500 l 	}EX
+X{ -0.050000 2.437500 m (1000) /rjust t
+X	}EX
+X{0.000000 3.250000 6.500000 3.250000 l 	}EX
+X{ -0.050000 3.250000 m (1200) /rjust t
+X	}EX
+X{0.000000 4.062500 6.500000 4.062500 l 	}EX
+X{ -0.050000 4.062500 m (1400) /rjust t
+X	}EX
+X{0.000000 4.875000 6.500000 4.875000 l 	}EX
+X{ -0.050000 4.875000 m (1600) /rjust t
+X	}EX
+X{0.000000 5.687500 6.500000 5.687500 l 	}EX
+X{ -0.050000 5.687500 m (1800) /rjust t
+X	}EX
+X{0.000000 0.000000 6.500000 0.000000 l 	}EX
+X{0.000000 6.500000 6.500000 6.500000 l 	}EX
+X]cvx bind def
+X/drawYaxis {
+X	gt001
+X}def
+X/drawTitle [
+X{ 3.250000 6.641667 m (579-579, screen) /cjust t 	}EX
+X] cvx bind def
+X0.416667 0.111111 translate
+XdrawXaxis drawYaxis drawTitle
+X0.360000 6.065312 m (358) /ljust w
+X0.620000 5.541250 m (389) /ljust w
+X1.140000 4.862813 m (399) /ljust w
+X2.180000 2.965625 m (478) /ljust w
+X3.220000 1.828125 m (529) /ljust w
+X4.260000 1.235000 m (626) /ljust w
+X5.300000 0.910000 m (690) /ljust w
+X6.266875 0.540313 m (704) /ljust w
+X/solid f  0.6 fw 0.260000 6.065313 m
+X 0.520000 5.541250 n
+X 1.040000 4.862813 n
+X 2.080000 2.965625 n
+X 3.120000 1.828125 n
+X 4.160000 1.235000 n
+X 5.200000 0.910000 n
+X 6.166875 0.540313 n
+Xgrestore saveIt restore
+X%%Trailer
+XEndPSGraph
+X%%DocumentFonts: Times-Roman
+X%%Pages: 1
+X%%BoundingBox: 0 0 497 496
+END_OF_FILE
+if test 7085 -ne `wc -c <'579-579-scr.psf'`; then
+    echo shar: \"'579-579-scr.psf'\" unpacked with wrong size!
+fi
+# end of '579-579-scr.psf'
+fi
+if test -f '579-tn-noscr.psf' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'579-tn-noscr.psf'\"
+else
+echo shar: Extracting \"'579-tn-noscr.psf'\" \(6914 characters\)
+sed "s/^X//" >'579-tn-noscr.psf' <<'END_OF_FILE'
+X%!PS-Adobe-1.0
+X%%Creator: morality.sjc.hw.sony.com:vixie (Paul &)
+X%%Title: PostScript graph file
+X%%CreationDate: Sun May  8 16:41:05 1994
+X%%DocumentFonts: (atend)
+X%%Pages: (atend)
+X%%BoundingBox: (atend)
+X%%EndComments
+X% psgraph.pro -- included prolog for PS graph files
+X% based on lib/psplot.pro, Copyright 1984 Adobe Systems, Inc.
+X% $Header: psgraph.pro,v 1.6 92/08/04 17:55:20 mogul Exp $
+Xsave 500 dict begin /psgraph exch def
+X/StartPSGraph
+X   {newpath 0 0 moveto 0.6 setlinewidth 0 setgray 1 setlinecap
+X    /imtx matrix currentmatrix def 
+X    /fnt /Times-Roman findfont def /fontsize 10 def
+X    72 72 scale
+X    /ex 72 nail def /ey 720 nail def
+X    /smtx matrix def fnt fontsize scalefont setfont}bind def
+X/len{dup mul exch dup mul add sqrt}bind def
+X/nail{0 dtransform len 0 idtransform len}bind def
+X/ljust{0 fontsize -3 div rmoveto}bind def
+X/rjust{dup stringwidth pop neg fontsize -3 div rmoveto}bind def
+X/cjust{dup stringwidth pop -2 div fontsize -3 div rmoveto}bind def
+X/vjust{90 rotate /cjust load exec}bind def
+X/prnt{dup stringwidth pop 6 add /tx exch def /ty fontsize 5 add def
+X    currentpoint /toy exch def /tox exch def 1 setgray
+X    newpath
+X      tox 3 sub toy 5 sub moveto 0 ty rlineto tx 0 rlineto 0 ty neg rlineto
+X    closepath fill tox toy moveto
+X    currentColor fc
+X    show}bind def
+X/m{newpath moveto}bind def
+X/s{pts stroke ins}bind def
+X/fl{pts fill ins}bind def
+X/n{lineto currentpoint s moveto}bind def
+X/nf{lineto}bind def
+X/l{moveto lineto currentpoint s moveto}bind def
+X/pts{smtx currentmatrix pop imtx setmatrix}bind def
+X/ins{smtx setmatrix}bind def
+X/t{pts load exec show ins}bind def
+X/w{pts load exec prnt ins}bind def
+X/e{pts ex ey moveto prnt prnt /ey ey 12 sub def ins}bind def
+X/gs{gsave}bind def
+X/gr{grestore}bind def
+X/c{gs newpath 0 0 3 -1 roll 0 360 arc s gr}bind def
+X/cf{gs newpath 0 0 3 -1 roll 0 360 arc fl gr}bind def
+X/f{dup lineStyles exch known
+X    {lineStyles begin load exec setdash end}
+X    {gs C 20 string cvs (No such line style: ) e gr unC/solid f}ifelse}bind def
+X/fc{dup dup /currentColor exch store lineColors exch known
+X    {lineColors begin load exec aload pop setrgbcolor end}
+X    {gs C 20 string cvs (No such psgraph color: ) e gr unC/black fc}ifelse}bind def
+X/fw{setlinewidth} def
+X/C{/Courier findfont 10 scalefont setfont 
+X    /sfs fontsize def /fontsize 10 def}bind def
+X/unC{/fontsize sfs def}bind def
+X/EX{/exec load}bind def
+X/EndPSGraph{clear psgraph end restore}bind def
+X/lineStyles 10 dict def lineStyles begin
+X/solid{{}0}bind def
+X/dotted{[2 nail 5 nail ] 0}bind def
+X/longdashed{[10 nail] 0}bind def
+X/shortdashed{[6 nail] 0}bind def
+X/dotdashed{[2 nail 6 nail 10 nail 6 nail] 0}bind def
+X/dashed{/shortdashed load exec}bind def
+X%/off{[0 100] 0}bind def
+X%/none{/off load exec}bind def
+Xend
+X/currentColor 0 def
+X/lineColors 10 dict def lineColors begin
+X/red {[1 0 0]}bind def
+X/blue {[0 0 1]}bind def
+X/magenta {[1 0 1]}bind def
+X/green {[0 1 0]}bind def
+X/black {[0 0 0]}bind def
+X/cyan {[0 1 1]}bind def
+X/yellow {[1 1 0]}bind def
+X/gray {[.5 .5 .5]}bind def
+X/orange {[1 .66 0]}bind def
+X/violet {[1 0 1]}bind def
+X/currentColor /black store
+Xend
+X
+X/markers 20 dict def markers begin
+X/none{}bind def
+X/off{}bind def
+X/square{0 0 m 0 1 n 1 1 n 1 -1 n -1 -1 n -1 1 n 0 1 n s}bind def
+X/diamond{0 0 m 0 1.41 n 1.41 0 n 0 -1.41 n -1.41 0 n 0 1.41 n s}bind def
+X/triangle{0 0 m 0 1 n 1 -0.73 n -1 -0.73 n 0 1 n s}bind def
+X/up{triangle}bind def
+X/down{0 0 m 0 -1 n 1 0.73 n -1 0.73 n 0 -1 n s}bind def
+X/right{0 0 m 1 0 n -0.73 1 n -0.73 -1 n 1 0 n s}bind def
+X/left{0 0 m -1 0 n 0.73 1 n 0.73 -1 n -1 0 n s}bind def
+X/circle{0 1 m 0 0 n 1 c s}bind def
+X/x{1 1 m -1 -1 n -1 1 m 1 -1 n s}bind def
+X/plus{0 1 m 0 -1 n -1 0 m 1 0 n s}bind def
+X/cross{plus}bind def
+X/circle-x{1 c .707 .707 m -.707 -.707 n -.707 .707 m .707 -.707 n s}bind def
+X/circle-plus{1 c 0 1 m 0 -1 n -1 0 m 1 0 n s}bind def
+X/filledsquare{0 1 m 1 1 nf 1 -1 nf -1 -1 nf -1 1 nf 0 1 nf fl}bind def
+X/filleddiamond{0 1.41 m 1.41 0 nf 0 -1.41 nf -1.41 0 nf 0 1.41 nf fl}bind def
+X/filledtriangle{0 1 m 1 -0.73 nf -1 -0.73 nf 0 1 nf fl}bind def
+X/filledcircle{0 0 m 1 cf}bind def
+X/marker{}def
+Xend
+X/ms 1.0 def
+X/mg 0 def
+X/sm{dup markers exch known
+X    {markers begin load /marker exch def end}
+X    {gs C 20 string cvs (No such marker type: )e gr unC/off sm}ifelse}bind def
+X/mk{gs translate /solid f
+X    mg 0.0 ne {mg setgray} if
+X    ms .04 mul dup scale markers begin marker end gr}bind def
+X% end fixed prolog
+X%%EndProlog
+X%%Page: 1 1
+XStartPSGraph
+X/saveIt save def
+Xgsave
+X/solid f
+X/Times-Roman findfont 10 scalefont setfont /fontsize 10 def
+X/gt000[
+X{0.000000 0.000000 6.500000 0.000000 l 	}EX
+X{0.000000 6.500000 6.500000 6.500000 l 	}EX
+X{ /black fc
+X0.000000 -0.111111 m (0) /cjust t
+X	}EX
+X{ 6.500000 -0.111111 m (1600) /cjust t
+X	}EX
+X{0.812500 0.000000 0.812500 6.500000 l 	}EX
+X{ 0.812500 -0.111111 m (200) /cjust t
+X	}EX
+X{1.625000 0.000000 1.625000 6.500000 l 	}EX
+X{ 1.625000 -0.111111 m (400) /cjust t
+X	}EX
+X{2.437500 0.000000 2.437500 6.500000 l 	}EX
+X{ 2.437500 -0.111111 m (600) /cjust t
+X	}EX
+X{3.250000 0.000000 3.250000 6.500000 l 	}EX
+X{ 3.250000 -0.111111 m (800) /cjust t
+X	}EX
+X{4.062500 0.000000 4.062500 6.500000 l 	}EX
+X{ 4.062500 -0.111111 m (1000) /cjust t
+X	}EX
+X{4.875000 0.000000 4.875000 6.500000 l 	}EX
+X{ 4.875000 -0.111111 m (1200) /cjust t
+X	}EX
+X{5.687500 0.000000 5.687500 6.500000 l 	}EX
+X{ 5.687500 -0.111111 m (1400) /cjust t
+X	}EX
+X{0.000000 0.000000 0.000000 6.500000 l 	}EX
+X{6.500000 0.000000 6.500000 6.500000 l 	}EX
+X]cvx bind def
+X/drawXaxis {
+X	gt000
+X}def
+X/gt001[
+X{0.000000 0.000000 0.000000 6.500000 l 	}EX
+X{6.500000 0.000000 6.500000 6.500000 l 	}EX
+X{ -0.050000 0.000000 m (500) /rjust t
+X	}EX
+X{ -0.050000 6.500000 m (3500) /rjust t
+X	}EX
+X{0.000000 1.083333 6.500000 1.083333 l 	}EX
+X{ -0.050000 1.083333 m (1000) /rjust t
+X	}EX
+X{0.000000 2.166667 6.500000 2.166667 l 	}EX
+X{ -0.050000 2.166667 m (1500) /rjust t
+X	}EX
+X{0.000000 3.250000 6.500000 3.250000 l 	}EX
+X{ -0.050000 3.250000 m (2000) /rjust t
+X	}EX
+X{0.000000 4.333333 6.500000 4.333333 l 	}EX
+X{ -0.050000 4.333333 m (2500) /rjust t
+X	}EX
+X{0.000000 5.416667 6.500000 5.416667 l 	}EX
+X{ -0.050000 5.416667 m (3000) /rjust t
+X	}EX
+X{0.000000 0.000000 6.500000 0.000000 l 	}EX
+X{0.000000 6.500000 6.500000 6.500000 l 	}EX
+X]cvx bind def
+X/drawYaxis {
+X	gt001
+X}def
+X/drawTitle [
+X{ 3.250000 6.641667 m (579-tnic, no screen) /cjust t 	}EX
+X] cvx bind def
+X0.416667 0.111111 translate
+XdrawXaxis drawYaxis drawTitle
+X0.360000 5.438334 m (95) /ljust w
+X0.620000 4.677834 m (120) /ljust w
+X1.140000 3.906500 m (124) /ljust w
+X2.180000 2.474333 m (132) /ljust w
+X3.220000 1.544833 m (139) /ljust w
+X4.260000 1.027000 m (178) /ljust w
+X5.300000 0.667333 m (178) /ljust w
+X6.266875 0.424667 m (115) /ljust w
+X/solid f  0.6 fw 0.260000 5.438333 m
+X 0.520000 4.677834 n
+X 1.040000 3.906500 n
+X 2.080000 2.474333 n
+X 3.120000 1.544833 n
+X 4.160000 1.027000 n
+X 5.200000 0.667333 n
+X 6.166875 0.424667 n
+Xgrestore saveIt restore
+X%%Trailer
+XEndPSGraph
+X%%DocumentFonts: Times-Roman
+X%%Pages: 1
+X%%BoundingBox: 0 0 497 496
+END_OF_FILE
+if test 6914 -ne `wc -c <'579-tn-noscr.psf'`; then
+    echo shar: \"'579-tn-noscr.psf'\" unpacked with wrong size!
+fi
+# end of '579-tn-noscr.psf'
+fi
+if test -f '579-tn-scr.psf' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'579-tn-scr.psf'\"
+else
+echo shar: Extracting \"'579-tn-scr.psf'\" \(6998 characters\)
+sed "s/^X//" >'579-tn-scr.psf' <<'END_OF_FILE'
+X%!PS-Adobe-1.0
+X%%Creator: morality.sjc.hw.sony.com:vixie (Paul &)
+X%%Title: PostScript graph file
+X%%CreationDate: Sun May  8 16:41:05 1994
+X%%DocumentFonts: (atend)
+X%%Pages: (atend)
+X%%BoundingBox: (atend)
+X%%EndComments
+X% psgraph.pro -- included prolog for PS graph files
+X% based on lib/psplot.pro, Copyright 1984 Adobe Systems, Inc.
+X% $Header: psgraph.pro,v 1.6 92/08/04 17:55:20 mogul Exp $
+Xsave 500 dict begin /psgraph exch def
+X/StartPSGraph
+X   {newpath 0 0 moveto 0.6 setlinewidth 0 setgray 1 setlinecap
+X    /imtx matrix currentmatrix def 
+X    /fnt /Times-Roman findfont def /fontsize 10 def
+X    72 72 scale
+X    /ex 72 nail def /ey 720 nail def
+X    /smtx matrix def fnt fontsize scalefont setfont}bind def
+X/len{dup mul exch dup mul add sqrt}bind def
+X/nail{0 dtransform len 0 idtransform len}bind def
+X/ljust{0 fontsize -3 div rmoveto}bind def
+X/rjust{dup stringwidth pop neg fontsize -3 div rmoveto}bind def
+X/cjust{dup stringwidth pop -2 div fontsize -3 div rmoveto}bind def
+X/vjust{90 rotate /cjust load exec}bind def
+X/prnt{dup stringwidth pop 6 add /tx exch def /ty fontsize 5 add def
+X    currentpoint /toy exch def /tox exch def 1 setgray
+X    newpath
+X      tox 3 sub toy 5 sub moveto 0 ty rlineto tx 0 rlineto 0 ty neg rlineto
+X    closepath fill tox toy moveto
+X    currentColor fc
+X    show}bind def
+X/m{newpath moveto}bind def
+X/s{pts stroke ins}bind def
+X/fl{pts fill ins}bind def
+X/n{lineto currentpoint s moveto}bind def
+X/nf{lineto}bind def
+X/l{moveto lineto currentpoint s moveto}bind def
+X/pts{smtx currentmatrix pop imtx setmatrix}bind def
+X/ins{smtx setmatrix}bind def
+X/t{pts load exec show ins}bind def
+X/w{pts load exec prnt ins}bind def
+X/e{pts ex ey moveto prnt prnt /ey ey 12 sub def ins}bind def
+X/gs{gsave}bind def
+X/gr{grestore}bind def
+X/c{gs newpath 0 0 3 -1 roll 0 360 arc s gr}bind def
+X/cf{gs newpath 0 0 3 -1 roll 0 360 arc fl gr}bind def
+X/f{dup lineStyles exch known
+X    {lineStyles begin load exec setdash end}
+X    {gs C 20 string cvs (No such line style: ) e gr unC/solid f}ifelse}bind def
+X/fc{dup dup /currentColor exch store lineColors exch known
+X    {lineColors begin load exec aload pop setrgbcolor end}
+X    {gs C 20 string cvs (No such psgraph color: ) e gr unC/black fc}ifelse}bind def
+X/fw{setlinewidth} def
+X/C{/Courier findfont 10 scalefont setfont 
+X    /sfs fontsize def /fontsize 10 def}bind def
+X/unC{/fontsize sfs def}bind def
+X/EX{/exec load}bind def
+X/EndPSGraph{clear psgraph end restore}bind def
+X/lineStyles 10 dict def lineStyles begin
+X/solid{{}0}bind def
+X/dotted{[2 nail 5 nail ] 0}bind def
+X/longdashed{[10 nail] 0}bind def
+X/shortdashed{[6 nail] 0}bind def
+X/dotdashed{[2 nail 6 nail 10 nail 6 nail] 0}bind def
+X/dashed{/shortdashed load exec}bind def
+X%/off{[0 100] 0}bind def
+X%/none{/off load exec}bind def
+Xend
+X/currentColor 0 def
+X/lineColors 10 dict def lineColors begin
+X/red {[1 0 0]}bind def
+X/blue {[0 0 1]}bind def
+X/magenta {[1 0 1]}bind def
+X/green {[0 1 0]}bind def
+X/black {[0 0 0]}bind def
+X/cyan {[0 1 1]}bind def
+X/yellow {[1 1 0]}bind def
+X/gray {[.5 .5 .5]}bind def
+X/orange {[1 .66 0]}bind def
+X/violet {[1 0 1]}bind def
+X/currentColor /black store
+Xend
+X
+X/markers 20 dict def markers begin
+X/none{}bind def
+X/off{}bind def
+X/square{0 0 m 0 1 n 1 1 n 1 -1 n -1 -1 n -1 1 n 0 1 n s}bind def
+X/diamond{0 0 m 0 1.41 n 1.41 0 n 0 -1.41 n -1.41 0 n 0 1.41 n s}bind def
+X/triangle{0 0 m 0 1 n 1 -0.73 n -1 -0.73 n 0 1 n s}bind def
+X/up{triangle}bind def
+X/down{0 0 m 0 -1 n 1 0.73 n -1 0.73 n 0 -1 n s}bind def
+X/right{0 0 m 1 0 n -0.73 1 n -0.73 -1 n 1 0 n s}bind def
+X/left{0 0 m -1 0 n 0.73 1 n 0.73 -1 n -1 0 n s}bind def
+X/circle{0 1 m 0 0 n 1 c s}bind def
+X/x{1 1 m -1 -1 n -1 1 m 1 -1 n s}bind def
+X/plus{0 1 m 0 -1 n -1 0 m 1 0 n s}bind def
+X/cross{plus}bind def
+X/circle-x{1 c .707 .707 m -.707 -.707 n -.707 .707 m .707 -.707 n s}bind def
+X/circle-plus{1 c 0 1 m 0 -1 n -1 0 m 1 0 n s}bind def
+X/filledsquare{0 1 m 1 1 nf 1 -1 nf -1 -1 nf -1 1 nf 0 1 nf fl}bind def
+X/filleddiamond{0 1.41 m 1.41 0 nf 0 -1.41 nf -1.41 0 nf 0 1.41 nf fl}bind def
+X/filledtriangle{0 1 m 1 -0.73 nf -1 -0.73 nf 0 1 nf fl}bind def
+X/filledcircle{0 0 m 1 cf}bind def
+X/marker{}def
+Xend
+X/ms 1.0 def
+X/mg 0 def
+X/sm{dup markers exch known
+X    {markers begin load /marker exch def end}
+X    {gs C 20 string cvs (No such marker type: )e gr unC/off sm}ifelse}bind def
+X/mk{gs translate /solid f
+X    mg 0.0 ne {mg setgray} if
+X    ms .04 mul dup scale markers begin marker end gr}bind def
+X% end fixed prolog
+X%%EndProlog
+X%%Page: 1 1
+XStartPSGraph
+X/saveIt save def
+Xgsave
+X/solid f
+X/Times-Roman findfont 10 scalefont setfont /fontsize 10 def
+X/gt000[
+X{0.000000 0.000000 6.500000 0.000000 l 	}EX
+X{0.000000 6.500000 6.500000 6.500000 l 	}EX
+X{ /black fc
+X0.000000 -0.111111 m (0) /cjust t
+X	}EX
+X{ 6.500000 -0.111111 m (1600) /cjust t
+X	}EX
+X{0.812500 0.000000 0.812500 6.500000 l 	}EX
+X{ 0.812500 -0.111111 m (200) /cjust t
+X	}EX
+X{1.625000 0.000000 1.625000 6.500000 l 	}EX
+X{ 1.625000 -0.111111 m (400) /cjust t
+X	}EX
+X{2.437500 0.000000 2.437500 6.500000 l 	}EX
+X{ 2.437500 -0.111111 m (600) /cjust t
+X	}EX
+X{3.250000 0.000000 3.250000 6.500000 l 	}EX
+X{ 3.250000 -0.111111 m (800) /cjust t
+X	}EX
+X{4.062500 0.000000 4.062500 6.500000 l 	}EX
+X{ 4.062500 -0.111111 m (1000) /cjust t
+X	}EX
+X{4.875000 0.000000 4.875000 6.500000 l 	}EX
+X{ 4.875000 -0.111111 m (1200) /cjust t
+X	}EX
+X{5.687500 0.000000 5.687500 6.500000 l 	}EX
+X{ 5.687500 -0.111111 m (1400) /cjust t
+X	}EX
+X{0.000000 0.000000 0.000000 6.500000 l 	}EX
+X{6.500000 0.000000 6.500000 6.500000 l 	}EX
+X]cvx bind def
+X/drawXaxis {
+X	gt000
+X}def
+X/gt001[
+X{0.000000 0.000000 0.000000 6.500000 l 	}EX
+X{6.500000 0.000000 6.500000 6.500000 l 	}EX
+X{ -0.050000 0.000000 m (400) /rjust t
+X	}EX
+X{ -0.050000 6.500000 m (1800) /rjust t
+X	}EX
+X{0.000000 0.928571 6.500000 0.928571 l 	}EX
+X{ -0.050000 0.928571 m (600) /rjust t
+X	}EX
+X{0.000000 1.857143 6.500000 1.857143 l 	}EX
+X{ -0.050000 1.857143 m (800) /rjust t
+X	}EX
+X{0.000000 2.785714 6.500000 2.785714 l 	}EX
+X{ -0.050000 2.785714 m (1000) /rjust t
+X	}EX
+X{0.000000 3.714286 6.500000 3.714286 l 	}EX
+X{ -0.050000 3.714286 m (1200) /rjust t
+X	}EX
+X{0.000000 4.642857 6.500000 4.642857 l 	}EX
+X{ -0.050000 4.642857 m (1400) /rjust t
+X	}EX
+X{0.000000 5.571429 6.500000 5.571429 l 	}EX
+X{ -0.050000 5.571429 m (1600) /rjust t
+X	}EX
+X{0.000000 0.000000 6.500000 0.000000 l 	}EX
+X{0.000000 6.500000 6.500000 6.500000 l 	}EX
+X]cvx bind def
+X/drawYaxis {
+X	gt001
+X}def
+X/drawTitle [
+X{ 3.250000 6.641667 m (579-tnic, screen) /cjust t 	}EX
+X] cvx bind def
+X0.416667 0.111111 translate
+XdrawXaxis drawYaxis drawTitle
+X0.360000 6.068214 m (339) /ljust w
+X0.620000 5.483214 m (389) /ljust w
+X1.140000 4.772857 m (348) /ljust w
+X2.180000 3.384643 m (363) /ljust w
+X3.220000 2.460714 m (350) /ljust w
+X4.260000 1.759643 m (428) /ljust w
+X5.300000 1.207143 m (383) /ljust w
+X6.266875 0.854286 m (352) /ljust w
+X/solid f  0.6 fw 0.260000 6.068214 m
+X 0.520000 5.483214 n
+X 1.040000 4.772857 n
+X 2.080000 3.384643 n
+X 3.120000 2.460714 n
+X 4.160000 1.759643 n
+X 5.200000 1.207143 n
+X 6.166875 0.854286 n
+Xgrestore saveIt restore
+X%%Trailer
+XEndPSGraph
+X%%DocumentFonts: Times-Roman
+X%%Pages: 1
+X%%BoundingBox: 0 0 497 496
+END_OF_FILE
+if test 6998 -ne `wc -c <'579-tn-scr.psf'`; then
+    echo shar: \"'579-tn-scr.psf'\" unpacked with wrong size!
+fi
+# end of '579-tn-scr.psf'
+fi
+if test -f 'cisco-9.0.2.psf' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'cisco-9.0.2.psf'\"
+else
+echo shar: Extracting \"'cisco-9.0.2.psf'\" \(7070 characters\)
+sed "s/^X//" >'cisco-9.0.2.psf' <<'END_OF_FILE'
+X%!PS-Adobe-1.0
+X%%Creator: morality.sjc.hw.sony.com:vixie (Paul &)
+X%%Title: PostScript graph file
+X%%CreationDate: Sun May  8 16:41:06 1994
+X%%DocumentFonts: (atend)
+X%%Pages: (atend)
+X%%BoundingBox: (atend)
+X%%EndComments
+X% psgraph.pro -- included prolog for PS graph files
+X% based on lib/psplot.pro, Copyright 1984 Adobe Systems, Inc.
+X% $Header: psgraph.pro,v 1.6 92/08/04 17:55:20 mogul Exp $
+Xsave 500 dict begin /psgraph exch def
+X/StartPSGraph
+X   {newpath 0 0 moveto 0.6 setlinewidth 0 setgray 1 setlinecap
+X    /imtx matrix currentmatrix def 
+X    /fnt /Times-Roman findfont def /fontsize 10 def
+X    72 72 scale
+X    /ex 72 nail def /ey 720 nail def
+X    /smtx matrix def fnt fontsize scalefont setfont}bind def
+X/len{dup mul exch dup mul add sqrt}bind def
+X/nail{0 dtransform len 0 idtransform len}bind def
+X/ljust{0 fontsize -3 div rmoveto}bind def
+X/rjust{dup stringwidth pop neg fontsize -3 div rmoveto}bind def
+X/cjust{dup stringwidth pop -2 div fontsize -3 div rmoveto}bind def
+X/vjust{90 rotate /cjust load exec}bind def
+X/prnt{dup stringwidth pop 6 add /tx exch def /ty fontsize 5 add def
+X    currentpoint /toy exch def /tox exch def 1 setgray
+X    newpath
+X      tox 3 sub toy 5 sub moveto 0 ty rlineto tx 0 rlineto 0 ty neg rlineto
+X    closepath fill tox toy moveto
+X    currentColor fc
+X    show}bind def
+X/m{newpath moveto}bind def
+X/s{pts stroke ins}bind def
+X/fl{pts fill ins}bind def
+X/n{lineto currentpoint s moveto}bind def
+X/nf{lineto}bind def
+X/l{moveto lineto currentpoint s moveto}bind def
+X/pts{smtx currentmatrix pop imtx setmatrix}bind def
+X/ins{smtx setmatrix}bind def
+X/t{pts load exec show ins}bind def
+X/w{pts load exec prnt ins}bind def
+X/e{pts ex ey moveto prnt prnt /ey ey 12 sub def ins}bind def
+X/gs{gsave}bind def
+X/gr{grestore}bind def
+X/c{gs newpath 0 0 3 -1 roll 0 360 arc s gr}bind def
+X/cf{gs newpath 0 0 3 -1 roll 0 360 arc fl gr}bind def
+X/f{dup lineStyles exch known
+X    {lineStyles begin load exec setdash end}
+X    {gs C 20 string cvs (No such line style: ) e gr unC/solid f}ifelse}bind def
+X/fc{dup dup /currentColor exch store lineColors exch known
+X    {lineColors begin load exec aload pop setrgbcolor end}
+X    {gs C 20 string cvs (No such psgraph color: ) e gr unC/black fc}ifelse}bind def
+X/fw{setlinewidth} def
+X/C{/Courier findfont 10 scalefont setfont 
+X    /sfs fontsize def /fontsize 10 def}bind def
+X/unC{/fontsize sfs def}bind def
+X/EX{/exec load}bind def
+X/EndPSGraph{clear psgraph end restore}bind def
+X/lineStyles 10 dict def lineStyles begin
+X/solid{{}0}bind def
+X/dotted{[2 nail 5 nail ] 0}bind def
+X/longdashed{[10 nail] 0}bind def
+X/shortdashed{[6 nail] 0}bind def
+X/dotdashed{[2 nail 6 nail 10 nail 6 nail] 0}bind def
+X/dashed{/shortdashed load exec}bind def
+X%/off{[0 100] 0}bind def
+X%/none{/off load exec}bind def
+Xend
+X/currentColor 0 def
+X/lineColors 10 dict def lineColors begin
+X/red {[1 0 0]}bind def
+X/blue {[0 0 1]}bind def
+X/magenta {[1 0 1]}bind def
+X/green {[0 1 0]}bind def
+X/black {[0 0 0]}bind def
+X/cyan {[0 1 1]}bind def
+X/yellow {[1 1 0]}bind def
+X/gray {[.5 .5 .5]}bind def
+X/orange {[1 .66 0]}bind def
+X/violet {[1 0 1]}bind def
+X/currentColor /black store
+Xend
+X
+X/markers 20 dict def markers begin
+X/none{}bind def
+X/off{}bind def
+X/square{0 0 m 0 1 n 1 1 n 1 -1 n -1 -1 n -1 1 n 0 1 n s}bind def
+X/diamond{0 0 m 0 1.41 n 1.41 0 n 0 -1.41 n -1.41 0 n 0 1.41 n s}bind def
+X/triangle{0 0 m 0 1 n 1 -0.73 n -1 -0.73 n 0 1 n s}bind def
+X/up{triangle}bind def
+X/down{0 0 m 0 -1 n 1 0.73 n -1 0.73 n 0 -1 n s}bind def
+X/right{0 0 m 1 0 n -0.73 1 n -0.73 -1 n 1 0 n s}bind def
+X/left{0 0 m -1 0 n 0.73 1 n 0.73 -1 n -1 0 n s}bind def
+X/circle{0 1 m 0 0 n 1 c s}bind def
+X/x{1 1 m -1 -1 n -1 1 m 1 -1 n s}bind def
+X/plus{0 1 m 0 -1 n -1 0 m 1 0 n s}bind def
+X/cross{plus}bind def
+X/circle-x{1 c .707 .707 m -.707 -.707 n -.707 .707 m .707 -.707 n s}bind def
+X/circle-plus{1 c 0 1 m 0 -1 n -1 0 m 1 0 n s}bind def
+X/filledsquare{0 1 m 1 1 nf 1 -1 nf -1 -1 nf -1 1 nf 0 1 nf fl}bind def
+X/filleddiamond{0 1.41 m 1.41 0 nf 0 -1.41 nf -1.41 0 nf 0 1.41 nf fl}bind def
+X/filledtriangle{0 1 m 1 -0.73 nf -1 -0.73 nf 0 1 nf fl}bind def
+X/filledcircle{0 0 m 1 cf}bind def
+X/marker{}def
+Xend
+X/ms 1.0 def
+X/mg 0 def
+X/sm{dup markers exch known
+X    {markers begin load /marker exch def end}
+X    {gs C 20 string cvs (No such marker type: )e gr unC/off sm}ifelse}bind def
+X/mk{gs translate /solid f
+X    mg 0.0 ne {mg setgray} if
+X    ms .04 mul dup scale markers begin marker end gr}bind def
+X% end fixed prolog
+X%%EndProlog
+X%%Page: 1 1
+XStartPSGraph
+X/saveIt save def
+Xgsave
+X/solid f
+X/Times-Roman findfont 10 scalefont setfont /fontsize 10 def
+X/gt000[
+X{0.000000 0.000000 6.500000 0.000000 l 	}EX
+X{0.000000 6.500000 6.500000 6.500000 l 	}EX
+X{ /black fc
+X0.000000 -0.111111 m (0) /cjust t
+X	}EX
+X{ 6.500000 -0.111111 m (1600) /cjust t
+X	}EX
+X{0.812500 0.000000 0.812500 6.500000 l 	}EX
+X{ 0.812500 -0.111111 m (200) /cjust t
+X	}EX
+X{1.625000 0.000000 1.625000 6.500000 l 	}EX
+X{ 1.625000 -0.111111 m (400) /cjust t
+X	}EX
+X{2.437500 0.000000 2.437500 6.500000 l 	}EX
+X{ 2.437500 -0.111111 m (600) /cjust t
+X	}EX
+X{3.250000 0.000000 3.250000 6.500000 l 	}EX
+X{ 3.250000 -0.111111 m (800) /cjust t
+X	}EX
+X{4.062500 0.000000 4.062500 6.500000 l 	}EX
+X{ 4.062500 -0.111111 m (1000) /cjust t
+X	}EX
+X{4.875000 0.000000 4.875000 6.500000 l 	}EX
+X{ 4.875000 -0.111111 m (1200) /cjust t
+X	}EX
+X{5.687500 0.000000 5.687500 6.500000 l 	}EX
+X{ 5.687500 -0.111111 m (1400) /cjust t
+X	}EX
+X{0.000000 0.000000 0.000000 6.500000 l 	}EX
+X{6.500000 0.000000 6.500000 6.500000 l 	}EX
+X]cvx bind def
+X/drawXaxis {
+X	gt000
+X}def
+X/gt001[
+X{0.000000 0.000000 0.000000 6.500000 l 	}EX
+X{6.500000 0.000000 6.500000 6.500000 l 	}EX
+X{ -0.050000 0.000000 m (0) /rjust t
+X	}EX
+X{ -0.050000 6.500000 m (16000) /rjust t
+X	}EX
+X{0.000000 0.812500 6.500000 0.812500 l 	}EX
+X{ -0.050000 0.812500 m (2000) /rjust t
+X	}EX
+X{0.000000 1.625000 6.500000 1.625000 l 	}EX
+X{ -0.050000 1.625000 m (4000) /rjust t
+X	}EX
+X{0.000000 2.437500 6.500000 2.437500 l 	}EX
+X{ -0.050000 2.437500 m (6000) /rjust t
+X	}EX
+X{0.000000 3.250000 6.500000 3.250000 l 	}EX
+X{ -0.050000 3.250000 m (8000) /rjust t
+X	}EX
+X{0.000000 4.062500 6.500000 4.062500 l 	}EX
+X{ -0.050000 4.062500 m (10000) /rjust t
+X	}EX
+X{0.000000 4.875000 6.500000 4.875000 l 	}EX
+X{ -0.050000 4.875000 m (12000) /rjust t
+X	}EX
+X{0.000000 5.687500 6.500000 5.687500 l 	}EX
+X{ -0.050000 5.687500 m (14000) /rjust t
+X	}EX
+X{0.000000 0.000000 6.500000 0.000000 l 	}EX
+X{0.000000 6.500000 6.500000 6.500000 l 	}EX
+X]cvx bind def
+X/drawYaxis {
+X	gt001
+X}def
+X/drawTitle [
+X{ 3.250000 6.641667 m (cisco 9.0(2)) /cjust t 	}EX
+X] cvx bind def
+X0.520833 0.111111 translate
+XdrawXaxis drawYaxis drawTitle
+X0.360000 6.036063 m (0) /ljust w
+X0.620000 3.429563 m (0) /ljust w
+X1.140000 1.837875 m (0) /ljust w
+X2.180000 0.952656 m (0) /ljust w
+X3.220000 0.643094 m (0) /ljust w
+X4.260000 0.484656 m (0) /ljust w
+X5.300000 0.389594 m (0) /ljust w
+X6.266875 0.329062 m (0) /ljust w
+X/solid f  0.6 fw 0.260000 6.036062 m
+X 0.520000 3.429563 n
+X 1.040000 1.837875 n
+X 2.080000 0.952656 n
+X 3.120000 0.643094 n
+X 4.160000 0.484656 n
+X 5.200000 0.389594 n
+X 6.166875 0.329062 n
+Xgrestore saveIt restore
+X%%Trailer
+XEndPSGraph
+X%%DocumentFonts: Times-Roman
+X%%Pages: 1
+X%%BoundingBox: 0 0 505 496
+END_OF_FILE
+if test 7070 -ne `wc -c <'cisco-9.0.2.psf'`; then
+    echo shar: \"'cisco-9.0.2.psf'\" unpacked with wrong size!
+fi
+# end of 'cisco-9.0.2.psf'
+fi
+if test -f 'tn-579-noscr.psf' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'tn-579-noscr.psf'\"
+else
+echo shar: Extracting \"'tn-579-noscr.psf'\" \(7001 characters\)
+sed "s/^X//" >'tn-579-noscr.psf' <<'END_OF_FILE'
+X%!PS-Adobe-1.0
+X%%Creator: morality.sjc.hw.sony.com:vixie (Paul &)
+X%%Title: PostScript graph file
+X%%CreationDate: Sun May  8 16:41:06 1994
+X%%DocumentFonts: (atend)
+X%%Pages: (atend)
+X%%BoundingBox: (atend)
+X%%EndComments
+X% psgraph.pro -- included prolog for PS graph files
+X% based on lib/psplot.pro, Copyright 1984 Adobe Systems, Inc.
+X% $Header: psgraph.pro,v 1.6 92/08/04 17:55:20 mogul Exp $
+Xsave 500 dict begin /psgraph exch def
+X/StartPSGraph
+X   {newpath 0 0 moveto 0.6 setlinewidth 0 setgray 1 setlinecap
+X    /imtx matrix currentmatrix def 
+X    /fnt /Times-Roman findfont def /fontsize 10 def
+X    72 72 scale
+X    /ex 72 nail def /ey 720 nail def
+X    /smtx matrix def fnt fontsize scalefont setfont}bind def
+X/len{dup mul exch dup mul add sqrt}bind def
+X/nail{0 dtransform len 0 idtransform len}bind def
+X/ljust{0 fontsize -3 div rmoveto}bind def
+X/rjust{dup stringwidth pop neg fontsize -3 div rmoveto}bind def
+X/cjust{dup stringwidth pop -2 div fontsize -3 div rmoveto}bind def
+X/vjust{90 rotate /cjust load exec}bind def
+X/prnt{dup stringwidth pop 6 add /tx exch def /ty fontsize 5 add def
+X    currentpoint /toy exch def /tox exch def 1 setgray
+X    newpath
+X      tox 3 sub toy 5 sub moveto 0 ty rlineto tx 0 rlineto 0 ty neg rlineto
+X    closepath fill tox toy moveto
+X    currentColor fc
+X    show}bind def
+X/m{newpath moveto}bind def
+X/s{pts stroke ins}bind def
+X/fl{pts fill ins}bind def
+X/n{lineto currentpoint s moveto}bind def
+X/nf{lineto}bind def
+X/l{moveto lineto currentpoint s moveto}bind def
+X/pts{smtx currentmatrix pop imtx setmatrix}bind def
+X/ins{smtx setmatrix}bind def
+X/t{pts load exec show ins}bind def
+X/w{pts load exec prnt ins}bind def
+X/e{pts ex ey moveto prnt prnt /ey ey 12 sub def ins}bind def
+X/gs{gsave}bind def
+X/gr{grestore}bind def
+X/c{gs newpath 0 0 3 -1 roll 0 360 arc s gr}bind def
+X/cf{gs newpath 0 0 3 -1 roll 0 360 arc fl gr}bind def
+X/f{dup lineStyles exch known
+X    {lineStyles begin load exec setdash end}
+X    {gs C 20 string cvs (No such line style: ) e gr unC/solid f}ifelse}bind def
+X/fc{dup dup /currentColor exch store lineColors exch known
+X    {lineColors begin load exec aload pop setrgbcolor end}
+X    {gs C 20 string cvs (No such psgraph color: ) e gr unC/black fc}ifelse}bind def
+X/fw{setlinewidth} def
+X/C{/Courier findfont 10 scalefont setfont 
+X    /sfs fontsize def /fontsize 10 def}bind def
+X/unC{/fontsize sfs def}bind def
+X/EX{/exec load}bind def
+X/EndPSGraph{clear psgraph end restore}bind def
+X/lineStyles 10 dict def lineStyles begin
+X/solid{{}0}bind def
+X/dotted{[2 nail 5 nail ] 0}bind def
+X/longdashed{[10 nail] 0}bind def
+X/shortdashed{[6 nail] 0}bind def
+X/dotdashed{[2 nail 6 nail 10 nail 6 nail] 0}bind def
+X/dashed{/shortdashed load exec}bind def
+X%/off{[0 100] 0}bind def
+X%/none{/off load exec}bind def
+Xend
+X/currentColor 0 def
+X/lineColors 10 dict def lineColors begin
+X/red {[1 0 0]}bind def
+X/blue {[0 0 1]}bind def
+X/magenta {[1 0 1]}bind def
+X/green {[0 1 0]}bind def
+X/black {[0 0 0]}bind def
+X/cyan {[0 1 1]}bind def
+X/yellow {[1 1 0]}bind def
+X/gray {[.5 .5 .5]}bind def
+X/orange {[1 .66 0]}bind def
+X/violet {[1 0 1]}bind def
+X/currentColor /black store
+Xend
+X
+X/markers 20 dict def markers begin
+X/none{}bind def
+X/off{}bind def
+X/square{0 0 m 0 1 n 1 1 n 1 -1 n -1 -1 n -1 1 n 0 1 n s}bind def
+X/diamond{0 0 m 0 1.41 n 1.41 0 n 0 -1.41 n -1.41 0 n 0 1.41 n s}bind def
+X/triangle{0 0 m 0 1 n 1 -0.73 n -1 -0.73 n 0 1 n s}bind def
+X/up{triangle}bind def
+X/down{0 0 m 0 -1 n 1 0.73 n -1 0.73 n 0 -1 n s}bind def
+X/right{0 0 m 1 0 n -0.73 1 n -0.73 -1 n 1 0 n s}bind def
+X/left{0 0 m -1 0 n 0.73 1 n 0.73 -1 n -1 0 n s}bind def
+X/circle{0 1 m 0 0 n 1 c s}bind def
+X/x{1 1 m -1 -1 n -1 1 m 1 -1 n s}bind def
+X/plus{0 1 m 0 -1 n -1 0 m 1 0 n s}bind def
+X/cross{plus}bind def
+X/circle-x{1 c .707 .707 m -.707 -.707 n -.707 .707 m .707 -.707 n s}bind def
+X/circle-plus{1 c 0 1 m 0 -1 n -1 0 m 1 0 n s}bind def
+X/filledsquare{0 1 m 1 1 nf 1 -1 nf -1 -1 nf -1 1 nf 0 1 nf fl}bind def
+X/filleddiamond{0 1.41 m 1.41 0 nf 0 -1.41 nf -1.41 0 nf 0 1.41 nf fl}bind def
+X/filledtriangle{0 1 m 1 -0.73 nf -1 -0.73 nf 0 1 nf fl}bind def
+X/filledcircle{0 0 m 1 cf}bind def
+X/marker{}def
+Xend
+X/ms 1.0 def
+X/mg 0 def
+X/sm{dup markers exch known
+X    {markers begin load /marker exch def end}
+X    {gs C 20 string cvs (No such marker type: )e gr unC/off sm}ifelse}bind def
+X/mk{gs translate /solid f
+X    mg 0.0 ne {mg setgray} if
+X    ms .04 mul dup scale markers begin marker end gr}bind def
+X% end fixed prolog
+X%%EndProlog
+X%%Page: 1 1
+XStartPSGraph
+X/saveIt save def
+Xgsave
+X/solid f
+X/Times-Roman findfont 10 scalefont setfont /fontsize 10 def
+X/gt000[
+X{0.000000 0.000000 6.500000 0.000000 l 	}EX
+X{0.000000 6.500000 6.500000 6.500000 l 	}EX
+X{ /black fc
+X0.000000 -0.111111 m (0) /cjust t
+X	}EX
+X{ 6.500000 -0.111111 m (1600) /cjust t
+X	}EX
+X{0.812500 0.000000 0.812500 6.500000 l 	}EX
+X{ 0.812500 -0.111111 m (200) /cjust t
+X	}EX
+X{1.625000 0.000000 1.625000 6.500000 l 	}EX
+X{ 1.625000 -0.111111 m (400) /cjust t
+X	}EX
+X{2.437500 0.000000 2.437500 6.500000 l 	}EX
+X{ 2.437500 -0.111111 m (600) /cjust t
+X	}EX
+X{3.250000 0.000000 3.250000 6.500000 l 	}EX
+X{ 3.250000 -0.111111 m (800) /cjust t
+X	}EX
+X{4.062500 0.000000 4.062500 6.500000 l 	}EX
+X{ 4.062500 -0.111111 m (1000) /cjust t
+X	}EX
+X{4.875000 0.000000 4.875000 6.500000 l 	}EX
+X{ 4.875000 -0.111111 m (1200) /cjust t
+X	}EX
+X{5.687500 0.000000 5.687500 6.500000 l 	}EX
+X{ 5.687500 -0.111111 m (1400) /cjust t
+X	}EX
+X{0.000000 0.000000 0.000000 6.500000 l 	}EX
+X{6.500000 0.000000 6.500000 6.500000 l 	}EX
+X]cvx bind def
+X/drawXaxis {
+X	gt000
+X}def
+X/gt001[
+X{0.000000 0.000000 0.000000 6.500000 l 	}EX
+X{6.500000 0.000000 6.500000 6.500000 l 	}EX
+X{ -0.050000 0.000000 m (500) /rjust t
+X	}EX
+X{ -0.050000 6.500000 m (4000) /rjust t
+X	}EX
+X{0.000000 0.928571 6.500000 0.928571 l 	}EX
+X{ -0.050000 0.928571 m (1000) /rjust t
+X	}EX
+X{0.000000 1.857143 6.500000 1.857143 l 	}EX
+X{ -0.050000 1.857143 m (1500) /rjust t
+X	}EX
+X{0.000000 2.785714 6.500000 2.785714 l 	}EX
+X{ -0.050000 2.785714 m (2000) /rjust t
+X	}EX
+X{0.000000 3.714286 6.500000 3.714286 l 	}EX
+X{ -0.050000 3.714286 m (2500) /rjust t
+X	}EX
+X{0.000000 4.642857 6.500000 4.642857 l 	}EX
+X{ -0.050000 4.642857 m (3000) /rjust t
+X	}EX
+X{0.000000 5.571429 6.500000 5.571429 l 	}EX
+X{ -0.050000 5.571429 m (3500) /rjust t
+X	}EX
+X{0.000000 0.000000 6.500000 0.000000 l 	}EX
+X{0.000000 6.500000 6.500000 6.500000 l 	}EX
+X]cvx bind def
+X/drawYaxis {
+X	gt001
+X}def
+X/drawTitle [
+X{ 3.250000 6.641667 m (tnic-579, no screen) /cjust t 	}EX
+X] cvx bind def
+X0.416667 0.111111 translate
+XdrawXaxis drawYaxis drawTitle
+X0.360000 6.436857 m (89) /ljust w
+X0.620000 5.205572 m (63) /ljust w
+X1.140000 2.405000 m (149) /ljust w
+X2.180000 2.770857 m (260) /ljust w
+X3.220000 2.013143 m (331) /ljust w
+X4.260000 0.685286 m (428) /ljust w
+X5.300000 0.367714 m (479) /ljust w
+X6.266875 0.174571 m (486) /ljust w
+X/solid f  0.6 fw 0.260000 6.436857 m
+X 0.520000 5.205572 n
+X 1.040000 2.405000 n
+X 2.080000 2.770857 n
+X 3.120000 2.013143 n
+X 4.160000 0.685286 n
+X 5.200000 0.367714 n
+X 6.166875 0.174571 n
+Xgrestore saveIt restore
+X%%Trailer
+XEndPSGraph
+X%%DocumentFonts: Times-Roman
+X%%Pages: 1
+X%%BoundingBox: 0 0 497 496
+END_OF_FILE
+if test 7001 -ne `wc -c <'tn-579-noscr.psf'`; then
+    echo shar: \"'tn-579-noscr.psf'\" unpacked with wrong size!
+fi
+# end of 'tn-579-noscr.psf'
+fi
+if test -f 'tn-579-scr.psf' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'tn-579-scr.psf'\"
+else
+echo shar: Extracting \"'tn-579-scr.psf'\" \(7173 characters\)
+sed "s/^X//" >'tn-579-scr.psf' <<'END_OF_FILE'
+X%!PS-Adobe-1.0
+X%%Creator: morality.sjc.hw.sony.com:vixie (Paul &)
+X%%Title: PostScript graph file
+X%%CreationDate: Sun May  8 16:41:06 1994
+X%%DocumentFonts: (atend)
+X%%Pages: (atend)
+X%%BoundingBox: (atend)
+X%%EndComments
+X% psgraph.pro -- included prolog for PS graph files
+X% based on lib/psplot.pro, Copyright 1984 Adobe Systems, Inc.
+X% $Header: psgraph.pro,v 1.6 92/08/04 17:55:20 mogul Exp $
+Xsave 500 dict begin /psgraph exch def
+X/StartPSGraph
+X   {newpath 0 0 moveto 0.6 setlinewidth 0 setgray 1 setlinecap
+X    /imtx matrix currentmatrix def 
+X    /fnt /Times-Roman findfont def /fontsize 10 def
+X    72 72 scale
+X    /ex 72 nail def /ey 720 nail def
+X    /smtx matrix def fnt fontsize scalefont setfont}bind def
+X/len{dup mul exch dup mul add sqrt}bind def
+X/nail{0 dtransform len 0 idtransform len}bind def
+X/ljust{0 fontsize -3 div rmoveto}bind def
+X/rjust{dup stringwidth pop neg fontsize -3 div rmoveto}bind def
+X/cjust{dup stringwidth pop -2 div fontsize -3 div rmoveto}bind def
+X/vjust{90 rotate /cjust load exec}bind def
+X/prnt{dup stringwidth pop 6 add /tx exch def /ty fontsize 5 add def
+X    currentpoint /toy exch def /tox exch def 1 setgray
+X    newpath
+X      tox 3 sub toy 5 sub moveto 0 ty rlineto tx 0 rlineto 0 ty neg rlineto
+X    closepath fill tox toy moveto
+X    currentColor fc
+X    show}bind def
+X/m{newpath moveto}bind def
+X/s{pts stroke ins}bind def
+X/fl{pts fill ins}bind def
+X/n{lineto currentpoint s moveto}bind def
+X/nf{lineto}bind def
+X/l{moveto lineto currentpoint s moveto}bind def
+X/pts{smtx currentmatrix pop imtx setmatrix}bind def
+X/ins{smtx setmatrix}bind def
+X/t{pts load exec show ins}bind def
+X/w{pts load exec prnt ins}bind def
+X/e{pts ex ey moveto prnt prnt /ey ey 12 sub def ins}bind def
+X/gs{gsave}bind def
+X/gr{grestore}bind def
+X/c{gs newpath 0 0 3 -1 roll 0 360 arc s gr}bind def
+X/cf{gs newpath 0 0 3 -1 roll 0 360 arc fl gr}bind def
+X/f{dup lineStyles exch known
+X    {lineStyles begin load exec setdash end}
+X    {gs C 20 string cvs (No such line style: ) e gr unC/solid f}ifelse}bind def
+X/fc{dup dup /currentColor exch store lineColors exch known
+X    {lineColors begin load exec aload pop setrgbcolor end}
+X    {gs C 20 string cvs (No such psgraph color: ) e gr unC/black fc}ifelse}bind def
+X/fw{setlinewidth} def
+X/C{/Courier findfont 10 scalefont setfont 
+X    /sfs fontsize def /fontsize 10 def}bind def
+X/unC{/fontsize sfs def}bind def
+X/EX{/exec load}bind def
+X/EndPSGraph{clear psgraph end restore}bind def
+X/lineStyles 10 dict def lineStyles begin
+X/solid{{}0}bind def
+X/dotted{[2 nail 5 nail ] 0}bind def
+X/longdashed{[10 nail] 0}bind def
+X/shortdashed{[6 nail] 0}bind def
+X/dotdashed{[2 nail 6 nail 10 nail 6 nail] 0}bind def
+X/dashed{/shortdashed load exec}bind def
+X%/off{[0 100] 0}bind def
+X%/none{/off load exec}bind def
+Xend
+X/currentColor 0 def
+X/lineColors 10 dict def lineColors begin
+X/red {[1 0 0]}bind def
+X/blue {[0 0 1]}bind def
+X/magenta {[1 0 1]}bind def
+X/green {[0 1 0]}bind def
+X/black {[0 0 0]}bind def
+X/cyan {[0 1 1]}bind def
+X/yellow {[1 1 0]}bind def
+X/gray {[.5 .5 .5]}bind def
+X/orange {[1 .66 0]}bind def
+X/violet {[1 0 1]}bind def
+X/currentColor /black store
+Xend
+X
+X/markers 20 dict def markers begin
+X/none{}bind def
+X/off{}bind def
+X/square{0 0 m 0 1 n 1 1 n 1 -1 n -1 -1 n -1 1 n 0 1 n s}bind def
+X/diamond{0 0 m 0 1.41 n 1.41 0 n 0 -1.41 n -1.41 0 n 0 1.41 n s}bind def
+X/triangle{0 0 m 0 1 n 1 -0.73 n -1 -0.73 n 0 1 n s}bind def
+X/up{triangle}bind def
+X/down{0 0 m 0 -1 n 1 0.73 n -1 0.73 n 0 -1 n s}bind def
+X/right{0 0 m 1 0 n -0.73 1 n -0.73 -1 n 1 0 n s}bind def
+X/left{0 0 m -1 0 n 0.73 1 n 0.73 -1 n -1 0 n s}bind def
+X/circle{0 1 m 0 0 n 1 c s}bind def
+X/x{1 1 m -1 -1 n -1 1 m 1 -1 n s}bind def
+X/plus{0 1 m 0 -1 n -1 0 m 1 0 n s}bind def
+X/cross{plus}bind def
+X/circle-x{1 c .707 .707 m -.707 -.707 n -.707 .707 m .707 -.707 n s}bind def
+X/circle-plus{1 c 0 1 m 0 -1 n -1 0 m 1 0 n s}bind def
+X/filledsquare{0 1 m 1 1 nf 1 -1 nf -1 -1 nf -1 1 nf 0 1 nf fl}bind def
+X/filleddiamond{0 1.41 m 1.41 0 nf 0 -1.41 nf -1.41 0 nf 0 1.41 nf fl}bind def
+X/filledtriangle{0 1 m 1 -0.73 nf -1 -0.73 nf 0 1 nf fl}bind def
+X/filledcircle{0 0 m 1 cf}bind def
+X/marker{}def
+Xend
+X/ms 1.0 def
+X/mg 0 def
+X/sm{dup markers exch known
+X    {markers begin load /marker exch def end}
+X    {gs C 20 string cvs (No such marker type: )e gr unC/off sm}ifelse}bind def
+X/mk{gs translate /solid f
+X    mg 0.0 ne {mg setgray} if
+X    ms .04 mul dup scale markers begin marker end gr}bind def
+X% end fixed prolog
+X%%EndProlog
+X%%Page: 1 1
+XStartPSGraph
+X/saveIt save def
+Xgsave
+X/solid f
+X/Times-Roman findfont 10 scalefont setfont /fontsize 10 def
+X/gt000[
+X{0.000000 0.000000 6.500000 0.000000 l 	}EX
+X{0.000000 6.500000 6.500000 6.500000 l 	}EX
+X{ /black fc
+X0.000000 -0.111111 m (0) /cjust t
+X	}EX
+X{ 6.500000 -0.111111 m (1600) /cjust t
+X	}EX
+X{0.812500 0.000000 0.812500 6.500000 l 	}EX
+X{ 0.812500 -0.111111 m (200) /cjust t
+X	}EX
+X{1.625000 0.000000 1.625000 6.500000 l 	}EX
+X{ 1.625000 -0.111111 m (400) /cjust t
+X	}EX
+X{2.437500 0.000000 2.437500 6.500000 l 	}EX
+X{ 2.437500 -0.111111 m (600) /cjust t
+X	}EX
+X{3.250000 0.000000 3.250000 6.500000 l 	}EX
+X{ 3.250000 -0.111111 m (800) /cjust t
+X	}EX
+X{4.062500 0.000000 4.062500 6.500000 l 	}EX
+X{ 4.062500 -0.111111 m (1000) /cjust t
+X	}EX
+X{4.875000 0.000000 4.875000 6.500000 l 	}EX
+X{ 4.875000 -0.111111 m (1200) /cjust t
+X	}EX
+X{5.687500 0.000000 5.687500 6.500000 l 	}EX
+X{ 5.687500 -0.111111 m (1400) /cjust t
+X	}EX
+X{0.000000 0.000000 0.000000 6.500000 l 	}EX
+X{6.500000 0.000000 6.500000 6.500000 l 	}EX
+X]cvx bind def
+X/drawXaxis {
+X	gt000
+X}def
+X/gt001[
+X{0.000000 0.000000 0.000000 6.500000 l 	}EX
+X{6.500000 0.000000 6.500000 6.500000 l 	}EX
+X{ -0.050000 0.000000 m (200) /rjust t
+X	}EX
+X{ -0.050000 6.500000 m (2000) /rjust t
+X	}EX
+X{0.000000 0.722222 6.500000 0.722222 l 	}EX
+X{ -0.050000 0.722222 m (400) /rjust t
+X	}EX
+X{0.000000 1.444444 6.500000 1.444444 l 	}EX
+X{ -0.050000 1.444444 m (600) /rjust t
+X	}EX
+X{0.000000 2.166667 6.500000 2.166667 l 	}EX
+X{ -0.050000 2.166667 m (800) /rjust t
+X	}EX
+X{0.000000 2.888889 6.500000 2.888889 l 	}EX
+X{ -0.050000 2.888889 m (1000) /rjust t
+X	}EX
+X{0.000000 3.611111 6.500000 3.611111 l 	}EX
+X{ -0.050000 3.611111 m (1200) /rjust t
+X	}EX
+X{0.000000 4.333333 6.500000 4.333333 l 	}EX
+X{ -0.050000 4.333333 m (1400) /rjust t
+X	}EX
+X{0.000000 5.055555 6.500000 5.055555 l 	}EX
+X{ -0.050000 5.055555 m (1600) /rjust t
+X	}EX
+X{0.000000 5.777778 6.500000 5.777778 l 	}EX
+X{ -0.050000 5.777778 m (1800) /rjust t
+X	}EX
+X{0.000000 0.000000 6.500000 0.000000 l 	}EX
+X{0.000000 6.500000 6.500000 6.500000 l 	}EX
+X]cvx bind def
+X/drawYaxis {
+X	gt001
+X}def
+X/drawTitle [
+X{ 3.250000 6.641667 m (tnic-579, screen) /cjust t 	}EX
+X] cvx bind def
+X0.416667 0.111111 translate
+XdrawXaxis drawYaxis drawTitle
+X0.360000 6.030556 m (364) /ljust w
+X0.620000 5.315556 m (351) /ljust w
+X1.140000 4.690834 m (450) /ljust w
+X2.180000 3.881944 m (542) /ljust w
+X3.220000 3.217500 m (593) /ljust w
+X4.260000 0.953333 m (716) /ljust w
+X5.300000 1.798333 m (805) /ljust w
+X6.266875 0.718611 m (755) /ljust w
+X/solid f  0.6 fw 0.260000 6.030556 m
+X 0.520000 5.315556 n
+X 1.040000 4.690834 n
+X 2.080000 3.881944 n
+X 3.120000 3.217500 n
+X 4.160000 0.953333 n
+X 5.200000 1.798333 n
+X 6.166875 0.718611 n
+Xgrestore saveIt restore
+X%%Trailer
+XEndPSGraph
+X%%DocumentFonts: Times-Roman
+X%%Pages: 1
+X%%BoundingBox: 0 0 497 496
+END_OF_FILE
+if test 7173 -ne `wc -c <'tn-579-scr.psf'`; then
+    echo shar: \"'tn-579-scr.psf'\" unpacked with wrong size!
+fi
+# end of 'tn-579-scr.psf'
+fi
+if test -f 'tn-tn-noscr.psf' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'tn-tn-noscr.psf'\"
+else
+echo shar: Extracting \"'tn-tn-noscr.psf'\" \(6828 characters\)
+sed "s/^X//" >'tn-tn-noscr.psf' <<'END_OF_FILE'
+X%!PS-Adobe-1.0
+X%%Creator: morality.sjc.hw.sony.com:vixie (Paul &)
+X%%Title: PostScript graph file
+X%%CreationDate: Sun May  8 16:41:06 1994
+X%%DocumentFonts: (atend)
+X%%Pages: (atend)
+X%%BoundingBox: (atend)
+X%%EndComments
+X% psgraph.pro -- included prolog for PS graph files
+X% based on lib/psplot.pro, Copyright 1984 Adobe Systems, Inc.
+X% $Header: psgraph.pro,v 1.6 92/08/04 17:55:20 mogul Exp $
+Xsave 500 dict begin /psgraph exch def
+X/StartPSGraph
+X   {newpath 0 0 moveto 0.6 setlinewidth 0 setgray 1 setlinecap
+X    /imtx matrix currentmatrix def 
+X    /fnt /Times-Roman findfont def /fontsize 10 def
+X    72 72 scale
+X    /ex 72 nail def /ey 720 nail def
+X    /smtx matrix def fnt fontsize scalefont setfont}bind def
+X/len{dup mul exch dup mul add sqrt}bind def
+X/nail{0 dtransform len 0 idtransform len}bind def
+X/ljust{0 fontsize -3 div rmoveto}bind def
+X/rjust{dup stringwidth pop neg fontsize -3 div rmoveto}bind def
+X/cjust{dup stringwidth pop -2 div fontsize -3 div rmoveto}bind def
+X/vjust{90 rotate /cjust load exec}bind def
+X/prnt{dup stringwidth pop 6 add /tx exch def /ty fontsize 5 add def
+X    currentpoint /toy exch def /tox exch def 1 setgray
+X    newpath
+X      tox 3 sub toy 5 sub moveto 0 ty rlineto tx 0 rlineto 0 ty neg rlineto
+X    closepath fill tox toy moveto
+X    currentColor fc
+X    show}bind def
+X/m{newpath moveto}bind def
+X/s{pts stroke ins}bind def
+X/fl{pts fill ins}bind def
+X/n{lineto currentpoint s moveto}bind def
+X/nf{lineto}bind def
+X/l{moveto lineto currentpoint s moveto}bind def
+X/pts{smtx currentmatrix pop imtx setmatrix}bind def
+X/ins{smtx setmatrix}bind def
+X/t{pts load exec show ins}bind def
+X/w{pts load exec prnt ins}bind def
+X/e{pts ex ey moveto prnt prnt /ey ey 12 sub def ins}bind def
+X/gs{gsave}bind def
+X/gr{grestore}bind def
+X/c{gs newpath 0 0 3 -1 roll 0 360 arc s gr}bind def
+X/cf{gs newpath 0 0 3 -1 roll 0 360 arc fl gr}bind def
+X/f{dup lineStyles exch known
+X    {lineStyles begin load exec setdash end}
+X    {gs C 20 string cvs (No such line style: ) e gr unC/solid f}ifelse}bind def
+X/fc{dup dup /currentColor exch store lineColors exch known
+X    {lineColors begin load exec aload pop setrgbcolor end}
+X    {gs C 20 string cvs (No such psgraph color: ) e gr unC/black fc}ifelse}bind def
+X/fw{setlinewidth} def
+X/C{/Courier findfont 10 scalefont setfont 
+X    /sfs fontsize def /fontsize 10 def}bind def
+X/unC{/fontsize sfs def}bind def
+X/EX{/exec load}bind def
+X/EndPSGraph{clear psgraph end restore}bind def
+X/lineStyles 10 dict def lineStyles begin
+X/solid{{}0}bind def
+X/dotted{[2 nail 5 nail ] 0}bind def
+X/longdashed{[10 nail] 0}bind def
+X/shortdashed{[6 nail] 0}bind def
+X/dotdashed{[2 nail 6 nail 10 nail 6 nail] 0}bind def
+X/dashed{/shortdashed load exec}bind def
+X%/off{[0 100] 0}bind def
+X%/none{/off load exec}bind def
+Xend
+X/currentColor 0 def
+X/lineColors 10 dict def lineColors begin
+X/red {[1 0 0]}bind def
+X/blue {[0 0 1]}bind def
+X/magenta {[1 0 1]}bind def
+X/green {[0 1 0]}bind def
+X/black {[0 0 0]}bind def
+X/cyan {[0 1 1]}bind def
+X/yellow {[1 1 0]}bind def
+X/gray {[.5 .5 .5]}bind def
+X/orange {[1 .66 0]}bind def
+X/violet {[1 0 1]}bind def
+X/currentColor /black store
+Xend
+X
+X/markers 20 dict def markers begin
+X/none{}bind def
+X/off{}bind def
+X/square{0 0 m 0 1 n 1 1 n 1 -1 n -1 -1 n -1 1 n 0 1 n s}bind def
+X/diamond{0 0 m 0 1.41 n 1.41 0 n 0 -1.41 n -1.41 0 n 0 1.41 n s}bind def
+X/triangle{0 0 m 0 1 n 1 -0.73 n -1 -0.73 n 0 1 n s}bind def
+X/up{triangle}bind def
+X/down{0 0 m 0 -1 n 1 0.73 n -1 0.73 n 0 -1 n s}bind def
+X/right{0 0 m 1 0 n -0.73 1 n -0.73 -1 n 1 0 n s}bind def
+X/left{0 0 m -1 0 n 0.73 1 n 0.73 -1 n -1 0 n s}bind def
+X/circle{0 1 m 0 0 n 1 c s}bind def
+X/x{1 1 m -1 -1 n -1 1 m 1 -1 n s}bind def
+X/plus{0 1 m 0 -1 n -1 0 m 1 0 n s}bind def
+X/cross{plus}bind def
+X/circle-x{1 c .707 .707 m -.707 -.707 n -.707 .707 m .707 -.707 n s}bind def
+X/circle-plus{1 c 0 1 m 0 -1 n -1 0 m 1 0 n s}bind def
+X/filledsquare{0 1 m 1 1 nf 1 -1 nf -1 -1 nf -1 1 nf 0 1 nf fl}bind def
+X/filleddiamond{0 1.41 m 1.41 0 nf 0 -1.41 nf -1.41 0 nf 0 1.41 nf fl}bind def
+X/filledtriangle{0 1 m 1 -0.73 nf -1 -0.73 nf 0 1 nf fl}bind def
+X/filledcircle{0 0 m 1 cf}bind def
+X/marker{}def
+Xend
+X/ms 1.0 def
+X/mg 0 def
+X/sm{dup markers exch known
+X    {markers begin load /marker exch def end}
+X    {gs C 20 string cvs (No such marker type: )e gr unC/off sm}ifelse}bind def
+X/mk{gs translate /solid f
+X    mg 0.0 ne {mg setgray} if
+X    ms .04 mul dup scale markers begin marker end gr}bind def
+X% end fixed prolog
+X%%EndProlog
+X%%Page: 1 1
+XStartPSGraph
+X/saveIt save def
+Xgsave
+X/solid f
+X/Times-Roman findfont 10 scalefont setfont /fontsize 10 def
+X/gt000[
+X{0.000000 0.000000 6.500000 0.000000 l 	}EX
+X{0.000000 6.500000 6.500000 6.500000 l 	}EX
+X{ /black fc
+X0.000000 -0.111111 m (0) /cjust t
+X	}EX
+X{ 6.500000 -0.111111 m (1600) /cjust t
+X	}EX
+X{0.812500 0.000000 0.812500 6.500000 l 	}EX
+X{ 0.812500 -0.111111 m (200) /cjust t
+X	}EX
+X{1.625000 0.000000 1.625000 6.500000 l 	}EX
+X{ 1.625000 -0.111111 m (400) /cjust t
+X	}EX
+X{2.437500 0.000000 2.437500 6.500000 l 	}EX
+X{ 2.437500 -0.111111 m (600) /cjust t
+X	}EX
+X{3.250000 0.000000 3.250000 6.500000 l 	}EX
+X{ 3.250000 -0.111111 m (800) /cjust t
+X	}EX
+X{4.062500 0.000000 4.062500 6.500000 l 	}EX
+X{ 4.062500 -0.111111 m (1000) /cjust t
+X	}EX
+X{4.875000 0.000000 4.875000 6.500000 l 	}EX
+X{ 4.875000 -0.111111 m (1200) /cjust t
+X	}EX
+X{5.687500 0.000000 5.687500 6.500000 l 	}EX
+X{ 5.687500 -0.111111 m (1400) /cjust t
+X	}EX
+X{0.000000 0.000000 0.000000 6.500000 l 	}EX
+X{6.500000 0.000000 6.500000 6.500000 l 	}EX
+X]cvx bind def
+X/drawXaxis {
+X	gt000
+X}def
+X/gt001[
+X{0.000000 0.000000 0.000000 6.500000 l 	}EX
+X{6.500000 0.000000 6.500000 6.500000 l 	}EX
+X{ -0.050000 0.000000 m (500) /rjust t
+X	}EX
+X{ -0.050000 6.500000 m (3000) /rjust t
+X	}EX
+X{0.000000 1.300000 6.500000 1.300000 l 	}EX
+X{ -0.050000 1.300000 m (1000) /rjust t
+X	}EX
+X{0.000000 2.600000 6.500000 2.600000 l 	}EX
+X{ -0.050000 2.600000 m (1500) /rjust t
+X	}EX
+X{0.000000 3.900000 6.500000 3.900000 l 	}EX
+X{ -0.050000 3.900000 m (2000) /rjust t
+X	}EX
+X{0.000000 5.200000 6.500000 5.200000 l 	}EX
+X{ -0.050000 5.200000 m (2500) /rjust t
+X	}EX
+X{0.000000 0.000000 6.500000 0.000000 l 	}EX
+X{0.000000 6.500000 6.500000 6.500000 l 	}EX
+X]cvx bind def
+X/drawYaxis {
+X	gt001
+X}def
+X/drawTitle [
+X{ 3.250000 6.641667 m (tnic-tnic, no screen) /cjust t 	}EX
+X] cvx bind def
+X0.416667 0.111111 translate
+XdrawXaxis drawYaxis drawTitle
+X0.360000 6.255600 m (127) /ljust w
+X0.620000 4.888000 m (101) /ljust w
+X1.140000 4.206800 m (194) /ljust w
+X2.180000 2.893800 m (260) /ljust w
+X3.220000 1.957800 m (203) /ljust w
+X4.260000 1.310400 m (268) /ljust w
+X5.300000 0.863200 m (236) /ljust w
+X6.266875 0.587600 m (205) /ljust w
+X/solid f  0.6 fw 0.260000 6.255600 m
+X 0.520000 4.888000 n
+X 1.040000 4.206800 n
+X 2.080000 2.893800 n
+X 3.120000 1.957800 n
+X 4.160000 1.310400 n
+X 5.200000 0.863200 n
+X 6.166875 0.587600 n
+Xgrestore saveIt restore
+X%%Trailer
+XEndPSGraph
+X%%DocumentFonts: Times-Roman
+X%%Pages: 1
+X%%BoundingBox: 0 0 497 496
+END_OF_FILE
+if test 6828 -ne `wc -c <'tn-tn-noscr.psf'`; then
+    echo shar: \"'tn-tn-noscr.psf'\" unpacked with wrong size!
+fi
+# end of 'tn-tn-noscr.psf'
+fi
+if test -f 'tn-tn-scr.psf' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'tn-tn-scr.psf'\"
+else
+echo shar: Extracting \"'tn-tn-scr.psf'\" \(6911 characters\)
+sed "s/^X//" >'tn-tn-scr.psf' <<'END_OF_FILE'
+X%!PS-Adobe-1.0
+X%%Creator: morality.sjc.hw.sony.com:vixie (Paul &)
+X%%Title: PostScript graph file
+X%%CreationDate: Sun May  8 16:41:06 1994
+X%%DocumentFonts: (atend)
+X%%Pages: (atend)
+X%%BoundingBox: (atend)
+X%%EndComments
+X% psgraph.pro -- included prolog for PS graph files
+X% based on lib/psplot.pro, Copyright 1984 Adobe Systems, Inc.
+X% $Header: psgraph.pro,v 1.6 92/08/04 17:55:20 mogul Exp $
+Xsave 500 dict begin /psgraph exch def
+X/StartPSGraph
+X   {newpath 0 0 moveto 0.6 setlinewidth 0 setgray 1 setlinecap
+X    /imtx matrix currentmatrix def 
+X    /fnt /Times-Roman findfont def /fontsize 10 def
+X    72 72 scale
+X    /ex 72 nail def /ey 720 nail def
+X    /smtx matrix def fnt fontsize scalefont setfont}bind def
+X/len{dup mul exch dup mul add sqrt}bind def
+X/nail{0 dtransform len 0 idtransform len}bind def
+X/ljust{0 fontsize -3 div rmoveto}bind def
+X/rjust{dup stringwidth pop neg fontsize -3 div rmoveto}bind def
+X/cjust{dup stringwidth pop -2 div fontsize -3 div rmoveto}bind def
+X/vjust{90 rotate /cjust load exec}bind def
+X/prnt{dup stringwidth pop 6 add /tx exch def /ty fontsize 5 add def
+X    currentpoint /toy exch def /tox exch def 1 setgray
+X    newpath
+X      tox 3 sub toy 5 sub moveto 0 ty rlineto tx 0 rlineto 0 ty neg rlineto
+X    closepath fill tox toy moveto
+X    currentColor fc
+X    show}bind def
+X/m{newpath moveto}bind def
+X/s{pts stroke ins}bind def
+X/fl{pts fill ins}bind def
+X/n{lineto currentpoint s moveto}bind def
+X/nf{lineto}bind def
+X/l{moveto lineto currentpoint s moveto}bind def
+X/pts{smtx currentmatrix pop imtx setmatrix}bind def
+X/ins{smtx setmatrix}bind def
+X/t{pts load exec show ins}bind def
+X/w{pts load exec prnt ins}bind def
+X/e{pts ex ey moveto prnt prnt /ey ey 12 sub def ins}bind def
+X/gs{gsave}bind def
+X/gr{grestore}bind def
+X/c{gs newpath 0 0 3 -1 roll 0 360 arc s gr}bind def
+X/cf{gs newpath 0 0 3 -1 roll 0 360 arc fl gr}bind def
+X/f{dup lineStyles exch known
+X    {lineStyles begin load exec setdash end}
+X    {gs C 20 string cvs (No such line style: ) e gr unC/solid f}ifelse}bind def
+X/fc{dup dup /currentColor exch store lineColors exch known
+X    {lineColors begin load exec aload pop setrgbcolor end}
+X    {gs C 20 string cvs (No such psgraph color: ) e gr unC/black fc}ifelse}bind def
+X/fw{setlinewidth} def
+X/C{/Courier findfont 10 scalefont setfont 
+X    /sfs fontsize def /fontsize 10 def}bind def
+X/unC{/fontsize sfs def}bind def
+X/EX{/exec load}bind def
+X/EndPSGraph{clear psgraph end restore}bind def
+X/lineStyles 10 dict def lineStyles begin
+X/solid{{}0}bind def
+X/dotted{[2 nail 5 nail ] 0}bind def
+X/longdashed{[10 nail] 0}bind def
+X/shortdashed{[6 nail] 0}bind def
+X/dotdashed{[2 nail 6 nail 10 nail 6 nail] 0}bind def
+X/dashed{/shortdashed load exec}bind def
+X%/off{[0 100] 0}bind def
+X%/none{/off load exec}bind def
+Xend
+X/currentColor 0 def
+X/lineColors 10 dict def lineColors begin
+X/red {[1 0 0]}bind def
+X/blue {[0 0 1]}bind def
+X/magenta {[1 0 1]}bind def
+X/green {[0 1 0]}bind def
+X/black {[0 0 0]}bind def
+X/cyan {[0 1 1]}bind def
+X/yellow {[1 1 0]}bind def
+X/gray {[.5 .5 .5]}bind def
+X/orange {[1 .66 0]}bind def
+X/violet {[1 0 1]}bind def
+X/currentColor /black store
+Xend
+X
+X/markers 20 dict def markers begin
+X/none{}bind def
+X/off{}bind def
+X/square{0 0 m 0 1 n 1 1 n 1 -1 n -1 -1 n -1 1 n 0 1 n s}bind def
+X/diamond{0 0 m 0 1.41 n 1.41 0 n 0 -1.41 n -1.41 0 n 0 1.41 n s}bind def
+X/triangle{0 0 m 0 1 n 1 -0.73 n -1 -0.73 n 0 1 n s}bind def
+X/up{triangle}bind def
+X/down{0 0 m 0 -1 n 1 0.73 n -1 0.73 n 0 -1 n s}bind def
+X/right{0 0 m 1 0 n -0.73 1 n -0.73 -1 n 1 0 n s}bind def
+X/left{0 0 m -1 0 n 0.73 1 n 0.73 -1 n -1 0 n s}bind def
+X/circle{0 1 m 0 0 n 1 c s}bind def
+X/x{1 1 m -1 -1 n -1 1 m 1 -1 n s}bind def
+X/plus{0 1 m 0 -1 n -1 0 m 1 0 n s}bind def
+X/cross{plus}bind def
+X/circle-x{1 c .707 .707 m -.707 -.707 n -.707 .707 m .707 -.707 n s}bind def
+X/circle-plus{1 c 0 1 m 0 -1 n -1 0 m 1 0 n s}bind def
+X/filledsquare{0 1 m 1 1 nf 1 -1 nf -1 -1 nf -1 1 nf 0 1 nf fl}bind def
+X/filleddiamond{0 1.41 m 1.41 0 nf 0 -1.41 nf -1.41 0 nf 0 1.41 nf fl}bind def
+X/filledtriangle{0 1 m 1 -0.73 nf -1 -0.73 nf 0 1 nf fl}bind def
+X/filledcircle{0 0 m 1 cf}bind def
+X/marker{}def
+Xend
+X/ms 1.0 def
+X/mg 0 def
+X/sm{dup markers exch known
+X    {markers begin load /marker exch def end}
+X    {gs C 20 string cvs (No such marker type: )e gr unC/off sm}ifelse}bind def
+X/mk{gs translate /solid f
+X    mg 0.0 ne {mg setgray} if
+X    ms .04 mul dup scale markers begin marker end gr}bind def
+X% end fixed prolog
+X%%EndProlog
+X%%Page: 1 1
+XStartPSGraph
+X/saveIt save def
+Xgsave
+X/solid f
+X/Times-Roman findfont 10 scalefont setfont /fontsize 10 def
+X/gt000[
+X{0.000000 0.000000 6.500000 0.000000 l 	}EX
+X{0.000000 6.500000 6.500000 6.500000 l 	}EX
+X{ /black fc
+X0.000000 -0.111111 m (0) /cjust t
+X	}EX
+X{ 6.500000 -0.111111 m (1600) /cjust t
+X	}EX
+X{0.812500 0.000000 0.812500 6.500000 l 	}EX
+X{ 0.812500 -0.111111 m (200) /cjust t
+X	}EX
+X{1.625000 0.000000 1.625000 6.500000 l 	}EX
+X{ 1.625000 -0.111111 m (400) /cjust t
+X	}EX
+X{2.437500 0.000000 2.437500 6.500000 l 	}EX
+X{ 2.437500 -0.111111 m (600) /cjust t
+X	}EX
+X{3.250000 0.000000 3.250000 6.500000 l 	}EX
+X{ 3.250000 -0.111111 m (800) /cjust t
+X	}EX
+X{4.062500 0.000000 4.062500 6.500000 l 	}EX
+X{ 4.062500 -0.111111 m (1000) /cjust t
+X	}EX
+X{4.875000 0.000000 4.875000 6.500000 l 	}EX
+X{ 4.875000 -0.111111 m (1200) /cjust t
+X	}EX
+X{5.687500 0.000000 5.687500 6.500000 l 	}EX
+X{ 5.687500 -0.111111 m (1400) /cjust t
+X	}EX
+X{0.000000 0.000000 0.000000 6.500000 l 	}EX
+X{6.500000 0.000000 6.500000 6.500000 l 	}EX
+X]cvx bind def
+X/drawXaxis {
+X	gt000
+X}def
+X/gt001[
+X{0.000000 0.000000 0.000000 6.500000 l 	}EX
+X{6.500000 0.000000 6.500000 6.500000 l 	}EX
+X{ -0.050000 0.000000 m (400) /rjust t
+X	}EX
+X{ -0.050000 6.500000 m (1600) /rjust t
+X	}EX
+X{0.000000 1.083333 6.500000 1.083333 l 	}EX
+X{ -0.050000 1.083333 m (600) /rjust t
+X	}EX
+X{0.000000 2.166667 6.500000 2.166667 l 	}EX
+X{ -0.050000 2.166667 m (800) /rjust t
+X	}EX
+X{0.000000 3.250000 6.500000 3.250000 l 	}EX
+X{ -0.050000 3.250000 m (1000) /rjust t
+X	}EX
+X{0.000000 4.333333 6.500000 4.333333 l 	}EX
+X{ -0.050000 4.333333 m (1200) /rjust t
+X	}EX
+X{0.000000 5.416667 6.500000 5.416667 l 	}EX
+X{ -0.050000 5.416667 m (1400) /rjust t
+X	}EX
+X{0.000000 0.000000 6.500000 0.000000 l 	}EX
+X{0.000000 6.500000 6.500000 6.500000 l 	}EX
+X]cvx bind def
+X/drawYaxis {
+X	gt001
+X}def
+X/drawTitle [
+X{ 3.250000 6.641667 m (tnic-tnic, screen) /cjust t 	}EX
+X] cvx bind def
+X0.416667 0.111111 translate
+XdrawXaxis drawYaxis drawTitle
+X0.360000 6.207500 m (371) /ljust w
+X0.620000 4.615000 m (415) /ljust w
+X1.140000 3.878333 m (469) /ljust w
+X2.180000 3.786250 m (478) /ljust w
+X3.220000 3.027917 m (465) /ljust w
+X4.260000 2.377917 m (543) /ljust w
+X5.300000 1.543750 m (524) /ljust w
+X6.266875 1.050833 m (467) /ljust w
+X/solid f  0.6 fw 0.260000 6.207500 m
+X 0.520000 4.615000 n
+X 1.040000 3.878333 n
+X 2.080000 3.786250 n
+X 3.120000 3.027917 n
+X 4.160000 2.377917 n
+X 5.200000 1.543750 n
+X 6.166875 1.050833 n
+Xgrestore saveIt restore
+X%%Trailer
+XEndPSGraph
+X%%DocumentFonts: Times-Roman
+X%%Pages: 1
+X%%BoundingBox: 0 0 497 496
+END_OF_FILE
+if test 6911 -ne `wc -c <'tn-tn-scr.psf'`; then
+    echo shar: \"'tn-tn-scr.psf'\" unpacked with wrong size!
+fi
+# end of 'tn-tn-scr.psf'
+fi
+echo shar: End of shell archive.
+exit 0

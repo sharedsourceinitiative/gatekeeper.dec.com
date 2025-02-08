@@ -1,0 +1,121 @@
+<html>
+<head><title>Using Inexpensive CMOS Cameras with StrongARM</title></head>
+<body>
+<center>
+<h1><b>Using Inexpensive CMOS Cameras with StrongARM</b></h1><br>
+<h2>Matt Podolsky, University of California at Berkeley</h2>
+</center>
+
+
+I've just finished my third year of graduate school at U.C. Berkeley,
+where I study electrical engineering.  I work with Martin Vetterli and
+Steve McCanne, and my general interests concern signal processing and
+networks.  Specifically, I've been studying the use of Forward Error
+Correction for real-time audio over the Internet.  Various Internet
+audio tools (e.g. rat, freephone) have added extra redundancy to their
+audio streams to protect against packet loss. I'm interested in trying
+to determine how much redundancy to add, and also in determining how
+things change as network conditions (e.g. traffic distributions)
+change.  In the near future I'll be studying similar issues with
+video.<P>
+
+While at SRC, I worked on attaching small cameras to SHARKs (the 
+Digital Network Appliance Reference Design).  The
+sensors for these cameras are made from a standard CMOS process (as
+opposed to a traditional CCD sensor), and so they can be fully
+integrated with other logic on a single board.  Other advantages over
+CCD systems include low price (only $15-$20 for one of these camera
+sensors and a plastic lens, when purchased in quantity) and low power
+(between 250 and 375 milliwatts).  Mark Hayter and I originally envisioned my
+project as studying image and video processing algorithms on the
+StrongARM microprocessor using a SHARK connected to one of these cameras.  However,
+when I started work this summer much needed to be
+done before the camera could send video to a SHARK.  As such, my summer was
+spent working on the following elements:<P>
+
+<OL>
+
+<LI> Writing device drivers for two different CMOS sensors.</li>
+
+The camera sensors were connected to a rev 1 SHARK through its ROM
+card slot.  A board consisting of an ADC, a pair of dual FIFOs, and a
+PAL acted as a bridge between the sensor and the SHARK' ROM card.
+Device drivers were written in C, and accessed the camera and FIFOs
+through memory mapped addresses on the SHARK.  The camera sensors'
+configuration data is read and written via an I2C serial bus
+interface; the driver I wrote included code to handle this serial
+communication.<P>
+
+<LI> Porting the UCB multicast tools to SHARK.</LI>
+
+I ported UCB MASH multicast toolkit and got the shared media board
+(mb) and video conferencing tool (vic) to run on a SHARK.  With vic
+you can display refreshing video locally and also multicast it to other
+workstations.  Because simply displaying the video on the local
+machine with the camera still involves doing an encode and decode for
+each frame, the video frame rate was only about two frames per second
+(fps).<P>
+
+<LI> Adapted a simpler Tcl/Tk display program for displaying video.</li>
+
+Using a program Mark Hayter had written for displaying video from one
+of these sensors on a Lectrice, a tablet-based computer, I modified it to work 
+on SHARKS with
+my device driver.  Its simplicity allowed me to study where time was
+being spent to process and display video, as well as display video
+faster than vic (by the end of the summer we had about 4 fps using
+this program).  I also adapted Tk widgets to controls various camera
+parameters, like ADC gain, black calibration levels, and color
+balance.<P>
+
+<LI> Improving picture quality.</li>
+
+The initial video out of the analog VV5426 camera sensor we used was quite
+noisy.  The noise came from the power supply interfering with the ADC,
+and this was solved by moving on to the VV5404 digital sensor.  This
+one took advantage of the CMOS nature of the sensor to put an ADC
+right on the board with the sensor.  The resulting picture was noise
+free and extremely sharp.  However, the color was rather unattractive,
+and using the Tcl/Tk program I was able to determine that the red and
+blue levels needed to be boosted, while the green levels should be
+reduced.  Other parameters like black levels and gain were varied and
+used to further improve picture quality.<P>
+
+<LI> Performance optimizations.</li>
+
+Finally, I was able to study the performance of the camera. 
+One of the areas I focused on was
+the color extraction process.  The CMOS camera sensors consist of an
+array of alternating color filters (one line has RGRGRG..., while the
+next has GBGBGB..., and back to RGRGRG, where R=red, G=green, and
+B=blue) in front of light sensors.  In order to obtain a full color
+picture, the software supplied with the cameras uses a Bayer algorithm
+to interpolate the missing colors.  However, even though you start off
+with one-third of the color information you need (one half of the green 
+and one-quarter each of the red and blue), the full-color output image is offset from
+the camera input image by one-half a pixel in the X and Y directions,
+so that every output pixel requires that all three colors be averaged.
+I implemented a simpler symmetric filter which uses only
+shifts and adds, and reduced the color interpolation time by 33%.  I
+also saved time in the next step of image extraction, a high-frequency
+emphasis filter, by removing some unnecessary thresholding checks and
+hard-coding in color gains.
+</ol><P>
+
+The most fun part of this project was getting the digital sensor
+working with corrected color and seeing good quality images come into
+the SHARK through a $20 camera.  One of the most challenging aspects
+of the project was working with the sensors, for I was dealing with
+extremely limited documentation.  This meant that I had to reverse
+engineer the vendor software and some of their data modes in order to
+determine functionality.  It also meant finding and debugging
+inaccuracies in supplied data sheets.  Dealing with SHARKs was also
+rewarding and fun, because their capabilities and state of development
+frequently amazed me, but also challenging because they were still
+prototypes.  All in all I found this to be a
+very rewarding project, and a great opportunity to work at SRC and
+interact with so many talented and capable people.<P>
+
+</BODY>
+</HTML>
+

@@ -1,0 +1,289 @@
+<!-- This file generated automatically by mtex2html(1) -->
+<HTML>
+<HEAD>
+<TITLE>dcpitopstalls</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#ffffff" VLINK="#006633">
+<H2>dcpitopstalls(1)</H2>
+
+<H3>NAME</H3>
+<BLOCKQUOTE>
+dcpitopstalls - List the instructions with the most stall cycles
+</BLOCKQUOTE>
+
+<H3>SYNOPSIS</H3>
+<BLOCKQUOTE>
+<P>
+
+<B>dcpitopstalls</B> [&lt;options&gt;] <I>image-file</I> [<I>image-file</I> ...]
+</BLOCKQUOTE>
+
+<H3>DESCRIPTION</H3>
+<BLOCKQUOTE>
+<P>
+
+Given one or more image-files and some profile files, dcpitopstalls
+identifies the N instructions in the images responsible for the most
+stall cycles.  N defaults to 100.<P>
+
+The output has the form:
+<PRE>
+1104066 samples (99.99% of all samples) had estimate conf &gt;= medium confidence.
+728719 stall cycles with estimate conf &gt;= medium confidence.
+Stall cycles of conf &gt;= medium confidence represent 65.99% of all samples.
+
+top 10 stalls of length &gt;= 0:
+     %  cum% cycles count C   avg blame pc          procedure  file:line
+ 10.0% 10.0% 109885  4998 H  22.0     d 0x12000957c compress   compress.c:484
+  9.9% 19.8% 108776  5513 H  19.7     d 0x120009530 compress   compress.c:477
+  7.8% 27.6%  85668  3836 H  22.3     d 0x12000959c compress   compress.c:488
+  3.0% 30.6%  33412  5513 H   6.1     ? 0x120009518 compress   compress.c:467
+  2.0% 32.6%  22153  2343 H   9.5     d 0x120010fb4 decompress compress.c:731
+  1.3% 33.9%  14169  2343 H   6.0   dDw 0x120010fa8 decompress compress.c:728
+  1.3% 35.2%  14102  5513 H   2.6     I 0x120009638 compress   compress.c:510
+  1.0% 36.2%  11385  1516 H   7.5     d 0x120010fd8 decompress compress.c:728
+  0.9% 37.1%   9861  2343 H   4.2     p 0x120009558 compress   compress.c:481
+</PRE>
+
+In the listing, each line covers one instruction.  The "%" column is
+the percentage of all cycles samples that were charged to stalls at
+the instruction.  The "cum%" column is a running total of the "%"
+column.  The "cycles" column is the number of cycles samples
+attributed to stalls.  The "count" column is the execution count of
+the instruction.  The "C" column is the confidence level of the
+count: 'L' for low, 'M' for medium, and 'H' for high confidence.
+The "avg" column is the average length of the stall (= cycles / count).
+The "blame" column identifies the possible causes for the stall using
+the same 1-character codes as <A HREF="dcpicalc.html">dcpicalc(1)</A>.  The
+"pc" column is the PC of the instruction.  The "procedure" column is
+the name of the procedure containing the instruction or, if the name
+has been stripped, procedure's entry address.  If more than one
+image-file is supplied, an additional column identifies which image
+contains the procedure.  The "file:line" column is the source file
+name and line number associated with the instruction.
+</BLOCKQUOTE>
+
+<H3>FLAGS</H3>
+<BLOCKQUOTE>
+<P>
+
+<DL>
+<DT>-help<DD> Print information about options.<P>
+
+<DT>-min int<DD> Specifies the minimum average stall length;
+stalls of fewer cycles will be tallied but not listed.  Defaults to 0.<P>
+
+<DT>-n int<DD> Specifies the maximum number of instructions to
+list.  Defaults to 100.<P>
+
+<DT>-no_src<DD> Omit the file:line column so that the output is more likely to
+fit in 80 columns.<P>
+
+<DT>-version<DD>  Print program version information.
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>EXECUTION COUNT AND STALL ANALYSIS FLAGS</H3>
+<BLOCKQUOTE>
+<P>
+
+The following options can be used to control the heuristics for estimating
+execution counts and identifying the causes of stalls.<P>
+
+<DL>
+<DT>-conf_low<DD>  Generate low, medium, and high confidence data.<P>
+
+<DT>-conf_med<DD>  Generate medium and high confidence data. (default)<P>
+
+<DT>-conf_high<DD> Generate only high confidence data.<P>
+
+<DT>-cross_procedure [optimistic | pessimistic | selective]<DD> Choose what
+assumption to make when a procedure call boundary is encountered while
+looking for reasons to explain dynamic stalls.  A procedure call boundary
+is either a call made by the procedure being analyzed or the beginning or
+end of that procedure.  With <I>pessimistic</I>, assume that
+whatever happens outside the analyzed procedure can cause a dynamic stall
+inside it.  With <I>optimistic</I>, assume that it cannot.  With
+<I>selective</I>, the assumption is based on standard procedure call
+convention.  (The default is <I>optimistic</I>.)<P>
+
+<DT>-do_gp<DD> Use a (non-linear time) constraint solver to exploit global
+flow constraints when estimating execution counts.  The 
+estimates may still violate flow constraints.<P>
+
+<DT>-tab foo.tab<DD> Get execution counts from output of
+<A HREF="dcpix.html">dcpix(1)</A> instead of making estimates, which may be
+inaccurate.  Requires a .xct file.<P>
+
+<DT>-xct foo.xct<DD> Get execution counts from output of
+<A HREF="dcpix.html">dcpix(1)</A> instead of making estimates, which may be
+inaccurate.  Requires a .tab file.<P>
+
+<DT>-xct_factor num<DD> Scales counts from .xct files by num.  Useful when
+you run a program once under <A HREF="dcpix.html">dcpix(1)</A> but multiple (num)
+times under <A HREF="dcpid.html">dcpid(1)</A> to get more samples.  Used in
+conjuction with -tab and -xct.<P>
+
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>PROFILE FILE FLAGS</H3>
+<BLOCKQUOTE>
+<P>
+
+By default, this command automatically finds all of the relevant
+profile files.  The following options can be used to guide the search
+for the profile files.<P>
+
+<DL>
+<DT>-db &lt;directory name&gt;<DD>
+Search for profile files in the specified profile database directory.
+The directory name should be the same name as the one specified when
+<TT>dcpid</TT> was started.  I.e., the named directory should contain a
+set of epochs.  If this option is not specified, the directory name is
+obtained from the <TT>DCPIDB</TT> environment variable.  If neither this
+option, nor the <TT>DCPIDB</TT> environment variable are set, the name of
+the directory used by the last invocation of <TT>dcpid</TT> on this
+machine is used.  If none of these methods succeed in finding the
+appropriate directory, and no explicit set of profile files is
+provided via the <TT>-profiles</TT> option, then the command fails.<P>
+
+<DT>-epoch latest<DD>
+Search for profile files in the latest epoch.  This is the default.<P>
+
+<DT>-epoch latest-k<DD>
+Search for profile files in the "k+1"th oldest epoch.  For example,
+search in the third last epoch if "-epoch latest-2" is specified.<P>
+
+<DT>-epoch all<DD>
+Search for profile files in all epochs.<P>
+
+<DT>-epoch &lt;name&gt;<DD>
+Search for profile files in the named epoch.  The epoch name should be
+the name of a subdirectory corresponding to a single epoch within the
+profile database directory.  Epoch subdirectory names usually take
+the form <TT>YYMMDDHHMM</TT> (year-month-day-hours-minutes).  For example,
+an epoch started on December 4, 1996 at 23:34 is named <TT>9612042334</TT>.
+If an epoch is given a symbolic name by creating a symbol link to
+the actual epoch directory, then the symbolic name can also be used
+as an argument to the <TT>-epoch</TT> option.<P>
+
+<DT>-events all<DD>
+Search for profile files corresponding to all event types such as
+cycles, icache misses, branch mispredictions, etc.  This is the default.<P>
+
+<DT>-events type(+type)*<DD>
+Search for profiles files for the specified event types.  For example,
+search for cycles, icache misses, and data cache misses when the
+option <TT>-events cycles+imiss+dmiss</TT> is specified.<P>
+
+<DT>-events all(-type)*<DD>
+Search for profile files for all event types except for the specified
+types.  For example, search for all event types except for branch
+mispredictions when the option <TT>-events all-branchmp</TT> is specified.<P>
+
+<DT>-label &lt;label&gt;<DD>
+Search for profile files with the specified label (see <TT>dcpilabel</TT>).
+If no labels are specified on the command line, profile file labels
+are ignored entirely.  If any labels are specified on the command line
+(this option can be repeated several times), only profile files that
+have one of the specified labels are used.<P>
+
+<DT>-profiles &lt;file names...&gt; --<DD>
+Use just the profile files named by the specified file names.  The
+list of profile file names can be terminated either via <TT>--</TT>, or by
+the end of the option list.  The command prints an error message and
+fails if the <TT>-profiles</TT> option is used in conjunction with any of
+the earlier automatic profile finding options.  (Use either the
+automatic profile lookup mechanism, or explicitly name the profile
+file with the <TT>-profile</TT> option, but not both.)
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>TYPICAL USAGE</H3>
+<BLOCKQUOTE>
+<P>
+
+<PRE>
+dcpitopstalls a.out
+dcpitopstalls -conf_low -n 50 -min 3 a.out
+</PRE>
+
+</BLOCKQUOTE>
+
+<H3>LIMITATIONS</H3>
+<BLOCKQUOTE>
+<P>
+
+The source file name and line number information, which is extracted from the
+symbol table, is inaccurate for some optimized programs.<P>
+
+Because an internal DCPI interface was not designed for whole-program
+analysis, the running time of this program is quadratic rather than linear in
+size of the image file.  Thus, this program runs slowly on large image files.
+</BLOCKQUOTE>
+
+<H3>SEE ALSO</H3>
+<BLOCKQUOTE>
+<P>
+
+<A HREF="dcpi.html">dcpi(1)</A>,
+<A HREF="dcpiflow.html">dcpiflow(1)</A>,
+<A HREF="dcpiprof.html">dcpiprof(1)</A>,
+<A HREF="dcpilist.html">dcpilist(1)</A>,
+<A HREF="dcpidis.html">dcpidis(1)</A>,
+<A HREF="dcpiscan.html">dcpiscan(1)</A>,
+<A HREF="dcpiepoch.html">dcpiepoch(1)</A>,
+<A HREF="dcpiflush.html">dcpiflush(1)</A>,
+<A HREF="dcpicalc.html">dcpicalc(1)</A>,
+<A HREF="dcpilabel.html">dcpilabel(1)</A>,
+<A HREF="dcpi2ps.html">dcpi2ps(1)</A>,
+<A HREF="dcpicat.html">dcpicat(1)</A>,
+<A HREF="dcpiquit.html">dcpiquit(1)</A>,
+<A HREF="dcpidiff.html">dcpidiff(1)</A>,
+<A HREF="dcpiwhatcg.html">dcpiwhatcg(1)</A>,
+<A HREF="dcpictl.html">dcpictl(1)</A>,
+<A HREF="dcpisource.html">dcpisource(1)</A>,
+<A HREF="dcpicc.html">dcpicc(1)</A>,
+<A HREF="dcpiversion.html">dcpiversion(1)</A>,
+<A HREF="dcpiuninstall.html">dcpiuninstall(1)</A>,
+<A HREF="dcpi2pix.html">dcpi2pix(1)</A>,
+<A HREF="dcpikdiff.html">dcpikdiff(1)</A>,
+<A HREF="dcpix.html">dcpix(1)</A>,
+<A HREF="dcpisumxct.html">dcpisumxct(1)</A>,
+<A HREF="dcpistats.html">dcpistats(1)</A>,
+<A HREF="dcpid.html">dcpid(1)</A>,
+<A HREF="dcpiformat.html">dcpiformat(4)</A>,
+<A HREF="dcpiloader.html">dcpiloader(5)</A><P>
+
+For more information, see the 
+<A HREF="../home.html">DIGITAL Continuous
+Profiling Infrastructure project home page
+(http://www.research.digital.com/SRC/dcpi/ from outside DIGITAL)</A>.
+</BLOCKQUOTE>
+
+<H3>COPYRIGHT</H3>
+<BLOCKQUOTE>
+<P>
+
+<a href="http://www.digital.com/info/tm.html">
+Copyright 1996-97, Digital Equipment Corporation.
+</a>
+</BLOCKQUOTE>
+
+<H3>AUTHOR</H3>
+<BLOCKQUOTE>
+Mark Vandevoorde
+</BLOCKQUOTE>
+
+This page was generated automatically by
+<A HREF="http://www.research.digital.com/SRC/mtex/">mtex software</A>.
+</BODY>
+</HTML>

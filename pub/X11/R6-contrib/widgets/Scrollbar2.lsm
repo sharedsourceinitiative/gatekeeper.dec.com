@@ -1,0 +1,18 @@
+
+Begin3
+Title:		Scrollbar2 - Add important functionality to Athena scrollbar
+Version:	1.0
+Entered-date:	$Date: 1999/04/24 22:03:35 $
+Description:	Adds a new "Notify()" action to Scrollbar to inform
+		applications when an interaction is completed.  Also
+		adds new translations & utilities to make Scrollbar more
+		useful.
+Keywords:	X11 Xt Intrinsics frame shadow widget
+Author:		Edward A. Falk <falk@falconer.vip.best.com>
+Maintained-by:	Edward A. Falk <falk@falconer.vip.best.com>
+Primary-site:	www.best.com/~falconer/Widgets/#scrollbar2
+Alternate-site: 
+Original-site:	
+Platforms:	Linux, Unix.
+Copying-policy: GPL
+End

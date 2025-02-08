@@ -1,0 +1,41 @@
+		  CRL Technical Report 90/7
+        Lazy Task Creation: A Technique for Increasing
+             the Granularity of Parallel Programs
+
+			 Eric Mohr*
+                       David A. Kranz+
+                   Robert H. Halstead, Jr.
+                      November 13, 1990
+
+                Digital Equipment Corporation
+                    Cambridge Research Lab
+
+
+Many parallel algorithms are naturally expressed at a fine level of
+granularity, often finer than a MIMD parallel system can exploit
+efficiently.  Most builders of parallel systems have looked to either
+the programmer or a parallelizing compiler to increase the granularity
+of such algorithms.  In this paper we explore a third approach to the
+granularity problem by analyzing two strategies for combining parallel
+tasks dynamically at run-time.  We reject the simpler load-based
+inlining method, where tasks are combined based on dynamic load level,
+in favor of the safer and more robust lazy task creation method, where
+tasks are created only retroactively as processing resources become
+available.
+
+These strategies grew out of work on Mul-T, an efficient parallel
+implementation of Scheme, but could be used with other languages as
+well.  We describe our Mul-T implementations of lazy task creation for
+two contrasting machines, and present performance statistics which
+show the method's effectiveness.  Lazy task creation allows efficient
+execution of naturally expressed algorithms of a substantially finer
+grain than possible with previous parallel Lisp systems.
+
+
+Key words and phrases: parallel programming languages, load balancing,
+	program partitioning, process migration, parallel Lisp, task
+	management.
+
+
+* Yale University
++ M.I.T. Laboratory for Computer Science

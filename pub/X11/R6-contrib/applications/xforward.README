@@ -1,0 +1,113 @@
+*** Notice: This is a modified version of xforward.
+
+It has no security whatsoever. It no longer requires any X 
+libraries or Motif. RUN IT AT YOUR OWN RISK.
+The original xforward source is now named xforward.c.org.
+
+
+It now simply acts as a proxy. I use it for a simple firewall application.
+
+Suppose you have a firewall and machines behind the firewall that require
+X access. Run xforward (on the router) for every machine that requires X
+access.
+
+Example: your firewall is called brick and the local machines
+are called fred and wilma. The non local machines are barney and betty.
+
+
+Invoke it like so (on the router):
+
+brick# xforward -display fred:0 &
+brick# xforward -display wilma:0 &
+
+Now, xforward assigns display numbers on brick to correspond to the local
+machines. If there is no X server on brick, then brick:0 will be forwarded
+to fred:0 and brick:1 will be forwarded to wilma:0
+You can now run remote X applications by setting the DISPLAY env variable
+properly on the remote machine (call it barney), like so:
+
+barney > setenv DISPLAY=brick:1
+barney > xterm &
+
+will pop up an xterm on wilma as long as wilma allows clients from barney;
+i.e. must have 
+wilma > xhost +barney
+
+Since xforward no longer checks authentication on the client machines,
+you can run it as part of a startup script, even if both fred and wilma
+are off.
+
+
+Original README follows:
+
+
+
+This is version 1.0 of xforward, a program for relaying X11
+connections across network boundaries.  While it may be used to cross
+security boundaries, Digital Equipment Corporation does not warrant
+this software for security or any other purpose.
+
+See the file NOTICE included in this distribution for information about
+copying and using this software.
+
+xforward currently uses the Motif user interface toolkit, so you will
+need Motif to compile it.
+
+xforward has only been used and tested on DECstations running ULTRIX 4.2
+or ULTRIX 4.3 with Digital's Motif product.  If you use it on another
+platform, please let us know.
+
+Installation
+------------
+
+1. Check the Makefile to make sure you like the paths and compiler
+options.  Non-DEC platforms will probably require some changes for the
+header file and library file paths.  (Yes, an Imakefile would be nice.
+But I have yet to see a way to make a portable Imakefile for using
+Motif.)
+
+2. Execute "make all"
+
+3. Execute "make install"
+
+Bug fixes, reports, and other changes should be sent to
+treese@crl.dec.com.
+
+Where to Get Xforward
+---------------------
+
+The current version of xforward can be copied by anonymous FTP from
+crl.dec.com:/pub/DEC/xforward.tar.Z.
+
+Reading About Xforward
+----------------------
+
+The design and implementation of xforward are described in
+
+	Treese, G. Winfield and Alec Wolman
+	X Through the Firewall, and Other Application Relays
+	Proceedings of the USENIX Summer Conference, June, 1993
+
+A preprint of this paper is available as technical report 93/10 from
+the Cambridge Research Lab of Digital Equipment Corporation, which can
+be obtained by anonymous FTP from
+crl.dec.com:/pub/DEC/CRL/tech-reports/93.10.ps.Z, or by sending an
+electronic mail message with the word "help" in the body to
+techreports@crl.dec.com.
+
+Acknowledgements
+----------------
+
+xforward is derived from a program originally written by John Kohl.
+Win Treese designed and Alec Wolman implemented the host access and
+dialog box mechanisms.
+
+Win Treese
+Cambridge Research Lab
+Digital Equipment Corp.
+treese@crl.dec.com
+4 June 1993
+
+
+
+

@@ -1,0 +1,11 @@
+"Wrestling with rep exposure"
+David L. Detlefs, K. Rustan M. Leino, Greg Nelson
+Report #156, July 29, 1998
+
+A central methodological problem in programming with multiple
+levels of abstractions is the loosely defined problem of rep
+exposure. This paper traces the problem of rep exposure to the
+precisely defined notion of abstract aliasing. The paper
+also outlines a statically-enforceable discipline for avoiding
+abstract aliasing, but the outline is incomplete.
+

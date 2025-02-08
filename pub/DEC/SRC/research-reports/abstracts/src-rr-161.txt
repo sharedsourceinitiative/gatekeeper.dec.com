@@ -1,0 +1,15 @@
+"A Logic of Object-Oriented Programs"
+Martin Abadi and K. Rustan M. Leino
+Report #161, September 15, 1998.
+37 pages.
+
+We develop a logic for reasoning about object-oriented
+programs. The logic is for a language with an imperative 
+semantics and aliasing, and accounts for self-reference in objects.  
+It is much like a type system for objects with subtyping, but 
+our specifications go further than types in detailing pre- and 
+postconditions.  We intend the logic as an analogue of Hoare 
+logic for object-oriented programs. Our main technical result 
+is a soundness theorem that relates the logic to a standard 
+operational semantics.
+

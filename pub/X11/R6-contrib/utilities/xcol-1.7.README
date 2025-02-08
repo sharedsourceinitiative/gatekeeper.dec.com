@@ -1,0 +1,38 @@
+
+                               __
+              _  ___________  / /
+             | |/_/ ___/ __ \/ /
+            _>  </ /__/ /_/ / /
+           /_/|_|\___/\____/_/  V1.7
+
+       -- yet another color-viewer --
+
+
+  available at ftp.x.org and mirrors as:
+                    /contrib/utilities/xcol-1.7.tgz
+
+
+  XCol is a program to edit occurrences of color-names in text-files
+  (i.e. C-source or the Xdefault-file). It shows the available colors
+  in a color-sorted way and you can change the textfile by selecting
+  new colors with the mouse.
+  
+  Even without editing a textfile, it gives you a good impression
+  of the available colors (the colors defined in the 'rgb.txt'-file
+  of the server).
+  
+  Alternatively you can use your own rgb.txt-file or an XCMS-database
+  as the source of the colors.
+  
+  
+  
+  Have fun.
+
+        __  __     __                __     __  __                 _
+       / / / /__  / /___ ___  __  __/ /_   / / / /___  ___  ____  (_)___ _
+      / /_/ / _ \/ / __ `__ \/ / / / __/  / /_/ / __ \/ _ \/ __ \/ / __ `/
+     / __  /  __/ / / / / / / /_/ / /_   / __  / /_/ /  __/ / / / / /_/ /
+  _ /_/ /_/\___/_/_/ /_/ /_/\__,_/\__/  /_/ /_/\____/\___/_/ /_/_/\__, /
+ /__________________________________e-mail: Helmut.Hoenig@hub.de______/
+
+

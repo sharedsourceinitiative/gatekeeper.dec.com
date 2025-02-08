@@ -1,0 +1,15 @@
+"1997 SRC Summer Intern Projects"
+Compiled by James Mason
+Note #1997-028, November 1997.
+
+This document features informal reports by interns who spent the
+summer of 1997 working with researchers at DIGITAL Systems Research
+Center (SRC).  The interns were graduate students in computer
+science or electrial engineering Ph.D. programs.  Each worked for
+about three months at SRC, collaborating on a project with
+the research staff.  The primary goal of this technical note is to
+describe the summer research projects.  However, the interns were
+encouraged to write their reports in whatever format or style they
+preferred, so that non-technical observations (such as background and
+impressions arising from their stay) could also be included.
+

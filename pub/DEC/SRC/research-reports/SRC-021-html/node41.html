@@ -1,0 +1,344 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Opening Files</TITLE>
+<META NAME="description" CONTENT="Opening Files">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node42.html">
+<LINK REL="previous" HREF="node40.html">
+<LINK REL="up" HREF="node39.html">
+<LINK REL="next" HREF="node42.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html699"
+ HREF="node42.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html695"
+ HREF="node39.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html689"
+ HREF="node40.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html697"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html698"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html700"
+ HREF="node42.html">Performing Input/Output</A>
+<B> Up:</B> <A NAME="tex2html696"
+ HREF="node39.html">The OS Interface: Files</A>
+<B> Previous:</B> <A NAME="tex2html690"
+ HREF="node40.html">Standard Declarations</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04042000000000000000">
+Opening Files</A>
+</H2>
+ <A NAME="Berkeley">&#160;</A>
+<P><A NAME="891">&#160;</A>
+<A NAME="892">&#160;</A>
+Each procedure in this subsection creates a new open-file object and
+returns a new file handle referring to it.
+<P><A NAME="2025">&#160;</A>
+<A NAME="2026">&#160;</A>
+<A NAME="2027">&#160;</A>
+<A NAME="2028">&#160;</A>
+<A NAME="2029">&#160;</A>
+<A NAME="2030">&#160;</A>
+<A NAME="2031">&#160;</A>
+<A NAME="2032">&#160;</A>
+<A NAME="2033">&#160;</A>
+<A NAME="2034">&#160;</A>
+<PRE>
+TYPE
+  OpenFlags = (fCreate, fExclusive, fTruncate,
+               fRead, fWrite, fAppend,
+               fNoDelay, fAsync);
+  OpenMode = BITS 16 FOR SET OF [fCreate .. fAppend];
+</PRE>
+<P>
+A value of type OpenMode is maintained within each open-file object.
+Most, but not all, of the individual flags can be specified when the
+open-file object is created; the others must be specified using the
+SetFlags procedure (see page <A HREF="node44.html#BonnyDoon"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).
+<P><A NAME="2035">&#160;</A>
+<PRE>
+PROCEDURE Open(
+    dir: Dir;
+    path: PathName;
+    flags: OpenMode;
+    mode: FileMode;
+    getLock: BOOLEAN := FALSE;
+    euser: User := NIL)
+    : File
+  RAISES {Error};
+  (* NotSuperUserEC, PathES, FileExistsEC, FileBusyEC,
+     NotEnoughRoomEC, RanOutOfResourcesEC, CannotWriteADirectoryEC,
+     NoDriverForDeviceEC, MinorDeviceDoesNotExistEC, FailureES,
+     NotImplementedEC *)
+</PRE>
+<P>
+Open returns a file handle referring to a new open-file object for the
+file (or directory) with the specified path name.  The details depend on
+the flags parameter:
+<P><DL>
+<DT><STRONG>fCreate:</STRONG>
+<DD>If the specified path name doesn't exist (but all the
+directories it names do exist) and fCreate is specified, create a new
+    file.  In this case, the new file is given the specified file mode
+    adjusted using the value of the umask (see the GetUMask procedure on
+    page <A HREF="node40.html#SanMateo"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).  NotEnoughRoomEC is raised if the volume is
+    too full to create a new file.  (The mode parameter is ignored if no
+    new file is created.  LookUpEC is raised if a directory specified by
+    the path name doesn't exist, or if fCreate isn't specified and the
+    file itself doesn't exist.)
+<A NAME="2036">&#160;</A>
+<A NAME="908">&#160;</A>
+<A NAME="909">&#160;</A>
+<A NAME="910">&#160;</A>
+<P>    <DT><STRONG>fExclusive:</STRONG>
+<DD>When specified along with fCreate, raise FileExistsEC if
+    the specified path name already exists.  This can be used to implement
+    a mutex that is accessible by several processes on the same or
+    different machines.
+<A NAME="2037">&#160;</A>
+<P>    <DT><STRONG>fTruncate:</STRONG>
+<DD>Truncate the length of the file to zero.
+<A NAME="2038">&#160;</A>
+<P>    <DT><STRONG>fRead:</STRONG>
+<DD>Request that the open-file object allow reading.
+<A NAME="2039">&#160;</A>
+<P>    <DT><STRONG>fWrite:</STRONG>
+<DD>Request that the open-file object allow writing.
+<A NAME="2040">&#160;</A>
+<P>    <DT><STRONG>fAppend:</STRONG>
+<DD>Open for appending.  When this flag is used with
+    fWrite, all writes using this open-file object are performed at
+    the end of the file, ignoring the file pointer.
+<A NAME="2041">&#160;</A>
+<A NAME="2042">&#160;</A>
+<A NAME="917">&#160;</A>
+</DL>
+<P><A NAME="2043">&#160;</A>
+If the path name specifies a regular file and getLock is TRUE, an advisory
+lock is simultaneously acquired (see the SetLock procedure on page
+<A HREF="node44.html#SanGregorio"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).  This lock is an ExclusiveLock if fWrite was specified,
+or a SharedLock otherwise;  it is automatically released when the file is
+closed.<A NAME="tex2html3"
+ HREF="footnode.html#921"><SUP><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/foot_motif.gif"></SUP></A>
+<P>
+Opening a directory for reading as if it were a regular file is permitted;
+attempting to open a directory for writing raises CannotWriteADirectoryEC.
+<P>
+Opening a file for writing has the side-effect of clearing the file's
+SetUIDonExec flag.
+<P><A NAME="922">&#160;</A>
+Local access checking is based on the effective user name of the caller
+unless the caller is the super-user and supplies a non-NIL euser
+parameter, in which case the checking is based on that user.
+NotSuperUserEC is raised if a process other than the super-user supplies a
+non-NIL euser parameter.
+<P>
+Open raises RanOutOfResourcesEC if the path name specifies a file residing
+on an Ultrix machine and the Ultrix limitation on the maximum number of
+file descriptors per process is encountered.  (This can occur two ways:
+either a Topaz application is running on Ultrix and trying to open a local
+file, or a Topaz application is running on Taos and trying to open a remote
+file residing on an Ultrix machine.)
+<P>
+Ultrix note: When getLock equals TRUE, Open does not atomically open the
+file and acquire the lock; it is possible that Open will create a new file
+and then block trying to lock it.
+<P><A NAME="2044">&#160;</A>
+<PRE>
+PROCEDURE OpenRead(
+    dir: Dir;
+    path: PathName;
+    getLock: BOOLEAN := FALSE)
+    : File
+  RAISES {Error};
+  (* PathES, FileBusyEC, RanOutOfResourcesEC,
+     NoDriverForDeviceEC, MinorDeviceDoesNotExistEC, FailureES *)
+</PRE>
+<P>
+OpenRead is equivalent to:
+<P><A NAME="2045">&#160;</A>
+<BR>
+<BR>
+<IMG WIDTH="489" HEIGHT="56" ALIGN="BOTTOM" BORDER="0"
+ SRC="img6.gif"
+ ALT="\begin{boxedverbatim}
+Open(dir, path, OpenMode{fRead}, anyMode, getLock)\end{boxedverbatim}">
+<BR>
+<BR>
+<P>
+Note that mode is irrelevant because no new file is ever created.
+<P><A NAME="2046">&#160;</A>
+<PRE>
+PROCEDURE OpenWrite(
+    dir: Dir;
+    path: PathName;
+    getLock: BOOLEAN := FALSE)
+    : File
+  RAISES {Error};
+  (* PathES, FileBusyEC, NotEnoughRoomEC, RanOutOfResourcesEC,
+     CannotWriteADirectoryEC,
+     NoDriverForDeviceEC, MinorDeviceDoesNotExistEC, FailureES *)
+</PRE>
+<P>
+OpenWrite is equivalent to:
+<P><A NAME="2047">&#160;</A>
+<A NAME="2048">&#160;</A>
+<A NAME="2049">&#160;</A>
+<A NAME="2050">&#160;</A>
+<BR>
+<BR>
+<IMG WIDTH="480" HEIGHT="94" ALIGN="BOTTOM" BORDER="0"
+ SRC="img7.gif"
+ ALT="\begin{boxedverbatim}
+Open(dir, path,
+ OpenMode{fRead, fWrite, fTruncate, fCreate},
+ ReadWriteAll, getLock)\end{boxedverbatim}">
+<BR>
+<BR>
+<P>
+It creates a new file if none existed, or truncates an existing file to
+length zero.  Note that the file is also open for reading.  The file mode
+ReadWriteAll is used since the setting of the umask will typically
+subtract wOK from Group and from Others.
+<P><A NAME="SanRafael">&#160;</A><A NAME="2051">&#160;</A>
+<A NAME="2052">&#160;</A>
+<PRE>
+TYPE
+  SearchPath = ARRAY OF Dir;
+
+PROCEDURE OpenSearch(
+    VAR IN searchPath: SearchPath;
+    path: PathName;
+    VAR (* OUT *) pathIndex: CARDINAL;
+    spStart: CARDINAL := 0;
+    spCount: CARDINAL := LAST(CARDINAL);
+    getLock: BOOLEAN := FALSE;
+    euser: User := NIL)
+    : File
+  RAISES {Error};
+  (* NotSuperUserEC, PathES, FileBusyEC, RanOutOfResourcesEC,
+     NoDriverForDeviceEC, MinorDeviceDoesNotExistEC, FailureES *)
+</PRE>
+<P>
+OpenSearch looks up a path name in the sequence of directories specified
+by path[spStart FOR spCount]. If the file is found, it is opened as in
+OpenRead and pathIndex is set to the index within searchPath where the
+file was found.  This procedure is equivalent to:
+<P><A NAME="2053">&#160;</A>
+<BR>
+<BR>
+<IMG WIDTH="575" HEIGHT="379" ALIGN="BOTTOM" BORDER="0"
+ SRC="img8.gif"
+ ALT="\begin{boxedverbatim}
+IF Text.IsEmpty(path) OR
+ NOT (Text.GetChar(path, 0) IN Ch...
+ ...n(NIL, path, OpenMode{fRead}, anyMode,
+ getLock, euser);
+END;\end{boxedverbatim}">
+<BR>
+<BR>
+<P>
+OpenSearch interprets the euser parameter the same way Open does.
+<P><A NAME="2054">&#160;</A>
+<PRE>
+PROCEDURE OpenPipe(
+    VAR (* OUT *) rdPipe: File;
+    VAR (* OUT *) wrPipe: File;
+    bufferSize: CARDINAL := 0)
+  RAISES {Error}; (* RanOutOfResourcesEC *)
+</PRE>
+<P><A NAME="952">&#160;</A>
+OpenPipe creates two new open-file objects.  The first is open only for
+reading and the second is open only for writing. They are linked together
+so that anything written on wrPipe is read by rdPipe.  There are
+bufferSize bytes of first-in-first-out storage between the two ends; if
+bufferSize is zero, an implementation-dependent size is chosen. The
+open-file objects created by this procedure cannot be passed to the Seek
+procedure.
+<P>
+Once the reading end of a pipe is closed, a pipe is said to be broken.
+Writing to a broken pipe causes an error; see the Write procedure on page
+<A HREF="node42.html#Sausalito"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A> for details on how that error is reported.
+<P>
+Taos note: The current default for bufferSize is 4096. RanOutOfResourcesEC
+is never raised.
+<P>
+Ultrix note: The bufferSize parameter is ignored; 4096 is always used.
+<P><A NAME="Ross">&#160;</A><A NAME="2055">&#160;</A>
+<PRE>
+PROCEDURE OpenControlTerminal(): File
+  RAISES {Error}; (* InvalidObjectEC *)
+</PRE>
+<P><A NAME="956">&#160;</A>
+OpenControlTerminal opens the control terminal for the calling process.
+OpenControlTerminal raises InvalidObjectEC if the calling process has no
+control terminal.
+<P>
+Taos note: OpenControlTerminal does not have to look up the path name
+/dev/tty, so it never needs to read from the disk.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html699"
+ HREF="node42.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html695"
+ HREF="node39.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html689"
+ HREF="node40.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html697"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html698"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html700"
+ HREF="node42.html">Performing Input/Output</A>
+<B> Up:</B> <A NAME="tex2html696"
+ HREF="node39.html">The OS Interface: Files</A>
+<B> Previous:</B> <A NAME="tex2html690"
+ HREF="node40.html">Standard Declarations</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

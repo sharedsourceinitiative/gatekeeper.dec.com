@@ -1,0 +1,50 @@
+Xarm-1.4.0 has been released.
+
+The Xarm library is a C++ wrapper of the Motif, Xmext and Xbae
+widget libraries.
+
+It supports Motif 1.2, 2.0, 2.1, LessTiff and CDE.
+
+Key features of Xarm include:
+
+	* An inheritance hierarchy that follows the Motif widget
+	  hierarchy.
+	  
+	* A unique callback interface that allows regular C++
+	  member functions to  be used as callbacks.
+	  
+	* A C++ interface to the Xt Arg system that frees the
+	  programmer from overrun bugs.
+	  
+	* Support for the Xbae Matrix and Caption widgets on systems
+	  where libXbae is installed.  The Xbae library is also
+	  available from the Xarm Home Page.
+
+	* Support for the Mesa Motif widgets.
+	  
+	* Several useful widgets including Tab, Dial, Gauge (progress bar),
+	  Password Field and the Xarm Tree List widget.
+	  
+	* Built-in support for Xpm files.  Xpm files may be used
+	  as Pixmap resources in app-defaults files!
+	  
+	* Automatic handling of the conversion between XmStrings
+	  and regular C/C++ char *'s.
+	  
+	* Tried and tested in free, Commercial and Government software
+	  systems.
+
+Xarm is also now available as a binary Setup Wizard (written using Xarm) that
+walks the user through extracting, configuring, compiling and even installing
+the Xarm Library. The source to the Setup Wizard is included in the examples
+directory.
+
+
+The Xarm Home Page is at:   http://www.xarm.org/
+Screenshots are available:  http://www.xarm.org/screenshots.html
+Xarm Setup binaries are at: http://www.xarm.org/binaries.html
+
+The library has also been uploaded to ftp://metalab.unc.edu/incoming/Linux/
+and should end up in ftp://metalab.unc.edu/pub/Linux/libs/X/c++libs/
+
+It should also eventually work it's way into ftp://ftp.x.org/contrib/libraries/

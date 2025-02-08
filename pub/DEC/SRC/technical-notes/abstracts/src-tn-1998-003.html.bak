@@ -1,0 +1,33 @@
+<TITLE>Digital Systems Research Center: Note 1998-003</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Technical Note 1998-003</H1>
+<H1>A Digital Fountain Approach to Reliable Distribution of Bulk Data</H1>
+<HR>
+<H2>John W. Byers, Michael Luby, Michael Mitzenmacher, Ashutosh Rege</H2>
+Note #1998-003, February 8, 1998.
+<P>
+The proliferation of applications that must reliably distribute
+bulk data to a large number of autonomous clients motivates the design 
+of new multicast and broadcast protocols. We describe an ideal, fully 
+scalable protocol for these applications that we call a digital fountain.
+A digital fountain allows any number of heterogeneous clients to acquire 
+bulk data with optimal efficiency at times of their choosing. Moreover, 
+no feedback channels are needed to ensure reliable delivery, even in 
+the face of high loss rates.
+<P>
+We develop a protocol that closely approximates a digital fountain
+using a new class of erasure codes that are orders of magnitude faster 
+than standard erasure codes. We provide performance measurements that 
+demonstrate the feasibility of our approach and discuss the design, 
+implementation and performance of an experimental system.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-003.ps.Z">PostScript compressed with UNIX compress</A></B> -- 264 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-003.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 224 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-003.ps.zip">PostScript compressed with ZIP</A></B> -- 224 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-003.ps">PostScript</A></B> -- 520 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-003.pdf">Portable Document Format (PDF)</A></B> -- 122 Kbytes<BR>
+</UL></P>

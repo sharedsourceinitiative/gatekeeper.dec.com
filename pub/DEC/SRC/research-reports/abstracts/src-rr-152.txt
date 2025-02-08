@@ -1,0 +1,10 @@
+"Fairness and Hyperfairness"
+Leslie Lamport
+Report #152, March 5, 1998. Minor corrections April 22, 1998. 14 pages.
+
+The notion of fairness in trace-based formalisms is examined.  It is
+argued that, in general, fairness means machine closure.  The notion
+of hyperfairness introduced by Attie, Francez, and Grumberg is
+generalized to arbitrary action systems.  Also examined are the
+fairness criteria proposed by Apt, Francez, and Katz.
+

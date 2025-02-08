@@ -1,0 +1,41 @@
+<HTML><HEAD><TITLE>
+Digital Systems Research Center: Report 46</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Research Report 46</H1>
+<P>
+<H1>An Algorithm for Data Replication.</H1>
+<HR>
+<H2>    Timothy Mann, Andy Hisgen, and Garret Swart.</H2>
+<b>June 1, 1989</b><BR><i> 55 pages</i>
+<P>
+    Replication is an important technique for increasing computer 
+    system availability.  In this paper, we present an algorithm for 
+    replicating stored data on multiple server machines.  The algorithm 
+    organizes the replicated servers in a master/slaves scheme, with 
+    one master election being performed at the beginning of each 
+    service period.  The status of each replica is summarized by a 
+    set of monotonically increasing epoch variables.  Examining the 
+    epoch variables of a majority of the replicas reveals which 
+    replicas have up-to-date data.  The set of replicas can be changed 
+    dynamically.  Replicas that have been off-line can be brought 
+    up to date in background, and witness replicas, which store the 
+    epoch variables but not the data, can participate in the majority 
+    voting.  The algorithm does not require distributed atomic 
+    transactions.  The algorithm also permits client machines to cache 
+    copies of data, with strict cache consistency being ensured by 
+    having the replicated servers keep track of which clients have 
+    cached what data.  The work reported in this paper is part of 
+    an ongoing project to build a new replicated distributed file 
+    system with client caching, called Echo.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-046.ps.Z">PostScript compressed with UNIX compress</A></B> -- 176 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-046.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 128 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-046.ps.zip">PostScript compressed with ZIP</A></B> -- 128 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-046.ps">PostScript</A></B> -- 424 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-046.pdf">Portable Document Format (PDF)</A></B> -- 376 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

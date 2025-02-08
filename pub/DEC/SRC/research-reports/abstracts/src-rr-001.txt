@@ -1,0 +1,14 @@
+"A Kernel Language for Modules and Abstract Data Types."
+R. Burstall and B. Lampson.
+September 1, 1984. 51 pages.
+
+Authors' Abstract
+
+    A small set of constructs can simulate a wide variety of apparently
+    distinct features in modern programming languages.  Using a kernel
+    language called Pebble based on the typed lambda calculus with
+    bindings, declarations, and types as first-class values, we show
+    how to build modules, interfaces and implementations, abstract
+    data types, generic types, recursive types, and unions.  Pebble
+    has a concise operational semantics given by inference rules.
+

@@ -1,0 +1,46 @@
+bongo_1.0a  Apr 15, 1994   Bob Madderra (bob@emss.com)
+
+This is a first stab at a tcl/tk based admin tool
+for shapeTools's AtFS.  Bongo is a tcl/tk shell
+script that executes normal shapeTools command
+line programs (vl, save, retrv, ...) and presents
+the output withing a tcl/tk GUI (much like expectk
+would).  There is currently no extended commands
+to build into the standard tcl/tk interpreter (wish).
+
+Here's a list of implemented functions:
+
+
+o  list AtFS, with several options
+o  check in/out
+o  clean cache
+o  change file modes
+o  lock/unlock
+o  change owner, author, host
+
+Like I said, this is intended as a simple
+admin tool.  It lacks most features a
+developer would be looking for.
+
+
+
+NOTES:
+
+o   bongo was created with XF, and requires the wish
+    interpreter created from tk3.6.
+
+o   I've only tested bongo with ShapeTools_1.4, as
+    built under Solaris 2.3 and Aix 3.2.5.
+
+o   To see what environment variables can be set, grep
+    for "env" in bongo.tcl.
+
+o   In any event, I would apreciate any comments on
+    bugs, runtime errors, or possible improvements.
+
+bob@emss.com
+
+
+BUGS:
+o   no help
+o   you get a stack trace if vl finds nothing to list.

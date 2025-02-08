@@ -1,0 +1,23 @@
+
+			CRL Technical Report 90/13
+			   Shape from Rotation
+			     Richard Szeliski
+			    December 21, 1990
+
+This paper examines the construction of a 3-D surface model of an object
+rotating in front of a camera.  Previous research in depth from motion has
+demonstrated the power of using an incremental approach to depth
+estimation.  In this paper, we extend this approach to more general motion
+and use a full 3-D surface model instead of a $2\andahalf$-D sketch.  % We
+also estimate the intensity distribution over the surface, which % improves
+the convergence of the algorithm.  The algorithm starts with a flow field
+computed using local correlation.  It then projects individual measurements
+into 3-D points with associated uncertainties.  Nearby points from
+successive frames are merged to improve the position estimates.  These
+points are then used to construct a finite element surface model, which is
+itself refined over time.  We demonstrate the application of our new
+techniques to several real image sequences.
+
+Keywords: computer vision, 3-D model construction, image sequence (motion)
+analysis, optic flow, Kalman filter, surface interpolation, computer aided
+design, computer graphics animation.

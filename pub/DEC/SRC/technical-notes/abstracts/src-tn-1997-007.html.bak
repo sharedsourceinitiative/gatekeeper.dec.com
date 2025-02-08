@@ -1,0 +1,32 @@
+<TITLE>Digital Systems Research Center: Note 1997-007</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Technical Note 1997-007</H1>
+<H1>Checking Object Invariants</H1>
+<HR>
+<H2>K. Rustan M. Leino and Raymie Stata</H2>
+<b>Note #1997-007. January 2, 1997</b><BR><i>17 pages</i>
+<P>
+When writing computer programs, programmers make assumptions about the
+relations among variables.  In object-oriented programs, these
+assumptions include relations among the instance variables of a single
+object, relations often referred to as \emph{object invariants}.
+It is a good idea to explicitly annotate a program with these
+assumptions.  Then, a static program-analysis tool can inspect the
+annotated program to check that routines preserve object invariants.
+This paper considers two issues that affect what object invariants a
+program analysis tool can check:  object construction and modular
+checking. The paper suggests some programming idioms and program 
+annotations that widen the range of object invariants that a static 
+program checker can check.  The paper also suggests a simple extension 
+to the Java programming language that makes the language more amenable to
+object-invariant checking.
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-007.ps.Z">PostScript compressed with UNIX compress</A></B> -- 99 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-007.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 80 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-007.ps.zip">PostScript compressed with ZIP</A></B> -- 168 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-007.ps">PostScript</A></B> -- 224 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-007.pdf">Portable Document Format (PDF)</A></B> -- 97 Kbytes<BR>
+</UL></P>

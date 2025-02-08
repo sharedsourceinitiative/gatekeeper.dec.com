@@ -1,0 +1,62 @@
+This is the Progress widget, for displaying the proportion of a task that is
+complete. It has optional percentage and time-elapsed and time-to-complete
+indicators.
+
+Progess is subclassed from XmPrimitive and Core. Its class pointer is
+xrhpProgressWidgetClass. Its class name is XrhpProgress.
+
+The Progress widget defines the following new resources:
+
+	Name		Class		Type		Default		Access
+
+	XmNmaxValue	XmCMaxValue	int		100		CSG
+	XmNshowPercent	XMCShowPercent	Boolean		False		CSG
+	XmNshowTime	XmCShowTime	Boolean		True		CSG
+	XmNvalue	XmCValue	int		0		CSG
+	XmNfont		XmCFont		XFontStruct *	XtDefaultFont	CSG
+
+	XmNmaxValue
+		The maximum value allowed for the XmNvalue resource. When
+		XmNvalue == XmNmaxValue, the widget is shows 100% complete,
+		and the progress bar will fill the widget.
+
+	XmNshowPercent
+		If set to True, the percentage complete will be shown as text
+		centred in the widget.
+
+	XmNshowTime
+		If set to True, the time taken so far is displayed on the left
+		of the widget, and the estimated time remaining is shown on
+		the right.
+
+	XmNvalue
+		The current value from 0 to XmNmaxValue, defining how much
+		progress has taken place. When this value is set to 0, the
+		elapsed time is set to zero.
+
+	XmNfont
+		The font used to display the times and the percentage text.
+
+Example usage:
+
+#include "Progress.h"
+
+progress=XtVaCreateManagedWidget("progress",
+		xrhpProgressWidgetClass, parent,
+		XmNwidth, 200,
+		XmNheight, 20,
+		XmNmaxValue, 200,
+		XmNshowPercent, True,
+		XtVaTypedArg, XmNfont, XmRString, "-*-helvetica-bold-r-*--*-100-*-*-*-*-iso8859-1", 47,
+		NULL);
+
+The value of the widget can be set using XtVaSetValues(), or by the convenience
+function
+
+	XrhpProgressSetValue(widget, new_value);
+
+(The convenience function causes less flicker than happens by using the set
+values function).
+
+
+Mail any bug reports to Dick Porter <dick@cymru.net>

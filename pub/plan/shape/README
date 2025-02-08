@@ -1,0 +1,334 @@
+
+This is README for shapeTools-1.4pl3.
+
+It contains general information on ShapeTools (we also refer to it as
+"shape toolkit") and an overview of its parts. The file "INSTALL"
+helps you installing the toolkit on your machine. It also gives hints
+for solving portability problems and describes the procedure for
+porting the toolkit to a new operating system platform. If you used
+ShapeTools-1.3 (or earlier versions) before, you should read
+"CHANGES-1.4" to check, what has changed since 1.3.
+
+  *** The file CHANGES-1.4 contains important information ***
+  *** on migrating from ShapeTools-1.3 to ShapeTools-1.4. ***
+
+Before installing and using the shape toolkit on your computer, you
+should also read the file "LICENSE". In the file "SUPPORT", you find
+important information on how the ShapeTools development will be
+carried out in the future. You can also find the address of a company
+offering commercial support for ShapeTools there.
+
+If you have any questions, hints or bug reports, you may contact us
+via:
+	Tech. Univ. Berlin		Tel: +49-30-314-73230
+	"ShapeTools"			Fax: +49-30-314-73488
+ 	Secr. FR 5-6 			E-mail: shape@cs.tu-berlin.de
+ 	Franklinstr. 28/29
+ 	10587 Berlin, Germany
+
+We set up a mailing list for announcing new releases and patches and
+for discussion of ShapeTools specific topics. If you want to be kept
+informed about the evolution of the toolkit, you should subscribe to
+the mailing list. The list is managed automatically. You can subscribe
+by sending a mail to 
+	"listserv@tubvm.cs.tu-berlin.de"
+with the contents
+	"sub shape-l <your full name>".
+
+Submissions to the mailing list are to be sent to
+	"shape-l@tubvm.cs.tu-berlin.de".
+
+
+General information:
+====================
+
+ShapeTools is a collection of programs to support software
+configuration management in an UNIX environment. It consists of a set
+of version and attribute control commands, and a configuration
+interpreter and build tool ("shape"). The toolkit is integrated on top
+of AtFS (Attributed File System), a storage system supporting multiple
+versions of files and associating an arbitrary number of application
+defined attributes of the form "name=value" with each version. AtFS
+comes as a function library that is meant as an extension to the UNIX
+file system. It does this without the need for kernel modifications
+and without imposing any restrictions to existing file system
+applications. ShapeTools is designed to live meaningfully together
+with any other UNIX tool operating on regular files. This distribution
+also contains a prototype for a comprehensive change control and
+release management system designed to manage the evolution of system
+releases in multi programmer software development efforts.
+
+The ShapeTools version and attribute control system ("shape_VC")
+----------------------------------------------------------------
+The ShapeTools version and attribute control control system is a set
+of UNIX(1) commands. Shape_VC offers version control functionality
+and direct access to user definable attributes associated with each
+version. In detail, shape_VC comprises
+ - storage and retrieval of multiple revisions of files.
+ - a built in status model for revisions.
+   (States: busy, saved, proposed, published, accessed, frozen)
+ - documentation of change histories.
+ - synchronization of concurrent updates to a history.
+ - symbolic names as version number aliases.
+ - a flexible version selection (version binding) mechanism driven by
+   general version binding rules.
+ - a basic network user concept.
+ - full (read and write) access to user definable attributes.
+
+The last point in the list, the attribute control, deserves some more
+attention. As the underlying storage system (AtFS) supports
+associating any number of attributes with each version, shape_VC uses 
+this mechanism to allow the user to attach his/her own management
+information in form of attributes to stored revisions. The attribute
+mechanism supports
+ - genuine attributes		(<name>=<value>)
+     where the attribute value is given statically.
+ - execution attributes		(<name>=!<executable_program>)
+     where the attribute value is determined dynamically by executing
+     a given program or shell script and catching its output.
+ - file reference attributes	(<name>=^<filename>)
+     where the contents of a file is taken as attribute value. The
+     file contents is read on every attribute access.
+ - version reference attributes		(<name>=*<network_pathname>)
+     where the attribute value points to another version.
+
+The toolkit character of the system allows to use it directly by
+calling the commands from the shell, or to build a customized
+environment on top of it. As an example, we wrote some code to provide
+direct access to the system from within GNU-Emacs. The corresponding
+emacs lisp code is contained in the distribution.
+
+The Attributed File System (AtFS)
+---------------------------------
+AtFS is the base abstraction of the whole toolkit. It provides uniform
+access to immutable revisions of files stored in special archive files
+(in a directory named "AtFS"), and mutable regular UNIX files.
+Consequently, the AtFS based toolkit lives peacefully (and
+meaningfully!) together with standard file system applications
+(editors, compilers, formatters etc.). Cooperative work within
+projects is supported by a build-in status model, controlling
+visibility of version objects, and locking, a primitive form of "long
+transactions" for synchronizing concurrent updates. The general
+concept of application defined attributes provides a basis for storing
+management information with versions and passing this information
+between individual tools. This mechanism is useful for building
+integrated environments from a set of unrelated tools. AtFS also
+supports derived object management, i.e. it maintains a cache of
+multiple versions of compiled object-files (e.g. compiled c-files with
+different compile switches).
+
+People with sophisticated requirements may also add their own
+applications on basis of AtFS to the toolkit. There is a fully
+documented C-language interface to AtFS, on top of which all the
+toolkit programs are built. Additionally to the AtFS C interface,
+there is the AtFS toolkit library interface (also in C), providing
+higher level functions such as the version binding mechanism.
+
+The configuration management and build program ("shape_CM")
+-----------------------------------------------------------
+The shape_CM component consists of the program "shape", performing
+ - identification of system components,
+ - component version selection,
+ - variant control,
+ - driving transformations (eg. compilations) and
+ - recording configurations (for later rebuild) 
+for the software system to be built.
+
+Shape_CM uses, similar to make, a description file named "Shapefile".
+In fact shape_CM is upward compatible to Make in that it can properly
+handle conventional Makefiles. The Shapefile however, uses 
+Makefile-style dependencies as (versionless) abstract system model and
+employs version selection rules to dynamically bind particular versions
+to the names listed in the system model. The version selection
+mechanism exploits AtFS' ability to maintain any number of arbitrary
+attributes for objects in the object base. On special request, shape
+records an identified configuration in a configuration identification
+document (bound configuration thread - BCT) which has the form of a
+completely bound Shapefile (all object-instances are explicit).
+
+One of the most useful features of shape is its support of various
+variant administration techniques. Shape makes no assumptions about
+the semantics of the variant notion other than having alternative
+(conceptually equivalent) instances of the same concept ("module").
+Despite the particular semantics of a certain variant-concept, there
+is a small number of techniques to physically handle variants. These
+techniques are what shape supports. Most commonly used techniques are:
+ - equally named files in different directories
+ - one source file representing multiple variants that are
+   extracted by a preprocessor using different preprocessor switches 
+   (e.g. conditional compilation)
+ - one source file processed by different tools or different
+   tool versions/variants (e.g. cross compilation, different coders)
+ - combinations of the above.
+Shape includes a variant definition facility that allows very flexible
+and convenient handling of all of the above variant administration
+techniques.
+
+The ShapeTools release management system (shape_RMS)
+----------------------------------------------------
+Enclosed in the distribution is a prototype for a configuration
+management environment to be used for constructing system releases in
+complex (multi programmer) software development projects. Using this
+environment does not require any experience in writing Shapefiles
+(resp. Makefiles). The environment consists of templates for a
+Shapefile and a Makefiles and of a library of Shapefile fragments for
+project wide use.
+
+The shape_RMS supports:
+ - a fully automatic global release building mechanism with automatic
+   release number generation.
+ - automatic generation of prereleases as systematic preparation of
+   releases.
+ - construction of subsystem releases and prereleases
+ - system building and installation by shape *and* make
+ - standard version selection rules
+ - a project wide unified variant raster
+ - built in standard functions for cleaning up, generating tar or shar
+   files, determine file dependencies etc.
+
+Each directory where a part of the managed system is developed, has to
+be equipped with a Shapefile and a Makefile derived from the given
+templates. In the normal case, the derivation just requires setting a
+few macros. Shape- and Makefile are kept redundancy free, the Makefile 
+is inserted in the Shapefile via an "include" mechanism. The
+management of a Shapefile *and* a Makefile (although the Shapefile
+alone should be enough) implies, that certain system building
+functions can also be performed by "make". This is especially
+important for producing self contained releases (buildable and
+installable on shape-less computer systems by use of make) from the
+projects development area (managed by shape).
+
+Further reading
+---------------
+You can find additional information on the shape toolkit in the manual
+pages and the tutorial enclosed in the distribution. The tutorial
+shall help you to learn to use the toolkit in your development work.
+If you want to read more about the concepts of shape and its object
+base, we refer to:
+
+    Axel Mahler, Andreas Lampen
+    "An Integrated Toolset for Engineering Software Configurations"
+    Proceedings of the ACM SOFSOFT/SIGPLAN Software Engineering
+    Symposium on Practical Software Engineering Environments
+    Boston MA, 28-30 November 1988
+    pp. 191-200 SIGSOFT SE Notes V13-No5, SIGPLAN NOTICES V24-No2,
+    
+    Andreas Lampen, Axel Mahler
+    "An Object Base for Attributed Software Objects"
+    Proceedings of the EUUG Autumn '88 Conference
+    Cascais (Portugal) 3-7 October 1988
+    pp. 95-105, European UNIX User Group, London 1988
+
+    Ulrich Pralle
+    "Driving the Software Release Process with Shape"
+    Proceedings of the EUUG Autumn '90 Conference
+    Nice (France) October 1990
+    pp. 27-38, European UNIX User Group, London 1988
+
+
+This distribution contains the following parts:
+===============================================
+
+	+PATCHLEVEL  -- The current patchlevel.
+	CHANGES-1.4  -- Release notes for ShapeTools-1.4
+	Dependencies -- An automatically generated file containing
+			Makefile dependencies. There are no
+			dependencies on this level.
+			in the ShapeTools root directory.
+	SUPPORT	     -- Some words about the status of ShapeTools
+			and a company offering support for
+			ShapeTools users.
+	INSTALL	     -- Information how to build and install the
+			toolkit on your machine.
+	LICENSE      -- Important information about copying
+			permissions and warranty issues.
+			This file should *not* be deleted.
+	Makefile     -- The top level Makefile for the toolkit.
+	README	     -- The file you are currently reading.
+	Release      -- The current Release Id.
+	Shapefile    -- The top level Shapefile.
+	shape_conf.sh-- A configuration script invoked
+			automatically when calling "make" the
+			first time and by "make config".
+	bin/
+	include/     -- Two local installation directories.
+			These are initially empty.
+	lib/	     -- The lib directory for local installation of
+			internal libraries during system build.
+			This is inilially empty, it only only contains
+			the (empty) subdirectories
+	    shape/	-- for the common Shapefile parts and the
+	    		   templates for Makefiles and Shapefiles. 
+	    emacs/lisp	-- for the emacs lisp code
+	man/         -- The online manuals for
+	    man1/    	-- the commands,
+	    man3/    	-- the AtFS, AtFStk and sttk library
+			   interfaces,
+	    man5/	-- file formats of AtFS archive files, and
+	    man7/	-- templates and version bind rules.
+	src/	     -- The sources
+	    atfs/	-- the attribute file system (AtFS)
+	    atfstk/	-- the AtFS toolkit library (AtFStk)
+	    interface/	-- GNU-Emacs lisp code
+	    patches/	-- patches for gbd and GNU-grep
+	    rms/	-- the release management system
+	    shape/	-- the shape program
+	    sttk/	-- the ShapeTools toolkit library
+	    vc/		-- the version control system
+	tutorial/    -- A tutorial on how to work with the shape toolkit
+
+
+Specialties of the System V version
+===================================
+
+For sake of a proper release management with shape, it is extremely
+useful to be able to share AtFS subdirectories (where the archive files
+are stored) between different directories. On BSD like systems, this
+can be organized by using symbolic links. Older System V systems do
+not support symbolic links, so we introduced a mechanism allowing the
+"AtFS" entry in a directory to be either a subdirectory (the normal
+case) or a regular file containing a directory name. The latter case
+is handled like a symbolic link and archive files are searched in the
+directory named in the "AtFS" entry.
+
+
+Acknowledgement
+===============
+
+Version 1.0 of the shape toolkit was a result of the UniBase project,
+a joint research and development project funded by the
+"Bundesministerium fuer Forschung und Technologie" (BMFT, Federal
+Ministry for Research and Technology of West Germany) under grant
+number ITS-8308. The project aimed at the development of a large
+scale industrial software production environment.
+
+The current work on the toolkit (version 1.1 and newer) is mostly part
+of the STONE project (A STructured and OpeN Environment). STONE is a
+scientific project aiming at the construction of a generic software
+development environment kernel. The STONE consortium consists of
+nine German universities and research institutes, three of them from
+former East Germany. STONE is also funded by the BMFT under grant
+ITS-8902E8.
+
+Further contributions come from members of the REX project
+(Reconfigurable and Extensible Parallel and Distributed Systems)
+funded by the EC as ESPRIT Project 2080, and from faculty members of
+the TU Berlin.
+
+Thanks to the various people who sent bug reports, hints and
+recommendations. Thank you also to the moderator and reviewers of
+comp.sources.reviewed, who made very valuable comments on
+shapeTools-1.2. They definitely had no easy job reviewing shapeTools
+in it's whole complexity.
+
+Special thanks to Steve Emerson (steve@unidata.ucar.edu) who rewrote
+parts of the shape program.
+
+Juergen Nickelsen (re)implemented various parts of the toolkit as
+member of the STONE project crew. Unfortunately he had to leave the
+project due to funding problems. We hope to get him back into the
+ShapeTools family as soon as possible.
+
+The ShapeTools people,
+
+	Andy Lampen and Axel Mahler

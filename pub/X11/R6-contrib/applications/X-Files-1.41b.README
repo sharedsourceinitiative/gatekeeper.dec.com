@@ -1,0 +1,54 @@
+**********************************************************************
+
+		X-Files  -- The Ultimate File Organizer --
+
+	current version 1.41b, dated 03 Nov 1997
+**********************************************************************
+
+X-Files is a graphical file management program for Unix/X-Window 
+environment that also supports browsing and file operations for zip-,
+tar-, compressed tar- and lharc-packages.
+
+For more info, screenshots, on-line manual and, of course, 
+the package [130 Kb] itself; see:
+------------------
+http://java.inf.tu-dresden.de/X-Files/
+http://pinhead.tky.hut.fi/~xf_adm/
+http://www.hut.fi/~mkivinie/xfindex.html
+
+The packages are also available at:
+-----------------------------------
+ftp://java.inf.tu-dresden.de/pub/unix/X-Files/
+ftp://sunsite.unc.edu/pub/X11/contrib/utilities/
+ftp://ftp.funet.fi/pub/X11/contrib/utilities/
+
+=========================================================================
+
+What you need to get X-Files working:
+-------------------------------------
+
+-  Unix/X-Window environment. The development has been made on Linux and 
+   thus Linux is the only platform that supports all the features. X-Files 
+   has been tested also on Silicon Graphics Indy, HP 700 workstation and 
+   Digital Alpha workstation.
+
+-  X-Files is entirely written in Tcl/Tk and requires the versions
+   7.4/4.0 or higher. No extensions have been used so none are needed.
+   No compiling, ready to run.
+
+-  X-Files supports a 3-button mouse which is therefor recommended. The 
+   program works with 2-button mouses but without the 3-button emulation 
+   you will not get everything out of the X-Files.
+
+=========================================================================
+***********************************************************************
+
+For questions etc. mail 
+xfiles@java.inf.tu-dresden.de
+
+or contact the authors
+jforsten@cc.hut.fi
+mkivinie@cc.hut.fi
+
+***********************************************************************
+

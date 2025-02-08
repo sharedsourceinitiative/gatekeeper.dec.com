@@ -1,0 +1,17 @@
+
+                    AVAILABLE ELECTRONICALLY
+
+"New-Value Logging in the Echo Replicated File System"
+Andy Hisgen, Andrew Birrell, Charles Jerian, Timothy Mann, Garret Swart
+June 23, 1993.  39 pages
+
+
+The Echo replicated file system uses new-value logging. Echo's use of
+new-value logging provides a clean separation of the internals of the 
+system into one module that is concerned with logging and recovery, and 
+another module that is concerned with accessing and updating the file 
+system's on-disk structures. The logging module provides a restricted form 
+of transaction. The restrictions simplify its implementation but impose
+constraints on the file system module. The file system module easily 
+satisfies these constraints, resulting in a good match overall. 
+

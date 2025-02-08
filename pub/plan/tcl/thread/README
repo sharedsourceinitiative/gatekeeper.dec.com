@@ -1,0 +1,27 @@
+Thread 2.0
+welch@ajubasolutions.com
+ftp://ftp.scriptics.com/pub/tcl/thread/thread2.0.tar.gz
+
+This extension provides a thread package for Tcl scripts
+that lets you create a new thread with its own Tcl interpreter.
+You can then send Tcl scripts to these worker threads for evaluation.
+The threading model is explained in more detail in
+http://dev.scriptics.com/doc/howto/thread_model.html
+
+To compile this you must first have built a Tclsh 8.3.1 that was
+configured with --enable-threads.  E.g., 
+	cd ~/src/tcl8.3.1/unix
+	sh configure --enable-threads --enable-gcc
+
+    Then configure and compile the thread extention:
+	cd ~/src/thread2.0/unix
+	sh ../configure --enable-threads --enable-gcc \
+		--with-tcl=../../tcl8.3.1/unix
+
+You also use configure and make on Windows - see the
+README.txt in the win directory for details.
+
+Note that we are extending the Tcl core support for threads to
+allow channels to be passed between threads.  These new APIs
+will appear in Tcl 8.4 and the Thread 2.1 version will take
+advantage of those capabilities.

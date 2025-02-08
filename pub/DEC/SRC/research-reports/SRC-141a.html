@@ -1,0 +1,1027 @@
+<html>
+
+<head>
+<title>
+Distributed Active Objects
+</title>
+</head>
+
+<body>
+<h1>Distributed Active Objects</h1>
+
+<A HREF="http://www.research.digital.com/people/mhb">
+     Marc H. Brown</A><br>
+DEC Systems Research Center<br>
+130 Lytton Ave.<br>
+Palo Alto, CA 94301<br>
+415 853-2152 (tel)<br>
+415 853-2104 (fax)<br>
+mhb@pa.dec.com
+
+<p>
+
+<A HREF="http://www.research.digital.com/people/najork">
+     Marc A. Najork</A><br>
+DEC Systems Research Center<br>
+130 Lytton Ave.<br>
+Palo Alto, CA 94301<br>
+415 853-2153 (tel)<br>
+415 853-2104 (fax)<br>
+najork@pa.dec.com
+
+
+<h2>Abstract</h2>
+
+
+<b>Many Web browsers now offer some form of <em>active objects</em>,
+written in a variety of languages, and the number and types of active
+objects are growing daily in interesting and innovative ways. This
+paper describes our work on Oblets, active objects that are
+distributed over multiple machines. Oblets are written in Obliq, an
+object-oriented scripting language for distributed computation.  The
+high-level support provided by Oblets makes it easy to write
+collaborative and distributed applications.</b>
+
+
+<h2>1 Overview</h2>
+
+One of the most exciting recent developments in Web-browser technology
+is <i>active objects</i>, where the browser downloads a program,
+executes it, and displays the program's user interface in a Web page.
+Sun's HotJava browser with Java applets pioneered active objects,
+showing Web pages with a wide range of content, from bouncing balls to
+spreadsheets to simulated science experiments.  Many browsers now
+offer some form of active objects, written in a variety of
+languages.<p>
+
+This paper describes <i>distributed active objects</i>, that is,
+active objects that can communicate with other active objects located
+on different machines across the Internet.  High-level support for
+distributed computation makes it easy to write groupware,
+computer-supported cooperative work (CSCW) applications, and
+multi-player games as active objects.<p>
+
+Our environment for writing distributed active objects is based on
+Obliq [<A HREF="Overview.html#Cardelli95">Cardelli95</A>], an
+objected-oriented scripting language that was specifically designed
+for constructing distributed applications in a heterogeneous
+environment.  We call active objects written in Obliq <i>Oblets</i> 
+(<b>Ob</b>liq app<b>lets</b>). We have also built a family of Web
+browsers (DeckScape [<A HREF="Overview.html#Brown94">Brown94</A>],
+WebCard [<A HREF="Overview.html#Brown95">Brown95</A>], and WebScape)
+capable of running Oblets.<p>
+
+Obliq supports distributed computation by implementing all objects as
+<i>network objects</i> [<A HREF="Overview.html#Birrell93">Birrell93</A>].  
+The methods of a network object can be invoked by other processes, in
+addition to the process that created the object. The initial
+connection between two processes occurs when one process registers an
+object with a name server under a unique name, and another process
+subsequently imports the object from that name server.  Once the
+connection is established, network objects can be passed to other
+processes just as simply as passing any other type of data.  <p>
+
+For network objects, method calls and field accesses have the same
+syntax regardless of where the object resides. It might reside in the
+same address space as the caller, or in a different address space
+either on the caller's machine or on some other (possibly different
+type of) machine.  Thus, from a programmer's perspective, there is no
+difference between local and remote objects.  As a result, network
+objects provide a uniform way for communication among Oblets,
+regardless of whether the Oblets are on the same Web page or on
+different Web pages displayed by different browsers on different
+machines.  Moreover, network objects communicate directly, without
+server intervention.  Thus, Oblets do not impose any load on an HTTP
+server, nor does a heavily loaded server affect their performance.<p>
+
+The rest of this paper consists of four sections with increasingly
+complex examples, followed by a review of related work.  The next
+section introduces fundamental concepts by showing a simple,
+non-distributed Oblet for adding two numbers.  Section 3 shows the
+basics of distribution by developing a two-person game of tic-tac-toe.
+Section 4 shows a prototypical CSCW application - a chat room.  The
+chat room allows an arbitrary number participants. The final example,
+Section 5, shows how to coordinate several different Oblets by
+developing a multi-view animation of an algorithm.
+
+
+<h2>2 A Simple Oblet</h2>
+
+An Oblet is an Obliq program that defines a variable named
+<code>oblet</code>. This variable must contain an Obliq object with at
+least two fields: <code>vbt</code> and <code>run</code>.  The
+<code>vbt</code> field is bound to a widget that will be installed on
+the screen when the Web page containing the Oblet is loaded.  The
+<code>run</code> field is bound to a method that is invoked just after
+the <code>vbt</code> field is evaluated.<p>
+
+Oblets are placed into HTML documents via <code>insert</code>, an HTML
+tag proposed by the World Wide Web Consortium (W3C) for inserting
+multimedia objects into HTML3 pages [<A HREF="Overview.html#HTML3">HTML3</A>].
+The markup for putting the Oblet at URL <code>foo.obl</code> into a 
+document is:
+
+<pre><font size=-1>    <img vspace=4 src="SRC-141a-figs/line.gif">    
+    &lt;insert code="foo.obl" type="application/x-oblet"&gt; &lt;/insert&gt;
+    <img src="SRC-141a-figs/line.gif">
+</font></pre>
+The <code>insert</code> tag also supports a variety of standard
+attributes, such as suggested dimensions, border size, and alignment.
+If suggested dimensions are not specified, the preferred dimensions of
+the widget contained in the Oblet's <code>vbt</code> field are used.<p>
+
+The following screen dump shows a simple Oblet for adding two numbers:
+<center>
+<A HREF="SRC-141a-figs/simple-full.gif"><IMG SRC="SRC-141a-figs/simple-half.gif" HSPACE=10 VSPACE=5></A>
+</center>
+<p>
+
+The user interface for that Oblet, defined by a FormsVBT s-expression
+[<A HREF="Overview.html#Avrahami89">Avrahami89</A>], is stored in the
+file <code>adder.fv</code>:
+
+<pre><font size=-1>    <img vspace=4 src="SRC-141a-figs/line.gif">    
+    (HBox 
+      (Numeric %num1) 
+      (Text "+") 
+      (Numeric %num2) 
+      (Text "=") 
+      (Text %sum "0"))
+    <img src="SRC-141a-figs/line.gif">
+</font>
+</pre>
+
+A user interface in FormsVBT is a hierarchical arrangement of
+<i>components</i>.  These include passive visual elements (e.g.,
+<code>Text</code>), basic interactors (e.g., <code>Numeric</code>),
+modifiers that add interactive behavior to other components (e.g.,
+<code>Button</code>), and layout operators that organize other
+components geometrically (e.g., <code>HBox</code>).  Components can be
+further categorized as a split, filter, or leaf, based on the number
+of child components they support.  A split can have any number of
+children (e.g., <code>HBox</code>), a filter has exactly one child
+(e.g., <code>Border</code>), and a leaf has no children (e.g.,
+<code>Text</code>). <p>
+
+A component in FormsVBT can be given a name so that its attributes can
+be queried and modified at runtime. Names are also used for attaching
+callback procedures to interactors.  In this Oblet, the two
+<code>Numeric</code> interactors are named <code>num1</code> and
+<code>num2</code>, and the <code>Text</code> component where the sum
+will be displayed is named <code>sum</code>.  <p>
+
+The source for this Oblet is as follows:
+
+<pre><font size=-1>    <img vspace=4 src="SRC-141a-figs/line.gif">
+    let doAdd = 
+      proc (fv)
+        let n1 = form_getInt (fv, "num1");
+        let n2 = form_getInt (fv, "num2");
+        form_putText (fv, "sum", fmt_int (n1+n2))
+      end;
+
+    let oblet = {
+      vbt => form_fromURL (BaseURL & "adder.fv"),
+      run => 
+        meth (self) 
+          form_attach (self.vbt, "num1", doAdd);
+          form_attach (self.vbt, "num2", doAdd);
+        end
+    };
+    <img src="SRC-141a-figs/line.gif">
+</font></pre>
+
+This Obliq program defines two variables: <code>doAdd</code> and
+<code>oblet</code>. Variable <code>doAdd</code> is a procedure that
+retrieves the values of both numeric interactors, and stores their sum
+in the component named <code>sum</code>.<p>
+
+Variable <code>oblet</code> is an object with two fields,
+<code>vbt</code> and <code>run</code>.  The <code>vbt</code> field is
+bound to a <i>form</i>, a widget that displays a FormsVBT
+s-expression.  The procedure <code>form_fromURL</code> takes a URL as
+an argument and returns a form whose description is stored at this
+URL.  The global variable <code>BaseURL</code> is the Oblet's absolute
+URL up through the last slash.  The <code>run</code> method in this
+Oblet just attaches the callback procedure <code>doAdd</code> to the
+two numeric interactors. This procedure will be invoked whenever the
+user clicks on the plus or minus buttons of either interactor, or
+types a number into the editing field between the buttons. The form in
+which the event occurred is passed as an argument to the callback
+procedure.
+Recall that when the Web page containing this Oblet is loaded, the
+<code>vbt</code> field will be evaluated and the result displayed on
+the page, the <code>run</code> method will be invoked, and finally the
+page will become visible. <p>
+
+
+
+<h2>3 A Distributed Game Oblet</h2>
+
+This section describes an Oblet for playing tic-tac-toe.  We'll first develop
+a single-site game; then, we'll show how to extend this game to two sites.
+The following screen dumps show the first three moves in the single-site game:
+
+<center>
+<A HREF="SRC-141a-figs/ttt-one-1-full.gif"><IMG SRC="SRC-141a-figs/ttt-one-1-twofifth.gif" HSPACE=10 VSPACE=5></A>
+<A HREF="SRC-141a-figs/ttt-one-2-full.gif"><IMG SRC="SRC-141a-figs/ttt-one-2-twofifth.gif" HSPACE=10 VSPACE=5></A>
+<A HREF="SRC-141a-figs/ttt-one-3-full.gif"><IMG SRC="SRC-141a-figs/ttt-one-3-twofifth.gif" HSPACE=10 VSPACE=5></A>
+</center>
+
+The FormsVBT description for this Oblet contains a message line that
+indicates whose turn it is, a game grid consisting of nine squares,
+and a "RESET" button at the bottom that is used to clear the squares.
+The message line is a <code>Text</code> component named
+<code>status</code>.  Each square of the game grid consists of a
+<code>Button</code> and a <code>Text</code> component. The
+<code>Button</code> components are named <code>btn1</code>, ...,
+<code>btn9</code>, and the <code>Text</code> components are named
+<code>lab1</code>, ..., <code>lab9</code>.  The "RESET" button is
+named <code>reset</code>.  Finally, the form's top-level component has
+the name <code>board</code>.<p>
+
+The code for the Oblet is as follows:
+
+<pre><font size=-1>    <img vspace=4 src="SRC-141a-figs/line.gif">
+    let otherPlayer = 
+      proc (p) 
+        if p is "X" then "O" else "X" end
+      end;
+    
+    let oblet = {
+      vbt => form_fromURL (BaseURL & "tic-tac-toe.fv"),
+      c   => ok,
+    
+      reset => 
+        meth (self)
+          for i = 1 to 9 do 
+            form_putText (self.vbt, "lab" & fmt_int(i), "");
+          end;
+        end,
+    
+      move =>
+        meth (self, label, player)
+          form_putText (self.vbt, label, player);
+          form_putText (self.vbt, "status", otherPlayer(player) & " is next");
+        end,
+    
+      nextTurn =>
+        meth (self) 
+          self.c := otherPlayer(self.c);
+        end,
+    
+      run => 
+        meth (self)
+          self.c := "X";
+    
+          let doReset = 
+            proc(fv)
+              self.reset ();
+            end;
+    
+          let doPress = 
+            proc (m) 
+              let label = "lab" & fmt_int(m);
+              if form_getText (self.vbt, label) is "" then
+                self.move (label, self.c);
+                self.nextTurn ();
+              end;
+            end;
+            
+          form_attach (self.vbt, "reset", doReset);
+          for i = 1 to 9 do
+            let p = proc(fv) doPress(i) end;
+            form_attach (self.vbt, "btn" & fmt_int(i), p)
+          end;
+        end
+    };
+    <img src="SRC-141a-figs/line.gif">
+</font></pre>
+
+This Oblet, in addition to the required <code>vbt</code> field and
+<code>run</code> method, also has a field <code>c</code> and methods
+<code>reset</code>, <code>move</code>, and <code>nextTurn</code>.  The
+field <code>c</code> will be a string indicating the player about to
+move, either "X" or "O". The <code>reset</code> method clears the
+label displayed in each square of the game grid.  The
+<code>move</code> method stores the string <code>player</code> into
+the <code>Text</code> component whose name is <code>label</code>, and
+also updates the message line to indicate whose turn is next.  The
+<code>nextTurn</code> method changes whose turn it is, that is, it
+changes the value of the field <code>c</code>.  The last two methods
+use the procedure <code>otherPlayer</code>, which takes one player's
+symbol and returns his opponent's symbol.<p>
+
+The body of the <code>run</code> method initializes field
+<code>c</code>, and then attaches callback procedures to the various
+interactors on the board.  Procedure <code>doReset</code> is attached
+to the "RESET" button; it will invoke the <code>reset</code> method of
+the object <code>oblet</code>.  A procedure <code>p</code> is attached
+to each of the nine buttons, <code>btn1</code>, ...,
+<code>btn9</code>.  This procedure effectively captures the value of
+<code>i</code>, the index of each square on the game grid.  When
+<code>p</code> is invoked (in response to a user clicking in a
+square), it calls procedure <code>doPress(i)</code>, which checks that
+the square is empty, and if so, invokes the Oblet's <code>move</code>
+and <code>nextTurn</code> methods.<p>
+
+
+We now convert the single-site version of tic-tac-toe into a two-site,
+distributed version.  The following figure shows a snapshot of a
+two-site game in progress.  The left image shows the browser
+(WebScape) used by player "O", the right image shows the browser
+(DeckScape) used by player "X".  The message line indicates that
+player "X" is next, and the Oblet of player "O" is grayed out,
+indicating that it is non-responsive for the time being.
+
+<center>
+<A HREF="SRC-141a-figs/ttt-two-O-full.gif"><IMG SRC="SRC-141a-figs/ttt-two-O-half.gif" HSPACE=10 VSPACE=5></A>
+<A HREF="SRC-141a-figs/ttt-two-X-full.gif"><IMG SRC="SRC-141a-figs/ttt-two-X-half.gif" HSPACE=10 VSPACE=5></A>
+</center>
+
+The changes to the Oblet code are remarkably simple. First, we extend
+the <code>oblet</code> to include an extra field, <code>opp</code>,
+which is the <code>oblet</code> of the opponent.  Second, we use the
+field <code>c</code> in a slightly different way: In the single-site
+version, <code>c</code> was a string that indicated whose turn it was;
+it changed after each turn. In the two-site version, it is also a
+string, but it never changes. Rather, it is initialized to the player
+in whose browser the Oblet is run.  Finally, there are changes to the
+<code>nextTurn</code> and <code>run</code> methods. Here is the entire
+Oblet, with unchanged parts elided:
+
+<pre><font size=-1>    <img vspace=4 src="SRC-141a-figs/line.gif">
+    let otherPlayer = ...;
+    
+    let oblet = {
+      vbt      => ...,
+      c        => ok,
+      opp      => ok,
+      reset    => ...,
+      move     => ...,
+     
+      nextTurn =>
+        meth (self) 
+          if form_getReactivity(self.vbt, "board") is "active" then
+            form_putReactivity(self.vbt, "board", "dormant");
+          else
+            form_putReactivity(self.vbt, "board", "active");
+          end;
+        end,
+    
+      run => 
+        meth (self)
+          try
+            self.opp := net_import ("TicTacToe", "ash.pa.dec.com");
+            self.opp.opp := self;
+            self.c := "X";
+          except net_failure => 
+            net_export ("TicTacToe", "ash.pa.dec.com", self);
+            form_putReactivity (self.vbt, "board", "dormant");
+            self.c := "O";
+          end;
+    
+          let doReset = 
+            proc(fv)
+              self.reset ();
+              self.opp.reset ();
+            end;
+    
+          let doPress = 
+            proc (m) 
+              let label = "lab" & fmt_int(m);
+              if form_getText (self.vbt, label) is "" then
+                self.move (label, self.c);
+                self.opp.move (label, self.c);
+                self.nextTurn ();
+                self.opp.nextTurn ();
+              end;
+            end;
+    
+          form_attach (self.vbt, "reset", doReset);
+          for i = 1 to 9 do
+            let p = proc(fv) doPress(i) end;
+            form_attach (self.vbt, "btn" & fmt_int(i), p)
+          end;
+        end
+    };
+    <img src="SRC-141a-figs/line.gif">
+</font></pre>
+
+We start a game by visiting the tic-tac-toe Web page, which causes the
+tic-tac-toe Oblet to be loaded and its <code>run</code> method to be
+invoked.  The first part of the <code>run</code> method attempts to
+import an object called <code>TicTacToe</code> from the name server at
+machine <code>ash.pa.dec.com</code>.  This call succeeds if there
+already is a player waiting for a game to begin. In this case, the
+opponent's <code>oblet</code> is stored in our <code>opp</code> field,
+our <code>oblet</code> is stored in our opponent's <code>opp</code>
+field, and we choose "X" to be our symbol.  If the attempt to import
+<code>TicTacToe</code> fails, then we export our <code>oblet</code> to
+the name server at <code>ash.pa.dec.com</code>, make our game board
+dormant (i.e., grayed out and unresponsive to mouse activity), and
+choose "O" as our symbol. For the sake of simplicity, we ignore the
+race condition of more than one player executing this code
+simultaneously.<p>
+
+The change to the <code>doReset</code> callback is simple: we invoke
+the <code>reset</code> method not only on our <code>oblet</code>, but
+also on our opponent's <code>oblet</code>.  The change to the
+<code>doPress</code> callback is similar: rather than invoking
+<code>move</code> and <code>nextTurn</code> only on our
+<code>oblet</code>, we also invoke these methods on our opponent's
+<code>oblet</code>.  The rest of the <code>run</code> method is
+unchanged: callbacks are attached to the interactors.<p> 
+
+The final change in the Oblet is to the <code>nextTurn</code>
+method. In the single-site version, we changed the value of field
+<code>c</code> from "X" to "O" and vice versa. Here, we change the
+reactivity of the game board, from active to dormant and vice versa.
+Therefore, each player can press a button only when it is his turn to
+move.<p>
+
+It is worth emphasizing that <code>self.opp</code> denotes an object
+that resides on the opponent's machine.  This implies that the
+assignment to <code>self.opp.opp</code> and the execution of the
+<code>self.opp.reset</code>, <code>self.opp.move</code>, and
+<code>self.opp.nextTurn</code> method calls take place on this other
+machine.
+
+
+<h2>4 A Distributed Chat Room Oblet</h2>
+
+Oblets are flexible enough to allow distributed computations to have
+arbitrary topologies. In the tic-tac-toe example, we had two
+<code>oblet</code> objects performing peer-to-peer communication. In
+this example, we use a star topology to implement a multi-person chat
+room. At the center of the star, we have a <i>conference control</i>
+object; at the periphery are the Oblets belonging to the
+participants. When a user types into his chat room Oblet, it informs
+the conference controller of the new text, which then relays the
+update to all the participating Oblets; in other words, Oblets do not
+communicate with other Oblets directly. Our chat room also provides a
+mechanism for floor control.<p>
+
+The following three images show the chat room Oblet running in
+different browsers (WebScape, WebCard, and DeckScape, from left to
+right). Each browser is running on a different machine. The
+participants in the chat room are Moe, Larry, and Curly (from left to
+right). Currently the floor is with Moe, as indicated by the status
+line over the editing region and by the color of the editing region in
+Moe's browser.
+
+<center>
+<A HREF="SRC-141a-figs/chatroom-webscape-full.gif"><IMG SRC="SRC-141a-figs/chatroom-webscape-twofifth.gif" HSPACE=10 VSPACE=5></A>
+<A HREF="SRC-141a-figs/chatroom-webcard-full.gif"><IMG SRC="SRC-141a-figs/chatroom-webcard-twofifth.gif" HSPACE=10 VSPACE=5></A>
+<A HREF="SRC-141a-figs/chatroom-deckscape-full.gif"><IMG SRC="SRC-141a-figs/chatroom-deckscape-twofifth.gif" HSPACE=10 VSPACE=5></A>
+</center>
+
+Here is the FormsVBT s-expression for the chat room Oblet:
+
+<pre><font size=-1>    <img vspace=4 src="SRC-141a-figs/line.gif">
+    (Rim (Pen 10)
+      (VBox
+        (Text %floorWith "The floor is free right now")
+        (Glue 10)
+        (Shape (Width 300) (Height 200)
+          (Frame Lowered 
+             (Filter Passive 
+               (TextEdit (BgColor "White") %mainEditor))))
+        (Glue 10)
+        (HBox
+          (Text "Your Name:")
+          (Frame Lowered (TypeIn (BgColor "White") %myName))
+          Fill
+          (Button %grabFloor "Grab Floor"))))
+    <img src="SRC-141a-figs/line.gif">
+</font></pre>
+
+The <code>floorWith</code> component is the message line above the
+large editing region; it will contain a message indicating who owns
+the floor. The <code>mainEditor</code> is the large (300x200) editing
+region. The <code>Filter</code> component surrounding the region is
+used to set the reactivity of the region; in the passive state, the
+region is unresponsive to mouse and keyboard activity, but it is not
+grayed out, as it would be in the dormant state.  The type-in field
+where each participant identifies himself is named
+<code>myName</code>. Finally, the "Grab Floor" button has been given
+the name <code>grabFloor</code>.<p>
+
+As we shall see, callback procedures will be attached to the "Grab
+Floor" button and to the large editing region. When the user clicks on
+the "Grab Floor" button, the message line on all participating Oblets
+will indicate who owns the floor (using the contents of the type-in
+field of the Oblet now owning the floor), the editing region on all
+Oblets (other than the one owning the floor) will become passive, and
+the editing region in the Oblet owning the floor will become active
+and its color will change to pink. When the user who owns the floor
+types a keystroke into the editing region, all of the participating
+Oblets will be notified of the updated text. <p>
+
+Recall that Oblets do not communicate with other Oblets directly.
+Rather, they use a conference control object to report the changes,
+and this object then relays the changes to the other Oblets. Here is
+the definition of the conference control object:
+
+<pre><font size=-1>    <img vspace=4 src="SRC-141a-figs/line.gif">
+    let ProtoConfControl = {
+      oblets => [],
+      onFloor => ok,
+      contents => "",
+    
+      register => 
+        meth (self, oblet)
+          self.oblets := self.oblets @ [oblet];
+          oblet.updateText (self.contents);
+          if self.onFloor isnot ok then
+            oblet.transferFloor (self.onFloor);
+          end;
+        end,
+            
+      transferFloor => 
+        meth (self, name)
+          self.onFloor := name;
+          foreach o in self.oblets do
+            o.transferFloor (name);
+          end;
+        end,
+            
+      updateText =>
+        meth (self, contents)
+          self.contents := contents;
+          foreach o in self.oblets do
+            o.updateText (contents);
+          end;
+        end
+    };
+    <img src="SRC-141a-figs/line.gif">
+</font></pre>
+
+The <code>oblets</code> data field is an array of the Oblets that have
+registered themselves with the conference control object. Each element
+of this array is an <code>oblet</code> that typically resides on a
+different machine. The <code>onFloor</code> data field is the name of
+the user who currently has the floor, and the <code>contents</code>
+data field contains the current contents of the editing region. These
+two fields are needed in order to initialize the display of a new
+participant entering this chat room.<p>
+
+The <code>register</code> method will be called by a new Oblet
+<code>oblet</code> when it is initialized, as part of its
+<code>run</code> method. The new Oblet is appended to the
+<code>oblets</code> array, and then it is notified both of the current
+contents of the editing region and of the owner of the floor, if there
+is one.<p>
+
+<!-- GOT UP TO HERE ######################################## -->
+
+
+The <code>transferFloor</code> method will be called by an Oblet when
+the user clicks on the "Grab Floor" button. This method stores in
+<code>onFloor</code> the name of the user who now owns the floor, and
+then iterates through all of the Oblets in the conference, invoking
+the <code>transferFloor</code> method on each Oblet to inform it of
+the new floor owner.<p>
+
+Finally, the <code>updateText</code> method will be called on each
+keystroke by the Oblet that owns the floor, passing in the current
+contents of the editing region. (Passing just the keystroke is not
+sufficient, since a single character could result in various editing
+actions, depending on the key bindings used by the Oblet.) The
+<code>updateText</code> method stores in <code>contents</code> the new
+contents of the editing region and then updates all of the Oblets in
+the chat room by invoking the <code>updateText</code> method on each
+one.<p>
+
+
+We are now ready to examine the code for the Oblet:
+
+<pre><font size=-1>    <img vspace=4 src="SRC-141a-figs/line.gif">
+    let oblet = {
+      vbt => form_fromURL (BaseURL & "chatroom.fv"),
+        
+      transferFloor =>
+        meth (self, name)
+          form_putReactivity (self.vbt, "mainEditor", "passive");
+          form_putBgColor (self.vbt, "mainEditor", color_named("white"));
+          form_putText (self.vbt, "floorWith", "The floor is with " & name);
+        end,
+    
+      updateText =>
+        meth (self, contents)
+          form_putText (self.vbt, "mainEditor", contents);
+        end,
+        
+      run => 
+        meth (self) 
+          var confControl = ok;
+          try 
+            confControl := net_import("ConfControl", "ash.pa.dec.com");
+          except net_failure => 
+            confControl := ProtoConfControl;
+            net_export("ConfControl", "ash.pa.dec.com", confControl);
+          end;
+        
+          let doGrabFloor = 
+            proc (fv)
+              confControl.transferFloor (form_getText (fv, "myName"));
+              form_putReactivity (fv, "mainEditor", "active");
+              form_putBgColor (fv, "mainEditor", color_named("pink"));
+            end;
+        
+          let doKeyEvent =
+            proc (fv)
+              confControl.updateText (form_getText (fv, "mainEditor"));
+            end;
+        
+          confControl.register (self);
+          form_attach (self.vbt, "grabFloor", doGrabFloor);
+          form_attach (self.vbt, "mainEditor", doKeyEvent);
+        end
+    };
+    <img src="SRC-141a-figs/line.gif">
+</font></pre>
+
+The Oblet defines two methods, <code>transferFloor</code> and
+<code>updateText</code>; as we just saw, these methods will be invoked
+by the conference control object in response to a user in an arbitrary
+Oblet in the chat room grabbing the floor or typing into the editing
+region, respectively. These methods are straightforward: the
+<code>transferFloor</code> method makes the editing region passive and
+sets its background to be white, and then updates the message
+line. The <code>updateText</code> message changes the contents of the
+editing region.<p>
+
+The Oblet's <code>run</code> method first contacts the name server on
+the machine <code>ash.pa.dec.com</code> to obtain a conference control
+object registered under the name <code>ConfControl</code>. If there is
+such an object, it is stored in the variable
+<code>confControl</code>. Otherwise, a new conference control object
+is registered with the name server and also stored in
+<code>confControl</code>.  As in the tic-tac-toe example, we do not
+show the code necessary for preventing the race condition of several
+users executing the <code>try-except</code> statement simultaneously.
+After defining callback procedures <code>doGrabFloor</code> and
+<code>doKeyEvent</code>, this Oblet registers itself with the
+conference controller, and finally attaches the callback procedures to
+the "Grab Floor" button and to the editing region.<p>
+
+The <code>doGrabFloor</code> callback procedure invokes the
+<code>transferFloor</code> method on the <code>confControl</code>
+object (which then calls the <code>transferFloor</code> method on all
+Oblets in the chat room, including this one), and then makes its own
+editing region active and colored pink.  The <code>doKeyEvent</code>
+callback procedure simply invokes the <code>updateText</code> method
+on the <code>confControl</code> object, passing to it the text in the
+editing region.<p>
+
+Again, it is important to point out that invoking a method
+<code>m</code> on the <code>confControl</code> object is done just by
+calling <code>confControl.m()</code>, regardless of where the
+<code>confControl</code> object resides. In this example, the
+conference control object will be local to the Oblet that creates it,
+and remote to all other Oblets.<p>
+
+There are many features that could be added to the chat room in a
+fairly straightforward way.  For example, it would be nice to be able
+to prevent another user from taking away the floor, to allow users to
+leave the chat room, to create new chat rooms, to see existing chat
+rooms, to handle exceptions that might result from network partitions,
+and so on.  In addition, one can easily imagine more efficient
+implementations, such as reporting only changes to the editing region
+rather than reporting the region's entire contents after each
+keystroke. <p>
+
+
+
+<h2>5 Oblets for Algorithm Animation</h2>
+
+Obliq's network objects provide a uniform and elegant way for objects
+to communicate, regardless of the address space they exist in and the
+machine they reside on.  The two previous examples showed the obvious
+use for network objects: to communicate among objects on different
+machines.  The example in this section uses network objects to allow
+Oblets running in the same browser (on the same Web page or on
+different Web pages) to communicate. This could be achieved through
+simpler mechanisms; after all, all Oblets on the same browser are in
+the same address space. However, network objects minimize the number
+of concepts needed by a programmer, since they handle this case in the
+exact same way as the distributed case. Moreover, network objects make
+it easy to reuse Oblets in distributed settings without any code
+changes.<p>
+
+This example uses network objects to coordinate multiple Oblets in the
+domain of algorithm animation [<A
+HREF="Overview.html#Brown84">Brown84</A>].  A typical algorithm
+animation system has a control panel and a collection of views, each
+in its own window.  The control panel is used for specifying data,
+starting the algorithm, controlling the animation speed, and so on. In
+order to animate an algorithm, strategically important points of its
+code are annotated with procedure calls that generate <i>interesting
+events</i>. These events are reported to the algorithm animation
+system, which in turn forwards them to all interested views. Each view
+responds to interesting events by updating its display
+appropriately.<p>
+
+The following screen dump shows an animation of first-fit binpacking.
+The control panel and the views are implemented by separate Oblets.
+
+<center>
+<A HREF="SRC-141a-figs/binpack-one-full.gif"><IMG SRC="SRC-141a-figs/binpack-one-third.gif" HSPACE=10 VSPACE=5></A>
+</center>
+
+We use an <i>event manager</i> object, similar to the conference
+control object in the chat room example, to relay interesting events
+from the algorithm to the views. For each interesting event there is a
+corresponding method both in the event manager object and in each view
+Oblet. When an interesting event occurs, the algorithm Oblet invokes
+the corresponding method of the event manager object, which in turn
+relays the event to each view.  Typically, views react by showing some
+animation reflecting the changes in the program.  In order for the
+animation in the views to happen simultaneously, the event manager
+forks a thread for each registered view, the thread calls the view's
+method corresponding to the interesting event, and the event manager
+waits until all of the threads have completed before returning to the
+algorithm.<p>
+
+For example, when a binpacking algorithm is trying to insert a particular
+weight <code>w</code> into a bin <code>b</code> that already contains
+a number of weights totaling up to <code>amt</code>, it calls
+<code>z.probe(w,b,amt)</code>. The <code>probe</code> method of the
+event manager object <code>z</code> is implemented as follows:
+
+<pre><font size=-1>    <img vspace=4 src="SRC-141a-figs/line.gif">
+    let z = {
+      views => [],
+      ...
+      probe =>
+        meth (self,w,b,amt) 
+          let threads = 
+            foreach v in self.views map 
+              let closure = proc() v.probe(w,b,amt) end;
+              thread_fork(closure) 
+            end;
+          foreach t in threads do 
+            thread_join(t) 
+          end;
+        end;
+        ...
+    };
+    <img src="SRC-141a-figs/line.gif">
+</font></pre>
+
+The screen dump above showed the Oblets for the control panel and each
+view all on the same Web page. However, there is no need for the
+Oblets to be located on the same page. In fact, if we put each Oblet
+on a separate page, the user can dynamically select the set of views
+visible (or even have more than one copy of any view). In the
+following screen dump, the Web page containing the control panel has
+links for pages containing the various views. Clicking on such a link
+brings up a page for the view, which the DeckScape browser can
+optionally display in a separate window.
+
+<center>
+<A HREF="SRC-141a-figs/binpack-many-full.gif"><IMG SRC="SRC-141a-figs/binpack-many-third.gif" HSPACE=10 VSPACE=5></A>
+</center>
+
+At first blush, it would appear that this example uses network objects
+merely for the coding elegance they offer, rather than for any of
+their distributed aspects.  That is, in the two screen dumps above,
+all of the Oblets exist in the same address space, namely that of the
+browser. However, because Oblets are network objects, we have far more
+flexibility. For instance, we can use the Oblets - <em>without any
+changes</em> - in an Electronic Classroom setting. In such a setting,
+the instructor and all students run Deckscape on their individual
+machines (using the same name server).  The instructor uses the
+control page Oblet to drive the animation, and each student sees a set
+of views portraying the workings of the algorithm. This scenario is
+explored in depth elsewhere [<A HREF="Overview.html#Brown96">Brown96</A>].
+
+
+<h2>6 Related Work</h2>
+
+Oblets bring together active objects and distributed computation.
+
+The best known language for active objects is Java 
+[<A HREF="Overview.html#Java">Java</A>]. HotJava was
+the first browser to support Java applets; in the meantime support for
+Java applets has been integrated into Netscape Navigator. Most major
+commercial browser vendors have subsequently announced intended
+support for Java applets.<p>
+
+The most serious potential competitor to Java-based browsers is
+probably Microsoft's Internet Explorer, which plans to integrate
+support for active objects written in Visual Basic (as well as for
+those written in Java) [<A HREF="Overview.html#Microsoft">Microsoft</A>]. 
+However, the current version of Internet Explorer does not support
+active objects.<p>
+
+In the research community, a number of browsers have been developed
+that support other languages for writing active objects. Most of these
+browsers are written in interpreted languages and support active
+objects written in the same language. Examples include Hush [<A
+HREF="Overview.html#vanDoorn95">vanDoorn95</A>] and SurfIt! [<A
+HREF="Overview.html#SurfIt!">SurfIt!</A>], implemented in Tcl/Tk; MMM
+[<A HREF="Overview.html#MMM">MMM</A>], implemented in CAML/Tk; and
+Grail [<A HREF="Overview.html#Grail">Grail</A>], implemented in
+Python.<p>
+
+None of the browsers and languages mentioned above has any high-level
+support for distributed programming. However, the HORB
+system [<A HREF="Overview.html#HORB">HORB</A>] adds the equivalent of
+network objects to Java.  It consists of a name server and a compiler
+that creates network object classes based on Java interface
+specifications. Unlike Obliq, HORB is a first-order language, meaning
+that only data, but not computations, can be migrated over the
+network.  Also, HORB does not provide distributed garbage
+collection.<p>
+
+Obliq [<A HREF="Overview.html#Cardelli95">Cardelli95</A>] is a
+lexically-scoped language that supports distributed object-oriented
+computation.  It has been integrated into commercial Web browsers by
+defining an Obliq MIME type and configuring the browser to use the
+Obliq interpreter as an external viewer 
+[<A HREF="Overview.html#Bharat95">Bharat95</A>].  Many other distributed
+languages exist, commercially (e.g., General Magic's Telescript 
+[<A HREF="Overview.html#Telescript">Telescript</A>]) and in academia
+(e.g., Orca [<A HREF="Overview.html#Bal92">Bal92</A>]).  However, we
+are not aware of any such language having been integrated with a Web
+browser.
+
+
+<h2>7 Conclusion</h2>
+
+The example Oblets shown in this paper have been small, for didactic
+reasons. However, Obliq is a full-strength programming language with
+access to a rich set of libraries, including multimedia objects and
+even Web pages. <p>
+
+The DeckScape browser below on the left shows a "Virtual TV" Oblet;
+the main screen and each of the buttons show live video streams.
+New video streams can be added by typing the IP address of a
+video server into the type-in field. <p>
+
+The WebScape browser below on the right shows an Oblet that implements
+the look-and-feel of DeckScape, but uses a different color for the
+main canvas. Within this Oblet, we are visiting Web pages containing
+the various binpacking animation Oblets we saw before.  This Oblet
+consists of about 500 lines of Obliq code and 200 lines of FormsVBT
+user-interface specification.
+
+<center>
+<A HREF="SRC-141a-figs/virtualtv-full.gif"><IMG SRC="SRC-141a-figs/virtualtv-third.gif" HSPACE=10 VSPACE=5></A>
+<A HREF="SRC-141a-figs/deckscape-full.gif"><IMG SRC="SRC-141a-figs/deckscape-third.gif" HSPACE=10 VSPACE=5></A>
+</center>
+
+We have not explored the issues of security and fault tolerance, both
+very important and very real problems. In the area of security, Web
+browsers should be able to authenticate the origin of an Oblet and to
+protect the user against malicious Oblets. In the area of fault
+tolerance, Oblets should be able to gracefully handle disruption of
+network services and nonavailability of network resources.<p>
+
+Many analysts feel that two of the most important technology themes
+for the remainder of the decade are the Web and using computers for
+collaboration. Oblets provide an elegant programming framework for
+bringing collaborative and distributed applications to the Web.
+
+
+<h2>References</h2>
+
+[<A NAME="Avrahami89">Avrahami89</A>]<br>
+Gideon Avrahami, Kenneth P. Brooks, Marc H. Brown.<br>
+A Two-View Approach To Constructing User Interfaces.<br>
+<i>Computer Graphics</i>, <b>23</b>(3):137-146, July 1989.
+<p>
+
+[<A NAME="Bal92">Bal92</A>]<br>
+H.E.Bal, M.F.Kaashoek, and A.S.Tanenbaum.<br>
+Orca: A Language for Parallel Programming of Distributed Systems.<br>
+<i>IEEE Transactions on Software Engineering</i>, <b>18</b>(3):190-205, 
+March 1992.
+<p>
+
+[<A NAME="Bharat95">Bharat95</A>]<br>
+Krishna Bharat and Luca Cardelli.<br>
+Distributed Applications in a Hypermedia Setting.<br>
+<i>Proc. of the 1st Intl. Workshop on Hypermedia Design</i>, 
+pages 185-192, June 1995.
+<p>
+
+[<A NAME="Birrell93">Birrell93</A>]<br>
+Andrew D. Birrell, Greg Nelson, Susan Owicki, and Edward P. Wobber.<br>
+Network Objects.<br>
+<i>Proc. of the 14th ACM Symposium on Operating System Principles</i>,
+pages 217-230, December 1993. 
+<p>
+
+[<A NAME="Brown84">Brown84</A>]<br>
+Marc H. Brown and Robert Sedgwick.<br>
+A System for Algorithm Animation.<br>
+<i>Computer Graphics</i>, <b>18</b>(3):177-186, July 1984.
+<p>
+
+[<A NAME="Brown94">Brown94</A>]<br>
+Marc H. Brown and Robert A. Shillner.<br>
+DeckScape: An Experimental Web Browser.<br>
+<i>Computer Networks and ISDN Systems</i>, <b>27</b>(1995) 1097-1104.
+<p>
+
+[<A NAME="Brown95">Brown95</A>]<br>
+Marc H. Brown.<br>
+Browsing the Web with a Mail/News Reader.<br>
+<i>Proc. of the 8th ACM Symposium on User Interface Software and Technology</i>,
+pages 197-198, November 1995.
+<p>
+
+[<A NAME="Brown96">Brown96</A>]<br>
+Marc H. Brown and Marc A. Najork.<br>
+Collaborative Active Textbooks:
+A Web-Based Algorithm Animation System for an Electronic Classroom.<br>
+Research Report #142, 
+Digital Equipment Corporation Systems Research Center, 
+Palo Alto, CA (May 1996).
+<p>
+
+[<A NAME="Cardelli95">Cardelli95</A>]<br>
+Luca Cardelli.<br>
+A Language with Distributed Scope.<br>
+<i>Computing Systems</i>, <b>8</b>(1):27-59, January 1995.
+<p>
+
+[<A NAME="Grail">Grail</A>]<br>
+Grail Home Page.<br>
+<A HREF="http://monty.cnri.reston.va.us/grail-0.2/"><code>http://monty.cnri.reston.va.us/grail-0.2/</code></A>
+<p>
+
+[<A NAME="HTML3">HTML3</A>]<br>
+HTML3 Linking and Embedding Model.<br>
+<A HREF="http://www.w3.org/hypertext/WWW/TR/WD-insert-951221.html"><code>http://www.w3.org/hypertext/WWW/TR/WD-insert-951221.html</code></A><br>
+<p>
+
+[<A NAME="HORB">HORB</A>]<br>
+HORB Home Page.<br>
+<A HREF="http://ring.etl.go.jp/openlab/horb/"><code>http://ring.etl.go.jp/openlab/horb/</code></A>
+<p>
+
+[<A NAME="Java">Java</A>]<br>
+Java: Programming for the Internet.<br>
+<A HREF="http://java.sun.com/"><code>http://java.sun.com/</code></A>
+<p>
+
+[<A NAME="Microsoft">Microsoft</A>]<br>
+Internet Development Toolbox.<br>
+<A HREF="http://www.microsoft.com/INTDEV/"><code>http://www.microsoft.com/INTDEV/</code></A>
+<p>
+
+[<A NAME="MMM">MMM</A>]<br>
+MMM Browser Home page.<br>
+<A HREF="http://pauillac.inria.fr/~rouaix/mmm/"><code>http://pauillac.inria.fr/~rouaix/mmm/</code></A>
+<p>
+
+[<A NAME="SurfIt!">SurfIt!</A>]<br>
+SurfIt!<br>
+<A HREF="http://pastime.anu.edu.au/SurfIt/"><code>http://pastime.anu.edu.au/SurfIt/</code></A>
+<p>
+
+[<A NAME="Telescript">Telescript</A>]<br>
+Telescript.<br>
+<A HREF="http://www.genmagic.com/Telescript/index.html"><code>http://www.genmagic.com/Telescript/index.html</code></A>
+<p>
+
+[<A NAME="vanDoorn95">vanDoorn95</A>]<br>
+Matthijs van Doorn and Anton Eli&euml;ns.<br>
+Integrating Applications and the World-Wide Web.<br>
+<i>Computer Networks and ISDN Systems</i>, <b>27</b>(1995) 1105-1110.
+
+<h1> </h1>
+<hr>
+<h1> </h1>
+
+<A HREF="SRC-141a-figs/mhb.gif"><IMG SRC="SRC-141a-figs/mhb.half.gif" ALIGN=LEFT></A>
+<B>Marc H. Brown</B> has been a member of the research staff at Digital
+Equipment Corporation's Systems Research Center since receiving his
+PhD in Computer Science from Brown University in 1987, where he worked
+with Andries van Dam and Robert Sedgewick on the "Electronic
+Classroom" project.  Dr. Brown was primarily responsible for the BALSA
+system, the courseware environment used in the classroom for
+interactive animation of computer programs. This led to his
+dissertation, <em>Algorithm Animation</em>, which was selected as a 1987 ACM
+Distinguished Dissertation. His current research focuses on algorithm
+animation and auralization, user interface toolkits and techniques,
+Web browsing, and computer science education.
+<BR CLEAR=ALL><P>
+
+<A HREF="SRC-141a-figs/man.gif"><IMG SRC="SRC-141a-figs/man.half.gif" ALIGN=LEFT></A>
+<B>Marc Najork</B> is a member of the research staff at Digital
+Equipment Corporation's Systems Research Center. His current research
+focuses on 3D animation, information visualization, algorithm
+animation, and the World-Wide Web. Dr. Najork received his PhD in
+Computer Science from the University of Illinois at Urbana-Champaign
+in 1994, where he developed Cube, a three-dimensional visual
+programming language.  
+<BR CLEAR=ALL><P>
+
+</body>
+</html>
+

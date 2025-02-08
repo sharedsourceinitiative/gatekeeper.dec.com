@@ -1,0 +1,155 @@
+*** usr.sbin/netstat/route.c	1997/01/07 17:44:13	1.1
+--- usr.sbin/netstat/route.c	1997/01/31 06:22:45
+***************
+*** 110,119 ****
+--- 110,130 ----
+  static void p_rtentry __P((struct rtentry *));
+  
++ /* column widths; each followed by one space */
++ #define	WID_DST		16	/* width of destination column */
++ #define	WID_GW		18	/* width of gateway column */
++ 
+  /*
+   * Print routing tables.
+   */
++ #ifdef IFDEFAULT
++ void
++ routepr(rtree, ifnetaddr)
++ 	u_long rtree;
++ 	u_long ifnetaddr;
++ #else
+  void
+  routepr(rtree)
+  	u_long rtree;
++ #endif
+  {
+  	struct radix_node_head *rnh, head;
+***************
+*** 144,147 ****
+--- 155,161 ----
+  				do_rtent = 1;
+  				pr_rthdr();
++ #ifdef IFDEFAULT
++ 				pr_ifroutes(af, ifnetaddr);
++ #endif
+  				p_tree(head.rnh_treetop);
+  			}
+***************
+*** 150,153 ****
+--- 164,239 ----
+  }
+  
++ #ifdef IFDEFAULT
++ /*
++  * Print the per-interface default route for interfaces that have one.
++  */
++ void
++ pr_ifroutes (af, ifnetaddr)
++ 	int af;
++ 	u_long ifnetaddr;
++ {
++ 	struct ifnet ifnet, rtif, *lastif;
++ 	struct rtentry rt;
++ 	char name [64], rt_name [64];
++ 	char dnbuf [128];
++ 
++ 	if (ifnetaddr == 0) {
++ 		printf("ifnet: symbol not defined\n");
++ 		return;
++ 	}
++ 
++ 	if (kread (ifnetaddr, (char *)&ifnetaddr, sizeof ifnetaddr))
++ 		return;
++ 
++ 	lastif = (struct ifnet *)0;
++ 
++ 	while (ifnetaddr) {
++ 		struct sockaddr_in *sin;
++ 
++ 		if (kread(ifnetaddr, (char *)&ifnet, sizeof ifnet))
++ 			return;
++ 		if (kread((u_long)ifnet.if_name, name, sizeof name))
++ 			return;
++ 		name [(sizeof name) - 4] = '\0';
++ 		ifnetaddr = (u_long)ifnet.if_next;
++ 
++ 		if (ifnet.if_default_route &&
++ 		    !kread ((u_long)ifnet.if_default_route, (char *)&rt,
++ 			    sizeof rt)) {
++ 			snprintf (dnbuf, sizeof dnbuf,
++ 				  "default:%s%d", name, ifnet.if_unit);
++ 
++ 			if (nflag)
++ 				printf("%-*s ", WID_DST, dnbuf);
++ 			else
++ 				printf("%-*.*s ", WID_DST, WID_DST, dnbuf);
++ 
++ 			p_sockaddr(kgetsa(rt.rt_gateway), 0, RTF_HOST, WID_GW);
++ 			p_flags(rt.rt_flags, "%-6.6s ");
++ 			printf("%6d %8d ", rt.rt_refcnt, rt.rt_use);
++ 			if (rt.rt_ifp) {
++ 				if (rt.rt_ifp != lastif) {
++ 					kget(rt.rt_ifp, rtif);
++ 					if (kread((u_long)rtif.if_name,
++ 						  rt_name, sizeof rt_name))
++ 						rt_name [0] = 0;
++ 					else {
++ 						char *s;
++ 						rt_name [(sizeof rt_name) - 4]
++ 						  = '\0';
++ 						s = &rt_name [strlen (rt_name)];
++ 						snprintf (s, 3, "%d",
++ 							  rtif.if_unit);
++ 					}
++ 					lastif = rt.rt_ifp;
++ 				}
++ 				printf(" %.16s", rt_name);
++ 			}
++ 			putchar('\n');
++ 		}
++ 	}
++ }
++ #endif /*IFDEFAULT*/
++ 
+  /*
+   * Print address family header before a section of the routing table.
+***************
+*** 181,188 ****
+  		printf("\nProtocol Family %d:\n", af);
+  }
+- 
+- /* column widths; each followed by one space */
+- #define	WID_DST		16	/* width of destination column */
+- #define	WID_GW		18	/* width of gateway column */
+  
+  /*
+--- 267,270 ----
+*** usr.sbin/netstat/main.c	1997/01/07 17:44:13	1.1
+--- usr.sbin/netstat/main.c	1997/01/31 06:19:46
+***************
+*** 358,362 ****
+--- 358,366 ----
+  			rt_stats(nl[N_RTSTAT].n_value);
+  		else
++ #ifdef IFDEFAULT
++ 			routepr(nl[N_RTREE].n_value, nl[N_IFNET].n_value);
++ #else
+  			routepr(nl[N_RTREE].n_value);
++ #endif
+  		exit(0);
+  	}
+*** usr.sbin/netstat/netstat.h	1997/01/07 17:44:13	1.1
+--- usr.sbin/netstat/netstat.h	1997/01/31 06:19:01
+***************
+*** 86,90 ****
+--- 86,95 ----
+  char	*netname __P((u_long, u_long));
+  char	*ns_print __P((struct sockaddr *));
++ #ifdef IFDEFAULT
++ void	routepr __P((u_long, u_long));
++ void	pr_ifroutes __P ((int, u_long));
++ #else
+  void	routepr __P((u_long));
++ #endif
+  
+  void	nsprotopr __P((u_long, char *));

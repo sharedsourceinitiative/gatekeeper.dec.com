@@ -1,0 +1,14 @@
+xping 2.1
+25-Jul-99
+
+xping presents a list of computer systems with a graphic indication of
+whether or not each system is alive (that is, responsive to ICMP ECHO_REQUEST
+datagrams or ``pings'').  Each system in the list is checked automatically
+with a period which can be controlled with command line arguments or X11
+resources.
+
+Users may request that the state of a system be checked immediately by
+pressing a button.  Any button pressed will remain depressed until the state
+of its system can be determined.  This is to indicate that the state is still
+uncertain.  When the button is raised, the state is known.  Multiple buttons
+can be depressed simultaneously.

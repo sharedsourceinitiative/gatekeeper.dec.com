@@ -1,0 +1,15 @@
+Begin3
+Title:          SM/Editor
+Version:        3.0
+Entered-date:   11 Jan 1999
+Description:    Full-featured Motif-based text editor
+Keywords:       text editor, Motif, X Window System, X11,
+                programming editor
+Author:         chosw@mines.co.kr (SiWon Cho)
+Maintained-by:  chosw@mines.co.kr (SiWon Cho)
+Primary-site:   ftp.x.org       /contrib/applications
+Alternate-site: sunsite.unc.edu /pub/Linux/apps/editors/X
+Platforms:      Unix
+Copying-policy: GPL
+End
+

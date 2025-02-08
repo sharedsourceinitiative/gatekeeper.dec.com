@@ -1,0 +1,152 @@
+
+README for the DD++ library - version 1.2
+=========================================
+
+By:  Harry Danilevsky and Andrew Renalds
+
+
+Description
+-----------
+
+The DD++ library is a C++ wrapper for the Motif 1.2 drag and drop preregister
+protocol.  Its unique design not only provides a simple interface to drag and
+drop but also allows the movement of objects through the X server.  This is done
+by separating the widget associated with the drag/drop site from the data that
+gets manipulated.
+
+The data type class, called Draggable, provides an interface to the data
+conversion and data transfer functions in the form of memory stream based
+persistence.  A programmer must derive a class from this base class and override
+the saveOn(), restoreFrom(), and atomName() functions.  Several examples are
+provided (DraggableString, DraggableInt, and DraggableDouble) in the include
+directory.  Frequently used data types can be included in the DD++ library.
+ 
+To create a drag site with all the default Motif properties, a programmer simply
+needs to instantiate the DragSite class with the widget which will be the drag
+site.  A data type can then be assigned to the drag site via the objectToDrag()
+method.  An example of a class derived from DragSite, called SpecificDragSite,
+is also provided in the include directory.  This class provides additional
+visual functionality such as drag-over and drag-under effects.
+
+Since a drop site can accept more than one data type, a programmer must first
+instantiate a DropTargetList class for a drop site.  For each data type a drop
+site will accept, a class must be derived from the DropTarget class overriding
+the receive() method.  This method is called when a successful drop occurs for a
+particular data type.  An object of each class derived from DropTarget is then
+added to the drop targets list of valid data types via the append() method.  In
+the same way, a data type may be removed from this list via the remove() method.
+
+A more detailed description of this library can be found in issue 12 of
+The X Resource journal.
+
+Compilation
+-----------
+
+To compile libDD++.a and test examples:
+
+- Look into makefile and modify (if necessary ) environment variables 
+  according to your directory structure.
+
+- Type 'make'. This will build lib/libDD++.a and example programs in 
+  test subdirectory.
+
+- Type 'make install'. libDD++.a will be installed in LIBINSTALLDIR and
+  the DD++ include directory will be created in INCINSTALLDIR.
+
+This package is known to compile with:
+	1. GNU's g++ version 2.4.1 under SunOS 4.1.3, Motif 1.2.1
+	2. Lucid's lcc version 3.2 under SunOS 4.1.3, Motif 1.2.1
+	3. Sun CC under Solaris 2.3, Motif 1.2.1
+	4. SGI C++ compiler under IRIX 5.2 , Motif 1.2.3
+	5. GNU's g++ version 2.6 under AIX
+
+If you compile and run it on other platforms, please let us know.
+
+
+Changes in version 1.1
+----------------------
+
+A new class has been added (XPixmap) to be able to handle pixmaps as
+well as bitmaps.  The library can be compiled with or without the
+HAVE_XPMLIB flag depending upon whether or not you have libxpm.a.
+A new example has also been added (DropTrash) showing how simple it 
+is to create drop sites which have fancy visual effects.  
+
+
+Changes in version 1.2
+----------------------
+
+Previous versions used SLList (single-linked list) class from GNU libg++
+library. This was the primary reason for releasing DD++ under the terms of Gnu
+Public License. GPL (as well as GLPL) are notorious for being a source of great
+confusion. It is especially disliked by people developing non-PD software. To
+eliminate this problem version 1.2 is no longer relying on libg++ and is now
+released under simple copyright terms (see file COPYRIGHT).
+
+Bug Fixes:
+
+Memory leaks eliminated (we used purify 3.0 do detect them). There are still
+memory leaks but they originate internally in Motif/Xlib and we don't have
+control over them.
+
+In previous versions it was not possible to override DragSite::actionName() and
+DragSite::dragKey() methods. Even though they were declared virtual they were in
+fact called from within DragSite ctor which of course used base class
+implementation. In version 1.2 actionName has become a char* data member of the
+DragSite class. You may specify your action name in DragSite ctor ; if you
+don't, the default action name "StartDrag" will be used.  You may also specify
+in DragSite ctor whether you want the default key translation (Btn2 for copy,
+Shift-Btn2 for move and Shift-Ctl-Btn2 for link). If you create a DragSite with
+setDefaultDragKeys=False, you can either set key translation in your resource
+file(this is more in X spirit) or overload DragSite::dragKey() method in your
+derived class, construct an instance of the derived class and then call
+setDragKeys() method for it.  Most likely you wouldn't want to do anything and
+rely on default behavior but we just didn't want to be blamed for "not providing
+enough flexibility" :-)
+
+New Feature:
+
+XDR-based streams.
+
+You may decide to use XDR-based streams instead of 'traditional' iostream-based.
+For instance if your Draggable object contains floating-point data and you are
+dragging it between applications running on different platforms then you can't
+reliably transfer floating-point data via iostream without losing precision
+(you'd have to write double onto a stream in string format and then read it
+back). An example of such Draggable object may be a graph structure containing
+coordinate pairs.
+
+XDR-based streams (DDistream and DDostream) are designed such that their
+interface is very similar to iostream's. The major practical difference is in
+operator >> for char*. In case of iostream operators <<(istream&, char*) and
+>>(ostream, char*) are not symmetrical. If a character string contains a
+whitespace or end-of-line character and you write it out using operator<<, you
+can't read it back with operator>> (only initial portion - till whitespace -
+will be read); you have to use getline() method.
+
+Xdr on the other hand has its own storing mechanism which automatically stores
+object size for arrays and strings. Thus for XDR-based streams getline() method
+is not needed.  Moreover, you can read from DDistream into NULL pointer and
+memory will be allocated automatically (you are responsible for deleting it).
+
+The DD++ implementation of XDR-based streams is not general (these are
+memory-based streams) because DD++ doesn't need file or socket based streams.
+
+If you choose to use XDR-based streams you'll have to uncomment a line in the
+makefile which defines DD_USE_XDR variable. If your system C library doesn't
+contain Xdr implementation you'll also need to set XDRLIB. Xdr implementation is
+part of publically available tirpc package. Xdr header files containing
+ANSI-style function prototypes are included in include/rpc directory.
+
+saveTo() and restoreFrom() methods now work with o_stream/i_stream which are
+typedef'd to ostream/istream or DDostream/DDistream, depending on whether
+DD_USE_XDR is defined.
+
+Because of lack of available equipment XDR feature has not been excessively
+tested and should be considered beta or even alpha. If you decide to use it we'd
+like to hear about your experience (no matter how bad it might be :-).
+
+
+Harry Danilevsky hdanilev@fnbc.com
+Andrew Renalds   renalds@fnbc.com
+

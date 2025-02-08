@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Sharing Mutable State</TITLE>
+<META NAME="description" CONTENT="Sharing Mutable State">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node9.html">
+<LINK REL="previous" HREF="node7.html">
+<LINK REL="up" HREF="node7.html">
+<LINK REL="next" HREF="node9.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html210"
+ HREF="node9.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html206"
+ HREF="node7.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html200"
+ HREF="node7.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html208"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html209"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html211"
+ HREF="node9.html">Avoiding Ad Hoc Multiplexing</A>
+<B> Up:</B> <A NAME="tex2html207"
+ HREF="node7.html">Guidelines for Multithreaded Interfaces</A>
+<B> Previous:</B> <A NAME="tex2html201"
+ HREF="node7.html">Guidelines for Multithreaded Interfaces</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION02031000000000000000">
+Sharing Mutable State</A>
+</H2>
+<A NAME="sec-sharing">&#160;</A>
+<A NAME="161">&#160;</A>
+<A NAME="162">&#160;</A>
+It is not uncommon for a single-threaded interface to reference a state
+variable that affects one or more procedures of the interface.  The
+purpose is often to shorten calling sequences by allowing the programmer
+to omit an explicit argument from each of a sequence of procedure calls in
+exchange for occasionally having to set the state variable.  To avoid
+interference over such a state variable, multiple client threads must
+often serialize their calls on procedures of the interface even when there
+is no requirement for causal ordering between the threads.
+<P><A NAME="163">&#160;</A>
+<A NAME="164">&#160;</A>
+<A NAME="165">&#160;</A>
+<A NAME="166">&#160;</A>
+<A NAME="167">&#160;</A>
+One example of interference caused by an interface state variable is the
+stream position pointer within a UNIX open file [<A
+ HREF="node19.html#ritchie:unix">14</A>].  The
+pointer is implicitly read and updated by the stream-like <TT>read</TT> and
+<TT>write</TT> procedures and is explicitly set by the <TT>seek</TT> procedure.
+If two threads use this interface to make independent random accesses to
+the same open file, they have to serialize all their <TT>seek-read</TT> and
+<TT>seek-write</TT> sequences.  Another example is the UNIX library routine
+<TT>ctime</TT>, which returns a pointer to a statically allocated buffer
+containing its result and so is not usable by concurrent threads.
+<P><A NAME="175">&#160;</A>
+While it is important to avoid unnecessary serialization of clients of an
+interface, serialization within the implementation of a multithreaded
+interface containing shared data structures is often necessary.  This is
+to be expected and will often consist of fine-grain locking that minimizes
+interference between threads.
+<P><A NAME="176">&#160;</A>
+<A NAME="177">&#160;</A>
+We can think of four basic approaches to designing multithreaded
+interfaces so as to minimize the possibility of interference between
+client threads over shared mutable state:
+<P><DL COMPACT>
+<DT>1.
+<DD>Make it an argument.  This is the most general solution, and has the
+advantage that one can maintain more than one object of the same type
+    as the shared mutable state being replaced.  In the file system
+    example, passing the stream position pointer as an argument to
+    <TT>read</TT> and <TT>write</TT> solves the problem.  Or consider a
+    pseudo-random number generator with a large amount of hidden state.
+    Instead of making the client synchronize its calls on the generator,
+    or even doing the synchronization within the generator, either of
+    which may slow down the application, a better solution is to allow
+    more than one generator state and to pass a reference to that state to
+    the generator on each call.
+<P><DT>2.
+<DD>Make it a constant.  It may be that some state component need not
+    change once an application is initialized.  An example of this might be
+    the user on whose behalf the application is running.
+<P><DT>3.
+<DD>Let the client synchronize.  This is appropriate for mutable state
+    components that are considered inherently to affect an entire application,
+    rather than to affect a particular action being done by a single thread.
+<P><DT>4.
+<DD>Make it thread-dependent, by having the procedure use the identity
+    of the calling thread as a key to look up the variable in a table.  Adding
+    extra state associated with every thread adds to the cost of threads, and
+    so should not be considered lightly.  Having separate copies of a state
+    variable can also make it more difficult for threads to cooperate in
+    manipulating a single object.
+</DL>
+<P><A NAME="182">&#160;</A>
+It is a matter of judgment which of these techniques to use in a
+particular case.  We used each of the four in designing the Topaz
+operating system interface.  Sometimes providing a combination offers
+worthwhile flexibility.  For example, a procedure may take an optional
+parameter that defaults to a value set at initialization time.  Also, it
+is possible for a client to simulate thread-dependent behavior using a
+procedure taking an explicit parameter in conjunction with an
+implementation of a per-thread property list (set of tag-value pairs).
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html210"
+ HREF="node9.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html206"
+ HREF="node7.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html200"
+ HREF="node7.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html208"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html209"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html211"
+ HREF="node9.html">Avoiding Ad Hoc Multiplexing</A>
+<B> Up:</B> <A NAME="tex2html207"
+ HREF="node7.html">Guidelines for Multithreaded Interfaces</A>
+<B> Previous:</B> <A NAME="tex2html201"
+ HREF="node7.html">Guidelines for Multithreaded Interfaces</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

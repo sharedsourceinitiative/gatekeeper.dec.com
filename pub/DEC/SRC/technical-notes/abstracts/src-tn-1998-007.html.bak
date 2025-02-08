@@ -1,0 +1,24 @@
+<TITLE>Digital Systems Research Center: Note 1998-007</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Technical Note 1998-007</H1>
+<H1>Two Facets of Authentication</H1>
+<HR>
+<H2>Martin Abadi</H2>
+Note #1998-007, March 18, 1998.
+<P>
+Authentication can serve both for assigning responsibility and for
+giving credit. Some authentication protocols are adequate for one
+purpose but not the other. This paper explains the distinction between
+responsibility and credit, through several examples, and discusses the
+role of this distinction in the design and analysis of protocols.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-007.ps.Z">PostScript compressed with UNIX compress</A></B> -- 520 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-007.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 504 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-007.ps.zip">PostScript compressed with ZIP</A></B> -- 504 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-007.ps">PostScript</A></B> -- 904 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-007.pdf">Portable Document Format (PDF)</A></B> -- 114 Kbytes<BR>
+</UL></P>

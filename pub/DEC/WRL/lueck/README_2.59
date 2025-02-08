@@ -1,0 +1,438 @@
+                      Atom V2.59 Release Notes
+                      ========================
+
+	*****************************************************************
+	*								*
+	*	The Atom ADK is no longer supported for the 3.2x        *
+	*	versions of Digital Unix.				*
+	*								*
+	*****************************************************************
+
+
+Digital Unix is now called Tru64 Unix.  This note has been updated to 
+reflect that change.
+
+A few problems have been fixed and some new support added since the 
+Atom 2.57 ADK:
+
+    Modifications to Atom:
+
+     -  A line number problem with large C++ applications has been fixed.
+
+     -  A scoping problem in the local symbol table was fixed.
+
+     -  The cause of an assertion in the trampoline table support has been 
+	fixed.
+
+
+    Modifications to Hiprof:
+
+     -  A new -samples mode is now supported in Hiprof: -toolargs=-samples
+
+      	This causes hiprof to profile CPU-time in all selected code using 
+	profil(2).  The resulting profile is a statistical sampling rather 
+	than a measurement, but it reflects the memory access delays suffered 
+	by the program, and it is usefully accurate when the run-time is more 
+	than a few seconds (the longer the better). The -asm, -heavy, and 
+	-lines options of gprof(1) can be used to display more finely grained 
+	profiles at the level of source-lines and machine-instructions.
+
+     -  Hiprof's -cputime mode is no longer supported for threaded programs,
+	because the mapping of the RPCC clock from kernel threads to pthreads
+	can not be achieved reliably. Use -samples instead; it is now the 
+	default profiling technique for the hiprof(1) command.
+
+
+This ADK contains the newly structured third degree as the default.  Using 
+"atom -tool third" will use the new third.  If you should experience a crash 
+or hang, please send stack traces with both -g and -gp to atombugs@zk3.dec.com.
+To use the old third, set ATOMTOOLPATH to /usr/lib/cmplrs/atom/old_third.
+
+Atom is now divided into two kits.  The ATM400 kit can be installed on 
+Tru64 UNIX V4.0x.  The ATM500 kit can be installed on Tru64 Unix 5.0.
+Choose the kit that is right for your system.
+
+Compaq Internal Base-Level Support:
+ATM500 kit is supported for Tru64 UNIX Steel BL16 or later.  It is not 
+supported on Steel BL15 or earlier Steel releases.
+
+ATM400 kit is supported for all V4.0x systems, including PTFC.
+
+
+
+Copyright Notice
+================
+/****************************************************************************
+ *                                                                          *
+ *  COPYRIGHT (c) 1999 BY                                                   *
+ *  COMPAQ COMPUTER CORP., HOUSTON, TEXAS.		                    *
+ *  ALL RIGHTS RESERVED.                                                    *
+ *  COPYRIGHT (c) 1995-1998 BY                                              *
+ *  DIGITAL EQUIPMENT CORPORATION, MAYNARD, MASSACHUSETTS.                  *
+ *  ALL RIGHTS RESERVED.                                                    *
+ *                                                                          *
+ *  THIS SOFTWARE IS FURNISHED UNDER A LICENSE AND MAY BE USED AND COPIED   *
+ *  ONLY IN  ACCORDANCE WITH  THE  TERMS  OF  SUCH  LICENSE  AND WITH THE   *
+ *  INCLUSION OF THE ABOVE COPYRIGHT NOTICE.  THIS SOFTWARE OR ANY  OTHER   *
+ *  COPIES THEREOF MAY NOT BE PROVIDED OR OTHERWISE MADE AVAILABLE TO ANY   *
+ *  OTHER PERSON.  NO TITLE TO AND OWNERSHIP OF  THE  SOFTWARE IS  HEREBY   *
+ *  TRANSFERRED.                                                            *
+ *                                                                          *
+ *  THE INFORMATION IN THIS SOFTWARE IS  SUBJECT TO CHANGE WITHOUT NOTICE   *
+ *  AND  SHOULD  NOT  BE  CONSTRUED AS  A  COMMITMENT BY  COMPAQ COMPUTER   *
+ *  CORPORATION.                                                            *
+ *                                                                          *
+ *  COMPAQ  ASSUMES NO RESPONSIBILITY FOR THE USE  OR  RELIABILITY OF ITS   *
+ *  SOFTWARE ON EQUIPMENT WHICH IS NOT SUPPLIED BY COMPAQ.                  *
+ *                                                                          *
+ ****************************************************************************
+ *		   Copyright 1999 Compaq Computer Corporation
+ *              Copyright 1995-1998 Digital Equipment Corporation
+ *                         All Rights Reserved
+ *
+ * Permission to use, copy, and modify this software and its documentation is
+ * hereby granted only under the following terms and conditions.  Both the
+ * above copyright notice and this permission notice must appear in all copies
+ * of the software, derivative works or modified versions, and any portions
+ * thereof, and both notices must appear in supporting documentation.
+ *
+ * This software may be distributed (but not offered for sale or transferred
+ * for compensation) to third parties, provided such third parties agree to
+ * abide by the terms and conditions of this notice.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND COMPAQ COMPUTER CORP. DISCLAIMS ALL
+ * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL COMPAQ COMPUTER
+ * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+ * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR
+ * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+ * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+ * SOFTWARE.
+ */
+
+
+Kit Availability
+================
+
+There are three Atom kits, each consists of a single, tar'ed setld package.  
+You only need one of these kits, depending on what version of the operating 
+system you have.  Use the ATM400 kit for installation on Tru64 UNIX V4.0x.
+Use the ATM500 kit for installation on Tru64 UNIX V5.0.  The ADK is no 
+longer supported on Digital Unix 3.2x.  However, the last kit that was 
+available for that platform, 2.43, can be obtained at the two locations 
+listed below.  The kit name is ATM350.tar, and the release notes are called 
+README350.
+
+
+You can obtain these kits from one of two locations.  All Compaq
+employees should have anonymous ftp access to this location in Nashua,
+NH (USA):
+
+	system:  	alpha.zk3.dec.com
+
+	directory:	/usr/ftp/pub/prof/tools/atom
+
+	files:     	README    	- These release notes
+			ADK_NOTES	- A compilation of previous changes
+			ATM400.tar	- Atom kit for Unix V4.0x
+			ATM500.tar	- Atom kit for Unix V5.0
+
+
+You may copy the kit from this location with this command:
+
+	% ftp alpha.zk3.dec.com
+	Name: anonymous
+	Password: <your email address>
+
+	ftp> cd pub/prof/tools/atom
+	ftp> bin
+	ftp> get ATM400.tar
+
+Everyone (including non-Compaq people) should have anonymous ftp access
+to this location in Palo Alto, CA (USA):
+
+	system:  	gatekeeper.pa.dec.com
+
+	directory:	/pub/DEC/WRL/lueck
+
+	files:     	README    	- These release notes
+			ADK_NOTES	- A compilation of previous changes
+			ATM400.tar	- Atom kit for Unix V4.0x
+			ATM500.tar	- Atom kit for Unix V5.0
+
+You may copy the kit from this location with this command:
+
+	% ftp gatekeeper.pa.dec.com
+	Name: anonymous
+	Password: <your email address>
+
+	ftp> cd pub/DEC/WRL/lueck
+	ftp> bin
+	ftp> get ATM400.tar
+
+For security reasons, read permission has been turned *off* in the
+directory containing these files.  You can still copy the files, but you
+will not be able to list the contents of the directory.
+
+
+Installation Instructions
+=========================
+
+This Atom kit can be installed on the following revisions of the
+Tru64 UNIX (formerly known as DEC OSF/1) operating system:
+
+	V4.0    (Platinum)
+	V4.0A	(PTA)
+	V4.0B	(PTB)
+	V4.0C
+	V4.0D	(PTmin)
+	V4.0E	(PTEV6)
+	V4.0F	(PTFC)
+	V5.0	(Steel BL16 or later)
+
+It may not be installed on earlier revisions.  Note, installation on Tru64
+UNIX V4.0x requires the ATM400 kit.  Installation on Tru64 UNIX 5.0
+requires the ATM500 kit.
+
+
+
+Installing on Tru64 UNIX V4.0x
+--------------------------------
+
+Before installing this kit, make sure you remove any previous versions
+of Atom:
+
+	% su
+	# setld -d ATMBASE400
+
+If this command returns an error, don't worry.  That simply means you
+don't have an old version of the Atom kit installed, no harm has been
+done.
+
+    NOTE: Do *not* delete the OSFATMBASE or OSFATMBIN subsets.  These
+	subsets are unrelated to Atom.
+
+    Note:  If you are deleting the old kit, but _not_ installing a new 
+	Atom ADK, you may need to set up symbolic links for the new drivers.  
+	Execute the following commands:
+	ln -s /usr/lib/cmplrs/cc/hiprof /usr/bin/hiprof
+	ln -s /usr/lib/cmplrs/cc/pixie /usr/bin/pixie
+	ln -s /usr/lib/cmplrs/cc/third /usr/bin/third
+
+	This is only necessary if you are _not_ installing a new kit.
+
+	
+You are now ready to install the new kit.  First, copy the kit as
+described above.  Then unpack the kit into a temporary directory on your
+system:
+
+	% cd <temp directory>
+	% tar xf ATM400.tar
+
+Now, become root and install the kit.  Because the installation may
+replace some system files, you should not install this kit on a system
+with other users loged on.
+
+	% su
+	# setld -l .
+
+This displays a menu of possible subsets to install.  There is only one
+subset to choose.  Your operating system already has all the necessary
+support for Atom.
+
+	ATMBASE400	- The base Atom functionality.  You must install
+	           	  this subset.
+
+After you install the Atom kit, you may delete the temporary directory
+where you unpacked the kit:
+
+	% rm -rf <temp directory>
+
+There is no need to reboot the system after installing this subset.
+
+You may also wish to run the installation verification programs.
+However, make sure you have a fair amount of /tmp space.  If not, set
+the TMPDIR environment variable to point to a larger partition (for
+example, /usr/tmp).
+
+        % su
+        # setld -v ATMBASE400
+
+The verification program passes if it prints the following line:
+
+        Confidence test suite passed.
+
+
+Uninstalling from Tru64 UNIX V4.0
+-----------------------------------
+
+Should you want to remove the ATM400 kit from a Tru64 UNIX V4.0 system
+and revert to the original version of Atom, you can follow this
+procedure:
+
+	% su
+	# setld -d ATMBASE400
+
+
+
+
+Installing on Tru64 UNIX V5.0
+-------------------------------
+
+Before installing this kit, make sure you remove any previous versions
+of Atom:
+
+	% su
+	# setld -d ATMBASE500
+
+If this command returns an error, don't worry.  That simply means you
+don't have an old version of the Atom kit installed, no harm has been
+done.
+
+    NOTE: Do *not* delete the OSFATMBASE or OSFATMBIN subsets.  These
+	subsets are unrelated to Atom.
+
+    Note:  If you are deleting the old kit, but _not_ installing a new 
+	Atom ADK, you may need to set up symbolic links for the new drivers.  
+	Execute the following commands:
+	ln -s /usr/lib/cmplrs/cc/hiprof /usr/bin/hiprof
+	ln -s /usr/lib/cmplrs/cc/pixie /usr/bin/pixie
+	ln -s /usr/lib/cmplrs/cc/third /usr/bin/third
+
+	This is only necessary if you are _not_ installing a new kit.
+
+
+You are now ready to install the new kit.  First, copy the kit as
+described above.  Then unpack the kit into a temporary directory on your
+system:
+
+	% cd <temp directory>
+	% tar xf ATM500.tar
+
+Now, become root and install the kit.  Because the installation may
+replace some system files, you should not install this kit on a system
+with other users logged on.
+
+	% su
+	# setld -l .
+
+This displays a menu of possible subsets to install.  There is only one
+subset to choose.  Your operating system already has all the necessary
+support for Atom.
+
+	ATMBASE500	- The base Atom functionality.  You must install
+	           	  this subset.
+
+After you install the Atom kit, you may delete the temporary directory
+where you unpacked the kit:
+
+	% rm -rf <temp directory>
+
+There is no need to reboot the system after installing this subset.
+
+You may also wish to run the installation verification programs.
+However, make sure you have a fair amount of /tmp space.  If not, set
+the TMPDIR environment variable to point to a larger partition (for
+example, /usr/tmp).
+
+        % su
+        # setld -v ATMBASE500
+
+The verification program passes if it prints the following line:
+
+        Confidence test suite passed.
+
+
+Uninstalling from Tru64 UNIX V5.0
+-----------------------------------
+
+Should you want to remove the ATM500 kit from a Tru64 UNIX system
+and revert to the original version of Atom, you can follow this
+procedure:
+
+	% su
+	# setld -d ATMBASE500
+
+
+
+Documentation
+=============
+
+The following manpages should be available on your system:
+
+	atom(1)
+	prof_intro(1)
+	hiprof(1)
+	pixie(1)
+	third(1)
+	hiprof(5)
+	pixie(5)
+	third(5)
+	atom_application_instrumentation(5)
+	atom_application_navigation(5)
+	atom_application_query(5)
+	atom_application_resolvers(5)
+	atom_instrumentation_routines(5)
+	atom_object_management(5)
+	atom_description_file(5)
+	Xlate(5)
+	AnalHeapBase(5)
+	Thread(5)
+
+    NOTE: To view the pixie(5) manpage, type
+
+		% man 5 pixie
+
+
+
+
+Kernel Support
+==============
+
+This version of Atom allows you to instrument the Tru64 UNIX kernel.
+For more information about this, please contact Alan Eustace at WRL:
+
+	Alan Eustace
+	eustace@pa.dec.com
+	DTN 543-3312
+	(415) 617-3312
+
+
+Reporting Bugs
+==============
+
+If you find a bug in Atom, please send a description of your problem to 
+atombugs@zk3.dec.com.
+
+Please include the following information in any bug report:
+
+	* The version of Atom, which is obtained with this command:
+
+		% atom -version
+
+	* The version of the operating system, which is obtained with
+	  this command:
+
+		% uname -a
+
+	* A list of those Atom subsets that are installed, which is
+	  obtained with this command:
+
+		% /usr/sbin/setld -i | grep '^ATM'
+
+	* A description of the problem including the exact command line
+	  you passed to Atom.
+
+	* If the problem is with a tool you wrote, either include the
+	  sources for the tool's instrumentation and analysis code or
+	  provide a pointer to the sources.  If you are using one of the
+	  prepackaged tools in the Atom kit, you need not provide this
+	  information.
+
+	* I normally need the binary image of the application to which
+	  you applied Atom.  If possible, save a copy and provide a
+	  pointer to the application.
+
+
+
+

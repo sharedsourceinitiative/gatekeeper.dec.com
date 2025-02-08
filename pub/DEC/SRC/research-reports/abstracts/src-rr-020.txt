@@ -1,0 +1,23 @@
+
+		AVAILABLE ELECTRONICALLY
+
+    "Synchronization Primitives for a Multiprocessor: 
+    A Formal Specification."
+    A. D. Birrell, J. V. Guttag, J. J. Horning, R. Levin.
+    August 20, 1987.  21 pages.
+
+Authors' Abstract
+
+    Formal specifications of operating system interfaces can be a
+    useful part of their documentation. We illustrate this by
+    documenting the Threads synchronization primitives of the Taos
+    operating system. We start with an informal description, present
+    a way to formally specify interfaces in concurrent systems, and
+    then give a formal specification of the synchronization primitives.
+    We briefly discuss both the implementation and what we have learned
+    from using the specification for more than a year.  Our main
+    conclusion is that programmers untrained in reading formal
+    specifications have found this one helpful in getting their work
+    done.
+
+

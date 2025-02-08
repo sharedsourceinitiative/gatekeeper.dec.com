@@ -1,0 +1,3002 @@
+<HTML>
+<HEAD>
+<TITLE>SRC Technical Note 1997-005c</TITLE>
+</HEAD>
+<BODY BGCOLOR="#ffffff" VLINK="#006633">
+<HR>
+<CENTER>
+<H2><b>SRC Technical Note</b></H2><P>
+<H3><b>1997-005c</b></H3><P>
+<H3>June 2, 1998</H3><P>
+
+<HR>
+<H2>The Vesta-2 Software Description Language</H2>
+<P>
+<H3>Allan Heydon, Jim Horning, Roy Levin, Timothy Mann, and Yuan Yu</H3>
+<HR>
+<P>
+<IMG SRC="http://www.research.digital.com/SRC/pics/DEC-logo.gif"
+ALT="DIGITAL"><BR>
+<b>Systems Research Center</b><BR>
+130 Lytton Avenue<BR>
+Palo Alto, CA 94301<BR>
+<A HREF="http://www.research.digital.com/SRC/"
+>http://www.research.digital.com/SRC/</A>
+<P>
+<HR>
+Copyright 1997, 1998 Digital Equipment Corporation. All rights reserved.
+<HR>
+</CENTER>
+
+<H2><A NAME="Contents">Table of Contents</A></H2>
+
+<OL>
+<LI> <A HREF="#Intro">Introduction</A>
+<LI> <A HREF="#LexConventions">Lexical Conventions</A>
+<UL>
+<LI> 2.1 <A HREF="#MetaNotation">Meta-notation</A>
+<LI> 2.2 <A HREF="#Terminals">Terminals</A>
+</UL>
+<LI> <A HREF="#Semantics">Semantics</A>
+<UL>
+<LI> 3.1 <A HREF="#Types">Value Space</A>
+<LI> 3.2 <A HREF="#TypeDecls">Type Declarations</A>
+<LI> 3.3 <A HREF="#Eval">Evaluation Rules</A>
+<UL>
+<LI> 3.3.1 <A HREF="#ExprEval">Expr</A>
+<LI> 3.3.2 <A HREF="#LiteralEval">Literal</A>
+<LI> 3.3.3 <A HREF="#IdEval">Id</A>
+<LI> 3.3.4 <A HREF="#ListEval">List</A>
+<LI> 3.3.5 <A HREF="#BindingEval">Binding</A>
+<LI> 3.3.6 <A HREF="#SelectEval">Select</A>
+<LI> 3.3.7 <A HREF="#BlockEval">Block</A>
+<LI> 3.3.8 <A HREF="#StmtEval">Stmt</A>
+<LI> 3.3.9 <A HREF="#AssignEval">Assign</A>
+<LI> 3.3.10 <A HREF="#IterateEval">Iterate</A>
+<LI> 3.3.11 <A HREF="#FuncDefEval">FuncDef</A>
+<LI> 3.3.12 <A HREF="#FuncCallEval">FuncCall</A>
+<LI> 3.3.13 <A HREF="#ModelEval">Model</A>
+<LI> 3.3.14 <A HREF="#FilesEval">Files</A>
+<LI> 3.3.15 <A HREF="#ImportsEval">Imports</A>
+<LI> 3.3.16 <A HREF="#FilenameEval">Filename Interpretation</A>
+</UL>
+<LI> 3.4 <A HREF="#Primitives">Primitives</A>
+<UL>
+<LI> 3.4.1 <A HREF="#BoolPrim">Functions on Type <CODE>t_bool</CODE></A>
+<LI> 3.4.2 <A HREF="#IntPrim">Functions on Type <CODE>t_int</CODE></A>
+<LI> 3.4.3 <A HREF="#TextPrim">Functions on Type <CODE>t_text</CODE></A>
+<LI> 3.4.4 <A HREF="#ListPrim">Functions on Type <CODE>t_list</CODE></A>
+<LI> 3.4.5 <A HREF="#BindingPrim">Functions on Type <CODE>t_binding</CODE></A>
+<LI> 3.4.6 <A HREF="#TypePrim">Type Manipulation Functions</A>
+<LI> 3.4.7 <A HREF="#RunToolPrim">Tool Invocation Function</A>
+</UL>
+</UL>
+<LI> <A HREF="#Syntax">Concrete Syntax</A>
+<UL>
+<LI> 4.1 <A HREF="#ConcreteGrammar">Grammar</A>
+<LI> 4.2 <A HREF="#Ambiguity">Ambiguity Resolution</A>
+<LI> 4.3 <A HREF="#ConcreteTokens">Tokens</A>
+<LI> 4.4 <A HREF="#ReservedIds">Reserved Identifiers</A>
+</UL>
+<LI> <A HREF="#Acks">Acknowledgments</A>
+<LI> <A HREF="#References">References</A>
+</OL>
+
+<H2><A NAME="Intro">1. Introduction</A></H2>
+
+<P> This note describes the formal syntax and semantics of the Vesta-2
+Software Description Language (SDL). We expect it will be used as a
+reference by Vesta-2 users. Although the description is meant to be
+complete and unambiguous, it is by no means a language tutorial or
+user guide.
+
+<P> Vesta-2 is a software configuration management system
+[<A HREF="#CiteVesta2">1</A>]. Developers
+use Vesta-2 to build and manage potentially large-scale software.
+In Vesta-2, the instructions for building a software artifact are
+written as an SDL program. Evaluating the program causes the software
+system to be constructed; the program's result value typically
+contains the derived files produced by the evaluation.
+
+<P> Vesta-1, the precursor of Vesta-2, saw extensive use at the
+Digital Systems Research Center [<A HREF="#CiteVesta1Approach">2</A>,
+<A HREF="#CiteVesta1Repos">3</A>, <A HREF="#CiteVesta1Lang">4</A>,
+<A HREF="#CiteVesta1Bridges">5</A>]. Vesta-2 adopts many of the same
+concepts as Vesta-1, but Vesta-2 features substantial design changes
+(including major changes to the syntax and semantics of the SDL itself)
+and a portable implementation. In the rest of this note, references to
+``Vesta'' mean ``Vesta-2''.
+
+<P> The Vesta SDL is a functional language with lexical scoping. Its
+value space includes Booleans, integers, texts, lists (similar to LISP
+lists), sequences of name-value pairs called <I>bindings</I>,
+closures, and a unique error value.
+
+<P> The language is dynamically typed; that is, types are associated
+with run-time values instead of with static names and expressions.
+Even without static type checking, the language is strongly typed: an
+executing Vesta program cannot breach the language's type system. The
+expected types of parameters to language primitives are defined, and
+those types are checked when the primitives are evaluated. The
+language includes provisions for specifying the types of used-defined
+function arguments and local variables, but these type declarations
+are currently unchecked.
+
+<P> The language contains roughly 60 primitive functions. There is a
+single <A HREF="#RunToolPrim"><CODE>_run_tool</CODE></A> primitive for
+invoking external tools like compilers and linkers as function calls.
+External tools can be invoked from Vesta without modification.
+
+<P> Conceptually, every software artifact built with Vesta is
+constructed from scratch, thereby guaranteeing that the resulting
+artifact is composed of consistent pieces. Vesta uses extensive
+caching to avoid unnecessary rebuilding. Vesta records software
+dependencies automatically. The techniques by which the implementation
+caches function calls and determines dependencies are described in the
+complete Vesta-2 paper [<A HREF="#CiteVesta2">1</A>].
+
+<H2><A NAME="LexConventions">2. Lexical Conventions</A></H2>
+
+<P> The language semantics presented in <A HREF="#Eval">Section 3</A>
+introduces each language construct by giving its syntax and semantics.
+This section defines the meta-notation and terminals assumed by the
+presented syntax fragments. The complete language syntax is given in
+<A HREF="#Syntax">Section 4</A>.
+
+<H3><A NAME="MetaNotation">2.1 Meta-notation</A></H3>
+
+<P> Nonterminals of the grammar begin with an uppercase letter, are at
+least two characters in length, and include at least one lowercase
+letter. Except for the four terminals listed in <A
+HREF="#Terminals">Section 2.2</A> below, each of which denotes a class
+of tokens, the terminals of the grammar are character strings
+not of this form.
+
+<P> The grammar is written in a variant of BNF (Backus-Naur Form).
+The meta-characters of this notation are:
+
+<PRE>
+  ::=  |  [  ]  {  }  *  +  `  '
+</PRE>
+
+<P> The meaning of the metacharacters is as follows:
+
+<PRE>
+  NT ::= Ex  NT rewrites to Ex
+  Ex1 | Ex2  Ex1 or Ex2
+  [ Ex ]     optional Ex
+  { Ex }     meta-parentheses for grouping.
+  Ex*        zero or more Ex's
+  Ex*,       zero or more Ex's separated by commas, trailing comma optional
+  Ex*;       zero or more Ex's separated by semicolons, trailing optional
+  Ex+        one or more Ex's
+  Ex+,       one or more Ex's separated by commas, trailing comma optional
+  Ex+;       one or more Ex's separated by semicolons, trailing optional
+  `s'        the literal character or character sequence s
+</PRE>
+
+<P> When used as terminals, square brackets, curly brackets, and
+vertical bar appear in single quotes to avoid ambiguity with the
+corresponding metacharacters (i.e., <TT>`['</TT>, <TT>`]'</TT>,
+<TT>`{'</TT>, <TT>`}'</TT>, <TT>`|'</TT> ).
+
+<H3><A NAME="Terminals">2.2 Terminals</A></H3>
+
+<P> The following names are used as terminals in the grammar. They
+denote classes of tokens, and are defined precisely in
+<A HREF="#ConcreteTokens">Section 4.3</A>
+
+<DL>
+<DT><CODE>Delim</CODE>
+<DD>
+A pathname delimiter. Either forward or backward slashes are allowed
+within pathnames, but not both.
+<DT><CODE>Integer</CODE>
+<DD>
+An integer, expressed in either decimal, octal, or hexadecimal.
+<DT><CODE>Id</CODE>
+<DD>An identifier.  An identifier is any sequence of letters, digits,
+periods, and underscores that does not represent an integer.
+For example, foo and 36.foo are identifiers, but 36 and 0x36 are not.
+<DT><CODE>Text</CODE>
+<DD>
+A text string. Texts are enclosed in double-quotes. They may
+contain escape sequences and spaces.
+</DL>
+
+<P> Comments and white space follow C++ conventions. A comment either
+begins with // and ends with the first subsequent newline or begins
+with /* and ends with */ (the latter form does not nest). Of course,
+these delimiters are only recognized outside text literals. White
+space delimits tokens but is otherwise ignored (except that the Space
+character, the ASCII character represented by the decimal number 32,
+is significant within text literals). The grammar prohibits white
+space other than the Space character within text literals.
+
+<P> The names of the built-in functions begin with an underscore
+character, and the identifier consisting of the single character "."
+plays a special role in the Vesta SDL. It is therefore recommended that
+Vesta programs avoid defining identifiers of these forms.
+
+<H2><A NAME="Semantics">3. Semantics</A></H2>
+
+<P> The semantics of programs written in the Vesta SDL are described
+by a function <I>Eval</I> that maps a syntactic <I>expression</I> and
+a <I>context</I> to a <I>value</I>. That is, Eval(E, C) returns the
+value of the syntactic expression E in the context C. In addition to
+syntactic expressions (denoted by the non-terminal Expr in the
+grammar), the domain of Eval includes additional syntactic constructs.
+Some of these additional constructs are defined by the concrete
+grammar, while others are introduced as ``intermediate results''
+during the evaluation process (the latter are noted where they are
+introduced). Each value returned by Eval is in the Vesta value space,
+described in the next section. The context parameter C to Eval is a
+value of type t_binding in the Vesta value space.
+
+<H3><A NAME="Types">3.1 Value Space</A></H3>
+
+<P> Values are typed.  The types and values of the language are:
+
+<PRE>
+  Type name     Values of the type
+  --------------------------------------------------------------------------
+  t_bool        true, false
+  t_int         integers
+  t_text        arbitrary byte sequences
+  t_list        sequences of zero or more arbitrary values
+  t_binding     sequences of zero or more pairs, in which the first member 
+                  of each pair is a non-empty t_text, the second is an 
+                  arbitrary value, and the first members of all the pairs 
+                  are distinct
+  t_closure     closures, each of which is a triple &lt;e, f, b&gt; where
+		  e is a function body (i.e., a Block as per the grammar),
+		  f is a list of pairs &lt;t_i, e_i&gt;, where t_i is a
+		    t_text value (a formal parameter name) and e_i is either
+		    the distinguished expression &lt;emptyExpr&gt; or is
+		    an Expr (for a default parameter value)
+		  b is a value of type t_binding (the context)
+  t_err         err
+</PRE>
+
+<P> The values <I>true</I>, <I>false</I>, <I>emptylist</I> (the list
+of length zero), <I>emptybinding</I> (the binding of length zero), and
+<I>err</I> are not to be confused with the language literals
+<CODE>TRUE</CODE>, <CODE>FALSE</CODE>, <CODE>&lt;&gt;</CODE>,
+<CODE>[]</CODE>, and <CODE>ERR</CODE> that denote those values.
+
+<P> The following supertype is used chiefly for defining the domain
+of primitive functions (the U(...) notation is type union):
+
+<PRE>
+  t_value       U(t_bool, t_int, t_text, t_list,
+		  t_binding, t_closure, t_err)
+</PRE>
+
+<P> The type t_bool contains the Boolean values <I>true</I> and
+<I>false</I>, denoted in the language by the literals <CODE>TRUE</CODE>
+and <CODE>FALSE</CODE>.
+
+<P> The type t_int contains integers over at least the range -2^31
+.. 2^31-1; the exact range is implementation dependent.
+
+<P> The type t_text contains arbitrary sequences of 8-bit bytes.
+This type is used to represent text literals (quoted strings) in SDL
+programs as well as the contents of files introduced through the
+Files nonterminal of the grammar. Consequently, an implementation
+must reasonably support the representation of large values of this
+type (thousands of bytes or more), but is not required to support
+efficient operations on large text values.
+
+<P> The type t_list contains sequences of values.
+The elements of a list need not be of the same type.
+
+<P> The type t_binding contains sequences of pairs
+&lt;<I>t_i</I>, <I>v_i</I>&gt;, in which each <I>t_i</I> is a
+non-empty value of type t_text, each <I>v_i</I> is an arbitrary Vesta
+value (i.e., of type t_value), and the <I>t_i</I> are all distinct.
+Note that bindings are sequences: they are ordered. The <I>domain</I>
+of a binding is the set of names <I>t_i</I> at its top level. Bindings
+may be nested.
+
+<P> Bindings play an important role in the Vesta language. They are used to
+represent a variety of interesting objects. For example, flat bindings
+that map names to texts can be used to represent command-line switches
+and environment variables; bindings that contain nested bindings can
+be used to represent file systems; and bindings that map names to
+closures can be used to represent interfaces.
+<A HREF="#BindingPrim">Section 3.4.5</A> describes the primitive
+functions and operators for manipulating bindings, including three
+primitives for combining two bindings.
+
+<P> The type t_closure contains closure values for the primitive
+operators and functions (defined in <A HREF="#Primitives">Section
+3.4</A>) as well as for user-defined functions.
+
+<P> The type t_err consists of the single distinguished value
+<I>err</I>, denoted in the language by the literal <CODE>ERR</CODE>,
+which is used to represent erroneous evaluations. Primitive functions
+return <I>err</I> when applied to values outside their natural domain.
+For most (but not all) primitives, the value <I>err</I> lies outside
+the natural domain and so is ``contagious''; that is, most primitives
+return <I>err</I> when given <I>err</I> for any input. The evaluation
+rules and the descriptions of primitive functions document these
+cases.
+
+<P> In most cases, <I>err</I> represents a definite error and
+the implementation should generate a suitable diagnostic for human
+consumption, in addition to merely propagating the <I>err</I>
+value through subsequent evaluation. Whether the evaluation
+terminates or continues in these cases is left to the
+implementation.
+
+<H3><A NAME="TypeDecls">3.2</A> <A HREF="#TypeDefNT">Type Declarations</A></H3>
+
+<P> The language includes a rudimentary mechanism for declaring the
+expected types of values computed during evaluation.  The grammar
+defines a small sub-language of type expressions, which includes the
+ability to give names to types and to describe aggregate types (lists,
+bindings, functions) with varying degrees of detail.  Type expressions
+may be attached to function arguments and results and to local variables,
+indicating the type of the expected value for these identifiers and
+expressions during evaluation.
+
+<P> The Vesta evaluator currently treats type names and type
+expressions as syntactically checked comments; it performs no other
+checking. Future implementations may type-check expressions at
+run-time and report an error if the value does not match the
+specified type (according to some as yet unspecified definition of
+what it means for a value to ``match'' a type specification).
+
+<P> The syntax fragments and semantic descriptions in subsequent
+sections omit any further reference to type expressions entirely.
+
+<H3><A NAME="Eval">3.3 Evaluation Rules</A></H3>
+
+<P> The evaluation of a Vesta program corresponds to the abstract
+evaluation:
+
+<PRE>
+  Eval( M([]) , C_initial)
+</PRE>
+
+where <I>M</I> is the closure corresponding to the contents of an
+immutable file (a system model) in the Vesta repository and
+<I>C_initial</I> is an initial context. <I>M</I>'s model should have the
+syntactic form defined by the nonterminal <A HREF="#ModelNT">Model</A>
+described in <A HREF="#ModelEval">Section 3.3.13</A> below.
+<I>C_initial</I> defines the names and associated values of the
+built-in primitive operators and functions described in <A
+HREF="#Primitives">Section 3.4</A> below.
+
+<P> The definition of Eval by cases follows. Unless E is handled by
+one of these cases, Eval(E, C) is <I>err</I>. As mentioned above, the
+domain of Eval includes the language generated by the concrete grammar
+as a proper subset. Thus, in some of the cases below, the expression E
+can arise only as an intermediate result of another case of Eval.
+These cases are explicitly noted.
+
+<P> The pseudo-code that defines the various cases of Eval and the
+primitive functions should be read like C++. That code assumes the
+following declaration for the representation of Vesta values:
+
+<PRE>
+  class val {
+    public:
+      operator int();
+      // converts Vesta t_int or t_bool to C++ int
+
+      val(int);
+      // converts a C++ integer to a Vesta t_int
+
+      int operator== (val);
+      // compares two Vesta values, returning true (1)
+      // if they have the same type and are equal, and
+      // false (0) otherwise
+  }
+</PRE>
+
+<P> Note that the <CODE>operator==</CODE> above is the one invoked by
+uses of ``<CODE>==</CODE>'' in the C++ pseudo-code. It is not to be
+confused with the primitive equality operator defined on various Vesta
+types in <A HREF="#Primitives">Section 3.4</A>.
+
+<P> The pseudo-code also refers to the following constants:
+
+<PRE>
+  static val true;         // value of literal TRUE
+  static val false;        // value of literal FALSE
+  static val emptylist;    // value of literal &lt; &gt;
+  static val emptybinding; // value of literal [ ]
+  static val err;          // value of literal ERR
+</PRE>
+
+<P> For convenience, the pseudo-code adopts the following notational
+conveniences:
+<P>
+<UL>
+<LI>
+Eval is defined by cases rather than by one C++ function
+with an enormous embedded case selection.
+<P>
+<LI>
+Recursive references to Eval appear inline in the same form that is used
+to identify the individual cases.
+<P>
+<LI>
+Primitive functions of the Vesta language, whose names begin with an
+underscore, are invoked inline from the pseudo-code as if they were
+ordinary C++ functions.  The primitive operators of the Vesta language
+are invoked this way too; for example, when the pseudo-code refers to
+operator+, it means the Vesta primitive function, not the C++
+operator. Note that some of the Vesta operators are overloaded by type,
+but not by arity. For example, operator+ is defined on integers,
+texts, lists, and bindings, but it always takes two arguments.
+<P>
+<LI>
+In the pseudo-code for rules that contain the terminal
+Id, the variable <CODE>id</CODE> denotes the value of the Id
+represented as a t_text.
+</UL>
+
+<P> In each of the following sections, we first present the relevant
+portions of the language syntax. We then present the evaluation rules
+that apply to those syntactic constructs. The complete language syntax
+is given in <A HREF="#Syntax">Section 4</A>.
+
+<H4><A NAME="ExprEval">3.3.1</A> <A HREF="#ExprNT">Expr</A></H4>
+
+<P> <B>Syntax:</B>
+
+<PRE>
+Expr       ::= if Expr then Expr else Expr | Expr1
+Expr1      ::= Expr2 {  =&gt;  Expr2 }*
+Expr2      ::= Expr3 {  ||  Expr3 }*
+Expr3      ::= Expr4 {  &&  Expr4 }*
+Expr4      ::= Expr5 [ { == | != | &lt; | &gt; | &lt;= | &gt;= } Expr5 ]
+Expr5      ::= Expr6 { AddOp Expr6 }*
+AddOp      ::= +  |  ++  |  -
+Expr6      ::= Expr7 { MulOp Expr7 }*
+MulOp      ::= *
+Expr7      ::= [ UnaryOp ] Expr8
+UnaryOp    ::= -  |  !
+Expr8      ::= Primary [ TypeQual ]
+Primary    ::= ( Expr ) | Literal | Id | List
+             | Binding | Select | Block | FuncCall
+</PRE>
+
+<P> The grammar lists the operators in increasing order of precedence.
+The binary operators at each precedence level are left-associative.
+
+<P> <B>Evaluation Rules:</B>
+
+<PRE>
+// conditional expression
+Eval( if Expr_1 then Expr_2 else Expr_3 , C) =
+{
+  val b = Eval( Expr_1 , C);
+  if (_is_bool(b) == false) return err;
+  if (b == true) return Eval( Expr_2 , C);
+  else return Eval( Expr_3 , C);
+}
+</PRE>
+
+<P> As defined in <A HREF="#IsBoolPrim">Section 3.4.6</A>,
+<CODE>_is_bool(<I>b</I>)</CODE> is <I>true</I> if <I>b</I>
+is a value of type t_bool and <I>false</I> otherwise.
+
+<PRE>
+// conditional implication
+Eval( Expr_1 =&gt; Expr_2 , C) =
+{
+  val b = Eval( Expr_1 , C);
+  if (_is_bool(b) == false) return err;
+  if (b == false) return true;
+  b = Eval( Expr_2 , C);
+  if (_is_bool(b) == false) return err;
+  return b;
+}
+
+// conditional OR
+Eval( Expr_1 || Expr_2 , C) =
+{
+  val b = Eval( Expr_1 , C);
+  if (_is_bool(b) == false) return err;
+  if (b == true) return true;
+  b = Eval( Expr_2 , C);
+  if (_is_bool(b) == false) return err;
+  return b;
+}
+
+// conditional AND
+Eval( Expr_1 && Expr_2 , C) =
+{
+  val b = Eval( Expr_1 , C);
+  if (_is_bool(b) == false) return err;
+  if (b == false) return false;
+  b = Eval( Expr_2 , C);
+  if (_is_bool(b) == false) return err;
+  return b;
+}
+
+// comparison
+Eval( Expr_1 == Expr_2 , C) = operator==(Eval( Expr_1 , C), Eval( Expr_2 , C)) 
+Eval( Expr_1 != Expr_2 , C) = operator!=(Eval( Expr_1 , C), Eval( Expr_2 , C)) 
+Eval( Expr_1 &lt;  Expr_2 , C) = operator&lt; (Eval( Expr_1 , C), Eval( Expr_2 , C)) 
+Eval( Expr_1 &gt;  Expr_2 , C) = operator&gt; (Eval( Expr_1 , C), Eval( Expr_2 , C)) 
+Eval( Expr_1 &lt;= Expr_2 , C) = operator&lt;=(Eval( Expr_1 , C), Eval( Expr_2 , C)) 
+Eval( Expr_1 &gt;= Expr_2 , C) = operator&gt;=(Eval( Expr_1 , C), Eval( Expr_2 , C))
+
+// AddOp and MulOp
+Eval( Expr_1 +  Expr_2 , C) = operator+ (Eval( Expr_1 , C), Eval( Expr_2 , C))
+Eval( Expr_1 ++ Expr_2 , C) = operator++(Eval( Expr_1 , C), Eval( Expr_2 , C))
+Eval( Expr_1 -  Expr_2 , C) = operator- (Eval( Expr_1 , C), Eval( Expr_2 , C))
+Eval( Expr_1 *  Expr_2 , C) = operator* (Eval( Expr_1 , C), Eval( Expr_2 , C))
+
+// UnaryOp
+Eval( ! Expr , C) = operator!(Eval( Expr , C)) 
+Eval( - Expr , C) = operator-(Eval( Expr , C)) 
+
+// parenthesization
+Eval( ( Expr ) , C) = Eval( Expr , C)
+</PRE>
+
+<P> There are seven remaining possibilities for a Primary: Literal,
+Id, List, Binding, Select, Block, and FuncCall. These are treated
+separately in subsequent sections.
+
+<H4><A NAME="LiteralEval">3.3.2</A> <A HREF="#LiteralNT">Literal</A></H4>
+
+<P> <B>Syntax:</B>
+
+<PRE>
+Literal    ::= ERR | TRUE | FALSE | Text | Integer
+</PRE>
+
+<P> <B>Evaluation Rules:</B>
+
+<PRE>
+Eval( ERR    , C) = err
+Eval( TRUE   , C) = true
+Eval( FALSE  , C) = false
+Eval( Text   , C) = the corresponding t_text value, following the C++
+                    interpretation for the Escape characters.
+Eval( Integer, C) = the corresponding t_int value if it can be
+                    represented by the implementation, otherwise `err'.
+</PRE>
+
+<H4><A NAME="IdEval">3.3.3</A> <A HREF="#IdNT">Id</A></H4>
+
+<P> <B>Evaluation Rules:</B>
+
+<PRE>
+Eval( Id , C) = _lookup(C, id),
+</PRE>
+
+<P> As defined in <A HREF="#LookupPrim">Section 3.4.5</A>,
+<CODE>_lookup(<I>b</I>, <I>nm</I>)</CODE> is the value
+associated with the non-empty name <I>nm</I> in the binding <I>b</I>,
+or <I>err</I> if <I>nm</I> is empty or is not in <I>b</I>'s domain.
+
+<H4><A NAME="ListEval">3.3.4</A> <A HREF="#ListNT">List</A></H4>
+
+<P> <B>Syntax:</B>
+
+<PRE>
+List       ::= &lt; Expr*, &gt;
+</PRE>
+
+The use of &lt;, &gt; as both binary operators and list delimiters
+makes the grammar ambiguous.  <A HREF="#Ambiguity">Section
+4.2</A> explains how the ambiguity is resolved.
+
+<P> <B>Syntactic desugarings:</B>
+
+<PRE>
+&lt; Expr_1, ..., Expr_n &gt;  desugars to  &lt; Expr_1 &gt; + &lt; Expr_2, ..., Expr_n &gt;
+</PRE>
+
+<P> Here, `+' is the concatenation operator on lists.
+
+<P> <B>Evaluation Rules:</B>
+
+<PRE>
+Eval( &lt;&gt;       , C) = emptylist
+Eval( &lt; Expr &gt; , C) = _list1(Eval( Expr , C))
+</PRE>
+
+<P> As defined in <A HREF="#List1Prim">Section 3.4.4</A>,
+<CODE>_list1(<I>val</I>)</CODE> evaluates to a list
+containing the single value <I>val</I>.
+
+<H4><A NAME="BindingEval">3.3.5</A> <A HREF="#BindingNT">Binding</A></H4>
+
+<P> <B>Syntax:</B>
+
+<PRE>
+Binding    ::= `[' BindElem*, `]'
+BindElem   ::= SelfNameB | NameBind
+SelfNameB  ::= Id
+NameBind   ::= GenPath = Expr
+GenPath    ::= GenArc { Delim GenArc }* [ Delim ]
+GenArc     ::= Arc | $ Id | $ ( Expr ) | % Expr %
+Arc        ::= Id | Integer | Text
+</PRE>
+
+<P> <B><A NAME="BindingSugar">Syntactic</A> desugarings:</B>
+
+<P> The following desugarings apply to <A
+HREF="#BindElemNT">BindElem</A>'s within a Binding.
+
+<PRE>
+Id                           desugars to  Id = Id
+GenArc Delim = Expr          desugars to  GenArc = Expr 
+GenArc Delim GenPath = Expr  desugars to  GenArc = [ GenPath = Expr ]
+$ Id = Expr                  desugars to  $ ( Id ) = Expr
+% Expr_1 % = Expr_2          desugars to  $ ( Expr_1 ) = Expr_2
+</PRE>
+
+<P> The SelfNameB syntactic sugar allows names from the current scope
+to be copied into bindings more succinctly.  For example, the binding
+value:
+
+<PRE>
+  [ progs = progs, tests = tests, lib = lib ]
+</PRE>
+
+<P> can instead be written:
+
+<PRE>
+  [ progs, tests, lib ]
+</PRE>
+
+<P> The GenPath syntactic sugar allows bindings consisting of a single
+path to be written more succinctly. For example, the binding value:
+
+<PRE>
+  [ env_ovs = [ Cxx = [ switches = [ compile =
+    [ debug = "-g3", optimize = "-O" ]]]]]
+</PRE>
+
+<P> can instead be written:
+
+<PRE>
+  [ env_ovs/Cxx/switches/compile = 
+    [ debug = "-g3", optimize = "-O" ]]
+</PRE>
+
+<P> <B>Evaluation Rules:</B>
+
+<P> First, the rules for constructing empty and singleton bindings:
+
+<PRE>
+Eval( [ ]            , C) = emptybinding
+Eval( [ Arc = Expr ] , C) = _bind1(id, Eval( Expr , C))
+</PRE>
+
+<P> Here <I>id</I> is the t_text representation of <I>Arc</I>.  <A
+NAME="ArcToText">The conversion</A> from an Arc to a t_text is
+straightforward. If the Arc is an Id, the literal characters of the
+identifier become the text value. If the Arc is an Integer, the
+literal characters used to represent the integer in the source of the
+model become the text value.  If the Arc is a Text, the result of
+Eval(Arc, C) is used.  As defined in <A HREF="#Bind1Prim">Section
+3.4.5</A>, <CODE>_bind1(<I>id</I>, <I>v</I>)</CODE> evaluates to a
+singleton binding that associates the non-empty t_text <I>id</I> with
+the value <I>v</I>.
+
+<P> The <CODE>$(<I>Expr</I>)</CODE> syntax allows the name introduced
+into a binding to be computed:
+
+<PRE>
+Eval( [ $ ( Expr_1 ) = Expr_2 ] , C) =
+  _bind1(Eval(Expr_1, C), Eval( Expr_2 , C))
+</PRE>
+
+<P> When the field name is computed using the <CODE>$</CODE> syntax,
+an empty string is illegal (see <A HREF="#Bind1Prim">_bind1</A>
+below), and the expression must evaluate to a t_text.
+
+<P> The following rule handles the case where multiple BindElem's are given.
+
+<PRE>
+Eval( [ BindElem_1, ..., BindElem_n ] , C) =
+  _append(Eval( [ BindElem_1 ] , C),
+          Eval( [ BindElem_2, ..., BindElem_n ] , C)
+</PRE>
+
+<P> As defined in <A HREF="#AppendBindPrim">Section 3.4.5</A>,
+<CODE>_append(<I>b1</I>, <I>b2</I>)</CODE>
+evaluates to the concatenation of the bindings <I>b1</I> and
+<I>b2</I>; it requires that their domains are disjoint.
+
+<H4><A NAME="SelectEval">3.3.6</A> <A HREF="#SelectNT">Select</A></H4>
+
+<P> <B>Syntax:</B>
+
+<PRE>
+Select     ::= Primary Selector GenArc
+Selector   ::= Delim | !
+GenArc     ::= Arc | $ Id | $ ( Expr ) | % Expr %
+Arc        ::= Id | Integer | Text
+</PRE>
+
+<P> A Select expression denotes a selection from a binding, so the
+Primary must evaluate to a binding value.
+
+<P> <B>Syntactic Desugarings:</B>
+
+<PRE>
+Primary Selector % Expr %  desugars to  Primary Selector $ ( Expr )
+</PRE>
+
+<P> <B>Evaluation Rules:</B>
+
+<P> The Delim syntax selects a value out of a binding by name.
+
+<PRE>
+Eval( Primary Delim Arc , C) =
+  _lookup(Eval( Primary , C), id)
+</PRE>
+
+<P> Here <I>id</I> is the t_text value of <I>Arc</I>, as 
+defined in <A HREF="#ArcToText">Section 3.3.5</A> above.
+
+<P> The <CODE>$(<I>Expr</I>)</CODE> syntax allows the selected name to
+be computed:
+
+<PRE>
+Eval( Primary Delim $ ( Expr ) , C) =
+  _lookup(Eval( Primary , C), Eval( Expr , C))
+</PRE>
+
+<P> The <CODE>!</CODE> syntax tests whether a name is in a binding's domain:
+
+<PRE>
+Eval( Primary ! Id , C) =
+  _defined(Eval( Primary , C), id),
+</PRE>
+
+<P> As defined in <A HREF="#DefinedPrim">Section 3.4.5</A>,
+<CODE>_defined(<I>b</I>, <I>nm</I>)</CODE> evaluates to <I>true</I> if
+<I>nm</I> is non-empty and in <I>b</I>'s domain, and to <I>false</I>
+otherwise.
+
+<P> As above, the <CODE>$(<I>Expr</I>)</CODE> syntax can be used to
+compute the name:
+
+<PRE>
+Eval( Primary ! $ ( Expr ) , C) =
+  _defined(Eval( Primary , C), Eval( Expr , C))
+</PRE>
+
+<P> In both cases where the GenArc is a computed expression, the Expr
+must evaluate to a t_text.
+
+<H4><A NAME="BlockEval">3.3.7</A> <A HREF="#BlockNT">Block</A></H4>
+
+<P> <B>Syntax:</B>
+
+<PRE>
+Block      ::= `{' Stmt*; Result; `}'
+Stmt       ::= Assign | Iterate | FuncDef | TypeDef
+Result     ::= { value | return } Expr
+</PRE>
+
+<P> <B>Syntactic Desugarings:</B>
+
+<PRE>
+return Expr   desugars to   value Expr
+</PRE>
+
+<P> That is, the keywords <CODE>return</CODE> and <CODE>value</CODE>
+are synonyms, provided for stylistic reasons. The
+<CODE>return</CODE>/<CODE>value</CODE> statement must appear at the
+end of a Block; there is no analog of the C/C++ return statement that
+terminates execution of the function in which it appears.
+
+<P> <B>Evaluation Rules:</B>
+
+<P> Since the Vesta SDL is functional, evaluation of a statement does
+not produce side-effects, but rather produces a binding. Evaluation of
+a block occurs by augmenting the context with the bindings produced by
+evaluating the Stmts, then evaluating the final Expr in the augmented
+context.
+
+<PRE>
+Eval( { value Expr } , C) = Eval( Expr , C)
+
+Eval( { Stmt_1; ...; Stmt_n; value Expr } , C) =
+  Eval( Expr , operator+(C, Eval( { Stmt_1; ...; Stmt_n } , C)))
+</PRE>
+
+<P> Notice that this second rule introduces an argument to Eval in the
+``extended'' language that is not generated by any non-terminal of the
+grammar.
+
+<H4><A NAME="StmtEval">3.3.8</A> <A HREF="#StmtNT">Stmt</A></H4>
+
+<P> <B>Evaluation Rules:</B>
+
+<P> Evaluating a Stmt or sequence of Stmts produces a binding. Note
+that the binding resulting from the evaluation of a sequence of Stmts
+is simply the overlay (operator `+') of the bindings resulting from
+evaluating each Stmt in the sequence, and does not include the context
+<I>C</I>.
+
+<PRE>
+Eval( { } , C) = emptybinding
+
+Eval( { Stmt_1; Stmt_2 ...; Stmt_n } , C) =
+{
+  val b = Eval( Stmt_1 , C);
+  return operator+(b, Eval( { Stmt_2; ...; Stmt_n } , operator+(C, b)))
+}
+</PRE>
+
+<P> These rules apply to constructs in the ``extended''
+language. There are three possibilities for a Stmt:
+<A HREF="#AssignEval">Assign</A>, <A HREF="#IterateEval">Iterate</A>,
+and <A HREF="#FuncDefEval">FuncDef</A>. They are covered in the next
+three sections.
+
+<H4><A NAME="AssignEval">3.3.9</A> <A HREF="#AssignNT">Assign</A></H4>
+
+<P> Since the Vesta SDL is functional, assignments do not produce
+side-effects. Instead, they introduce a new name into the evaluation
+context whose value is that of the given expression.
+
+<P> <B>Syntax:</B>
+
+<PRE>
+Assign     ::= Id [ TypeQual ] [ Op ] = Expr 
+Op         ::= AddOp | MulOp
+AddOp      ::= +  |  ++  |  -
+MulOp      ::= *
+</PRE>
+
+<P> <B>Syntactic Desugarings:</B>
+
+<PRE>
+Id Op = Expr   desugars to   Id = Id Op Expr
+</PRE>
+
+<P> <B>Evaluation Rules:</B>
+
+<PRE>
+Eval( Id = Expr , C) = _bind1(id, Eval( Expr , C))
+</PRE>
+
+<H4><A NAME="IterateEval">3.3.10</A> <A HREF="#IterateNT">Iterate</A></H4>
+
+<P> The language includes expressions for iterating over both lists
+and bindings. There is also a <CODE>_map</CODE> primitive defined on
+lists (<A HREF="#MapListPrim">Section 3.4.4</A>) and bindings
+(<A HREF="#MapBindingPrim">Section 3.4.5</A>). <CODE>_map</CODE> is
+more efficient but less general than the language's Iterate construct.
+
+<P> <B>Syntax:</B>
+
+<PRE>
+Iterate    ::= foreach Control in Expr do IterBody
+Control    ::= Id | `[' Id = Id `]'
+IterBody   ::= Stmt | `{' Stmt+; `}'
+</PRE>
+
+<P> The two Control forms are used to iterate over lists and bindings,
+respectively.
+
+<P> <B>Evaluation Rules:</B>
+
+<PRE>
+// iteration with single-statement body
+Eval( foreach Control in Expr do Stmt , C) =
+  Eval( foreach Control in Expr do { Stmt } , C)
+</PRE>
+
+<P> The semantics of a loop are to conceptually unroll the loop
+<I>n</I> times, where <I>n</I> is the length of the list or binding
+being iterated over.
+
+<PRE>
+// iteration over a list
+Eval( foreach Id in Expr do { Stmt_1; ...; Stmt_n } , C) =
+{
+  val l = Eval( Expr, C);
+  if (_is_list(l) == false) return err;
+  t_text id = Id; // identifier Id as a t_text
+  val r = emptybinding;
+  for (; !(l == emptylist); l = _tail(l)) {
+    val r1 = operator+(C, r);
+    r1 = operator+(r1, _bind1(id, _head(l)));
+    r = operator+(r, Eval( { Stmt_1; ...; Stmt_n } , r1));
+  }
+  return r;
+}
+</PRE>
+
+<P> As defined in <A HREF="#IsListPrim">Section 3.4.6</A>,
+<CODE>_is_list(<I>l</I>)</CODE> is <I>true</I> if <I>l</I> is of type
+t_list, and <I>false</I> otherwise.
+
+<PRE>
+// iteration over a binding
+Eval( foreach [ Id1 = Id2 ] in Expr do { Stmt_1; ...; Stmt_n } , C) =
+{
+  val b = Eval( Expr, C);
+  if (_is_binding(b) == false) return err;
+  t_text id1 = Id1; // identifier Id1 as a t_text
+  t_text id2 = Id2; // identifier Id2 as a t_text
+  val r = emptybinding;
+  for (; !(b == emptybinding); b = _tail(b)) {
+    val r1 = operator+(C, r);
+    r1 = operator+(r1, _bind1(id1, _n(_head(b))));
+    r1 = operator+(r1, _bind1(id2, _v(_head(b))));
+    r = operator+(r, Eval( { Stmt_1; ...; Stmt_n } , r1));
+  }
+  return r;
+}
+</PRE>
+
+<P> As defined in <A HREF="#IsBindingPrim">Section 3.4.6</A>,
+<CODE>_is_binding(<I>b</I>)</CODE> is <I>true</I> if <I>b</I> is of type
+t_binding, and <I>false</I> otherwise.
+
+<P> Note that the iteration variables (that is, <CODE>Id</CODE>,
+<CODE>Id1</CODE>, and <CODE>Id2</CODE> above) are not bound in the
+binding that results from evaluating the <CODE>foreach</CODE>
+statement. However, any assignments made in the loop body <I>are</I>
+included in the result binding.
+
+<P> Iteration statements are typically used to walk over or collect
+parts of a list or binding. For example, here is a function for
+reversing a list:
+
+<PRE>
+  reverse_list(l: list): list
+  {
+    res: list = &lt;&gt;;
+    foreach elt in l do
+      res = &lt;elt&gt; + res;
+    return res;
+  }
+</PRE>
+
+<P> Here is a function that counts the number of leaves of a binding:
+
+<PRE>
+  count_leaves(b: binding): int
+  {
+    res: int = 0;
+    foreach [ nm = val ] in b do
+      res += if _is_binding(val) then count_leaves(val) else 1;
+    return res;
+  }
+</PRE>
+
+<H4><A NAME="FuncDefEval">3.3.11</A> <A HREF="#FuncDefNT">FuncDef</A></H4>
+
+<P> <B>Syntax:</B>
+
+<P> The function definition syntax allows a suffix of the formal
+parameters to have associated default values.
+
+<PRE>
+FuncDef    ::= Id Formals+ [ TypeQual ] Block
+Formals    ::= ( FormalArgs )
+FormalArgs ::= { TypedId*,            		      	      // none defaulted
+             | { TypedId = Expr }*,   		      	      // all defaulted
+             | TypedId { , TypedId }* { , TypedId = Expr }+ } // some defaulted
+</PRE>
+
+<P> Note that the syntax allows multiple <CODE>Formals</CODE> to
+follow the function name. As the rules below describe, the use of
+multiple Formals produces a sequence of curried functions, all but the
+first of which is anonymous.
+
+<P> <B>Evaluation Rules:</B>
+
+<PRE>
+Eval( Id Formals_1 ... Formals_n Block , C) =
+  _bind1(id, Eval( e , C1)),
+  where:
+    e = LAMBDA Formals_1 ... LAMBDA Formals_n Block
+    C1 = operator+(C, _bind1(id, Eval( e , C1)))
+</PRE>
+
+<P> Notice the recursive definition of C1. This permits functions to
+be self-recursive, but not mutually recursive. Although this recursive
+definition looks a little odd, it can be implemented by the evaluator
+by introducing a cycle into the context C1. This is the only case
+where any Vesta value can contain a cycle (the language syntax and
+operators do not allow cyclic lists or bindings to be constructed),
+and the cycle is invisible to clients. There is no practical
+difficulty in constructing the cycle because, as we are about to see,
+the ``evaluation'' of a <CODE>LAMBDA</CODE> is purely syntactic.
+
+<P> Also note that this rule produces a <CODE>LAMBDA</CODE> construct
+in the ``extended'' language that is not generated by any non-terminal
+of the grammar. The following is the simple case of
+<CODE>LAMBDA</CODE>, where all actual parameters must be given in any
+application of the closure. The reason for the restriction on the use
+of "." as a formal parameter is treated below in the section on
+function calls.
+
+<PRE>
+Eval( LAMBDA (Id_1, ..., Id_m)
+      LAMBDA Formals_2 ... LAMBDA Formals_n Block , C) =
+  If any of the Id's is the identifier ".", return err; otherwise,
+  return the t_closure value
+    &lt;LAMBDA Formals_2 ... LAMBDA Formals_n Block, f, C&gt;, where:
+       f is a list of pairs &lt;id_i, &lt;emptyExpr&gt;&gt; where:
+         id_i is the t_text representation of Id_i, for i in [1..m]
+</PRE>
+
+<P> In the typical case where only one set of Formals is specified
+(that is, <I>n</I> = 1), the first element of the resulting closure
+value is simply a Block.
+
+<P> Next is the general case of LAMBDA, in which ``default
+expressions'' are given for a suffix of the formal parameter list.
+Functions may be called with fewer actuals than formals if each formal
+corresponding to an omitted actual includes an expression specifying
+the default value to be computed. When the closure is applied, if an
+actual parameter is missing, its formal's expression is evaluated
+(in the context of the LAMBDA) and passed instead. The following
+<A HREF="#FuncCallEval">FuncCall section</A> defines this precisely.
+
+<PRE>
+Eval( LAMBDA (Id_1, ..., Id_k, Id_k+1 = Expr_k+1, ... Id_m = Expr_m)
+      LAMBDA Formals_2 ... LAMBDA Formals_n Block , C) =
+  If any of the Id's is the identifier ".", return err; otherwise,
+  return the t_closure value
+    &lt;LAMBDA Formals_2 ... LAMBDA Formals_n Block, f, C&gt;, where:
+       f is a list of pairs &lt;id_i, expr_i&gt; where:
+         id_i is the t_text representation of Id_i, for i in [1..m]
+         expr_i is &lt;emptyExpr&gt;, for i in [1..k],
+         expr_i is Expr_i, for i in [k+1..m]
+</PRE>
+
+<H4><A NAME="FuncCallEval">3.3.12</A> <A HREF="#FuncCallNT">FuncCall</A></H4>
+
+<P> <B>Syntax:</B>
+
+<PRE>
+FuncCall   ::= Primary Actuals
+Actuals    ::= ( Expr*, )
+</PRE>
+
+<P> <B>Evaluation Rules:</B>
+
+<P> The function call mechanism provides special treatment for the
+identifier consisting of a single period, called the <I>current
+environment</I> and pronounced ``dot''. Dot is typically assigned a
+binding that contains the tools, switches, and file system required
+for the rest of the build. The initial environment,
+<A HREF="#Eval"><I>C_initial</I></A>, does not bind dot (that is,
+``<CODE>_defined(C_initial, ".") == false</CODE>'').
+
+<P> When a function is called, the context in which its body executes
+may bind "." to a value established as follows:
+<P>
+<UL>
+<LI>
+if the function is defined with <I>n</I> formals and called with
+<I>n</I> or fewer actuals, then the value for "." at the point of call
+is bound to the implicit formal parameter named "." in the callee;
+<P>
+<LI>
+if the function is defined with <I>n</I> formals and called with
+<I>n</I>+1 actuals, then the value bound to the implicit formal
+parameter named "." is the value of the last actual.
+</UL>
+
+<P> Thus, the binding for ".", if any, is passed through the dynamic call
+chain until it is altered either explicitly by an
+<A HREF="#AssignEval">Assign statement</A> or implicitly by calling a
+function with an extra actual parameter. The pseudo-code below makes
+this precise.
+
+<PRE>
+Eval( Primary ( Expr_1, ..., Expr_n ) , C) =
+{
+  val cl = Eval( Primary , C);
+  if (_is_closure(cl) == false) return err;
+
+  // cl.e is the function body, cl.f are the formals, cl.b is the context
+  int m = _length(cl.f);              // number of formals
+  if (n &gt; m + 1) return err;          // too many actuals
+  val C1 = cl.b; 		      // t_binding
+  val f = cl.f;  		      // t_list (of &lt;t, e&gt; pairs)
+
+  // augment C1 to include formals bound to corresponding actuals
+  int i;
+  for (i = 1; i &lt;= m; i++) {
+    val form = _head(f);              // i-th formal (a &lt;t, e&gt; pair)
+    val act;                          // value of corresponding actual
+    if (i &lt;= n)
+      act = Eval( Expr_i , C);        // value for i-th actual
+    else {
+      if (form.e == &lt;emptyExpr&gt;)
+        return err;                   // missing required actual
+      act = Eval( form.e , cl.b);     // value for defaulted argument
+    }
+    C1 = operator+(C1, _bind1(form.t, act));
+    f = _tail(f);
+  }
+
+  // bind "." in C1
+  val dot;
+  if (n &lt;= m)
+    dot = _lookup(C, ".");            // inherit value for "." from C
+  else
+    dot = Eval( Expr_n , C);          // explicit value for last actual
+  C1 = operator+(C1, _bind1(".", dot));
+
+  /* C1 is now a suitable environment.  If the closure is a primitive
+     function, then invoke it by a special mechanism internal to the
+     evaluator and return the value it computes.  Otherwise, perform
+     the following: */
+  return Eval( cl.e , C1);      
+}
+</PRE>
+
+<P> Note: The comparison with &lt;emptyExpr&gt; has not been
+formalized, but it should be intuitively clear.
+
+<H4><A NAME="ModelEval">3.3.13</A> <A HREF="#ModelNT">Model</A></H4>
+
+<P> <B>Syntax:</B>
+
+<PRE>
+Model      ::= Files Imports Block
+</PRE>
+
+<P> <B>Evaluation Rules:</B>
+
+<P> The nonterminal Model is treated like the body of a function
+definition (i.e., like a <A HREF="#FuncDefEval">FuncDef</A>, but without
+the identifier naming the function and with an empty list of formal
+parameters). More precisely:
+
+<PRE>
+Eval( Files Imports Block , C) =
+  Eval( LAMBDA () Block , _append(Eval( Files Imports , emptybinding), C))
+</PRE>
+
+<P> As this rule indicates, the <A HREF="#FilesEval">Files</A> and <A
+HREF="#ImportsEval">Imports</A> constructs are evaluated in an empty
+context, and they augment the closure context in which the model's
+<CODE>LAMBDA</CODE> is evaluated. In practice, the context C will
+always be the initial context C_initial when this rule is applied (cf.
+Sections <A HREF="#Eval">3.3</A> and <A HREF="#ImportsEval">3.3.15</A>).
+
+<P> The Files nonterminal introduces values corresponding to the
+contents of ordinary files and directories. The Imports nonterminal
+introduces closure values corresponding to other Vesta SDL models.
+
+<P> The evaluation rules handle Files and Imports clauses by augmenting
+the context using the _append primitive, thereby ensuring that the names
+introduced by these clauses are all distinct, just as if the
+Files and Imports clauses of the Model were a single binding
+constructor. The Files and Imports clauses are evaluated
+independently:
+
+<PRE>
+Eval( Files Imports , C) =
+  _append(Eval( Files , C), Eval( Imports , C))
+</PRE>
+
+<P> The following two sections give the rules for evaluating Files and
+Imports clauses individually. It is worth noting that the evaluation
+context C is ignored in those rules.
+
+<H4><A NAME="FilesEval">3.3.14</A> <A HREF="#FilesNT">Files</A></H4>
+
+<P> A Files clause introduces names corresponding to files or
+directories in the Vesta repository. Generally, these files or
+directories are named by relative paths, which are interpreted
+relative to the location of the model containing the Files clause.
+Absolute paths are permitted, though they are expected to be rarely
+used.
+
+<P> <B>Syntax:</B>
+
+<PRE>
+Files       ::= FileClause*
+FileClause  ::= files FileItem*;
+FileItem    ::= FileSpec | FileBinding
+FileSpec    ::= [ Arc = ] DelimPath
+FileBinding ::= Arc = `[' FileSpec*, `]'
+
+DelimPath   ::= [ Delim ] Path [ Delim ]
+Path        ::= Arc { Delim Arc }*
+Arc         ::= Id | Integer | Text
+</PRE>
+
+<P> Each FileItem in a Files clause takes one of two forms: a
+FileSpec or a FileBinding. Each form introduces (binds) exactly one
+name. In the former case, the name corresponds to the contents of a
+single file or directory; in the latter case, the name corresponds
+to a binding consisting of perhaps many files or directories. In
+both cases, the identifier introduced into the Vesta naming context
+or the identifiers introduced into the binding can be specified
+explicitly or derived from an <A HREF="#ArcNT">Arc</A> in the
+<A HREF="#PathNT">Path</A>. 
+
+<P> For example, consider the following <CODE>files</CODE> clause:
+<PRE>
+  files
+    scripts = bin;
+    c_files = [ utils.c, main.c ];
+</PRE>
+Suppose the directory containing this model also contains a directory
+named <CODE>bin</CODE> and files named <CODE>utils.c</CODE> and
+<CODE>main.c</CODE>. Then this <CODE>files</CODE> clause introduces
+the two names <CODE>scripts</CODE> and <CODE>c_files</CODE> into the
+context. The former is bound to a binding whose structure corresponds
+to the <CODE>bin</CODE> directory. The latter is bound to a binding
+that maps the names <CODE>utils.c</CODE> and <CODE>main.c</CODE> to
+the contents of those files, respectively. The file contents are
+values of type t_text.
+
+<P> <B>Syntactic Desugaring:</B>
+
+<P> When multiple FileItem's are given in a FileClause, the
+<CODE>files</CODE> keyword simply distributes over each of the
+FileItem's. That is:
+
+<PRE>
+  files FileItem_1; ...; FileItem_n;
+</PRE>
+
+<P> desugars to:
+
+<PRE>
+  files FileItem_1;
+  ...;
+  files FileItem_n;
+</PRE>
+
+<P> When the initial Arc is omitted from a FileSpec, it is inferred
+from the path. In particular:
+
+<PRE>
+  files [ Delim ] { Arc Delim }* Arc [ Delim ];
+</PRE>
+
+<P> desugars to:
+
+<PRE>
+  files Arc = [ Delim ] { Arc Delim }* Arc [ Delim ];
+</PRE>
+
+<P> <B>Evaluation Rules:</B>
+
+<P> Multiple FileClause's are evaluated independently:
+
+<PRE>
+Eval( FileClause_0 FileClause_1 ... FileClause_n , C) =
+  _append(Eval( FileClause_0 , C), Eval( FileClause_1 ... FileClause_n , C))
+</PRE>
+
+<P> That leaves only two cases to consider: FileSpec (in which the
+initial Arc is specified) and FileBinding.
+
+<PRE>
+// <A NAME="FileSpecEval">FileSpec</A>
+Eval( files Arc = DelimPath , C) = _bind1(id, v)
+</PRE>
+where:
+<UL>
+<LI>
+<I>id</I> is the t_text representation of <I>Arc</I>, as defined in
+<A HREF="#ArcToText">Section 3.3.5</A> above.
+<P>
+<LI>
+If <I>DelimPath</I> begins with a Delim, it is interpreted as an
+absolute path, which must nevertheless resolve to a file
+or directory in the Vesta repository. If <I>DelimPath</I>
+does not begin with a Delim, it refers to a file or
+directory named relative to the directory of the enclosing
+Model.
+<P>
+<LI>
+If the entity named by <I>DelimPath</I> is a file, <I>v</I> is a
+t_text value formed by taking the file's contents.  If <I>DelimPath</I>
+names a directory, <I>v</I> is a t_binding value constructed
+from the contents of the the directory, treating the files
+(if any) in the directory as above (i.e., as t_text
+values) and the directories (if any) recursively (i.e.,
+as bindings). The members of the resulting binding are
+in an unspecified order.  If <I>DelimPath</I> does not
+correspond to either an extant file or directory, <I>v</I>
+is the value <I>err</I>.
+</UL>
+
+<PRE>
+// <A NAME="FileBindingEval">FileBinding</A>
+Eval( files Arc = [ FileSpec_1, ..., FileSpec_n ] , C) =
+  _bind1(id, Eval( files FileSpec_1; ...; FileSpec_n , C))
+</PRE>
+
+<P> Again, <I>id</I> is the t_text representation of <I>Arc</I>.
+
+<P> The <A HREF="#FileBindingNT">FileBinding</A> form of the Files
+clause provides a convenient way to create a binding containing multiple
+<A HREF="#FileSpecNT">FileSpecs</A>.
+Without this construct, it would be necessary to name each file
+twice, once in the FileSpec and once in a subsequent binding
+constructor. Making a binding with FileBinding is semantically
+similar to constructing a file system directory, with the
+additional property that there is an enumeration order for the
+component files.
+
+<P> Notice that the grammar and evaluation rules given above 
+for <I>FileSpec</I> and <I>FileBinding</I> allow a general <A
+NAME="ArcLeft">Arc on the left-hand side</A> of each equal sign, not
+just an Id.  This was done to simplify the definitions and desugaring
+rules.  However, it would be useless to write constructs like the
+following, which introduce names that cannot be referenced in the body
+of the model:
+
+<PRE>
+files 
+    33;
+    34 = 34;
+    "hash-table.c";
+    "foo bar" = [ foo, bar ];
+</PRE>
+
+<P> Therefore, we introduce an additional restriction: the context
+created by a Files clause must bind only names that are legal
+identifiers; that is, names that match the syntax of the <A
+HREF="#IdNT">Id</A> token.
+
+<P> If you need to use files whose names are not legal
+identifiers, you should either assign them legal names with the 
+equal sign syntax or embed them in a binding.  Some possibilities:
+
+<PRE>
+// Choose a legal name
+files 
+    f33 = 33;
+    f34 = 34;
+    hash_table.c = "hash-table.c";
+    foo_bar = [ foo, bar ]; 
+</PRE><PRE>
+// Embed in a binding
+files
+    f = [ 33, 34 ];
+    src = [ "hash-table.c" ];
+</PRE>
+
+<H4><A NAME="ImportsEval">3.3.15</A> <A HREF="#ImportsNT">Imports</A></H4>
+
+<P> The Imports clause enables one Vesta SDL model to reference and
+use others; that is, it supports modular decomposition of Vesta SDL
+programs.
+
+<P> <B>Syntax:</B>
+
+<PRE>
+Imports   ::= ImpClause*
+ImpClause  ::= ImpIdReq | ImpIdOpt
+</PRE>
+
+<P> There are two major forms of the Imports clause: one
+where identifiers are required (ImpIdReq), and one where they are
+optional (ImpIdOpt). Both forms have two sub-forms in which either a
+single model or a list of models may be imported.
+
+<P> First, consider the ImpIdReq case. This form is typically used to
+import models in the same package as the importing model.
+Each ImpItemR in the ImpIdReq clause takes one of two forms: an
+ImpSpecR or an ImpListR. Each form binds exactly one name.
+
+<PRE>
+ImpIdReq   ::= import ImpItemR*;
+ImpItemR   ::= ImpSpecR | ImpListR
+ImpSpecR   ::= Arc = DelimPath
+ImpListR   ::= Arc = `[' ImpSpecR*, `]'
+
+DelimPath  ::= [ Delim ] Path [ Delim ]
+Path       ::= Arc { Delim Arc }*
+Arc        ::= Id | Integer | Text
+</PRE>
+
+<P> In the ImpSpecR case, the name is bound to the t_closure value that
+results from evaluation of the contents of a file according to the
+Model evaluation rules of <A HREF="#ModelEval">Section 3.3.13</A>. For
+example, consider the Import clause:
+<PRE>
+  import self = progs.ves;
+</PRE>
+This clause binds the name <CODE>self</CODE> to the closure
+corresponding to the local <CODE>progs.ves</CODE> model in the same
+directory as the model in which it appears.
+
+<P> In the ImpList case, the name is bound to a binding of such
+values. For example:
+<PRE>
+  import sub =
+    [ progs = src/progs.ves, tests = src/tests.ves ];
+</PRE>
+This clause binds the name <CODE>sub</CODE> to a binding
+containing the names <CODE>progs</CODE> and <CODE>tests</CODE>; these
+names within the binding are bound to the closures corresponding to
+the models named <CODE>progs.ves</CODE> and <CODE>tests.ves</CODE> in
+the package's <CODE>src</CODE> subdirectory. For example, the
+<CODE>progs.ves</CODE> model would be invoked by the expression
+``<CODE>sub/progs()</CODE>''.
+
+<P> Because the Imports clause often mentions several files with
+names that share a common prefix, a syntactic form is provided to
+allow the prefix to be written once. This is the ImpIdOpt form. It is
+used to import models from other packages. The semantics are defined
+so that many identifiers are optional; when omitted, they default to
+the name of the package from which the model is being imported. As in
+the ImpIdReq case, ImpIdOpt has forms for importing both single models
+and lists of multiple models.
+
+<PRE>
+ImpIdOpt   ::= from DelimPath import ImpItemO*;
+ImpItemO   ::= ImpSpecO | ImpListO
+ImpSpecO   ::= [ Arc = ] Path [ Delim ]
+ImpListO   ::= Arc = `[' ImpSpecO*, `]'
+</PRE>
+
+<P> Here are some examples of ImpIdOpt imports:
+<PRE>
+  from /vesta/src.dec.com/vesta import
+    cache/12/build.ves;
+    libs = [ srpc/2/build.ves, basics/5/build.ves ];
+</PRE>
+This example binds the name <CODE>cache</CODE> to the closure
+corresponding to version 12 of that package's <CODE>build.ves</CODE>
+model, and it binds the name <CODE>libs</CODE> to a binding containing
+the names <CODE>srpc</CODE> and <CODE>basics</CODE>, bound to versions
+2 and 5 of those package's <CODE>build.ves</CODE> models. (As the 
+evaluation rules below describe, the three occurrences of
+``<CODE>/build.ves</CODE>'' in this example could actually have been
+omitted.)
+
+<P> <B>Syntactic Desugaring:</B>
+
+<P> When multiple ImpItemR's are given in a ImpIdReq, the
+<CODE>import</CODE> keyword distributes over each of the ImpItemR's.
+That is:
+
+<PRE>
+  import ImpSpec_1; ...; ImpSpec_n;
+</PRE>
+
+desugars to:
+
+<PRE>
+  import ImpSpec_1;
+  ...;
+  import ImpSpec_n;
+</PRE>
+
+<P> Similarly, the <CODE>from</CODE> clause distributes over the
+individual imports of an ImpIdOpt. In particular:
+
+<PRE>
+  from DelimPath import ImpItemO_1; ...; ImpItemO_n;
+</PRE>
+
+desugars to:
+
+<PRE>
+  from DelimPath import ImpItemO_1;
+  ...;
+  from DelimPath import ImpItemO_n;
+</PRE>
+
+<P> The use of <CODE>from</CODE> makes it optional to supply a name
+for the closure value being introduced; if the name is omitted, it is
+derived from the Path following the <CODE>import</CODE> keyword as
+follows:
+
+<PRE>
+  from DelimPath import
+    [ Arc_1 = ] [ Delim ] Arc_2 { Delim Arc }* [ Delim ]
+</PRE>
+
+<P> desugars to:
+
+<PRE>
+  import Arc =
+    DelimPath Delim Arc_2 { Delim Arc }* [ Delim ]
+</PRE>
+
+where <I>Arc</I> is <I>Arc_1</I> if it is present and is <I>Arc_2</I>
+otherwise.
+
+<P> Similarly:
+
+<PRE>
+  from DelimPath import Arc = [
+    [ Arc1_1 = ] [ Delim ] Arc2_1 { Delim Arc }* [ Delim ],
+    ...,
+    [ Arc1_n = ] [ Delim ] Arc2_n { Delim Arc }* [ Delim ] ]
+</PRE>
+
+desugars to:
+
+<PRE>
+  import Arc = [
+    Arc_1 = DelimPath Delim Arc2_1 {Delim Arc }* [ Delim ],
+    ...,
+    Arc_n = DelimPath Delim Arc2_n {Delim Arc }* [ Delim ] ]
+</PRE>
+
+where <I>Arc_i</I> is <I>Arc1_i</I> if it is present and is
+<I>Arc2_i</I> otherwise.
+
+<P> <B>Evaluation Rules:</B>
+
+<P> Multiple ImpClause's are evaluated independently:
+
+<PRE>
+Eval( ImpClause_0 ImpClause_1 ... ImpClause_n , C) =
+  _append(Eval( ImpClause_0 , C), Eval( ImpClause_1 ... ImpClause_n , C))
+</PRE>
+
+<P> This leaves two fundamental forms of the Imports clause, whose
+semantics are defined as follows:
+
+<PRE>
+// <A NAME="ImpSpecREval">ImpSpecR</A>
+Eval( import Arc = DelimPath , C) =
+  _bind1(id, Eval( model , C_initial))
+</PRE>
+
+where:
+<UL>
+<LI>
+<I>id</I> is the t_text representation of <I>Arc</I>, as
+defined in <A HREF="#ArcToText">Section 3.3.5</A> above.
+<P>
+<LI>
+Let <I>f</I> be the sequence of Delims and Arcs that constitute
+the DelimPath.
+<OL>
+<LI>
+If <I>f</I> does not begin with a Delim, prepend ``<CODE>Delim Path0
+Delim</CODE>'' to <I>f</I>, where <I>Path0</I> names the directory
+containing the Model in which this Imports clause appears.
+<LI>
+Lookup the path <I>f</I> in the Vesta repository. (See
+<A HREF="#FilenameEval">Filename Interpretation</A> below.)
+If <I>f</I> names a directory, append a Delim (if <I>f</I> doesn't
+already end in one) and the string "<CODE>build.ves</CODE>", then
+lookup the augmented path <I>f</I> in the repository again. If
+<I>f</I> does not name a directory and its final element
+does not end in "<CODE>.ves</CODE>", append the string "<CODE>.ves</CODE>"
+to the final element of <I>f</I>, and look it up in the repository again.
+</OL>
+<P>
+<LI>
+<I>model</I> is the Vesta SDL Model represented by the contents of the
+file in the Vesta repository named by the sequence <I>f</I>. If no such
+expression can be produced (e.g., the file doesn't exist, or can't
+be parsed as an expression), <I>model</I> is the expression
+<CODE>ERR</CODE>.
+</UL>
+
+<PRE>
+// <A NAME="ImpListREval">ImpListR</A>
+Eval( import Arc = [ ImpSpecR_1, ..., ImpSpecR_n ] , C) =
+  _bind1(id, Eval( import ImpSpecR_1; ...; ImpSpecR_n , C))
+</PRE>
+
+<P> Again, <I>id</I> is the t_text representation of <I>Arc</I>.
+
+<P> As with the Files clause, and for the same <A
+HREF="#ArcLeft">reason</A>, we add one restriction to the rules just
+given: the context created by an Imports clause must bind only names
+that are legal identifiers; that is, names that match the syntax of
+the <A HREF="#IdNT">Id</A> token.
+
+<H4><A NAME="FilenameEval">3.3.16</A>
+<A HREF="#DelimPathNT">Filename Interpretation</A></H4>
+
+<P> The evaluation rules for the <A HREF="#FilesNT">Files</A> and <A
+HREF="#ImportsNT">Imports</A> clauses do not specify how the sequence
+of Arcs and Delims making up a DelimPath is converted into a filename
+in the underlying file system. While this is somewhat
+system-dependent, it is nevertheless intended to be intuitive. In
+particular,
+
+<P><UL>
+<LI> Multiple adjacent Delims are replaced by a single
+one. (The grammar above doesn't permit adjacent Delims, but they can
+be produced by the desugaring rules.)<P>
+
+<LI> The Vesta SDL syntax allows the arbitrary intermingling of
+``<CODE>/</CODE>'' and ``<CODE>\</CODE>'' as arc separators. However,
+the implementation actually requires that Vesta programs use one or
+the other uniformly. When creating a filename from a sequence of Arcs
+and Delims, the implementation inserts the appropriate arc separator
+required by the underlying file system. The choice is not influenced
+by the choice of Delim that appears in the Vesta SDL program.<P>
+
+<LI> The grammar permits an Arc to be an arbitrary Text.  An Arc in a
+filename, however, is forbidden to contain a Delim character (i.e.,
+forward or backward slash), and the Arcs ``<CODE>..</CODE>'' and
+``<CODE>.</CODE>'' are forbidden in filenames as well.  In particular,
+``<CODE>..</CODE>'' cannot be used to mean <I>parent directory</I> and
+``<CODE>.</CODE>'' cannot be used to mean <I>current directory</I>.
+The ``<CODE>..</CODE>'' notation is forbidden for technical reasons
+related to Vesta caching, while the ``<CODE>.</CODE>'' notation is
+simply unimplemented.  However, the empty Arc ``'' can be used to
+denote the current directory.  </UL>
+
+<H3><A NAME="Primitives">3.4 Primitives</A></H3>
+
+<P> The primitive names and associated values described below are
+provided by the Vesta SDL interpreter in <I>C_initial</I>, the initial
+context. Most of these values are closures with empty contexts; that
+is, they are primitive functions.
+
+<P> In the descriptions that follow, the notation used for the
+function signatures follows C++, with the result type preceding the
+function name and each argument type preceding the corresponding
+argument name. Defaulting conventions also follow C++; if an argument
+name is followed by "<CODE>= &lt;value&gt;</CODE>", then omitting the
+corresponding actual argument is equivalent to supplying
+&lt;value&gt;.
+
+<P> Some of the function signatures use the C++ operator
+definition syntax, which should be understood as defining a function
+whose name is not an Id in the sense of the grammar above. Such
+operator names cannot be rebound. These operators are typically
+overloaded, as the descriptions below indicate. Uses of these built-in
+Vesta primitives within C++ code are denoted by the
+<CODE>operator</CODE> syntax.
+
+<P> The pseudo-code of this section assumes the definition of the
+Vesta value class given at the start of <A HREF="#Eval">Section
+3.3</A>. Invocation of a Vesta operator primitive within the
+pseudo-code is denoted by the <CODE>operator</CODE> syntax. All other
+operators appearing in the pseudo-code denote the C++ operators.
+
+<P> In these descriptions, the argument types represent the natural
+domain; the result type is the natural range. In reality, all
+functions accept arguments of any type, producing <I>err</I> for arguments
+that lie outside the natural domain. For this reason, a function whose
+specified (natural) result is of type T has an actual result of type
+<CODE>U(T, t_err)</CODE>.
+
+<P> Type-checking occurs when primitive functions are called, not
+before.
+
+<H4><A NAME="BoolPrim">3.4.1 Functions on Type <CODE>t_bool</CODE></A></H4>
+
+<P> Recall that <I>true</I> and <I>false</I> are Vesta values, not
+C++ quantities.
+
+<PRE>
+t_bool
+operator==(t_bool b1, t_bool b2)
+</PRE>
+<BLOCKQUOTE>
+Returns <I>true</I> if <I>b1</I> and <I>b2</I> are the same, and
+<I>false</I> otherwise.
+</BLOCKQUOTE>
+
+<PRE>
+t_bool
+operator!=(t_bool b1, t_bool b2)
+  operator!(operator==(b1, b2))
+</PRE>
+
+<PRE>
+t_bool
+operator!(t_bool b) =
+{
+  int ib = b; // convert to C++ integer
+  if (ib) return false; else return true;
+}
+</PRE>
+
+<H4><A NAME="IntPrim">3.4.2 Functions on Type <CODE>t_int</CODE></A></H4>
+
+<PRE>
+t_bool
+operator==(t_int i1, t_int i2)
+</PRE>
+<BLOCKQUOTE>
+Returns <I>true</I> if <I>i1</I> and <I>i2</I> are equal, and
+<I>false</I> otherwise.
+</BLOCKQUOTE>
+
+<PRE>
+t_bool
+operator!=(t_int i1, t_int i2) =
+  operator!(operator==(i1, i2))
+</PRE>
+
+<PRE>
+t_int
+operator+(t_int i1, t_int i2)
+</PRE>
+<BLOCKQUOTE>
+Returns the integer sum <I>i1</I> + <I>i2</I> unless it lies outside the
+implementation-defined range, in which case <I>err</I> is returned.
+</BLOCKQUOTE>
+
+<PRE>
+t_int
+operator-(t_int i1, t_int i2)
+</PRE>
+<BLOCKQUOTE>
+Returns the integer difference <I>i1</I> - <I>i2</I> unless it lies
+outside the implementation-defined range, in which case <I>err</I> is
+returned.
+</BLOCKQUOTE>
+
+<PRE>
+t_int
+operator-(t_int i) =
+  operator-(0, i)
+</PRE>
+
+<PRE>
+t_int
+operator*(t_int i1, t_int i2)
+</PRE>
+<BLOCKQUOTE>
+Returns the integer product <I>i1</I> * <I>i2</I> unless it lies outside the
+implementation-defined range, in which case <I>err</I> is returned.
+</BLOCKQUOTE>
+
+<PRE>
+t_int
+_div(t_int i1, t_int i2)
+</PRE>
+<BLOCKQUOTE>
+Returns the integer quotient <I>i1</I> / <I>i2</I> (that is, the floor
+of the real quotient) unless it lies outside the
+implementation-defined range, in which case <I>err</I> is returned.
+(<I>err</I> is possible only if <I>i2</I> is zero or if <I>i2</I> is
+-1 and <I>i1</I> is the largest implementation-defined negative
+number.)
+</BLOCKQUOTE>
+
+<PRE>
+t_int
+_mod(t_int i1, t_int i2) =
+  operator-(i1, operator*(_div(i1,i2), i2))
+</PRE>
+
+<PRE>
+t_bool
+operator&lt;(t_int i1, t_int i2) =
+{
+  int ii1 = i1, ii2 = i2; // convert to C++ integers
+  if (ii1 &lt; ii2) return true; else return false;
+}
+</PRE>
+
+<PRE>
+t_bool
+operator&gt;(t_int i1, t_int i2) =
+  operator&lt;(i2, i1)
+</PRE>
+
+<PRE>
+t_bool
+operator&lt;=(t_int i1, t_int i2) =
+{
+  int ii1 = i1, ii2 = i2; // convert to C++ integers
+  if (ii1 &lt;= ii2) return true; else return false;
+}
+</PRE>
+
+<PRE>
+t_bool
+operator&gt;=(t_int i1, t_int i2) =
+  operator&lt;=(i2, i1)
+</PRE>
+
+<PRE>
+t_int
+_min(t_int i1, t_int i2) =
+{ if (operator&lt;(i1, i2)) return i1; else return i2; }
+</PRE>
+
+<PRE>
+t_int
+_max(t_int i1, t_int i2) =
+{ if (operator&gt;(i1, i2)) return i1; else return i2; }
+</PRE>
+
+<H4><A NAME="TextPrim">3.4.3 Functions on Type <CODE>t_text</CODE></A></H4>
+
+<P> The first byte of a t_text value has index 0.
+
+<PRE>
+t_bool
+operator==(t_text t1, t_text t2)
+</PRE>
+<BLOCKQUOTE>
+Returns <I>true</I> if <I>t1</I> and <I>t2</I> are identical byte
+sequences, and <I>false</I> otherwise.
+</BLOCKQUOTE>
+
+<PRE>
+t_bool
+operator!=(t_text t1, t_text t2) =
+  operator!(operator==(t1, t2))
+</PRE>
+
+<PRE>
+t_text
+operator+(t_text t1, t_text t2)
+</PRE>
+<BLOCKQUOTE>
+Returns the byte sequence formed by appending the byte sequence <I>t2</I>
+to the byte sequence <I>t1</I> (concatenation).
+</BLOCKQUOTE>
+
+<PRE>
+t_int
+_length(t_text t)
+</PRE>
+<BLOCKQUOTE>
+Returns the number of bytes in the byte sequence <I>t</I>.
+</BLOCKQUOTE>
+
+<PRE>
+t_text
+_elem(t_text t, t_int i)
+</PRE>
+<BLOCKQUOTE>
+If <CODE>0 &lt;= <I>i</I> &lt; _length(<I>t</I>)</CODE>,
+returns a byte sequence of length 1 consisting of byte <I>i</I>
+ of the byte sequence <I>t</I>.  Otherwise, returns the empty byte
+sequence.
+</BLOCKQUOTE>
+
+<PRE>
+t_text
+_sub(t_text t, t_int start = 0, t_int len = _length(t)) =
+{
+  int w = _length(t);
+  int i = _min(_max(start, 0)), w);
+  int j = _min(i + _max(len, 0), w);
+  // 0 &lt;= i &lt;= j &lt;= _length(t); extract [i..j)
+  t_text r = "";
+  for (; i &lt; j; i++) r = operator+(r, _elem(t, i));
+  return r;
+}
+</PRE>
+<BLOCKQUOTE>
+Extracts from <I>t</I> and returns a byte sequence of length <I>len</I>
+beginning at byte <I>start</I>. Note the boundary cases defined by
+the pseudo-code; <CODE>_sub</CODE> produces <I>err</I> only if it
+is passed arguments of the wrong type.
+</BLOCKQUOTE>
+
+<PRE>
+t_int
+_find(t_text t, t_text p, t_int start = 0) =
+{
+  int j = _length(t) - _length(p);
+  if (j &lt; 0) return -1;
+  int i = _max(start, 0);
+  if (i &gt; j) return -1;
+  for (; i &lt;= j; i++) {
+    int k = 0;
+    while (k &lt; _length(p) && _elem(t, i+k) == _elem(p, k)) k++;
+    if (k == _length(p)) return i;
+  }
+  return -1;
+}
+</PRE>
+<BLOCKQUOTE>
+Finds the leftmost occurrence of <I>p</I> in <I>t</I> that begins at or
+after position <I>start</I>.  Returns the index of the first byte
+of the occurrence, or -1 if none exists.
+</BLOCKQUOTE>
+
+<PRE>
+t_int
+_findr(t_text t, t_text p, t_int start = 0) =
+{
+  int j = _length(t) - _length(p);
+  if (j &lt; 0) return -1;
+  int i = _max(start, 0);
+  if (i &gt; j) return -1;
+  for (; i &lt;= j; j--) {
+    int k = 0;
+    while (k &lt; _length(p) && _elem(t, j+k) == _elem(p, k)) k++;
+    if (k == _length(p)) return j;
+  }
+  return -1;
+}
+</PRE>
+<BLOCKQUOTE>
+Finds the rightmost occurrence of <I>p</I> in <I>t</I> that begins at or
+after position <I>start</I>.  Returns the index of the first byte
+of the occurrence, or -1 if none exists.
+</BLOCKQUOTE>
+
+<H4><A NAME="ListPrim">3.4.4 Functions on Type <CODE>t_list</CODE></A></H4>
+
+<PRE>
+t_bool
+operator==(t_list l1, t_list l2)
+</PRE>
+<BLOCKQUOTE>
+Returns <I>true</I> if <I>l1</I> and <I>l2</I> are lists of the same
+length containing (recursively) equal values, and <I>false</I> otherwise.
+</BLOCKQUOTE>
+
+<PRE>
+t_bool
+operator!=(t_list l1, t_list l2) =
+  operator!(operator==(l1, l2))
+</PRE>
+
+<PRE>
+<A NAME="List1Prim">t_list</A>
+_list1(t_value v)
+</PRE>
+<BLOCKQUOTE>
+Returns a list containing a single element whose value is <I>v</I>.
+</BLOCKQUOTE>
+
+<PRE>
+t_value
+_head(t_list l)
+</PRE>
+<BLOCKQUOTE>
+Returns the first element of <I>l</I>.
+If <I>l</I> is empty, returns <I>err</I>.
+</BLOCKQUOTE>
+
+<PRE>
+t_list
+_tail(t_list l)
+</PRE>
+<BLOCKQUOTE>
+Returns the list consisting of all elements of <I>l</I>, in order,
+except the first.  If <I>l</I> is empty, returns <I>err</I>.
+</BLOCKQUOTE>
+
+<PRE>
+t_int
+_length(t_list l)
+</PRE>
+<BLOCKQUOTE>
+Returns the number of (top-level) values in the list <I>l</I>.
+</BLOCKQUOTE>
+
+<PRE>
+t_value
+_elem(t_list l, t_int i)
+</PRE>
+<BLOCKQUOTE>
+Returns the <I>i</I>-th value in the list <I>l</I>, or
+<I>err</I> if no such value exists. The first value of a list has
+index 0.
+</BLOCKQUOTE>
+
+<PRE>
+t_list
+operator+(t_list l1, t_list l2)
+</PRE>
+<BLOCKQUOTE>
+Returns the list formed by appending <I>l2</I> to <I>l1</I>.
+</BLOCKQUOTE>
+
+<PRE>
+<A NAME="SubListPrim">t_list</A>
+_sub(t_list l, t_int start = 0, t_int len = _length(l))
+{
+  int w = _length(l);
+  int i = _min(_max(start, 0)), w);
+  int j = _min(i + _max(len, 0), w);
+  // 0 &lt;= i &lt;= j &lt;= _length(l); extract [i..j)
+  t_list r = emptylist;
+  for (; i &lt; j; i++) r = operator+(r, _elem(l, i));
+  return r;
+}
+</PRE>
+<BLOCKQUOTE>
+Returns the sub-list of <I>l</I> of length <I>len</I> starting at
+element <I>start</I>. Note the boundary cases defined by
+the pseudo-code; <CODE>_sub</CODE> produces <I>err</I> only if it
+is passed arguments of the wrong type.
+</BLOCKQUOTE>
+
+<PRE>
+<A NAME="MapListPrim">t_list</A>
+_map(t_closure f, t_list l) =
+{
+  t_list res = emptylist;
+  for (; !(l == emptylist); l = _tail(l)) {
+    t_value v = f(_head(l)); // apply the closure "f"
+    if (res == err || v == err) res = err;
+    else res = operator+(res, v);
+  }
+  return res;
+}
+</PRE>
+<BLOCKQUOTE>
+Returns the list that results from applying the closure <I>f</I> to each
+element of the list <I>l</I>, and concatenating the results in order.
+The closure <I>f</I> should take one value (of type t_value) as
+argument and return a value of any type. If <I>f</I> has the wrong
+signature or if any evaluation of <I>f</I> returns <I>err</I>, then
+<CODE>_map</CODE> returns <I>err</I>. However, <I>f</I> will be
+applied to every element of the list, even if one of its evaluations
+produces <I>err</I>.
+</BLOCKQUOTE>
+
+<PRE>
+<A NAME="ParMapListPrim">t_list</A>
+_par_map(t_closure f, t_list l)
+</PRE>
+<BLOCKQUOTE>
+Formally equivalent to <CODE>_map</CODE>, but the implementation
+may perform each application of <I>f</I> in a separate parallel thread.
+External tools invoked by <CODE>_run_tool</CODE> in different threads
+may be run simultaneously on different machines.
+</BLOCKQUOTE>
+
+<H4><A NAME="BindingPrim"
+>3.4.5 Functions on type <CODE>t_binding</CODE></A></H4>
+
+<PRE>
+t_bool
+operator==(t_binding b1, t_binding b2)
+</PRE>
+<BLOCKQUOTE>
+Returns <I>true</I> if <I>b1</I> and <I>b2</I> are bindings of the same
+length containing the same names (in order) bound to (recursively)
+equal values, and <I>false</I> otherwise.
+</BLOCKQUOTE>
+
+<PRE>
+t_bool
+operator!=(t_binding b1, t_binding b2) =
+  operator!(operator==(b1, b2))
+</PRE>
+
+<PRE>
+<A NAME="Bind1Prim">t_binding</A>
+_bind1(t_text n, t_value v)
+</PRE>
+<BLOCKQUOTE>
+If <I>n</I> is empty, returns <I>err</I>.  Otherwise, returns a binding with
+the single &lt;name, value&gt; pair &lt;<I>n</I>, <I>v</I>&gt;. Note
+that <I>v</I> may be any value, including <I>err</I>.
+</BLOCKQUOTE>
+
+<PRE>
+t_binding
+_head(t_binding b)
+</PRE>
+<BLOCKQUOTE>
+Returns a binding with one &lt;name, value&gt; pair equal to the first
+element of <I>b</I>.  If <I>b</I> is empty, returns <I>err</I>.
+</BLOCKQUOTE>
+
+<PRE>
+t_binding
+_tail(t_binding b)
+</PRE>
+<BLOCKQUOTE>
+Returns the binding consisting of all elements of <I>b</I>, in order,
+except the first.  If <I>b</I> is empty, returns <I>err</I>.
+</BLOCKQUOTE>
+
+<PRE>
+t_int
+_length(t_binding b)
+</PRE>
+<BLOCKQUOTE>
+Returns the number of &lt;name, value&gt; pairs in <I>b</I>.
+</BLOCKQUOTE>
+
+<PRE>
+t_binding
+_elem(t_binding b, t_int i)
+</PRE>
+<BLOCKQUOTE>
+Returns a binding consisting solely of the <I>i</I>-th
+&lt;name, value&gt; pair in the binding <I>b</I>, or <I>err</I> if no
+such pair exists. The first pair of a binding has index 0.
+</BLOCKQUOTE>
+
+<PRE>
+t_text
+_n(t_binding b)
+</PRE>
+<BLOCKQUOTE>
+If <CODE>_length(b) = 1</CODE>, returns the name part of the
+&lt;name, value&gt; pair that constitutes <I>b</I>.  Otherwise,
+returns <I>err</I>.
+</BLOCKQUOTE>
+
+<PRE>
+t_value
+_v(t_binding b)
+</PRE>
+<BLOCKQUOTE>
+If <CODE>_length(<I>b</I>)</CODE> differs from 1, returns <I>err</I>.
+Otherwise, let <I>v</I> be the value part of the &lt;name, value&gt;
+pair that constitutes <I>b</I>. This function returns <I>v</I>. (Note
+that a result value of <I>err</I> does not imply that
+<CODE>_length(<I>b</I>)</CODE> differs from 1, since
+<I>v</I> may be the value <I>err</I>.)
+</BLOCKQUOTE>
+
+<PRE>
+<A NAME="DefinedPrim">t_bool</A>
+_defined(t_binding b, t_text name)
+</PRE>
+<BLOCKQUOTE>
+If <I>name</I> is empty, returns <I>err</I>.  Otherwise, returns
+<I>true</I> if the binding <I>b</I> contains a pair &lt;n, v&gt; with
+<I>n</I> identical to <I>name</I>, and <I>false</I> otherwise.
+</BLOCKQUOTE>
+
+<PRE>
+<A NAME="LookupPrim">t_value</A>
+_lookup(t_binding b, t_text name)
+</PRE>
+<BLOCKQUOTE>
+If <I>name</I> is empty, returns <I>err</I>.  If <I>name</I> is
+defined in <I>b</I>, returns the value associated with it; otherwise,
+returns <I>err</I>.  Note that the value associated with <I>name</I>
+may be of any type, including t_err, so a result of <I>err</I> does
+not necessarily imply that <CODE>_defined(<I>b</I>,
+<I>name</I>)</CODE> is <I>false</I>.
+</BLOCKQUOTE>
+
+<PRE>
+<A NAME="AppendBindPrim">t_binding</A>
+_append(t_binding b1, t_binding b2)
+</PRE>
+<BLOCKQUOTE>
+Returns a binding formed by appending <I>b2</I> to <I>b1</I>, but only
+if all the names in <I>b1</I> and <I>b2</I> are distinct.  Otherwise,
+returns <I>err</I>.
+</BLOCKQUOTE>
+
+<PRE>
+<A NAME="PlusBindingPrim">t_binding</A>
+operator+(t_binding b1, t_binding b2) =
+{
+  val r = emptybinding;
+  for (; !(b1 == emptybinding); b1 = _tail(b1)) {
+    val n = _n(_head(b1));
+    val v;
+    if (_defined(b2, n) == true)
+      v = _lookup(b2, n);
+    else v = _v(_head(b1));
+    r = _append(r, _bind1(n, v));
+  }
+  for (; !(b2 == emptybinding); b2 = _tail(b2)) {
+    if (_defined(b1, _n(_head(b2)) == false)
+      r = _append(r, _head(b2));
+  }
+  return r;
+}
+</PRE>
+<BLOCKQUOTE>
+Returns a binding formed by appending <I>b2</I> to <I>b1</I>, giving
+precedence to <I>b2</I> when both <I>b1</I> and <I>b2</I> contain
+&lt;name, value&gt; pairs with the same <I>name</I>. 
+</BLOCKQUOTE>
+
+<PRE>
+t_binding
+operator++(t_binding b1, t_binding b2) =
+{
+  val r = emptybinding;
+  for (; !(b1 == emptybinding); b1 = _tail(b1)) {
+    val n = _n(_head(b1));
+    val v;
+    if (_defined(b2, n) == true) {
+      val v2 = _lookup(b2, n);
+      if (_is_binding(v2) == true) {
+        v = _v(_head(b1);
+        if (_is_binding(v) == true)
+          v = operator++(v, v2);
+        else v = v2;
+      }
+      else v = v2;
+    }
+    else v = _v(_head(b1));
+    r = _append(r, _bind1(n, v));
+  }
+  for (; !(b2 == emptybinding); b2 = _tail(b2)) {
+    if (_defined(r, _n(_head(b2)) == false)
+      r = _append(r, _head(b2));
+  }
+  return r;
+}
+</PRE>
+<BLOCKQUOTE>
+Similar to operator+, but performs the operation recursively for each
+name <I>n</I> for which both <CODE>_isbinding(_lookup(b1,
+<I>n</I>))</CODE> and <CODE>_isbinding(_lookup(b2, <I>n</I>))</CODE>
+are true.
+</BLOCKQUOTE>
+
+<PRE>
+<A NAME="MinusBindingPrim">t_binding</A>
+operator-(t_binding b1, t_binding b2) =
+{
+  val r = emptybinding;
+  for (; !(b1 = emptybinding); b1 = _tail(b1)) {
+    val n = _n(_head(b1));
+    if (_defined(b2, n) == false)
+      r = _append(r, _head(b1));
+  }
+  return r;
+}
+</PRE>
+<BLOCKQUOTE>
+Returns a binding formed by removing from <I>b1</I> any pair
+&lt;<I>n</I>, <I>v</I>&gt; such that <CODE>_defined(<I>b2</I>,
+<I>n</I>)</CODE>.  The value <I>v</I> associated with <I>n</I> in
+<I>b2</I> is irrelevant.
+</BLOCKQUOTE>
+
+<PRE>
+<A NAME="SubBindingPrim">t_binding</A>
+_sub(t_binding b, t_int start = 0, t_int len = _length(b))
+{
+  int w = _length(b);
+  int i = _min(_max(start, 0)), w);
+  int j = _min(i + _max(len, 0), w);
+  // 0 &lt;= i &lt;= j &lt;= _length(b); extract [i..j)
+  t_binding r = emptybinding;
+  for (; i &lt; j; i++) r = _append(r, _elem(b, i));
+  return r;
+}
+</PRE>
+<BLOCKQUOTE>
+Returns the sub-binding of <I>b</I> of length <I>len</I> starting at
+element <I>start</I>. Note the boundary cases defined by
+the pseudo-code; <CODE>_sub</CODE> produces <I>err</I> only if it
+is passed arguments of the wrong type.
+</BLOCKQUOTE>
+
+<PRE>
+<A NAME="MapBindingPrim">t_binding</A>
+_map(t_closure f, t_binding b) =
+{
+  t_binding res = emptybinding;
+  for (; !(b == emptybinding); b = _tail(l)) {
+    t_binding b1 = f(_n(_head(b)), _v(_head(b))); // apply the closure "f"
+    if (res == err || b1 == err) res = err;
+    else res = _append(res, b1);
+  }
+  return res;
+}
+</PRE>
+<BLOCKQUOTE>
+Returns the binding that results from applying the closure <I>f</I> to each
+&lt;<I>name</I>, <I>value</I>&gt; pair of the binding <I>b</I>, and
+appending the resulting bindings together. The closure <I>f</I> should take
+the <I>name</I> (of type t_text) and <I>value</I> (of type t_value) as
+arguments, and return a value of type t_binding. If <I>f</I> has the
+wrong signature or if any evaluation of <I>f</I> returns <I>err</I>,
+then <CODE>_map</CODE> returns <I>err</I>. However, <I>f</I> will be
+applied to every pair of the binding, even if one of its evaluations
+produces <I>err</I>.
+</BLOCKQUOTE>
+
+<PRE>
+<A NAME="ParMapBindingPrim">t_binding</A>
+_par_map(t_closure f, t_binding b)
+</PRE>
+<BLOCKQUOTE>
+Formally equivalent to <CODE>_map</CODE>, but the implementation
+may perform each application of <I>f</I> in a separate parallel thread.
+External tools invoked by <CODE>_run_tool</CODE> in different threads
+may be run simultaneously on different machines.
+</BLOCKQUOTE>
+
+<H4><A NAME="TypePrim">3.4.6 Type Manipulation Functions</A></H4>
+
+<PRE>
+t_text
+_type_of(t_value v)
+</PRE>
+<BLOCKQUOTE>
+<CODE>_type_of</CODE> returns a text value corresponding to the type of the
+value <I>v</I>:
+<PRE>
+  value             text returned by _type_of
+  -----             -------------------------
+  true, false       "t_bool"
+  integer           "t_int"
+  byte sequence     "t_text"
+  err               "t_err"
+  list              "t_list"
+  binding           "t_binding"
+  closures          "t_closure"
+</PRE>
+</BLOCKQUOTE>
+
+<PRE>
+t_bool
+_same_type(t_value v1, t_value v2) =
+   operator==(_type_of(v1), _type_of(v2))
+</PRE>
+
+<PRE>
+<A NAME="IsBoolPrim">t_bool</A>
+_is_bool(t_value v)
+</PRE>
+<BLOCKQUOTE>
+Returns <I>true</I> if <I>v</I> is of type t_bool; returns
+<I>false</I> otherwise.
+</BLOCKQUOTE>
+
+<PRE>
+t_bool
+_is_int(t_value v)
+</PRE>
+<BLOCKQUOTE>
+Returns <I>true</I> if <I>v</I> is of type t_int; returns <I>false</I>
+otherwise.
+</BLOCKQUOTE>
+
+<PRE>
+t_bool
+_is_text(t_value v)
+</PRE>
+<BLOCKQUOTE>
+Returns <I>true</I> if <I>v</I> is of type t_text; returns
+<I>false</I> otherwise.
+</BLOCKQUOTE>
+
+<PRE>
+t_bool
+_is_err(t_value v)
+</PRE>
+<BLOCKQUOTE>
+Returns <I>true</I> if <I>v</I> is of type t_err; returns <I>false</I>
+otherwise.
+</BLOCKQUOTE>
+
+<PRE>
+<A NAME="IsListPrim">t_bool</A>
+_is_list(t_value v)
+</PRE>
+<BLOCKQUOTE>
+Returns <I>true</I> if <I>v</I> is of type t_list; returns
+<I>false</I> otherwise.
+</BLOCKQUOTE>
+
+<PRE>
+<A NAME="IsBindingPrim">t_bool</A>
+_is_binding(t_value v)
+</PRE>
+<BLOCKQUOTE>
+Returns <I>true</I> if <I>v</I> is of type t_binding; returns
+<I>false</I> otherwise.
+</BLOCKQUOTE>
+
+<PRE>
+t_bool
+_is_closure(t_value v)
+</PRE>
+<BLOCKQUOTE>
+Returns <I>true</I> if <I>v</I> is of type t_closure; returns
+<I>false</I> otherwise.
+</BLOCKQUOTE>
+
+<H4><A NAME="RunToolPrim">3.4.7 Tool Invocation Function</A></H4>
+
+<PRE>
+t_binding
+_run_tool(
+  platform: t_text,
+  command:  t_list,
+  stdin:    t_text = "",
+  stdout_treatment: t_text = "report",
+  stderr_treatment: t_text = "report",
+  status_treatment: t_text = "report_nocache",
+  signal_treatment: t_text = "report_nocache",
+  fp_contents: t_int = 0,
+  wd: t_text = ".WD",
+  existing_writable: t_bool = FALSE)
+</PRE>
+<BLOCKQUOTE>
+<P> <CODE>_run_tool</CODE> is the mechanism by which external programs
+like compilers and linkers are executed from a Vesta SDL program. It
+provides functionality that is fairly platform-independent. The following
+description, however, is somewhat Unix-specific (for example, in its
+description of exit codes and signals).
+
+<P> The <I>platform</I> argument specifies the platform on which the
+tool is to be executed. <CODE>_run_tool</CODE> selects a specific
+machine for the given platform. The legal values for <I>platform</I>
+and the mechanism by which a machine of the appropriate platform is
+chosen are implementation dependent.
+
+<P> The tool to be executed is specified by the <I>command</I>
+argument. This argument is a t_list of t_text values. The first member
+of the list is the name of the tool (interpretation of the name is
+discussed below); the remaining members of the list are the arguments
+passed to the tool as its command line. The tool is executed on the
+specified <I>platform</I> in an environment with the following
+characteristics:
+
+<P><UL>
+<LI>
+The file system is encapsulated so that absolute paths (i.e., those
+beginning with a Delim) are interpreted relative to
+<CODE>./root</CODE>, where `.' is the implicit final parameter to
+_run_tool.  Non-absolute paths are interpreted relative to
+<CODE>./root/$<I>wd</I></CODE>, where <I>wd</I> is a parameter
+to _run_tool.  The interpretation of filenames is
+discussed in more detail below.
+
+<P><LI>
+The environment variables are taken from <CODE>./envVars</CODE>, where
+`.' is the implicit final parameter to _run_tool.
+
+<P><LI>
+The contents of standard input are the value of the <I>stdin</I>
+parameter to _run_tool.
+
+<P><LI>
+Standard output and standard error are treated as specified by the
+<I>stdout_treatment</I> and <I>stderr_treatment</I> parameters. Each
+of these parameters may take on one of the t_text values
+<CODE>"ignore"</CODE>, <CODE>"report"</CODE>,
+<CODE>"report_nocache"</CODE>, or <CODE>"value"</CODE>. If the value
+is <CODE>"ignore"</CODE>, any bytes written to the corresponding
+output stream (stdout or stderr) are discarded. If the value is
+<CODE>"report"</CODE>, the corresponding output is made visible to the
+user.  If the value is <CODE>"report_nocache"</CODE>, the 
+corresponding output is made visible to the user and, if it is not
+empty, the evaluator does not cache the _run_tool result.
+If the value is <CODE>"value"</CODE>, the output stream is converted
+to a Vesta value of type t_text and returned as part of the _run_tool
+result, as described below.
+
+<P><LI>
+The <I>status_treatment</I> and <I>signal_treatment</I> arguments may
+take on the t_text value <CODE>"report"</CODE> or
+<CODE>"report_nocache"</CODE>. Regardless of their values, the
+<CODE>code</CODE> and <CODE>signal</CODE> fields of the result value
+will be set as described below. If the value of <I>status_treatment</I> is
+<CODE>"report_nocache"</CODE>, this run_tool call will not be cached
+if the result <CODE>code</CODE> is nonzero; similarly, if
+<I>signal_treatment</I> is <CODE>"report_nocache"</CODE>, the run_tool
+call will not be cached if the result <CODE>signal</CODE> is nonzero.
+
+<P><LI>The <I>existing_writable</I> argument controls whether the
+tool is permitted to write to files that already exist in its
+encapsulated file system when it is started.  If the argument is
+TRUE, such files may be opened for writing and written to; if it is
+FALSE, they may not.  For technical reasons in
+the NFS-based repository implementation, tools will get much better
+file system performance when <I>existing_writable</I> is FALSE.
+It should be set to TRUE only for tools that require it.
+</UL>
+
+<P> In the absence of errors, _run_tool returns a binding that contains
+the results of the command execution.  This binding has type:
+
+<PRE>
+  type run_tool_result = binding [
+    code   : int,
+    signal : int,
+    stdout_written : bool,
+    stderr_written : bool,
+    stdout : text,
+    stderr : text,
+    root   : binding
+  ]
+</PRE>
+
+<P> If <I>r</I> is of type run_tool_result, then:
+<P>
+<UL>
+<LI>
+<CODE><I>r</I>/code</CODE> is an integer value that characterizes how
+the command terminated (i.e., the exit status of the Unix process).
+<P>
+<LI>
+<CODE><I>r</I>/signal</CODE> is an integer value identifying the Unix
+signal that terminated the process, or 0 if the process exited
+voluntarily.
+<P>
+<LI>
+<CODE><I>r</I>/stdout_written</CODE> and
+<CODE><I>r</I>/stderr_written</CODE> indicate whether data was
+written to the stdout and stderr streams, respectively.
+<P>
+<LI>
+<CODE><I>r</I>/stdout</CODE> is defined iff the <I>stdout_treatment</I>
+parameter to _run_tool is <CODE>"value"</CODE>, in which case it
+contains the bytes written to stdout.
+<P>
+<LI>
+<CODE><I>r</I>/stderr</CODE> is defined iff the
+<I>stderr_treatment</I> parameter to _run_tool is
+<CODE>"value"</CODE>, in which case it contains the bytes written to
+stderr.
+<P>
+<LI>
+<CODE><I>r</I>/root</CODE> is a binding containing all files created
+by the command that are extant upon exit. See
+<A HREF="#FSEncapsulation">File System Encapsulation</A> below for more
+details.
+</UL>
+
+<P> Two fine points relating to the results of _run_tool:
+<P>
+<OL>
+<LI>
+If the tool cannot be invoked---for example, because of errors in the
+parameters to _run_tool---the evaluator prints a suitable diagnostic
+and the _run_tool call returns <I>err</I>. However, errors that result during
+the execution of the tool are reported in a tool-specific fashion,
+with the exit status reported in <CODE><I>r</I>/code</CODE>.
+<P>
+<LI>
+Specifying <CODE>"report_nocache"</CODE> as the treatment for an
+output stream (stdout or stderr) or the exit status prevents the
+evaluator from making a cache entry from the call of _run_tool if any
+output is produced on the corresponding output stream or if the exit
+status is nonzero, respectively. In addition, none of the ancestor
+functions of the failing _run_tool call in the call graph are cached
+either. Since no cache entries are made, a subsequent
+re-interpretation of the model will produce the same output (on stdout
+or stderr). This can be useful for reproducing error messages from a
+compiler or other external tool that are displayed through the Vesta
+user interface.
+</OL>
+
+<P> By default, arbitrary unique fingerprints are chosen for any
+derived files created by the tool execution, including derived files
+created for stdout/stderr when the value of the
+<I>stdout_treatment</I>/<I>stderr_treatment</I> parameter is "value".
+You can instead cause the fingerprints for such files to be computed
+deterministically from their contents, using the <I>fp_contents</I>
+parameter.  If this parameter is a nonnegative value, files less than
+<I>fp_contents</I> bytes long are given content-based fingerprints,
+while files of <I>fp_contents</I> or more bytes are given arbitrary
+unique fingerprints.  If the parameter is set to -1, all files are
+given content-based fingerprints.  The boolean values TRUE and FALSE
+are accepted as synonyms for -1 and 0 respectively.
+
+<p>The cost of fingerprinting a file's contents is non-trivial, but
+doing so allows for cache hits in cases where two evaluations depends
+on an value that is identical but was computed in two different ways.
+
+<P> <A NAME="FSEncapsulation">File System Encapsulation</A>:
+<P>
+<UL>
+<LI>
+When the command process (or any subprocess it creates) executes a
+Unix system call that includes a file path as a parameter, the file
+path is translated into a reference into the `.' binding that is the
+last parameter to _run_tool.
+<P>
+<LI>
+The path is interpreted beginning at <CODE>./root</CODE> if it begins
+with "/" and at <CODE>./root/$wd</CODE> otherwise, where
+<CODE>$wd</CODE> is the value of the <I>wd</I> parameter to _run_tool.
+Each component of the path---except possibly the final one---must name a
+Vesta binding. The interpretation of the final component of the path
+depends on the semantics of the system call. If the system call
+expects an extant file, the final component must name a Vesta
+value of type t_text. If the system call expects an extant
+directory, the Vesta value must be of type t_binding. If the system
+call expects an unbound name, the name must not be bound by the
+binding corresponding to the penultimate path component.
+<P>
+<LI>
+A file created or modified by the command process (or a subprocess) remains
+visible in the name space throughout the remainder of the
+process's execution (or until deleted), just as in a regular
+file system.  This is achieved by modeling file creation, modification, and
+deletion as a suitable overlaying of <CODE>./root</CODE>. For example,
+if the process creates ``foo.o'' in its working directory, this has
+the effect of:
+<PRE>
+  ./root/$wd += [ foo.o = &lt;bytes of file&gt; ];
+  &lt;subsequent execution of the command process&gt;
+</PRE>
+
+<P><LI>File modification is handled in exactly the same way.  For example, 
+if the process opens the existing file ``foo.db'' in its working directory
+and writes to it, this has the effect of:
+<PRE>
+  ./root/$wd += [ foo.db = &lt;new contents of file&gt; ];
+  &lt;subsequent execution of the command process&gt;
+</PRE>
+Note that modification of preexisting files is forbidden if the
+<I>existing_writable</I> argument to _run_tool is set to 
+FALSE (its default value).
+
+<P><LI>
+File deletions are modeled similarly, but the files are removed from the
+context using the <A HREF="#MinusBindingPrim">binding difference (-)
+operator</A>, instead of added using the <A
+HREF="#PlusBindingPrim">binding overlay (+) operator</A>.
+<P>
+<LI>
+When the command process exits, the accumulated effects
+of the file creations and deletions it has performed 
+are returned as part of the _run_tool result (in
+<CODE><I>r</I>/root</CODE>). In this binding, the names of files
+deleted by the tool are bound to <I>false</I>. Such names
+correspond either to files that existed in <CODE>./root</CODE> before
+the tool was invoked, or to files created and subsequently deleted by
+the tool.
+<P>
+Thus, if <CODE>./root</CODE> represents the state of the file system
+visible to the command process at the time it is launched, then the
+state of the file system when it exits can be described as:
+<PRE>
+  ./root ++ r/root
+</PRE>
+<P> So, if the invoker of _run_tool wanted to update <CODE>./root</CODE>
+to reflect the changes made by calling _run_tool, the code might
+look like this:
+<PRE>
+  r = _run_tool( &lt;suitable parameters&gt; );
+  new_fs = ./root ++ r/root;
+  . += [ root = new_fs ];
+</PRE>
+<P> After the last assignment, names in <CODE>./root</CODE> bound to
+<I>false</I> are files that were deleted by the tool. Here is a
+recursive function for removing such files:
+<PRE>
+  remove_deleted(b: binding): binding
+  {
+    res: binding = [];
+    foreach [ n = v ] in b do
+      res += if v = false then [] else
+        if _is_binding(v) then [ $n = remove_deleted(v) ]
+        else [ $n = v ];
+    return res;
+  };
+</PRE>
+</UL>
+</BLOCKQUOTE>
+
+<H2> <A NAME="Syntax">4. Concrete Syntax</A></H2>
+
+<H3> <A NAME="ConcreteGrammar">4.1 Grammar</A></H3>
+
+<P> <B>Models:</B>
+
+<PRE>
+<A HREF="#ModelEval">Model</A>       <A NAME="ModelNT">::=</A> Files Imports Block
+</PRE>
+
+<P> <B>Files clauses:</B>
+
+<PRE>
+<A HREF="#FilesEval">Files</A>       <A NAME="FilesNT">::=</A> FileClause*
+FileClause  ::= files FileItem*;
+FileItem    ::= FileSpec | FileBinding
+<A HREF="#FileSpecEval">FileSpec</A>    <A NAME="FileSpecNT">::=</A> [ Arc = ] DelimPath
+<A HREF="#FileBindingEval">FileBinding</A> <A NAME="FileBindingNT">::=</A> Arc = `[' FileSpec*, `]'
+</PRE>
+
+<P> <B>Import clauses:</B>
+
+<PRE>
+<A HREF="#ImportsEval">Imports</A>     <A NAME="ImportsNT">::=</A> ImpClause*
+ImpClause   ::= ImpIdReq | ImpIdOpt
+ImpIdReq    ::= import ImpItemR*;
+ImpItemR    ::= ImpSpecR | ImpListR
+<A HREF="#ImpSpecREval">ImpSpecR</A>    ::= Arc = DelimPath
+<A HREF="#ImpListREval">ImpListR</A>    ::= Arc = `[' ImpSpecR*, `]'
+ImpIdOpt    ::= from DelimPath import ImpItemO*;
+ImpItemO    ::= ImpSpecO | ImpListO
+ImpSpecO    ::= [ Arc = ] Path [ Delim ]
+ImpListO    ::= Arc = `[' ImpSpecO*, `]'
+</PRE>
+
+<P> <B>Paths and Arcs:</B>
+
+<PRE>
+<A HREF="#FilenameEval">DelimPath</A>   <A NAME="DelimPathNT">::=</A> [ Delim ] Path [ Delim ]
+Path        <A NAME="PathNT">::=</A> Arc { Delim Arc }*
+Arc         <A NAME="ArcNT">::=</A> Id | Integer | Text
+</PRE>
+
+<P> <B>Blocks and Statements:</B>
+
+<PRE>
+<A HREF="#BlockEval">Block</A>       <A NAME="BlockNT">::=</A> `{' Stmt*; Result; `}'
+<A HREF="#StmtEval">Stmt</A>        <A NAME="StmtNT">::=</A> Assign | Iterate | FuncDef | TypeDef
+Result      ::= { value | return } Expr
+</PRE>
+
+<P> <B>Assignment statements:</B>
+
+<PRE>
+<A HREF="#AssignEval">Assign</A>      <A NAME="AssignNT">::=</A> TypedId [ Op ] = Expr 
+Op          ::= AddOp | MulOp
+AddOp       ::= +  |  ++  |  -
+MulOp       ::= *
+</PRE>
+
+<P> <B>Iteration statements:</B>
+
+<PRE>
+<A HREF="#IterateEval">Iterate</A>     <A NAME="IterateNT">::=</A> foreach Control in Expr do IterBody
+Control     ::= TypedId | `[' TypedId = TypedId `]'
+IterBody    ::= Stmt | `{' Stmt+; `}'
+</PRE>
+
+<P> <B>Function definitions:</B>
+
+<PRE>
+<A HREF="#FuncDefEval">FuncDef</A>     <A NAME="FuncDefNT">::=</A> Id Formals+ [ TypeQual ] Block
+Formals     ::= ( FormalArgs )
+FormalArgs  ::= { TypedId*,                                    // none defaulted
+              | { TypedId = Expr }*,                           // all defaulted
+              | TypedId { , TypedId }* { , TypedId = Expr }+ } // some defaulted
+</PRE>
+
+<P> <B>Expressions:</B>
+
+<PRE>
+<A HREF="#ExprEval">Expr</A>        <A NAME="ExprNT">::=</A> if Expr then Expr else Expr | Expr1
+Expr1       ::= Expr2 {  =&gt;  Expr2 }*
+Expr2       ::= Expr3 {  ||  Expr3 }*
+Expr3       ::= Expr4 {  &&  Expr4 }*
+Expr4       ::= Expr5 [ { == | != | &lt; | &gt; | &lt;= | &gt;= } Expr5 ]
+Expr5       ::= Expr6 { AddOp Expr6 }*
+Expr6       ::= Expr7 { MulOp Expr7 }*
+Expr7       ::= [ UnaryOp ] Expr8
+UnaryOp     ::= -  |  !
+Expr8       ::= Primary [ TypeQual ]
+Primary     ::= ( Expr ) | Literal | Id | List
+              | Binding | Select | Block | FuncCall
+</PRE>
+
+<P> Binary operators with equal precedence are left associative.
+
+<P> <B>Literals:</B>
+
+<PRE>
+<A HREF="#LiteralEval">Literal</A>     <A NAME="LiteralNT">::=</A> ERR | TRUE | FALSE | Text | Integer
+</PRE>
+
+<P> <B>Lists:</B>
+
+<PRE>
+<A HREF="#ListEval">List</A>        <A NAME="ListNT">::=</A> &lt; Expr*, &gt;
+</PRE>
+
+<P> <B>Bindings:</B>
+
+<PRE>
+<A HREF="#BindingEval">Binding</A>     <A NAME="BindingNT">::=</A> `[' BindElem*, `]'
+BindElem    <A NAME="BindElemNT">::=</A> SelfNameB | NameBind
+<A HREF="#BindingSugar">SelfNameB</A>   ::= Id
+NameBind    <A NAME="NameBindNT">::=</A> GenPath = Expr
+<A HREF="#BindingSugar">GenPath</A>     ::= GenArc { Delim GenArc }* [ Delim ]
+<A HREF="#BindingSugar">GenArc</A>      ::= Arc | $ Id | $ ( Expr ) | % Expr %
+</PRE>
+
+<P> <B>Binding selections:</B>
+
+<PRE>
+<A HREF="#SelectEval">Select</A>      <A NAME="SelectNT">::=</A> Primary Selector GenArc
+Selector    ::= Delim | !
+</PRE>
+
+<P> <B>Function calls:</B>
+
+<PRE>
+<A HREF="#FuncCallEval">FuncCall</A>    <A NAME="FuncCallNT">::=</A> Primary Actuals
+Actuals     ::= ( Expr*, )
+</PRE>
+
+<P> <B>Type definitions:</B>
+<PRE>
+<A HREF="#TypeDecls">TypeDef</A>     <A NAME="TypeDefNT">::=</A> type Id = Type
+TypedId     ::= Id [ TypeQual ]
+TypeQual    ::= : Type
+Type        ::= any | bool | int | text
+              | list [ ( Type ) ]
+              | binding ( TypeQual )
+              | binding [ ( TypedId*, ) ]
+              | function { ( TypedForm*, ) }* [ TypeQual ]
+              | Id
+TypedForm   ::= [ Id : ] Type
+</PRE>
+
+<H3> <A NAME="Ambiguity">4.2 Ambiguity Resolution</A></H3>
+
+<P> The grammar as given above is ambiguous.  We resolve the ambiguity as
+follows.
+
+<P> The Vesta parser accepts a modified grammar in which the &gt;
+token is replaced by two distinct tokens: GREATER in the production
+for Expr4 and RANGLE in the production for List.  The modified grammar
+is unambiguous and can easily be parsed by an LL(1) or LALR(1)
+automaton.
+
+<P> The Vesta tokenizer is responsible for disambiguating between
+GREATER and RANGLE wherever &gt; appears in the input.  It does so by
+looking ahead to the next token after the &gt;.  If the next token is
+one of
+
+<PRE>
+    - ! ( ERR TRUE FALSE Text Integer Id &lt; [ {
+</PRE>
+
+then the &gt; is taken as GREATER; otherwise, it is taken as RANGLE.
+
+<P> Why is this solution reasonable?  Inspection of the grammar shows
+that in a syntactically valid program, the next token after GREATER
+must be one of those in the above list.  The next token after RANGLE
+must be one of the following:
+
+<PRE>
+    : * + ++ - == != &lt; GREATER &lt;= &gt;= && || =&gt;
+    ; do , ) then else RANGLE ] % / \ ! (
+</PRE>
+
+These sets overlap in the tokens <CODE>-</CODE>, <CODE>!</CODE>,
+<CODE>(</CODE>, and <CODE>&lt;</CODE>.  Because we have chosen to
+resolve these cases as GREATER, it is impossible to write certain
+syntactically valid programs containing RANGLE.  However, any such
+program can be rewritten by replacing every List nonterminal by
+<CODE>(</CODE> List <CODE>)</CODE>, yielding a semantically equivalent
+program in which the closing &gt; of the List is correctly resolved as
+RANGLE.  Moreover, we claim (without presenting a proof) that any
+program in which RANGLE is followed by <CODE>-</CODE>, <CODE>!</CODE>,
+<CODE>(</CODE>, or <CODE>&lt;</CODE> must have a runtime type error,
+due to the paucity of operators defined on the list type, so in
+practice such programs are never written.
+
+<H3> <A NAME="ConcreteTokens">4.3 Tokens</A></H3>
+
+<P> Here is a BNF description of the tokens of the language.  The
+token classes Delim, Integer, Id, and Text, and the individual tokens
+in the classes Punc, TwoPunc, and Keyword, serve as terminals in the
+BNF of earlier sections.
+
+<PRE>
+TokenSeq   ::= Token*
+Token      ::= Integer | Id | Text | Punc | TwoPunc | Keyword
+             | Whitespace | Comment
+
+Delim      ::= /  |  \
+              
+Integer    ::= DecimalNZ Decimal* | 0 Octal* | 0 { x | X } Hex+
+Decimal    ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+DecimalNZ  ::= 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+Octal      ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
+Hex        ::= Decimal | A | B | C | D | E | F | a | b | c | d | e | f
+
+<A HREF="#IdEval">Id</A>         <A NAME="IdNT">::=</A> { Letter | Decimal | IdPunc }+
+Letter     ::= A | B | C | D | E | F | G | H | I | J | K | L | M
+             | N | O | P | Q | R | S | T | U | V | W | X | Y | Z
+             | a | b | c | d | e | f | g | h | i | j | k | l | m
+             | n | o | p | q | r | s | t | u | v | w | x | y | z
+IdPunc     ::= .  |  _
+
+Text       ::= " TextChar* "
+TextChar   ::= Decimal | Letter | Punc | Escape
+Punc       ::= ~ | ` | ! | @ | # | $ | % | ^ | & | * | ( | )
+             | _ | - | + | = | `{' | `[' | `}' | `]' | : | ;
+             | `|' | ' | , | &lt; | . | &gt; | ? | / | Space
+Escape     ::= \ { n | t | v | b | r | f | a | \  | " | Octals |  Hexes }
+Octals     ::= Octal [ Octal [ Octal ] ]
+Hexes      ::= { x | X } Hex [ Hex ]
+
+TwoPunc    ::= ++ | == | != | &lt;= | &gt;= | =&gt; | || | &&
+
+Keyword    ::= binding | do | else | ERR | FALSE | files | foreach 
+            | from | function | if | in | import | list | return
+            | then | type | TRUE | value
+
+Whitespace ::= ` ' | Tab | Newline
+
+Comment    ::= // NonNewlineChar* Newline
+            |  `/*' CommentBody `*/'
+</PRE>
+
+<P> We define Newline as an ASCII new line sequence, either CR, LF, or
+CRLF.  NonNewlineChar is any ASCII character other than CR and
+LF. CommentBody is any sequence of ASCII characters that does not
+contain `*/'.  Tab is the ASCII TAB character.
+
+<P> The ambiguities in the token grammar are resolved as follows.  The
+tokenizer interprets the program as a TokenSeq.  It scans from left to
+right, repeatedly matching the longest possible Token beginning with
+the next unmatched character.  Whitespace and Comment tokens are
+discarded after matching; other tokens are passed on for parsing by
+the main grammar.  When a string of characters matches both Integer
+and Id, it is tokenized as Integer.  When a string matches both
+Keyword and Id, it is tokenized as Keyword.
+
+<H3> <A NAME="ReservedIds">4.4 Reserved Identifiers</A></H3>
+
+<P> Here are Vesta-2's reserved identifiers; they should not be
+redefined:
+
+<PRE>
+  _append _bind1 _defined _div _elem _find _findr
+  _head _is_binding _is_bool _is_closure _is_err
+  _is_int _is_list _is_text _length _list1 _lookup
+  _map _max _min _mod _n _run_tool _same_type _sub
+  _tail _type_of _v
+</PRE>
+
+<H2> <A NAME="Acks">5. Acknowledgments</A></H2>
+
+<P> Bill McKeeman encouraged us to revise the syntax of the language
+to make it more palatable to C programmers. Mark Lillibridge gave us
+many useful comments on an earlier draft of the paper.
+
+<H2> <A NAME="References">6. References</A></H2>
+
+<A NAME="CiteVesta2">[1]</A>
+Allan Heydon, Roy Levin, Tim Mann, and Yuan Yu.
+<I>The Vesta-2 Software Configuration Management System</I>,
+Research Report,
+<A HREF="http://www.research.digital.com/SRC/"
+>Digital Systems Research Center</A>.
+In preparation.
+
+<P>
+
+<A NAME="CiteVesta1Approach">[2]</A>
+Roy Levin and Paul R. McJones.
+<I>The Vesta Approach to Precise Configuration of Large Software
+Systems</I>,
+<A HREF="http://www.research.digital.com/SRC/publications/src-rr.html#src-rr-105">Research Report 105</A>,
+<A HREF="http://www.research.digital.com/SRC/"
+>Digital Systems Research Center</A>.
+June 1993. 39 pgs.
+
+<P>
+
+<A NAME="CiteVesta1Repos">[3]</A>
+Sheng-Yang Chiu and Roy Levin.
+<I>The Vesta Repository: A File System Extension for Software Development</I>,
+<A HREF="http://www.research.digital.com/SRC/publications/src-rr.html#src-rr-106">Research Report 106</A>,
+<A HREF="http://www.research.digital.com/SRC/"
+>Digital Systems Research Center</A>.
+June 1993. 34 pgs.
+
+<P>
+
+<A NAME="CiteVesta1Lang">[4]</A>
+Christine B. Hanna and Roy Levin.
+<I>The Vesta Language for Configuration Management</I>,
+<A HREF="http://www.research.digital.com/SRC/publications/src-rr.html#src-rr-107">Research Report 107</A>,
+<A HREF="http://www.research.digital.com/SRC/"
+>Digital Systems Research Center</A>.
+June 1993. 62 pgs.
+
+<P>
+
+<A NAME="CiteVesta1Bridges">[5]</A>
+Mark R. Brown and John R. Ellis.
+<I>Bridges: Tools to Extend the Vesta Configuration Management System</I>,
+<A HREF="http://www.research.digital.com/SRC/publications/src-rr.html#src-rr-108">Research Report 108</A>,
+<A HREF="http://www.research.digital.com/SRC/"
+>Digital Systems Research Center</A>.
+June 1993. 43 pgs.
+
+</BODY>
+</HTML>

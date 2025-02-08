@@ -1,0 +1,171 @@
+This is version 1.0 of the xmub library.
+
+The xmub library simplifies the definition of resources in a program,
+by letting you define keywords as values in the resource file and
+replacing them with the selected values at run-time.
+This enables you to define resources in sets, so that the user can
+select a color scheme or a font size that affects the whole
+application, without you having to write several resource files.
+
+The library contains functions for individual manipulation of the 
+different parts of the resource set replacement as well as convenience
+functions.
+
+
+LICENSE
+-------
+
+Copyright 1994 by Union Bank of Switzerland.
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies.
+Union Bank of Switzerland makes no representations about the usability
+of this software for any purpose. It is provided "as is" without express
+or implied warranty.
+
+
+STATUS
+------
+
+The basic functionality requires X11R4 or higher. The dialogs in
+xmubCustUi require Motif 1.1 or higher.
+
+The library and the demo programs have been compiled and tested on
+the following platforms:
+
+	AIX 3.2.5	X11R5	Motif 1.2
+	HP-UX 9.1	X11R5	Motif 1.2
+	Solaris 2.3	X11R5	Motif 1.2
+	DEC-OSF/1 3.0	X11R5	Motif 1.2
+	VMS 5.5		X11R4	Motif 1.1
+
+The basic functionality is in the module xmubCustUtil. 
+xmubCustUi contains implementations of default dialogs that can be
+used to change colors or fonts at run-time. This module requires Motif.
+
+Man pages and a short programming description are included.
+The man pages are provided on a mdule basis.
+An upcoming article in The X Journal (scheduled for Jan/Feb 95)
+describes the ideas and concepts of the library. It also describes
+how to program with it.
+
+
+FILES AND DIRECTORIES
+---------------------
+
+This distribution contains the following files and directories:
+
+  COPYRIGHT	copyrights and the permissions granted to licensees
+  KNOWNBUGS	a list of bugs and problems that I know about
+  PROGRAMMING   a short "Programmer's Guide"
+  README	this file
+  WARRANTY	a standard "No Warranty" disclaimer
+  Imakefile	a top-level Imakefile for building the distribution
+  xmub.tmpl	an Imake template for use with the Imakefile
+  xmub		a directory containing source code for the xmub library
+  clients	a directory of sample xmub client applications
+  man/man3      man pages for xmubCustUtil and xmubCustUi
+
+
+BUILDING THE XMUB LIBRARY
+-------------------------
+
+To build the distribution, first read the file xmub.tmpl and, if
+necessary, set variables as appropriate for your site.  There are
+variables to control which kinds of libraries are built.  By default,
+only a normal library is built, but you can also have shared, debugged
+(compiled with -g) and profiled (compiled with -p) libraries built.
+
+There are also variables that control where the library will be
+installed, and variables that specify where the X11 and Motif libraries
+are installed.  You need to set these variables only if you want
+something other than the standard locations.
+
+Once this template file is correctly configured, you can build the
+distribution by typing:
+
+	xmkmf
+	make World
+
+This will build the library in the xmub directory, and the sample
+clients in the clients directory.
+
+When the build is complete, you can install the library, the header
+files, the sample programs, and man pages by typing
+
+	make install
+
+in the top level directory.  If you only want to install the library,
+and the headers, cd to the xmub directory, and type 'make install' there.
+
+If you do not have the 'xmkmf' script, installed, you can do the build
+with these commands:
+
+	imake -DUseInstalled -I/usr/lib/X11/config
+	make World
+
+If your imake configuration files are installed somewhere other than
+/usr/lib/X11/config, you will have to change the -I option above as
+necessary.  
+
+If you do not have imake on your system at all, you'll have to build the
+distribution by hand.  I have not provided a Makefile for this, but it
+is easy to do on your own with commands like the following:
+
+	cd xmub
+	cc -c -I.. *.c
+	ar clq libxmub.a *.o
+	ranlib libxmub.a
+
+You may have to modify the options passed to cc, ar, and ranlib to work
+correctly on your system.
+
+NOTE: The xmub library is written to ANSI-C, so you must specify
+      the correct compiler options for ANSI mode for your compiler.
+
+The requirements for building the library are described under STATUS.
+
+
+BUILDING THE LIBRARY ON VMS
+---------------------------
+
+For VMS, you have to do without imake. 
+
+Copy all .c and .h files into one directory and compile the .c files
+individually with CC. No qualifiers need to be specified.
+The files xprog.opt and doDemo_vms.com must also be copied.
+You might have to modify xprog.opt if you have the libraries installed
+in another location.
+
+Use the following commands to link the demo programs.
+
+link new_demo.obj,xmubCustUtil.obj,xmubUtils.obj,xprog.opt/opt
+link txj_demo.obj,xmubCustUtil.obj,xmubUtils.obj,xmubCustUi.obj,xprog.opt/opt
+
+To run the programs, execute the command file
+
+@doDemo_vms.com
+
+This file will copy the resource files into your login directory,
+define XRESOURCE_MAP_FILE to the mapping file in the current directory
+and run the demo programs.
+
+
+DOCUMENTATION
+-------------
+
+The file PROGRAMMING contains a short "Programmer's Guide" for
+working with the library.
+
+I have written an article that is scheduled for publication in
+The X Journal, issue Jan/Feb 95, which describes the concepts
+and ideas behind the resource mapping, and also describes the
+programming interface.
+
+
+REPORTING BUGS
+--------------
+
+If you find a bug in the xmub library, or anywhere in the xmub
+distribution, please report it directly to me at bre@ubszh.net.ch.

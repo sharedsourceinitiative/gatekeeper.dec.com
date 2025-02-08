@@ -1,0 +1,16 @@
+Filename: TclTkElRef.pdf
+Title: Tcl/Tk Electronic Reference
+Editor: Charles Todd (ctodd@ball.com)
+Size: 2.2 MB (877 pages)
+Date: October 19, 1998
+Require: Adobe Acrobat Reader v3.0 or later
+Abstract: 
+   PDF version version of the Tcl/Tk and [incr Tcl] manuals.  Applies to
+Tcl/Tk version 8.0.3 and [incr Tcl] version 3.0.  Only version 3.0.0 of
+[incr Widgets] is included (no version 2.2.0).  Document is complete with
+nice cover page and thorough table of contents for each section (comments
+included). 
+Side Comments:
+   Built with groff (for nice formatting), existing man pages (this is the
+bulk of the work), and a custom indexer that I wrote in Bourne Shell.  That
+and a nice copy of Adobe Distiller and Exchange.

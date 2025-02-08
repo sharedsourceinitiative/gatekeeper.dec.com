@@ -1,0 +1,534 @@
+<!-- This file generated automatically by mtex2html(1) -->
+<HTML>
+<HEAD>
+<TITLE>dcpid</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#ffffff" VLINK="#006633">
+<H2>dcpid(1)</H2>
+
+<H3>NAME</H3>
+<BLOCKQUOTE>
+<P>
+
+dcpid - DIGITAL Continuous Profiling Infrastructure daemon.
+</BLOCKQUOTE>
+
+<H3>SYNOPSIS</H3>
+<BLOCKQUOTE>
+<P>
+
+<B>dcpid</B>
+[-event <I>type[:period]</I>]
+[-mux <I>interval</I>]
+[-bypid <I>image</I>]
+[-map <I>mapfile</I>]
+[-forkid <I>seconds</I>]
+[-unknown]
+[-epoch]
+[-merge <I>seconds</I>]
+[-flush <I>seconds</I>]
+[-hash <I>bytes</I>]
+[-chunk <I>bytes</I>]
+[-device <I>device</I>] 
+[-log <I>logfile</I>]
+[-quiet]
+[-verbose]
+[-status <I>seconds</I>]
+[-logmaps]
+[-help]
+[-version]
+[-bug]
+[-nodaemon]
+[-socket <I>socket</I>]
+<I>database</I>
+</BLOCKQUOTE>
+
+<H3>EVENT OPTIONS</H3>
+<BLOCKQUOTE>
+<P>
+
+<DL>
+<DT>-event <I>type[:period]</I><DD>
+<DT>-event <I>type[:period]</I>+<I>type[:period]</I>+...+<I>type[:period]</I><DD>
+<DT>-t is shorthand for -event<P>
+
+<DD>Selects event types to monitor, and specifies the sampling period for
+each event type.  This option can be repeated; each instance of
+<TT>-event</TT> specifies a set of event types to monitor using a single
+hardware performance counter.  When only one event type is specified,
+it is always monitored.  When several event types are specified, they
+are time-multiplexed onto the same hardware counter.  <P>
+
+If no <TT>-event</TT> arguments are specified on the command line, the
+default is to always monitor <TT>cycles</TT> and <TT>imiss</TT> events using
+the default sampling periods.<P>
+
+<B>Event Types</B><P>
+
+Event types supported on all Alpha processors:<P>
+
+<UL>
+<LI> cycles   = processor cycles
+<LI> issues   = instruction issues
+<LI> nonissue = non-issue cycles
+<LI> imiss    = instruction cache misses
+<LI> dmiss    = data cache misses
+<LI> branchmp = branch mispredicts
+<LI> flow     = flow control changes (see Caveats below)
+<LI> pipelinedry = pipeline dry cycles (no valid I-stream data)
+<LI> issue2   = cycles with 2 issues
+<LI> intop    = integer operations (excluding loads/stores)
+<LI> fpop     = floating point operations (excluding loads/stores/br)
+<LI> load     = load instructions
+<LI> store    = store instructions
+</UL>
+<P>
+
+Additional event types supported on the Alpha 21064 processor:<P>
+
+<UL>
+<LI> pipefrozen = pipeline frozen due to resource conflict
+<LI> palmode  = cycles executing palcode
+</UL>
+<P>
+
+Additional event types supported on the Alpha 21164 processor:<P>
+
+<UL>
+<LI> itbmiss  = instruction translation buffer misses
+<LI> dtbmiss  = data translation buffer misses
+<LI> pcmp     = PC mispredicts
+<LI> iaccess  = instruction cache accesses
+<LI> daccess  = data cache accesses
+<LI> smiss    = on-chip secondary cache misses
+<LI> srmiss   = on-chip secondary cache read misses
+<LI> swmiss   = on-chip secondary cache write misses
+<LI> saccess  = on-chip secondary cache accesses
+<LI> sread    = on-chip secondary cache reads
+<LI> swrite   = on-chip secondary cache writes
+<LI> svictim  = on-chip secondary cache victims
+<LI> sshwrite = on-chip secondary cache shared writes
+<LI> bmiss    = board-level cache misses
+<LI> bhit     = board-level cache hits
+<LI> bvictim  = board-level cache victims
+<LI> bref     = board-level cache references
+<LI> sysinv   = system invalidates
+<LI> sysread  = system read requests
+<LI> sysreq   = system requests
+<LI> splitissue = split issue cycles
+<LI> replaytrap = replay traps
+<LI> issue1   = cycles with 1 issue
+<LI> issue3   = cycles with 3 issues
+<LI> issue4   = cycles with 4 issues
+<LI> mb       = memory barriers
+<LI> loadmerged = loads merged (in MAF)
+<LI> ldureplay = load/use (ldu) replays
+<LI> wbmafreplay = write buffer or maf full replays
+<LI> loadlocked = LDx_L instructions
+<LI> longstall = stall longer than 12 cycles
+<LI> external = external event (system-specific or unused)
+</UL>
+<P>
+
+The optional event period follows the event type, and has the format
+<I>:Mperiod</I>, where <I>M</I> is a period modifier, and <I>period</I> is
+the sampling period.  If the event period is omitted, reasonable
+defaults are automatically chosen based on the particular event type
+and the processor hardware.<P>
+
+The <I>period modifier</I> must be <I>R</I>, denoting a random sampling
+interval with a mean equal to <I>period</I> events, or <I>F</I>, denoting
+a fixed sampling interval equal to <I>period</I> events.  If omitted,
+the default is to use a random sampling interval on hardware that
+supports it, or a fixed sampling interval otherwise.<P>
+
+The <I>sampling period</I> specifies how often the event should be
+sampled, expressed as a decimal number.  The suffix <I>K</I> can 
+be used to scale the specified <I>period</I> by 1024.<P>
+
+The <I>period modifier</I> and <I>period</I> specifications are limited on
+the Alpha 21064 processor, which uses a fixed sampling period (65536
+for <TT>cycles</TT>, <TT>issues</TT>, and <TT>flow</TT>, and 4096 for the other
+events).  Later Alpha processors such as the 21164 have hardware
+support for modifying the sampling period and can support arbitrary
+fixed periods, as well as randomized periods.  Randomization of the
+sampling interval helps avoid undesirable synchronization effects with
+periodic code execution.  <I>Caveat:</I> The current driver
+implementation restricts the set of valid randomized periods.  For the
+<TT>cycles</TT> event, a valid randomized period must have the form (65536
+- 2^n).  Future versions of the driver may allow more flexibility.<P>
+
+<B>Examples</B><P>
+
+<DL>
+<DT><TT>-event cycles:R63488 -event imiss+dmiss+branchmp</TT><DD>
+Always monitor cycle counter events, with a randomized sampling period
+whose mean is one sample every 63488 cycles.  In addition, rotate
+among gathering <TT>imiss</TT>, <TT>dmiss</TT>, and <TT>branchmp</TT> events,
+using the default sampling rates for those events.<P>
+
+<DT><TT>-event cycles:F64K -event imiss+imiss+imiss+dmiss</TT><DD> 
+Always sample <TT>cycles</TT> with a fixed period of 65536 (64K) cycles
+per sample, and switch between sampling <TT>imiss</TT> events 75% of the
+time and <TT>dmiss</TT> events 25% of the time, using the default sampling
+rate for those events.  In this example, events are repeated within a
+single multiplexing <TT>-event</TT> option, in order to sample one kind of
+event more frequently than other kinds of events.
+</DL>
+<P>
+
+<B>Caveats</B><P>
+
+Alpha performance counter interrupts are not precise for events other
+than <TT>cycles</TT> and <TT>dtbmiss</TT>, so a sample for some other event may
+not be correctly attributed to the instruction which generated the
+event.<P>
+
+There are only a limited number of hardware performance counters (2 on
+21064 processors and 3 on 21164 processors), and each counter can only
+count a subset of all events. Thus, certain combinations of events
+cannot be simultaneously monitored.  Consult the Alpha AXP
+Architecture Reference Manual by Sites &amp; Witek, Appendix D, for
+detailed information about legal event combinations.<P>
+
+When multiplexing events, the <TT>cycles</TT> event type must always be
+monitored, since cycle sample interrupts are used to decide when to
+switch to the next multiplexed event type.  This switching interval is
+controlled by the <TT>-mux</TT> option (see below).<P>
+
+On the Alpha 21064 processor, <TT>issues</TT> counts the total number of
+instruction issues divided by 2, and <TT>nonissues</TT> counts the total
+number of nonissues divided by 2.<P>
+
+On the Alpha 21164, the meaning of the "flow" event is altered by
+whether the "branchmp" or "pcmp" events are samples at the same time
+as the "flow" event: With "branchmp" sampling, "flow" events happen
+only at conditional branches.  With "pcmp" sampling, "flow" events
+happend only at jsr and ret instructions.  (Simultaneous sampling of
+"branchmp" and "pcmp" events is not possible, though multiplexed
+sampling of these events is possible.)  <P>
+
+<DT>-mux <I>interval</I><DD>
+<DT>-I is shorthand for -mux<P>
+
+<DD>For event multiplexing, switch the events being monitored every
+<I>interval</I> occurences of the <TT>cycle</TT> event performance counter
+interrupt.  The default multiplexing interval is 10 on Alpha
+21164-based machines; i.e. the monitored events will be switched every
+10 cycle counter interrupts.<P>
+
+The default multiplexing interval is 100 for Alpha 21064-based
+machines.  On the 21064, counter values cannot be read and restored.
+During event multiplexing, this means that the counter values are
+reset to zero whenever a multiplexing interval expires.  With frequent
+time-multiplexed switching, this can result in distortion in the
+sampling of events other than cycles.  For this reason, it is
+recommended that the multiplexing interval not be set below about 20
+for this processor.
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>IMAGE ASSOCIATION OPTIONS</H3>
+<BLOCKQUOTE>
+<P>
+
+<DL>
+<DT>-bypid <I>image</I><DD>
+<DT>-i is shorthand for -bypid<DD>
+Store separate profiles for each process that loads the specified
+executable image.  By default, the profile associated with an
+executable image contains aggregate samples for <I>all</I> processes
+that execute that image.  This option allows samples to be identified
+by process as well as by image.  The filenames for per-process
+profiles have the suffix "_hostPID", where host is the local hostname,
+and PID is a local process identifier. This option can be repeated to
+specify per-process profiling for multiple executable images.<P>
+
+<DT>-map <I>mapfile</I><DD>
+<DT>-m is shorthand for -map<DD>
+Use specified map file generated by dcpiscan(1) for associating
+processes with named images.  This option can be repeated, allowing
+several map files to be specified; information from all of the
+supplied map files is merged.<P>
+
+A default map for common Digital Unix
+3.2 and 4.0 binaries is compiled into dcpid; specifying additional maps
+will allow dcpid to identify site-specific binaries.<P>
+
+<DT>-forkid <I>seconds</I><DD>
+The modified system loader dcpiloader(5) provides information to dcpid
+about image loadmaps for dynamically-loaded processes.  A hook in the 
+kernel exec path provides information to dcpid about image loadmaps
+for statically-loaded processes.  Unfortunately, there is no
+convenient hook for capturing information about processes that are
+created via fork(2) which do not subsequently invoke exec(2).<P>
+
+To obtain loadmap information for such forked processes that are
+relatively long-lived, periodic scans of system tables are performed
+to match unknown forked processes with information known about their
+parents.  By default, a scan is performed every 30 seconds.  This
+feature can be disabled by specifying a scan period of 0 seconds.<P>
+
+<DT>-unknown<DD>
+<DT>-u is shorthand for -unknown<DD>
+Store separate per-process profiles for samples that cannot be
+associated with any image.  Unknown samples will be stored in profiles
+associated with 1MB regions of each process address space; these
+"anonymous" profiles are given names of the form <I>hostPID@address</I>.
+If this option is not specified, a count of all unknown samples is
+stored in a single profile named <I>unknown@host</I>.
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>PROFILE DATABASE OPTIONS</H3>
+<BLOCKQUOTE>
+<DL>
+<DT>-epoch<DD>
+<DT>-e is shorthand for -epoch<DD>
+Use the most recent existing epoch for storing new profiles.  By
+default, a new epoch is created each time dcpid is restarted.  New
+epochs can also be started using dcpiepoch(1).<P>
+
+<DT>-merge <I>seconds</I><DD>
+<DT>-M is shorthand for -merge<DD>
+Merge buffered profile samples from dcpid to the non-volatile profile
+database every <I>seconds</I> seconds.  Defaults to every 600 seconds 
+(10 minutes). 
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>DRIVER OPTIONS</H3>
+<BLOCKQUOTE>
+<P>
+
+<DL>
+<DT>-flush <I>seconds</I><DD>
+<DT>-F is shorthand for -flush<DD>
+Flush samples from the performance counter device driver to dcpid
+every <I>seconds</I> seconds.  Defaults to every 300 seconds (5 minutes).
+Samples are also automatically flushed from the driver to dcpid whenever
+remaining driver buffer space is low.<P>
+
+<DT>-hash <I>bytes</I><DD>
+<DT>-H is shorthand for -hash<DD>
+Specifies the desired size of the driver hash table data structure in bytes.
+The default is 262144 (256K bytes).  The driver treats the specified
+size as a hint, and may impose additional constraints, such as forcing
+the actual size to be a power of two.<P>
+
+<DT>-chunk <I>bytes</I><DD>
+<DT>-C is shorthand for -chunk<DD>
+Specifies the desired chunk size to use when flushing driver hash
+table data structure.  The default is 16384 (16K bytes).  The driver
+treats the specified size as a hint, and may impose additional
+constraints, such as forcing the actual size to be a power of two.<P>
+
+<DT>-device <I>device</I><DD>
+<DT>-d is shorthand for -device<DD>
+Use specified performance counter device for collecting raw samples.
+Default device is <TT>/dev/pcount0</TT>.
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>LOGGING OPTIONS</H3>
+<BLOCKQUOTE>
+<P>
+
+<DL>
+<DT>-log <I>logfile</I><DD>
+<DT>-l is shorthand for -log<DD>
+Use specified file for logging warnings, errors, debugging
+information, and other messages.  Defaults to <TT>dcpid-host.log</TT> in
+the specified profile database directory, where host is the local
+hostname.  The log file is written using append mode, so it is safe to
+reuse the same log file across dcpid invocations.<P>
+
+Note: the Unix command <I>tail -f</I> is useful for watching the log as
+it is written.<P>
+
+<DT>-quiet<DD>
+<DT>-q is shorthand for -quiet<DD>
+Operate in quiet mode, disabling most message logging.
+By default, dcpid logs errors, debugging information, and other
+messages to the specified log file. <P>
+
+<DT>-verbose<DD>
+<DT>-v is shorthand for -verbose<DD>
+Operate in verbose mode, enabling extra message logging.<P>
+
+<DT>-status <I>seconds</I><DD>
+<DT>-L is shorthand for -status<DD>
+Log dcpid status information to the log file every <I>seconds</I> seconds.  
+The default period is 0 (i.e. disabled).<P>
+
+<DT>-logmaps<DD>
+<DT>-x is shorthand for -logmaps<DD>
+Log image loadmap information as it becomes available.
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>OTHER OPTIONS</H3>
+<BLOCKQUOTE>
+<P>
+
+<DL>
+<DT>-help<DD>
+Print dcpid usage message and then terminate.<P>
+
+<DT>-version<DD>
+<DT>-V is shorthand for -version<DD>
+Print dcpid version string.<P>
+
+<DT>-bug<DD>
+<DT>-b is shorthand for -bug<DD>
+Avoid DIGITAL Unix bug by disabling the initial scan of system tables
+to identify executables started before dcpid.  This option is provided
+to eliminate the possiblity of dcpid triggering kernel bugs that can
+hand dcpid or even crash the kernel in rare cases.<P>
+
+Unlike earlier versions of dcpid, which performed frequent scans to
+identify images, the current version only performs a single scan
+during initialization.  Thus, it is extremely unlikely that this
+problem will be encountered.  It is generally worth the risk of
+performing the initial scan in order to obtain useful information about
+processes that were already executing when dcpid was started.<P>
+
+When -bug is specified, periodic scans for identifying forked images
+are also disabled.  This is merely a precaution, since there are no
+reports of problems with -forkid scans.<P>
+
+<DT>-nodaemon<DD>
+<DT>-D is shorthand for -nodaemon<DD>
+Do not run dcpid as a daemon.  By default, dcpid places itself in
+the background, detaches from its terminal, and redirects all output
+to its log file.<P>
+
+<DT>-socket <I>socket</I><DD>
+<DT>-s is shorthand for -socket<DD>
+Use specified local Unix socket pathname for incoming messages from
+client applications such as dcpiflush(1), dcpiepoch(1), and
+dcpiquit(1).  Defaults to <TT>/tmp/.dcpid0</TT>, the default path used by
+these client applications and dcpiloader(5).<P>
+
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>DESCRIPTION</H3>
+<BLOCKQUOTE>
+<P>
+
+Dcpid continuously extracts raw samples from the specified performance
+counter device, associates them with their corresponding images, and
+updates disk-based image profiles in the specified profile database.
+A new profile database can be created by specifying an empty directory.<P>
+
+Dcpid shuts down gracefully in response to termination signals,
+flushing all unsaved samples to their corresponding profiles before
+terminating.  Dcpid may also be terminated using dcpiquit(1).<P>
+
+Dcpid must be executed with root privileges.  It is recommended that
+dcpid be installed as a setuid-root program.
+</BLOCKQUOTE>
+
+<H3>VERSION HISTORY</H3>
+<BLOCKQUOTE>
+<P>
+
+<DL>
+
+<DT>2.22<DD>
+Expanded set of supported event types.  Supports labelled profiles.
+By default, place log file in profile database directory.
+Added "-forkid" option to help identify forked images.  Classifies
+samples from dynamically-loaded kernel modules.
+<DT>2.09<DD>
+Significantly improved functionality and performance.  Uses new pdb
+file format.  Supports long option names.  Ported to Alpha/NT.
+<DT>1.90<DD>
+Added support for sampling multiple events simultaneously, and for
+multiplexing events.
+<DT>1.87<DD>
+Added "-i" option to support per-process profiles.  Improved
+identification of dcpid, kernel, and loader images.
+<DT>1.74<DD>
+Accurately classify samples resulting from loader activity, resulting
+in significantly fewer unknown samples.  Rebuilt using updated pdb
+library to support enhanced profile headers.
+<DT>1.50<DD>
+First external release beyond SRC/WRL.<P>
+
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>SEE ALSO</H3>
+<BLOCKQUOTE>
+<P>
+
+<A HREF="dcpi.html">dcpi(1)</A>,
+<A HREF="dcpiflow.html">dcpiflow(1)</A>,
+<A HREF="dcpiprof.html">dcpiprof(1)</A>,
+<A HREF="dcpilist.html">dcpilist(1)</A>,
+<A HREF="dcpidis.html">dcpidis(1)</A>,
+<A HREF="dcpiscan.html">dcpiscan(1)</A>,
+<A HREF="dcpiepoch.html">dcpiepoch(1)</A>,
+<A HREF="dcpiflush.html">dcpiflush(1)</A>,
+<A HREF="dcpicalc.html">dcpicalc(1)</A>,
+<A HREF="dcpilabel.html">dcpilabel(1)</A>,
+<A HREF="dcpi2ps.html">dcpi2ps(1)</A>,
+<A HREF="dcpicat.html">dcpicat(1)</A>,
+<A HREF="dcpiquit.html">dcpiquit(1)</A>,
+<A HREF="dcpidiff.html">dcpidiff(1)</A>,
+<A HREF="dcpitopstalls.html">dcpitopstalls(1)</A>,
+<A HREF="dcpiwhatcg.html">dcpiwhatcg(1)</A>,
+<A HREF="dcpictl.html">dcpictl(1)</A>,
+<A HREF="dcpisource.html">dcpisource(1)</A>,
+<A HREF="dcpicc.html">dcpicc(1)</A>,
+<A HREF="dcpiversion.html">dcpiversion(1)</A>,
+<A HREF="dcpiuninstall.html">dcpiuninstall(1)</A>,
+<A HREF="dcpi2pix.html">dcpi2pix(1)</A>,
+<A HREF="dcpikdiff.html">dcpikdiff(1)</A>,
+<A HREF="dcpix.html">dcpix(1)</A>,
+<A HREF="dcpisumxct.html">dcpisumxct(1)</A>,
+<A HREF="dcpistats.html">dcpistats(1)</A>,
+<A HREF="dcpiformat.html">dcpiformat(4)</A>,
+<A HREF="dcpiloader.html">dcpiloader(5)</A><P>
+
+For more information, see the 
+<A HREF="../home.html">DIGITAL Continuous
+Profiling Infrastructure project home page
+(http://www.research.digital.com/SRC/dcpi/ from outside DIGITAL)</A>.
+</BLOCKQUOTE>
+
+<H3>COPYRIGHT</H3>
+<BLOCKQUOTE>
+<P>
+
+<a href="http://www.digital.com/info/tm.html">
+Copyright 1996-97, Digital Equipment Corporation.
+</a>
+</BLOCKQUOTE>
+
+<H3>AUTHORS</H3>
+<BLOCKQUOTE>
+Carl Waldspurger, Sanjay Ghemawat, Jeffrey Dean
+</BLOCKQUOTE>
+
+This page was generated automatically by
+<A HREF="http://www.research.digital.com/SRC/mtex/">mtex software</A>.
+</BODY>
+</HTML>

@@ -1,0 +1,151 @@
+                                                            Nov 1, 1997
+
+Announcing the release of Xquote 1.1.  This release contains manual session
+saving (#1 requested feature), configuration for the days and hours quote
+updates should occur, auto-detection of CDE, and a number of bug fixes.
+
+See the CHANGES file for what's new. See the TODO file for what's coming up. 
+
+Check out the Xinvest home page at http://sunsite.auc.dk/xinvest/. Here
+you can find the latest source and Linux binary along with other helpful
+information on using Xquote and Xinvest.
+
+
+Primary Site    -> http://sunsite.auc.dk/xinvest/
+
+Alternate site
+Source          -> ftp://ftp.x.org/contrib/applications/xquote-1.1.tar.gz
+Linux Static Binary  
+                -> ftp://ftp.x.org/contrib/applications/xquote-1.1.bin.tar.gz
+
+** Linux binary users should see the Xinvest/Xquote FAQ for important **
+** operating information about resolving domain names.                **
+
+The XPM library -> ftp://ftp.x.org/contrib/libraries
+
+==========================================================================
+
+What is Xquote?
+----------------
+
+Xquote is a WWW ticker symbol quote retrieval program for UNIX systems 
+using the X Window System. Xquote requires Motif 1.2 or later and XPM. 
+
+Xquote is tested on the following platforms:  HPUX 9.05, Solaris 2.5 CDE, and 
+Linux 2.0.27.
+
+Xquote retrieves quotes from a number of net sources. It takes a ticker
+symbol (stock, mutual fund, currency) and displays info in a table or ticker
+tape. The table data displayed is selectable, and includes price, date,
+change, volume, yield, 52 week high/low, day high/low, P/E, dividend, full
+name, basically whatever can be reliably retrieved from multiple sources.
+
+The good part Xquote communicates this information to Xinvest automatically
+(if its running).
+
+New servers can be added without rebuilding, just update X resources and the
+new server or format is supported.
+
+Xquote supports X11R5 (CDE 1.x) and X11R6 session management.  Xquote will 
+start off just as you left it! Now with manual session management, you no
+longer need a session manager to save your ticker symbols and other setup.
+
+Hopefully, all of this is displayed using  an easy-to-use, point-and-click 
+interface.  There are few command line switches, no dot files, and X resources 
+are limited to color and font selection allowing you to tailor the look of the 
+tool to your own preferences.
+=============================================================================
+
+Building Xquote
+----------------
+
+Xquote is tested on the following platforms:  HPUX 9.05, Solaris 2.5 CDE, and 
+Linux 2.0.27.
+
+
+Known difficulties by machine/OS.
+---------------------------------
+1. Unixware users should use gcc if possible.  Unixware 2.1 users can use
+   the native compiler.  You may also wish to define NEED_STRCASECMP in the
+   Imakefile or Makefile.distrib or link against libucb (-lucb).
+
+2. SunOS 4.x 
+   a. Use Sun's acc, GNU gcc, or another ANSI compliant compiler. 
+   b. Define NEED_STRERROR in Makefile.distrib or Imakefile.
+
+3. Solaris
+   a. Add -lsocket and -lnsl to LIBS in Makefile.distrib and/or SYS_LIBS in
+      Imakefile. 
+
+4. SGI IRIX
+   a. IRIX 5.3 users should know xpm.h is missing from the standard 
+      distribution, though libXpm is present. Motif includes are installed in 
+      /usr/include/abi.  
+   b. Xquote Motif 2.0 resources generate a warning:
+      "Warning: CvtStringToSlidingMode: Unknown string".  
+      This is safe to ignore or remove "ProgessBar.slidingMode:        SLIDER" 
+      from resCommon.h and Xquote.ad before building. 
+
+5. HPUX users note that Xmu and Xaw (not required) are not in the standard 
+   distribution, but are available from HP in unsupported patches.
+
+   PHSS_6202 s700_800 10.0X Xaw/Xmu Development November Point Patch
+   PHSS_5654 s700_800 9.X Xaw/Xmu Development patch
+
+   Patches can be fetched from http://us.external.hp.com.
+
+   Without Xmu, Xquote can not pass price data to Xinvest.  If this is not
+   important to you then define NO_XMU (in Imakefile or Makefile.distrib)
+   and this code will not be built.
+
+To build Xquote.
+-----------------
+0. Go to the Xquote home page (http://sunsite.auc.dk/xinvest/) to find a
+   source archive.
+
+1. Download and uncompress the source archive.  There are two ways to uncompress
+   the archive:
+   a. If you have GNU tar:  "tar -xvzf xquote-VERSION.tar.gz"
+    or
+   b. "gunzip < xquote-VERSION.tar.gz | tar -xvf -"
+
+   Xquote will create it's own subdirectory named 'xquote-VERSION'. Note that
+   'VERSION' will be a number, such as 2.3.
+
+2. cd to xquote-VERSION.
+
+If you have imake.
+3. Look over the Imakefile provided.  
+   a. If you have XPM or Motif in non-standard places add the include 
+      directories where the headers are found to INCLUDES.  
+   b. Add the full path name of the XPM and Motif libraries to SYS_LIBRARIES.  
+   c. If you want a transparent icon add -DSHAPE to DEFINES. 
+
+4. xmkmf; make Makefile; make depend; make; make install.  You may need to
+   be root to do the installation.
+
+If you don't have imake.
+3. Copy Makefile.distrib to Makefile. Look over the provided Makefile.  You're 
+   kind of on your own here.
+   a. Set CFLAGS, INCLUDES, LIBS, and LIBDIR and the build should go well.  
+   b. Add -DSHAPE to CFLAGS if you want a transparent icon. This will require 
+      linking against libXext (already in LIBS in the Makefile).
+
+4. Type make. Copy Xquote to your bin area (usually /usr/bin/X11).  
+
+To test Xquote. 
+----------------
+1. Select a server from the Option->Network dialog. Configure a proxy server
+   if you have one.
+2. Add ticker symbols from the Option->Ticker dialog. Here's one to start you
+   off, TXN (Texas Instruments).
+3. Select File->Update Now.
+4. Start up Xinvest and see how much fun it is not to update prices by hand. 
+   (Xinvest must be running at the end of the quote download and must have
+   at least some of the ticker symbols Xquote downloads).
+
+=======================================================================
+Questions?  For build problems, ask a local knowledgeable person, they will
+            know your system better than I will.  If all else fails or for
+            questions or comments on Xquote: buser@micro.ti.com
+=======================================================================

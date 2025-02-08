@@ -1,0 +1,66 @@
+                            Tkgraph 2.0
+			    Mike Thomas
+			wart@ugcs.caltech.edu
+			    
+Tkgraph grew out of my frustration that there was no decent graphing
+package available for use with Tcl.  Instead of trying to do things
+the easy way by extending Gnu plot or some such other graphing package,
+I decided to write my own.
+
+This software is still beta.  I have been using it quite frequently
+at work, fixing small bugs here and there.  I plan on releasing a new
+version as time permits and bugs surface.  If there is enough demand, I
+will start a Tkgraph mailing list.
+
+If you find any bugs with Tkgraph, please don't hesitate to notify
+me.  Patches are gladly accepted.  Suggestions will be read and
+taken into consideration.
+
+Features
+========
+
+* 2d xy plots.
+* Polar plots.  
+* xy plots with error bars, including errors on the x value only,
+  y value only, or different hi and lo errors.
+* Draw a symbol for each data point, join the data points in a line,
+  or both.
+* Virtually unlimited datasets per graph.
+* Control over the width, color, and "dashedness" of dataset lines.
+* Adjustable tickmark sizes, thickness, color, and spacing.
+* Adjustable tickmark label fonts and colors.
+* Rotated text used for y axis labels.
+* Draw arbitrary lines, circles, ovals, squares, rectangles, and text.
+* Easy creation of new graphs.
+* Though kludgy, it can be interfaced with other Tcl/Tk programs
+  as an add-on graphing utility.
+* Plots can be saved and reloaded at a later time.
+* Autoconf based building of program.
+
+
+Dependencies
+============
+
+Earlier versions of Tkgraph were written using Itcl2.2p2 patched with the
+Dash patch.  2.0 is the first version that requires Tcl/Tk 8.0 and Itcl3.0.1.
+The Dash patch is still necessary.
+
+The Dash patch written by Jan Nijtmans may be retrieved from
+http://home.wxs.nl/~nijtmans/dash.html
+
+Other notes
+===========
+
+Please read the file "license.terms".  It applies to some of the source
+files in the ./src directory.  Some of these files were modified from
+some Tk distribution (7.6/8.0).
+
+Thanks
+======
+
+Thanks to Eleftherios Gkioulekas (lf@amath.washington.edu) for all of
+his help with autoconf (check out his tutorial at
+http://www.amath.washington.edu/~lf/) and his Tcl m4 macros.
+
+Thanks to John Ousterhout and the crew at Scriptics for Tcl.  And
+Thanks to Michael J. McLennan for Itcl.

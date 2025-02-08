@@ -1,0 +1,17 @@
+
+Begin3
+Title:		Button, RockerSwitch, XpmButton - various button widgets
+Version:	1.0
+Entered-date:	$Date: 1999/08/18 17:48:37 $
+Description:	Button is a base class from which other buttons are created.
+		RockerSwitch is a button that looks like a panel switch
+		XpmButton is a button displaying arbitrary pixmaps.
+Keywords:	X11 Xt Intrinsics Button Pixmap
+Author:		Edward A. Falk <falk@falconer.vip.best.com>
+Maintained-by:	Edward A. Falk <falk@falconer.vip.best.com>
+Primary-site:	www.best.com/~falconer/Widgets/#button
+Alternate-site: 
+Original-site:	
+Platforms:	Linux, Unix.
+Copying-policy: GPL
+End

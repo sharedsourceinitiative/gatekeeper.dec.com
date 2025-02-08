@@ -1,0 +1,13 @@
+"Mobile Ambient Synchronization"
+Luca Cardelli
+Note #1997-013. July 10, 1997.
+
+This note describes a non-distributed implementation of the 
+basic operations of the Ambient Calculus, which is a calculus 
+for mobile computing developed together with Andrew Gordon. The 
+implementation uses standard shared-memory concurrent programming 
+technology in the form provided by Java. The presentation is 
+self-contained, but previous familiarity with the Ambient Calculus 
+is useful for motivation and intuitions.
+
+

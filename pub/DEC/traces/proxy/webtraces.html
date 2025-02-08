@@ -1,0 +1,434 @@
+<HTML>
+<HEAD>
+<TITLE>Digital's Web Proxy Traces</TITLE>
+<!-- Changed by: Thomas Kroeger, 19-Sep-1996 -->
+<!-- Changed by: Jeff Mogul, 6-Feb-1998 -->
+</HEAD>
+<BODY>
+ 
+<!--
+This file lives at
+	ftp://ftp.digital.com/pub/DEC/traces/proxy/webtraces.html
+-->
+
+<P><H1>Digital's Web Proxy Traces</H1>
+ This document begins by offering a quick
+introduction to using web proxy traces that were taken at Digital
+Equipment Corporation, and then discusses these
+traces in greater detail.
+
+<P><H3> A Quick Introduction </H3> 
+<P> The key things you need to know to work with these traces are:
+<UL>
+<LI><STRONG> Current Traces </STRONG> -- Currently available is one set of traces taken over a period of a few weeks, including approximately 24,477,674
+references.  These traces are from an
+instrumented version of the <A
+HREF="http://www.nlanr.net/Squid">squid</A> proxy, and record
+all external web requests generated from within Digital Equipment
+Corporation during that period.
+    <UL>
+    <LI> A list of the <A HREF="./tracelist.html">
+		currently-available traces in V1.0 format</A>.
+		Please read the fine
+		print at the bottom of that page!
+    <LI> A list of the <A HREF="./tracelistv1.2.html">
+		same traces in V1.2 format</A>.
+		Please read the fine
+		print at the bottom of that page!
+		This format is documented
+		<A HREF="./webtraces.v1.2.html">separately</A>.
+    <LI> More on <A HREF="#environment"> the environment traced</A> 
+    </UL>
+
+
+<LI><STRONG> Post-processing </STRONG> -- After collection the trace
+data was post-processed.  The goal of this post-processing was to
+transform  four of the larger more unwieldy fields (server's name,
+URL's path, query [if any], and client's IP address) into  four simple 32 bit
+integers.  This transformation was done to allow easy manipulation of
+trace records, and to maintain privacy.
+    <UL>
+    <LI> More on <A HREF="#post">post-processing</A> 
+    </UL>
+
+
+<LI> <STRONG> Trace Files </STRONG> -- Each trace file starts with an 8 KB
+ASCII text header, with
+details of the post-processing including total counts for the number of
+unique clients, servers, URL paths, URL queries, and total number of
+events. This header is then followed by trace event records stored as
+binary data.  (Note: these traces were processed on an Alpha, a little
+endian machine.)
+    <UL> 
+    <LI> More on <A HREF="#header">trace file headers</A> 
+    </UL>
+
+
+<LI><STRONG> Record Fields </STRONG> -- The following items are
+available in each trace event record:
+<UL>
+<LI> the time at which the request was seen
+<LI> the duration of the request
+<LI> the amount of time the proxy spent communicating with the server
+</UL>
+all in microseconds, and
+<UL>
+<LI> the object's last-modified date, if available
+<LI> a unique integer ID for the client
+<LI> a unique integer ID for the server
+<LI> the server port number
+<LI> a unique integer ID for the path
+<LI> a unique integer ID for the query, if any
+<LI> a code specifying the object type (based on the path name extension,
+if any)
+<LI> the object size in bytes
+<LI> the method used
+<LI> the protocol used
+</UL>
+All of these fields are encoded as integers of various sizes.
+    <UL>
+    <LI> More on <A HREF="#fields">record fields and their values</A> 
+    </UL>
+
+
+<LI> <STRONG> Reading Traces</STRONG> -- We provide the program
+<A HREF="./code/proxytrace2txt.c">
+<CODE><STRONG>proxytrace2txt</STRONG></CODE></A>, as a tool to
+convert the trace files into human-readable form, and as a
+template for developing simulation programs that use these traces.
+    <UL>
+    <LI> More on <A HREF="#code"> proxytrace2txt</A> 
+    </UL>
+</UL> 
+
+ <P>
+ <P><H3> More Details</H3>
+<P>
+
+<P>The rest of this document is organized as follows:
+<OL>
+    <LI><A HREF="#environment">Environment in which traces were taken</A>
+    <LI><A HREF="#post"> Post-processing of the traces</A>
+    <OL>
+        <LI> <A  HREF = "#hash">Unique ID  &amp; fingerprint</A>
+        <LI><A  HREF = "#header">Trace file header</A>
+    </OL>
+    <LI><A  HREF = "#fields">Trace fields and values</A>
+    <LI><A HREF="#code" >Reading traces</A>
+</OL> 
+
+<!--
+<P>Two additional documents that cover related information are:
+
+<UL>
+ <LI><A HREF="processing.html" >Processing Traces</A>
+ <LI><A HREF="files.html">A survey of the programs and scripts used</A>
+</UL>
+-->
+
+<P> <H3><A NAME ="environment">Environment in Which Traces Were
+Taken </A> </H3> 
+<P>
+We modified the 1.0.beta17 version of the squid proxy to output
+specific details of its actions at various points. This instrumented
+proxy software was then used on two machines that act as web proxies
+for the Digital's internal network.
+Because the DNS entry for the proxy was set up so that the DNS servers
+would randomly return either of the two addresses with equal probability,
+proxy clients split their requests between the two proxies.
+The trace stream
+represented in these files is a combination of requests traced at both
+machines, and thus represents all external web-related requests
+generated from within Digital.
+
+<P>
+During the time covered by these traces, the proxy software was NOT
+operating as a cache.
+
+<P> <H3> <A NAME="post"> Post-processing of the Traces</A> </H3> <P>In
+post-processing the instrumented proxy output, the following steps
+were taken:
+ <OL>
+ <LI><strong> parse </STRONG>-- Individual events from the
+instrumented proxy (e.g. <CODE>###time_stamp### accept TCP connection
+from client xxx.xxx.xxx.xxx</CODE>)
+were correlated to generate an intermediate format with
+one line for each client request.
+<LI><STRONG> clean </STRONG>-- Four fields were converted from
+strings (or IP addresses) to unique ID numbers (32 bit integers). In
+this conversion, a keyed MD5 fingerprint of the string is made and
+stored.  This fingerprint can then the used to correlate specific
+field values across trace sets. The files containing the mapping from
+unique IDs to 128 bit fingerprints are available as well.  This step
+was also taken to protect the privacy of internal web activity;
+we will not make available the mappings between the original strings
+or addresses and the MD5 fingerprints.
+<UL>
+<LI>More
+details are discussed in  <A  HREF = "#hash">Unique ID  &amp;
+fingerprint</A>
+</UL>
+
+ <LI><STRONG> text to binary conversion </STRONG>-- This last step
+takes what has been up to now ASCII text data and writes it as binary data,
+preceded by an 8 KB header containing a summary of the previous
+steps, as well as cumulative count information and a trace version number.
+ </OL>
+ 
+<P><H3>   <A  NAME = "hash">Unique ID  &amp; fingerprint</A> </H3>
+As explained above, four fields are converted to unique ID numbers.
+These numbers simply represent an enumeration of the values seen for
+that field.  For example, if the first value seen for the server field
+is www.Joe_server.com, then this value will have the unique ID number
+of 1, and every time a request to this server is seen the server 
+number  field will have the value 1.  Although a trace set may be kept
+in several files (usually one file per day) these unique ID numbers are
+consistent across an entire set of traces.
+
+<P>Additionally, when these fields are transformed to unique IDs a 128
+bit fingerprint is used to specifically identify the string.
+(see <A HREF="#fields">Trace Fields and Values</A> for more details on
+the string representing these fields).  Files mapping each fingerprint
+to each unique ID number are also available. The purpose of these
+files is to allow correlation between different trace sets without
+compromising the specifics (or privacy) of the site traced's references.
+
+<!--
+<P> This transformation and fingerprinting is done by one program
+(<CODE>clean</CODE>) that takes a space separated text column from an
+ASCII text file and does the conversion.
+-->
+
+<P> <H3><A NAME = "header">Trace File Header</A> </H3> <P> The ASCII
+text header for each file details the output from post-processing.
+Each such header contains the maximum value that each of the
+unique IDs has reached in this trace file. This number is basically a
+count of the total number of values seen for that field in the traced
+stream ending with this file. For example, if the client field has a
+maximum of 100, then we can say that by the end of this trace file, the
+entire stream traced has seen requests from 100 different clients.
+
+
+<P> <H3><A  NAME = "fields">Trace Fields and Values</A> </H3>
+<P> The structure of each trace record is shown in the type definition
+below.  The type <CODE>u_4bytes</CODE> is an unsigned four byte integer.
+ 
+<P>
+All fields are written in little-endian byte-order (this work was done
+using Digital's Alpha-based systems).  It should be possible to
+read these files on a big-endian system, by using macros or function
+calls to byte-swap the 16-bit or 32-bit fields, as appropriate.
+ 
+<PRE>
+    typedef struct  _TEntry {
+	u_4bytes			event_duration;
+	u_4bytes			server_duration;
+	u_4bytes			last_mod;
+	u_4bytes			time_sec;
+	u_4bytes			time_usec;
+
+	u_4bytes			client;
+	u_4bytes			server;
+	u_4bytes			port;
+	u_4bytes			path;
+	u_4bytes			query;
+	u_4bytes			size;
+
+	unsigned short			status;
+	unsigned  char			type;
+	unsigned  char			flags;
+ 	method_t			method;
+	protocol_t			protocol;
+    } TEntry;
+</PRE>
+
+<P>The duration  fields  are measured in microseconds. The event
+duration is the time from when the proxy first accepts a connection
+from the client to when the proxy successfully closes that connection.
+The server_duration field consists of the time the proxy is connected to the
+web server.  Note this duration can take the unsigned equivalent of -1
+in the case that no connection to this server was made.
+
+<P> The time fields represent the time at which the proxy accepted a
+connection from the client, in microseconds since the UNIX epoch.
+
+<P>The fields client, server, path, query are all unique ID numbers.
+These numbers are sequential from 1 to the last unique value for  that
+field.
+ 
+<P>
+The ``path'' is the portion of the requested URL following the server
+name (and possible port number), up to the end of the URL or the first
+<CODE>?</CODE>, if one appears.
+If the URL contains no path, a default path ID is used,
+of <CODE>/</CODE> is used  and a flag is set (see
+<A HREF="#flags">below</A>.)
+
+<P>
+If a <CODE>?</CODE> appears in the URL, the string used for the query
+is everything after (and including) the
+first <CODE>?</CODE> in the URL.
+
+<P>The port is the TCP port used for the connection.
+<P>The size is the size of the object in bytes.
+<P>Status is the HTTP status code returned from the web server.
+
+<A NAME="flags">
+<P>The values for the field flags are as follows:
+<TABLE>
+<TR>
+<TH> Symbol </TH>
+<TH> Value </TH>
+<TH> Meaning </TH>
+</TR>
+ <TR>
+<TD>  NO_PATH_FLAG</TD>
+<TD> 1 </TD>
+<TD> path consists of only  <CODE>/</CODE> </TD>
+<TR>
+<TD> PORT_SPECIFIED_FLAG </TD>
+<TD> 2</TD>
+<TD> A specific TCP Port was specified </TD>
+</TR>
+<TR>
+<TD> NULL_PATH_ADDED_FLAG </TD>
+<TD> 4 </TD>
+<TD>  The requested URL had no path</TD>
+</TR>
+<TR>
+<TD> QUERY_FOUND_FLAG </TD>
+<TD> 8 </TD>
+<TD>   A <CODE>?</CODE> was found in the requested URL</TD>
+</TR>
+<TR>
+<TD> EXTENSION_SPECIFIED_FLAG</TD>
+<TD>16  </TD>
+<TD>  The path field specified an extension</TD>
+</TR>
+<TR>
+<TD> CGI_BIN_FLAG  </TD>
+<TD>32 </TD>
+<TD>  The string <CODE>cgi_bin</CODE> was found in the path</TD>
+</TR>
+
+</TABLE>
+<P>   Any extension provided at the end of the path is used to
+determine a object type.
+ The type field is set
+depending on what string the extension is.
+Various forms of well-known extensions are accepted
+(e.g. <CODE>.htm</CODE> is considered type HTML,
+and <CODE>.JPEG</CODE>, <CODE>.jpeg</CODE>, <CODE>.JPG</CODE>,
+and <CODE>.jpg</CODE> are all considered the same.)
+<TABLE>
+<TR>
+<TH>Symbol </TH>
+<TH> Value </TH>
+</TR>
+ <TR>
+<TD>  NO_EXTENSION </TD>
+<TD> 0 </TD>
+</TR>
+ <TR>
+<TD>  HTML_EXTENSION </TD>
+<TD> 1 </TD>
+</TR>
+ <TR>
+<TD>  GIF_EXTENSION </TD>
+<TD> 2 </TD>
+</TR>
+ <TR>
+<TD>  CGI_EXTENSION </TD>
+<TD> 3 </TD>
+</TR>
+ <TR>
+<TD>  DATA_EXTENSION </TD>
+<TD> 4 </TD>
+</TR>
+ <TR>
+<TD>  CLASS_EXTENSION </TD>
+<TD> 5 </TD>
+</TR>
+ <TR>
+<TD>  MAP_EXTENSION  </TD>
+<TD> 6 </TD>
+</TR>
+ <TR>
+<TD>  JPEG_EXTENSION </TD>
+<TD> 7 </TD>
+</TR>
+<TR>
+<TD>  MPEG_EXTENSION </TD>
+<TD> 8 </TD>
+</TR>
+<TR>
+<TD>   OTHER_EXTENSION </TD>
+<TD>  9 </TD>
+</TR>
+</TABLE>
+
+<P>  Method and protocol are copied directly from Squid's source code,
+and are as follows:
+
+<PRE>
+    typedef enum {
+	METHOD_NONE = 0,
+	METHOD_GET,
+	METHOD_POST,
+	METHOD_HEAD,
+	METHOD_CONNECT
+    } method_t;
+    
+    typedef enum {
+	PROTO_NONE = 0,
+	PROTO_HTTP,
+	PROTO_FTP,
+	PROTO_GOPHER,
+	PROTO_WAIS,
+	PROTO_CACHEOBJ,
+	PROTO_MAX
+    } protocol_t;
+</PRE>
+
+
+<P><H3><A NAME="code">Code to Read Traces</A> </H3>
+ <P>The <A HREF="./code/proxytrace2txt.c"><CODE>proxytrace2txt</CODE></A>
+program is a simple C program (with an associated <A HREF="
+./code/proxytrace2txt.h">header</A> file) that opens either a regular
+or compressed (file with extension ".gz") trace data file, and prints
+out the trace records as seen.  A packaged copy of the <A
+HREF="./code/proxytrace2txt.tar.gz">code</A> for this program is provided as a
+ tool to examine the trace data, and as a template from which to
+develop simulation programs that use this data.
+(Note that this version of the software runs only on little-endian
+machines.)
+
+<P>
+As noted above, these traces were created on a little-endian machine.
+<A HREF="mailto:rousskov@plains.NoDak.edu">Alex Rousskov</A> has kindly
+contributed a modified program,
+<A HREF="./contrib/proxytrace2any.tar.gz">proxytrace2any</A>,
+that does automatic byte-order conversion.  This program also supports
+both the V1.0 and V1.2 input formats, supports three output formats
+(DEC native, squid, and squid with swapped fields). New formats can be
+easily added.  See the
+<A HREF="./contrib/README.proxytrace2any">README</A> file for more
+details.
+This code has not been tested here at Digital.
+</P>
+
+<P><address>
+
+This page and the documented programs were done by <A
+HREF="http://www.cse.ucsc.edu/~tmk">Tom M. Kroeger</A> as a part of
+my summer internship at Digital's
+<A HREF="http://www.research.digital.com/wrl">Western Research Lab</A>,
+under the supervision of <A HREF="http://www.research.digital.com/wrl/people/mogul/bio.html">Jeff Mogul</A>. 
+
+The instrumentation of the squid proxy was done by <A HREF="http://www.cs.Colorado.edu/~carlosm/Home.html">Carlos Maltzahn</A>.
+</address>
+
+
+ </BODY> </HTML>
+
+

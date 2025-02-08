@@ -1,0 +1,233 @@
+<!-- This file generated automatically by mtex2html(1) -->
+<HTML>
+<HEAD>
+<TITLE>dcpiflow</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#ffffff" VLINK="#006633">
+<H2>dcpiflow(1)</H2>
+
+<H3>NAME</H3>
+<BLOCKQUOTE>
+dcpiflow - generate DIGITAL  Continuous Profiling Infrastructure
+basic-block graph for a procedure annotated with
+samples collected during profiling via <TT>dcpid</TT>.
+</BLOCKQUOTE>
+
+<H3>SYNOPSIS</H3>
+<BLOCKQUOTE>
+<B>dcpiflow</B> [-v] <I>procedure-name</I> <I>image-file</I> [<I>sample-files...</I>]
+</BLOCKQUOTE>
+
+<H3>FLAGS</H3>
+<BLOCKQUOTE>
+<DL>
+<DT>-samesize<DD>  Assign same size to each block in the control flow graph.
+<DT>-v<DD>  Prints detailed progress information.
+<DT>-V<DD>  Print program version number.
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>DESCRIPTION</H3>
+<BLOCKQUOTE>
+Dcpiflow generates a basic block graph from a named procedure that is
+extracted from a specified image file.  The basic block graph is
+annotated with samples that were collected by <TT>dcpid</TT> and then
+stored in the named sample files.  The basic block graph is printed on
+standard output, and can be converted to postscript by dcpi2ps(1).  The
+output can also be fed into dcpisource(1) for further
+annotation.<P>
+
+Instead of a procedure name, <TT>dcpiflow</TT> also accepts an address.
+Therefore, if an image contains multiple procedures with the same
+name, you can give an address that falls within one of these
+procedures to disambiguate the procedure selection.<P>
+
+Samples that do not belong to the specified procedure are ignored.  If
+no sample files are provided, a sample count of zero is assumed for
+each instruction.  If multiple sample files contribute to the samples
+for the specified procedure, these samples are merged together in the
+output.
+</BLOCKQUOTE>
+
+<H3>INTERPRETING OUTPUT</H3>
+<BLOCKQUOTE>
+<P>
+
+Each node of the control flow graphs corresponds to a basic block.  If
+the <TT>-samesize</TT> option is specified on the command line, each block
+is assigned the same size.  Otherwise, blocks are scaled depending on
+the number of samples and instructions in them: If the average number
+of samples per instruction in small, the corresponding block is
+printed using tiny font and contains just the start address of the
+block. The larger the average number of samples per instruction, the
+larger the font used to print the content of a block.<P>
+
+All (except the smallest-font) nodes of the control flow graph consist
+of multiple lines. The first line contains the last 24-bits of the
+(hexadecimal) start address of the basic block. The remaining lines
+contain the instructions of the basic block. Each line uses the
+following format, from left to right:
+<UL>
+<LI> the last 24 bits of the instruction's address (hexadecimal),
+<LI> the source line number (decimal) or 0 if the source code
+cannot be found,
+<LI> colon,
+<LI> the instruction's 32-bit machine code (hexadecimal)
+<LI> the instruction in mnemonics
+<LI> the number of PC samples falling at this instruction address (decimal).
+</UL>
+<P>
+
+Example:
+<PRE>
+ 588584  318:2e4c0000 ldq_u    a2, 0(s3)        1558
+ 588588  318:a79d2d70 ldq      at, 11632(gp)    191855
+</PRE>
+
+</BLOCKQUOTE>
+
+<H3>TYPICAL USAGE</H3>
+<BLOCKQUOTE>
+<P>
+
+Typically, <TT>dcpiflow</TT>, <TT>dcpisource</TT>, and
+<TT>dcpi2ps</TT> are used together as follows:
+<PRE>
+dcpiflow idle_thread /vmunix vmunix* | \
+dcpisource -f /src/kernel/kern/sched_prim.c | \
+dcpi2ps -o idle_thread.ps 
+</PRE>
+
+</BLOCKQUOTE>
+
+<H3>PROBLEMS WITH JUMP TABLE TARGETS</H3>
+<BLOCKQUOTE>
+During the construction of the basic block graph, <TT>dcpiflow</TT> tries
+to determine the targets of all computed jumps. If it fails to do so
+for a jump, it prints an error message saying that it could not compute
+jump table targets.  In such cases, the user can guide the operation
+of dcpiflow by telling <TT>dcpiflow</TT> an upper and lower bound on the
+value of the index register used in the jump.  <TT>dcpiflow</TT> then
+uses the upper and lower bounds to determine all possible targets of
+the computed jump.<P>
+
+To tell <TT>dcpiflow</TT> an upper bound and a lower bound on the value of
+the index register of a jump in an image, create a file called
+"<TT>.dcpijumps</TT>" in the current directory or in the home directory.
+This file should contain lines of the form:
+<PRE>
+    0x&lt;image_id in hex&gt;  0x&lt;jump address in hex&gt;  &lt;lower&gt;  &lt;upper&gt;
+</PRE>
+
+The file should contain one line for each image/compute-jump pair
+for which dcpiflow could not automatically determine the targets.<P>
+
+Use <TT>dcpiscan</TT> to determine the image_id for an image.<P>
+
+<I>Example:</I><P>
+
+When we run dcpiflow on a particular procedure, it prints the following
+message to stderr:
+<PRE>
+   % dcpiflow ...
+   0x12004bb10: could not compute jump table targets
+</PRE>
+
+The next step is to examine the disassembled code in the neighborhood
+of the computed jump at address <TT>0x12004bb10</TT>.  (The output of either
+dcpilist or dcpiflow can be used for this purpose.)
+<PRE>
+ ...
+ 04baf8  244:41da53b6 cmpult   s5, 0xd2, t8     0
+ 04bafc  244:e6c009d9 beq      t8, 0x12004e264  0
+ 04bb00  244:a79d82c0 ldq      at, -32064(gp)   0
+ 04bb04  244:41dc0459 s4addq   s5, at, t11      0
+ 04bb08  244:a3390000 ldl      t11, 0(t11)      0
+ 04bb0c  244:433d0419 addq     t11, gp, t11     0
+ 04bb10  244:6bf903e5 jmp      zero, (t11), 0x12004caa8 0
+ ...
+</PRE>
+
+The pair of instructions <TT>cmpult/beq</TT> at <TT>0x12004baf8</TT> branch
+away from the jump instruction if <TT>s5</TT> is not in the range
+<TT>[0..0xd1]</TT>.  The <TT>ldq</TT> instruction loads into register <TT>at</TT>
+the base address of the jump table associated with this computed jump.
+The <TT>s4addq</TT> multiplies the index register <TT>s5</TT> by 4, adds it to
+the base of the jump table to get a pointer into the jump table, and
+stores the resulting pointer in register <TT>t11</TT>.  The <TT>ldl</TT>
+instruction loads the corresponding jump table entry into <TT>t11</TT> and
+the following <TT>addq</TT> adds the <TT>gp</TT> to the value of <TT>t11</TT>
+since the jump entries are offsets from the contents of <TT>gp</TT>.<P>
+
+Because of the <TT>cmpult/beq</TT> instruction pair, we know that the
+<TT>jmp</TT> instruction is reachable only when the index register <TT>s5</TT>
+has a value in the range <TT>[0..0xd1]</TT>.  Therefore, the following
+entry should be placed in <TT>.dcpijumps</TT>:
+<PRE>
+     0x3249774100393048 0x12004bb10 0 209
+</PRE>
+
+(The image-id <TT>0x3249774100393048</TT> was determined by <TT>dcpiscan</TT>.)
+</BLOCKQUOTE>
+
+<H3>SEE ALSO</H3>
+<BLOCKQUOTE>
+<P>
+
+<A HREF="dcpi.html">dcpi(1)</A>,
+<A HREF="dcpiprof.html">dcpiprof(1)</A>,
+<A HREF="dcpilist.html">dcpilist(1)</A>,
+<A HREF="dcpidis.html">dcpidis(1)</A>,
+<A HREF="dcpiscan.html">dcpiscan(1)</A>,
+<A HREF="dcpiepoch.html">dcpiepoch(1)</A>,
+<A HREF="dcpiflush.html">dcpiflush(1)</A>,
+<A HREF="dcpicalc.html">dcpicalc(1)</A>,
+<A HREF="dcpilabel.html">dcpilabel(1)</A>,
+<A HREF="dcpi2ps.html">dcpi2ps(1)</A>,
+<A HREF="dcpicat.html">dcpicat(1)</A>,
+<A HREF="dcpiquit.html">dcpiquit(1)</A>,
+<A HREF="dcpidiff.html">dcpidiff(1)</A>,
+<A HREF="dcpitopstalls.html">dcpitopstalls(1)</A>,
+<A HREF="dcpiwhatcg.html">dcpiwhatcg(1)</A>,
+<A HREF="dcpictl.html">dcpictl(1)</A>,
+<A HREF="dcpisource.html">dcpisource(1)</A>,
+<A HREF="dcpicc.html">dcpicc(1)</A>,
+<A HREF="dcpiversion.html">dcpiversion(1)</A>,
+<A HREF="dcpiuninstall.html">dcpiuninstall(1)</A>,
+<A HREF="dcpi2pix.html">dcpi2pix(1)</A>,
+<A HREF="dcpikdiff.html">dcpikdiff(1)</A>,
+<A HREF="dcpix.html">dcpix(1)</A>,
+<A HREF="dcpisumxct.html">dcpisumxct(1)</A>,
+<A HREF="dcpistats.html">dcpistats(1)</A>,
+<A HREF="dcpid.html">dcpid(1)</A>,
+<A HREF="dcpiformat.html">dcpiformat(4)</A>,
+<A HREF="dcpiloader.html">dcpiloader(5)</A><P>
+
+For more information, see the 
+<A HREF="../home.html">DIGITAL Continuous
+Profiling Infrastructure project home page
+(http://www.research.digital.com/SRC/dcpi/ from outside DIGITAL)</A>.
+</BLOCKQUOTE>
+
+<H3>COPYRIGHT</H3>
+<BLOCKQUOTE>
+<P>
+
+<a href="http://www.digital.com/info/tm.html">
+Copyright 1996-97, Digital Equipment Corporation.
+</a>
+</BLOCKQUOTE>
+
+<H3>AUTHOR</H3>
+<BLOCKQUOTE>
+Sanjay Ghemawat,
+Monika Henzinger
+</BLOCKQUOTE>
+
+This page was generated automatically by
+<A HREF="http://www.research.digital.com/SRC/mtex/">mtex software</A>.
+</BODY>
+</HTML>

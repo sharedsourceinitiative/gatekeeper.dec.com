@@ -1,0 +1,797 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<TITLE>Strengthening Passwords</TITLE>
+</HEAD>
+<BODY bgcolor="#ffffff" text="#000000">
+<H1 ALIGN=CENTER>Strengthening Passwords</H1>
+<P>
+<TABLE WIDTH="100%">
+<TR ALIGN=CENTER>
+<TD COLSPAN=2>
+Mart&iacute;n Abadi<BR>
+Digital Equipment Corporation<BR>
+Systems Research Center<BR>
+<FONT SIZE=-1><TT><A HREF="mailto:ma@pa.dec.com">ma@pa.dec.com</A></TT></FONT>
+<TR ALIGN=CENTER>
+<TD>
+T.&nbsp;Mark A.&nbsp;Lomas<BR>
+Goldman Sachs International<BR>
+Information Security Department<BR>
+<FONT SIZE=-1><TT><A HREF="mailto:Mark.Lomas@gs.com">Mark.Lomas@gs.com</A></TT></FONT>
+<TD>
+Roger Needham<BR>
+University of Cambridge<BR>
+Computer Laboratory<BR>
+and<BR>
+Microsoft Research<BR>
+<FONT SIZE=-1><TT><A HREF="mailto:Roger.Needham@cl.cam.ac.uk">Roger.Needham@cl.cam.ac.uk</A></TT></FONT>
+<TR ALIGN=CENTER>
+<TD COLSPAN=2>
+September 4, 1997<BR> 
+(with minor revisions on December 16, 1997)
+</TABLE>
+<P ALIGN=CENTER>
+<STRONG>Abstract</STRONG>
+<P>
+<BLOCKQUOTE>
+Despite their notorious vulnerability, 
+traditional passwords remain important for security.
+In this paper we describe a method for strengthening passwords.  Our
+method does not require users to memorize or to write down long
+passwords, and does not rely on smart-cards or other auxiliary
+hardware.  The main cost of our method is that it lengthens the process
+of checking a password.
+</BLOCKQUOTE>
+<P>
+<HR>
+<H2>Contents</H2>
+<TABLE>
+<TR>
+<TD><STRONG>1.</STRONG></TD>
+<TD><STRONG><A HREF="#sec:introduction">Introduction</A></STRONG></TD>
+<TR>
+<TD><STRONG>2.</STRONG></TD>
+<TD><STRONG><A HREF="#sec:laptop">Strengthening User Passwords</A></STRONG></TD>
+<TR>
+<TD><STRONG>3.</STRONG></TD>
+<TD><STRONG><A HREF="#sec:network">Strengthening Secrets over a Network</A></STRONG></TD>
+<TR>
+<TD><STRONG>4.</STRONG></TD>
+<TD><STRONG><A HREF="#sec:comparisons">Comparisons</A></STRONG></TD>
+<TR>
+<TD><STRONG>5.</STRONG></TD>
+<TD><STRONG><A HREF="#sec:conclusion">Conclusion</A></STRONG></TD>
+<TR>
+<TD COLSPAN=2><STRONG><A HREF="#sec:references">References</A></STRONG></TD>
+</TABLE>
+<P>
+<HR>
+<H2><A NAME="sec:introduction">1. Introduction</A></H2>
+<P>
+Traditional passwords are still the most common basis for user
+authentication.  Even systems with sophisticated cryptographic
+protocols often employ user passwords, for example for encrypting keys.
+It seems likely that passwords will be pervasive for some time.
+<P>
+Passwords are notoriously vulnerable to
+attacks&nbsp;[<A HREF="#Menezes96">MvOV96</A>,<A HREF="#BruceSchnei96">Sch96</A>].
+Users often have weak passwords because strong passwords are long and
+hard to remember.
+Furthermore, password protection weakens with the passage of time and
+improvements in computer performance: attackers can rely on faster and
+faster computers for guessing passwords, while user memory does not
+seem to be expanding, and passwords do not seem to be getting longer.
+<P>
+Because long passwords are hard to remember, users may write them on
+pieces of paper, or store them on floppy disks, smart-cards, or other
+pieces of auxiliary hardware.  In some cases, the auxiliary hardware
+may also contain private keys and perform cryptographic operations.
+However, pieces of paper, floppy disks, and smart-cards may all fall
+into enemy hands.  Smart-cards could be protected with passwords or
+PINs, which in turn may be weak; they are also subject to tampering.
+Thus, auxiliary hardware is not a perfect remedy, and sometimes it can
+even be a liability: whereas hardware may not be easy to destroy, a
+user may well forget a password, and may claim that this has happened
+even under legal pressure to reveal the password.
+<P>
+There has been much work on maintaining security despite weaknesses in
+passwords.  In this paper, we address the different problem of
+improving passwords.  Any effort to improve passwords must be
+concerned with the trade-off between user memory and
+security.  However, as we show, it is possible to strengthen passwords,
+without requiring additional user memory and without auxiliary
+hardware.  Our techniques are easy to implement in software and
+conceptually simple.  Their main cost is in access time: a password
+check may take longer than usual.  We arrive at a three-way trade-off
+between user memory, security, and access time.  
+Since access time is part of this trade-off, our techniques can take
+advantage of improvements in computer performance: password protection
+can progress at the same speed as brute-force attacks on passwords.
+<P>
+In
+<A HREF="#sec:laptop">section&nbsp;2</A>,
+we describe a technique for strengthening passwords; it seems
+particularly appealing for the protection of data stored in a laptop or
+other personal computer.  In
+<A HREF="#sec:network">section&nbsp;3</A>,
+we describe a variant of our ideas; this variant allows a shared secret
+to be strengthened over a network.  We briefly compare the techniques of
+sections&nbsp;<A HREF="#sec:laptop">2</A>
+and&nbsp;<A HREF="#sec:network">3</A> in
+<A HREF="#sec:comparisons">section&nbsp;4</A>.
+<P>
+The work presented in this paper was carried out in 1996 and early
+1997.  In the fall of 1997, a reader of a previous version of this
+paper pointed us to an interesting paper by
+Manber&nbsp;[<A HREF="#manber:pwd">Man96</A>], 
+which describes ideas related to those of
+<A HREF="#sec:laptop">section&nbsp;2</A>
+and their implementation in the context of Unix.
+<P>
+<H2><A NAME="sec:laptop">2. Strengthening User Passwords</A></H2>
+<P>
+<STRONG>The problem</STRONG>
+A computer may sometimes be outside the physical control of its
+intended users; for example, a laptop may be stolen rather
+easily.  Therefore, it is prudent to restrict access to the computer's
+functions, for instance by requiring the entry of a password.  It is
+also prudent to protect the files on the computer by encrypting them,
+for instance under an encryption key derived from the password.  The
+password itself should not be kept in the clear on the computer.  In
+this way, only parties that know the password can use the computer and
+read the files, even if they have direct access to the computer's
+storage devices.  The password should be strong enough that an attacker
+cannot guess it and then decrypt the files.  In this section we present
+a technique for strengthening a password for this purpose.
+<P>
+<STRONG>Assumptions</STRONG>
+We assume that user and computer have some secure means for
+communicating, perhaps because the user has direct, physical access to
+the computer, or can establish a secure network connection with the
+computer.
+<P>
+We also make some cryptographic assumptions, which we state informally
+as follows.  We rely on a function
+<VAR>f</VAR>
+that is easy to compute but hard to invert.  We assume that, given
+<VAR>x</VAR>,
+the computation of <VAR>f(x)</VAR> is fast - for example, it may take
+just a few microseconds.  On the other hand, given
+<VAR>y</VAR>, an
+<VAR>x</VAR>
+such that
+<VAR>f(x) = y</VAR>
+cannot be found much faster than by applying
+<VAR>f</VAR>
+to all possible arguments; this property should hold even when part of
+<VAR>x</VAR>
+is given along
+with&nbsp;<VAR>y</VAR>.
+In short,
+<VAR>f</VAR>
+should be a locally one-way
+function&nbsp;[<A HREF="#Menezes96">MvOV96</A>, chapter 9].
+Additionally, we assume that
+<VAR>f</VAR>
+is collision-resistant.  Functions such as MD5 and SHA (or
+variants)&nbsp;[<A HREF="#BruceSchnei96">Sch96</A>]
+seem fairly likely to have these properties.
+<P>
+<STRONG>A solution</STRONG>
+We describe our technique in the context of protecting a laptop and the
+data stored in the laptop.  Use of the laptop and access to
+confidential files depends on possession of a password; the user may
+type this password into the laptop at log-in time, as usual.  Let us
+call this
+password&nbsp;<VAR>P</VAR>.
+<P>
+In addition to
+<VAR>P</VAR>,
+we consider a quantity
+<VAR>Q</VAR>,
+called the
+<EM>password supplement</EM>.
+We refer to the concatenation of
+<VAR>P</VAR> and
+<VAR>Q</VAR> as the
+<EM>full password</EM>, and write
+<VAR>P+Q</VAR>
+for this concatenation.  On the laptop, confidential files are
+encrypted under an encryption key derived from the full password
+(<VAR>P+Q</VAR>).
+<P>
+The length of
+<VAR>Q</VAR>
+is fixed; with current technology in mind, we envision that this length
+would be between 16 and 20 bits.  The quantity
+<VAR>Q</VAR>
+is chosen randomly.  Both the user and the laptop may contribute to
+<VAR>Q</VAR>,
+using whatever sources of entropy they have available.  While it is
+often expensive to generate high-quality random bits, existing
+techniques can be applied without much trouble for constructing a short
+quantity such as
+<VAR>Q</VAR>.
+The quantity
+<VAR>Q</VAR>
+never changes or changes seldom after initial installation.  For
+example, it would be natural for the laptop to pick a new
+<VAR>Q</VAR>
+every time the user picks a new
+<VAR>P</VAR>.
+<P>
+The laptop holds the result of applying
+<VAR>f</VAR>
+to the full password.  We write
+<VAR>H</VAR>
+for this result (that is, for
+<VAR>f(P+Q)</VAR>).
+The quantity
+<VAR>H</VAR>
+need not be kept secret.  The laptop does not hold the full password or
+any of its parts except while in use by a legitimate user; the full
+password and even the password supplement should be kept secret.
+<P>
+When the user enters the password
+<VAR>P</VAR>,
+the laptop searches for
+<VAR>Q</VAR>,
+by trying all possible quantities
+<VAR>X</VAR>
+of the same length as
+<VAR>Q</VAR>.
+For each candidate quantity
+<VAR>X</VAR>,
+the laptop calculates
+<VAR>f(P+X)</VAR>.
+If
+<VAR>f(P+X)</VAR>
+equals
+<VAR>H</VAR>,
+then
+<VAR>X</VAR>
+is
+<VAR>Q</VAR>
+(since
+<VAR>f</VAR>
+is collision-resistant), so access is granted; later, knowledge of
+<VAR>P+Q</VAR>
+enables the decryption of confidential files.  If the user types the
+password incorrectly, no match will occur (since
+<VAR>f</VAR>
+is collision-resistant, again), so access will be denied.
+<P>
+<STRONG>Performance consequences</STRONG>
+Performance can be acceptable even when the password supplement is
+substantial.  For example, if the computation of
+<VAR>f</VAR>
+takes 2 microseconds and
+<VAR>Q</VAR>
+is 20 bits long, then the search for
+<VAR>Q</VAR>
+should take about 1 second on average when the user enters
+<VAR>P</VAR>
+correctly.
+<P>
+The order in which the candidates
+<VAR>X</VAR>
+are generated and tried is not essential.  We suggest trying them in
+sequential order, but starting with a random quantity rather than
+starting at
+<VAR>0</VAR>.
+The random start prevents any deductions about
+<VAR>Q</VAR>
+based on timing, while allowing the search to terminate as soon as
+<VAR>f(P+X)</VAR>
+equals
+<VAR>H</VAR>.
+The random start also implies that no values of
+<VAR>Q</VAR>
+will provide the user with particularly good or bad access time;
+security would be reduced if the user could somehow control access time
+by picking
+<VAR>Q</VAR>,
+or by changing
+<VAR>Q</VAR>
+when access time is poor.
+<P>
+<STRONG>Security consequences</STRONG>
+The protection provided by this technique is determined by the strength
+of the full password
+<VAR>P+Q</VAR>,
+rather than by the strength of the password
+<VAR>P</VAR>
+alone. 
+<P>
+In particular, suppose that an attacker has stolen the disk of the
+laptop and is trying to decrypt a confidential file by trying all
+possible keys.  Assuming that keys are properly derived from full
+passwords, there are as many possible keys as possible values for the
+full password.  If the length of the password supplement is 20 bits,
+then the search space that the attacker has to explore is
+<VAR>2<SUP>20</SUP></VAR>
+larger than it would have been with traditional password protection.
+<P>
+Similarly, suppose that the attacker is trying to learn
+<VAR>P+Q</VAR>
+by guessing a value, applying
+<VAR>f</VAR>
+to it, and comparing the result with
+<VAR>H</VAR>,
+which is stored on the laptop.  Because
+<VAR>f</VAR>
+is collision-resistant, a match would indicate that the attacker has guessed
+<VAR>P+Q</VAR>
+correctly.  Again, if the length of the password supplement is 20 bits,
+then the search space that the attacker has to explore is
+<VAR>2<SUP>20</SUP></VAR>
+larger than the corresponding search space for
+<VAR>P</VAR>.
+<P>
+The protection provided by this technique is equivalent to that which
+we would obtain through a traditional approach and with a longer
+password.  In short, the user remembers the password and gets the
+protection of the full password.  In order to quantify this
+improvement, assume for example that the password
+<VAR>P</VAR>
+is a random, 40-bit quantity, or has equivalent strength, and that the
+password supplement
+<VAR>Q</VAR>
+is a random, 20-bit quantity.  In this case, the protection goes from
+mediocre to respectable: the full password is stronger than a DES
+key&nbsp;[<A HREF="#DES">DES77</A>].
+<P>
+<STRONG>Salting</STRONG>
+It is common that computers do not store passwords in the clear, but
+instead store something like
+<VAR>f(P+S)</VAR>
+and
+<VAR>S</VAR>,
+where
+<VAR>S</VAR> is a
+<EM>salt</EM> -
+added for the purpose of thwarting dictionary attacks.  The main
+difference between the salt
+<VAR>S</VAR>
+and the password supplement
+<VAR>Q</VAR>
+is that
+<VAR>S</VAR>
+is stored and may even be public, while
+<VAR>Q</VAR>
+is discarded and should be kept secret.  Thus, we may summarize our
+technique as follows: salt the password, then delete the salt, and
+reconstruct the salt by brute force when the password is checked.
+<P>
+Ideally,
+<VAR>P</VAR>
+and
+<VAR>Q</VAR>
+should be long enough to prevent a dictionary attack against
+<VAR>P+Q</VAR>.
+Otherwise, our technique can easily be enhanced with salting, in the
+standard manner: the laptop would store
+<VAR>f(P+Q+S)</VAR>
+and
+<VAR>S</VAR>,
+where
+<VAR>S</VAR>
+is a salt.
+<P>
+<STRONG>A generalization for partial password recovery</STRONG>
+A variant of our technique allows the user to enter only part of
+<VAR>P</VAR>.
+In that case, the laptop will search for the remainder of
+<VAR>P</VAR>,
+much like it searches for the password supplement.  The search will
+naturally take longer, perhaps hours or days.  This delay may be
+acceptable in extreme circumstances, for example when the user has
+accidentally forgotten the remainder of
+<VAR>P</VAR>.
+Thus, the technique provides the option of remembering more and getting
+faster response, or remembering less and getting slower response.
+<P>
+<H2><A NAME="sec:network">3. Strengthening Secrets over a Network</A></H2>
+<P>
+<STRONG>The problem</STRONG>
+Suppose that two parties
+<VAR>A</VAR>
+and
+<VAR>B</VAR>
+share a secret
+<VAR>P</VAR>
+and wish to use it as the basis for confidential communication between
+them.  The messages between
+<VAR>A</VAR>
+and
+<VAR>B</VAR>
+may therefore be encrypted, for example applying DES and using
+<VAR>P</VAR>
+as a key (possibly after padding or truncation).  This approach is
+represented in the following figure, where braces represent DES
+encryption and
+<VAR>M</VAR>
+is a typical message.
+<P><BR>
+<IMG WIDTH="300" HEIGHT="75" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.gif"
+><BR>
+<P>
+When
+<VAR>P</VAR>
+is weak,
+<VAR>A</VAR>
+and
+<VAR>B</VAR>
+should be careful not to expose it to off-line attacks.  A log of the
+messages between
+<VAR>A</VAR>
+and
+<VAR>B</VAR>
+may provide an attacker with enough information to confirm a guess of
+<VAR>P</VAR>.
+For example, when the message
+<VAR>M</VAR>
+contains some recognizable plaintext, an attacker that sees
+<VAR>{M}<SUB>P</SUB></VAR>
+and that guesses
+<VAR>P</VAR>
+can confirm the guess by decrypting
+<VAR>{M}<SUB>P</SUB></VAR>.
+The attacker can try many guesses, by brute force, without being detected.
+<P>
+When
+<VAR>A</VAR>
+and
+<VAR>B</VAR>
+share a weak secret, therefore, they may wish to strengthen this
+secret, or (equivalently) to establish a new, stronger shared secret.
+A natural approach is for
+<VAR>A</VAR>
+to create a new secret and to send it to
+<VAR>B</VAR>,
+signed and encrypted under
+<VAR>P</VAR>.
+In turning this approach into a concrete protocol, one needs to choose
+particular signature and encryption mechanisms, as well as any
+additional fields for
+<VAR>A</VAR>'s
+message.  When
+<VAR>P</VAR>
+is weak, some naive choices result in poor protocols that permit
+off-line attacks.  For example, the following picture shows a poor
+protocol, in which
+<VAR>K</VAR>
+is a new shared secret:
+<P><BR>
+<IMG WIDTH="300" HEIGHT="110" ALIGN="BOTTOM" BORDER="0"
+ SRC="img4.gif"
+><BR>
+<P>
+Again, an attacker may use a log of the protocol messages for
+confirming a guess of
+<VAR>P</VAR>.
+This kind of weakness unfortunately appears in current systems where a
+strong key is stored encrypted under a user password.
+<P>
+Several recent, sophisticated
+protocols&nbsp;[<A HREF="#lomas89">LGSN89</A>,<A HREF="#gong93">GLNS93</A>,<A HREF="#eke">BM92</A>,<A HREF="#aeke">BM93</A>] 
+impede off-line attacks.  However, these protocols are difficult to
+design and to analyze, and sometimes permit on-line
+attacks&nbsp;[<A HREF="#patel">Pat97</A>].
+<P>
+<STRONG>A solution</STRONG>
+The ideas of
+<A HREF="#sec:laptop">section&nbsp;2</A>
+lead to a simple protocol for strengthening a shared secret
+<VAR>P</VAR>.
+First,
+<VAR>A</VAR>
+invents a quantity
+<VAR>Q</VAR>
+of a fixed length, and sends
+<VAR>f(P+Q)</VAR>
+to
+<VAR>B</VAR>.
+(Optionally,
+<VAR>A</VAR>
+could salt
+<VAR>P+Q</VAR>.)
+When
+<VAR>B</VAR>
+receives
+<VAR>A</VAR>'s
+message,
+<VAR>B</VAR>
+searches for
+<VAR>Q</VAR>,
+much as the laptop searches for
+<VAR>Q</VAR>
+in the technique of
+<A HREF="#sec:laptop">section&nbsp;2</A>.
+As a result,
+<VAR>A</VAR>
+and
+<VAR>B</VAR>
+share the longer secret
+<VAR>P+Q</VAR>,
+which they may use for encrypting messages.  This protocol is
+represented in the following figure:
+<P><BR>
+<IMG WIDTH="300" HEIGHT="110" ALIGN="BOTTOM" BORDER="0"
+ SRC="img5.gif"
+><BR>
+<P>
+After running this protocol,
+<VAR>A</VAR>
+and
+<VAR>B</VAR>
+could use
+<VAR>P+Q</VAR>
+as the basis for exchanging an even longer secret through a standard protocol.
+<P>
+<STRONG>Performance consequences</STRONG>
+The main cost of this protocol is that
+<VAR>B</VAR>
+has to perform an exhaustive search for
+<VAR>Q</VAR>.
+On the other hand, the protocol imposes no great burden on
+<VAR>A</VAR>
+after the invention of
+<VAR>Q</VAR>.
+Because of this asymmetry, it is useful to apply some good judgement in
+choosing the roles of
+<VAR>A</VAR>
+and
+<VAR>B</VAR>
+when the protocol is instantiated.  For example, one may let
+<VAR>A</VAR>
+be a heavily-used server, and
+<VAR>B</VAR>
+be a client with abundant idle cycles (rather than vice versa).  Much as in
+<A HREF="#sec:laptop">section&nbsp;2</A>,
+performance can be acceptable for the client even when
+<VAR>Q</VAR>
+is fairly substantial, for example 20 bits long.
+<P>
+<STRONG>Cryptographic assumptions and security consequences</STRONG>
+Like the technique of
+<A HREF="#sec:laptop">section&nbsp;2</A>,
+this protocol relies on the assumption that
+<VAR>f</VAR>
+is a locally one-way function.  Assuming in addition that
+<VAR>f</VAR>
+is collision-resistant, this protocol should make an off-line attack on
+<VAR>P</VAR>
+roughly
+<VAR>2<SUP>n</SUP></VAR>
+times more expensive than the corresponding attack with a naive
+protocol, where
+<VAR>n</VAR>
+is the length of
+<VAR>Q</VAR>.
+After a run of this protocol, an attacker could confirm a guess
+<VAR>P'</VAR>
+of
+<VAR>P</VAR>
+by calculating
+<VAR>f(P'+X)</VAR>
+for all
+<VAR>2<SUP>n</SUP></VAR>
+possible values of
+<VAR>X</VAR>.
+Since
+<VAR>f</VAR>
+is collision-resistant, a match
+<VAR>f(P'+X) = f(P+Q)</VAR>
+would indicate that
+<VAR>P</VAR>
+is
+<VAR>P'</VAR>.
+<P>
+Complete collision-resistance does not seem absolutely necessary for
+this protocol.  As long as
+<VAR>f(P+Q) = f(P+Q')</VAR>
+implies
+<VAR>Q = Q'</VAR>,
+the two parties
+<VAR>A</VAR>
+and
+<VAR>B</VAR>
+successfully agree on the value of
+<VAR>Q</VAR>.
+It may be acceptable that
+<VAR>f(P+Q) = f(P'+Q')</VAR>
+when
+<VAR>P</VAR>
+and
+<VAR>P'</VAR>
+differ and
+<VAR>Q</VAR>
+and
+<VAR>Q'</VAR>
+differ.  Such a collision may create confusion for
+<VAR>A</VAR>
+and
+<VAR>B</VAR>,
+but perhaps this confusion can be tolerated.  The collision could also
+impede an attack, because it makes it harder to confirm a guess of
+<VAR>P</VAR>.
+<P>
+<STRONG>Related work: stretching secrets</STRONG>
+Recently and independently, Kelsey, Schneier, and Wagner invented a
+protocol similar to
+ours&nbsp;[<A HREF="#Wagner:private">Wag97</A>]. 
+In their protocol, there is no analogue to
+<VAR>Q</VAR>;
+instead, the password
+<VAR>P</VAR>
+is stretched by repeated application of a function
+<VAR>f</VAR>:
+<P><BR>
+<IMG WIDTH="300" HEIGHT="75" ALIGN="BOTTOM" BORDER="0"
+ SRC="img6.gif"
+><BR>
+<P>
+Here
+<VAR>n</VAR>
+is a large number, such as
+<VAR>2<SUP>20</SUP></VAR>.
+This protocol achieves some of the same desirable properties as ours.
+There are however several interesting differences between the two
+protocols.  Some of the differences are:
+<P>
+<UL>
+<LI> Stretching and strengthening make somewhat different assumptions
+about the properties of
+<VAR>f</VAR>.
+For example, it is clear that stretching requires certain assumptions
+about the iteration of
+<VAR>f</VAR>,
+while strengthening does not.  These assumptions would imply that it is
+not possible to parallelize a brute-force attack against a stretched
+secret, while it is easy to parallelize a brute-force attack against a
+strengthened secret.
+<P>
+<LI> With stretching, both parties have to do equal work, namely the same
+number of applications of
+<VAR>f</VAR>.
+With strengthening, only one of the two parties needs to apply
+<VAR>f</VAR>
+many times.
+<P>
+<LI> Strengthening a secret with a supplement
+<VAR>Q</VAR>
+introduces entropy.  In contrast, stretching it by repeated application of a
+function
+<VAR>f</VAR>
+does not.  Therefore, with stretching, it is particularly important to
+make judicious use of salts.
+</UL>
+<P>
+<H2><A NAME="sec:comparisons">4. Comparisons</A></H2>
+<P>
+In the technique of
+<A HREF="#sec:network">section&nbsp;3</A>,
+two parties
+<VAR>A</VAR>
+and
+<VAR>B</VAR>
+strengthen a secret
+<VAR>P</VAR>
+by exchanging a message
+<VAR>f(P+Q)</VAR>
+on an untrusted communication medium.  We may say that the technique of
+<A HREF="#sec:laptop">section&nbsp;2</A>
+is an instance of the technique of
+<A HREF="#sec:network">section&nbsp;3</A>,
+where the untrusted communication medium is a laptop, and where
+<VAR>A</VAR>
+and
+<VAR>B</VAR>
+are the same user at different times.
+<P>
+An important difference is in the nature of
+<VAR>A</VAR>
+and
+<VAR>B</VAR>.
+In
+<A HREF="#sec:network">section&nbsp;3</A>,
+both
+<VAR>A</VAR>
+and
+<VAR>B</VAR>
+must be capable of computing
+<VAR>f</VAR>,
+so they are probably not human users.  In the technique of
+<A HREF="#sec:laptop">section&nbsp;2</A>,
+on the other hand, the laptop is trusted to manipulate
+<VAR>P</VAR>
+and to compute
+<VAR>f</VAR>
+for a short time, while under the control of a human user.
+<P>
+The two techniques could be applied in combination.  For example, after
+a user has entered the same
+<VAR>P</VAR>
+on several computers, these computers may agree on a single
+<VAR>Q</VAR>
+by exchanging their values for
+<VAR>f(P+Q)</VAR>.
+<P>
+<H2><A NAME="sec:conclusion">5. Conclusion</A></H2>
+<P>
+Password strengthening is a compatible extension of traditional
+password mechanisms.  It increases the security of passwords, without
+requiring users to memorize or to write down long strings.  Password
+strengthening does not assume any extra hardware, and does not
+introduce any of the vulnerabilities that come with extra hardware.
+These characteristics should make password strengthening easy to adopt,
+and appealing in practical applications.
+<P>
+<H2><A NAME="sec:references">References</A></H2>
+<P>
+<TABLE>
+<TR VALIGN=TOP>
+<TD><A NAME="eke">[BM92]</A></TD>
+<TD>Steven&nbsp;M. Bellovin and Michael Merritt.
+Encrypted key exchange: password-based protocols secure against
+dictionary attacks.
+In <EM>Proceedings of the 1992 IEEE Computer Society Symposium on
+Research in Security and Privacy</EM>, pages 72-84, May 1992.</TD>
+<TR VALIGN=TOP>
+<TD><A NAME="aeke">[BM93]</A></TD>
+<TD>Steven&nbsp;M. Bellovin and Michael Merritt.
+Augmented encrypted key exchange: a password-based protocol secure
+against dictionary attacks and password file compromise.
+In <EM>Proceedings of the First ACM Conference on Computer and
+Communications Security</EM>, pages 244-250, November 1993.</TD>
+<TR VALIGN=TOP>
+<TD><A NAME="DES">[DES77]</A></TD>
+<TD>Data encryption standard.
+Fed. Inform. Processing Standards Pub.&nbsp;46, National Bureau of
+Standards, Washington DC, January 1977.</TD>
+<TR VALIGN=TOP>
+<TD><A NAME="gong93">[GLNS93]</A></TD>
+<TD>Li&nbsp;Gong, T.&nbsp;Mark&nbsp;A. Lomas, Roger&nbsp;M. Needham, and Jerome&nbsp;H. Saltzer.
+Protecting poorly chosen secrets from guessing attacks.
+<EM>IEEE Journal on Selected Areas in Communications</EM>,
+11(5):648-656, June 1993.</TD>
+<TR VALIGN=TOP>
+<TD><A NAME="lomas89">[LGSN89]</A></TD>
+<TD>T.&nbsp;Mark&nbsp;A. Lomas, Li&nbsp;Gong, Jerome&nbsp;H. Saltzer, and Roger&nbsp;M. Needham.
+Reducing risks from poorly chosen keys.
+<EM>Proceedings of the 12th ACM Symposium on Operating System
+Principles, ACM Operating Systems Review</EM>,
+23(5):14-18, December 1989.</TD>
+<TR VALIGN=TOP>
+<TD><A NAME="manber:pwd">[Man96]</A></TD>
+<TD>Udi Manber.
+A simple scheme to make passwords based on one-way functions much
+harder to crack.
+<EM>Computers and Security</EM>, 15(2):171-176, 1996.</TD>
+<TR VALIGN=TOP>
+<TD><A NAME="Menezes96">[MvOV96]</A></TD>
+<TD>Alfred&nbsp;J. Menezes, Paul&nbsp;C. van Oorschot, and Scott&nbsp;A. Vanstone.
+<EM>Handbook of Applied Cryptography</EM>.
+CRC Press, 1996.</TD>
+<TR VALIGN=TOP>
+<TD><A NAME="patel">[Pat97]</A></TD>
+<TD>Sarvar Patel.
+Number theoretic attacks on secure password schemes.
+In <EM>Proceedings of the 1997 IEEE Symposium on Security and Privacy</EM>,
+pages 236-247, May 1997.</TD>
+<TR VALIGN=TOP>
+<TD><A NAME="BruceSchnei96">[Sch96]</A></TD>
+<TD>Bruce Schneier.
+<EM>Applied Cryptography: Protocols, Algorithms, and Source Code in C</EM>.
+John Wiley &amp; Sons, Inc., second edition, 1996.</TD>
+<TR VALIGN=TOP>
+<TD><A NAME="Wagner:private">[Wag97]</A></TD>
+<TD>David Wagner.
+Private communication.
+June 1997.</TD>
+</TABLE>
+</BODY>
+</HTML>

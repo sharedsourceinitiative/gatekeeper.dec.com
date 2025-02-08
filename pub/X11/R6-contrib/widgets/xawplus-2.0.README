@@ -1,0 +1,64 @@
+
+		The XawPlus wiget set and applications
+
+			   Version 2.0
+
+			March 14th, 1999
+
+			Author: Roland Krause
+
+
+ * What is XawPlus and what is new ?
+
+XawPlus is a clone of the original Xaw library, providing a more up to date
+look to the original Athena widget set. This library is as compatible as
+possible to the original. In the most cases it is possible to compile the
+source code of a Xaw client without any changes (except the include path
+of the XawPlus header files) to get the new look of XawPlus to this client.
+
+XawPlus make it possible to use XPM pixmaps in labels, toggles or buttons
+without changing the code of your application via setting the bitmap resource.
+A transparent background is provided. Since Release 1.5 XawPlus also provide
+a help function for buttons, toggles, repeaters and menu buttons. A help window
+is popped up if the mouse pointer stay over the buttons window and a help text
+is given.
+
+XawPlus comes with a set of adapted applications using also the new features
+and widgets of XawPlus.
+
+
+ * How do I build XawPlus and its clients ?
+
+To build XawPlus, the GNU compiler gcc is required. Try the version 2.7.x
+or better. If you want to use another one, change the $CC entry in all
+makefiles. XawPlus comes with the following archive files:
+
+ xawplus-2.0.tgz		The library itself
+ xawplus_clients-2.3.tgz	Some clients like editres, bitmap ...
+ xawplus_apps-4.0.tgz		Some Applications like pixmap, ghostview, xless ...
+ xawplus_demos-2.0.tgz		Demo programs
+ xawplus_doc-2.0.tgz		The documentation in HTML
+
+In the first step log in as superuser root and put the xawplus-2.0 archive
+to /tmp and untar it. Change to the XawPlus directory and type 'make' to
+compile and install the library. This should work on all linux boxes. On other
+system take a look at the makefile.
+In the next step put the other archives to /tmp, untar them and compile it
+using the script ./BuildAll in the corresponding file tree.
+
+
+ * On what machines XawPlus is tested on ?
+
+At this time only on linux boxes with Intel hardware and X11R5 and X11R6.
+If you are successful tested XawPlus on other systems please mail me your
+makefiles, if there are changes !
+
+
+If you have any hints, suggestions or bug reports feel free to mail me:
+
+
+Roland Krause March 14th, 1999
+
+rokrause@aol.com
+
+

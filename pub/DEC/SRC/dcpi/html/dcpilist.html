@@ -1,0 +1,294 @@
+<!-- This file generated automatically by mtex2html(1) -->
+<HTML>
+<HEAD>
+<TITLE>dcpilist</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#ffffff" VLINK="#006633">
+<H2>dcpilist(1)</H2>
+
+<H3>NAME</H3>
+<BLOCKQUOTE>
+dcpilist - Produce procedure listing annotated with profile information
+</BLOCKQUOTE>
+
+<H3>SYNOPSIS</H3>
+<BLOCKQUOTE>
+<B>dcpilist</B> [options]
+[-p] <I>procedure-name</I>
+<I>image-file</I><P>
+
+<B>dcpilist</B> -V
+</BLOCKQUOTE>
+
+<H3>FLAGS</H3>
+<BLOCKQUOTE>
+<DL>
+<DT>-V<DD>
+Prints version number and exits.<P>
+
+<DT>-best<DD>
+Prints source code if it is available, else prints a disassembly of
+the specified procedure.  This is the default output format.<P>
+
+<DT>-source<DD>
+Prints source code.<P>
+
+<DT>-asm<DD>
+Prints a disassembly of the specified procedure.<P>
+
+<DT>-both<DD>
+Prints both the source code, and a disassembly of the specified
+procedure.  The source code is always printed in line-number order.
+If the <TT>-order</TT> option is not given, for each source line, the set
+of instructions that correspond to the source line are printed
+immediately after the source line in address order.  Since the
+compiler can mix instructions that come from different source lines,
+there may be gaps in the instruction output for a given source line.
+These gaps are indicated with a line of the form <TT>...</TT>.  For
+example,
+<PRE>
+    if (x-&gt;ptr != NULL)
+    0x120022464 ldq     t2, 0(s6)
+    ...
+    0x120022470 beq     t2, 0x120023fc4
+</PRE>
+
+This output format does not guarantee that the instructions are
+displayed in address order.  For example, in the listing below,
+the instructions for the first two source lines are intermixed.
+<PRE>
+    a += x[0];
+    0x120022504 ldq     t1, 0(s1)
+    ...
+    0x12002250c addq    s2, t1, s2
+    b += x[1];
+    0x120022508 ldq     t2, 0(s1)
+    ...
+    0x120022510 addq    s3, t2, s3
+</PRE>
+
+Therefore, the last instruction corresponding to the first source
+line occurs after the first instruction corresponding to the second
+source line, but is displayed earlier.<P>
+
+If you specify the <TT>-order</TT> option, dcpilist produces a different
+interleaving of the source code and the disassembled instructions.
+The source lines are still printed in line number order.  In addition,
+the instructions are all printed in address order.  To handle
+instructions reordering, dcpilist will group a set of source lines
+together and show the corresponding assembly instructions immediately
+after the group of source lines.  The example above will produce the
+following output if you specify the <TT>-order</TT> option.
+<PRE>
+    a += x[0];
+    b += x[1];
+    0x120022504 ldq     t1, 0(s1)
+    0x120022508 ldq     t2, 0(s1)
+    0x12002250c addq    s2, t1, s2
+    0x120022510 addq    s3, t2, s3
+</PRE>
+
+The <TT>-order</TT> option is not turned on by default because it does not
+work well under high optimizations levels when the compiler moves
+two instructions that belong to the same source line far apart from
+each other.<P>
+
+<DT>-f <I>file</I><DD>
+If dcpilist cannot find the source file automatically, the user can
+specify the file name explicitly with this option.<P>
+
+<DT>-lines<DD>
+If this option is specified, dcpilist labels each source line and
+disassembled instruction with the corresponding source line number.
+This option can be helpful in understanding the output of <TT>-both
+-order</TT>.<P>
+
+<DT>-order<DD>
+See the description of the <TT>-both</TT> option above.<P>
+
+<DT>-conf_low<DD>
+Output low, medium, and high confidence data.<P>
+
+<DT>-conf_med<DD>
+Output medium and high confidence data.  This is the default.<P>
+
+<DT>-conf_high<DD>
+Output only high confidence data.<P>
+
+<DT>-tk<DD>
+Experimental option for generating Tcl code that places the output in
+a Tk text widget.<P>
+
+<DT>-ranks <I>n</I><DD>
+When used in combination with the <TT>-tk</TT> option, each source line is
+tagged with a rank in the range <TT>0..n-1</TT> where the rank is
+determined by the number of samples that fell on that source line.
+Higher samples imply a higher rank.
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>PROFILE FILE FLAGS</H3>
+<BLOCKQUOTE>
+<P>
+
+By default, this command automatically finds all of the relevant
+profile files.  The following options can be used to guide the search
+for the profile files.<P>
+
+<DL>
+<DT>-db &lt;directory name&gt;<DD>
+Search for profile files in the specified profile database directory.
+The directory name should be the same name as the one specified when
+<TT>dcpid</TT> was started.  I.e., the named directory should contain a
+set of epochs.  If this option is not specified, the directory name is
+obtained from the <TT>DCPIDB</TT> environment variable.  If neither this
+option, nor the <TT>DCPIDB</TT> environment variable are set, the name of
+the directory used by the last invocation of <TT>dcpid</TT> on this
+machine is used.  If none of these methods succeed in finding the
+appropriate directory, and no explicit set of profile files is
+provided via the <TT>-profiles</TT> option, then the command fails.<P>
+
+<DT>-epoch latest<DD>
+Search for profile files in the latest epoch.  This is the default.<P>
+
+<DT>-epoch latest-k<DD>
+Search for profile files in the "k+1"th oldest epoch.  For example,
+search in the third last epoch if "-epoch latest-2" is specified.<P>
+
+<DT>-epoch all<DD>
+Search for profile files in all epochs.<P>
+
+<DT>-epoch &lt;name&gt;<DD>
+Search for profile files in the named epoch.  The epoch name should be
+the name of a subdirectory corresponding to a single epoch within the
+profile database directory.  Epoch subdirectory names usually take
+the form <TT>YYMMDDHHMM</TT> (year-month-day-hours-minutes).  For example,
+an epoch started on December 4, 1996 at 23:34 is named <TT>9612042334</TT>.
+If an epoch is given a symbolic name by creating a symbol link to
+the actual epoch directory, then the symbolic name can also be used
+as an argument to the <TT>-epoch</TT> option.<P>
+
+<DT>-events all<DD>
+Search for profile files corresponding to all event types such as
+cycles, icache misses, branch mispredictions, etc.  This is the default.<P>
+
+<DT>-events type(+type)*<DD>
+Search for profiles files for the specified event types.  For example,
+search for cycles, icache misses, and data cache misses when the
+option <TT>-events cycles+imiss+dmiss</TT> is specified.<P>
+
+<DT>-events all(-type)*<DD>
+Search for profile files for all event types except for the specified
+types.  For example, search for all event types except for branch
+mispredictions when the option <TT>-events all-branchmp</TT> is specified.<P>
+
+<DT>-label &lt;label&gt;<DD>
+Search for profile files with the specified label (see <TT>dcpilabel</TT>).
+If no labels are specified on the command line, profile file labels
+are ignored entirely.  If any labels are specified on the command line
+(this option can be repeated several times), only profile files that
+have one of the specified labels are used.<P>
+
+<DT>-profiles &lt;file names...&gt; --<DD>
+Use just the profile files named by the specified file names.  The
+list of profile file names can be terminated either via <TT>--</TT>, or by
+the end of the option list.  The command prints an error message and
+fails if the <TT>-profiles</TT> option is used in conjunction with any of
+the earlier automatic profile finding options.  (Use either the
+automatic profile lookup mechanism, or explicitly name the profile
+file with the <TT>-profile</TT> option, but not both.)
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>DESCRIPTION</H3>
+<BLOCKQUOTE>
+<P>
+
+Dcpilist prints the contents of the procedure specified on the command
+line.  The name of the image in which the procedure can be found is
+also specified on the command line.  Instead of a procedure name, you
+can specify an instruction address: the procedure that contains the
+specified address is printed.  If multiple procedures in the image
+have the same name, you can give the address of one of these
+procedures instead of an ambiguous name.<P>
+
+Dcpilist can print the source code for the procedure, a disassembly of
+the procedure, or a mixed output that contains both the source code
+and the disassembly.<P>
+
+Each source line and disassebled instruction in the output is
+annotated with the sample counts obtained from corresponding profile
+files.  When the cycle cost of an instruction or a source line can be
+determined (see dcpicalc(1)), then this cost is also printed in the
+output.<P>
+
+Samples that do not belong to the specified procedure are ignored.  If
+the relevant profile files contain samples for multiple events, then a
+column for the count of each unique event type is included in the
+listing.  If multiple profile files with the same event type
+contribute to the samples for the specified procedure, these samples
+are merged together in the output.
+</BLOCKQUOTE>
+
+<H3>SEE ALSO</H3>
+<BLOCKQUOTE>
+<P>
+
+<A HREF="dcpi.html">dcpi(1)</A>,
+<A HREF="dcpiflow.html">dcpiflow(1)</A>,
+<A HREF="dcpiprof.html">dcpiprof(1)</A>,
+<A HREF="dcpidis.html">dcpidis(1)</A>,
+<A HREF="dcpiscan.html">dcpiscan(1)</A>,
+<A HREF="dcpiepoch.html">dcpiepoch(1)</A>,
+<A HREF="dcpiflush.html">dcpiflush(1)</A>,
+<A HREF="dcpicalc.html">dcpicalc(1)</A>,
+<A HREF="dcpilabel.html">dcpilabel(1)</A>,
+<A HREF="dcpi2ps.html">dcpi2ps(1)</A>,
+<A HREF="dcpicat.html">dcpicat(1)</A>,
+<A HREF="dcpiquit.html">dcpiquit(1)</A>,
+<A HREF="dcpidiff.html">dcpidiff(1)</A>,
+<A HREF="dcpitopstalls.html">dcpitopstalls(1)</A>,
+<A HREF="dcpiwhatcg.html">dcpiwhatcg(1)</A>,
+<A HREF="dcpictl.html">dcpictl(1)</A>,
+<A HREF="dcpisource.html">dcpisource(1)</A>,
+<A HREF="dcpicc.html">dcpicc(1)</A>,
+<A HREF="dcpiversion.html">dcpiversion(1)</A>,
+<A HREF="dcpiuninstall.html">dcpiuninstall(1)</A>,
+<A HREF="dcpi2pix.html">dcpi2pix(1)</A>,
+<A HREF="dcpikdiff.html">dcpikdiff(1)</A>,
+<A HREF="dcpix.html">dcpix(1)</A>,
+<A HREF="dcpisumxct.html">dcpisumxct(1)</A>,
+<A HREF="dcpistats.html">dcpistats(1)</A>,
+<A HREF="dcpid.html">dcpid(1)</A>,
+<A HREF="dcpiformat.html">dcpiformat(4)</A>,
+<A HREF="dcpiloader.html">dcpiloader(5)</A>, dis(1).<P>
+
+For more information, see the 
+<A HREF="../home.html">DIGITAL Continuous
+Profiling Infrastructure project home page
+(http://www.research.digital.com/SRC/dcpi/ from outside DIGITAL)</A>.
+</BLOCKQUOTE>
+
+<H3>COPYRIGHT</H3>
+<BLOCKQUOTE>
+<P>
+
+<a href="http://www.digital.com/info/tm.html">
+Copyright 1996-97, Digital Equipment Corporation.
+</a>
+</BLOCKQUOTE>
+
+<H3>AUTHOR</H3>
+<BLOCKQUOTE>
+Sanjay Ghemawat
+</BLOCKQUOTE>
+
+This page was generated automatically by
+<A HREF="http://www.research.digital.com/SRC/mtex/">mtex software</A>.
+</BODY>
+</HTML>

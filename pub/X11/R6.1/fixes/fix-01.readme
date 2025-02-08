@@ -1,0 +1,4 @@
+The X11R6.1 tar files and source trees include public patch 1,
+so there is no need to get a fix-01 file.  R6.1 was not released
+to the public until after public patch 1 had also been released.
+Read xc/bug-report to see what version of X you have.

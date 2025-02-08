@@ -1,0 +1,155 @@
+
+<html>
+<head>
+<title></title>
+</head>
+<body>
+
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" HEIGHT="1%" >
+
+<tr>
+<td>
+
+<center><b><font size=+1>OS Support for Speculative I/O Prefetching</font></b></center>
+
+</td>
+</tr>
+
+</table>
+</center>
+
+<br>&nbsp;
+
+<center>
+<table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" >
+
+<tr>
+<td>
+
+<center>
+
+<b>Keir Fraser</b>
+<br><b>University of Cambridge</b>
+
+</center>
+
+</td>
+</tr>
+
+</table>
+</center>
+
+<br>&nbsp;
+<br>&nbsp;
+
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" HEIGHT="1%" >
+
+<tr>
+<td><b>1. Introduction</b>
+<p>
+
+Speculative execution is a technique for prefetching
+disk blocks before they are required, by pre-executing 
+application code whenever the CPU is idle. Disk requests
+found by speculative execution are turned into prefetches.
+The original SpecHint tool, written by Fay Chang, was implemented
+entirely within user space. Although it was effective
+for many benchmarks, it is hard to control resource
+utilisation without assistance from the operating system.
+This means that SpecHint can harm application performance
+if, for example, memory is scarce.
+<p>
+My work this summer explored the potential advantages of removing this
+constraint by  
+implementing and evaluating a design that includes special operating system 
+support for the speculative execution approach.  Somewhat to our surprise, 
+our results indicate that allowing such support will not produce larger 
+performance improvements.  Nevertheless, where adding such support is
+feasible, our new design has improved resource control which makes it
+a more practical alternative to SpecHint.
+
+<p>
+<br>
+&nbsp;&nbsp;
+</td>
+</tr>
+<tr>
+<td><b>2. Design overview</b>
+<p>
+
+Each time a new process is created, an additional process is also
+forked and marked as the <em>shadow</em> of the primary process. The
+shadow exists for the entire lifetime of its parent, and
+remains idle until the primary process requests a file region which
+must be fetched from disk. At that point the shadow is synchronized
+by copying the primary process's memory and file tables, and becomes
+runnable.
+<p>
+We take particular care when allocating shared resources to a shadow
+process to ensure that this does not impact the performance of
+higher-priority operations. Critical resources which we consider are
+processing time, memory, and disk bandwidth. 
+<p>
+The most difficult resource to control is memory, because it is
+generally impossible to allocate a memory page to a shadow process
+without evicting pages which may be more valuable. It is common
+practice to allocate most of physical memory to either file cache or
+application virtual memory. Only a small number of pages will
+typically be available for immediate allocation, and a kernel daemon
+will periodically run to keep the free list `topped up'. A page
+allocated to a shadow process may therefore cause another page to be
+evicted at some later time, when the reclaim daemon runs, but it 
+is impossible to determine that page's value, or even which page
+it will be. We implement a simple scheme in which shadow pages are
+initially allocated onto a low-priority page list, thus making them
+good candidates for eviction, and by preventing shadow processes from
+marking pages as referenced. Our intention is that high memory demands
+by a shadow process will cause its own pages, or pages from another
+shadow process, to be evicted before those of a primary process.
+
+<p>
+<br>
+&nbsp;&nbsp;
+</td>
+</tr>
+<tr>
+<td><b>3. Results</b>
+<p>
+
+We implemented our design within Linux 2.4.8, and evaluated it
+using a range of disk-intensive applications. These included
+<p>
+<ul>
+<li> <em>Gnuld</em>: object code linker
+<li> <em>Agrep</em>: text-file pattern matching
+<li> <em>XDataSlice</em>: three-dimensional data visualization
+<li> <em>PostgresQL</em>: flexible DBMS, based on POSTGRES 
+<li> <em>Sphinx</em>: speech-recognition system
+</ul>
+<p>
+Our experiments were conducted on an
+866MHz Pentium III with 128MB of memory, running our modified kernel.
+The test filesystem system consisted of four Compaq RZ1CB Ultra SCSI
+discs (12ms average seek time) striped into a 16GB array. The maximum
+transfer rate supported by the discs and the SCSI interface was
+40MB/s. 
+<p>
+With 128MB of memory, which was more than adequate for the
+benchmarks we used, the performance improvements were similar to
+those achieved by the original SpecHint tool.
+<p>
+When memory was reduced to 64MB, we were able to prevent speculative
+execution from significantly reducing performance on those benchmarks
+which required a large amount of memory (for example, Sphinx).
+
+<p>
+<br>
+&nbsp;&nbsp;
+</td>
+</tr>
+</table>
+</center>
+
+</body>
+</html>
+

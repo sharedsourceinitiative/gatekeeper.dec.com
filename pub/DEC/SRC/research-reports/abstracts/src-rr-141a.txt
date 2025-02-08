@@ -1,0 +1,15 @@
+"Distributed Active Objects"
+Marc H. Brown and Marc N.Najork
+April 15, 1996. 21 pages.
+
+Many Web browsers now offer some form of active objects, written in a 
+variety of languages, and the number of types of active objects are growing 
+daily in interesting and innovative ways. This report describes our work on 
+Oblets, active objects that are distributed over multiple machines. Oblets 
+are written in Obliq, an object-oriented scripting language for distributed 
+computation. The high-level support provided by Oblets makes it easy to write 
+collaborative and distributed applications.
+
+A videotape (141b) associated with this work is available.
+
+

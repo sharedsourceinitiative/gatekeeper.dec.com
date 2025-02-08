@@ -1,0 +1,404 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Sending and Handling Signals</TITLE>
+<META NAME="description" CONTENT="Sending and Handling Signals">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node51.html">
+<LINK REL="previous" HREF="node49.html">
+<LINK REL="up" HREF="node48.html">
+<LINK REL="next" HREF="node51.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html810"
+ HREF="node51.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html806"
+ HREF="node48.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html800"
+ HREF="node49.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html808"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html809"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html811"
+ HREF="node51.html">Creating Processes</A>
+<B> Up:</B> <A NAME="tex2html807"
+ HREF="node48.html">The OS Interface: Processes</A>
+<B> Previous:</B> <A NAME="tex2html801"
+ HREF="node49.html">More Standard Declarations</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04052000000000000000">
+Sending and Handling Signals</A>
+</H2>
+ <A NAME="Bolinas">&#160;</A>
+<P>
+This subsection describes the procedures for sending signals to other
+processes and for handling signals.  It also enumerates all the possible
+signals and their default behavior.
+<P><A NAME="1241">&#160;</A>
+<A NAME="2155">&#160;</A>
+<A NAME="2156">&#160;</A>
+<PRE>
+TYPE
+  SignalOrNone =
+    (SigNone, SigHUp, SigInt, SigQuit, SigIll, SigTrap,
+     SigIOT, SigEMT, SigFPE, SigKill, SigBus, SigSegV,
+     SigSys, SigPipe, SigAlrm, SigTerm, SigUrg, SigStop,
+     SigTStp, SigCont, SigChld, SigTTIn, SigTTOu, SigIO,
+     SigXCPU, SigXFSz, SigVTAlrm, SigProf, SigWinCh, Sig29,
+     SigUsr1, SigUsr2);
+  Signal = [SigHUp .. SigUsr2];
+</PRE>
+<P><A NAME="1244">&#160;</A>
+SignalOrNone enumerates the names of all the signals; there are 31
+different named signals (not including SigNone).  The definition of Signal
+is consistent with the numbering of signals in Ultrix 1.1 and 2.0 (see
+sigvec(2)).  However, many of these signals should not be used by OS
+clients because OS provides different mechanisms for dealing with the
+underlying conditions.  It is highly recommended that only the following
+signals be used:
+<P><A NAME="1245">&#160;</A>
+<A NAME="1246">&#160;</A>
+<A NAME="1966">&#160;</A>
+<A NAME="1248">&#160;</A>
+<P>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1">
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>&nbsp;</TD>
+<TD ALIGN="LEFT" NOWRAP><EM>Send</EM></TD>
+<TD ALIGN="LEFT" NOWRAP><EM>Handle</EM></TD>
+<TD ALIGN="LEFT" NOWRAP>&nbsp;</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP><EM>Name</EM></TD>
+<TD ALIGN="LEFT" NOWRAP><EM>ok?</EM></TD>
+<TD ALIGN="LEFT" NOWRAP><EM>ok?</EM></TD>
+<TD ALIGN="LEFT" NOWRAP><EM>Usage</EM></TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>SigHUp</TD>
+<TD ALIGN="LEFT" NOWRAP>No</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT" NOWRAP>Modem carrier has dropped</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>SigInt</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT" NOWRAP>User changed his mind (Control-C)</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>SigQuit</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT" NOWRAP>User wants core image (Control-<TT>&#92;</TT>)</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>SigKill</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT" NOWRAP>No</TD>
+<TD ALIGN="LEFT" NOWRAP>Unconditional termination</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>SigTerm</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT" NOWRAP>General software termination signal</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>SigStop</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT" NOWRAP>No</TD>
+<TD ALIGN="LEFT" NOWRAP>Unconditional stop</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>SigTStp</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT" NOWRAP>User wants to stop (Control-Z)</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>SigCont</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT" NOWRAP>Restart stopped process</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>SigTTIn</TD>
+<TD ALIGN="LEFT" NOWRAP>No</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT" NOWRAP>Read by background process</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>SigTTOu</TD>
+<TD ALIGN="LEFT" NOWRAP>No</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT" NOWRAP>Write by background process</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>SigUsr1</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT" NOWRAP>User-defined signal (System V)</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>SigUsr2</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT" NOWRAP>User-defined signal (System V)</TD>
+</TR>
+</TABLE></DIV>
+Sending other signals to a process can confuse the process, because of the
+Ultrix semantics associated with those signals.  Attempting to handle
+other signals is deprecated because OS and Topaz provide more appropriate
+mechanisms.  (The Ultrix implementation of OS disallows handling most
+other signals; the Taos implementation may be changed to match.)
+<P><A NAME="1261">&#160;</A>
+<A NAME="1262">&#160;</A>
+<A NAME="1263">&#160;</A>
+<A NAME="1264">&#160;</A>
+<A NAME="2157">&#160;</A>
+<A NAME="2158">&#160;</A>
+<A NAME="2159">&#160;</A>
+<A NAME="2160">&#160;</A>
+<A NAME="2161">&#160;</A>
+<A NAME="2162">&#160;</A>
+<A NAME="2163">&#160;</A>
+<A NAME="2164">&#160;</A>
+<A NAME="2165">&#160;</A>
+<A NAME="2166">&#160;</A>
+<A NAME="2167">&#160;</A>
+<A NAME="2168">&#160;</A>
+<A NAME="2169">&#160;</A>
+<A NAME="2170">&#160;</A>
+<A NAME="2171">&#160;</A>
+<A NAME="2172">&#160;</A>
+<A NAME="2173">&#160;</A>
+<A NAME="2174">&#160;</A>
+<A NAME="2175">&#160;</A>
+<A NAME="1284">&#160;</A>
+<A NAME="1285">&#160;</A>
+<A NAME="1286">&#160;</A>
+<A NAME="1287">&#160;</A>
+Topaz converts hardware traps to exceptions defined in the System and Trap
+interfaces rather than converting them to the signals SigIll, SigIOT,
+SigEMT, SigFPE, SigBus, and SigSegV, as Ultrix does.  Topaz reserves the
+hardware breakpoint trap for the debugger rather than converting it to
+SigTrace.  OS raises exceptions for the synchronous events that Ultrix
+converts to the signals SigSys and SigPipe.  OS doesn't provide the Ultrix
+interval timing facilities that send SigAlrm, SigVTAlrm, and SigProf;
+instead clients can program their own facilities using the Thread and Time
+interfaces.  OS doesn't send SigChld or SigIO because a client can fork an
+extra thread to wait for the event (child state change or asynchronous
+I/O); this will apply to SigUrg if sockets are implemented.  OS doesn't
+provide the Ultrix resource limit facilities that send SigXCPU and
+SigXFSz.  OS doesn't provide the Ultrix 2.0 window size change feature
+that sends SigWinCh.  Sig29 is reserved for future standardization.
+<P><A NAME="2176">&#160;</A>
+<A NAME="2177">&#160;</A>
+<PRE>
+PROCEDURE SendSignal(
+    pid: PID;
+    signal: SignalOrNone;
+    euser: User := NIL)
+  RAISES {Error}; (* NotSuperUserEC, BadPIDEC, NotOwnerEC *)
+
+PROCEDURE SendSignalToGroup(
+    pgrp: PGRP;
+    signal: SignalOrNone;
+    euser: User := NIL)
+  RAISES {Error}; (* NotSuperUserEC, BadPIDEC, NotOwnerEC *)
+</PRE>
+<P><A NAME="1290">&#160;</A>
+<A NAME="1291">&#160;</A>
+<A NAME="1292">&#160;</A>
+<A NAME="1293">&#160;</A>
+<A NAME="1294">&#160;</A>
+SendSignal sends a signal to the process with a specified process
+identifier; specifying pid equal to NullPID means to use the process
+identifier of the calling process.  (Note that the conventions obeyed by
+the Ultrix kill kernel call for a pid of 0 or -1 do not apply to
+SendSignal.) SendSignalToGroup sends a signal to all the processes in a
+specified process group; specifying a process group identifier equal to
+NullPID means to send to all the processes in the group of the calling
+process (including the calling process itself).
+<P><A NAME="2178">&#160;</A>
+Sending SigNone is a way to check the validity of a process identifier:
+normal error checking is done, but no signal is actually sent.
+<P><A NAME="1296">&#160;</A>
+<A NAME="2179">&#160;</A>
+The sender and receiver must have the same effective user name, unless
+either the sender is the super-user, or the signal is SigCont and the
+sender is an ancestor of the receiver.  NotOwnerEC is raised if none of
+these conditions are satisfied.
+<P>
+BadPIDEC is raised if no process has the process identifier passed to
+SendSignal or the process group identifier passed to SendToGroup.
+<P>
+SendSignal and SendSignalToGroup interpret the euser parameter the same
+way Open does.
+<P><A NAME="2180">&#160;</A>
+<PRE>
+TYPE
+  SignalState = (SignalDefault, SignalIgnore, SignalHandle);
+</PRE>
+<P><A NAME="1299">&#160;</A>
+A signal state represents the intention by a process with respect to a
+particular signal to handle the signal, to ignore the signal, or to accept
+the default action for that signal.
+<P><A NAME="Saratoga">&#160;</A><A NAME="2181">&#160;</A>
+<PRE>
+PROCEDURE SetMySignalState(
+    signal: Signal;
+    state: SignalState)
+    : SignalState
+  RAISES {Error} (* BadStateForSignalEC *);
+</PRE>
+<P><A NAME="1302">&#160;</A>
+<A NAME="1303">&#160;</A>
+SetMySignalState allows a process to declare its intention with respect to
+a specified signal.  It returns the previous intention.
+<P><A NAME="2182">&#160;</A>
+<A NAME="2183">&#160;</A>
+<A NAME="2184">&#160;</A>
+SetMySignalState raises BadStateForSignalEC if an attempt is made to
+handle or ignore a signal other than SigHUp, SigInt, SigQuit, SigPipe,
+SigTerm, SigTStp, SigCont, SigTTIn, SigTTOu, SigXCPU, SigWinCh, Sig29,
+SigUsr1, or SigUsr2.  It raises BadStateForSignalEC if an attempt is made
+to ignore SigCont.  Requiring SigKill and SigStop to be defaulted provides
+a reliable way to terminate or stop an errant process.  Disallowing
+SigCont to be ignored ensures that a stopped process can be continued.
+<P><A NAME="1307">&#160;</A>
+<A NAME="1308">&#160;</A>
+<A NAME="1309">&#160;</A>
+As mentioned in Section <A HREF="node31.html#Burlingame">2.9</A>, page <A HREF="node31.html#Burlingame"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>, there
+are several possible default actions that can occur when a signal arrives
+for a process and the signal state is SignalDefault: to ignore the signal,
+to stop execution of the process temporarily, to continue execution of the
+process after such a temporary stop, or to terminate the process.  If a
+signal is ignored (either because the signal state is SignalIgnore or
+because the signal state is SignalDefault and the default action for that
+signal is to ignore it), it is as if the signal had never been sent.
+Stopping and continuing processes is discussed in Section <A HREF="node33.html#Alamo">2.11</A>, page
+<A HREF="node33.html#Alamo"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.  Terminating processes is discussed in Section <A HREF="node52.html#Alameda">5.4</A>,
+page <A HREF="node52.html#Alameda"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.
+<P><A NAME="SanBruno">&#160;</A>Which of the default actions actually occurs depends on the identity of
+the signal:
+<P><DL>
+<DT><STRONG>Ignore:</STRONG>
+<DD>SigUrg, SigChld, SigIO, SigWinCh.
+<DT><STRONG>Terminate:</STRONG>
+<DD>SigHUp, SigInt, SigKill, SigPipe, SigAlrm, SigTerm,
+    SigXCPU, SigXFSz, SigVTAlrm, SigProf, Sig29, SigUsr1, SigUsr2.
+<P>    <DT><STRONG>Terminate with core image:</STRONG>
+<DD>SigQuit, SigIll, SigTrap, SigIOT, SigEMT,
+    SigFPE, SigBus, SigSegV, SigSys.
+<P>    <DT><STRONG>Stop:</STRONG>
+<DD>SigStop, SigTStp, SigTTIn, SigTTOu.
+<P>    <DT><STRONG>Continue:</STRONG>
+<DD>SigCont.
+</DL>
+<P><A NAME="1319">&#160;</A>
+<A NAME="1320">&#160;</A>
+<A NAME="1321">&#160;</A>
+<A NAME="1322">&#160;</A>
+<A NAME="1323">&#160;</A>
+<A NAME="2185">&#160;</A>
+<A NAME="2186">&#160;</A>
+<A NAME="2187">&#160;</A>
+<A NAME="2188">&#160;</A>
+There is a special case involving the stop signals: if a process is an
+orphan, then only SigStop will stop it; the default action for SigTStp,
+SigTTIn, and SigTTOu is to terminate the process.  The reason for this is
+that in the typical usage of stop signals in conjunction with job control,
+it is up to the parent to continue a stopped child (see Section
+<A HREF="node33.html#Alamo">2.11</A>, page <A HREF="node33.html#Alamo"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).  An orphan would be stopped forever,
+so it is terminated instead.
+<P>
+It should be noted that signal states are inherently of process-wide
+significance.  It is up to the application to provide its own
+synchronization if it dynamically alters signal state settings.
+<P><A NAME="2189">&#160;</A>
+<A NAME="2190">&#160;</A>
+<A NAME="2191">&#160;</A>
+<PRE>
+TYPE
+  Signals = BITS 32 FOR SET OF Signal;
+
+CONST
+  AllSignals = Signals{SigHUp .. SigUsr2};
+
+PROCEDURE WaitForSignal(allowed: Signals): Signal
+  RAISES {Error, Alerted}; (* BadStateForSignalEC *)
+</PRE>
+<P><A NAME="1333">&#160;</A>
+WaitForSignal waits until one of the signals in the allowed set becomes
+pending (by being sent to this process), then makes the signal not pending
+and returns its identity.  If several signals in the allowed set are
+pending, it is unpredictable which of them WaitForSignal will choose.
+Similarly if a signal becomes pending and that signal is in the allowed
+sets of several threads that have called WaitForSignal, it is
+unpredictable which thread will be unblocked.  WaitForSignal raises
+BadStateForSignalEC if any signal in the allowed set is not in the state
+SignalHandle, since it could never become pending.  WaitForSignal is
+alertable.
+<P><A NAME="1334">&#160;</A>
+<A NAME="1335">&#160;</A>
+<A NAME="1336">&#160;</A>
+Ultrix note: The priority of the thread calling WaitForSignal must be
+higher than that of any compute-bound thread.  See GetPriority and
+SetPriority in the ThreadFriends interface.
+<P>
+Taos note: Since the Firefly thread scheduler implements time-slicing, the
+priority of the thread calling WaitForSignal must be at least as high as
+that of any compute-bound thread.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html810"
+ HREF="node51.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html806"
+ HREF="node48.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html800"
+ HREF="node49.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html808"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html809"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html811"
+ HREF="node51.html">Creating Processes</A>
+<B> Up:</B> <A NAME="tex2html807"
+ HREF="node48.html">The OS Interface: Processes</A>
+<B> Previous:</B> <A NAME="tex2html801"
+ HREF="node49.html">More Standard Declarations</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,26 @@
+
+			AVAILABLE ELECTRONICALLY
+
+"An Extension of System F with Subtyping"
+Luca Cardelli, Simone Martini, John C. Mitchell, Andre Scedrov
+December 30, 1991.  56 pages
+
+Authors' abstract
+
+System F is a well-known typed l-calculus with polymorphic types, which
+provides a basis for polymorphic programming languages.  We study an
+extension of F, called F<:J(pronouncedJef-sub) that combines parametric
+polymorphism with subtyping.
+
+The main focus of the paper is the equational theory of F<:J, which
+is related to PER models and the notion of parametricity.  We study
+some categorical properties of the theory when restricted to closed
+terms, including interesting categorical isomorphisms.  We also
+investigate proof-theoretical properties, such as the conservativity
+of typing judgments with respect to F.
+
+We demonstrate by a set of examples how a range of constructs may be
+encoded in F<:J.  These include record operations and subtyping
+hierarchies that are related to features of object-oriented languages. 
+
+

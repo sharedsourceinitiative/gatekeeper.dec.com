@@ -1,0 +1,24 @@
+
+				AVAILABLE ELECTRONICALLY
+
+"Introduction to LCL, A Larch/C Interface Language"
+J. V. Guttag and J. J. Horning
+July 24, 1991.  96 pages
+
+Authors' abstract
+
+This report is aimed primarily at the C programmer who wishes to begin
+to integrate formal specifications into the program development cycle.
+We present a specification language  targeted specifically at C and
+discuss how it can be used to support a style of C programming in which
+abstraction plays a vital role.
+
+The report begins with a quick overview of the use of the Larch family of
+languages for program specification.  It continues with an overview of LCL,
+a Larch interface language for (ANSI) standard C. It then describes LCL by
+means of an extended example.  Parts of an implementation of the specified
+interfaces are provided in the body of the report.  The remaining parts of
+the implementation are presented in an appendix.  Another appendix contains
+a brief introduction to the Larch Shared Language.
+
+

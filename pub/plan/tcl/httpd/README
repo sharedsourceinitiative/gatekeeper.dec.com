@@ -1,0 +1,10 @@
+Tcl Httpd 2.3.7 is the last stable "2.3" release.
+
+Tcl Httpd 3.0* adds threading and SSL support.
+
+There are two sorts of distributions.
+tclhttpd3.4.tar.gz will just contain Tcl Httpd
+tclhttpd3.4-dist.tar.gz is a bundle that includes Tcl and other packages.
+
+For more info, see
+http://www.tcl.tk/software/tclhttpd/

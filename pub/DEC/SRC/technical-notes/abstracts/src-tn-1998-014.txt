@@ -1,0 +1,27 @@
+"Analysis of a Very Large AltaVista Query Log"
+Craig Silverstein, Monika Henzinger, Hannes Marais, Michael Moricz
+Note #1998-014. October 26, 1998.
+
+In this paper we present an analysis of a 280 GB AltaVista Search Engine
+query log consisting of approximately 1 billion entries for search
+requests over a period of six weeks.  This represents approximately
+285 million user sessions, each an attempt to fill a single information
+need.
+
+We present an analysis of individual queries, query duplication, and
+query sessions.  Furthermore we present results of a correlation
+analysis of the log entries, studying the interaction of terms within
+queries.
+
+Our data supports the conjecture that web users differ significantly
+from the user assumed in the standard information retrieval
+literature.  Specifically, we show that web users type in short
+queries, mostly look at the first 10 results only, and seldom
+modify the query.  This suggests that traditional information retrieval
+techniques might not work well for answering web search requests.
+
+The correlation analysis showed that the
+most highly correlated items are constituents of phrases.  This result
+indicates it may be useful for search engines to consider search terms
+as parts of phrases even if the user did not explicitly specify them
+as such.

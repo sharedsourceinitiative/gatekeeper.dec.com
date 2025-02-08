@@ -1,0 +1,14 @@
+"Fully Dynamic 2-Edge Connectivity Algorithm in Polylogarithmic Time per Operation"
+Monika Rauch Henzinger and Valerie King
+Note #1997-004. June 12, 1997. 14 pages.
+
+This paper presents the first dynamic algorithm that maintains 2-edge
+connectivity in polylogarithmic time per operation.  The algorithm is
+a Las-Vegas type randomized algorithm.
+
+For a sequence of Omega(m_0) operations, where m_0 is the number of
+edges in the initial graph, the expected time for p insertions or
+deletions of edges is O(p log^5n) and the worst-case time for a query
+is O(log n).  If only deletions are allowed then the cost for p
+updates is O(p log^4n) expected time.
+

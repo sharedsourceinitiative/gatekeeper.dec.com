@@ -1,0 +1,15 @@
+Begin3
+Title:          Xarm library.
+Version:        1.3.0 
+Entered-date:   
+Description:    Xarm library is a C++ wrapper of the Motif library.  
+		It supports Motif 1.2, 2.0 and LessTif. 
+Keywords:       C++, X11, Motif, LessTif
+Author:         (Jettero Heller)
+Maintained-by:  glgay@shinbiro.com (Gerald L. Gay)
+Primary-site:   ftp://sunsite.unc.edu/pub/Linux/libs/X/c++libs
+Alternate-site: ftp://ftp.x.org/contrib/libraries/
+Original-site:  ftp://sunsite.unc.edu/pub/Linux/libs/X/c++libs
+Platforms:      X11R5, X11R6, Motif 1.2.x, LessTif, Motif 2.0
+Copying-policy: LGPL
+End

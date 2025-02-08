@@ -1,0 +1,710 @@
+
+          ____  _______ ____    ________                              
+          \   \/  /_   /_   |  /  _____/_____    _____   ____   ______
+           \     / |   ||   | /   \  ___\__  \  /     \_/ __ \ /  ___/
+           /     \ |   ||   | \    \_\  \/ __ \|  Y Y  \  ___/ \___ \ 
+          /___/\  \|___||___|  \______  (____  /__|_|  /\___  >____  >
+                \_/                   \/     \/      \/     \/     \/ 
+
+                           Created by Justin Kibell
+                           """"""""""""""""""""""""
+
+                            Updated: 4th November 1994
+                         Last Posted: 18th August 1994
+
+The following list of games for the X Window System are in a random order.
+The data on each game has been collected from both archives and from email
+from the authors. If something needs updating or you have a game you want
+to add then email me with the details. jck@citri.edu.au
+
+            * This is NOT a complete list of games available. *
+
+If you maintain an archive site that is mentioned in this document and you
+don't want ot be then please email me and I will remove your site from this
+document. This goes for any game author in this list also. If some game details
+are incorrect or not good enough then please send your suggestions to me.
+
+*** Please do not ask me how to compile all these games for your system. ***
+Most game authors are available via email so ask them please. Thanks.
+
+The format I have chosen for the game entries is supposed to be simple, but
+comprehensive enough to browse through and check out what's available. Some
+of the entries may be missing due to lack of information. If you have some
+information that will enable me to fill in the gaps please send it to me.
+
+Template:-
+
+   Title: The name by which the game is most recognised.
+  Author: The author(s) of the game. It may a group of people or just one.
+   email: The electronic mail address you use to contact the developers.
+ Version: The latest version number of the software.
+Features: Color/Sound/Single-player/Multi-player/...
+Requires: What is needed to run the game (Color/Sound/X11R6/100 Gigabytes/...)
+Location: Where you can ftp the software from. Please use this resource
+          wisely and download games after hours. :-)
+ Archive: Where the game can be located on the archive site. ie: directory.
+  Status: Development/Finished/Alpha/Beta/New release/Unstable/Unsupported.
+ Updated: Date of last update for FAQ entry.
+
+
+I think every good computer system has had good games so why not promote
+those on the X Window System! This document will be posted to comp.windows.x 
+and comp.windows.x.apps every now and then. It can also be found on ftp.x.org.
+
+If you have the details for some entries that are not complete then please
+send them and I will add them. I haven't time to get each game and check it
+out so if you have already then we all benefit!
+
+
+PLEASE NOTE THAT ftp.x.org HAS MOVED ALL NEW STUFF into /contrib AND THEN INTO
+AN ORDERED DIRECTORY SETUP - SOME GAME LOCATIONS MAY BE OUT OF DATE!!!
+
+Try /R5contrib if the game cannot be found in /contrib/games
+
+
+                          GAMES INDEX (In NO order)
+                          =========================
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+01 - X Blow Up          26 - Lander             51 - Layout Games Pack
+02 - XAmigo             27 - XBattle            52 - XFortress
+03 - XBomb              28 - Battle Zone        53 - XConq
+04 - Spy vs Bob         29 - Hearts             54 - XGolf
+05 - 4 War              30 - Ataxx              55 - Mazewar
+06 - Net Maze           31 - Missile X          56 - XPipe Man
+07 - XRisk              32 - Mr. Is             57 - Dodger
+08 - Generic Tetris     33 - Jewel              58 - Jet Set Willy
+09 - XVMines            34 - XTank              59 - Connect Four
+10 - Crossfire          35 - XPilot             60 - X Block Out
+11 - Mahjongg           36 - Spellcast          61 - XFred
+12 - Mille              37 - XBoing             62 - TclRobots
+13 - SpaceOut           38 - Bowling            63 - Budge
+14 - xhextris           39 - Tank Hunt          64 - XInvaders
+15 - Stratego           40 - Xtet42             65 - Paradise Netrek
+16 - ACM                41 - XDemineur          66 - XMemory
+17 - 3D Tetris          42 - Xtb                67 - Net3d
+18 - Boulder Dash       43 - XBlast             68 - xvier
+19 - XTrek              44 - XBoard             69 - Frisk
+20 - Black Jack         45 - Xics               70 - xgammon
+21 - Blockbuster        46 - Spider             71 -
+22 - Minesweeper        47 - NetHack            72 -
+23 - XPool              48 - XChomp             73 -
+24 - Tetris             49 - XFallout           74 -
+25 - asteriods          50 - XSokoban           75 -
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+New games in this revision: 9
+Total Number of games listed: 66
+
+-----------------------------------------------------------------------------
+
+X Blow Up
+=========
+
+Xblowup is for releasing frustration. It is a 2 player blow-each-other-up 
+game mildly reminiscent of asteroids.
+
+   Title: xblowup
+  Author: Reed Wade
+   email: wade@cs.utk.edu
+ Version: 1.1
+Features: 
+Requires: 
+Location: iraun1.ira.uka.de
+ Archive: /pub/X11/xblowup.tar.Z
+  Status: 
+ Updated: 15th November 1993
+
+
+XAmigo
+======
+
+Xamigo is a simple interface to the AmiGo Go playing program, originally 
+written for the Amiga computer. The Go player was written by Stoney Ballard, 
+with additional code by Todd R. Johnson. 
+
+   Title: xamigo
+  Author: Neil Bowers & others.
+   email: neilb@scs.leeds.ac.uk
+ Version: 1.0
+Features: 
+Requires: 
+Location: iraun1.ira.uka.de
+ Archive: /pub/X11/xamigo.sh.Z
+  Status: beta
+ Updated: 8th November 1993
+
+
+XBomb
+=====
+
+xbomb is an rewrite and extension of the minesweeper game found on various PCs. 
+The object of the game is to clear a field of deadly bombs. To do this requires 
+only two mouse buttons, one key and a devastatingly clever man page which 
+describes the game in greater detail.
+
+   Title: xbomb
+  Author: Matthew Merzbacher
+   email: matthew@cs.ucla.edu
+ Version: 1.2
+Features: 
+Requires: 
+Location: iraun1.ira.uka.de
+ Archive: /pub/X11/xbomb-1.2.tar.Z
+  Status: 
+ Updated: 8th November 1993
+
+
+Spy vs Bob
+==========
+
+In svb, you control the Spy (Pink) who is trying to escape the building. The 
+"BoB"s in the elevators are trying to stop you. The goal is to get across the  
+screen without being smashed by a "BoB" before time runs out. Any leftover 
+time is added to your score as a bonus. The "BoB"s will change speed each time 
+they change direction. On each ledge some "SLACK" will appear after a random 
+delay. Picking this up is worth 500 bonus points.
+
+   Title: svb
+  Author: David Lemke
+   email: lemke@ncd.com
+ Version: 1.0
+Features: 
+Requires: 
+Location: ftp.x.org
+ Archive: contrib/games/svb.shar.Z
+  Status: Now has NetAudio support.
+ Updated: 19th August 1994
+
+
+4 War
+=====
+
+This is a board game which implements the Chinese four-state war game in the
+X Window environment. It allows four players to play the game on four displays,
+each coordinating a complete army, players at the opposite position of the
+playing board are allied. The goal of the game is to capture the COLOURS of
+the enemy.
+I heard it's sort of like the American game 'stratego'.
+
+   Title: x4war
+  Author: Xiaobing Chen
+   email: xiaobing@cs.sfu.ca
+ Version: 1.1
+Features: 
+Requires: 
+Location: ftp.x.org
+ Archive: /contrib/x4war1.1.tar.Z
+  Status: 
+ Updated: 15th November 1993
+
+
+Net Maze
+========
+
+Netmaze is a multiplayer comabt game. You play in a maze with 3D graphics. 
+You can shoot and the object of the game is to hunt down and kill the other 
+players.
+
+   Title: netmaze
+  Author: Michael Hipp
+   email: mhipp@student.uni-tuebingen.de
+ Version: 0.81
+Features: Colour, 3D, multi-player, server, TEXTURE MAPPING on walls!
+Requires: fast X server, fastish network.
+Location: ftp.x.org
+ Archive: contrib/netmaze0.81.tar.gz
+  Status: Under more developement.
+ Updated: 18th April 1994
+
+
+XRisk
+=====
+
+XRisk is a game running under the X window system, that looks very much like
+the "Risk" board game published by Parker Brothers, Inc.
+
+The object of the game is very simple: World Conquest or fullfillment of a 
+mission. To obtain this goal, each player places and moves his own armies on 
+the board, and attacks the armies of other players until a certain mission 
+(chosen by the computer) is accomplished, or until the world is totally 
+conquered. Xrisk might be played with 1 or 2 active players.
+
+   Title: xrisk
+  Author: Members of Programmers Workshop, NTH, Norway
+   email: xrisk@pvv.unit.no
+ Version: 2.15
+Features: Colour, multi-player
+Requires: Colour
+Location: ftp.pvv.unit.no
+ Archive: /pub/pvv-source/unix/games
+  Status: Stable
+ Updated: 5th August 1994
+
+
+Generic Tetris
+==============
+
+Yet Another Tetris Game on X. One of the motivations of this tetris program 
+is simplicity. It does not have many fancy features but the blocks are big
+enough so player can feel comfortable.
+
+   Title: tetris
+  Author: Q. Alex Zhao
+   email: azhao@cc.gatech.edu
+ Version: 3.1.0
+Features: Colour, single-player
+Requires: 
+Location: ftp.x.org
+ Archive: /contrib/tetris.3.1.0.tar.Z         (official version)
+ Archive: /contrib/altetris.tar.Z             (hacked by David A. Bagley)
+  Status: stable
+ Updated: 8th November 1993
+
+
+XVmines
+=======
+
+Discover and deactivate the mines in rectangular mine field.
+Similar to the  MS-Windows minesweeper; requires XView.
+
+   Title: xvmines
+  Author: Manolis Lourakis
+   email: lourakis@csd.uch.gr
+ Version: 1.0
+Features: 
+Requires: 
+Location: ftp.x.org, ftp.csd.uch.gr
+ Archive: /contrib/xvmines-1.0.tar.Z
+ Archive: /pub/X/xvmines-1.0.tar.Z
+  Status: Finished
+ Updated: 9th November 1993
+
+Crossfire
+=========
+
+CrossFire is a multiplayer graphical arcade and adventure game made for the 
+X-Window environment. It has certain flavours from other games, especially 
+Gauntlet (TM) and Nethack/Moria. Any number of players can move around in 
+their own window, picking up / using items and battle monsters. The players 
+all do battle in the same world, and can communicate with eachothers (even 
+fight with each other). The goal of the game is to survive.
+
+   Title: crossfire
+  Author: Frank Tore Johansen
+   email: frankj@ifi.uio.no
+ Version: 0.89.2
+Features: Colour, sound, multi-player
+Requires: 
+Location: ifi.uio.no
+ Archive: /pub/crossfire/crossfire-0.89.2.tar.Z
+  Status: stable
+ Updated: 15th March 1993
+
+
+Mahjongg
+========
+
+
+   Title: xvmahjongg
+  Author: 
+   email: 
+ Version: 2.1
+Features: 
+Requires: 
+Location: ftp.x.org
+ Archive: /contrib/xvmahjongg2.1.tar.Z
+  Status: 
+ Updated: 22nd Decemeber 1992
+
+
+Mille
+=====
+
+X version of the classic Mille Bournes game.
+
+   Title: xmille
+  Author: Keith Packard
+   email: 
+ Version: 
+Features: 
+Requires: 
+Location: ftp.x.org
+ Archive: /contrib/xmille.tar.Z
+  Status: 
+ Updated: 2nd April 1992
+
+
+SpaceOut
+========
+
+
+   Title: spaceout
+  Author: 
+   email: 
+ Version: 
+Features: 
+Requires: 
+Location: ftp.x.org
+ Archive: /contrib/spaceoutX11R4.shar
+  Status: 
+ Updated: 25th September 1990
+
+
+xhextris
+========
+
+Hexagonal version of tetris, by David Markley.
+
+   Title: xhextris
+  Author: David Markley
+   email: 
+ Version: 
+Features: Single-player
+Requires: 
+Location: ftp.x.org
+ Archive: /contrib/xhextris.tar.Z
+  Status: 
+ Updated: 30th March 1991
+
+
+Stratego
+========
+
+Xstratego is a X windows based stratego interface for two players.
+You can either play against another player (on the same or different host)
+or create a board setup for later use.
+  
+The man page includes a summary of the Stratego rules, in case you haven't
+played in awhile.
+
+   Title: xstratego
+  Author: Michiel Huisjes
+   email: huisjes@cs.vu.nl
+ Version: 
+Features: Colour, 2 player
+Requires: 2 players
+Location: ftp.x.org
+ Archive: /contrib/xstratego.tar.Z
+  Status: 
+ Updated: 20th December 1993
+
+
+ACM
+===
+
+Acm is a LAN-oriented, multiplayer aerial combat simulation.  My main design
+objective was to provide source code that could be easily compiled and
+executed on a wide variety of platforms.  To that end, acm is written entirely
+in C, exploiting the programming features of Unix, X11, and the BSD socket
+interface.
+
+   Title: acm
+  Author: Riley Rainey
+   email: riley@netcom.com
+ Version: 4.2
+Features: Color, 3D, multi-player
+Requires: -
+Location: ftp.x.org
+ Archive: /contrib/acm-4.2.tar.Z
+  Status: Stable
+ Updated: 27th January 1994
+
+
+3D Tetris
+=========
+
+t3d is a 3D-Graphics game demonstrating the usage of PEX extension to the
+X Window System via Phigs API, with X-Toolkit and Athena widget set. It is
+based on the traditional tetris game.
+
+   Title: t3d
+  Author: Yotam Medini
+   email: yotam@fai.com
+ Version: 0.0 ??
+Features: 
+Requires: 
+Location: ftp.x.org
+ Archive: /contrib/T3D.tar.Z
+  Status: 
+ Updated: 27th May 1992
+
+
+Boulder Dash
+============
+
+This game has a cute fellow that runs around in mines dodging boulders and
+collecting diamonds for points. Meanies take chase. Very similar to C64 ver.
+Boulder-dash is still in an experimental phase. Mail your bug reports, 
+interesting new levels, ideas to the author.
+
+   Title: bd
+  Author: Jeroen Houttuin ??
+   email: SnailMail: Jeroen Houttuin, Informatikdienste, ETH Zurich 1990
+ Version: 1.1
+Features: Very similar to Commodore 64 version - same levels. Addictive
+Requires: 
+Location: ?
+ Archive: ?
+  Status: beta
+ Updated: 22nd March 1994
+
+
+XTrek
+=====
+
+The basic object of the game is to conquer sixteen (by default) planets for 
+your empire. Of course, everyone else is trying to achive the same objective,
+and that is where all of the fun comes in.
+
+You may want to check out Netrek as well. This version is a not all X11ish 
+It is different but worth noting. Check out rec.games.netrek for more info.
+
+   Title: xtrek
+  Author: Dan Lovinger
+   email: dl2n+@andrew.cmu.edu
+ Version: 6
+Features: Colour, multi-player
+Requires: -
+Location: ftp.x.org
+ Archive: /contrib/xtrek.tar.Z
+  Status: stable
+ Updated: 17th December 1991
+
+
+Black Jack
+==========
+
+Xblackjack is a MOTIF/OLIT based tool constructed to get you ready for the 
+casino. It was inspired by a book called "Beat the Dealer" by Edward O. Thorp, 
+Ph.D. of UCLA. A number of important statistics are maintained for display, 
+and used by the program to implement Thorp's "Complete Point System" 
+(high-low system). 
+
+   Title: xblackjack
+  Author: Kirk Erickson
+   email: kirke@sgi.com
+ Version: 2.1
+Features: 
+Requires: 
+Location: ftp.x.org
+ Archive: /contrib/xblackjack-2.1.tar.Z
+  Status: stable
+ Updated: 24th September 1992
+
+
+Blockbuster
+===========
+
+XBlockbuster is a variation of the break-out type games, only a bit more
+complex in the type of bricks it has and effects the bricks have.  It is
+X11 based.  It should work on any system that has X11R5 (or R4) installed.
+
+   Title: xblockbuster
+  Author: Mark Wedel
+   email: master@cats.ucsc.edu
+ Version: 1.03
+Features: 
+Requires: 
+Location: ftp.x.org
+ Archive: /contrib/xblockbuster1.03.tar.Z
+  Status: stable
+ Updated: 20th May 1993
+
+
+Minesweeper
+===========
+
+xminesweep is a game in which you have to mark all the mines in a playing
+field, you have to work out where they are from information about the
+number of mines around a Cell in the playing field. It is an addictive mind
+game ;) Similar to the MS-Windows version of minesweeper.
+
+   Title: xminesweep
+  Author: Ashley Roll
+   email: aroll@gucis.cit.gu.edu.au
+ Version: 2.1
+Features: 
+Requires: 
+Location: ftp.x.org
+ Archive: /contrib/xminesweep2.1.tar.Z
+  Status: stable
+ Updated: 5th April 1993
+
+
+XPool
+=====
+
+Xpool is a X window game which simulates a billiard game by using an
+approach called Discrete Element Method(DEM).
+
+   Title: xpool
+  Author: Ismail ARIT
+   email: iarit@tara.mines.colorado.edu
+ Version: 1.3
+Features: 
+Requires: 
+Location: ftp.x.org
+ Archive: /contrib/XpoolTable1.3.tar.Z
+  Status: stable
+ Updated: 15th June 1993
+
+
+Tetris
+======
+
+Xtetris is a game involving dropping blocks. As they drop you can move them 
+to the left or to the right by clicking the left or right mouse buttons 
+respectively. Pressing the shift key while clicking the button causes the 
+falling shape to rotate anti-clockwise (left mouse  button) or clockwise 
+(right mouse button). Pressing the middle mouse button causes the shape to 
+quickly drop. 
+
+   Title: xtetris
+ Authors: Dan R. Greening, Adam Marguilies, Phill Everson, and Didier Tallot
+   email: xtetris@cs.ucla.edu
+ Version: 2.5.2
+Features: 
+Requires: 
+Location: ftp.x.org
+ Archive: /contrib/xtetris-2.5.2.tar.Z
+  Status: Stable
+ Updated: 30th December 1992
+
+
+asteriods
+=========
+
+X windows based asteroids style arcade game. You are a space ship and you
+are surrounded by lots of asteriods that are intent on destroying your ship
+by crashing into you. Your mission is to stay alive.
+
+   Title: xasteriods
+  Author: Phil Goetz
+   email: goetz@cs.buffalo.EDU
+ Version: 5
+Features: single-player
+Requires: -
+Location: ftp.x.org
+ Archive: /contrib/xasteriods.sh.Z
+  Status: stable
+ Updated: 16th Feburary 1993
+
+
+Lander
+======
+
+xlander is a lunar landing simulation for X. The object is to successfully 
+land the craft on the surface of the moon or some other planet. The program 
+features "out-the-window" 3-d wire-frame graphics and full directional 
+control of the lander. For further instructions, please refer to the man page.
+
+   Title: xlander
+  Author: Paul Riddle, Mike Friedman
+   email: paulr@umbc3.umbc.edu, mikef@umbc3.umbc.edu
+ Version: 1.0
+Features: 3D, single-player
+Requires: -
+Location: ftp.x.org
+ Archive: /contrib/xlander.shar.Z
+  Status: Stable
+ Updated: 19th May 1992
+
+
+XBattle
+=======
+
+xbattle is a concurrent multi-player battle strategy game that captures the 
+dynamics of a wide range of military scenarios. It is based on X windows, 
+which you must have installed to run this game. Players play from separate 
+displays, and commands are executed concurrently, i.e. the players do not 
+take "turns", they all issue their commands simultaneously. There can be 
+any number of players, and each player is assigned to a color team (or black, 
+white & gray for monochrome monitors). The game board is a matrix of squares 
+that can be occupied by colored troops, and the aim of the game is to 
+eliminate the enemy from the board by attacking squares occupied enemy troops.
+
+   Title: xbattle
+  Author: Steve Lehar, Greg Lesher
+   email: slehar@cns.bu.edu, lesher@cns.bu.edu, xbattle_request@park.bu.edu
+ Version: 4.0
+Features: Colour, multi-player
+Requires: -
+Location: ftp.x.org
+ Archive: /contrib/xbattle-4.0.tar.Z
+  Status: stable
+ Updated: 11th November 1992
+
+
+Battle Zone
+===========
+
+Cbzone is a version of Battlezone derived from the Fortran sources written 
+by Justin S. Revenaugh.  This version is more flexible in that the number 
+of opponents is user selectable.
+
+   Title: cbzone
+  Author: Todd Mummert
+   email: mummert+@cs.cmu.edu
+ Version: 1.1
+Features: Colour, Sound, single-player
+Requires: -
+Location: ftp.x.org
+ Archive: /contrib/cbzone.tar.Z or /contrib/cbzone-sound.tar.gz
+  Status: new sound version
+ Updated: 2nd August 1993
+
+
+Hearts
+======
+
+Hearts is yet another benign, mindless card game. This particular variation 
+is four-handed, with up to four human players allowed. The remaining hands 
+are played by the computer.  Players may join at any time. A computer player 
+will replace any player that leaves the game.
+
+   Title: xhearts
+ Authors: Bob Ankeney, Mike Yang
+   email: mikey@sgi.com
+ Version: 
+Features: 
+Requires: 
+Location: ftp.x.org
+ Archive: /contrib/xhearts.tar.Z
+  Status: Stable
+ Updated: 10th January 1992
+
+
+Ataxx
+=====
+
+XAtaxx is a strategy game based on Ataxx, a popular arcade video game. It is
+a game of position and movement. The object is to have the most pieces of 
+your color on the board at the end of the game.
+
+   Title: xataxx
+ Authors: Jim Zelenka, Steven Gifford, Andrew Plotkin & Co.
+   email: jz1j@andrew.cmu.edu
+ Version: 1.1
+Features: 
+Requires: 
+Location: ftp.x.org
+ Archive: /contrib/xataxx.tar.Z
+  Status: Finished
+ Updated: 28th October 1991
+
+
+
+Missile X
+=========
+
+This is a game of "Defend The Cities From The Falling Missiles", in the
+style of the old arcade game.
+
+   Title: missileX
+ Authors: Sandy Walsh, John Rochester. 
+   email: sandy@garfield.cs.mun.ca
+ Version: 1.1
+Fea

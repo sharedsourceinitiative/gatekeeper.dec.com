@@ -1,0 +1,279 @@
+/***************************************************************************
+
+     File: README.TXT -- demo version
+ Contents: Information to get you started when installing Xmtutor, and
+           how to purchase Xmtutor if you haven't already done so.
+  Part of: The Xmtutor application
+   Author: Jan Borchers <jan@tk.uni-linz.ac.at>
+ Revision: 1.11
+     Date: 1997/04/16 Updated ftp server information
+
+***************************************************************************/
+
+
+/**************************************************************************/
+/*                                                                        */
+/* COPYRIGHT NOTICE:                                                      */
+/* -----------------                                                      */
+/* All parts of the Xmtutor application and the sample Motif tutorial are */
+/* Copyright (C) 1993,1994 Jan Borchers. All rights reserved. No part of  */ 
+/* this software or tutorial data may be reproduced or changed in any     */
+/* manner without prior written consent of the author. The author makes   */
+/* no warranty of any kind with regard to this software and tutorial, and */
+/* he shall not be liable for errors or damages in connection with using  */
+/* this product.                                                          */
+/*                                                                        */
+/**************************************************************************/
+
+
+INTRODUCTION
+
+This is the README.TXT file for the Xmtutor demo application, version 
+1.3b, a program to run interactive tutorials using OSF/Motif. It works 
+best with X11R5 / Motif 1.2 or later, but using X11R4 / Motif 1.1 is 
+also possible.
+
+Xmtutor has been awarded "excellent research contribution" as finalist 
+of the 1994 European Academic Software Award!
+See http://www.ask.uni-karlsruhe.de/ for details.
+
+The software has been developed on Sun SPARC stations using SunOS 4.1, 
+but it has also been installed successfully on DEC Alphas running 
+Digital Unix (formerly OSF/1), Linux PCs, Silicon Graphics workstations, 
+and many other platforms.
+
+This package contains the first chapters of a comprehensive tutorial 
+about programming in Motif. The full version contains the complete 
+tutorial, a detailed program documentation explaining how to write your 
+own tutorials, and a ready-to-print TeX-formatted PostScript file of the 
+complete Motif tutorial with screen shots from all examples (more than 
+120 pages) -- very useful to read "off-screen", which is often more 
+convenient!
+
+To purchase the full version of Xmtutor, send me an email or postal mail 
+stating that you would like to buy Xmtutor.
+
+Don't forget to state your address clearly. I will send you the latest 
+full version via email (or ftp if email is a problem) right away. If you 
+don't have ftp or email access, I can send you a 3.5" HD disk with the 
+software. Substantial reductions for site licenses, especially for 
+educational institutions, are available; simply send me an email (or 
+postal mail, if you must ;-)), and we can work something out. My email 
+address is:
+
+        jan@tk.uni-linz.ac.at
+
+PLEASE IGNORE ANY OLDER EMAIL/POSTAL ADDRESS INFORMATION YOU MAY COME 
+ACROSS IN THE PROGRAM, OR ITS OLDER README.TXT FILE!
+
+You can pay by sending just 
+
+                            >>> 49 DM <<<
+
+(+ 10 DM international bank transfer fees if you're paying from outside 
+Germany) via international money order to the following account:
+
+Recipient:   Jan Borchers
+Account No.: 24 48 35
+Bank code:   630 500 00
+Bank name:   Sparkasse Ulm
+             GERMANY
+
+You can pay in DM (easy with the money order), or in your own currency 
+(please use the current exchange rate). To make things easier, I have 
+fixed the price in US$ (many requests come from the United States) at
+
+                            >>> 39 US$ <<<
+
+including the bank transfer fee.
+---------
+
+I prefer money orders since they are very safe (no sending cheques 
+around). However, if you don't want to use them, you can also send a 
+cheque to the following address:
+
+    Jan Borchers
+    Heilmeyersteige 145
+    89075 Ulm
+    GERMANY
+
+Thank you for supporting my work by purchasing Xmtutor!
+
+****************************************************************************
+
+
+INSTALLATION
+
+IMPORTANT: PLEASE READ THIS FILE BEFORE AND WHILE INSTALLING XMTUTOR.
+           IT WILL HELP YOU WITH THE INSTALLATION PROCEDURE!
+
+
+1)  Create a directory on your Unix system and change to it
+    (the name is not important, but we will use xmtutor_package in
+    this guide, which is also the configuration default):
+
+    >> mkdir ~/xmtutor_package
+    >> cd ~/xmtutor_package
+
+
+2A) IF YOU GOT XMTUTOR VIA FTP OR EMAIL:
+
+    Put the two files, xmtutor-1.3b.D.tar.Z and this README.TXT, into the
+    directory you just created:
+
+    >> mv <wherever>/xmtutor-1.3b.D.tar.Z <wherever>/README.TXT .
+
+
+2B) IF YOU GOT XMTUTOR ON A DISK:
+
+    This README.TXT file should have come together with a file called
+    XMT13DTA.RZ. Copy both files from the MS-DOS disk to the Unix
+    directory you just created (you can use the mcopy command from the
+    PD software "mtools" to access MS-DOS disks from Unix):
+
+    >> mcopy 'a:\*.*' .
+
+    Next, rename xmt13dta.rz to xmtutor-1.3b.D.tar.Z (the capital Z at
+    the end is important to the uncompress program):
+
+    >> mv xmt13dta.rz xmtutor-1.3b.D.tar.Z
+
+
+3) Uncompress the .Z file, and extract the resulting tar archive
+   xmtutor.tar:
+
+   >> uncompress xmtutor-1.3b.D.tar.Z
+   >> tar xvf xmtutor-1.3b.D.tar
+
+   This will create a directory called Xmtut INSIDE the
+   xmtutor_package directory, with various subdirectories and files
+   that make up Xmtutor, the interactive tutorial to learn Motif
+   programming.
+
+
+4) Open the makefile.cfg file in the Xmtut directory which contains
+   common definitions of paths, compiler flags, etc., that will be
+   inserted into all the makefiles for the xmtutor application and the
+   examples.
+
+   For personal use, it is best to leave the Contents subdirectory
+   where the main files resist (in the Xmtut directory). In our
+   example, this would mean that XMTUTOR_CONTENTS remains defined as
+   "${HOME}/xmtutor_package/Xmtut/Contents". 
+
+   If, however, you want to put the contents somewhere else (maybe for
+   a system-wide installation), set the make variable XMTUTOR_CONTENTS
+   to where you want to put the subdirectory "Contents/", e.g.,
+   /usr/lib/X11/XmtutorContents.
+
+   Now, set XMTUTOR_USR_RSRC to where you or the users should keep
+   their changed Xmtutor example resource files (this has to be
+   relative to the user's home directory!). This directory will be
+   created by Xmtutor. The default is that this directory is created
+   as ".XmtutorUserResources" inside your home directory.
+
+   Note that this version 1.3b of Xmtutor works best with X11R5 / Motif
+   1.2 or later! Using X11R4 / Motif 1.1 results in a minor "cosmetic"
+   Xmtutor bug (see bugs.txt). So make sure to use the right libraries,
+   and SET THE -I COMPILER OPTION in the makefile.cfg file to include
+   the right X/Motif header files when building xmtutor and the examples.
+   (Beside the main makefile, there are separate makefiles for each
+   chapter that all insert this makefile.cfg file).
+
+
+5) You will also have to edit the file xmt in the Xmtut directory. The
+   changes you have to make to it are described there.
+
+
+6) Finally, you have to define an environment variable "XMTUTOR_HOME"
+   that has to be set to the path where the main Xmtutor files are,
+   i.e., the path to where you have extracted the archive, plus the
+   directory appendix "/Xmtut". If you had extracted the archive for
+   personal use in a directory called "xmtutor_package" in your home
+   directory, an example command using the csh / tcsh would be
+
+   >> setenv XMTUTOR_HOME ${HOME}/xmtutor_package/Xmtut
+
+   sh, bash, and ksh users would use the following commands instead:
+
+   >> XMTUTOR_HOME=${HOME}/xmtutor_package/Xmtut
+   >> export XMTUTOR_HOME
+
+   This environment variable is only needed for the following "make
+   makefiles" to work, so you don't have to define it permanently to
+   use Xmtutor.
+
+
+7) Now change to the Xmtut directory, and call "make makefile" to
+   insert the makefile.cfg file into the main makefile, then "make
+   makefiles" to do the same with the example makefiles. After that, you
+   can create xmtutor (the application itself), all examples and the
+   sorted indexabc.txt by typing "make":
+
+   >> cd Xmtut
+   >> make makefile
+   >> make makefiles
+   >> make
+
+
+9) Check that all files belonging to Xmtutor or the tutorial are
+   readable by you or the users. (Programs have to be executable, of
+   course.)
+
+   If you want to install xmtutor system-wide, put xmtutor and xmt
+   into the appropriate directory, e.g., /usr/bin/, and put the
+   resource files XmtutorContents[.german], XmtutorLanguage[.german], and
+   XmtutorStructures into the directory you specified in the xmt file
+   (or use the alternative described there).
+
+   Make sure that xmt and xmtutor are in a path that is included in
+   your PATH environment variable, either my moving xmtutor and xmt,
+   or by adding their path to the PATH variable (this should then be
+   included in your startup shell script, e.g., .cshrc):
+
+   >> setenv PATH <where_xmt_and_xmtutor_are>:$PATH         (for csh/tcsh)
+   >> PATH=<where_xmt_and_xmtutor_are>:$PATH ; export PATH  (for sh/bash/ksh)
+
+   The csh and tcsh offer a command to rescan the PATH directories
+   after installing the program, so that xmt and xmtutor are found
+   immediately:
+
+   >> rehash (for csh/tcsh)
+
+   Put everything in the Contents/ directory to where you specified it
+   to be (XMTUTOR_CONTENTS in the makefile and the xmt file).
+
+   It should be possible for a user to start the xmtutor application
+   by typing "xmt" at the shell prompt. This should execute the shell
+   script xmt. It copies the example resource files to the user's
+   directory (creating it when necessary, as specified in the
+   makefile), loads the resource database, and runs the actual xmtutor
+   application. If the -g option is supplied to xmt as first argument,
+   it loads German instead of English resources.
+
+   In the full version, you will find a detailed documentation
+   "xmtutor.ps" of the Xmtutor project in the Doc/ directory in
+   PostScript format, containing some pictures showing the system
+   architecture, and a screen snapshot of the Xmtutor application
+   running. You can then just print the xmtutor.ps file to get a
+   complete documentation.
+
+   The full version also contains the file "xmtutorial.ps" in the same
+   directory, a TeX-formatted version of the complete tutorial. You
+   can use it if you prefer to read something on paper instead of in
+   front of your screen.
+
+   If you think Xmtutor might be useful to others, please pass this demo 
+   version on to your friends, or upload it as "xmtutor-1.3b.D.tar.Z", 
+   together with this README file, to wherever you like - thank you! The 
+   package, however, *must* remain complete and unchanged. Apart from this, 
+   the above Copyright notice applies.
+
+   This package is available from ftp.x.org, in the /contrib/docs/ directory,
+   and from ftp.uni-stuttgart.de, in the /pub/X11/local/ directory.
+   
+   I hope this application is of use to you or your users! Contact me
+   to get the full version or if you run into problems, or drop me a
+   line anyway.
+
+            Jan Borchers <jan@tk.uni-linz.ac.at>

@@ -1,0 +1,15 @@
+"On variants of block-sorting compression using context from both the left and right"
+Mike Burrows and Li Zhang
+Note #2000-005, October 28, 2000. 
+
+The block-sorting text compression algorithm can be viewed as associating a
+context with each character to be compressed, and then sorting the characters
+on their contexts.  Normally, the context associated with each character is the
+string to the left of the character.  Recently, Ratushnyak suggested that it
+might be possible instead to build a context by interleaving characters taken
+alternately from the left and right.  We show that transformations of this type
+are not reversible in general unless additional information is supplied.
+Further, the amount of additional information needed to reverse the
+transformation is necessarily large, and so such transformations are unlikely
+to be of interest as part of a compression algorithm.
+

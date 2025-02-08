@@ -1,0 +1,213 @@
+
+  Motif Guide - A graphical approach to UI design.
+
+  "Motif Guide" is a programmers tool to build Motif compliant user
+interfaces by graphically designing the user interface within the 
+tool and then generating the corresponding Motif "C" code to be 
+linked with the rest of the application.
+
+  Essentially "Motif Guide" lets the user (programmer) design a user
+interface through an easy to use point and click GUI that will do a
+certain amount of error checking so that invalid combinations of
+Motif "Widgets" are not allowed. This will prevent the programmer from
+making costly mistakes will would otherwise require large amounts of
+debugging time.
+
+  User Interfaces generated with this application are essentially bug
+free, allowing the programmer to concentrate his efforts on the actual 
+application code. (...well... that's the idea anyway...)
+
+  "Motif Guide" supports all Motif 1.2.3 widgets and (at the moment) most
+of their resources. I plan to add the Motif 2.0 widgets at some time in
+the future.
+
+  One of the most daunting tasks of a Motif programmer is keeping track
+of the attachments between widgets ( the relationship of one widget to
+its neighbor(s) and its parent). "Motif Guide" resolves this issue by
+supplying a "Constraint(Layout) Editor" which allows the programmer to
+graphically view and modify those attachments.
+
+  Resources can be modified through the use of a "Resource Editor" which
+seperates each widgets resources based on their wether they are core 
+resources or widget (and inherited) resources. When a resource is selected
+the corresponding help item, and a list a valid resource values.
+ 
+
+I haven't had time to play with Gnu's configure utility so in order to
+compile you need to edit the Makefile (only one) to reflect your systems
+library and include file locations. (should be straight forward)
+
+PLEASE DON'T ASK ME ABOUT OTHER COMPILERS! I AM AS CLUELESS AS YOU !
+(Actually, only egcs 1.1.2 is known to work... ) 
+
+   .    _  .     _____________
+   |\_|/__/|    /             \
+  / / \/ \  \  / Happy! Happy! \
+ /__|O||O|__ \ \   Joy! Joy!   /
+|/_ \_/\_/ _\ | \  ___________/
+| | (____) | ||  |/
+\/\___/\__/  // _/
+(_/         ||
+ |          ||\
+  \        //_/
+   \______//
+  __|| __||
+ (____(____) 
+
+A lot of work still needs to be done for this to become
+a useful tool.
+
+Widgets supported in this release (0.7.6):
+
+   Widget Name      Resources   Code Gen.        Interface Gen.     
+                    C = Core    C = Constraints  C = Constraints
+                    W = Widget  R = Resources    R = Resources
+                    H = Help    W = Widget       W = Widget
+                                T = Transl.      T = Transl.
+                                E = Events       E = Events
+                                A = Actions      A = Actions
+                                
+
+  applicationshell      C/W        -/-/W/-/-/-    -/-/-/-/-/-
+  toplevelshell         C          -/-/W/-/-/-    -/-/-/-/-/-
+  arrowbutton           C/W        C/-/W/-/-/-    -/-/-/-/-/-          
+  arrowbuttongadget     C          -/-/-/-/-/-    -/-/-/-/-/-          
+  bulletinboard         C          C/-/W/-/-/-    -/-/-/-/-/-          
+  cascadebutton         C/W/H      C/-/W/-/-/-    -/-/-/-/-/-          
+  cascadebuttongadget   C          -/-/-/-/-/-    -/-/-/-/-/-          
+  command               C          C/-/W/-/-/-    -/-/-/-/-/-          
+  dialogshell           C          -/-/W/-/-/-    -/-/-/-/-/-          
+  drawingarea           C          -/-/W/-/-/-    -/-/-/-/-/-          
+  drawnbutton           C/W/H      -/-/W/-/-/-    -/-/-/-/-/-          
+  errordialog           C          -/-/-/-/-/-    -/-/-/-/-/-          
+  fileselectionbox      C          -/-/-/-/-/-    -/-/-/-/-/-          
+  form                  C/W/H      C/-/W/-/-/-    -/-/-/-/-/-          
+  formdialog            C          -/-/-/-/-/-    -/-/-/-/-/-          
+  frame                 C/W/H      C/-/W/-/-/-    -/-/-/-/-/-          
+  informationdialog     C          -/-/-/-/-/-    -/-/-/-/-/-          
+  label                 C/W/H      C/-/W/-/-/-    -/-/-/-/-/-          
+  labelgadget           C          -/-/-/-/-/-    -/-/-/-/-/-          
+  list                  C          C/-/W/-/-/-    -/-/-/-/-/-          
+  mainwindow            C          C/-/W/-/-/-    -/-/-/-/-/-          
+  menushell             C          -/-/-/-/-/-    -/-/-/-/-/-          
+  menubar               C          C/-/W/-/-/-    -/-/-/-/-/-          
+  messagebox            C          C/-/W/-/-/-    -/-/-/-/-/-          
+  optionmenu            C          -/-/-/-/-/-    -/-/-/-/-/-          
+  panedwindow           C          C/-/W/-/-/-    -/-/-/-/-/-          
+  popupmenu             C          -/-/-/-/-/-    -/-/-/-/-/-          
+  promptdialog          C          -/-/-/-/-/-    -/-/-/-/-/-          
+  pulldownmenu          C          C/-/W/-/-/-    -/-/-/-/-/-          
+  pushbutton            C/W/H      C/-/W/-/-/-    -/-/-/-/-/-          
+  pushbuttongadget      C          -/-/-/-/-/-    -/-/-/-/-/-          
+  questiondialog        C          -/-/-/-/-/-    -/-/-/-/-/-          
+  radiobox              C          C/-/W/-/-/-    -/-/-/-/-/-          
+  rowcolumn             C          C/-/W/-/-/-    -/-/-/-/-/-          
+  scale                 C          C/-/W/-/-/-    -/-/-/-/-/-          
+  scrollbar             C          C/-/W/-/-/-    -/-/-/-/-/-          
+  scrolledlist          C          -/-/-/-/-/-    -/-/-/-/-/-          
+  scrolledtext          C          -/-/-/-/-/-    -/-/-/-/-/-          
+  scrolledwindow        C          -/-/-/-/-/-    -/-/-/-/-/-          
+  selectionbox          C          -/-/-/-/-/-    -/-/-/-/-/-          
+  selectiondialog       C          -/-/-/-/-/-    -/-/-/-/-/-          
+  separator             C          C/-/W/-/-/-    -/-/-/-/-/-          
+  separatorgadget       C          -/-/-/-/-/-    -/-/-/-/-/-          
+  templatedialog        C          -/-/-/-/-/-    -/-/-/-/-/-          
+  text                  C          C/-/W/-/-/-    -/-/-/-/-/-          
+  textfield             C          C/-/W/-/-/-    -/-/-/-/-/-          
+  togglebutton          C          C/-/W/-/-/-    -/-/-/-/-/-          
+  togglebuttongadget    C          -/-/-/-/-/-    -/-/-/-/-/-          
+  warningdialog         C          -/-/-/-/-/-    -/-/-/-/-/-          
+  workingdialog         C          -/-/-/-/-/-    -/-/-/-/-/-          
+
+Custom widgets:    
+  tab                   C          -/-/-/-/-/-    -/-/-/-/-/-          
+
+--------   Release Notes ----------------------------------
+Release 0.7.1
+
+Currently the following is working (mostly):
+
+  Saving an interface *
+  Saving all interfaces *
+  Adding a saved interface to the current display *
+  Loading an interface file *
+  Displaying the widget tree
+  Displaying different interfaces
+  Displaying the widget and core resources for most widget
+  Generating the interfaces
+  HTML help system **
+
+What doesn't work yet:
+
+  Resource Editor *
+  Constraint Editor ***
+  Callback Editor
+  Disabling certain widgets when they are invalid selections
+  Code generation ***
+  No configure script yet
+  
+
+*   Resource modification doesn't work yet
+
+**  Based on free XmHTML widget. You will need the XmHTML library
+    to compile Motif GUIDE.
+
+*** I had this working in a previous release and will be putting
+    it back in soon. 
+
+
+Release 0.7.2
+
+  Added core resources display and widget resource display for some
+  widgets.
+
+Release 0.7.3
+
+  Added more widget resources, and help on each resource.
+  Started with the ConstraintEditor, possible to display location
+  of widgets in form. No manipulation of attachments yet.
+  
+Release 0.7.4
+
+  Added several bug fixes, but still no support for egcs.
+
+Release 0.7.5
+
+  Added support for egcs 1.1.2. This will be the required compiler
+  from now on. Added more code generation for solaris makefile,
+  linux makefile support in next release. Makefile support is
+  hardcoced for the moment, need to change this to be configurable,
+  but for the moment this will do (has to...).
+
+Release 0.7.6
+
+  To compile with linux you need to change Guide::codeMakefile(..),
+  just comment out "codeSolarisMakefile" and uncomment 
+  "codeLinuxMakefile". 
+  Added more support for widget resources. Saving the interface does
+  not work properly yet. (hopefully soon)
+
+Release 0.7.7 (not yet released..)
+
+  More widget resource support. 
+  Private colormap support.
+
+Release 0.8.1 (not yet released..)
+
+  Saving the interface works.
+
+Release 0.8.2 (not yet released..)
+
+  Cut and paste support added.
+
+Release 0.9.1 (not yet released..)
+
+  Callback editor.
+
+Release 0.9.9 (not yet released..)
+
+  Event Editor, Tranlations and Actions.
+
+Release 1.0.0 (not yet released..)
+
+  Stable release.

@@ -1,0 +1,18 @@
+"Each to Each Programmer's Reference Manual"
+Paul McJones and John DeTreville
+Note #1997-023. October 1, 1997.
+
+Each to Each applies collaborative filtering techniques to the 
+problem of making subjective recommendations to consumers faced 
+with "infoglut". The basic idea is to ask people to vote for 
+items on a numeric scale, then perform a statistical analysis 
+of the collection of all people's votes, and use the results 
+of the analysis to predict additional items of potential interest 
+to a particular person. Unlike some competitive approaches, the 
+Each to Each technology separates prediction from analysis, allows 
+predictions to be made using compact "models" produced by the 
+analysis, and provides meaningful predictions after a person 
+has provided just a few votes.  This manual documents the Each 
+to Each APIs and shows how to use them in a complete recommendation 
+application. 
+

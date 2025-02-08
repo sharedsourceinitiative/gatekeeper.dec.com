@@ -1,0 +1,19 @@
+"Smooth Scheduling in a Cell-Based Switching Network"
+Thomas L. Rodeheffer and James B. Saxe
+Report #150, February 19, 1998
+36 pages.
+
+This paper describes a method for scheduling data cell traffic through a
+crossbar switch in such a way as to guarantee that the time slots for
+each flow, and optionally for certain aggregates of flows, are
+approximately uniformly distributed throughout the duration of the
+scheduling frame.  Such a "smooth" schedule achieves reductions in both
+the latency of data flows and the need for associated buffering memory. 
+The method can be used to compute smooth schedules even under conditions
+of maximum load, where the bandwidth re-quirements of the flows to be
+scheduled are sufficient to consume the entire capacity of the switch. 
+This method has been implemented for a working high-speed ATM switching
+network, AN2.  We describe the implementation, its performance, and
+possible future improvements.
+
+

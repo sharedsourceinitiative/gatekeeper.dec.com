@@ -1,0 +1,29 @@
+<TITLE>Compaq Systems Research Center: Note 1998-017</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/SRC/pics/cpq-logo.gif" ALT="Compaq">
+ SRC Technical Note 1998-017</H1>
+<H1>A Note on Low Density Parity Check Codes for Erasures and Errors</H1>
+<HR>
+<H2>Michael Mitzenmacher</H2>
+Note #1998-017. December 11, 1998.
+<P>
+We analyze low density parity check codes that correct both
+errors and erasures using a simple decoding scheme. Our framework 
+unifies previous analyses for low density parity check codes
+and erasure codes. The result is a general class of codes that 
+corrects both errors and erasures, with corresponding simple 
+linear time encoding and decoding algorithms and provable 
+performance guarantees. We also describe how these codes can 
+be applied to yield a new fast algorithm for the setting of 
+Gaussian noise, and leave several open questions regarding the 
+construction of these codes and the associated decoding algorithms.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-017.ps.Z">PostScript compressed with UNIX compress</A></B> -- 144 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-017.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 89 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-017.ps.zip">PostScript compressed with ZIP</A></B> -- 89 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-017.ps">PostScript</A></B> -- 328 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-017.pdf">Portable Document Format (PDF)</A></B> -- 75 Kbytes<BR>
+</UL></P>

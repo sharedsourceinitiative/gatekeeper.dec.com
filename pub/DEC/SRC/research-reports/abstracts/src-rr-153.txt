@@ -1,0 +1,21 @@
+"Continuous Monitoring and Performance Specification"
+Sharon E. Perl, William E. Weihl, and Brian Noble
+Report #153, June 26, 1998. 66 pages.
+
+CMon is a general-purpose performance monitoring system. It enables
+monitoring of long-running programs in a setting where the
+experimenters who are interested in the performance data are different
+from the users who run the programs that generate the data. Among
+other things, this permits programs to be monitored under real
+workload conditions. 
+
+PSpec is a language and set of tools for performance assertion checking, 
+an approach to automating the testing of performance properties of 
+complex systems. It can be used in conjunction with the CMon system to 
+produce a performance monitor that runs continuously, over the lifetime 
+of a program, and automatically detects performance anomalies. 
+
+In this report we describe the design and implementation of CMon 
+and the continuous monitoring features of PSpec, and report on our 
+experience using the systems.
+

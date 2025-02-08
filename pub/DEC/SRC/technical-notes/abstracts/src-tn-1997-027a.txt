@@ -1,0 +1,15 @@
+"A Simple, Intuitive Hypermedia Synchronization Model and its Realization in the Browser/Java Environment"
+Jin Yu
+Note #1997-027a, October 27, 1997. 12 pages. Revised April 1, 1998.
+
+This paper presents a simple and intuitive hypermedia synchronization
+model -- the Media Relation Graph (MRG), and an alternative
+implementation of the Hypermedia Presentation and Authoring System
+(HPAS), which is the testbed for MRG. HPAS is a system for presenting,
+integrating, and managing time-based hypermedia documents on the Web.
+The underlying temporal model of HPAS combines the power of both
+interval-based and point-based synchronization mechanisms. The new
+Java-based implementation exploits many rich features of commercial
+Web browsers and reuses existing browser components, such as plugins
+and Java applets.  (An overview of HPAS and its original Unix/C
+implementation can be found elsewhere \cite{src-tn-1997-003}.)

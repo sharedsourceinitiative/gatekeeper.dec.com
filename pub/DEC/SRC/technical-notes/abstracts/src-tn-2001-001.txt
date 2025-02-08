@@ -1,0 +1,8 @@
+"Cloudburst: A compressing, log-structured virtual disk for flash memory"
+
+Gretta Bartels and Timothy Mann
+
+Report #2001-001, February 2001. 
+
+Cloudburst is a compressing, log-structured virtual disk implemented in flash memory under the Linux operating system. Existing Linux filesystems (preferably with certain modifications) can run on top of Cloudburst. Unfortunately, more extensive filesystem modifications would be needed to make the results fully satisfactory than we had realized at first, and we did not complete them. Nevertheless, the Cloudburst design has some interesting aspects that may be of use to future efforts in flash file systems. 
+

@@ -1,0 +1,14 @@
+	AVAILABLE ELECTRONICALLY
+
+    "Pretending Atomicity."
+    Leslie Lamport and Fred B.~Schneider.
+     May 1, 1989.  29 pages.
+
+Authors' Abstract
+
+    We present a theorem for deriving properties of a concurrent 
+    program by reasoning about a simpler, coarser-grained version.  
+    The theorem generalizes a result that Lipton proved for partial 
+    correctness and deadlock-freedom.  Our theorem applies to all 
+    safety properties.
+

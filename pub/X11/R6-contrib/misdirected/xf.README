@@ -1,0 +1,48 @@
+This is xf(1), an X11R5 utility for generating lists of filenames.
+I expect it will still work ok under X11R6, but it's possible that
+the Set widget will need to be hacked if the class structure has
+changed (as it did from R4 to R5).  If I had access to an X11R6
+platform, I'd fix it, but... I don't.
+
+It is useful as a keyboard-replacement when selecting files to
+delete, copy, tar, etc..  Some examples of xf(1) usage are:
+
+403 % rm `xf /data/x11r3/stuff`
+404 % cp `xf ../xwatch` .
+405 % foreach f (`xf /usr/man/man1`)
+? troff -man $f | lpr -Plz -t
+? end
+
+Xf(1) is written primarily in ANSI C, except for the Set widget
+(a corruption of the Athena List widget) which remains in the original
+pcc dialect.  The code assumes the existence of the POSIX-standard
+directory-access routines (see below), and uses
+the getopt(1) routine to parse the (currently few) command line
+arguments.  Getopt(1) and the POSIX directory-access routines
+are available from the comp.sources.unix archives.
+
+If you find bugs or have suggestions for improvement of the xf(1)
+program, please notify me and I will make appropriate changes
+in future releases of xf(1).
+
+Thanks to Erik M. van der Poel (ddlab!sran8.sra.junet!erik@uunet.uu.net)
+for portability suggestions, which i hope i've properly followed.
+
+Gary Shea
+shea@xmission.com
+
+--------------------------------------------------------------------
+About the POSIX-standard directory routines:
+
+If you have the files
+    /usr/include/dirent.h
+    OR
+    /usr/include/sys/dir.h
+you've probably got them.
+The functions in question are opendir(3), readdir(3), closedir(3).
+If you have the file /usr/include/sys/dir.h, be sure to
+define BSD_DIR in the Makefile or Imakefile (there's a note there).
+If you have neither, you'll be unable to build xf(1).
+
+Machines that definitely CAN build xf(1) include Sun 3's, ULTRIX
+and BSD vaxen, and the DEC 3100 (PMAX).

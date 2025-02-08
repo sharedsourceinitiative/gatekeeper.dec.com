@@ -1,0 +1,146 @@
+<html>
+<head><title>Chasing Races
+</title> 
+</head>
+<body>
+<center> <h1> <b>Chasing Races
+</b> </h1> <br>
+<h2>Silvija Seres, Oxford University</h2>
+</center>
+This is a brief report on the work performed by Silvija Seres during
+her summer research internship at SRC in 1999, together with her host,
+Greg Nelson.  The main theme of the work was evaluating two tools
+developed at SRC for checking the correctness of multi-threaded Java
+programs: Eraser, a dynamic race detector, first described at SOSP in
+1997 [<a href="#eraser">1</a>], and ESC/Java [<a href="#extended">2</a>], 
+a verification-based static program
+checker.  There are two main research results: porting Eraser to work
+on Java programs, and applying ESC/Java (for the first time) to a
+sizable multi-threaded program.  As a source of test cases we used the
+Mercator [<a href="#mercator">3</a>] Web crawler by Allan Heydon and 
+Marc Najork.<P>
+
+Our goal was not to build tools but to evaluate them.  Nevertheless,
+some tool-building was inevitable.  To achieve the necessary
+expressibility with ESC/Java, we needed to add one new pragma and some
+flexibility for the use of so-called ghost variables. With the help of
+Sanjay Ghemawat, we implemented Eraser for Java.  The Eraser algorithm
+finds races by checking all loads and stores to detect shared
+variables that are accessed by different threads without using a lock
+to ensure mutual exclusion.<P>
+
+While checking Mercator, we identified six basic concurrency control
+techniques:<P>
+
+<OL>
+
+<li>In the "monitored object" technique, the methods of a class provide
+internal synchronization before accessing shared variables.<P>
+
+<li>In the "client locking" technique, this synchronization is the
+responsibility of the client of the shared class.<P>
+
+<li>In the "per-thread object" technique, no particular instance of the
+shared class is accessed by more than one thread.<P>
+
+<li>In the "read-only data" technique, thread-safety is achieved by making
+the data immutable after initialization.<P>
+
+<li>In the "exclusive/shared" technique, the program uses exclusive/shared
+locks, also called reader/writer locks, which are a well-known kind of
+lock that can be held by a thread either in exclusive mode or in
+shared mode.<P>
+
+<li>In the "temporal separation" technique, conflicting accesses are
+guaranteed to be non-concurrent because the computation imposes an
+order on them.  There are many examples, of which the most typical is
+a pipeline in which the shared data is accessible to one thread per
+stage.<P>
+
+</ol>
+
+We have also found places in Mercator where these techniques are used
+in combination.<P>
+
+ESC Java's annotation language was designed to specify the monitored
+object technique, but all the others represent specification
+challenges.  Eraser deals with the first four techniques
+automatically, and the rest require minimal annotations.  We have
+designed annotation strategies to allow ESC/Java checking of all the
+techniques. Our strategies make heavy use of ghost variables and of
+the ESC/Java annotations "defined_if" and "writable_if" (the latter of
+which we had to add in the course of our research).<P>
+
+We haven't annotated all of Mercator for ESC/Java, so all of the races
+that we found were found with Eraser.  Mercator consists of
+approximately 25,000 lines of code, and Eraser produced fifteen
+warnings on the first run.  Of these warnings, two were real races and
+the rest were false alarms.  The two races were fixed, and sixteen
+lines of Eraser annotations were added to supress the false alarms.<P>
+
+We have also checked Pachyderm [<a href="#pachyderm">4</a>], the 
+Java mail and news system built by
+Andrew Birrell et. al.  There were a large number of warnings,
+primarily because Pachyderm uses the Java windowing classes, which
+seem to be a fulsome source of races.  Andrew claimed that three of
+the warnings were worth acting on in his code.<P>
+
+Our first conclusion is that Mercator uses more synchronization
+techniques than were envisioned by the designers of ESC/Java.<P>
+
+Our second conclusion is that Eraser is more effective than ESC at
+finding race conditions, especially given a large, unannotated
+program.<P>
+
+Third, ESC/Java requires far more annotation work. A result of this, however,
+is that it allows for the documentation of the synchronization design of the
+program.<P>
+
+We have not experienced coverage to be a problem with either tool, but
+it seems still to be an open issue for each tool, for different
+reasons.  In Eraser we don't have a clear coverage measure, because in
+addition to passing through each branch of the program at least once,
+one needs to check that each shared variable has been accessed by at least
+two threads.<P>
+
+
+<h2>References</h2>
+
+<P>
+<a name="eraser">[1]</a>
+Stefan Savage, Michael Burrows, Greg Nelson, Patrick
+Sobalvarro, and Thomas E.  Anderson. Eraser: A dynamic data race
+detector for multi-threaded programs. ACM Transactions on
+Computer Systems (TOCS), 15(4):391-411, November 1997. Also
+appeared in Proceedings of the Sixteenth ACM Symposium on
+Operating System Principles, October 5-8, 1997, St. Malo,
+France, Operating System Review 31(5), ACM Press, 1997, ISBN
+0-89791-916-5, pp 27-37.
+
+<P>
+<a name="extended">[2]</a>
+David Detlefs, K. Rustan M. Leino, Greg Nelson, and James
+B. Saxe. Extended static checking. Research Report 159, Compaq
+Systems Research Center, Palo Alto, CA, December 1998. Also see:
+<a href="http://www.research.digital.com/SRC/esc/Esc.html">
+Extended Static Checking Web page.</a>
+
+<P>
+<a name="mercator">[3]</a>
+Allan Heydon and Marc Najork. Mercator: A Scalable,
+Extensible Web Crawler. To appear in World Wide Web, December
+1999. See also: <a href="http://www.research.digital.com/SRC/mercator/">
+The Home page of the Mercator Web Crawler.</a>
+
+<P>
+<a name="pachyderm">[4]</a>
+<a href="http://www.research.digital.com/SRC/pachyderm/">
+The Pachyderm Email System</a><P>
+
+
+
+
+</body>
+
+</html>
+

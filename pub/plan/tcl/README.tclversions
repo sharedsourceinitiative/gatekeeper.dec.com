@@ -1,0 +1,28 @@
+
+Version notes:
+Tcl 7.5 goes with Tk 4.1
+	This was the first cross-platform release.
+	The final patch release was "7.5p1"
+Tcl 7.6 goes with Tk 4.2
+	This was a solid cross-platform release before the compiler.
+	The final patch release was "7.6p2"
+Tcl/Tk 8.0
+	This featues the built-in bytecode compiler.
+	The latest patch release is "8.0.5"
+Tcl/Tk 8.1
+	This featues internationalization and thread safety.
+	Last patch release was 8.1.1, but even that was broken
+	in some respects (e.g., server sockets on some NT service packs)
+Tcl/Tk 8.2
+	This is a bug fix/stabilization release in comparison to 8.1
+	New string subcommands (e.g., string map) appeared, too.
+	Last patch release 8.2.3
+Tcl/Tk 8.3
+	Features adoption of most of the Tk Dash and Img patches.
+	Last patch release 8.3.5
+Tcl/Tk 8.4
+	Features new widgets, more features and enhanced performance.
+	This is the current stable release.
+Tcl/Tk 8.5
+	Currently in development, it will focus on revamping the
+	default look of Tk and general improvements.

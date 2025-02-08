@@ -1,0 +1,9 @@
+
+(THIS REPORT HAS BEEN SUPERSEDED BY REPORT #79.)
+
+ A Temporal Logic of Actions
+ Leslie Lamport
+
+ April 1, 1990.  36 pages
+
+

@@ -1,0 +1,43 @@
+<HTML><HEAD><TITLE>
+Compaq Systems Research Center: Report 162</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/SRC/pics/cpq-logo.gif" ALT="Compaq">
+ SRC Research Report 162</H1>
+<H1>An Efficient Matching Algorithm for a High-Throughput, Low-Latency Data Switch</H1>
+<HR>
+<H2>Thomas L. Rodeheffer and James B. Saxe</H2>
+<b>Report #162, November 5, 1998</b><BR><i>24 pages</i>
+<P>
+This paper focuses on two desired properties of cell-based
+switches for digital data net-works: (1) data cells should
+not be detained inside the switch any longer than necessary
+(the work-conserving property) and (2) data cells that have
+been in the switch longer (older cells) should have priority
+over younger cells (the order-conserving property).  A
+well-known, but expensive design of a work- and 
+order-conserving switch is the output-queued switch.
+<P>
+A different switch design is the speedup crossbar switch, 
+in which input buffers are con-nected to output buffers 
+through a crossbar that runs at a multiple (called the speedup) 
+of the external cell rate.  A matching algorithm determines 
+which cells are forwarded through the crossbar at any given 
+time.  Previous work has proposed a matching al-go-rithm called 
+the lowest output occupancy first algorithm (LOOFA).  It is 
+known that a LOOFA switch with speedup at least 2 is work-conserving.
+<P>
+We propose a refinement of LOOFA called the lowest output 
+occupancy and timestamp first algorithm (LOOTFA).  The main 
+result of this paper is that a LOOTFA cross-bar switch is 
+work- and order-conserving provided that the speedup is at 
+least 3.  We prove this result and consider some generalizations.
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-162.ps.Z">PostScript compressed with UNIX compress</A></B> -- 408 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-162.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 328 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-162.ps.zip">PostScript compressed with ZIP</A></B> -- 328 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-162.ps">PostScript</A></B> -- 1136 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-162.pdf">Portable Document Format (PDF)</A></B> -- 122 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

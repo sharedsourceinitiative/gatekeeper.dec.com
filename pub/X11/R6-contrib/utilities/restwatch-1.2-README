@@ -1,0 +1,36 @@
+restwatch is intended to run permanently during an X11 session and to
+monitor the time during which the keyboard or mouse is used. 
+
+The best way to do this is with the XTestExtension1, but this is rarely
+found in X11 implementations and never got to be "standard".
+It is the best because it is the most efficient and also gets you mouse clicks.
+This is the preferred method used by restwatch.  However, if the program
+does not compile because you do not have this extension on the client side,
+move the 
+	#define USEXTESTEXTN1
+in restwatch.c inside the comment, and the program will use the alternative
+method of selecting for events on each window.  This cannot get mouse events.
+
+(The XTRAP extension could probably provide the same functionality, as well
+as the new RECORD extension which appeared with R6 in draft status.  This
+has not been investigated.  The XTEST extension is not useful, as it only
+allows keyboard and mouse to be sent (for simulation) and not received.)
+
+Having XTestExtension1 in libXext.a and being able to compile with 
+USEXTESTEXTN1 defined does not necessarily mean it is supported in the
+server.  (Note it is not usually "trivial" to add XTestExtension1 to the
+server).  You can find out by looking at the output from xdpyinfo after the
+line
+
+	number of extensions: ...
+you need to see
+
+	XTestExtension1
+
+I use a second keyboard on my server, and use a2x to emulate keyboard
+events via XTEST.  This is a problem as these emulated events are not seen
+by XTestExtension1, so I have hacked a2x to also generate a sendevent on
+the root window, and the restwatch program has a hook in it whereby
+sendevents on the root window are looked for.  Terrible, but should not
+cause any concern for other users of the program.  If it does, set the
+variable usea2xhack to false.

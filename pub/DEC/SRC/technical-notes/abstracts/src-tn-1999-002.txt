@@ -1,0 +1,10 @@
+"Checking Java programs via guarded commands"
+K. Rustan M. Leino, James B. Saxe, and Raymie Stata
+Note #1999-002. May 21, 1999.
+
+This paper defines a simple guarded-command-like language and its semantics.  
+The language is used as an intermediate language in generating verification 
+conditions for Java. The paper discusses why it is a good idea to generate 
+verification conditions via an intermediate language, rather than directly.
+
+

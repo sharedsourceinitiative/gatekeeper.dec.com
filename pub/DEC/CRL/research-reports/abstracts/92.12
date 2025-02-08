@@ -1,0 +1,31 @@
+			CRL Technical Report 92/12
+
+			 Encapsulating Plurality
+
+			    Andrew P. Black
+			     Mark P. Immel
+
+                            December 21, 1992
+
+
+This paper discusses the Gaggle, a  mechanism  for grouping and
+naming  objects in a distributed system.  Using Gaggles, client
+objects can access distributed replicated services without regard
+for the number of objects that provide the service.  In this way
+they encapsulate plurality.  Rather than imposing a particular
+design philosophy, Gaggles allow implementors of replicated 
+distributed services full freedom to structure those services as
+they see fit.
+
+A Gaggle behaves very much like an object: it can be named in the
+same way as an object, and can be used as the invokee of an 
+invocation.  However, Gaggles can be used to represent individual 
+objects,  several  ordinary objects, or even several other Gaggles,
+so they serve to encapsulate plurality.  If a Gaggle is  used  as
+an invokee, _one_ of the objects that it represents is chosen to be
+the receiver.
+
+Keywords: distribution, replication,  Emerald,  network,  object,
+alias,  group,  availability,  object-finding, wide-area, gaggle,
+consistency, encapsulation, plurality
+

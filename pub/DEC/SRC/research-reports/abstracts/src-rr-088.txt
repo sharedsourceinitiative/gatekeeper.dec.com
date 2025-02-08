@@ -1,0 +1,32 @@
+
+ 
+			AVAILABLE ELECTRONICALLY
+
+"Factors in the Performance of the AN1 Computer Network"
+Susan S. Owicki and Anna R. Karlin
+June 15, 1992.  25 pages
+
+
+Authors' abstract
+
+
+AN1 (formerly known as Autonet) is a local area network composed of
+crossbar switches interconnected by 100Mbit/second, full-duplex links.
+In this paper, we evaluate the performance impact of certain choices
+in the AN1 design.  These include the use of FIFO input buffering in the
+crossbar switch, the deadlock-avoidance mechanism, cut-through routing,
+back-pressure for flow control, and multi-path routing.  AN1's
+performance goals were to provide low latency and high bandwidth in
+a lightly loaded network.  In this it is successful.  Under heavy load,
+the most serious impediment to good performance is the use of 
+FIFO input buffers.  The deadlock-avoidance technique has an adverse
+effect on the performance of some topologies, but it seems to be the
+best alternative, given the goals and constraints of the AN1 design.
+Cut-through switching performs well relative to store-and-forward
+switching, even under heavy load.  Back-pressure deals adequately with
+congestion in a lightly-loaded network; under moderate load, performance
+is acceptable when coupled with end-to-end flow control for bursts.
+Multi-path routing successfully exploits redundant paths between hosts
+to improve performance in the face of congestion.
+
+

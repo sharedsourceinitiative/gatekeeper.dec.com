@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Cancelling Operations</TITLE>
+<META NAME="description" CONTENT="Cancelling Operations">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="previous" HREF="node9.html">
+<LINK REL="up" HREF="node7.html">
+<LINK REL="next" HREF="node11.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html232"
+ HREF="node11.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html228"
+ HREF="node7.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html224"
+ HREF="node9.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html230"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html231"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html233"
+ HREF="node11.html">Topaz Operating System Interface</A>
+<B> Up:</B> <A NAME="tex2html229"
+ HREF="node7.html">Guidelines for Multithreaded Interfaces</A>
+<B> Previous:</B> <A NAME="tex2html225"
+ HREF="node9.html">Avoiding Ad Hoc Multiplexing</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION02033000000000000000">
+Cancelling Operations</A>
+</H2>
+<A NAME="sec-cancelling">&#160;</A>
+<A NAME="205">&#160;</A>
+Many application programs allow the cancellation of a command in progress.
+For example, the user may decide not to wait for the completion of a
+computation or the availability of a resource.  In order to allow prompt
+cancellation, an application needs a way of notifying all the relevant
+threads of the change in plans.
+<P>
+If the entire application is designed as one large module, then state
+variables, monitors, and condition variables may be enough to implement
+cancellation requests.  However if the application is composed of
+lower-level modules defined by interfaces, it is much more convenient to
+be able to notify a thread of a cancellation request without regard for
+what code the thread is currently executing.
+<P><A NAME="206">&#160;</A>
+<A NAME="207">&#160;</A>
+<A NAME="208">&#160;</A>
+<A NAME="209">&#160;</A>
+<A NAME="210">&#160;</A>
+<A NAME="211">&#160;</A>
+<A NAME="212">&#160;</A>
+<A NAME="213">&#160;</A>
+<A NAME="214">&#160;</A>
+The Modula-2+ language [<A
+ HREF="node19.html#rovner:extendingmodula2">15</A>] in which Topaz
+programs are written provides the <I>alert</I> mechanism [<A
+ HREF="node19.html#birrell:synch">4</A>]
+for this purpose (Mesa provides a similar <I>abort</I> mechanism
+[<A
+ HREF="node19.html#lampson:mesaprocess">10</A>]).  Sending an alert to a thread simply puts it
+in the alerted state.  A thread can atomically test-and-clear its alerted
+status by calling a procedure <TT>TestAlert</TT>.  Of course this is a form of
+polling, and isn't always appropriate or efficient.  To avoid the need to
+poll, there exist variants of the procedures for waiting on condition
+variables and semaphores.  These variants, <TT>AlertWait</TT> and <TT>AlertP</TT>,
+return prematurely with a special indication if the calling thread is
+already in, or enters, the alerted state.  The variants also clear the
+alerted status.  We refer to the procedures <TT>TestAlert</TT>,
+<TT>AlertWait</TT>, and
+<TT>AlertP</TT>, and to procedures that call them, as <I>alertable</I>.
+<P><A NAME="227">&#160;</A>
+What then is the effect of alerts on interface design?  Deciding which
+procedures in an interface should be alertable requires making a trade-off
+between the ease of writing responsive programs and the ease of writing
+correct programs.  Each call of an alertable procedure provides another
+point at which a computation can be cancelled, but each such call also
+requires the caller to design code to handle the two possible outcomes:
+normal completion and an alert being reported.  We have formulated the
+following guidelines for using alerts, which in some sense lead to the
+minimum set of alertable procedures necessary to allow top-level programs
+to cancel operations:
+<P><DL COMPACT>
+<DT>1.
+<DD>Only the owner of a thread, that is the program that forked it,
+should alert the thread.  This is because an alert carries no parameters
+    or information about its sender.  A corollary is that a procedure that
+    clears the alerted status of a thread must report that fact to its caller,
+    so that the information can propagate back to the owner.
+<P><DT>2.
+<DD><A NAME="229">&#160;</A>
+    Suppose there is an interface M providing a procedure P that does an
+    unbounded wait, that is a wait whose duration cannot be bounded by
+    appeal to M's specification alone.  Then M should provide alertable
+    and nonalertable variants of the procedure, just as Modula-2+ does for
+    waits on condition variables and semaphores.  (The interface might
+    provide either separate procedures or one procedure accepting an
+    ``alertable'' Boolean parameter.)  A client procedure Q should use the
+    alertable variant of P when it needs to be alertable itself and cannot
+    determine a bound on P's wait.
+<P><DT>3.
+<DD>A procedure that performs a lengthy computation should follow one of
+    two strategies.  It can allow partial operations, so that its client can
+    decompose a long operation into a series of shorter ones separated by an
+    alert test.  Or it can accept an ``alertable'' Boolean parameter that
+    governs whether the procedure periodically tests for alerts.
+<P></DL>
+<P>
+If all interfaces follow these rules, a main program can always alert its
+worker threads with the assurance that they will eventually report back.
+The implementation of an interface might choose to call alertable
+procedures in more cases than required by the second guideline, gaining
+quicker response to alerts at the cost of more effort to maintain its
+invariants.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html232"
+ HREF="node11.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html228"
+ HREF="node7.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html224"
+ HREF="node9.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html230"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html231"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html233"
+ HREF="node11.html">Topaz Operating System Interface</A>
+<B> Up:</B> <A NAME="tex2html229"
+ HREF="node7.html">Guidelines for Multithreaded Interfaces</A>
+<B> Previous:</B> <A NAME="tex2html225"
+ HREF="node9.html">Avoiding Ad Hoc Multiplexing</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

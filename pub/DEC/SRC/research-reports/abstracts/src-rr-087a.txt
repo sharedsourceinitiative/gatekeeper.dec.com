@@ -1,0 +1,29 @@
+"Animation of Geometric Algorithms: A Video Review"
+Edited by Marc H. Brown and John Hershberger
+June 6, 1992.  23 pages.
+
+Geometric algorithms and data structures are often easiest to understand
+visually, in terms of the geometric objects they manipulate.  Indeed,
+most papers in computational geometry rely on diagrams to communicate
+the intuition behind the results. Algorithm animation uses dynamic
+visual images to explain algorithms. Thus it is natural to present
+geometric algorithms, which are inherently dynamic, via algorithm
+animation.
+
+This videotape presents a video review of geometric animations; the
+review was premiered at the 1992 ACM Symposium on Computational
+Geometry.  The review includes single-algorithm animations and sample
+graphic displays from ``workbench'' systems for implementing multiple
+geometric algorithms.  The accompanying report contains short
+descriptions of the algorithm, animation, and implementation techniques
+used in each video segment.
+
+A videotape (87b) accompanies report 87a:
+
+"Animation of Geometric Algorithms: A Video Review"
+Edited by Marc H. Brown and John Hershberger
+Time: 74 minutes
+
+
+
+

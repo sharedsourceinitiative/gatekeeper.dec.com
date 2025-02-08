@@ -1,0 +1,123 @@
+<title>Modula-3 Implementations</title>
+<H2> Modula-3 implementations </H2>
+
+Three implementations are available or under development at this time:
+
+<MENU>
+<LI> <A HREF="#srcm3">SRC Modula-3</A>
+<LI> <A HREF="#m3pc">m3pc</A>
+<LI> <A HREF="#gm3">GNU Modula-3</A>
+</MENU>
+
+
+<H2><A NAME=srcm3>SRC Modula-3</A></H2>
+
+SRC Modula-3 was built by the
+<A HREF="http://src-www.pa.dec.com/orgs/SRC.html>DEC Systems Research Center</A>.
+
+<P>
+The current version, 2.11, implements the language defined in
+<A HREF="biblio.html#spwm3">SPwM3</A>.
+It is available for a number of
+<A HREF="architectures.html">architectures</A>.
+
+<P>
+SRC Modula-3 includes a user manual, compiler, runtime library,
+some libraries and a few other goodies (see below).
+
+<P>
+The compiler generates C as an intermediate language and should be
+fairly easy to port.  Except for the very lowest levels of the
+thread implementation, the entire system is written in Modula-3.
+
+<UL>
+<LI> <A HREF="top.html">SRC Modula-3 documentation.</A>
+<LI> <A HREF="file://gatekeeper.dec.com/pub/DEC/Modula-3/release"> 
+     SRC Modula-3 distribution.</A>
+</UL>
+
+
+<H2><A NAME=m3pc>m3pc</A></H2>
+
+M3PC is a preliminary port of SRC Modula-3 to
+a PC.  Its "official" announcement was made by
+Laszlo Boeszoermenyi in <TT>comp.lang.modula3</TT> on March 8:
+
+<P>
+<BLOCKQUOTE>
+The Modula-3 system ported by us on the PC and available on the
+gatekeeper, runs with MSDOS, gnu c compiler and djgpp memory
+manager (detailed description in the read me file).
+
+<P>
+You may compile, link and run Modula-3 programs, without threads.
+From the library modules only those are tested which are used by
+the compiler.  In the course of a student project a
+"student-friendly" environment is in development.  It will be
+available at end of June (hopefully).
+</BLOCKQUOTE>
+
+<P>
+<UL>
+<LI> <A HREF="file://gatekeeper.dec.com/archive/pub/DEC/Modula-3/contrib/m3pc/readme.1st"> m3pc's README </A>
+
+<LI>
+<A HREF="file://gatekeeper.dec.com/archive/pub/DEC/Modula-3/contrib/m3pc">
+m3pc distribution </A>.
+</UL>
+
+<H2><A NAME=gm3> GNU Modula-3 </A></H2>
+
+GNU Modula-3 is an independent effort to create a Modula-3 system
+using the GNU C compiler's backend.
+It was announced by Eliot Moss in <TT>comp.lang.modula3</TT> on March 25:
+
+<P>
+<BLOCKQUOTE>
+   We said we'd try to get the initial (alpha) release of GNU
+   Modula-3 out some time this month (March), and we're in the
+   process of figuring out what to release and how to package it
+   up. We expect to have something in roughly two weeks (watch
+   this space for a notice).
+
+<P>
+   What would this be? First, it is a compiler for the VAX (only)
+   under Ultrix (only), definitely without threads, and probably
+   still failing a small number of the tests in the SRC test
+   suite (which implies that not all of libm3 is likely to work
+   either). The actual release information will detail more about
+   what's working and what's not at that time. We DO currently
+   pass all the compiler tests that the SRC compiler did when it
+   was first released (i.e., the ones we fail are more obscure
+   things that users uncovered over time).
+
+<P>
+   Second, the release itself will be a compressed tar file
+   including sources and executables. The executables will
+   probably work only if you put libraries, etc., in the expected
+   places (otherwise, you'll need to rebuild from sources).The
+   compiler is written in C and should be compiled with a recent
+   version of gcc (so you'll need gcc installed). The system also
+   uses gld (the GNU linker).
+
+<P>
+   This release should be most useful to people undertaking ports
+   to other machines and operating systems, since it will give
+   them a head start on understanding the compiler and getting
+   the full system ready. It may be of some use for ordinary
+   programming, but it really depends on whether you tend to use
+   features that tickle the remaining bugs. We are indeed
+   interested in alpha test reports, but only if they tell us
+   something new (i.e., we'll provide a list of known
+   deficiencies).
+
+<P>
+   When the release is made, we'll also start email discussions
+   with the various parties who have indicated they might
+   undertake ports, to help sort out who will do what.
+
+<P>
+   Regards, and thanks for your continued interest and
+   encouragement -- EM
+<P>
+</BLOCKQUOTE>

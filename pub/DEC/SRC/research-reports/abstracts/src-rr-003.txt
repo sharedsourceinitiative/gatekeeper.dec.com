@@ -1,0 +1,18 @@
+"On Extending Modula-2 for Building Large, Integrated Systems."
+Paul Rovner, Roy Levin, John Wick.
+January 11, 1985.  45 pages.
+
+Authors' Abstract
+
+    This paper addresses some of the problems of using Modula-2 to
+    develop large programs, that is, programs with more detail than
+    can be managed effectively by one person. The primary weaknesses
+    of Modula-2 for building large systems of concurrent applications
+    that share data structures and code are discussed.  A collection
+    of language changes and extensions to strengthen Modula-2 for
+    such applications are described. Experience using the extended
+    language for a large software project suggests that it is good
+    for the cooperative development of large, experimental programs
+    that share memory.
+
+

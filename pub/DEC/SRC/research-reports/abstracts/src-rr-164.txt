@@ -1,0 +1,28 @@
+"Key Instructions:  Solving the Code Location Problem for Optimized Code"
+Caroline Tice and Prof. Susan L. Graham
+Report #164, August 17, 2000. 25 pages
+
+There are many difficulties to be overcome in the process of designing
+and implementing a debugger for optimized code.  One of the first
+problems facing the designer of such a debugger is determining how to
+accurately map between locations in the source program and locations
+in the corresponding optimized binary.  The solution to this problem
+is critical for many aspects of debugger design, from setting
+breakpoints, to implementing single-stepping, to reporting error
+locations.  Previous approaches to debugging optimized code have
+presented many different techniques for solving this location mapping
+problem (commonly known as the code location problem).  These
+techniques are often very complex and sometimes incomplete.
+
+Identifying key instructions allows for a simple yet formal way of
+mapping between locations in the source program and the optimized
+target program.  In this paper we present the concept of key
+instructions.  We give a formal definition of key instructions and
+present algorithms for identifying them.  We then show how they
+greatly simplify many location mapping tasks, regardless of the
+particular approach taken for solving other problems related to
+debugging optimized code.  Finally we briefly describe our experiences
+implementing and using key instructions.  The concepts presented in
+this paper are fundamental rather than complex; but they are of
+profound importance in the field of debugging optimized code and are
+therefore worthy of careful attention and articulation.

@@ -1,0 +1,198 @@
+
+
+
+LIBXEARTH(3)                                                     LIBXEARTH(3)
+
+
+
+NAME
+  Earth - The earth widget class
+
+SYNOPSIS
+
+  #include <Earth.h>
+
+  extern void             XearthSetViewMag(
+  Widget                  self,
+  float                   view_mag
+  );
+
+  extern void             XearthSetViewRot(
+  Widget                  self,
+  float                   view_rot
+  );
+
+  extern void             XearthSetViewLat(
+  Widget                  self,
+  float                   view_lat
+  );
+
+  extern void             XearthSetViewLon(
+  Widget                  self,
+  float                   view_lon
+  );
+
+  extern void             XearthChildGetLatitude(
+  Widget                  child,
+  float                   *latitude
+  );
+
+  extern void             XearthChildGetLongitude(
+  Widget                  child,
+  float                   *longitude
+  );
+
+  extern void             XearthChildSetLatitude(
+  Widget                  child,
+  float                   latitude
+  );
+
+  extern void             XearthChildSetLongitude(
+  Widget                  child,
+  float                   longitude
+  );
+
+  extern int              XearthGetXY(
+  Widget                  self,
+  float                   latitude,
+  float                   longitude,
+  Position                *xret,
+  Position                *yret
+  );
+
+
+
+
+
+DESCRIPTION
+  _E_a_r_t_h is the reentrant version of the well known _x_e_a_r_t_h. Is is a constraint
+  widget ant manages visibility of its children according their geographical
+  positions.
+
+  XXeeaarrtthhGGeettXXYY(()) returns 1 if position is visible, otherwise zero.
+
+  Resources
+
+
+  pprroojjTTyyppee       might be mmeerrccaattoorr or oorrtthhooggrraapphhiicc.
+
+  vviieewwPPoossTTyyppee    might be ffiixxeedd, ssuunnrreell, or oorrbbiitt.
+
+  vviieewwLLaatt        is the view latitude.
+
+  vviieewwLLoonn        is the view longitude.
+
+  ppeerriioodd         is the orbital period.
+
+  iinncclliinn         is the orbital inclination.
+
+  vviieewwRRoott        is the view rotation.
+
+  vviieewwMMaagg        is the view magnification.
+
+  ssttaarrFFrreeqq       is the star frequency,
+
+  bbiiggSSttaarrss       displays big stars.
+
+  ddaayy            defines the day percentage.
+
+  nniigghhtt          defines the night percentage.
+
+  tteerrmmiinnaattoorr     see _x_e_a_r_t_h.
+
+  mmoonnoo           displays the earth in monochrome (even on color displays).
+
+  nnuummCCoolloorrss      defines the number of colors used.
+
+  xxGGaammmmaa         defines the xxggaammmmaa of the display.
+
+  ttiimmee           defines the _u_n_i_x time (ttiimmee__tt) of the earth.
+
+  sshhiiffttXX         defines the horizontal shift.
+
+  sshhiiffttYY         defines the vertical shift.
+
+  ccoommppuutteeSSuunnPPooss  computes the sun position.
+
+  ddooSShhaaddee        does a day/night rendering.
+
+  ddooSSttaarrss        displays stars instead of a dark space.
+
+  ddooGGrriidd         displays the position vertices.
+
+  ggrriiddBBiigg        displays a big grid.
+
+  ggrriiddSSmmaallll      displays a small grid.
+
+  Constraint resources
+
+
+  llaattiittuuddee       defines the latitude of the child.
+
+  lloonnggiittuuddee      defines the longitude of the child.
+
+NOTES TO IMPLEMENTORS
+
+  To make the code reentrant and to interface correctly with the code of
+  xearth (to respect the original code), We've had to create some kind of
+  structures (t_map_scan_input, t_map_scan_output, etc...). The simplest
+  thing is to understand well the meaning of these structures.  Be careful,
+  when a Resize() occurs, we have to call the correct reallocation methods
+  because we've tried to limit them. By example, when the resource XtNtime
+  changes, we don't realloc the rendermap nor the XImage (because XtNwidth
+  and XtNheight hasn't changed).
+
+  Not all the resources are deeply implemented (but almost all the most
+  interesting ones). You have to know that there is some big problems with
+  XtRfloat!!! On a 32 bit system, you can't pass them trough a XtSetValues
+  and the best thing you've got to do (to be portable) is to pass them in
+  using XtRString (and by example XtVaTypedArg). There is also another method
+  by implementing public procedures (as in XawScrollbar for the thumb
+  resource). It's what it has been done.
+
+
+SEE ALSO
+  xxeeaarrtthh((11))
+
+
+TODO
+  XearthDrawLine() to draw lines on the earth surface. We have to find a way
+  to keep a context concerning these lines to correctly redraw them on expo-
+  sures.
+
+
+AUTHORS
+  Kirk Lauritz Johnson <tuna@cag.lcs.mit.edu> - original author of xearth.
+  Martin Gall (mgall@capmedia.fr) - widget version.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,31 @@
+
+                         AVAILABLE ELECTRONICALLY
+
+"Bridges: Tools to Extend the Vesta Configuration Management System"
+Mark R. Brown, John R. Ellis
+June 14, 1993.  42 pages
+
+
+Vesta is a highly flexible configuration management system that
+supports large-scale development. Vesta provides a repository of 
+immutable objects and a functional programming language for writing 
+concise yet complete descriptions of configurations.
+
+A Vesta bridge is a set of related functions and data types provided by
+tool builders to a Vesta environment. For instance, a C bridge might 
+include a function for compiling C sources and a function for linking 
+compiled C sources into executable images.
+
+Vesta has supported development on a significant scale. The Vesta
+prototype included several low-aspiration bridges that encapsulated 
+existing tools without modification; these bridges were straightforward 
+to write. Vesta also included one high-aspiration bridge, Vulcan, a 
+compiler server based on abstract-syntax trees. Vulcan gained both 
+functionality and performance from its integration with Vesta. Both types 
+of bridge benefited from Vesta's single, uniform naming facility that 
+replaced ad hoc name spaces of traditional environments.
+
+Bridges themselves are described and configured within Vesta. This
+allows tool builders to provide consistent collections of tools, control 
+their evolution, and manage their installation using Vesta. 
+

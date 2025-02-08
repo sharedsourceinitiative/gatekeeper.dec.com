@@ -1,0 +1,455 @@
+diff m3rpc-1.2/README m3rpc-1.3/README
+1c1
+< 4/1/92
+---
+> 5/20/92
+18a19,38
+> 
+> Making a program
+> ================
+> 
+> To make a program, create a .x file that describes your RPC interface.
+> This should be written in Sun's RPC Language.  Files that work with rpcgen
+> should work with m3rpcgen.  Then run the file through m3rpcgen:
+> 
+>     % m3rpcgen Foo.x
+> 
+> You will get files named Foo.i3 (an interface for clients and servers for
+> this RPC service), Foo_c.m3 (client stubs), Foo_s.m3 (server stubs), and
+> possibly Foo_x.i3 and Foo_x.m3 (for "XDR", marshalling and unmarshalling
+> routines).  Compile these up and link them into your program along with the
+> code that calls the stubs and the runtime.  Link against libm3rpc.a.
+> 
+> 
+> The stubs and the library interface
+> ===================================
+> 
+47,48c67,68
+< can have multiple connections).  The stub generator ought to provide
+< locking to enforce this, but it doesn't yet.
+---
+> can have multiple connections).  The stub generator enforces this by use of
+> a lock embedded in the client stub object.
+55c75
+< before discarding o to reclaim the file descriptor.
+---
+> to reclaim the file descriptor before discarding o.
+58c78
+< the object's methods, then export it with
+---
+> the object's methods, then export it with code like
+67c87,89
+< structure that represents the address of an RPC server.
+---
+> structure that represents the address of an RPC server.  To allocate a
+> transient program number, the constant RPCSun.TransientProgram can be
+> supplied as the second parameter to RPCSun.Export.
+79a102,104
+> Keeping in touch
+> ================
+> 
+84a110,117
+> 
+> ================================================================
+> Changes for 1.3 (5/20/92):
+> - Added support for transient program numbers.
+> - Converted to version 2.06 of the compiler.
+> - Bug fixes to m3rpcgen.
+> - Added locking to generated stubs.
+> ================================================================
+Common subdirectories: m3rpc-1.2/m3rpc and m3rpc-1.3/m3rpc
+Common subdirectories: m3rpc-1.2/m3rpcgen and m3rpc-1.3/m3rpcgen
+Common subdirectories: m3rpc-1.2/rpcexamples and m3rpc-1.3/rpcexamples
+Common subdirectories: m3rpc-1.2/m3rpc/RCS and m3rpc-1.3/m3rpc/RCS
+diff m3rpc-1.2/m3rpc/RPCSun.i3 m3rpc-1.3/m3rpc/RPCSun.i3
+7c7
+<    $Id: RPCSun.i3,v 1.4.1.1 1992/04/02 00:49:35 nichols Exp $
+---
+>    $Id: RPCSun.i3,v 1.6 1992/05/20 22:05:38 nichols Exp $
+62d61
+< 
+86d84
+< 
+123a122,125
+> CONST
+>   TransientProgram = 16_40000000; (* says we want a transient program
+>                                      number *)
+> 
+148c150,155
+<    necessary) and allocates a socket. *)
+---
+>    necessary) and allocates a socket.
+> 
+>    If the program number is TransientProgram, then a new transient program
+>    number is picked and used.  The new value can be obtained from the
+>    BindingInfo returned from the function value.  ExportUDP and
+>    ExportTCPListener will also do this. *)
+159c166,168
+< (* Caller has connected socket (e.g.  via inetd) to client. *)
+---
+> (* Caller has connected socket (e.g.  via inetd) to client.  Will not pick
+>    a transient program number since it doesn't register with the port
+>    mapper. *)
+diff m3rpc-1.2/m3rpc/RPCSun.m3 m3rpc-1.3/m3rpc/RPCSun.m3
+7c7
+<    $Id: RPCSun.m3,v 1.4.1.2 1992/04/02 02:41:48 nichols Exp $
+---
+>    $Id: RPCSun.m3,v 1.6 1992/05/20 22:05:38 nichols Exp $
+21c21
+< IMPORT M3toC, PortMapper, RPC, Thread, Uin, Unetdb, Usocket, XDR;
+---
+> IMPORT M3toC, PortMapper, Random, RPC, Thread, Uin, Unetdb, Usocket, XDR;
+61a62,65
+> (*
+>  * Client services
+>  *)
+> 
+79a84,87
+> (*
+>  * Server services
+>  *)
+> 
+128c136
+<       RAISE RPC.Failed(NEW(RPC.Failure, info := "Not a call msg"));
+---
+>       RAISE RPC.Failed(NEW(RPC.Failure, info := "not a call msg"));
+179c187
+<         RPC.Failed(NEW(RPC.Failure, info := "Protocol error: msg type."));
+---
+>         RPC.Failed(NEW(RPC.Failure, info := "protocol error: msg type"));
+194c202
+<                                info := "Protocol error: bad acceptance."));
+---
+>                                info := "protocol error: bad acceptance"));
+205c213
+<                   NEW(RPC.Failure, info := "Protocol error: bad denial."));
+---
+>                   NEW(RPC.Failure, info := "protocol error: bad denial"));
+209c217
+<               NEW(RPC.Failure, info := "Protocol error: bad reply type."));
+---
+>               NEW(RPC.Failure, info := "protocol error: bad reply type"));
+264c272
+<           RPC.Failed(NEW(RPC.Failure, info := "Can't contact portmapper",
+---
+>           RPC.Failed(NEW(RPC.Failure, info := "can't contact portmapper",
+270a279,284
+> CONST
+>   TransientProgNumBase = 16_40000000; (* Start of SunRPC transient program
+>                                          numbers. *)
+>   TransientProgNumMax = 16_5FFFFFFF; (* First number past legal SunRPC
+>                                         transient program number. *)
+>   TransientStartMax = 16_48000000; (* max value we'll pick randomly *)
+278c292,294
+< PROCEDURE PortMapperRegister (prog, vers, port: INTEGER; protocol: Protocol)
+---
+> PROCEDURE PortMapperRegister (VAR (*in/out*) prog      : INTEGER;
+>                                              vers, port: INTEGER;
+>                                              protocol  : Protocol )
+293,304c309,344
+<     (* If we've never registered this prog/vers for any protocol before,
+<        then we need to unregister it at the portmapper.  We're assuming
+<        that we'll never have one process export for UDP and another for TCP
+<        for the same prog/vers pair, but the semantics of pmapproc_unset
+<        sort of guarantee that, anyway. *)
+<     r := registrations;
+<     WHILE r # NIL AND (r.prog # prog OR r.vers # vers) DO r := r.next; END;
+<     IF r = NIL THEN
+<       r := NEW(Registration, next := registrations, prog := prog,
+<                vers := vers);
+<       registrations := r;
+<       EVAL pm.Unset(prog, vers, proto, 0);
+---
+>     IF prog = TransientProgram THEN
+>       (* Find a transient program number to use and register it.  We do
+>          this by successively picking transient program numbers and trying
+>          to register them until one succeeds.  NOTE: Unlike the
+>          non-transient case, we should NOT try to unregister anything. *)
+>       prog := PickTransientProgramNumber();
+>       WHILE NOT pm.Set(prog, vers, proto, port) DO
+>         INC(prog);              (* Try the next one up. *)
+>         IF prog >= TransientProgNumMax THEN
+>           RAISE
+>             RPC.Failed(
+>               NEW(RPC.Failure,
+>                   info := "can't find a free transient program number"));
+>         END;
+>       END;
+>     ELSE
+>       (* If we've never registered this prog/vers for any protocol before,
+>          then we need to unregister it at the portmapper.  We're assuming
+>          that we'll never have one process export for UDP and another for
+>          TCP for the same prog/vers pair, but the semantics of
+>          pmapproc_unset sort of guarantee that, anyway. *)
+>       r := registrations;
+>       WHILE r # NIL AND (r.prog # prog OR r.vers # vers) DO
+>         r := r.next;
+>       END;
+>       IF r = NIL THEN
+>         r := NEW(Registration, next := registrations, prog := prog,
+>                  vers := vers);
+>         registrations := r;
+>         EVAL pm.Unset(prog, vers, proto, 0);
+>       END;
+>       (* Now register ourselves. *)
+>       IF NOT pm.Set(prog, vers, proto, port) THEN
+>         RAISE RPC.Failed(NEW(RPC.Failure,
+>                              info := "can't register with port mapper"));
+>       END;
+306,311d345
+<     (* Now register ourselves. *)
+<     IF NOT pm.Set(prog, vers, proto, port) THEN
+<       RAISE
+<         RPC.Failed(
+<           NEW(RPC.Failure, info := "Can't register with port mapper."));
+<     END;
+314a349,356
+> VAR rand: Random.T := NIL;
+> PROCEDURE PickTransientProgramNumber (): INTEGER =
+>   (* Return a "randomly" picked transient program number. *)
+>   BEGIN
+>     IF rand = NIL THEN rand := Random.New(-1); END;
+>     RETURN Random.Subrange(rand, TransientProgNumBase, TransientStartMax);
+>   END PickTransientProgramNumber;
+> 
+359c401
+<     IF Usocket.getsockname(s, ADR(addr), len) = -1 THEN
+---
+>     IF Usocket.getsockname(s, ADR(addr), ADR(len)) = -1 THEN
+diff m3rpc-1.2/m3rpc/RPCSunPriv.i3 m3rpc-1.3/m3rpc/RPCSunPriv.i3
+7c7
+<    $Id: RPCSunPriv.i3,v 1.3 1992/03/31 01:21:26 nichols Exp $
+---
+>    $Id: RPCSunPriv.i3,v 1.4 1992/05/20 22:11:15 nichols Exp $
+109,111c109,113
+< (* Register with the port mapper. *)
+< PROCEDURE PortMapperRegister (prog, vers, port: INTEGER;
+<                               protocol        : RPCSun.Protocol)
+---
+> (* Register with the port mapper.  If prog is RPCSun.TransientProgram, then
+>    pick a transient program number and return its value in prog. *)
+> PROCEDURE PortMapperRegister (VAR (*in/out*) prog      : INTEGER;
+>                                              vers, port: INTEGER;
+>                                              protocol  : RPCSun.Protocol)
+diff m3rpc-1.2/m3rpc/RPCSunTCP.m3 m3rpc-1.3/m3rpc/RPCSunTCP.m3
+7c7
+<    $Id: RPCSunTCP.m3,v 1.6 1992/03/31 01:21:26 nichols Exp $
+---
+>    $Id: RPCSunTCP.m3,v 1.7 1992/05/20 22:11:44 nichols Exp $
+231c231
+<       s := Usocket.accept(cl.s, ADR(addr), len);
+---
+>       s := Usocket.accept(cl.s, ADR(addr), ADR(len));
+diff m3rpc-1.2/m3rpc/RPCSunUDP.m3 m3rpc-1.3/m3rpc/RPCSunUDP.m3
+7c7
+<    $Id: RPCSunUDP.m3,v 1.6 1992/03/31 01:21:26 nichols Exp $
+---
+>    $Id: RPCSunUDP.m3,v 1.7 1992/05/20 22:11:44 nichols Exp $
+386,388c386,389
+<     result := Usocket.recvfrom(
+<                 s := socket, buf := ADR(data[0]), len := NUMBER(data),
+<                 flags := 0, from := ADR(sourceAddr), fromlen := addrLen);
+---
+>     result :=
+>       Usocket.recvfrom(
+>         s := socket, buf := ADR(data[0]), len := NUMBER(data), flags := 0,
+>         from := ADR(sourceAddr), fromlen := ADR(addrLen));
+Common subdirectories: m3rpc-1.2/m3rpcgen/RCS and m3rpc-1.3/m3rpcgen/RCS
+diff m3rpc-1.2/m3rpcgen/rpc_clntout.c m3rpc-1.3/m3rpcgen/rpc_clntout.c
+154a155
+>     f_print(fout, "          o.GetClient().Destroy();\n");
+188a190
+> 	f_print(fout, "\t\t  mu: MUTEX := NIL;\n");
+214a217
+> 	    f_print(fout, "\t\tmu := Thread.NewMutex(),\n");
+226,227c229,231
+< 		    "    RETURN NEW(%sPrivate, cl := RPCSun.ImportService(b));\n",
+< 		    pvName);
+---
+> 		    "    RETURN NEW(%sPrivate,\n", pvName);
+> 	    f_print(fout, "\t\tmu := Thread.NewMutex(),\n");
+> 	    f_print(fout, "\t\tcl := RPCSun.ImportService(b));\n");
+284c288,289
+< 	    f_print(fout, "    %s := %s.cl.StartCall(%s);\n", si, o,
+---
+> 	    f_print(fout, "    LOCK %s.mu DO\n", o);
+> 	    f_print(fout, "      %s := %s.cl.StartCall(%s);\n", si, o,
+287c292
+< 		f_print(fout, "    TRY\n");
+---
+> 		f_print(fout, "      TRY\n");
+292c297
+< 			emit_put_stat(&(dl->decl), "  ", "", FALSE, si);
+---
+> 			emit_put_stat(&(dl->decl), "    ", "", FALSE, si);
+308,314c313,319
+< 		f_print(fout, "    EXCEPT\n");
+< 		f_print(fout, "      XDR.Failed(e) =>\n");
+< 		f_print(fout, "        RAISE\n");
+< 		f_print(fout, "          RPC.Failed(NEW(RPC.ZeroTimesFailure,\n");
+< 		f_print(fout, "            info := \"arg marshalling failed\",\n");
+< 		f_print(fout, "            subArg := e));\n");
+< 		f_print(fout, "    END;\n");
+---
+> 		f_print(fout, "      EXCEPT\n");
+> 		f_print(fout, "        XDR.Failed(e) =>\n");
+> 		f_print(fout, "          RAISE\n");
+> 		f_print(fout, "            RPC.Failed(NEW(RPC.ZeroTimesFailure,\n");
+> 		f_print(fout, "              info := \"arg marshalling failed\",\n");
+> 		f_print(fout, "              subArg := e));\n");
+> 		f_print(fout, "      END;\n");
+316c321
+< 	    f_print(fout, "    %s := %s.cl.SendCall();\n", so, o);
+---
+> 	    f_print(fout, "      %s := %s.cl.SendCall();\n", so, o);
+318c323
+< 		f_print(fout, "    TRY\n");
+---
+> 		f_print(fout, "      TRY\n");
+322c327
+< 			    "    %s := XDR.Get%s(%s);\n", outParm, srcMethod,
+---
+> 			    "        %s := XDR.Get%s(%s);\n", outParm, srcMethod,
+327c332
+< 			    "    %s_x.Get_%s(%s, %s);\n",
+---
+> 			    "        %s_x.Get_%s(%s, %s);\n",
+331,337c336,342
+< 		f_print(fout, "    EXCEPT\n");
+< 		f_print(fout, "      XDR.Failed(e) =>\n");
+< 		f_print(fout, "        RAISE\n");
+< 		f_print(fout, "          RPC.Failed(NEW(RPC.Failure,\n");
+< 		f_print(fout, "            info := \"result marshalling failed\",\n");
+< 		f_print(fout, "            subArg := e));\n");
+< 		f_print(fout, "    END;\n");
+---
+> 		f_print(fout, "      EXCEPT\n");
+> 		f_print(fout, "        XDR.Failed(e) =>\n");
+> 		f_print(fout, "          RAISE\n");
+> 		f_print(fout, "            RPC.Failed(NEW(RPC.Failure,\n");
+> 		f_print(fout, "              info := \"result marshalling failed\",\n");
+> 		f_print(fout, "              subArg := e));\n");
+> 		f_print(fout, "      END;\n");
+339c344,345
+< 	    f_print(fout, "    %s.cl.EndCall();\n", o);
+---
+> 	    f_print(fout, "      %s.cl.EndCall();\n", o);
+> 	    f_print(fout, "    END;\n");
+diff m3rpc-1.2/m3rpcgen/rpc_cout.c m3rpc-1.3/m3rpcgen/rpc_cout.c
+168,170c168,173
+< 	if ((srcMethod != NULL) &&
+< 	    (streq(srcMethod, "Integer") || streq(srcMethod, "Short")))
+< 	    f_print(fout, "      %s %s =>\n", firstFlag, cl->case_name);
+---
+> 	if (srcMethod != NULL) {
+> 	    if (streq(srcMethod, "Integer") || streq(srcMethod, "Short"))
+> 		f_print(fout, "      %s %s =>\n", firstFlag, cl->case_name);
+> 	    else
+> 		f_print(fout, "      %s %s =>\n", firstFlag, cl->case_name);
+> 	}
+216,217c219,222
+< 	f_print(fout, "    Put_%s(si, v.%s);\n",
+< 		def->def.un.enum_decl.type, def->def.un.enum_decl.name);
+---
+> 	f_print(fout, "    %sPut_%s(si, v.%s);\n",
+> 		GetPutModuleName(def->def.un.enum_decl.type, TRUE),
+> 		def->def.un.enum_decl.type,
+> 		def->def.un.enum_decl.name);
+diff m3rpc-1.2/m3rpcgen/rpc_scan.c m3rpc-1.3/m3rpcgen/rpc_scan.c
+461c461
+<      *      Emit a corresponding M3 constant.
+---
+>      *      Emit nothing since the material is C-specific.
+480,494c480
+< 	line += 7;		/* Skip over #define */
+< 	line = SkipWhiteSpace(line); /* Skip over white space. */
+< 	strcpy(p, line);
+< 	p1 = SkipName(p);	/* Skip over name. */
+< 	p2 = SkipWhiteSpace(p1);
+< 	if (*p2 == '\0')
+< 	    return;		/* No value, so don't emit a CONST defn. */
+< 	else if (CurrentContext->printDirectives) {
+< 	    /* Emit the name. */
+< 	    *p1 = '\0';
+< 	    f_print(fout, "\nCONST %s = ", p);
+< 
+< 	    /* Emit the value. */
+< 	    f_print(fout, "%s;\n\n", p2);
+< 	}
+---
+> 	/* Emit nothing. */ ;
+diff m3rpc-1.2/m3rpcgen/rpc_util.c m3rpc-1.3/m3rpcgen/rpc_util.c
+515c515
+<     definition *defStruct;
+---
+>     definition *defStruct, *defStructOld;
+520,522c520,527
+< 	defStruct = BaseType(defStruct);
+< 	if (defStruct->def_kind == DEF_STRUCT)
+< 	    return (defStruct);
+---
+> 	defStructOld = BaseType(defStruct);
+> 	if (defStructOld->def_kind == DEF_STRUCT) {
+> 	    if ((defStruct->def_kind == DEF_TYPEDEF) &&
+> 		(defStruct->def.ty.rel != REL_ALIAS))
+> 		return NULL;
+> 	    else
+> 		return (defStructOld);
+> 	}
+Common subdirectories: m3rpc-1.2/rpcexamples/RCS and m3rpc-1.3/rpcexamples/RCS
+diff m3rpc-1.2/rpcexamples/SimpleClient.m3 m3rpc-1.3/rpcexamples/SimpleClient.m3
+7c7
+<    $Id: SimpleClient.m3,v 1.2 1992/04/01 02:16:23 nichols Exp $
+---
+>    $Id: SimpleClient.m3,v 1.3 1992/05/20 22:36:49 nichols Exp $
+42a43
+> VAR progNum := simple.Simple_prognum;
+50a52,54
+>     IF ParseParams.KeywordPresent("-t") THEN
+>       progNum := ParseParams.GetNextInt();
+>     END;
+54,55c58,59
+<            RPCSun.LookupHost(HostName), simple.Simple_prognum,
+<            simple.Vers_1_versnum, 0, RPCSun.Protocol.UDP);
+---
+>            RPCSun.LookupHost(HostName), progNum, simple.Vers_1_versnum, 0,
+>            RPCSun.Protocol.UDP);
+diff m3rpc-1.2/rpcexamples/SimpleServer.m3 m3rpc-1.3/rpcexamples/SimpleServer.m3
+7c7
+<    $Id: SimpleServer.m3,v 1.3 1992/04/02 02:42:23 nichols Exp $
+---
+>    $Id: SimpleServer.m3,v 1.4 1992/05/20 22:36:49 nichols Exp $
+28c28
+< IMPORT Wr, Fmt, Thread;
+---
+> IMPORT Scan, Wr, Fmt, ParseParams, Thread;
+48a49,53
+> VAR
+>   progNum                                         := simple.Simple_prognum;
+>   hostAddr, progVersion, port: INTEGER;
+>   protocol                   : RPCSun.Protocol;
+>   bi                         : RPCSun.BindingInfo;
+50a56,61
+>     ParseParams.BeginParsing(stderr);
+>     IF ParseParams.KeywordPresent("-t") THEN
+>       progNum := RPCSun.TransientProgram;
+>     END;
+>     ParseParams.EndParsing();
+> 
+54,56c65,69
+<     EVAL RPCSun.Export(simple.GetVers_1ServerProc(NEW(MySimple1)),
+<                        simple.Simple_prognum, simple.Vers_1_versnum,
+<                        RPCSun.Protocol.UDP);
+---
+>     bi :=
+>       RPCSun.Export(simple.GetVers_1ServerProc(NEW(MySimple1)), progNum,
+>                     simple.Vers_1_versnum, RPCSun.Protocol.UDP);
+>     RPCSun.DecodeBindingInfo(
+>       bi, hostAddr, progNum, progVersion, port, protocol);
+58c71,72
+<     Wr.PutText(stdout, "Exported simple via UDP.\n");
+---
+>     Wr.PutText(stdout, "Exported simple via UDP, progNum = "
+>                          & Fmt.Int(progNum) & "\n");
+63a78
+>   | Scan.BadFormat => Wr.PutText(stderr, "Usage: SimpleServer [-t]\n");

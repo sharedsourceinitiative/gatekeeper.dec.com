@@ -1,0 +1,226 @@
+<HTML><HEADER>
+<TITLE> Modula-3 for Energize </TITLE>
+</HEADER><BODY>
+  
+<P>
+<H1>Modula-3 for Energize</H1>
+<P>
+<H2>Introduction</H2>
+<P>
+This is a modified version of the DEC SRC Modula-3 compiler, which adds the
+ability to communicate with the <I>Energize Programming System</I>
+from Lucid, Inc.
+This enables the Energize browsing tools to be used on Modula-3 code.
+ <P>
+<BLOCKQUOTE>
+<I>IMPORTANT NOTE</I>
+<P>
+This is experimental software which is being made available without charge on
+an as-is basis.  It is not supported by Lucid, Inc.  There is no warranty of
+any kind, so use at your own risk.
+</BLOCKQUOTE>
+
+<H2>Pre-requisites</H2>
+<P>
+This version is for release 3.3 of the Modula-3 compiler and release
+3.0 (or later) of Energize, on a Sun SPARCstation running SunOS
+release 4.  (It is possible to use it with Energize release 2, but that
+doesn't work well enough to be very useful because release 2 doesn't
+understand modules.)
+<P>
+If you don't already have the DEC SRC compiler, either use the World Wide Web
+to access: 
+<A HREF="http://www.research.digital.com/SRC/modula-3/html/home.html">
+<TT>http://www.research.digital.com/SRC/modula-3/html/home.html</TT> </A> 
+(this is also a good source of general information about the Modula-3
+language) or get it by FTP:
+<P>
+<PRE>
+    % ftp gatekeeper.dec.com
+    Name: anonymous
+    Password: <I>&lt;your e-mail address&gt;</I>
+    ftp&gt; cd pub/DEC/Modula-3/release-3.3
+    ftp&gt; get README
+</PRE>
+<P>
+and then follow the directions there.
+<P>
+For information about purchasing Energize, send e-mail to 
+"<TT>info@lucid.com</TT>" or call Lucid sales at 1-800-223-9322.
+<P>
+<H2>Getting the files</H2>
+<P>
+The compiler extension for Energize can be obtained by anonymous FTP
+ <A HREF="ftp://ftp.lucid.com/pub/hacks/energize/"> from Lucid </A>
+ as follows:
+<P>
+<PRE>
+    % ftp ftp.lucid.com
+    Name: anonymous
+    Password: <I>&lt;your e-mail address&gt;</I>
+    ftp&gt; cd /pub/hacks/energize
+    ftp&gt; binary
+    ftp&gt; get modula-3-SPARC-3-3.tar.gz
+</PRE>
+Or <A HREF="ftp://gatekeeper.dec.com/pub/DEC/Modula-3/contrib/energize/"> from gatekeeper </A>
+ as follows:
+<P>
+<PRE>
+    % ftp gatekeeper.dec.com
+    Name: anonymous
+    Password: <I>&lt;your e-mail address&gt;</I>
+    ftp&gt; cd /pub/DEC/Modula-3/contrib/energize
+    ftp&gt; binary
+    ftp&gt; get modula-3-SPARC-3-3.tar.gz
+</PRE>
+<P>
+If you want to be able to build the extended compiler from source, then
+pick up the file <TT>modula-3-source-kit.tar.gz</TT>.  This includes the
+connection libraries for building for either SunOS or Solaris.
+<P>
+<H2>Installation and use</H2>
+<P>
+Assuming that you have already installed the standard releases of both the SRC
+compiler and Energize, the following additional files are provided in this
+package, to be added to the installation directory of the Modula-3 compiler:
+ <DL>
+ <DT> <TT>m3c-ez </TT>
+ <DD> An alternate version of "<TT>m3c</TT>", the compiler front-end.
+ <DT> <TT>m3-ez</TT> 
+ <DD> This is a script which is used like "<TT>m3</TT>" (the
+compiler driver) except that it uses "<TT>m3c-ez</TT>" instead of
+"<TT>m3c</TT>" and if the optional argument "<TT>-Xez</TT>" is supplied,
+the compiler will connect to Energize.
+ <DT> <TT>m3build-ez</TT> 
+ <DD> This script is like "<TT>m3build</TT>" except that it
+uses "<TT>m3-ez</TT>" instead of "<TT>m3</TT>", passing the "<TT>-Xez</TT>"
+argument if supplied, and it uses the Energize incremental linker instead
+of "<TT>ld</TT>".  It also uses "<TT>energize_make_target</TT>" to record a
+build command for the target program.
+ </DL>
+Once these are copied into your installation directory, you will need to edit
+the pathnames in the two script files to match the location of your
+installation.
+<P>
+Also, you will want to be sure to take advantage of the Emacs mode support for
+Modula-3.  Your "<TT>.emacs</TT>" file should contain something like this:
+<P>
+<PRE>
+  (autoload 'modula-3-mode "/usr/local/modula3/lib/elisp/modula3" nil t)
+  (setq auto-mode-alist
+        (cons '("\\.[im][3g]$" . modula-3-mode) auto-mode-alist))
+  (setq completion-ignored-extensions
+        (append completion-ignored-extensions
+	        '( ".mo" ".mx" ".mc" ".io" ".ix" ; Modula-3 internal files
+		)))
+</PRE>
+<P>
+The file "<TT>modula3.el</TT>" is included in the SRC distribution as part
+of file "<TT>tools.tar.gz</TT>".  Alternatively, there is a slightly older
+version in the Energize 3.0 directory as
+"<TT>$ENERGIZE_ROOTDIR/etc/unsupported/elisp/nm3.elc</TT>".
+<P>
+Thus, where you would normally do a build by:
+<PRE>
+    m3build
+</PRE>
+if you instead do:
+<PRE>
+    m3build-ez -Xez
+</PRE>
+then the compiler and linker will connect to Energize and report information
+to it.
+<P>
+<H2>Limitations</H2>
+<P>
+This implementation is far from being complete, but it does provide for using
+most of the capabilities of the Energize browsers with Modula-3 code: Language
+Element Browser, call graphs, object inheritance graphs, error messages
+annotated in the source code, edit definition or declaration, visit uses of
+language element, etc.  The major features that are not supported are
+"incremental compilation" and "smart compilation".  You do, however, get
+incremental linking, which can save a lot of time.  Another obvious limitation
+of the current Energize release is that the browsers tend to display
+everything using C++ syntax and terminology.
+<P>
+Some additional details of the limitations of the current implementation:
+  <UL>
+<LI> Since the current version of the SRC compiler only supports building
+programs or libraries, rather than compiling individual files, the Energize
+"<B>Compile File</B>" command doesn't work on Modula-3 files.  Because of
+this, the executable target is given the build option "do not build
+sub-targets".
+<LI> When "<TT>m3build-ez</TT>" is used, a use of `<TT>m3_option</TT>' in the
+"<TT>m3makefile</TT>" gets an error.  I just haven't figured out the right
+way to override the options in the "<TT>m3build</TT>" line (assuming that
+there is one).
+<LI> The compiler tells Energize that it is generating object files named
+"<I>foo</I><TT>.mo</TT>", although the default SPARC configuration for this
+release is to use "<I>foo</I><TT>_m.o</TT>"
+<LI> In many cases the browsers just show a language element's name without
+qualifying it with the module name.
+<LI> The browsers don't distinguish between a <TT>RECORD</TT> and an
+<TT>OBJECT</TT>; both are called a "class".
+<LI> The values of constants are not reported.
+<LI> Enumeration element names are not reported.
+<LI> Energize doesn't understand set types and subrange types.
+<LI> Inherited members of objects are not reported to Energize, so are not
+available in the class grapher.
+<LI> The Language Element Browser for a method doesn't show the overriding or
+overridden methods from other objects.
+<LI> Exceptions and generic modules are not properly handled.
+<LI> The compiler shouldn't be writing error messages to `<TT>stdout'</TT> when
+it is invoked by Energize.
+<LI> <B>Edit Definition</B> doesn't find variables belonging to other modules
+unless the module is explicitly specified.
+<LI> Qualified names (i.e.  module.member) are not supported by lookup from a
+browser panel.  (They are however understood by <B>Edit Definition</B>,
+<B>Edit Declaration</B>, and <B>Browse Selected Element</B>.)
+<LI> Interface files edited during a build may not be detected as needing to be
+saved.
+<LI> The <TT>READONLY</TT> argument attribute is not shown in the browsers.
+<LI> Visit uses of language element sometimes claims to not be able to find a
+textual reference to the name within the procedure; there seems to be
+something wrong with its understanding of the Modula-3 lexical rules.
+<LI> There are a number of bugs relating to proper scoping of names defined in
+unusual ways involving aliasing or "<TT>FROM</TT> ...  <TT>IMPORT</TT> ..."
+or "<TT>REVEAL</TT> ...  <TT>=</TT> ...  <TT>REF</TT> ...";
+<LI> There is some confusion if a module has more than one "<TT>FROM</TT> ...
+<TT>IMPORT</TT> ...".
+<LI> Energize sometimes gives an invalid consistency warning for two type names
+that ought to be equivalent.  You may want to start Energize with the
+"<TT>-noinconsistencies</TT>" option to avoid this.
+<LI> After editing a Modula-3 function to remove some code and recompiling, the
+removed reference may still appear in the Language Element Browser.
+<LI> When connected to Energize, the compiler may give invalid errors on a
+forward referenced name used by a formal argument.
+<LI> The Energize Debugger has some trouble resolving names of Modula-3 source
+files when connected to Energize; it works OK using "<TT>gdb</TT>" not
+connected to Energize.  [ref 19904]
+<LI> Open array types are not reported to Energize.
+<LI> The return type of object methods is incorrectly shown as being the
+containing object.
+</UL>
+<P>
+There are probably many other bugs that have not yet been discovered.  The
+modified compiler has been successfully used in its own development, but has
+had negligible testing beyond that.
+<P>
+If you find additional bugs, I would be interested in hearing about them, but
+any bug fixing will be strictly on the basis of "if and when I feel like it".
+Once again, this is not a supported product of Lucid, so the Lucid customer
+support folks won't be able to help you with this.  If you would like to
+volunteer to help with fixing or extending the implementation, that would be
+most welcome.  The modified compiler sources are available on request.
+<P>
+David N. Gray<BR>
+Internet: <TT>gray@lucid.com</TT><BR>
+Phone: 415 329-8400 x5529
+<P>
+Lucid, Inc.<BR>
+707 Laurel Street<BR>
+Menlo Park, CA 94025-3414
+<P>
+July 19, 1994
+
+</BODY></HTML>

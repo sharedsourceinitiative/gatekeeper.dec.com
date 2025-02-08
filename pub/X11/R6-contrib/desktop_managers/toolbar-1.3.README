@@ -1,0 +1,93 @@
+------------
+Toolbar v1.3
+------------
+by Gerald Washington
+
+The "toolbar" application creates a window containing user-specified buttons
+which are use to launch applications.  The buttons may contain a text name or
+a color pixmap image.  The content of the toolbar is defined by the file
+".toolbarrc" in the user's home directory.
+
+
+Minimum Requirements:
+---------------------
+
+Motif 1.2
+X11 Release 4
+Xpm 3.2
+ANSI C compiler
+
+
+Compilation:
+------------
+
+1> Edit the makefile to specify your compiler, location of
+   X11, Motif, and Xpm include files and libraries, and any
+   preferred compiler options.
+
+2> Type "make".
+
+
+Installation:
+-------------
+
+Type "make install", or follow these steps for manual installation.
+NOTE:  you always have to modify the ".toolbarrc" file for proper
+execution (step 3).
+
+1> Place the "toolbar" application in your search path.
+
+2> You may place the "XToolbar" resource file in your resource file
+   path and customize the file as you please, or you may use the
+   built-in resources.
+
+3> Place the ".toolbarrc" file in your home directory.
+   Customize this file to specify your toolbar layout.  The
+   syntax is as follows, with one command per line.  The
+   commands must be in all caps.
+
+	TITLE "toolbar title"
+	- specifies the title of the toolbar; this must be
+	  the first command
+
+	BUTTON "button name" "command"
+	- creates a text button; the "button name" is displayed,
+	  and the "command" is executed
+
+	IMAGE "image file" "command"
+	- creates an image button; the image is read from the
+	  XPM file "image file", and the "command" is executed
+
+	SEPARATOR
+	- creates a separator line
+
+	IPATH "directory"
+	- specifies the "directory" to use for finding image
+	  files; this may be changed again in the file
+
+	POPUP "window name"
+	- creates a popup window with a button named "window name"
+
+	POPUP_IMAGE "image file"
+	- creates a popup window with a button showing "image file"
+
+	END_POPUP
+	- must match a POPUP or POPUP_IMAGE command; nested popup
+	  windows are not allowed
+
+4> Make sure the images specified by IMAGE commands are installed
+   in the IPATH or current directories.  Some sample images are
+   included in the sample_images directory.
+
+
+Execution:
+----------
+
+Just type "toolbar".
+
+
+-----------------------------------------------------------------
+# Gerald G. Washington		Voice:	301 953 3330		#
+# Software Engineer		  Fax:	301 953 2368		#
+# Century Computing, Inc.	email:	gwashington@cen.com	#
+-----------------------------------------------------------------

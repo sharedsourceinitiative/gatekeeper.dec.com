@@ -1,0 +1,134 @@
+<html>
+<head>
+<title></title>
+</head>
+<body>
+
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" HEIGHT="1%" >
+
+<tr>
+<td>
+
+<center><b><font size=+1>Porting the FastVM from Alpha to IA-32</font></b></center>
+
+</td>
+</tr>
+
+</table>
+</center>
+
+<br>&nbsp;
+
+<center>
+<table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" >
+
+<tr>
+<td>
+
+<center>
+
+<b>Matthias Jacob</b>
+<br><b>Princeton University</b>
+
+</center>
+
+</td>
+</tr>
+
+</table>
+</center>
+
+<br>&nbsp;
+<br>&nbsp;
+
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="70%" HEIGHT="1%" >
+
+<tr>
+<td><b>1. Introduction</b>
+		<p> The goal of the project was to port the existing Java Fast Virtual 
+		  Machine (FastVM) on the Alpha platform to IA-32. This includes the whole 
+		  runtime environment as well as the just-in-time compiler. The work during 
+		  the summer was mainly focused on the just-in-time compiler. The important 
+		  parts of the project were to bridge the differences between the Alpha 
+		  and IA-32 architecture and especially to design a fast and efficient 
+		  register allocator on the IA-32 platform. 
+		<p>
+<br>
+&nbsp;&nbsp;
+</td>
+</tr>
+<tr>
+<td><b>2. Alpha vs IA-32</b>
+<p>
+
+Apart from the general difference of processing 32 bit instead of 64 bit the Intel architecture complicates the implementation of the just-in-time compiler in various aspects:
+<ul>
+<li>no fixed instruction length
+<li>few multi-purpose registers
+<li>floating-point stack instead of registers 
+<li>registers bound to certain instructions
+</ul>
+This leads to design issues such as having a higher register pressure on the IA-32 architecture and implementing 64-bit operations using multiple 32-bit instructions and allocating additional registers. 
+
+<p>
+<br>
+&nbsp;&nbsp;
+</td>
+</tr>
+<tr>
+<td><b>2. Stack Frames</b>
+		<p> Compared to the standard GNU stack frame specification, several things had 
+		  to be changed for the Java just-in-time compiler. For example, since 
+		  some values are represented as 64-bit values within Java the stack frame 
+		  needs to be aligned to 8 byte boundaries instead of 4 byte boundaries. 
+		  Furthermore, a stack check needs to be introduced in order to be able 
+		  to do appropriate exception handling. Also, since it was the goal to 
+		  make as many registers as possible available for general purpose a reserved 
+		  stack slot is introduced to distinguish the parent from the current 
+		  stack frame which makes the frame pointer redundant. 
+		<p>
+<br>
+&nbsp;&nbsp;
+</td>
+</tr>
+<tr>
+<td><b>3. Floating-Point operations</b>
+<p>
+The floating-point unit in IA-32 uses a floating-point stack instead of directly accessible registers in order to store floating-point values. Floating-point operations can be executed either on the first two elements of the stack or on an element in memory and on top of the stack, whereas the result is stored on top of the stack. There are no transfers possible between the processor registers and the floating-point stack which can become a performance problem if the register allocator doesn't take it into account. 
+
+<p>
+<br>
+&nbsp;&nbsp;
+</td>
+</tr>
+<tr>
+<td><b>4. Register Allocation</b>
+		<p> The design goal of the register allocator is to minimize the compile 
+		  time, and optimize the generated code as much as possible. In total 
+		  there are 7 registers available for general purpose values depending 
+		  on whether the instructions are able to address these registers. In 
+		  addition the floating-point stack can carry 7 floating-point values 
+		  as well. <br>
+The register allocator for the Alpha version of the FastVM uses a data structure that assigns each entity in the program a home location and maps this to temporary locations in the registers. The register allocation itself works on a local scheme for each Java bytecode instruction and doesn't use any global algorithm since this can become expensive. 
+
+<p>
+<br>
+&nbsp;&nbsp;
+</td>
+</tr>
+<tr>
+<td><b>5. Results</b>
+<p>
+When comparing the ratio of the SpecINT and SpecJVM benchmarks of different JVM implementations on different platforms, the FastVM is one of the leading implementations. It is the question whether it is possible to preserve the performance of the implementation on a different platform.
+We compared the first prototype implementation of the FastVM for IA-32 to existing JVM implementations by Sun and IBM and found that on several of the SpecJVM benchmarks the FastVM is doing better by about 10%. However, there are still benchmarks that do a large number of floating-point operations, where performance is decreasing. This has to do with the complicated floating-point handling on IA-32. But after all, this project shows that the FastVM can be ported to a different architecture with a minimum amount of work in a few months.  
+
+
+<p>
+<br>
+&nbsp;&nbsp;
+</td>
+</table>
+</center>
+
+</body>
+</html>

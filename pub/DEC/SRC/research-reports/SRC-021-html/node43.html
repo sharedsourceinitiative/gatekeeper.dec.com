@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Manipulating File Handles</TITLE>
+<META NAME="description" CONTENT="Manipulating File Handles">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node44.html">
+<LINK REL="previous" HREF="node42.html">
+<LINK REL="up" HREF="node39.html">
+<LINK REL="next" HREF="node44.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html723"
+ HREF="node44.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html719"
+ HREF="node39.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html713"
+ HREF="node42.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html721"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html722"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html724"
+ HREF="node44.html">Manipulating Open-File State</A>
+<B> Up:</B> <A NAME="tex2html720"
+ HREF="node39.html">The OS Interface: Files</A>
+<B> Previous:</B> <A NAME="tex2html714"
+ HREF="node42.html">Performing Input/Output</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04044000000000000000">
+Manipulating File Handles</A>
+</H2>
+ <A NAME="Alviso">&#160;</A>
+This subsection contains procedures for closing a file handle when it is
+no longer needed, for duplicating a file handle for use by a concurrent
+activity, and for retrieving a file handle from the constant array
+provided when the process was started.
+<P><A NAME="Pescadero">&#160;</A><A NAME="2079">&#160;</A>
+<PRE>
+PROCEDURE Close(f: File) RAISES {Error};
+  (* BadFileEC, FailureES *)
+</PRE>
+<P><A NAME="1019">&#160;</A>
+<A NAME="1020">&#160;</A>
+<A NAME="1021">&#160;</A>
+Close removes the reference from the specified file handle to the
+underlying open-file object.  Once a file handle has been closed, passing
+it to any procedure other than Close causes BadFileEC to be raised.
+Passing a file handle to Close a second time does not cause an exception
+to be raised (or have any other effect).
+<P>
+Once the last file handle referring to a particular open-file object is
+closed, the open-file object itself is deleted and the advisory lock held
+by that open-file object, if any, is released.
+<P><A NAME="1022">&#160;</A>
+Once the last open-file object for a particular file is deleted, the file
+itself is closed.  This entails deleting the file if all the directory
+entries referring to it have been removed, or else clearing its
+exclusive-use flag and, if it is a regular file, freeing any disk space
+tentatively allocated past the file's current length (see the SetSize
+procedure on page <A HREF="node45.html#SanJose"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).
+<P><A NAME="1024">&#160;</A>
+<A NAME="1025">&#160;</A>
+<A NAME="1026">&#160;</A>
+A Close is automatically performed when a file handle is garbage-collected
+or the process holding it terminates, but it is often desirable to perform
+the Close explicitly to initiate the associated behavior.  (For example,
+closing the read end of a pipe can be detected at the write end of the
+pipe.)
+<P><A NAME="1027">&#160;</A>
+Taos note:  When a file itself is being closed (because the last open-file
+object referring to it is being closed) but not deleted (because there are
+still directory entries referring to it) and its data or attributes (other
+than access time) have been modified, Close schedules the writes necessary
+to flush the modifications to disk.  Unlike EnsureWritten, Close doesn't
+wait for the writes to complete.
+<P><A NAME="2080">&#160;</A>
+<PRE>
+PROCEDURE Dup(f: File): File RAISES {Error}; (* BadFileEC *)
+</PRE>
+<P><A NAME="1029">&#160;</A>
+Dup returns another file handle that refers to the same open-file object
+as does f.  The point in doing this is to pass the new file handle to
+a separate thread or package that can then close it when it is finished
+with it without affecting the original file handle.
+<P>
+Ultrix note: Unlike the Ultrix dup kernel call, Dup does not create
+another file descriptor (of which there are a finite number), so it should
+be considered an inexpensive operation.
+<P><A NAME="PleasantHill">&#160;</A><A NAME="2081">&#160;</A>
+<A NAME="2082">&#160;</A>
+<PRE>
+PROCEDURE GetDescriptor(d: CARDINAL): File RAISES {};
+
+PROCEDURE GetMaxDescriptor(): CARDINAL RAISES {};
+</PRE>
+<P><A NAME="1033">&#160;</A>
+The procedures GetDescriptor and GetMaxDescriptor provide access to the
+constant array of file handles supplied when the process was created.
+GetDescriptor returns the d'th file handle, or NIL if the corresponding
+array element was not set.  GetMaxDescriptor returns the largest number i
+such that GetDescriptor(i) will not return NIL.
+<P><A NAME="2083">&#160;</A>
+<A NAME="2084">&#160;</A>
+<A NAME="2085">&#160;</A>
+<PRE>
+CONST
+  StdIn = 0;
+  StdOut = 1;
+  StdErr = 2;
+</PRE>
+<P><A NAME="1037">&#160;</A>
+<A NAME="1038">&#160;</A>
+<A NAME="1039">&#160;</A>
+<A NAME="1040">&#160;</A>
+<A NAME="1041">&#160;</A>
+<A NAME="1042">&#160;</A>
+The constants StdIn, StdOut, and StdErr define the indices of the standard
+input, standard output, and standard diagnostic output passed by shells
+(see sh(1) and csh(1)) when they start processes.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html723"
+ HREF="node44.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html719"
+ HREF="node39.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html713"
+ HREF="node42.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html721"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html722"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html724"
+ HREF="node44.html">Manipulating Open-File State</A>
+<B> Up:</B> <A NAME="tex2html720"
+ HREF="node39.html">The OS Interface: Files</A>
+<B> Previous:</B> <A NAME="tex2html714"
+ HREF="node42.html">Performing Input/Output</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,31 @@
+sebern.README
+
+The file sebern.motifapp-1.1.tar.Z is the example source code from my book
+"Building OSF/Motif Applications: A Practical Introduction", Prentice Hall,
+1994. ISBN 0-13-122409-3.
+
+This file contains the complete C and UIL source files for the book 
+examples, including the "slide maker" program that serves as the vehicle 
+for most of the book's presentation of X and Motif programming. This 
+version (1.1) incorporates some minor fixes, but is otherwise the same as 
+that in the first printing of the book.
+
+Some UIL compilers fail with a "severe error" on the file "mslide.uil", 
+as described on page 248 in the book. The workaround suggested there
+has been implemented in this version of the code.
+
+The book is written primarily for the software practitioner, but it has
+also been used successfully as the text for a computer engineering senior 
+elective in GUI programming.
+
+If you find the book helpful, or discover any problems with the book or
+the example code, I'd like to hear from you. You may contact me through one
+of the email addresses below.
+
+Mark Sebern
+
+msebern@sebern.com
+msebern@acm.org
+
+Updated January 1996
+

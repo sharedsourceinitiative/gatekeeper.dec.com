@@ -1,0 +1,19 @@
+TclX 8.3.0
+
+The tclx8.3.tar.gz file is the TclX snapshot used for
+TclPro 1.4.  tclx83.zip is the corresponding ZIP file.
+This version is compatible with Tcl 8.3.
+
+The TclX home page is at
+http://www.neosoft.com/TclX/
+
+However, currently I can make no guarantee about the
+completeness of this distribution.  We build and release
+directly from our CVS workspaces as opposed to using
+this particular source release.  All this is to say, don't
+be too suprised if there are glitches building from this 
+release.  Ideally you should be able to use "configure"
+and "make" to build for the UNIX platform of your choice.
+
+September 5, 2000
+webmaster@scriptics.com

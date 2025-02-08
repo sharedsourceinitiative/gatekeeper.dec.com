@@ -1,0 +1,79 @@
+<html>
+<head><title>Replicating the Vesta Repository</title></head>
+<body>
+<center>
+<h1><b>Replicating the Vesta Repository</b></h1><br>
+<h2>Neil Stratford, Cambridge University</h2>
+</center>
+
+
+I am a PhD student at the Cambridge University Computer Laboratory
+working with Simon Crosby. I am interested in the general area of
+system support for multimedia. My specific interests are in the area
+of operating system resource management and for my thesis work I am
+looking at the problems that arise when considering the
+interdependencies between multiple resources in the usage patterns of
+multimedia applications.<P>
+
+I chose SRC for an internship because of the high reputation of its
+intern programme, and because Bob Taylor once said that it rains too
+much in Seattle.<P>
+
+<h3>SRC Project</h3>
+
+Over the summer I worked on the replication aspects of a
+versioned file system that is part of a source code configuration
+management suite called Vesta.<P>
+
+The underlying goal of Vesta is that all builds should be
+repeatable. This has led to a design where the source code repository
+stores packages as combinations of immutable files and
+immutable/append only directories.  To enable varying degrees of
+cooperation between different repository sites such as collaborative
+working or disconnected operation, a global name space is required.<P>
+
+The global namespace is achieved through a concept of "mastership" of 
+a source file or directory. The "master" is considered the coordination
+site for insertion of new names or content into the system.<P>
+
+Over the summer I have worked on various aspects of the design and
+implementation. This has included: <P>
+
+<UL>
+
+<LI>Design and implementation of a protocol for the transfer of 
+mastership between two repositories and locating the current master.<P>
+
+<LI>Design and implementation of a manually invoked replication tool that
+replicates between two repositories according to a configuration file.
+The file has an entry that allows requests such as "replicate everything
+that is required to build this package" which works by following
+the package imports listed in the package build description.<P>
+
+<LI>Implementation of reverse lookup tables in the repository to 
+improve the degree of sharing in the destination repository of 
+a replication.<P>
+
+<LI>Design of procedures to allow working with remotely mastered packages.
+An example is checking out a remotely mastered package.<P>
+
+<LI>Design of an automatic replication tool that automatically
+propagates updates as they happen.<P>
+
+</UL>
+
+Looking back over the summer, I partly regret not spending more time
+selecting a suitable project when I first arrived. The project proved
+to be interesting but did not really contain enough design work and
+focused too heavily on implementation. Much of the design was already
+in place when I arrived.<P>
+
+<h3>Other</h3>
+
+SRC is an exciting place to work, with many great people. I have been
+particularly impressed by how well the theory and systems people work
+togther when solving problems. This is what makes SRC unique.<P>
+
+</BODY>
+</HTML>
+

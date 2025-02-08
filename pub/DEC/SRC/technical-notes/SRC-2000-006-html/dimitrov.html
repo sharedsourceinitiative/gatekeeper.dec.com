@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0189)http://pachyderm.pa.dec.com/main/dimitrov.html?user=wobber&choices=0&version=7&token=3a71da6c-b344ed359140e7d3&op=contents&msg=114.341&arg=4847:13729:7bit:X-Pachy/header&name=/dimitrov.html -->
+<HTML><HEAD><TITLE>Dimitrov</TITLE>
+<META content="text/html; charset=iso-8859-1" http-equiv=Content-Type>
+<META content="MSHTML 5.00.3017.1000" name=GENERATOR></HEAD>
+<BODY>
+<CENTER>
+<H1><FONT face="Times New Roman,Times"><FONT size=+1>Animating Proofs With 
+Juno-xyt</FONT></FONT></H1></CENTER>
+<CENTER>
+<TABLE border=0 cols=1 height="1%" width="75%">
+  <TBODY>
+  <TR>
+    <TD>
+      <CENTER><B>Boris Dimitrov</B> <BR><B>boris@cs.caltech.edu</B> <BR><B><A 
+      href="http://www.cs.caltech.edu/~boris">http://www.cs.caltech.edu/~boris</A></B></CENTER></TD></TR></TBODY></TABLE></CENTER><BR>&nbsp; 
+
+<BR>&nbsp; 
+<CENTER>
+<TABLE border=0 cellPadding=0 cellSpacing=0 height="1%" width="75%">
+  <TBODY>
+  <TR>
+    <TD><B>1 Introduction</B> 
+      <P>Juno-2 is an extensible constraint-based drawing editor created by Greg 
+      Nelson and Allan Heydon [1], which was originally designed for producing 
+      high-quality still illustrations. Juno-2 permits arbitrary constraints to 
+      be specified using a declarative notation based on the theory of real 
+      numbers with a pairing function and equality. After the constraints have 
+      been specified, any degrees of freedom that remain in the drawing may be 
+      adjusted interactively with the mouse. Thus, Juno-2 makes it easy to 
+      illustrate and to explore virtually any geometric construction in the 
+      Euclidean plane. 
+      <P>Long before my internship, Allan and Greg had written in the Juno 
+      language [2] a module for playing animations [3]. Greg had animated a 
+      fragment of Archimedes's reasoning for the area of the circle. Most SRCers 
+      who had seen Greg's animation thought that it communicated superbly the 
+      crux of Archimedes's proof. My job this summer was to extend Juno-2 with 
+      features that would make it easier to produce such animations. 
+      <P><B>2 DimiTeX</B> 
+      <P>One difficulty that Greg had encountered in animating Archimedes proof 
+      was that typesetting mathematical formulas with Juno-2 was a very tedious 
+      task. In order for Juno to display <i>&#960;r<SUP>2</SUP></I>, Greg had to type a 30 line 
+      program that switched the current font to "Symbol" and back again as the 
+      letter <i>&#960;</i> was displayed, and then raised the superscript "2" up by 
+      one-third of the current font's height. 
+      <P>Because Greek letters, mathematical symbols, superscripts and 
+
+      subscripts occur commonly in proofs, I implemented a subset of TeX's 
+      functionality in Juno. My implementation, which Greg named DimiTeX, mostly 
+      adheres to TeX's syntax; however, DimiTeX's escape character is the 
+      exclamation mark '!', because the backslash '\' was already taken by Juno. 
+      For example, here is what we would have to type in Juno-xyt for the 
+      formula <i>&#960;r<SUP>2</SUP></I> to appear at position <i>a</i>. 
+      <P>&nbsp;&nbsp;&nbsp;&nbsp; DimiTeX.Show(a, "$!pi r^2$") 
+      <P>Greg wrote the documentation for DimiTeX's syntax which is included in 
+      the Juno-xyt manual page. 
+      <P>Some proofs use symbols that are not available in the bundled 
+
+      PostScript and X fonts. With Juno, it is easy to draw a new symbol and to 
+      encapsulate the resulting closure as a DimiTeX glyph. This glyph can be 
+      bound to a DimiTeX control sequence, such as "!mynewsym". (Even animated 
+      drawings can be encapsulated as DimiTeX glyphs. That's how we created the 
+      DimiTeX "!circle{...}" macro, which slowly draws a circle around any 
+      formula.) 
+      <P>While dragging a compound formula across the screen, I observed a 
+      curious effect which Greg called "rounding flicker". Consider the distance 
+      between a superscript and a subscript in the same <BR>formula. The real 
+      number with which DimiTeX represents this distance may not be divisible by 
+      the screen's pixel size, but the physical distance on the screen always 
+      is. The window system rounds DimiTeX's real number either up or down, 
+      depending on the formula's current position. As the formula is being 
+      dragged, its current position changes, and so does the physical distance 
+      between the superscript and the subscript on the screen.&nbsp; We did not 
+      fix the resulting flicker, because we had other fun things to do. 
+
+      <P><B>3 Animation</B> 
+      <P>An animation can be fun even if it does not prove a theorem. Early in 
+      the summer, Greg and I created an animation showing how a calligrapher 
+      might write "Juno xyt". Juno-2 already had a calligraphic pen that could 
+      be easily applied to the current PostScript path. Still, given a 
+
+      PostScript path which consists of a few dozen Bezier segments, how would 
+      you draw that fraction of the path which is visible in the animation's 
+      current frame? 
+      <P>We first solved this problem for a single Bezier segment by using De 
+      Casteljau's construction. That is, we obtained Bezier control points for 
+      the visible fraction of our segment by nesting a number of simultaneous 
+      "sliders". (After this exercise, we created a graphical slider in the Juno 
+      user interface and connected it to the Juno variable "UISlider.val"). Then 
+      we encapsulated each segment of the PostScript path into a separate 
+      animation closure. Finally, we defined a new composition primitive called 
+      "Seq2" which right-reduced the list of single-segment animations into a 
+      single closure that animated the entire path. 
+      <P>Toward summer's end, we used the same "Seq2" to tie together the steps 
+      of a calculational "Feijen style" proof that the Fermat numbers 
+
+      <i>(2 exp 2<SUP>n</SUP>)+1</i> are pairwise relatively prime. Actually, only two of the 
+      animated slides in that proof were "Feijen style" --- more traditional 
+      "title slides" stated the results that were to be proved. We grouped the 
+      various slides into "scenes" so that slide transitions within a scene were 
+      made automatically by Juno, whereas "show mode" transitions from one scene 
+      to the next would occur only in response to user events. We also 
+
+      implemented a "Scene menu" in the user interface that allowed us to view 
+      the scenes in random order while working in "edit mode". Edit mode is the 
+      mode that Juno starts in; show mode is a mode for giving full-screen 
+      presentations that we added this summer. 
+      <P><B>4 Conclusion</B> 
+      <P>Some of the extensions that we added this summer -- for example DimiTeX 
+      -- work just as well in Juno-2 as they do in Juno-xyt. Although this is 
+      also true of the last and the least trivial to implement addition that I 
+      will describe --- a facility for unfolding and refolding predicates and 
+      templates and for "narrowing" predicates --- we were not hard-pressed to 
+      make this addition to Juno until we started producing larger animations. 
+      That's because still illustrations seldom use the same predicates and the 
+      same templates instantiated over and over for the exact same parameter 
+      values, which would be required for automated editing operations to pay 
+      off. But that's just what happens in slide shows and animations --- they 
+      usually consist of many scenes all of which are derived from the same 
+      template. For example, all scenes in Greg's animation of Archimedes's 
+      proof display a caption at the exact same anchor point. What if, while 
+      editing scene N, Greg needed to move down that anchor point in order to 
+      make room for a larger caption? In Juno-2, he would have had to edit 
+      manually all other scenes in addition to editing scene N (please note that 
+      storing the anchor point in a global variable is not a valid option, 
+      because there may be non-trivial constraints relating the anchor point to 
+      other points in the same template). In Juno-xyt, Greg would get away by 
+      editing just the common template --- assuming that he has read the "Using 
+      Schemes" section of the Juno-xyt manual page. 
+      <P><B>5 References</B> 
+      <P>&nbsp;&nbsp; 1. Allan Heydon and Greg Nelson, 
+      <BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The Juno-2 Constraint-Based Drawing 
+      Editor (SRC Research Report 131a) <BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A 
+      href="http://gatekeeper.dec.com/pub/DEC/SRC/research-reports/abstracts/src-rr-131a.html">http://gatekeeper.dec.com/pub/DEC/SRC/research-reports/abstracts/src-rr-131a.html</A> 
+
+      <P>&nbsp;&nbsp; 2. Greg Nelson and Allan Heydon, 
+      <BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Juno-2 Language Definition (SRC 
+      Technical Note 1997-009) <BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A 
+      href="http://gatekeeper.dec.com/pub/DEC/SRC/technical-notes/abstracts/src-tn-1997-009.html">http://gatekeeper.dec.com/pub/DEC/SRC/technical-notes/abstracts/src-tn-1997-009.html</A> 
+
+      <P>&nbsp;&nbsp; 3. Allan Heydon and Greg Nelson, 
+      <BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Constraint-Based Animations 
+      (PostScript, 2 pp.) <BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A 
+      href="http://research.compaq.com/SRC/juno-2/papers/animations.ps">http://research.compaq.com/SRC/juno-2/papers/animations.ps</A></P></TD></TR></TBODY></TABLE></CENTER><BR>&nbsp; 
+<BR>&nbsp; </BODY></HTML>

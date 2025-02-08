@@ -1,0 +1,338 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Examining Processes</TITLE>
+<META NAME="description" CONTENT="Examining Processes">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="previous" HREF="node52.html">
+<LINK REL="up" HREF="node48.html">
+<LINK REL="next" HREF="node54.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html844"
+ HREF="node54.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html840"
+ HREF="node48.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html836"
+ HREF="node52.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html842"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html843"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html845"
+ HREF="node54.html">The OSFriends Interface</A>
+<B> Up:</B> <A NAME="tex2html841"
+ HREF="node48.html">The OS Interface: Processes</A>
+<B> Previous:</B> <A NAME="tex2html837"
+ HREF="node52.html">Terminating Processes</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04055000000000000000">
+Examining Processes</A>
+</H2>
+ <A NAME="Benecia">&#160;</A>
+This subsection describes the procedures for enumerating processes and for
+obtaining information about processes.
+<P><A NAME="1463">&#160;</A>
+<A NAME="2216">&#160;</A>
+<A NAME="2217">&#160;</A>
+<A NAME="2218">&#160;</A>
+<A NAME="2219">&#160;</A>
+<PRE>
+TYPE
+  ProcessState = (PSRunning, PSStopped, PSTerminating);
+</PRE>
+<P><A NAME="1468">&#160;</A>
+<A NAME="1469">&#160;</A>
+<A NAME="1470">&#160;</A>
+<P><A NAME="1471">&#160;</A>
+<A NAME="2220">&#160;</A>
+<A NAME="2221">&#160;</A>
+<A NAME="2222">&#160;</A>
+<A NAME="2223">&#160;</A>
+A process is always in one of three ProcessStates as seen by the operating
+system. It is running if it has been started, has not yet terminated, and
+is not currently stopped.  It is stopped if it received a stop signal
+(SigStop, SigTStp, SigTTIn, or SigTTOu) and hasn't yet received the
+continue signal (SigCont) or a terminating signal.  Finally, it is
+terminating if it has terminated normally or abnormally and its parent has
+not yet called WaitForChild specifying its process identifier (see Section
+<A HREF="node52.html#Alameda">5.4</A>, page <A HREF="node52.html#Alameda"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).  (A terminating process is
+sometimes called a zombie.)
+<P><A NAME="2224">&#160;</A>
+<A NAME="2225">&#160;</A>
+<A NAME="2226">&#160;</A>
+<A NAME="2227">&#160;</A>
+<PRE>
+TYPE
+  DebugState = (DSRunning, DSStopped, DSTrapped);
+</PRE>
+<P><A NAME="1482">&#160;</A>
+<A NAME="1483">&#160;</A>
+<A NAME="1484">&#160;</A>
+A process is always in one of three DebugStates as seen by the debugger.
+It is running if the debugger hasn't stopped it at the request of the user
+and if it hasn't spontaneously stopped because of a trap.  It is stopped
+if the debugger has stopped it at the request of the user--for example,
+typing Control-C to the TeleDebug command.  It is trapped if a thread
+within the process has caused a trap that is handled by the debugger.
+<P><A NAME="2228">&#160;</A>
+<PRE>
+TYPE
+  SignalStates = ARRAY Signal OF BITS 8 FOR SignalState;
+</PRE>
+<P>
+The type SignalStates represents the set of signal states for a process.
+<P><A NAME="2229">&#160;</A>
+<A NAME="2230">&#160;</A>
+<PRE>
+TYPE
+  RWho = (Self, Children);
+</PRE>
+<P><PRE>
+TYPE
+  ProcessInfo = RECORD
+</PRE>
+<P><PRE>
+    pid: PID;
+    pgrp: PGRP;
+    ppid: PID;
+</PRE>
+<P><PRE>
+    effUser, realUser: Text.T;
+</PRE>
+<P><PRE>
+    ctlTty: Text.T;
+    windowSystem: Text.T;
+</PRE>
+<P><PRE>
+    space: NubTypes.Space;
+</PRE>
+<P><PRE>
+    numThreads: CARDINAL;
+</PRE>
+<P><PRE>
+    processState: ProcessState;
+    debugState: DebugState;
+    debuggerConnected: BOOLEAN;
+</PRE>
+<P><PRE>
+    signalStates: SignalStates;
+</PRE>
+<P><PRE>
+    command: PathName;
+</PRE>
+<P><PRE>
+    mappedBytes, residentBytes: CARDINAL;
+</PRE>
+<P><PRE>
+    rUsage: ARRAY RWho OF RUsage;
+</PRE>
+<P><PRE>
+  END; (* ProcessInfo *)
+</PRE>
+<P>
+A ProcessInfo record packages the information available about a file via
+the GetProcessInfo procedure.
+<P><A NAME="1488">&#160;</A>
+<A NAME="1489">&#160;</A>
+<A NAME="1490">&#160;</A>
+<A NAME="1491">&#160;</A>
+The pid and pgrp fields give the process identifier and process group
+identifier.  The ppid field gives the process identifier of the parent
+process; if the process is an orphan, ppid is one.
+<P><A NAME="1492">&#160;</A>
+<A NAME="1493">&#160;</A>
+The effUser and realUser fields give the effective and real user names on
+whose behalf the process is executing.
+<P><A NAME="1494">&#160;</A>
+<A NAME="1495">&#160;</A>
+<A NAME="1496">&#160;</A>
+The ctlTty field gives an identification of the control terminal of the
+process.  The windowSystem field identifies the Trestle instance (see
+Trestle.RPCInit) used for emulated terminals and typescripts created by
+this process.
+<P><A NAME="1497">&#160;</A>
+<A NAME="1498">&#160;</A>
+The space field gives the address space number, of interest only for
+low-level debugging.
+<P>
+The numThreads field tells how many threads of control are executing
+within the process.  For a standard Ultrix application running on Taos, it
+will equal one; for a Topaz application it will always be greater than
+one.
+<P><A NAME="1499">&#160;</A>
+<A NAME="1500">&#160;</A>
+The processState field tells whether the process is currently running,
+stopped, or terminating, as seen by the operating system.  The debugState
+field tells whether the process is running, stopped, or trapped, as seen
+by the debugger.  The debuggerConnected field tells whether there is
+currently a TeleDebug session in existence for the process.
+<P><A NAME="1501">&#160;</A>
+The signalStates field tells whether the process is currently handling,
+ignoring, or defaulting each of the 31 kinds of signals.
+<P><A NAME="1502">&#160;</A>
+The command field gives the path name given to StartProcess,
+StartProcessSearch, or the execve kernel call to load the process.
+<P>
+The mappedBytes and residentBytes fields represent the number of bytes
+within the address space of the process that are currently mapped and
+currently resident, respectively. The resident number changes with
+swapping; the mapped number changes only in response to actions of that
+process.
+<P>
+The rUsage field summarizes CPU time used by this process (Self) and by
+all its terminated descendants (Children).  (See the discussion of RUsage
+on page <A HREF="node52.html#Oakland"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.)
+<P><A NAME="2231">&#160;</A>
+<PRE>
+PROCEDURE GetProcessInfo(
+    pid: PID;
+    VAR (* OUT *) processInfo: ProcessInfo;
+    getUser: BOOLEAN := TRUE)
+  RAISES {Error}; (* BadPIDEC *)
+</PRE>
+<P>
+GetProcessInfo returns information about the specified process.  It
+returns information about the calling process if pid is equal to NullPID;
+it raises BadPIDEC if pid is not equal to NullPID or the process
+identifier of any existing process.  (Once WaitForChild is called for a
+terminating process, the process ceases to exist as far as GetProcessInfo
+is concerned.)
+<P>
+GetProcessInfo fills in the effUser and realUser fields only if getUser is
+TRUE.
+<P>
+Taos note: The mappedBytes is currently estimated by adding the allocated
+lengths of the high and low segments; residentBytes is set to zero.
+<P><A NAME="1505">&#160;</A>
+Ultrix note: GetProcessInfo only works when pid is equal to NullPID.  When
+getUser is TRUE, the /etc/passwd file must be read.  The space, ctlTty,
+and command field are not filled in.  The residentBytes field is actually
+a maximum of the number of bytes.  The mappedBytes field includes both
+shared and unshared memory.
+<P><A NAME="2232">&#160;</A>
+<PRE>
+PROCEDURE NextProcess(pid: PID): PID RAISES {};
+</PRE>
+<P><A NAME="1507">&#160;</A>
+<A NAME="1508">&#160;</A>
+NextProcess returns the next in-use process identifier larger than the one
+it is given.  To enumerate all the existing processes (using the same
+definition of existence as does GetProcessInfo): start by passing NullPID
+to NextProcess, repeatedly call NextProcess with its result from the
+previous call, and stop when NextProcess returns NullPID.
+<P>
+Ultrix note:  NextProcess always returns NullPID.
+<P>
+Taos note: NextProcess returns process identifiers for some `system
+processes' for which complete information via GetProcessInfo is not
+available:
+<P>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1">
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP><EM>PID</EM></TD>
+<TD ALIGN="LEFT" NOWRAP><EM>Command</EM></TD>
+<TD ALIGN="LEFT" NOWRAP><EM>Other interesting fields</EM></TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>1</TD>
+<TD ALIGN="LEFT" NOWRAP>Init</TD>
+<TD ALIGN="LEFT" NOWRAP>rUsage[Children]</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>2</TD>
+<TD ALIGN="LEFT" NOWRAP>Nub</TD>
+<TD ALIGN="LEFT" NOWRAP>numThreads, mappedBytes,</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>&nbsp;</TD>
+<TD ALIGN="LEFT" NOWRAP>&nbsp;</TD>
+<TD ALIGN="LEFT" NOWRAP>residentBytes (someday)</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>3</TD>
+<TD ALIGN="LEFT" NOWRAP>Taos</TD>
+<TD ALIGN="LEFT" NOWRAP>space, numThreads, mappedBytes,</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>&nbsp;</TD>
+<TD ALIGN="LEFT" NOWRAP>&nbsp;</TD>
+<TD ALIGN="LEFT" NOWRAP>residentBytes, rUsage</TD>
+</TR>
+</TABLE></DIV>
+<P><A NAME="2233">&#160;</A>
+<PRE>
+PROCEDURE GetPassword(): Text.T RAISES {Error};
+</PRE>
+<P><A NAME="1518">&#160;</A>
+GetPassword returns the password (in clear text) of the calling process if
+the caller is the super-user; otherwise GetPassword raises NotSuperUserEC.
+The password is needed for doing authenticated RPC.
+<P><A NAME="1519">&#160;</A>
+<A NAME="1520">&#160;</A>
+<A NAME="1521">&#160;</A>
+Ultrix note: GetPassword returns the value of the PASSWORD environment
+variable if it is set, otherwise it reads the file /.ffpw (readable only
+by user firefly) and returns its contents.
+<P>
+Taos note: Until general authenticated RPC is available, GetPassword does
+not require the caller to be the super-user.
+<P><PRE>
+END OS.
+</PRE>
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html844"
+ HREF="node54.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html840"
+ HREF="node48.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html836"
+ HREF="node52.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html842"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html843"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html845"
+ HREF="node54.html">The OSFriends Interface</A>
+<B> Up:</B> <A NAME="tex2html841"
+ HREF="node48.html">The OS Interface: Processes</A>
+<B> Previous:</B> <A NAME="tex2html837"
+ HREF="node52.html">Terminating Processes</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

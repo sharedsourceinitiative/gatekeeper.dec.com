@@ -1,0 +1,14 @@
+
+
+    "IO Streams: Abstract Types, Real Programs."
+    Mark R. Brown and Greg Nelson.
+    November 15, 1989.  46 pages.
+
+Authors' Abstract
+
+    The paper proposes standard Modula-3 interfaces for text input and
+    output.  It also describes an implementation of the interfaces,
+    focusing on two novel features of Modula-3: the partially opaque
+    type and the explicit isolation of unsafe code.
+
+

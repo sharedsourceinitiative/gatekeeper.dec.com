@@ -1,0 +1,23 @@
+"Abstracts of SRC Technical Notes"
+Compiled by James Mason
+Note #1998-006, March 10, 1998
+
+This document presents abstract and title listings of all 
+SRC Technical Notes published to date. The technical notes
+series provides a fast track for the publication of work in
+progress, position papers, and interim results. The series
+is accessible at:
+
+	www.research.digital.com/SRC/publications/
+
+Also at this web site is the SRC Research Report series
+and a feature articles section. The research report 
+series consists of formal publications that are peer reviewed
+while the feature articles provide overviews of research
+projects for general audiences.
+
+Information on how to retrieve technical notes and subscribe
+to publication announcements is given in section two of this
+paper.
+
+

@@ -1,0 +1,229 @@
+
+###############################################################################
+
+        xmfract version 1.4 - a freeware fractal generation program.
+          Copyright (C) 1995 Darryl House and the Stone Soup Group.
+ 
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+ 
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+    Some source code for this program is covered by additional copyrights.
+    See the copyright notices in the source files for more information.
+ 
+    You should have received a machine-readable and/or hard copy of the
+    GNU General Public License along with this program; if not, write to the
+    Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+###############################################################################
+
+  Please carefully read the "COMPILATION AND INSTALLATION" section below
+  for important information about the configuration options for your site.
+
+  This is xmfract 1.4, an X11R[5/6] Motif program based upon a
+  popular DOS freeware program named Fractint. It is a true graphic
+  user interface quite different from that program.
+
+  The program will calculate, display and manipulate over 90 discrete
+  fractal types with very fast algorithms. Other features include zooming,
+  animation (color cycling), color editing, spherical projection, and an
+  amazing wealth of parameters. There are too many features to list here.
+
+  Also included are dozens of ancillary files such as color map files,
+  parameter files, formula files, and an extensive on-line help system.
+
+  System requirements:
+    The program is known run to under the following operating systems:
+
+      OSF/1 (with Motif 1.2)
+      Solaris 2.x (with Motif 1.2)
+      Linux 1.94 or later (with XFree 3.1 and Motif 1.2)
+      HPUX (with Motif 1.2)
+
+    Motif 1.2 or greater is required for this program. Motif 1.1 will
+      not work with this program.
+
+    The program has been tested under the following window managers:
+      mwm olwm olvwm twm tvtwm vuewm
+
+    Required utilities:
+      The GNU utility "autoconf" is required to configure the program.
+      The GNU utility "gunzip" and the Unix or GNU utility "tar" are
+        required to unpack the archive.
+
+    Recommended utilities:
+      The GNU C compiler "gcc", while not required, is recommended.
+
+  Disk requirements:
+    2MB of space is required to download the source archive.
+    The compiled program (stripped and optimized) requires 1MB of space.
+    The ancillary files (see below) require 1.5MB of space.
+
+    The amount of space required to compile the program will vary,
+    depending on the compiler used, the compilation flags that
+    are set, and whether the ancillary files are stored in the
+    same file system as the source (the default configuration).
+    About 20MB of space is recommended for the most convenient
+    method of compilation and storage.
+
+  Bugs fixed and enhancements since version 1.1:
+
+  - Added GNU "autoconf" capability with configuration files and scripts.
+  - All dialogs have been extensively generalized. There are now no
+      specific widget positioning or sizing parameters, allowing the
+      use of any font or window manager.
+  - Added platform-dependent conditions for some system library functions
+      and definitions.
+  - Deleted the call to MrmInitialize() and deleted the reference to
+      the Mrm library in the Makefiles.
+  - Conditionally compile and/or include the Xmu library and calls
+      to register the event handlers for "editres".
+  - The zoom box problems reported in the previous version have been fixed.
+  - The two pop-up menus have been replaced by option menus.
+  - Fixed various widget heirarchy and memory allocation errors.
+  - Function prototypes have been generalized.
+  - varargs vs. stdarg handling has been generalized.
+  - Added signal handling for Linux platforms.
+  - Added Brighter and Darker buttons to the color editor.
+  - Added a Fractint-like 'z' key function for parameters.
+  - Added an Image Refresh Rate option.
+  - Added a parameter forwarding option.
+  - Added the Fractint zoombox pan capability.
+  - Added a Fractint-like color editor freestyle capability.
+  - Added palette randomization functions and an associated dialog.
+  - Enhanced the handling of formula, ifs, and lsystem fractal types.
+  - Enhanced the initialization file and environment variable handling.
+  - Added more preset window sizes.
+  - Updated this file and the on-line help files.
+  - Fixed all reported bugs.
+  - Added an icon.
+
+  Table of Contents:
+
+  1: COMPILATION AND INSTALLATION
+
+  (An expanded version of this file is embedded in the source archive)
+
+  ===========================================================================
+  1: COMPILATION AND INSTALLATION
+
+  Unpack the archive with gunzip and tar:
+
+    prompt% gunzip xmfract.beta.tar.gz
+    prompt% tar xvf xmfract.beta.tar
+    prompt% rm xmfract.beta.tar
+
+  This will leave a directory named xmfract_1.4 that contains the
+  source archive and configuration files.
+
+  Also included are dozens of ancillary files used at runtime
+  (*.par, *.frm, *.map, etc.), and a directory containing the on-line
+  help files.
+
+  Type "man editres" for more information about editres. If it is
+  not installed on your system, it is of no concern to this program.
+  Editres is a resource editor that is useful for debugging and
+  figuring out the names of specific widgets, which is also handy
+  for customizing the X resource file.
+
+  All you need to know about your system is where the Motif include
+  and library directories are, and whether you have (and wish to use)
+  the Xmu library for editres. Autoconf will try to figure out the rest.
+
+  By default (configurable -- these are just defaults):
+    The program will be installed in /usr/local/bin
+    The ancillary files will be installed in /usr/local/xmfract
+    The help files will be installed in /usr/local/xmfract/help
+
+  TO CONFIGURE THE PROGRAM FOR YOUR SITE:
+
+  The pertinent options for "configure" are:
+    (type ./configure -help for syntax information and more options)
+
+    --prefix (or make install prefix=<path>)
+        This changes the /usr/local prefix for everything.
+
+    --exec-prefix (or make install exec_prefix=<path>)
+        This changes just the /usr/local prefix for the xmfract executable.
+
+       "make install bindir=<path>" has the same effect -- the program
+          will be installed as <path>/xmfract
+
+       "make install libdir=<path>" changes the installation path for the
+          ancillary files. They will be installed in <path> and the help
+          files will be installed in <path>/help
+
+       "make install helpdir=<path>" will change the path to the help files.
+
+    --with-editres
+        Enables the editres protocol and includes the Xmu libraries.
+
+    --with-motif="motif_includes=DIR motif_libraries=DIR"
+        Tells the Makefiles where it can find the Motif directories.
+
+        For example, on a system where Motif is installed in the
+        directory /usr/lib/motif_1.2, then motif_includes=DIR becomes
+        motif_includes=/usr/lib/motif_1.2/include
+
+     Please note that there are a puzzling combination of dashes,
+     underscores and quotation marks in the arguments -- take care
+     to get it correct, and use full path names, not relative paths.
+
+  Type "./configure [options]"
+
+  Type "make install [options]"
+
+  If you are using a BSD compiler, you will probably get a
+    gazillion warnings about "& before array or function" that
+    will be safely ignored.
+
+  Initialization:
+
+  1. - Xmfract may obtain initialization information from many sources,
+       including the command line, the environment, and two different
+       names for initialization files. Choose whichever of these options
+       is most convenient for you:
+
+         a: If you use this method, no modification of any initialization
+            file is necessary (yet not disallowed). Set an environment
+            variable XMFRACTDIR or FRACTDIR that points to wherever you
+            have placed the ancillary files (*.map, *.par, etc.).
+            Then rename the file "xmfract.ini" to ".xmfractrc" (note the
+            leading "dot") and place it in your home directory.
+
+         -- or --
+
+         b: Add a line to the top of the "xmfract.ini" that points to
+            wherever you have placed the ancillary files. This must be
+            a full-pathed name of a directory (relative paths or variables
+            are not (yet) supported). i.e. fractdir=/usr/local/xmfract
+            Note that there are no spaces before or after the "=", nor
+            is the path surrounded by quotation marks. Place this file
+            in your home directory or the directory from which you
+            intend to run xmfract.
+
+       In either case, if you have placed the help files in any directory
+       other than <fractdir>/help, then add a line to whichever file you
+       are using for initialization (xmfract.ini or .xmfractrc) that
+       points to wherever you have placed the help files.
+
+  2. - The program contains internal default fallback X resources, so an
+       app-defaults file is not necessary, but it may be useful for
+       customizing the program's appearance and behaviour. If desired,
+       rename the X resource file from Xmfract.ad to Xmfract and place it
+       where your system's resource files are stored, or your home directory.
+       Review the comments at the top of the resource file for more
+       information about customizing resources.
+
+       For Linux systems, this will probably be required because XFree has
+       a problem dealing with tear-off menus in many versions of Motif.
+       Set the tearOffModel resource to TEAR_OFF_DISABLED for Linux systems,
+       if you experience problems with tear-off menus. Xmfract does not need
+       to be re-compiled when any resource is changed.
+
+

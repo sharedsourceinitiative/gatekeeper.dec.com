@@ -1,0 +1,49 @@
+<html>
+<head>
+<title>DCPI-V2.5 Release Notes</title>
+</head>
+<body>
+<!--#include file="includes/title.html" -->
+<br>
+DCPI-V2.5 Release Notes
+</h1>
+<hr>
+<pre>
+Changes since release V2.4:
+
+- Removed loader that didn't work with 4.0d and 5.0
+
+Known limitations:
+
+- Does not work with Digital Unix 5.0 (works on 3.2 and 4.0*)
+
+- Does not profile dynamically loaded images on Digital Unix 4.0d or later.
+
+- Analysis tools cannot disassemble Alpha 21264-specific instructions.
+
+</pre>
+<hr>
+
+DCPI-V2.4 Release Notes
+</h1>
+<hr>
+<pre>
+Changes since release V2.3:
+
+- Added support for EV6 Counters to daemon and downstream tools that
+  do not require stall-level analysis, e.g., dcpiprof, dcpilist,
+  dcpidis, etc.
+
+  None of the downstream tools that perform stall-level analysis will
+  work with EV6 (Alpha 21264) profiles.
+
+- Major update to dcpi2pix to generate more accurate data.
+
+- Added loader that should work with 4.0d and 5.0
+
+</pre>
+<hr>
+
+<!--#include file="includes/dcpi-footer.html" -->
+</body>
+</html>

@@ -1,0 +1,24 @@
+
+			CRL Technical Report 93/3
+		    Recovering 3D Shape and Motion from
+	       Image Streams using Non-Linear Least Squares
+			     Richard Szeliski
+			      Sing Bing Kang
+				March, 1993
+
+The simultaneous recovery of 3D shape and motion from image sequences is
+one of the more difficult problems in computer vision.  Classical
+approaches to the problem rely on using algebraic techniques to solve for
+these unknowns given two or more images.  More recently, a batch analysis
+of image streams (the temporal tracks of distinguishable image features)
+under orthography has resulted in highly accurate reconstructions.  We
+generalize this approach to perspective projection and partial or uncertain
+tracks by using a non-linear least squares technique.  While our approach
+requires iteration, it quickly converges to the desired solution, even in
+the absence of a priori knowledge about the shape or motion.  Important
+features of the algorithm include its ability to handle partial point
+tracks, to use line segment matches and point matches simultaneously, and
+to use an object-centered representation for faster and more accurate
+structure and motion recovery.  We also show how a projective (as opposed
+to scaled rigid) structure can be recovered when the camera calibration
+parameters are unknown.

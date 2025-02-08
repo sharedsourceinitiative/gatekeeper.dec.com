@@ -1,0 +1,78 @@
+
+<html>
+<head><title>SmartBridge: A Scalable Bridge Architecture
+</title></head>
+<body>
+<center><h1><b>SmartBridge: A Scalable Bridge Architecture</b></h1></br>
+<h2>Darrell Anderson, Duke University</h2>
+</center>
+
+I spent my summer working with Tom Rodeheffer and Chandu Thekkath
+on SmartBridge, a scalable bridge architecture supporting automatic
+reconfiguration and shortest path routing in ethernet.  We built a
+software prototype inside the FreeBSD kernel, SmartBridging between
+ethernet adapters.  We observed a dozen bridge reconfiguration times
+around 10 ms and found that our solution performed as well as a 
+Prominet Cajun hardware bridge
+in terms of latency and throughput for a single session on 100 Mb/s
+ethernet.
+
+<h2>Introduction</h2>
+
+As the number of hosts in a network exceeds what an ethernet segment
+can handle, bridges are employed to partition the network into
+multiple segments, routing traffic between them.  Two common solutions
+for routing in a network are IP routing and bridge routing.  The
+former approach connects networks at the IP layer and is known to
+scale well. However, individual hosts and IP routers need to be
+configured by hand.  Bridge routing, in contrast, works at the link
+layer, is transparent to the host, and is automatic to set up.
+Unfortunately, bridge routing does not scale well because traffic is
+carried along a spanning tree where a single bridge can become a
+bottleneck.
+
+<p>This project introduces a new architecture called SmartBridge that
+combines the good features of IP routing and bridge routing.
+SmartBridges offer an advantage over ordinary bridges in that they
+perform shortest path routing, introducing fewer bottlenecks in large
+networks.  They offer an advantage over IP routers in that they are
+automatic to set up (no host configuration), easy to administer, and
+incrementally scalable with little or no operator intervention.
+
+<h2>What's Interesting?</h2>
+
+Here were the main action items of the project:<P>
+
+<UL>
+<li>Learning global network topology (&agrave la Autonet).
+<li>Finding deterministic shortest-path routes in linear time.
+<li>Locating hosts on segments.
+<li>Propagating host location without introducing routing loops.
+<li>Recognizing host movement.
+<li>Setting up peaceful coexistence with standard bridges (which
+included redundant links).
+</UL>
+
+<h2>Acknowledgments</h2>
+
+I would like to thank Tom Rodeheffer, my host, for introducing me
+to the finer points of bridge routing.  Chandu Thekkath was my co-host and
+had many helpful suggestions.  Mitch Lichtenburg assisted with the
+initial setup and final experiments with contemporary hardware.
+Leslie Lamport and Ed Lee helped keep me in shape--and thanks also to
+Mike Burrows for advice and entertainment.
+
+<h2>About the Author</h2>
+
+I began my Ph.D. program at Duke University in the fall of 1996,
+working with Jeff Chase on gigabit networking and storage interaction.
+
+<h2>About the Author's Pet Iguana</h2>
+
+I don't have a pet iguana.  I just wanted to say I had a terrific
+summer and I figure this way you're more likely to read it.  During my
+stay, I learned a great deal about distributed algorithms,
+professional life outside academia, and specialty coffees.  Thanks!
+
+</body></html>
+

@@ -1,0 +1,22 @@
+Edit 5.0.2                                           March 11, 1998
+
+NEdit is a high quality GUI text editor based on Motif. It provides
+users who are accustomed to modern GUI-based environments, like the
+Macintosh or MS Windows, with the standard dialogs, menus, graphics,
+and keyboard shortcuts that are absent in most other X-based editors.
+It is also very thorough, complete, and robust, with a large user
+base.  Features include: state-of-the-art syntax highlighting,
+rectangular selection, interactive WYSIWYG dragable selections,
+secondary quick-action selections, learn/replay, client/server mode,
+auto and smart indent, C-like macro language, ctags support, tab
+emulation, unlimited undo, and much more.
+
+The primary ftp site for NEdit is: ftp://ftp.fnal.gov/pub/nedit/,
+where you will find (in addition to the sources posted here) pre-
+built executables for most popular Unix systems, lots of contributed
+software, and syntax highlighting patterns for many languages not
+included in the standard distribution.
+
+NEdit's home web page: http://www-pat.fnal.gov/nirvana/nedit.html.
+
+Send questions and comments to: nedit_support@fnal.gov.

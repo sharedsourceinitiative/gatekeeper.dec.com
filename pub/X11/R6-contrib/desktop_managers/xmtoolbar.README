@@ -1,0 +1,111 @@
+xmoolbar is a simple toolbar for Motif 2.0
+Version 1.1
+
+This toolbar was written to learn more about Motif and now I know that I
+want to have a good GUI builder :-)
+Maybe this version is slow on your computer, that's because I did much of
+the work on my own what possibly could be done by Motif, but I learn every
+day a little bit more...
+
+Some features:
+	* launch applications on a mouse-click
+	* fully configureable without writing lots of config files
+	* group buttons for application groups
+	* shrink toolbar on a mouse-click
+	* quick infos  - now supports descriptions for both, group buttons
+	  and normal buttons
+	* use more than one config file
+	* position the toolbar anywhere on your screen
+	* default config file
+	* preferences dialog and some popups
+
+Some bugs: 
+	You have to find them on your own
+	
+The Homepage of xmtoolbar is located at: 
+	http://www.atnet.at/club/spiff
+
+You can always get the latest version of xmtoolbar there.
+ 
+This toolbar has no human readable config file, because I don't like them
+very much. To customize your toolbar you have to start xmtoolbar and change 
+it as you like, then save your config file and that's all.
+
+Installation:
+-------------
+
+Put the files
+	space.xpm
+	default.xpm
+somewhere in your pixmap search path (i.e. the start directory of xmtoolbar)
+Place the xmtoolbar binary anywhere in your path.
+The .toolbar file will be saved to your home directory. 
+It is possible to set an environment variable (TOOLBAR) to point at a
+default file (xmtoolbar) created by the system administrator, so every new 
+user will get a toolbar with a default layout.
+For bash type: "export TOOLBAR=/usr/X11/lib" - this will cause xmtoolbar to
+search for a file "xmtoolbar" located in the "/usr/X11/lib" directory. If
+you want it for every user on your system, just add it to your /etc/profile
+file.
+
+Start it:
+---------
+At the first start there is only one button - the default button. This
+button controls most of the toolbar actions. If you press the right mouse
+button on it a popup menu shows up. Every button has its own popup menu
+where you can change the pixmap, the application or just delete the button
+from the toolbar. So the right mouse button is considered to be a control
+mechanism of the toolbar.
+With the popup menu on the default-button you are able to add new buttons to
+the toolbar, change the layout or save the configuration to the config file.
+When you press the left mouse button on the default button the toolbar
+shrinks to the size of one button. To expand the toolbar again press
+the left mouse again on the default button.
+
+Sometimes when you try to change a pixmap the pixmap can't be loaded,
+because it uses to much colors. Try to reduce the colors or change to a
+display with more colors ;-) else the no-pix pixmap will be displayed
+instead. ( somtimes it helps to kill Netscape :-) )
+
+Files:
+------
+I added a tool called "convert", to make a new configuration file out of the
+old one, so you can recycle ;-) your old file.
+Toolbar creates a file .toolbar in your home directory where the
+configuration is stored, unless you specify a different configuration file.
+For example, 
+
+$xmtoolbar &               <-- use the config file $HOME/.toolbar
+$xmtoolbar -c .my_toolbar  <-- use the config file $HOME/.my_toolbar
+
+You can also specify the starting position for the toolbar.  Just add the 
+xposition, yposition arguments when you initially start a new toolbar:
+
+$xmtoolbar -c .my_toolbar -x 0 -y 100
+
+Then set up the toolbar as you like, and save the configuration.  Your
+starting position will be saved and used when you restart the toolbar.
+
+I included a directory with some sample pixmaps
+If you want to have real cool pixmaps, then get the 3D pixmaps (Joerg Mertin)
+from "librarypc50.zrz.tu-berlin.de /pub/3dpixmaps". These pixmaps gives the
+toolbar a look of an NeXT-Step toolbar :)
+
+If you have any suggestions or bug reports please write to one of these
+addresses:
+spiff@calvin.priv.at  
+2:310/39.1701 (Fido-Net)
+
+
+TODO:
+* let the user sort the buttons.
+* add drag-and-drop (for getting applications from other drag-sources or for
+  sorting the buttons)
+* add a status to the button (option) associated with a pixmap, so
+  applications are started just once
+* maybe some sound...
+* add some HELP!!!!!!
+
+Thanks to MALLOZZI@bowie.msfc.nasa.gov who sent me some patches for
+xmtoolbar (the config patch and the position patch) which made it possible
+to release version 1.1

@@ -1,0 +1,23 @@
+"The Vesta Software Configuration
+Management System"
+Allan Heydon, Roy Levin, Timothy Mann, and Yuan Yu
+Report #177, January 22, 2002. 
+
+Vesta is a system for software configuration management. It stores collections of
+source files, keeps track of which versions of which files go together, and automates
+the process of building a complete software artifact from its component pieces.
+Unlike other software configuration management systems, Vesta was specifically
+designed to handle very large projects—tens of millions of lines of code and beyond.
+Vesta’s novel approach gives it three important properties not available in
+other systems. First, every build is repeatable, because its component sources and
+build tools are stored immutably and immortally, and its configuration description
+completely describes what components and tools are used and how they are put
+together. Second, every build is incremental, because results of previous builds are
+cached and reused. Third, every build is consistent, because all build dependencies
+are automatically captured, recorded, and checked, so that a cached result from a
+previous build is reused only when doing so is certain to be correct. In addition,
+Vesta’s flexible language for writing configuration descriptions makes it easy to
+describe large software configurations in a modular fashion and to create variant
+configurations by customizing build parameters. This report describes the Vesta
+technology in detail and discusses the performance of our implementation.
+

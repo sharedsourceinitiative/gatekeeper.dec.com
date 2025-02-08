@@ -1,0 +1,226 @@
+Introduction
+------------
+
+This version has been built on, and had some testing with :
+
+ o Solaris 2.5.1, 2.6, 2.7 and SunOS 4.1.3 with
+    - Sparc Compilers SC4 and SC4.2,
+    - gcc/g++ 2.8.1,
+    - Centerline c and cfront/C++ compilers.
+ 
+ o FreeBSD 2.2.6 and 3.2-stable with
+    - gcc 2.7.2.1
+    - gcc version gcc-2.95 19990608 (prerelease)
+    - f77 (f2c calling gcc 2.7.2.1)
+    - GNU F77 version gcc-2.95 19990608 (prerelease)
+
+ o FreeBSD 4.0-current with
+    - egcs 1.1.2 release
+    - gcc version gcc-2.95 19990608 (prerelease)
+    - f77 (f2c calling gcc 2.7.2.1)
+    - GNU F77 version gcc-2.95 19990608 (prerelease)
+
+ o Linux ELF 2.0.35 (Red Hat 5.2)
+    - gcc 2.7.2.3
+    - egcs 1.0.3 release
+
+ o Linux Debian 2.0.34
+    - gcc 2.7.2.3
+
+See the file README for build instructions.
+
+The URL for the ups web site is:
+
+           http://www.concerto.demon.co.uk/UPS/
+
+It is maintained by Ian Edwards (ian@concerto.demon.co.uk).
+It includes a FAQ, html man pages, site listings where ups
+can be found, supported architectures, a history of changes
+between versions, and other information.
+
+A "ups -v" now produces:
+
+        ups version 3.35 (build date: Fri Sep  8 12:28:12 PDT 2000)
+
+Changes between 3.35 and 3.34
+-----------------------------
+
+o  Changes from Russ Browne <russ@amc.com>
+    - Support for SC5 compiler:
+        Use the compiler supplied demangling library.
+        Recognize the bool type, now supported by this compiler.
+        Support for new implementation of virtual base classes used
+        by this compiler.
+
+    - Corrected look and feel for X clipboard operations:
+        Selected text does not vanish when the mouse button is released.
+        Instead, it stays selected until another clipboard selection
+        is made or the displayed text is changed by some user action.
+
+        Corrected paste from X clipboard to not allow pasting a new-line
+        in a text display that does not accept a new-line from the keyboard.
+
+    - Corrected display of source files with dos style line endings to not
+      display the \r at the end of each line.
+
+    - Added a keyboard history feature:
+        Most regions where UPS accepts data from the keyboard have
+        a history of recent entries.  Recent entries can be accessed
+        either through the keyboard by typing Control-P or Control-N,
+        or through the mouse by pressing a button that brings up a menu
+        of recent entries for that item.
+
+    - Added a text-entry button.
+        This was primarily so that when entries are accessed through
+        the history menu one can complete the entry with the mouse
+        rather than shifting to the keyboard to type return or escape.
+        Clicking the middle mouse button on this region does a paste.
+
+    - Allow the user to remove the mousehole from the display through X resources.
+        If one uses a large font, the typing line area can get
+        rather small.  By setting X resources one can retrieve the
+        space the mousehole takes up for the typing line instead.
+
+    - Fixed med3 keyboard routines to recognize the most useful control characters.
+
+    - display of 'long double' on SunOS 4.x
+    - implement raise/lower on "exec to here".
+    - fix to the symbol table problem reported by James Armstrong.
+    - stop 'Add Expresion' crash if no debugging info in the file
+    - fixes for lower/iconify on run
+
+  Notes from Russ Browne <russ@amc.com> :
+
+   Added X resource and command line option to split the output window
+   off as an independent top level X window.
+
+   Arrange that ups can raise itself to the foreground when the debugged
+   process breaks or dies.  This behavior can be turned on by a
+   menu option under "Windows" (below) or by an X resource or a command
+   line option.
+
+   Renamed the old "Snapshot" button to "Windows" and added options to
+   raise sister ups windows to the foreground and to make ups raise itself
+   to the foreground when the debugged process breaks or dies.
+
+  Some more technical changes:
+
+    Added handling of N_ILDPAD stabs information in elf symbol tables.
+
+    Further tightening up of compiler identification while handling
+    the N_OPT stab.
+
+    Treatment of SC5 virtual base classes is working to my satisfaction.
+    I removed from the CHANGES file the sentence about this requiring
+    a lot more work.
+
+    In split window mode, the typing line '/' and '?' shortcuts always
+    search something on the screen where the command is typed.
+
+    Changes in symbol parsing to ensure the the va_type field in
+    a var_t object is never NULL.  I reported earlier that I changed
+    TypeID to never return NULL; that proved to be a mistake.  Instead,
+    I always check that the "rtype" being assigned to v->va_type is
+    not NULL.
+
+    Removed the broken mousehole from the source window when it is
+    split off a top level window.
+
+    Renamed the X resource to remove the mousehole completely to
+    "WantMousehole=no".
+
+    Added X resource and command line option to turn message logging
+    on by default.
+
+    Added wn_setdefault() and used it to set several X resources
+    from the command line.  X resources so treated appear in the
+    command line as [-[no]option], so that an option turned on by an
+    X resource can be turned off by the command line, or vice-versa.
+    These options are:
+       -[no]split[:num] -[no]splitoutput[:num]
+       -[no]mousehole -[no]outwin -[no]logging -[no]raise_on_break
+
+    Added support for menu toggle items and used them to combine the
+    message logging on/off options into a single option and to add
+    the new raise-on-break option.
+
+    When the window containing the display area is iconified all UPS
+    windows are iconified.  When that window is de-iconified all windows
+    iconfied with it are restored.
+
+    Gave UPS an icon.  As I said earlier, I not a great artist.
+    If anyone wants to improve on my work, or replace the icon
+    completely, be my guest.  The bitmap for the icon is in ups.c
+
+    Added X resources for the source and output window geometries.
+    These are Src.Geometry and Output.Geometry.  Originally, these
+    were to be SrcGeometry and OutputGeometry, but the '.' fell out
+    of the existing get_xdef routine in wn_init.c and appears to be
+    consistent with X conventions for specifying a resource specific
+    to an individual window, button, or the like.  In the manual page
+    I spelled this out as "Ups.Src.Geometry" because I felt readers
+    might not understand that the "Ups." still goes in front of the
+    resource name.
+
+o  Changes from Rod Armstrong <rod@san-jose.tt.slb.com>
+    - splitting the ups window into two.
+    - X resources to control vertical positioning of the items in the
+      display window.
+    - fix for static globals with Centerline and Purify on Solaris.
+    - fix for scroll delay code
+    - revived the code for debugging dynamically loaded libraries.
+      This was commented out in 3.35 beta6 because it caused a step 
+      in C++ code to be very slow. The hit should happen now only
+      when the dynamic linker does a load, open or close of a 
+      dynamic library, or when the user rescans the init file.
+      Ricardo Telichevesky <ricardo@teli.org> reports this works
+      on Linux Red Hat 6.2 as well as Solaris.
+    - related to the above, rescanning the init file now works again.
+    - for a display window search, optimized the coloring by turning 
+      it on and off only when necessary. This reduced the setup time 
+      for a search from minutes, for a display window of thousands of 
+      lines, to millisecs.
+    - fixed a bug that caused most steps to behave like nexts in Sun
+      shared libraries, especially for C++ code.
+    - added support for displaying Static members of a class for 
+      Centerline compiled code.
+    - added /usr/openwin/lib/app-defaults to the search path for X resources.
+
+o  Changes from Ian Edwards <ian@concerto,demon.co.uk>
+    - support of multiple X screens in libx11wn.
+    - various FreeBSD and Linux bugs.
+    - 'C' library calls in interpreted code at breakpoints on Linux
+      and FreeBSD 3.x,4.x.
+    - fixes for lower/iconify on run
+    - application defaults file may be in /usr/X11R6/lib/...
+    - stuff to allow a FreeBSD package/port of ups to be built
+    - libx11wn builds in its directory and not the X11 subdirectory
+    - stuff to allow a Linux RPM of ups to be built
+
+o  Changes from Panagiotis Tsirigotis <pgttso@best.com>
+    - fix for UPS crash when using a g++ that generates vtable thunks
+      for virtual function dispatch.
+
+o  Changes from Peter Collinson <pc@hillside.co.uk>
+    - control speed of scrolling of text in windows with Ups.ScrollDelay
+
+o  Bob Carragher <bob@fla.fujitsu.com> and
+   Rick Mallett <rmallett@ccs.carleton.ca> tested the 'split windows'
+   code on dual-monitor systems.
+
+o  Doug Hughes <Doug.Hughes@ENG.Auburn.EDU> provided fixes for
+    -  Makefile errors.
+
+o  Dibyendu Majumdar <dibyendu@mazumdar.demon.co.uk> provided fixes for
+    -  memory leaks in the interpreter code.
+    -  make C interpreter understand class::method so can be used in
+       interpreted breakpoint code.
+
+o  Thanks to Laszlo Ladanyi <ladanyi@us.ibm.com> for pointing out
+  - UPS was using its own 'strstr()' when most C libraries now have one,
+  - 'gets()' should be avoided
+  - not necessary to remove "-O2" when building using 'gcc'
+
+Rod Armstrong
+rod@san-jose.tt.slb.com
+11 Sep 2000

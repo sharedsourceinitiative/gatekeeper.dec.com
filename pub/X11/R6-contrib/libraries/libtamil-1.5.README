@@ -1,0 +1,368 @@
+	Tamil Fonts and Tamil Utils for the X Window Systems
+	----------------------------------------------------
+	Gnanasekaran Swaminathan <gs4t@virginia.edu>
+	libtamil-1.5 20Apr95
+
+LIBTAMIL
+--------
+libtamil has a family of Tamil fonts to be used with
+X window systems. It also has a suit of library functions
+that can be used effectively to transform an Xt ascii application
+into Tamil application. 
+
+I have illustrated such a transformation using three useful
+examples: xedit, xrn, and xtalk
+
+xedit: 	no modification to original source is needed
+	except adding libtamil.a to the Imakefile.
+
+xrn:	server.c is modified to accept Tamil
+	and English postings. buttons.c is modified to
+	let \btthamizh \etpostings in SCT to be printed to the
+	default PostScript printer. save.c is modified to
+	save SCT articles in standard Madurai form.
+
+	If possible please use xrn to post and read soc.culture.tamil.
+	If you cannot use X windows, please post
+	your articles in Bala's Madurai format. While
+	posting articles in Madurai transliterated
+	English, please do not forget to enclose
+	the transliterated text with "\bt" and "\et".
+	For example, write a poem as follows:
+
+	\btn^an^tha va_naththilO rA_Nti--ava_n
+	    n^AlARu mAthamA_yk ku_yava_nai vE_Ntik
+	ko_Ntu van^thA_noru thO_Nti--meththak
+	    kUththAtik kUththAtip pOttutaiththA_Nti
+       		              --katuveLis siththar\et
+
+xtalk:	xtalk.c has been changed non-trivially to
+	accept \btthamizh \et writings enclosed within
+	"\bt" and "\et" from peer. Similarly, all \btthamizh \et
+	written from xtalk will be enclosed within
+	"\bt" and "\et" and sent to the peer.
+
+xmailtool: xmailtool example was tested by Badrinarayanan Seshadri
+	<badri@sofia.tn.cornell.edu>. Same as xedit above but
+	you need to add the following lines to your .mailrc file:
+	--------------------------------------------------------
+	set EDITOR=none
+	set print_cmd="tamil -"
+	--------------------------------------------------------
+
+xgopher: xgopher example was also illustrated by Badri. Same as
+	xedit above. 
+	Thanks Badri!
+
+NEWS
+----
+Version 1.5 20Apr95
+(a) minor PostScript generation bug fixed
+(b) fp_tamil2ps in tamil.l is generously commented for future reference
+
+Version 1.4 3Mar95
+(a) added X11R6 support
+(b) discontinued X11R4 support
+
+Version 1.3 19Dec93
+(a) xrn bug fixes sent in by Badri incorporated.
+(b) Imakefile support added for font installation in Openwindows.
+
+Version 1.2 3Oct93
+(a) PostScript output cleaned up quite a bit.
+
+Version 1.1 2Oct93
+(a) added Imakefile to bdf directory.
+(b) added xgopher
+(c) Dr. Malten's transliteration scheme is added. Begin Dr. Malten's
+    transliteration using \BT and end it with \et.
+
+Version 1.0 25Sep93
+(a) libtamil Imakefile corrections done.
+(b) fixed all errors reported in xtalk.
+
+Version 0.9 24Sep93
+(a) fixed all bugs reported in xrn.
+(b) SCT articles are routed to "tamil -" for printing.
+(c) minor extension to Madurai added.
+
+Version 0.8 19Sep93
+(a) a nasty tamil2madurai bug in xrn-6.17 is fixed.
+(b) big X wntml fonts dropped.
+
+Version 0.7 17Sep93
+(a) minor Madurai bugs fixed.
+(b) xtalk added.
+(c) xmailtool srcs included.
+(d) tamil is made to send the PostScript output to "lpr".
+(e) wntml pk fonts dropped.
+
+Version 0.6 5Sep93
+(a) Support for RS6000 added.
+
+Version 0.5 3Sep93
+(a) tamil--a program to convert between Tamil, Madurai, and PostScript
+           formats is introduced. tamil replaces tamil-lex and
+	   tamil-print programs in version 0.2 28Aug93.
+(b) Errors in man pages fixed.
+
+Version 0.4 3Sep93
+(a) man pages are added for tamil and libtamil.
+(b) minor bugs fixed.
+
+Version 0.3 1Sep93
+(a) A nasty bug in parsing several files as reported in
+    version 0.2 28Aug93 is fixed.
+(b) Print facility tamil-print is added. It takes a \btthamizh
+    \etfile and converts it into a PostScript file. If you
+    want to get fancy print outs, you still need to use
+    Ravi Sundaram's m2t that comes with madurai.
+
+Version 0.2 28Aug93
+(a) All clearly reported bugs in version 0.1 21Aug93 has
+    been fixed. Now, libtamil will accept all Madurai
+    transliterated English enclosed within "\bt" and "\et".
+(b) Keyboard mapping has been greatly enhanced. For example,
+    to get \btauvaiyaar\et, you type ESC to get into Tamil mode
+    and type "awvYyArr" and type ESC again to get out of Tamil
+    mode.
+
+Version 0.1 21Aug93
+(a) First public version released.
+
+X Tamil FONT
+------------
+The X bdf Tamil font that I am using has the following characterstics:
+
+(a) I am using ADOBE courier font for character codes 0-127.
+    ADOBE and DEC owns the copyright for this font.
+
+(b) I am using Thomas Ridgeway's Tamil font for character
+    codes 128-255. Thomas Ridgeway owns the copyright for
+    this Tamil font.
+
+Having both ASCII and Tamil in the same font has the following
+advantages:
+  (1) All the existing X applications can be used
+      without any modifications with Tamil fonts.
+  (2) Because of (1), all one need to convert an X application to
+      a Tamil application is to link my Tamil library
+      before Athena X widget library when creating the executable.
+      Lo and behold, you get Tamil X application without
+      any extra work.
+
+Otherwise, one have to extensively modify or completely rewrite
+the X application to accept Tamil fonts. Such is the case for
+all designs that uses two or more fonts like Japanese, Chinese,
+Thai, etc. We avoid such needless expensive work by using both
+ASCII and Tamil in the same font and a Tamil library which takes
+care of keyboard input of Tamil characters.
+
+libtamil-1.5 is available for anonymous ftp from
+	ftp.virginia.edu: pub/libtamil-1.5.tar.gz
+	wuarchive.wustl.edu: doc/misc/tamil/libtamil-1.2.tar.gz
+	ftp.stolaf.edu: pub/tamil/libtamil-1.2.tar.gz
+Use gnu gzip to uncompress it.
+
+WN Tamil METAFONT fonts were developed by Thomas Ridgeway
+of University of Washington. Without his WN Tamil fonts, this project
+wouldn't even have been conceived. We are all indebted to
+him.
+
+X TAMIL FONTS INSTALATION 
+-------------------------
+See bdf/README to install X Tamil fonts. Install the Tamil
+fonts first.
+
+The  following fonts are included with this distribution
+in the directory bdf:
+	wntml10-100.bdf
+	wntml10-150.bdf
+	wntml12-100.bdf
+	wntml12-150.bdf
+
+LIBTAMIL
+--------
+You need libtamil.a before you can work with installing
+xedit, xmailtool, xtalk, and xrn. Please read lib/README for more info.
+
+INSTALLATION OF EXAMPLES
+------------------------
+XEDIT
+-----
+To compile the xedit example, do
+	1. Edit Imakefile so that the library path for
+	   libtamil.a is ok.
+	2. xmkmf
+	3. make
+	4. xedit -fn wntml10-150 testfile
+
+lib/README gives a keyboard mapping for Tamil characters.
+Please use a few times in order to get used to it.
+
+You can add the following resources to your .Xdefaults
+file to get good xedit behavior:
+
+!xedit
+xedit*geometry:			900x825+50+50
+xedit*enableBackups:		on
+xedit*backupNameSuffix:		%
+xedit*font:			wntml10-150
+
+XRN
+---
+Please use xrn to read and post soc.culture.tamil.
+To install xrn,
+	1. Edit config.h to suit your site
+	2. Edit Imakefile so that the library and include paths
+	   for libtamil are ok.
+	3. xmkmf
+	4. make
+	5. xrn -fn wntml10-150
+
+Please read lib/README to find out how to use
+the keyboard to directly type tamil characters.
+
+I use the following X resources for my xrn:
+
+! xrn
+xrn.geometry:			950x800+50+50
+xrn.breakLength:		0
+xrn.lineLength:			0
+xrn.distribution:		world
+xrn.includePrefix:		: 
+xrn*font:			wntml10-150
+xrn*artButtonList: artQuit,artCatchUp,artGotoArticle,artMarkUnread,artSubSearch,artPost
+xrn*ngButtonList: ngQuit,ngRead,ngCatchUp,ngRescan,ngSubscribe,ngPost
+
+XMAILTOOL
+---------
+To install xmailtool, do
+	1) Edit Imakefile so that the paths for libtamil and
+	   HELP_DIR are ok.
+	2) xmkmf
+	3) make
+	4) make install-files
+	5) edit your .mailrc file to include the following lines
+	   -----------------------------------------------------
+	   set EDITOR=none
+	   set print_cmd="tamil -"
+	   -----------------------------------------------------
+	6) xmailtool -fn wntml10-150
+
+I use the following X resources for my xmailtool:
+
+! xmailtool
+XMailTool*font:			wntml10-150
+XMailTool*composition.geometry: 950x825+50+50
+XMailTool*geometry:		950x825+60+60
+
+XTALK
+-----
+To install xtalk do,
+	1) Edit Imakefile so that path to libtamil.a is ok.
+	2) xmkmf
+	3) make
+	4) xtalk -fn wntml10-150 your-friend ttyno
+
+Please ask your peer to type several spaces or newline
+after \btthamizh.\et
+
+I use the following X resources for my xtalk:
+
+! xtalk
+xtalk*geometry:			900x825+50+50
+xtalk*font:			wntml10-150
+
+XGOPHER
+-------
+To install xgopher do
+	1) get xgopher.1.3.1.tar.Z from ftp.x.org
+	2) uncompress and untar xgopher.1.3.1
+	3) mv xgopher/* xgopher.1.3
+	   i.e. replace Imakefile and Xgopher.ad with the ones
+           provided here.
+	4) Edit Imakefile so that paths for XGOPHERDIR, BINDIR,
+	   and libtamil.a in LOCAL_LIBRARIES are ok.
+	5) xmkmf
+	6) make install
+	7) xgopher linus.informatik.uni-koeln.de
+
+Dr. Malten has \btaka n^An^URu, puRa n^An^URu\et etc. there.
+Enjoy those \btsanga ilakkiyangaL\et.
+
+
+ACKNOWLEDGEMENT
+---------------
+
+ADOBE Courier fonts are obtained from the M.I.T. distribution
+of 100dpi fonts.
+
+Tamil fonts are translated from U. of Washington' Tamil
+fonts in pk format. Thomas Ridgeway <ridgeway@carson.u.washington.edu>
+created WN Tamil METAFONT fonts.
+
+A heavily modified version of Dirk Grunwald's mftobdf is
+used to translate the wntml fonts to bdf format.
+
+AsciiSrc.c file in libtamil was taken from X11R5 distribution
+and was written by Chris Peterson of MIT X Consortium.
+
+xmailtool was written by Bob Kierski and Keith Fredericks of
+Cray Research Inc.
+
+xrn was written by Ellen Sentovich and Rick Spickelmier of UC Berkeley.
+
+xedit was found in MIT X distribution.
+
+xtalk was written by Paul Whaley of U. of British Columbia, Canada.
+
+xgopher was written by Allan Tuchman <a-tuchman@uiuc.edu> of
+U. of Illinois, Urbana.
+
+Madurai transliteration scheme was invented by Bala Swaminathan
+<bs@wucs1.wustl.edu>.
+
+Hari Shankar <hari@fx.com> and Raja Sooriamurthi
+<raja@silver.ucs.indiana.edu> provided useful comments
+at the early stages of the development of libtamil-0.1.
+
+Badrinarayanan Seshadri <badri@sofia.tn.cornell.edu> tested
+the libtamil concept with xmailtool and xgopher. He also gave a lot of
+suggestions for the improvement of libtamil.
+
+Craig D. Rice <cdr@stolaf.edu> has provided a permanent home for
+libtamil:
+	ftp.stolaf.edu: pub/tamil/libtamil-x.y.tar.gz
+
+Bala Swaminathan has provided yet another home for libtamil:
+	wuarchive.wustl.edu: doc/misc/tamil/libtamil-x.y.tar.gz
+
+Bill Pemberton <wfp5p@virginia.edu> has provided a permanent home
+for libtamil:
+	ftp.virginia.edu: pub/libtamil-x.y.tar.gz
+
+Following people reported bugs in libtamil, and thus helped
+improve libtamil:
+	Badrinarayanan Seshadri <badri@sofia.tn.cornell.edu>
+	Ravi Sundaram <sundaram@me.uta.edu>
+	S. Kesavan <kesavans@skinner.cs.uoregon.edu>
+	Bala Swaminathan <bs@cs.wustl.edu>
+	Geetha Ramaswami <G.P.Ramaswami@damtp.cambridge.ac.uk>
+	Siddharthan Ramachandramurthi <siddhart@cs.utk.edu>
+
+BUG Report
+----------
+If you have any questions, please contact the author at
+	gs4t@virginia.edu
+
+I will really appreciate your comments on the fonts and the
+library design.
+
+
+-Sekar
+
+Gnanasekaran Swaminathan
+CSIS Lab, Dept. of Electrical Engineering
+University of Virginia
+Charlottesville, VA 22903.

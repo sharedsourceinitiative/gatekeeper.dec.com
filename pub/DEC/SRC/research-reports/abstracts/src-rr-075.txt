@@ -1,0 +1,17 @@
+
+			AVAILABLE ELECTRONICALLY
+"Zeus: A System for Algorithm Animation and Multi-view Editing"
+Marc H. Brown
+February 28, 1992.  21 pages
+
+Author's abstract:
+
+Algorithm animation is a form of program visualization that is 
+concerned with dynamic and interactive graphical displays of a 
+program's fundamental operations. This paper describes the Zeus 
+algorithm animation system. Zeus is noteworthy for its use of objects, 
+strong-typing, and parallelism. Also of interest is how the system 
+can be used for building multi-view editors.
+
+
+

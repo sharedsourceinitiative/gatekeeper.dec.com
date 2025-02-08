@@ -1,0 +1,100 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Generator" content="Microsoft Word 97">
+   <meta name="GENERATOR" content="Mozilla/4.73 [en] (WinNT; U) [Netscape]">
+   <title>A hardware compiler for data-streaming</title>
+</head>
+<body>
+&nbsp;
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" >
+<tr>
+<td>
+<center><b><font size=+1>A Hardware Compiler for Data-streaming Reconfigurable
+Architectures</font></b>
+<p><b>Grigorios Magklis</b>
+<br><b>University of Rochester</b></center>
+</td>
+</tr>
+</table></center>
+
+<br>&nbsp;
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" >
+<tr>
+<td><b>1 Introduction</b>
+<p><font size=+0>I'm currently working towards my Ph.D. at the University
+of Rochester, working with professor Michael Scott, my advisor. My current
+research is on Complexity Adaptive Processing. This summer I worked with
+Laurent Moll, on building a compiler for the Sepia board.</font>
+<p><b>2 Sepia</b>
+<p><font size=+0>Sepia consists of a reconfigurable device (Xilinx FPGA)
+that has a PCI connection to the host machine and a network interface to
+connect with other machines or Sepia boards. It is currently being used
+to merge partially rendered images to a final image. In the current configuration
+each board accepts two streams of data (from the local machine and from
+the network) representing parts of an image, and outputs a data steam that
+is a combination of the two inputs. The combining function can be anything
+from alpha-channel blending to z-buffer comparison.</font>
+<p><b>3 Hardware Configuration</b>
+<p><font size=+0>The process of configuring the h/w involves many steps.
+First the algorithm is described and tested in some high level language,
+like C. Then the appropriate hardware is designed by hand. After this the
+hardware is described in some hardware description language (HDL) and is
+tested again. Finally the FPGA code is compiled and "downloaded" to the
+board.</font>
+<p><font size=+0>The goal of this project is to simplify this process by
+allowing the user to specify the algorithm in some high level language
+and have the final FPGA code generated automatically by the compiler.</font>
+<br>&nbsp;
+<p><b>4 The Compiler</b>
+<p><font size=+0>Our compiler understands a very simplified C-like language.
+This language does not have features like pointers and arrays due to the
+problems they present with efficiently mapping them to hardware resources.
+It also does not have other features like complex types (<font face="Courier New">struct</font>,
+<font face="Courier New">union</font>)
+and support for functions (except for a <font face="Courier New">main</font>
+function), because there was not enough time to implement them. These features
+can be easily added in the future though. Loops are also not allowed (<font face="Courier New">for</font>,
+<font face="Courier New">while</font>,
+<font face="Courier New">do</font>)
+because of the nature of the computation: the hardware is operating on
+streams of data and has to generate a result on every clock cycle.</font>
+<p><font size=+0>When designing the compiler we decided to follow traditional
+compiler techniques. The only difference is in the intermediate language
+instruction set. Instead of representing an ISA, it represents the available
+hardware resources. The first stages of the compiler are similar to a common
+C compiler. It first generates a parsing tree and then it builds the intermediate
+representation code (IR) in single static assignment form. The only interesting
+difference is that the generated code is one large basic block. This is
+possible because the IR contains a "select" instruction – similar to the
+"<font face="Courier New">?:</font>"<font face="Courier New"> </font>C
+operator.</font>
+<p><font size=+0>The next step is optimizing the IR. In this step we also
+follow traditional compiler techniques, only that now we are trying to
+optimize for code size, not speed. The optimizations performed, in order,
+are: copy and constant propagation, constant expression evaluation, expression
+simplification and unreachable code elimination.</font>
+<p><font size=+0>The final step of the compilation is to produce location
+information for each primitive (IR instruction). This is the most important
+step since it is going to decide the performance, i.e. clock frequency,
+of the resulting hardware. Unfortunately I didn’t have time to implement
+this step. The "scheduling problem" as it is called, is an NP-hard problem
+and so far people have used a number of heuristics to solve it. We are
+thinking to use the datapath information we get from the IR in order to
+generate placement information. This can be done by first identifying which
+IR instructions belong to each pipeline stage of the resulting hardware
+and then try to schedule (i.e. generate location information) for each
+stage separately. This has the property of reducing the problem dimensions
+from two to one.</font>
+<br>&nbsp;</td>
+</tr>
+</table></center>
+
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+</body>
+</html>

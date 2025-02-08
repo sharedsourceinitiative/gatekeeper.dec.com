@@ -1,0 +1,55 @@
+<html>
+<head><title>Eliminating Redundant Synchronisation in Java</title></head>
+<body>
+<center>
+<h1><b>Eliminating Redundant Synchronisation in Java</b></h1><br>
+<h2>Steve Muir, University of Pennsylvania</h2>
+</center>
+
+
+I've just finished the second year of my PhD at the University of
+Pennsylvania where my advisor is Jonathan Smith.  My work so far has
+been on alternative (i.e. non-SMP), operating system structures for
+multiprocessor systems, particularly in the context of
+high-performance and active networks. <p>
+
+<h3>Summer Research Project</h3>
+
+This summer I've been working with Sanjay Ghemawat on a static
+analyser for Java programs to detect unnecessary synchronisation
+operations.  This information is then used by the <tt>srcjava</tt> JVM to
+eliminate those redundant operations.<p>
+
+Synchronisation in Java is a relatively expensive operation, typically
+requiring about 75 CPU cycles in <tt>srcjava</tt>.  In many cases, Sun's
+implementations of the standard Java classes e.g. <tt>StringBuffer</tt> and
+</tt>Vector</tt>, are very conservative in their use of synchronisation, thus
+imposing overhead on single-threaded programs where the synchronisation 
+is not needed.<p>
+
+We designed and implemented a static analyser which would perform a
+data-flow analysis on allocated objects to determine whether those
+objects ever became exposed outside their creating threads.  If not,
+accesses to that object by method invocations would not need to be
+synchronised.<p>
+
+Our initial simple and conservative implementation was able to detect
+that allocated objects were unexposed only when these objects
+were accessed exclusively via local variables. Unfortunately, most 
+objects (StringBuffers being the notable
+exception) tend not to be used in this manner, except by hardened C
+programmers such as myself. Rather, they are accessed 
+in a more object-oriented way via fields of other, containing objects.<p>
+
+This observation prompted us to design and begin implementation of a
+second analyser which performs a global analysis of allocated
+objects, building an exposure dependency graph between objects
+e.g. the operation <tt>x.a=y</tt> stores <tt>y</tt> into <tt>x</tt>, so that an edge is added from <tt>x</tt>
+to <tt>y</tt>.  We believe this analyser will be able to detect a higher
+proportion of unexposed objects than our first implementation.<p>
+
+</BODY>
+</HTML>
+
+
+

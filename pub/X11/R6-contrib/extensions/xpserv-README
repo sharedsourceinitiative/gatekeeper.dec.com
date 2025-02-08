@@ -1,0 +1,92 @@
+
+		X->PostScript Print server.
+
+	xpserv is a requests-only server which translates the X protocol
+    to PostScript.  "Requests-only" means that the server only receives
+    and replies to X requests and does not generate events.  The server
+    is typically started as the second server on the host, for example:
+    "foo:1".  There are some environment variables which are used by
+    the print server:
+
+    XPRINTFONTS:  This variable gives the pathname to the file which 
+		  maps X fonts to Adobe fonts.  The format of the file
+		  is X font on one line, followed by the corresponding
+		  Adobe font on the next line.
+    
+    XPRINTOPTS:   This was designed as hook for printer options, right 
+		  now, it only contains a flag for whether the output
+		  supports indexed colorspaces.
+
+	Since Xpserv is a separate server, all the server resources used
+    in your application with the normal server ( colormaps, gcs, fonts, 
+    windows, etc.) have to be re-created on the print server.  To take
+    advantage of high resolution printers, make sure your draw routines
+    resize with the window, and draw to a very large window.
+
+	Xpserv now supports both 8 an 24 bit visuals.
+    
+    Xlib Interface:  There is an example program, "testclient", which uses
+    the Xpserv interface:
+
+Bool XOpenPrintWindow( Display 	*dpy,
+		       Drawable drawable,
+		       char 	*printfile);
+
+	XOpenPrintWindow() specifies the window in the application which 
+    is to have its requests translated to PostScript.
+
+    dpy - 	The display connection to the print server
+    drawable -	The drawable for which commands will be translated (this 
+		must be created on the print server.
+    printfile - The name of the output file (or printer) to print to.
+
+ 
+Bool XClosePrintWindow ( Display  *dpy,
+			 Drawable drawable);
+	
+	XClosePrintWindow() tells Xpserv to stop translating requests to
+    the window, and to issue the "showpage" command in PostScript.
+
+    dpy -  	Display connection to the print server.
+    drawable -	The window which was used for printing.
+ 
+Bool XSetPrintParams( Display 	*dpy,
+		      Bool 	preserveAspect,
+		      int 	fontScale,
+		      int 	pixmapScale,
+		      int 	pageWidth,  
+		      int 	pageHeight,
+		      int 	printDirect,
+		      int 	landscape,
+		      char 	*correctFile,   
+		      char 	*prologFile);
+
+
+	XSetPrintParams() sets parameters for the print server.
+
+    dpy - 		Display connection to the print server.
+    preserveAspect - 	Whether the printout should be stretched to fill the
+			page, or keep the aspect ratio of the window.
+    fontScale -		How much to scale up the font, since the window might
+			have been grown for higher resolution without changing
+			the font size.
+    pixmapScale -	Same thing, except for scaling pixmaps (which are 
+			sometimes used for symbols)
+    pageWidth -		The page width, in points (1/72 inch) to print to.
+    pageHeight -	Page Height in points.
+    printDirect -	This causes output to be piped directly to the lpr
+			command, with the filename used as the name of the
+			printer.
+    landscape -		1: print in landscape mode, 2: portrait mode
+    correctFile -	This gives a length and a table of RGB values 
+			which are used to remap the colors used for printing
+			to compensate for different printers.
+    prologFile -	This file is put at the head of the PostScript file,
+			and can use two %d scanf() formats to take the page
+			width and page height.  The prolog file for the HP650C
+			is provided, to prevent it from spitting out E-Sized
+			sheets of paper constantly, even with A-size plots.
+
+
+
+

@@ -1,0 +1,29 @@
+<TITLE>Digital Systems Research Center: Note 1997-026</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Technical Note 1997-026</H1>
+<H1>Specifying the modification of extended state</H1>
+<HR>
+<H2>K. Rustan M. Leino</H2>
+Note #1997-026. October 30, 1997.
+<P>
+This paper explores the interpretation of specifications in the
+context of an object-oriented programming language with subclassing
+and method overrides, for example like Java.  In particular, the paper
+considers annotations for describing what variables a method may
+change and the interpretation of these annotations.  The paper shows
+that there is a problem to be solved in the specification of methods
+whose overrides may modify additional state introduced in
+subclasses.  As a solution to this problem, the paper introduces
+<I>data groups</I>, which enable modular checking and rather
+naturally capture a programmer's design decisions.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-026.ps.Z">PostScript compressed with UNIX compress</A></B> -- 83 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-026.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 68 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-026.ps.zip">PostScript compressed with ZIP</A></B> -- 69 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-026.ps">PostScript</A></B> -- 160 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-026.pdf">Portable Document Format (PDF)</A></B> -- 81 Kbytes<BR>
+</UL></P>

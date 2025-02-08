@@ -1,0 +1,30 @@
+xroute routes X packets from one machine to another. It is typically used
+to enable programs to run in an environment where a firewall does not route
+arbitrary packets between "internal" and "external" hosts. It's a handy 
+program to have around when dealing with the increasingly common situation of 
+having to run X programs to and from remote sites across internet gateways. 
+
+This release of xroute has the following new features:
+
++ More efficient routing. Previously, after a partial write, xroute used to 
+block until completion. Now, it never blocks unnecessarily.
+
++ You can optionally ask xroute to pop up a dialog box on whether to
+accept each incoming X connection. It uses the standard xdialog program to
+create the dialog box. Alternatively, you can easily plug in xmessage or any 
+similar utility.
+
++ Administration. xroute can be run as a server from inetd on a firewall, and
+users can request remote routes from their machine. This reduces the need
+for many users to have an account on the firewall machine. Additionally, it
+is possible to specify a limit on the number of clients per route, as well as 
+the allowable range of X displays.
+
+xroute is pretty portable. It compiles and run fine on various platforms.
+
+If you have any suggestions, questions, comments, etc, feel free to send me 
+mail.
+
+--
+Kartik Subbarao, Workstation Systems Division, Hewlett-Packard
+Internet: <subbarao@fc.hp.com>, Phone: (303) 229-3897, Fax: (303) 229-6858

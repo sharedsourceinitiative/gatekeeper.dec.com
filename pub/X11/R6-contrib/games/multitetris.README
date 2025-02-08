@@ -1,0 +1,61 @@
+                              MULTITETRIS (precompiled version)
+
+DESCRIPTION
+-----------
+
+Multitetris is a Tetris that will let you play either alone, or against a human
+opponent on a distant display (either cooperatively or in match).
+
+
+RUNNING MULTITETRIS
+-------------------
+
+Try one of
+
+multitetris
+      (single player)
+
+multitetris other.display:0
+      (match against an opponent)
+
+multitetris -cooperative other.display:0
+      (match in cooperation with an opponent)
+
+multitetris -myname Cedric
+      (to specify your name for the high score file)
+
+multitetris -3d
+      (to use 3d blocks)
+
+Type "multitetris -help" to get help.
+
+
+VERY SHORT MANUAL
+-----------------
+
+The button Start will start a new game. If you want to change the
+keymap, click in the Textfield under "Keymap" (which contains 'aspd '
+by default), and replace the mapping with yours.
+
+This mapping must be five characters long exactly, or it will be
+refused. Once it is typed, validate with RETURN. Characters are 
+in that order : move left, flip left, flip right, move right, fall.
+
+The text field below Keymap contains the name you want to use
+if you make it into the high scores. If you want to modify it,
+don't forget to press RETURN once you've typed it.
+
+
+FULL PACKAGE
+------------
+
+The sources can be retrieved on
+
+koala.inria.fr:/pub/multitetris-x.xx.tar.gz
+
+
+COMPLAINTS
+----------
+
+to beust@sophia.inria.fr (money equally welcome ;)).
+

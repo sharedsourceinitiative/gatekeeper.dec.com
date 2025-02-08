@@ -1,0 +1,60 @@
+File:       gatekeeper.hpl.hp.com/~ftp/README
+Revised:    17 May 2007 (Richard Schedler) <richard.schedler@hp.com>
+Revised:    30 May 2001 (Richard Schedler) <richard.schedler@compaq.com>
+Revised:    08 Jul 1999 (Richard Schedler) <schedler@pa.dec.com>
+
+***************************************************************************
+
+GATEKEEPER.HPL.HP.COM Public FTP Archive 
+Hewlett-Packard Company
+
+INTRODUCTION
+
+The FTP archive on gatekeeper.hpl.hp.com is provided by Hewlett Packard
+Laboratories.  Use entirely at your own risk - no warranty is expressed 
+or implied.  Questions about its operation should be sent to 
+<ftp-admin@hpl.hp.com>.
+
+*****************************************************************************
+
+FTP ACCESS
+
+Connect to gatekeeper.hpl.hp.com with your local FTP command.  Login as user 
+"anonymous", and use your email address as the password.  Below is a typical 
+anonymous FTP login example.  (Case doesn't matter, uppercase is used here 
+for illustration.)
+
+$ ftp gatekeeper.hpl.hp.com
+Connected to gatekeeper.hpl.hp.com.
+220- *** /etc/motd.ftp ***
+
+    [ message of the day deleted ]     
+
+220 gatekeeper.hpl.hp.com FTP server (Version 5.182 Mon Apr 3 17:48:00 PDT 2000) ready.
+Name (gatekeeper.hpl.hp.com:schedler): ANONYMOUS
+331 Guest login ok, send ident as password.
+Password: MYNAME@MYDOMAIN
+230 Guest login ok, access restrictions apply.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp> 
+
+Use the "cd" command to move between directories; the "ls" command to list
+directory contents; and, the "get" command to retrieve files.  
+
+*****************************************************************************
+
+WORLD WIDE WEB ACCESS
+
+The gatekeeper.hpl.hp.com home page is at URL:
+
+    http://gatekeeper.hpl.hp.com/
+
+Once there, just point and click.
+
+*****************************************************************************
+
+FTP Administrators, HP Labs
+ftp-admin@hpl.hp.com
+
+

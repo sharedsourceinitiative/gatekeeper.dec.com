@@ -1,0 +1,61 @@
+<html>
+<head>
+<title>DCPI-V2.3 Release Notes</title>
+</head>
+<body>
+<!--#include file="includes/title.html" -->
+<br>
+DCPI-V2.3 Release Notes
+</h1>
+<hr>
+<pre>
+Changes since release V2.2:
+
+- dcpid
+  - Added support for labelled profiles (see new dcpilabel command).
+  - Added support for classifying samples from dynamically-loaded
+    kernel modules. 
+  - Added support to identify "forked without exec" images (see new
+    -forkid option). 
+  - Added support for all non-external events on 21064 and 21164
+    processors. 
+  - Changed default log file name and location (see -log option).
+  - Status logging is now disabled by default (see -status option).
+  - Fixed a bug in sampling of bmiss events (was sampling something
+    else). 
+  - Fixed minor bugs that could occasionally misclassify samples as
+    "unknown". 
+
+- dcpilabel - new command
+  - It runs a specified program and labels all collected profiles with a
+    user-defined label.  This label can be passed to analysis tools to
+    focus their attention on just the profiles with the specified label.
+    This functionality can be used for example to compare two runs of a
+    program within the same epoch, or to find the samples that fall within
+    the kernel during the run of a program.
+
+- dcpitopstalls - new command
+  - It lists the stall instructions in one or more images sorted in
+    descending order of the cycles they take.
+
+- dcpiwhatcg
+  - Added support for examining multiple images
+  - Improved performance for images with a lot of unexecuted code
+
+- dcpicalc
+  - It now identifies "nops" in procedure summary and instruction listing
+  - It now chooses a font size for each basic blocks based on its importance
+  - It now omits the bodies of basic blocks that take trivial amounts of
+    time.  See -cutoff option for details.
+  - Improved heuristics for finding possible reasons for stalls
+
+- dcpicalc, dcpiwhatcg, dcpitopstalls, dcpilist
+  - Improved frequency estimates
+
+
+See man pages for details on these changes.
+</pre>
+<hr>
+<!--#include file="includes/dcpi-footer.html" -->
+</body>
+</html>

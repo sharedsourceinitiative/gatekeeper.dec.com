@@ -1,0 +1,37 @@
+<HTML><HEAD><TITLE>
+Digital Systems Research Center: Report 24</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Research Report 24</H1>
+<P>
+<H1>A Simple and Efficient Implementation for Small Databases.</H1>
+<HR>
+<H2>    Andrew D. Birrell, Michael B. Jones, and Edward P. Wobber.</H2>
+<b>January 30, 1988</b><BR><i> 13 pages</i>
+<P>
+    This paper describes a technique for implementing the sort of small
+    databases that frequently occur in the design of operating systems
+    and distributed systems.  We take advantage of the existence of very
+    large virtual memories, and quite large real memories, to make the
+    technique feasible.  We maintain the database as a strongly typed
+    data structure in virtual memory, record updates incrementally on
+    disk in a log, and occasionally make a checkpoint of the entire
+    database.  We recover from crashes by restoring the database from
+    an old checkpoint, then replaying the log.  We use existing packages
+    to convert between strongly typed data objects and their disk
+    representations, and to communicate strongly typed data across the
+    network (using remote procedure calls).  Our memory is managed entirely
+    by a general purpose allocator and garbage collector.  This scheme
+    has been used to implement a name server for a distributed system.
+    The resulting implementation has the desirable property of being
+    simultaneously simple, efficient, and reliable.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-024.ps.Z">PostScript compressed with UNIX compress</A></B> -- 136 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-024.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 120 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-024.ps.zip">PostScript compressed with ZIP</A></B> -- 120 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-024.ps">PostScript</A></B> -- 248 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

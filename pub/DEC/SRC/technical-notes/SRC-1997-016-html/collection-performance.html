@@ -1,0 +1,903 @@
+<HTML>
+<HEAD>
+<TITLE>
+5.  Profiling Performance - Continuous Profiling: Where Have All the Cycles Gone?
+</TITLE>
+</HEAD>
+
+<BODY>
+
+<H1>
+<CENTER>
+<A HREF="sosp97.html">Continuous Profiling: Where Have All the Cycles Gone?</A>
+<P>
+5.  Profiling Performance
+</CENTER>
+</H1>
+
+<P>
+Performance is critical to the success of a profiling system intended
+to run continuously on production systems.  The
+system must collect many thousands of samples per second yet incur
+sufficiently low overhead that its benefits outweigh its costs.  In
+this section we summarize the results of experiments designed to
+measure the performance of our system and to explore tradeoffs in its
+design.
+</P>
+
+<P>
+
+We evaluated our profiling system's performance under three different
+configurations: <I>cycles</I>, in which the system monitors only
+cycles, <I>default</I>, in which the system monitors both cycles and
+instruction-cache misses, and <I>mux</I>, in which the system monitors
+cycles with one performance counter and uses multiplexing to monitor
+instruction-cache misses, data-cache misses, and branch mispredictions
+with another counter.  Table 2 shows the workloads
+used, their average running times (from a minimum of 10 runs, shown
+with 95%-confidence intervals) in the <I>base</I> configuration
+without our system, and the machines on which they ran.
+</P>
+
+<P>
+
+<CENTER>
+<TABLE BORDER=2 CELLSPACING=2 CELLPADDING=4>
+    <TR><TH> Workload </TH>
+        <TH> Mean <I> base</I> runtime (secs) </TH>
+        <TH> Platform </TH>
+        <TH> Description </TH>
+    </TR>
+    <TR><TD COLSPAN=4 ALIGN=CENTER> <I> Uniprocessor Workloads</I> </TD>
+    <TR><TD ALIGN=LEFT> SPECint95 </TD>
+        <TD ALIGN=CENTER> 13226 &plusmn 258 </TD>
+        <TD ALIGN=LEFT> 333 MHz ALPHASTATION 500 </TD>
+	<TD ROWSPAN=2> The SPEC benchmark suite compiled using both
+	the BASE and PEAK compilation flags and run with the <I>
+	runspec </I> driver<A HREF="references.html#SPEC95">[SPEC95]<A>.</TD>
+    </TR>
+    <TR><TD ALIGN=LEFT> SPECfp95 </TD>
+        <TD ALIGN=CENTER> 17238 &plusmn 106 </TD>
+        <TD ALIGN=LEFT> 333 MHz ALPHASTATION 500 </TD>
+    </TR>
+    <TR><TD ALIGN=LEFT> x11perf </TD>
+        <TD ALIGN=CENTER>  N/A </TD>
+        <TD ALIGN=LEFT> 333 MHz  ALPHASTATION 500 </TD> 
+	<TD>Several tests from the x11perf X server performance
+	testing program.  The tests chosen are representative of CPU-bound
+	tests<A HREF="references.html#McCKAK">[McCKAK]</A>.</TD>
+    </TR>
+    <TR><TD ALIGN=LEFT> McCalpin </TD>
+        <TD ALIGN=CENTER> N/A </TD>
+        <TD ALIGN=LEFT>333 MHz ALPHASTATION 500 </TD>
+	<TD> The McCalpin STREAMS benchmark, consisting of
+	four loops that measure memory-system bandwidth
+        <A HREF="references.html#McC95">[McC95]</A>.</TD>
+    </TR>
+    <TR><TD COLSPAN=4 ALIGN=CENTER> <I> Multiprocessor Workloads</I> </TD>
+    <TR><TD ALIGN=LEFT> AltaVista </TD>
+        <TD ALIGN=CENTER> 319 &plusmn 2 </TD>
+        <TD ALIGN=LEFT> 300 MHz 4-CPU ALPHASERVER 4100 </TD>
+	<TD> A trace of 28622 queries made to the 3.5 GB AltaVista news
+	index.  The system was driven so as to maintain 8 outstanding 
+	queries.</TD>
+    </TR>
+    <TR><TD ALIGN=LEFT> DSS </TD>
+        <TD ALIGN=CENTER> 2786 &plusmn 35 </TD>
+        <TD ALIGN=LEFT> 300 MHz 8-CPU ALPHASERVER 8400 </TD>
+	<TD> A decision-support system (DSS) query based upon the
+    	TPC-D specification<A HREF="references.html#TPPC">[TPPC]</A>.</TD>
+    </TR>
+    <TR><TD ALIGN=LEFT> parallel SPECfp </TD>
+        <TD ALIGN=CENTER>  2777 &plusmn 168 </TD>
+        <TD ALIGN=LEFT> 300 MHz 4-CPU ALPHASERVER 4100 </TD>
+	<TD> The SPECfp95 programs, parallelized by the Stanford
+	SUIF compiler<A HREF="references.html#Hal96">[Hal96]</A>.</TD>
+    </TR>
+    <TR><TD ALIGN=LEFT> timesharing </TD>
+        <TD ALIGN=CENTER> 7 days </TD>
+        <TD ALIGN=LEFT> 300 MHz 4-CPU ALPHASERVER 4100 </TD>
+	<TD> A timeshared server used for office and technical
+	applications, running the <I> default </I> configuration of our
+	system. We used this workload to gather statistics for a
+	long-running profile session.</TD>
+    </TR>
+</TABLE>
+</CENTER>
+
+<!--
+---------------------------------------------------------------------
+\begin{tabular}{|l|c|l|l|}
+\hline
+Workload	& Mean {\it base} & Platform & Description\\
+        	& runtime (secs)  &                & \\
+\hline
+\multicolumn{4}{c}{{\it Uniprocessor workloads}}\\ 
+\hline
+
+SPECint95  & 13226 $\pm$ 258 & 333 MHz {\sc AlphaStation} 500 & 
+	The {\sc spec} benchmark suite compiled using both the {\sc base} and \\
+
+\cline{1-3}
+SPECfp95   & 17238 $\pm $106 & 333 MHz {\sc AlphaStation} 500 & 
+	\parbox{2.950in}{{\sc peak} compilation flags and run with the {\it runspec} driver~\cite{SPEC95}.\vspace{.05in}}\\
+
+\hline
+x11perf   & N/A  & 333 MHz {\sc AlphaStation} 500 & 
+	\parbox{2.950in}{\vspace{.05in}Several tests from the x11perf X server performance
+	testing program.  The tests chosen are representative of CPU-bound
+	tests~\cite{x11perf}.\vspace{.05in}} \\
+\hline
+McCalpin & N/A & 333 MHz {\sc AlphaStation} 500 &
+	\parbox{2.950in}{\vspace{.05in}The McCalpin {\sc streams} benchmark, consisting of
+	four loops that measure memory-system bandwidth~\cite{mccalpin}.\vspace{.05in}} \\
+\hline
+
+\multicolumn{4}{c}{{\it Multiprocessor workloads}} \\
+\hline
+AltaVista & 319 $\pm$ 2  & 300 MHz 4-CPU {\sc alphaserver} 4100 &
+	 \parbox{2.950in}{\vspace{.05in}A trace of 28622 queries made to the 3.5 GB AltaVista news
+	index.  The system was driven so as to maintain 8 outstanding queries.\vspace{.05in}} \\
+\hline
+DSS   & 2786 $\pm$ 35 & 300 MHz 8-CPU {\sc alphaserver} 8400 &
+	\parbox{2.950in}{\vspace{.05in}A decision-support system (DSS) query based upon the TPC-D specification~\cite{TPC-D}.\vspace{.05in}} \\
+\hline
+\parbox{0.4in}{parallel {\sc spec}fp}  & 2777 $\pm$ 168 & 300 MHz 4-CPU {\sc alphaserver} 4100 &
+	\parbox{2.950in}{\vspace{.05in}The SPECfp95 programs, parallelized by the Stanford
+	{\sc SUIF} compiler~\cite{Hall+:Computer96}.\vspace{.05in}} \\
+\hline
+timesharing  & 7 days & 300 MHz 4-CPU {\sc alphaserver} 4100 &
+	\parbox{2.950in}{\vspace{.05in}A timeshared server used for office and technical applications,
+	running the {\it default} configuration of our system. We used this workload
+	to gather statistics for a long-running profile session.\vspace{.05in}} \\
+\hline
+\end{tabular}
+-----------------------------------------------------------------------
+-->
+
+<CENTER>
+<B>Table 2:  Description of Workloads.</B>
+</CENTER>
+
+<H2><A NAME="overall-overhead">5.1.  Aggregate Time Overhead</A></H2>
+
+
+<P>
+To measure the overhead, we ran each workload a minimum of 10 times in
+each configuration, and ran many workloads as many as 50 times.
+Table 3 shows the percentage overhead (with
+95%-confidence intervals) imposed by the three different
+configurations of our system compared to the <I>base</I> configuration.
+(The timesharing workload is not included in the table; since it was
+measured on a live system, we cannot run it in each configuration to
+determine overall slowdown.)  McCalpin and x11perf report their
+results as rates (MB/sec for McCalpin, and operations/sec for
+x11perf); for these, the table shows the degradation of the rates.
+For the other workloads, the table shows the increase in running time.
+The numbers in Table 3 show that the overall
+overhead imposed by our system is quite low, usually 1 to 3%.  The
+variation in performance from run to run of each workload is typically
+much greater than our system's overhead.
+</P>
+
+<CENTER>
+<TABLE BORDER=2 CELLSPACING=2 CELLPADDING=4>
+    <TR><TH> Workload </TH>
+        <TH> <I> cycles (%) </I> </TH>
+        <TH> <I> default (%) </I> </TH>
+        <TH> <I> mux (%) </I> </TH>
+    </TR>
+    <TR><TD COLSPAN=4 ALIGN=CENTER> <I> Uniprocessor Workloads</I> </TD>
+    <TR><TD ALIGN=LEFT> SPECint95 </TD>
+        <TD ALIGN=CENTER> 2.0 &plusmn 0.8 </TD>
+        <TD ALIGN=CENTER> 2.8 &plusmn 0.9 </TD>
+        <TD ALIGN=CENTER> 3.0 &plusmn 0.7 </TD>
+    </TR>
+    <TR><TD ALIGN=LEFT> SPECfp95 </TD>
+        <TD ALIGN=CENTER> 0.6 &plusmn 1.0 </TD>
+        <TD ALIGN=CENTER> 0.5 &plusmn 1.1 </TD>
+        <TD ALIGN=CENTER> 1.1 &plusmn 1.1 </TD>
+    </TR>
+    <TR><TD ALIGN=LEFT> x11perf </TD>
+        <TD COLSPAN=3> <BR> </TD>
+    </TR>
+    <TR><TD ALIGN=LEFT> &nbsp &nbsp noop</TD>
+        <TD ALIGN=CENTER> 1.6 &plusmn 0.5 </TD>
+        <TD ALIGN=CENTER> 1.9 &plusmn 0.5 </TD>
+        <TD ALIGN=CENTER> 2.2 &plusmn 0.5 </TD>
+    </TR>
+    <TR><TD ALIGN=LEFT> &nbsp &nbsp circle10</TD>
+        <TD ALIGN=CENTER> 2.8 &plusmn 0.6 </TD>
+        <TD ALIGN=CENTER> 2.4 &plusmn 0.4 </TD>
+        <TD ALIGN=CENTER> 2.4 &plusmn 0.4 </TD>
+    </TR>
+    <TR><TD ALIGN=LEFT> &nbsp &nbsp ellipse10</TD>
+        <TD ALIGN=CENTER> 1.5 &plusmn 0.2 </TD>
+        <TD ALIGN=CENTER> 1.8 &plusmn 0.2 </TD>
+        <TD ALIGN=CENTER> 2.3 &plusmn 0.4 </TD>
+    </TR>
+    <TR><TD ALIGN=LEFT> &nbsp &nbsp 64poly10</TD>
+        <TD ALIGN=CENTER> 1.1 &plusmn 0.4 </TD>
+        <TD ALIGN=CENTER> 2.0 &plusmn 0.5 </TD>
+        <TD ALIGN=CENTER> 2.4 &plusmn 0.6 </TD>
+    </TR>
+    <TR><TD ALIGN=LEFT> &nbsp &nbsp ucreate </TD>
+        <TD ALIGN=CENTER> 2.7 &plusmn 0.7 </TD>
+        <TD ALIGN=CENTER> 4.2 &plusmn 0.7 </TD>
+        <TD ALIGN=CENTER> 5.0 &plusmn 0.7 </TD>
+    </TR>
+    <TR><TD ALIGN=LEFT> McCalpin </TD>
+        <TD COLSPAN=3> <BR> </TD>
+    </TR>
+    <TR><TD ALIGN=LEFT> &nbsp &nbsp assign </TD>
+        <TD ALIGN=CENTER> 0.9 &plusmn 0.1 </TD>
+        <TD ALIGN=CENTER> 0.9 &plusmn 0.1 </TD>
+        <TD ALIGN=CENTER> 1.1 &plusmn 0.1 </TD>
+    </TR>
+    <TR><TD ALIGN=LEFT> &nbsp &nbsp saxpy </TD>
+        <TD ALIGN=CENTER> 1.0 &plusmn 0.1 </TD>
+        <TD ALIGN=CENTER> 1.1 &plusmn 0.1 </TD>
+        <TD ALIGN=CENTER> 1.3 &plusmn 0.1 </TD>
+    </TR>
+    <TR><TD ALIGN=LEFT> &nbsp &nbsp scale </TD>
+        <TD ALIGN=CENTER> 1.1 &plusmn 0.1 </TD>
+        <TD ALIGN=CENTER> 1.1 &plusmn 0.1 </TD>
+        <TD ALIGN=CENTER> 1.2 &plusmn 0.1 </TD>
+   </TR>
+    <TR><TD ALIGN=LEFT> &nbsp &nbsp sum </TD>
+        <TD ALIGN=CENTER> 1.1 &plusmn 0.1 </TD>
+        <TD ALIGN=CENTER> 1.1 &plusmn 0.1 </TD>
+        <TD ALIGN=CENTER> 1.2 &plusmn 0.1 </TD>
+   </TR>
+    <TR><TD COLSPAN=4 ALIGN=CENTER> <I> Multiprocessor Workloads</I> </TD>
+    <TR><TD ALIGN=LEFT> AltaVista </TD>
+        <TD ALIGN=CENTER> 0.5 &plusmn 0.8 </TD>
+        <TD ALIGN=CENTER> 1.3 &plusmn 1.8 </TD>
+        <TD ALIGN=CENTER> 1.6 &plusmn 0.5 </TD>
+    </TR>
+    <TR><TD ALIGN=LEFT> DSS </TD>
+        <TD ALIGN=CENTER> 1.2 &plusmn 1.1 </TD>
+        <TD ALIGN=CENTER> 1.8 &plusmn 2.6 </TD>
+        <TD ALIGN=CENTER> 0.6 &plusmn 0.3 </TD>
+    </TR>
+    <TR><TD ALIGN=LEFT> parallel SPECfp </TD>
+        <TD ALIGN=CENTER> 6.0 &plusmn 3.5 </TD>
+        <TD ALIGN=CENTER> 3.1 &plusmn 1.8 </TD>
+        <TD ALIGN=CENTER> 7.5 &plusmn 4.6 </TD>
+    </TR>
+</TABLE>
+</CENTER>
+
+<!--
+---------------------------------------------------------------------
+\begin{tabular}{|l||r|r|r|}
+\hline
+	
+Workload	& \multicolumn{1}{|c|}{{\it cycles (\%)}}
+         	& \multicolumn{1}{|c|}{{\it default (\%)}}	
+                & \multicolumn{1}{|c|}{{\it mux (\%)}}	\\\hline
+
+\multicolumn{4}{c}{{\it Uniprocessor workloads}}\\
+\hline
+SPECint95             & $2.0 \pm 0.8$  & $2.8 \pm 0.9$  & $3.0 \pm 0.7$ \\
+\hline
+SPECfp95              & $0.6 \pm 1.0$  & $0.5 \pm 1.1$  & $1.1 \pm 1.1$ \\
+\hline
+x11perf & & & \\
+\ \ \ \ \  noop      & $1.6 \pm 0.5$  & $1.9 \pm 0.5$  & $2.2 \pm 0.5$ \\
+\ \ \ \ \  circle10  & $2.8 \pm 0.6$  & $2.4 \pm 0.4$  & $2.4 \pm 0.4$ \\
+\ \ \ \ \  ellipse10  & $1.5 \pm 0.2$  & $1.8 \pm 0.2$  & $2.3 \pm 0.4$ \\
+\ \ \ \ \  64poly10  & $1.1 \pm 0.4$  & $2.0 \pm 0.5$  & $2.4 \pm 0.6$ \\
+\ \ \ \ \  ucreate   & $2.7 \pm 0.7$  & $4.2 \pm 0.7$  & $5.0 \pm 0.7$ \\
+\hline
+McCalpin & & & \\
+\ \ \ \ \ assign     & $0.9 \pm 0.1$  & $0.9 \pm 0.1$  & $1.1 \pm 0.1$ \\
+\ \ \ \ \ saxpy      & $1.0 \pm 0.1$  & $1.1 \pm 0.1$  & $1.3 \pm 0.1$ \\
+\ \ \ \ \ scale      & $1.1 \pm 0.1$  & $1.1 \pm 0.1$  & $1.2 \pm 0.1$ \\
+\ \ \ \ \ sum        & $1.1 \pm 0.1$  & $1.1 \pm 0.1$  & $1.2 \pm 0.1$ \\
+\hline
+\multicolumn{4}{c}{{\it Multiprocessor workloads}}\\
+\hline
+AltaVista            & $0.5 \pm 0.8$  & $1.3 \pm 1.8$  & $1.6 \pm 0.5$ \\
+\hline
+\dss                 & $1.2 \pm 1.1$  & $1.8 \pm 2.6$  & $0.6 \pm 0.3$ \\
+\hline
+parallel {\sc spec}fp  & $6.0 \pm 3.5$  & $3.1 \pm 1.8$  & $7.5 \pm 4.6$ \\
+\hline
+\end{tabular}
+---------------------------------------------------------------------
+-->
+
+<CENTER>
+<B>Table 3:  Overall Slowdown (in percent).</B>
+</CENTER>
+
+</P>
+
+<P>
+Figure 6 shows the data in more detail for three
+programs: AltaVista; the gcc portion of the SPECint95 workload (peak
+version); and the wave5 portion of the SPECfp95 workload (peak
+version).  Each graph gives a scatter plot of the running times in
+seconds for all four configurations.  The x-axis is centered at the
+mean <I>base</I> value; the range of the y-axis is from 90%
+to 135% of the mean value.  95%-confidence intervals
+are also shown.
+</P>
+
+<HR>
+<CENTER>
+
+<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0>
+<TR><TD><IMG SRC="av.gif" ALIGN=CENTER></TD></TR>
+<TR><TD><IMG SRC="gcc.gif" ALIGN=CENTER></TD></TR>
+<TR><TD><IMG SRC="wave5.gif" ALIGN=CENTER></TD></TR>
+</TABLE>
+</CENTER>
+
+<CENTER>
+<B>Figure 6:  Distribution of running times.</B>
+</CENTER>
+<HR>
+
+<P>
+AltaVista is representative of the majority of the workloads that we
+studied: the profiling overhead is small and there is little variance
+across the different runs.  In contrast, our system incurs relatively
+high overhead on gcc (about 4% to 10%).  This benchmark
+compiles 56 pre-processed source files into assembly files; each file
+requires a separate invocation of the program and thus has a distinct
+PID.  Since samples with distinct PID's do not match in the hash
+table, the eviction rate is high, resulting in higher overhead (see
+section 5.2).  Finally, the wave5 data shows
+an apparent speedup from running DCPI in our experiments.  In this and
+similar cases, the running time variance exceeded our profiling
+overhead.
+</P>
+
+<P>
+The overheads we measured are likely to be slightly higher than would
+be experienced in practice, since as discussed in the next section,
+all measurements were done using an instrumented version of the system
+that logged additional statistics, imposing overhead that would not
+normally be incurred.
+</P>
+
+<H2><A NAME="component-overhead">5.2.  Components of Time Overhead</A></H2>
+
+<P>
+There are two main components to our system's overhead.  First is
+the time to service performance-counter interrupts.  Second is the
+time to read samples from the device driver into the daemon and merge
+the samples into the on-disk profiles for the appropriate images.
+To investigate the cost of these two components, 
+we performed all the experiments with 
+our system instrumented to collect several statistics: (1)
+the number of cycles spent in our interrupt handler,
+collected separately for the cases when samples hit or miss 
+in the hash table;
+(2) the eviction rate from the
+hash table; and (3) the total number of samples observed.  For real
+workloads, we are able to directly measure only the time spent in our
+interrupt handler, which does not include the time to deliver the
+interrupt nor the time to return from the interrupt handler.
+Experimentation with a tight spin loop revealed the best-case
+interrupt setup and teardown time to be around 214 cycles (not
+including our interrupt handler itself).  Under real
+workloads, this value is likely to increase due to additional
+instruction-cache misses.
+</P>
+
+<P>
+To evaluate the daemon's per-sample cost of processing, all
+experiments were configured to gather per-process samples for the daemon
+itself; this showed how many cycles were spent both in the
+daemon and in the kernel on behalf of the daemon.
+Dividing this by the total number of samples processed by the driver gives
+the per-sample processing time in the daemon.
+(The per-sample
+metric is used to allow comparison with the per-sample time in the
+interrupt handler, and is different from the time spent processing each
+entry from the overflow buffer (since multiple samples are "processed"
+for entries with counts higher than one).)
+</P>
+
+<P>
+These statistics are summarized for each workload in
+Table 4 for each of the three profiling
+configurations.  We also separately measured the
+statistics for the gcc program in the SPECint95 workload to show the
+effects of a high eviction rate.  The table shows that workloads with
+low eviction rates, such as
+SPECfp95 and AltaVista, not only spend less time processing each interrupt
+(because a hit in the hash table is faster), but also spend less time
+processing each sample in the daemon because many samples are
+aggregated into a single entry before being evicted from the hash
+table.  For workloads with a high eviction rate, the average interrupt
+cost is higher; in addition, the higher eviction rate leads to more
+overflow entries and a higher per-sample cost in the daemon.
+</P>
+
+
+<CENTER>
+<TABLE  BORDER=2 CELLSPACING=2 CELLPADDING=4>
+
+    <TR ALIGN="center">
+	<TH ROWSPAN=3> Workload </TH>
+	<TH ROWSPAN=14> </TH>
+	<TH COLSPAN=3> <I> cycles </I> </TH>
+	<TH ROWSPAN=14> </TH>
+	<TH COLSPAN=3> <I> default </I> </TH>
+	<TH ROWSPAN=14> </TH>
+	<TH COLSPAN=3> <I> mux </I> </TH>
+    </TR>
+    <TR ALIGN="center">
+	<TH ROWSPAN=2> miss rate </TH>
+	<TH COLSPAN=2> per sample cost (cycles) </TH>
+	<TH ROWSPAN=2> miss rate </TH>
+	<TH COLSPAN=2> per sample cost (cycles) </TH>
+	<TH ROWSPAN=2> miss rate </TH>
+	<TH COLSPAN=2> per sample cost (cycles) </TH>
+    </TR>
+    <TR ALIGN="center">
+	<TH> intr cost avg (hit/miss) </TH>
+	<TH> daemon cost </TH>
+	<TH> intr cost avg (hit/miss) </TH>
+	<TH> daemon cost </TH>
+	<TH> intr cost avg (hit/miss) </TH>
+	<TH> daemon cost </TH>
+    </TR>
+
+    <TR><TD COLSPAN=13>
+    </TR>
+
+    <TR ALIGN="right">
+	<TD ALIGN="left"> SPECint95 </TD>
+	<TD>  6.7% </TD>
+	<TD>  435 (416/700)  </TD>
+	<TD> 175  </TD>
+	<TD>  9.5% </TD>
+	<TD>  451 (430/654)  </TD>
+	<TD> 245  </TD>
+	<TD>  9.5% </TD>
+	<TD>  582 (554/842)  </TD>
+	<TD> 272  </TD>
+    </TR>
+    <TR ALIGN="right">
+	<TD ALIGN="left"> gcc </TD>
+	<TD> 38.1% </TD>
+	<TD>  551 (450/716)  </TD>
+	<TD> 781  </TD>
+	<TD> 44.5% </TD>
+	<TD>  550 (455/669)  </TD>
+	<TD> 927  </TD>
+	<TD> 44.2% </TD>
+	<TD>  667 (558/804)  </TD>
+	<TD> 982  </TD>
+    </TR>
+
+    <TR ALIGN="right">
+	<TD ALIGN="left"> SPECfp95 </TD>
+	<TD>  0.6% </TD>
+	<TD>  486 (483/924)  </TD>
+	<TD>  59  </TD>
+	<TD>  1.4% </TD>
+	<TD>  437 (433/752)  </TD>
+	<TD>  95  </TD>
+	<TD>  1.5% </TD>
+	<TD>  544 (539/883)  </TD>
+	<TD> 107  </TD>
+    </TR>
+
+    <TR ALIGN="right">
+	<TD ALIGN="left"> x11perf </TD>
+	<TD>  2.1% </TD>
+	<TD>  464 (454/915)  </TD>
+	<TD> 178  </TD>
+	<TD>  5.6% </TD>
+	<TD>  454 (436/763)  </TD>
+	<TD> 266  </TD>
+	<TD>  5.5% </TD>
+	<TD>  567 (550/868)  </TD>
+	<TD> 289  </TD>
+    </TR>
+
+    <TR ALIGN="right">
+	<TD ALIGN="left"> McCalpin </TD>
+	<TD>  0.7% </TD>
+	<TD>  388 (384/1033)  </TD>
+	<TD>  51  </TD>
+	<TD>  1.4% </TD>
+	<TD>  391 (384/916)  </TD>
+	<TD>  70  </TD>
+	<TD>  1.1% </TD>
+	<TD>  513 (506/1143)  </TD>
+	<TD>  72  </TD>
+    </TR>
+
+    <TR><TD COLSPAN=13>
+    </TR>
+
+    <TR ALIGN="right">
+	<TD ALIGN="left"> AltaVista </TD>
+	<TD>  0.5% </TD>
+	<TD>  343 (340/748)  </TD>
+	<TD>  21  </TD>
+	<TD>  1.7% </TD>
+	<TD>  349 (344/661)  </TD>
+	<TD>  56  </TD>
+	<TD>  1.6% </TD>
+	<TD>  387 (382/733)  </TD>
+	<TD>  47  </TD>
+    </TR>
+
+    <TR ALIGN="right">
+	<TD ALIGN="left"> DSS </TD>
+	<TD>  0.5% </TD>
+	<TD>  230 (227/755)  </TD>
+	<TD>  41  </TD>
+	<TD>  0.9% </TD>
+	<TD>  220 (216/660)  </TD>
+	<TD>  49  </TD>
+	<TD>  0.9% </TD>
+	<TD>  278 (273/815)  </TD>
+	<TD>  60  </TD>
+    </TR>
+
+    <TR ALIGN="right">
+	<TD ALIGN="left"> parallel SPECfp </TD>
+	<TD>  0.3% </TD>
+	<TD>  356 (354/847)  </TD>
+	<TD>  29  </TD>
+	<TD>  0.7% </TD>
+	<TD>  355 (352/713)  </TD>
+	<TD>  47  </TD>
+	<TD>  0.9% </TD>
+	<TD>  444 (440/854)  </TD>
+	<TD>  58  </TD>
+    </TR>
+
+    <TR ALIGN="right">
+	<TD ALIGN="left"> timesharing </TD>
+	<TD COLSPAN=3 ALIGN="center"> not measured  </TD>
+	<TD> 0.7% </TD>
+	<TD> 202 (199/628) </TD>
+	<TD> 66 </TD>
+	<TD COLSPAN=3 ALIGN="center"> not measured  </TD>
+    </TR>
+
+</TABLE>
+</CENTER>
+
+<!--
+---------------------------------------------------------------------
+\begin{tabular}{|l||r|r|r||r|r|r||r|r|r||}
+\hline
+ 	& \multicolumn{3}{c||}{{\it cycles}}	& \multicolumn{3}{c||}{{\it default}} & \multicolumn{3}{c||}{{\it mux}}\\
+\cline{2-10}
+ 	& & \multicolumn{2}{c||}{per sample cost (cycles)}	& & \multicolumn{2}{c||}{per sample cost (cycles)}	& & \multicolumn{2}{c||}{per sample cost (cycles)}	\\
+\cline{3-4}\cline{6-7}\cline{9-10}
+\multicolumn{1}{|c||}{Workload} 
+& \multicolumn{1}{|c|}{miss} & \multicolumn{1}{|c|}{intr cost} &  \multicolumn{1}{|c||}{daemon} 
+& \multicolumn{1}{|c|}{miss} & \multicolumn{1}{|c|}{intr cost} &  \multicolumn{1}{|c||}{daemon} 
+& \multicolumn{1}{|c|}{miss} & \multicolumn{1}{|c|}{intr cost} &  \multicolumn{1}{|c||}{daemon} \\
+
+& \multicolumn{1}{|c|}{rate} & \multicolumn{1}{|c|}{avg (hit/miss)} &  \multicolumn{1}{|c||}{cost}
+& \multicolumn{1}{|c|}{rate} & \multicolumn{1}{|c|}{avg (hit/miss)} &  \multicolumn{1}{|c||}{cost}
+& \multicolumn{1}{|c|}{rate} & \multicolumn{1}{|c|}{avg (hit/miss)} &  \multicolumn{1}{|c||}{cost} \\
+\hline
+\specint        &  6.7\% &  435 (416/700)  & 175  &  9.5\% &  451 (430/654)  & 245  &  9.5\% &  582 (554/842)  & 272  \\
+gcc             & 38.1\% &  551 (450/716)  & 781  & 44.5\% &  550 (455/669)  & 927  & 44.2\% &  667 (558/804)  & 982  \\
+\specfp         &  0.6\% &  486 (483/924)  &  59  &  1.4\% &  437 (433/752)  &  95  &  1.5\% &  544 (539/883)  & 107  \\
+x11perf         &  2.1\% &  464 (454/915)  & 178  &  5.6\% &  454 (436/763)  & 266  &  5.5\% &  567 (550/868)  & 289  \\
+McCalpin        &  0.7\% &  388 (384/1033)  &  51  &  1.4\% &  391 (384/916)  &  70  &  1.1\% &  513 (506/1143)  &  72  \\
+\hline         AltaVista       &  0.5\% &  343 (340/748)  &  21  &  1.7\% &  349 (344/661)  &  56  &  1.6\% &  387 (382/733)  &  47  \\
+\dss            &  0.5\% &  230 (227/755)  &  41  &  0.9\% &  220 (216/660)  &  49  &  0.9\% &  278 (273/815)  &  60  \\
+parallel {\sc spec}fp &  0.3\% &  356 (354/847)  &  29  &  0.7\% &  355 (352/713)  &  47  &  0.9\% &  444 (440/854)  &  58  \\
+\cline{2-4}\cline{8-10}timesharing     & \multicolumn{3}{|c||}{not measured}  &  0.7\% & 202 (199/628)   &  66  & \multicolumn{3}{|c||}{not measured}  \\
+\hline
+\end{tabular}
+---------------------------------------------------------------------
+-->
+
+<CENTER>
+<B>Table 4:  Time overhead components.</B>
+</CENTER>
+
+<H2>5.3. Aggregate Space Overhead</H2>
+
+<P>
+Memory and disk resources are also important. Memory is consumed by both the
+device driver and the daemon, while disk space is used to
+store nonvolatile profile data.
+</P>
+
+<P>
+As described in <A HREF="collection.html">Section 4</A>, the device driver
+maintains a hash table and a pair of overflow buffers for each
+processor in non-pageable kernel memory.  In all of our experiments,
+each overflow buffer held 8K samples and each hash table held 16K
+samples, for a total of 512KB of kernel memory per processor.
+</P>
+
+<P>
+The daemon consumes ordinary pageable memory.  It allocates a buffer
+large enough to flush one overflow buffer or hash table per processor,
+as well as data structures for every active process and image.  Memory
+usage grows with the number of active processes, and also depends upon
+workload locality.  Per-process data structures are reaped
+infrequently (by default, every 5 minutes), and samples for each image
+are buffered until saved to disk (by default, every 10 minutes); as a
+result, the daemon's worst-case memory consumption occurs when the
+profiled workload consists of many short-lived processes or processes
+with poor locality.
+</P>
+
+<P>
+Table 5 presents the average and peak
+resident memory (both text and data) used by the daemon
+for each workload.  For most workloads, memory usage
+is modest.  The week-long timesharing workload, running on
+a four-processor compute server with hundreds of active processes,
+required the most memory.  However, since this multiprocessor has 4GB
+of physical memory, the overall fraction of memory devoted to our
+profiling system is less than 0.5%.
+</P>
+
+<CENTER>
+<TABLE  BORDER=2 CELLSPACING=2 CELLPADDING=4>
+
+    <TR ALIGN="center">
+	<TH ROWSPAN=3> Workload </TH>
+	<TH ROWSPAN=14> </TH>
+	<TH COLSPAN=3> <I> cycles </I> </TH>
+	<TH ROWSPAN=14> </TH>
+	<TH COLSPAN=3> <I> default </I> </TH>
+	<TH ROWSPAN=14> </TH>
+	<TH COLSPAN=3> <I> mux </I> </TH>
+    </TR>
+    <TR ALIGN="center">
+	<TH ROWSPAN=2> Uptime </TH>
+	<TH COLSPAN=2> Space (KBytes) </TH>
+	<TH ROWSPAN=2> Uptime </TH>
+	<TH COLSPAN=2> Space (KBytes) </TH>
+	<TH ROWSPAN=2> Uptime </TH>
+	<TH COLSPAN=2> Space (KBytes) </TH>
+    </TR>
+    <TR ALIGN="center">
+	<TH> Memory avg (peak) </TH>
+	<TH> Disk usage </TH>
+	<TH> Memory avg (peak) </TH>
+	<TH> Disk usage </TH>
+	<TH> Memory avg (peak) </TH>
+	<TH> Disk usage </TH>
+    </TR>
+    <TR><TD COLSPAN=13>
+    </TR>
+    <TR ALIGN="right">
+	<TD ALIGN="left"> SPECint95 </TD>
+	<TD> 14:57:50 </TD>
+	<TD> 6600 (8666) </TD>
+	<TD> 2639 </TD>
+	<TD> 15:00:36 </TD>
+	<TD> 8284 (13500) </TD>
+	<TD> 4817 </TD>
+	<TD> 15:08:45 </TD>
+	<TD> 8804 (11250) </TD>
+	<TD> 6280 </TD>
+    </TR>
+    <TR ALIGN="right">
+	<TD ALIGN="left"> gcc </TD>
+	<TD> 5:49:37 </TD>
+	<TD> 8862 (11250) </TD>
+	<TD> 1753 </TD>
+	<TD> 5:42:10 </TD>
+	<TD> 9284 (9945) </TD>
+	<TD> 3151 </TD>
+	<TD> 5:47:44 </TD>
+	<TD> 11543 (12010) </TD>
+	<TD> 4207 </TD>
+    </TR>
+    <TR ALIGN="right">
+	<TD ALIGN="left"> SPECfp95 </TD>
+	<TD> 19:15:20 </TD>
+	<TD> 2364 (3250) </TD>
+	<TD> 1396 </TD>
+	<TD> 19:14:17 </TD>
+	<TD> 2687 (3750) </TD>
+	<TD> 2581 </TD>
+	<TD> 19:22:37 </TD>
+	<TD> 2958 (3800) </TD>
+	<TD> 3182 </TD>
+    </TR>
+    <TR ALIGN="right">
+	<TD ALIGN="left"> x11perf </TD>
+	<TD> 0:21:25 </TD>
+	<TD> 1586 (1750) </TD>
+	<TD> 216 </TD>
+	<TD> 0:20:58 </TD>
+	<TD> 1786 (1917) </TD>
+	<TD> 356 </TD>
+	<TD> 0:21:31 </TD>
+	<TD> 1959 (2141) </TD>
+	<TD> 434 </TD>
+    </TR>
+    <TR ALIGN="right">
+	<TD ALIGN="left"> McCalpin </TD>
+	<TD> 0:09:10 </TD>
+	<TD> 1568 (2000) </TD>
+	<TD> 108 </TD>
+	<TD> 0:09:07 </TD>
+	<TD> 1716 (2179) </TD>
+	<TD> 155 </TD>
+	<TD> 0:09:09 </TD>
+	<TD> 1812 (2311) </TD>
+	<TD> 157 </TD>
+    </TR>
+    <TR><TD COLSPAN=13>
+    </TR>
+    <TR ALIGN="right">
+	<TD ALIGN="left"> AltaVista </TD>
+	<TD> 0:26:49 </TD>
+	<TD> 2579 (3000) </TD>
+	<TD> 265 </TD>
+	<TD> 0:27:04 </TD>
+	<TD> 2912 (3286) </TD>
+	<TD> 470 </TD>
+	<TD> 0:27:09 </TD>
+	<TD> 3156 (3571) </TD>
+	<TD> 571 </TD>
+    </TR>
+    <TR ALIGN="right">
+	<TD ALIGN="left"> DSS </TD>
+	<TD> 3:55:14 </TD>
+	<TD> 4389 (5500) </TD>
+	<TD> 634  </TD>
+	<TD> 3:56:23 </TD>
+	<TD> 5126 (5288) </TD>
+	<TD> 1114  </TD>
+	<TD> 3:53:41 </TD>
+	<TD> 5063 (5242) </TD>
+	<TD> 1389 </TD>
+    </TR>
+    <TR ALIGN="right">
+	<TD ALIGN="left"> parallel SPECfp </TD>
+	<TD> 8:10:49 </TD>
+	<TD> 2902 (3250) </TD>
+	<TD> 1157  </TD>
+	<TD> 7:57:02 </TD>
+	<TD> 3384 (3636) </TD>
+	<TD> 2028  </TD>
+	<TD> 8:17:34 </TD>
+	<TD> 3662 (3950) </TD>
+	<TD> 2616 </TD>
+    </TR>
+    <TR ALIGN="right">
+	<TD ALIGN="left"> timesharing </TD>
+	<TD COLSPAN=3 ALIGN="center"> not measured  </TD>
+	<TD> 187:43:46 </TD>
+	<TD> 10887 (14200) </TD>
+	<TD> 12601  </TD>
+	<TD COLSPAN=3 ALIGN="center"> not measured  </TD>
+    </TR>
+
+
+</TABLE>
+</CENTER>
+
+<!--
+---------------------------------------------------------------------
+\begin{tabular}{|l||r|r|r||r|r|r||r|r|r||}
+\hline
+ 	& \multicolumn{3}{c||}{{\it cycles}}	& \multicolumn{3}{c||}{{\it default}} & \multicolumn{3}{c||}{{\it mux}}\\
+\cline{2-10}
+ 	& & \multicolumn{2}{c||}{Space (KBytes)} & & \multicolumn{2}{c||}{Space (KBytes)}	& & \multicolumn{2}{c||}{Space (KBytes)}	\\
+\cline{3-4}\cline{6-7}\cline{9-10}
+\multicolumn{1}{|c||}{Workload} 
+& \multicolumn{1}{|c|}{Uptime} & \multicolumn{1}{|c|}{Memory} &  \multicolumn{1}{|c||}{Disk} 
+& \multicolumn{1}{|c|}{Uptime} & \multicolumn{1}{|c|}{Memory} &  \multicolumn{1}{|c||}{Disk} 
+& \multicolumn{1}{|c|}{Uptime} & \multicolumn{1}{|c|}{Memory} &  \multicolumn{1}{|c||}{Disk} \\
+
+& \multicolumn{1}{|c|}{ } & \multicolumn{1}{|c|}{avg (peak)} &  \multicolumn{1}{|c||}{usage}
+& \multicolumn{1}{|c|}{ } & \multicolumn{1}{|c|}{avg (peak)} &  \multicolumn{1}{|c||}{usage}
+& \multicolumn{1}{|c|}{ } & \multicolumn{1}{|c|}{avg (peak)} &  \multicolumn{1}{|c||}{usage} \\
+\hline
+\specint        & 14:57:50 & 6600 (8666) & 2639  & 15:00:36 & 8284 (13500) & 4817  & 15:08:45 & 8804 (11250) & 6280  \\
+gcc             & 5:49:37 & 8862 (11250) & 1753  & 5:42:10 & 9284 (9945) & 3151  & 5:47:44 & 11543 (12010) & 4207  \\
+\specfp         & 19:15:20 & 2364 (3250) & 1396  & 19:14:17 & 2687 (3750) & 2581  & 19:22:37 & 2958 (3800) & 3182  \\
+x11perf         & 0:21:25 & 1586 (1750) & 216  & 0:20:58 & 1786 (1917) & 356  & 0:21:31 & 1959 (2141) & 434  \\
+McCalpin        & 0:09:10 & 1568 (2000) & 108  & 0:09:07 & 1716 (2179) & 155  & 0:09:09 & 1812 (2311) & 157  \\
+\hline         AltaVista       & 0:26:49 & 2579 (3000) & 265  & 0:27:04 & 2912 (3286) & 470  & 0:27:09 & 3156 (3571) & 571  \\
+\dss            & 3:55:14 & 4389 (5500) & 634  & 3:56:23 & 5126 (5288) & 1114  & 3:53:41 & 5063 (5242) & 1389  \\
+parallel {\sc spec}fp & 8:10:49 & 2902 (3250) & 1157  & 7:57:02 & 3384 (3636) & 2028  & 8:17:34 & 3662 (3950) & 2616  \\
+\cline{2-4}\cline{8-10}timesharing     & \multicolumn{3}{|c||}{not measured}  & 187:43:46 & 10887 (14200) & 12601  & \multicolumn{3}{|c||}{not measured}  \\
+\hline
+\end{tabular}
+---------------------------------------------------------------------
+-->
+
+<CENTER>
+<B>Table 5:  Daemon Space Overhead.</B>
+</CENTER>
+
+<P>
+On workstations with smaller configurations (64MB to 128MB), the
+memory overhead ranges from 5 to 10%.  Since the current daemon
+implementation has not been carefully tuned, we expect substantial
+memory savings from techniques such as reductions in the storage costs
+of hash tables and more aggressive reaping of inactive structures.
+</P>
+
+<P>
+Finally, as shown in Table 5, the disk
+space consumed by profile databases is small.  Most sets of
+profiles required only a few megabytes of storage.  Even the week-long
+timesharing workload, which stored both CYCLES and IMISS profiles
+for over 480 distinct executable images, used just 13MB of disk space.
+</P>
+
+<H2>5.4.  Potential Performance Improvements</H2>
+
+<P>
+While the driver has been carefully engineered for performance, there
+is still room for improvement.  In addition, the performance of the
+daemon can probably be improved substantially.
+</P>
+
+<P>
+As shown in <A HREF="#component-overhead">Section 5.2</A>, the performance of
+our system is heavily dependent on the effectiveness of the hash table
+in aggregating samples.  To explore alternative designs, we
+constructed a trace-driven simulator that models the driver's hash
+table structures.  Using sample traces logged by a special version of
+the driver, we examined varying associativity, replacement policy,
+overall table size and hash function.
+</P>
+
+<P>
+Our experiments indicate that (1) increasing associativity from 4-way to
+6-way, by packing more entries per processor cache line (which would also
+increase the total number of entries in the hash table), and (2) using
+swap-to-front on hash-table hits and inserting new entries at the beginning
+of the line, rather than the round-robin policy we currently use, would
+reduce the overall system cost by 10-20%. We intend to incorporate both of
+these changes in a future version of our system.
+</P>
+
+<P>
+Unlike the driver, the user-mode daemon has not been heavily optimized.  A
+few key changes should reduce the time to process each raw driver sample
+significantly.  One costly activity in the daemon involves associating a
+sample with its corresponding image; this currently requires three hash
+lookups.  Sorting each buffer of raw samples by PID and PC could
+amortize these lookups over a large number of samples.  Memory copy costs
+could also be reduced by mapping kernel sample buffers directly into the
+daemon's address space.  We estimate that these and other changes could cut
+the overhead due to the daemon by about a factor of 2.
+</P>
+<HR>
+
+<BLOCKQUOTE>
+<A HREF="sosp97.html"> Beginning of paper </A> <BR>
+<A HREF="abstract.html">Abstract</A> <BR>
+<A HREF="introduction.html">1. Introduction</A> <BR>
+<A HREF="related.html">2. Related Work</A> <BR>
+<A HREF="examples.html">3. Data Analysis Examples</A> <BR>
+<A HREF="collection.html">4. Data Collection System</A> <BR>
+5. Profiling Performance <BR>
+<A HREF="analysis.html">6. Data Analysis Overview</A> <BR>
+<A HREF="future.html">7. Future Directions</A> <BR>
+<A HREF="conclusions.html">8. Conclusions</A> <BR>
+<A HREF="acks.html">Acknowledgements</A> <BR>
+<A HREF="references.html">References</A>
+</BLOCKQUOTE>
+
+<HR>
+
+This paper was published in the Proceedings of the 16th ACM Symposium
+on Operating Systems Principles, October, 1997. Copyright 1997 by the
+Assocation for Computing Machinery. All rights reserved. Republished
+by permission.
+
+</BODY>
+</HTML>

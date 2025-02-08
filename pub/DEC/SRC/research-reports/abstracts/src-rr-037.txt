@@ -1,0 +1,21 @@
+
+    "Ruler, Compass, and Computer:
+        The Design and Analysis of Geometric Algorithms."
+    Leonidas J.  Guibas and Jorge Stolfi.
+    February 14, 1989.  55 pages.
+
+Authors' Abstract
+
+    In this paper the authors endeavor to convey the flavor of
+    techniques, especially recent ones, that have been found useful
+    in designing and analyzing efficient geometric algorithms. Each
+    technique is presented by means of a worked out example. The paper
+    presupposes some elementary knowledge of algorithmic geometric
+    techniques and a more advanced knowledge of classical data
+    structures. The aim is to share with the reader some of the
+    excitement that permeates one of the most active areas in
+    theoretical computer science today, namely the field of
+    Computational Geometry. The paper is based on a series of lectures
+    delivered at the 1987 NATO Symposium on Theoretical Foundations
+    of Computer Graphics and CAD.
+

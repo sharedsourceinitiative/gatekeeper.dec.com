@@ -1,0 +1,520 @@
+			This is the README file for 
+
+
+                        X   X  FFFFF  SSSSS  M     M                            
+                         X X   F      S      M M M M                          
+                          X    FFFFF  SSSSS  M  M  M                           
+                         X X   F          S  M     M                           
+                        X   X  F      SSSSS  M     M                            
+
+                        X      File   System Monitor (c) 1993-1997 Robert Gasch
+
+
+1) Author & Copyright
+
+	xfsm was written by Robert Gasch (Robert_Gasch@peoplesoft.com) and 
+	is copyright by the author.
+	xfsm is available from various FTP sites as well as the author's 
+	home page, which is:
+
+		http://www.peoplesoft.com/peoplepages/g/robert_gasch/index.htm
+
+2) Distribution Policy
+
+ 	Permission to use, copy, modify and distribute this software for
+	any purpose and without fee is hereby granted, provided that this
+	copyright notice appear in all copies as well as supporting 
+	documentation. All work developed as a consequence of the use of 
+	this program should duly acknowledge such use.
+
+	See the GNU General Public Licence (included in the file "Copying") 
+	for more information.
+
+3) Guarantees
+
+	xfsm should work all right *but*
+
+	No representations are made about the suitability of this software 
+	for any purpose. This software is provided "as is" without express 
+	or implied warranty.
+
+4) What is xfsm?
+
+	xfsm stands for X File System Monitor and runs under MIT's X11
+	window system on several flavors of UNIX. It is a tool designed 
+	to make monitoring your file systems' status easy by displaying 
+	a simple bar graph for each file system greater than size 0. It
+	updates the file systems' statistics at regular, user definable 
+	intervals.
+
+5) Version Number
+
+	The current version number is 1.97
+
+6) What if you change the program?
+
+	If you extend xfsm's functionality, add support for new UNIX
+	flavors, or simply solve bugs, *please*mail* me the changes(!)
+	as I'd like to act as the central source for xfsm. This will 
+	also enable me to include your changes in a future release. 
+	Unless it is generic please enclose it in a meaningful
+	#ifdef. If your change affects *many* lines, please provide
+	some method of me finding it back (preferrably a #ifdef, 
+	alternativeley some comment I can grep for). 
+
+	I initially intended to give people credit for their contributions, 
+	but I soon abandoned this idea as I received just too many responses. 
+	My apologies to the people who helped me but who are not mentioned. 
+	Please realize that much of the improvements to xfsm come from your 
+	suggestions. 
+
+7) Systems currently supported
+
+	AIX
+	AUX
+	BSDI
+	ConvexOS
+	DGUX
+	DYNIX
+	FreeBSD
+	HPUX
+	LINUX
+	MACH
+	OSF1 
+	SCO
+	SGI
+	SOLARIS
+	SunOS
+	SYSV
+	ULTRIX	
+
+8) How do I get started?
+
+	This section assumes that you have all the necessary files. (The 
+	file "Manifest" contains a list of distributed files.)
+
+	a) Customize the Imakefile to suit your system setup. 
+	If it turns out that your system is not one of the currently
+	supported ones, you'll have to add the appropriate definitions.
+
+	b) Make the Makefile by typing 
+		xmkmf
+	If your system does not support generating makefiles from 
+	Imakefiles use "Makefile.std" as a template to build your
+	own. 
+
+	c) If your X headers do not define APP_DEFAULTS_DIR and your default 
+	X Resource file is not 
+		/usr/X11R5/lib/X11/app-defaults/
+	edit xfsm.c and modify the definition for APP_DEFAULTS_DIR. On 
+	most systems things should be OK the way they are, but this gives 
+	you the possibility to customize this.
+
+	d) Once you have a valid Makefile (see step a&b) build xfsm by typing
+		make
+
+	Once you have created the executable, you're ready to go. The
+	executable will be created in the directory in which the source
+	for xfsm resides. If you're really hurting for space try the 
+	following command:
+		strip xfsm
+	On Linux 2.0.33 (Redhat 5, glibc) this reduces the executable size 
+	to about 40K.
+
+9) Brief users guide
+
+	In this section the following abbreviations are used:
+		LB	- left mouse button
+		MB	- middle mouse button
+		RB	- right mouse button
+
+	You can get a list of supported options by typing one of the
+	following:
+		xfsm -?
+		xfsm -help
+		xfsm help
+
+	Once you have started xfsm you will get a window containing 
+	at least 1 bar graph (xfsm removes all file systems of size 0)
+	and 2 menus. The Menus are:
+
+		Update Now - updates all files systems' statistics now
+		Quit       - exits xfsm
+
+	If you click on the graph of a file system (LB, MB) you get a 
+	window displaying the detailed statistics for the file system. 
+	Clicking on the file system again (LB, MB) or clicking in the 
+	detail window (LB, MB), closes the detail window while clicking 
+	on another file system (LB, MB) while the detail window is open, 
+	displays this file system's statistics in the detail window. (Check
+	the 5th item in the Troubleshooting section regarding the 
+	configuration of xfsm with regard to calculating percentages.)
+
+	The right mouse button is used to toggle the display mode. The
+	default startup mode graphs all file systems relative to their
+	size. By clicking with the right mouse button in any of the 
+	windows, the graphs are drawn in absolute size. Clicking (RB) 
+	again, reverts back to the original mode. 
+
+	If you have specified the -w flag with a valid parameter, xfsm
+	will display an exclamation mark after the file system's percent
+	display when the file system's useage exceeds the specified
+	threshold. If you also specified the -e option, xfsm will sound
+	the bell when the above condition is true for at least 1 file 
+	system when the file systems statistics are updated. You can 
+	use the -wl0c, -wl1, -wl1c, -wl2, -wl2c, -wl3, -wl3c options to 
+	set additional warning levels and associate them with colors. 
+	When you're using colors (specifically foreground or a warning 
+	level color) the gray tile fill is automatically disabled. I 
+	didn't implement an override for this behaviour as I personally 
+	feel that colors with a gray fill look awful. 
+	
+
+	Xfsm will recognize automount file systems. If file systems are 
+	added or removed after startup, they will be caught at update 
+	time. Xfsm will then resize the main window to enable it properly 
+	display a status bar for each file system. If you specify file systems 
+	to be ignored (via the -d or -D option) xfsm will remember these file 
+	systems even if they are not present at startup time. This enables you 
+	to have xfsm ignore file systems which are not mounted at startup
+	time. (The redraw/resize mechanism when autmount file systems are 
+	added or removd may be a bit shaky since I do not have an automount 
+	setup to actually test this. If you discover problems along this 
+	area mail a detailed description and I'll try to fix them.) 
+
+	The following keys can be used to control xfsm:
+		q - quit xfsm
+		u - update now
+		t - toggle display mode
+		c - close the detail window
+
+	The Detail Window can display the following statistics. Depending
+	on the system you are on, you may not get all these statistics:
+		Device Name		The actual device name
+		Total Size		The file system size in MB
+		Space Free		Free space in MB
+		Sapce Available		Space Available to non-root in MB
+		Block Size		The size of a block in Bytes
+		Blocks			The number of blocks
+		Blocks Free		The number of free blocks
+		Blocks Available	Blocks available to non-root
+		File Inodes		The number of Inodes
+		Free Inodes		The number of free Inodes
+		Inodes Availible	Inodes available to non-root user
+
+	If a device name is too long to be dispayed in the detail window, 
+	the detail window will resize to accomodate the name. This resizing
+	will take place every time a file system name is too long to fit 
+	into the default width of the detail window. You can resize the 
+	main window but xfsm will not let you make the main window 
+	smaller beyond a certain point. This is to ensure that the output 
+	remains neat and legible. When the main window is not wide 
+	enough to display the entire name of a file system, the name
+	will be truncated so that it does not overwrite the percentages.
+
+9) Command line parameters
+
+	xfsm accepts the following parameters as command line options:
+
+	+rv			reverse video (use to override xrdb entry) 
+	+synchronous		syncronous mode (use to override xrdb entry)
+	-?			help
+	-a			absolute display mode
+	-background <arg>	backgound color 
+	-b			black bars (disable gray fill)
+	-bg <arg>		same as -background 
+	-bordercolor <arg>	border color
+	-borderwidth <arg>	border width
+	-d <arg1 ... argn>	ignore these file systems
+	-D <arg1 ... argn>	ignore file systems matching these patterns
+	-detailgeometry <arg> 	Geometry of detail window. Only X and Y are 
+					honoured
+	-display		display
+	-e			extend warning to ring bell when at least
+					one file system is above warning level
+	-fg <arg>		same as -forground
+	-font <arg>		font
+	-foreground <arg>	forground color (also file system bar color)
+	-fsb			draw file system bars without a border
+	-geometry <arg>		geometry (will override extreme window sizes to 
+					apply reasonable settings)
+	-help			help
+	-i <arg>		interval at which stats are updated(default=60s)
+	-it <arg1 ... argn>	ignore file systems of this type (*)
+	-iconic			iconic
+	-m			minimize window size
+	-mb			draw menu borders
+	-mnl			minimize window size so that the longest file 
+					system name fits
+	-name <arg>		run xfsm under this name
+	-ot <arg>		show only file systems of this type (*)
+	-oi			override ignore: keeps file systems 
+					maked 'ignore'
+	-p			don't display percentages
+	-pu			popup alarm flag
+	-r			display space with respect to root
+	-rootdf			display df % values when in root mode 
+					only honored with -r 
+	-rs <arg>		specify the amount of space reserved for root
+	-rv 			reverse video
+	-sb			show biggest file system size in lower right
+	-sort			sort file systems alphabetically
+	-synchronous		synchronous mode
+	-title			title to show in main menu
+	-v			verbose
+	-w <arg>		display warning when usage reaches <arg> %
+	-wl0c			color for entries below first warning level
+	-wl1 <arg>		threshold for first warning level
+	-wl1c <arg>		color for first warning level
+	-wl2 <arg>		threshold for second warning level
+	-wl2c <arg>		color for second warning level
+	-wl3 <arg>		threshold for third warning level
+	-wl3c <arg>		color for third warning level
+	-xrm			set an entry in the resource database for this
+					execution only
+	help			help
+
+
+	* = not available under SCO
+
+10) Wow, that's a lot of options. What are some useful ones? 
+
+	Try the following: 
+
+	xfsm -fg yellow -bg blue2 -wl0c green -wl1 30 -wl1c yellow \
+		-wl2 65 -wl2c orange -wl3 75 -wl3c red -w 50 -title wintermute  
+
+	The file xfsm.gif is a screen capture of how this looks on 
+	my LINUX machine.
+
+11) XResources 
+
+        xfsm recognizes the following XResources. Usually xfsm will search 
+	for resources under the program name but you can override this with 
+	the -name flag. If you do not wish to use a specific application 
+	defaults file, you can execute xrdb -merge to merge your resource 
+	specifications into the XResource database. 
+
+	xfsm first checks in the directory pointed at by the environment 
+	variable XAPPLRESDIR. If this doesn't yield any resource definitions 
+	it checks the APP_DEFAULTS_DIR. This is defined in your headers or 
+	in xfsm.h. If you want to change this you'll have to recompile xfsm.
+
+	absolute		absolute display mode
+	background		universal backgound color
+	<filesystem>.background	background color for a file system
+	bell			extend warning to ring bell when at least
+					one file system is above warning level
+	borderColor		border color
+	borderWidth		border width
+	detailWin.geometry	Geometry of detail window. Only X and Y are
+					honored
+	detailWin.share		have detail window share file system color
+	display			display
+	font			font
+	foreground		universal foreground color 
+	<filesystem>.foreground	foreground color for a file system
+	fs_border		do we draw a borders around file systems?
+	gray			black bars
+	help			show help
+	mainWin.geometry	main window geometry
+	iconic			start program in iconic mode 
+	minimize		minimize window size 
+	menuborder		draw menu borders
+	name			run xfsm under this name
+	overrideIgnore		override ignore 
+	percent			don't display percentages 
+	popup			popup alarm flag
+	root			display space with respect to root
+	rootdf			display df % values when in root mode (only with -r)
+	reverseVideo		reverse video
+	showBiggest		show biggest file system size in lower right
+	sort			sort file systems alphabetically
+	synchronous		syncronous mode
+	title			title to show in main window
+	updInterval		interval at which stats are updated
+	used			show space free rather than space available
+	verbose			verbose mode 
+	warnval			display warning pixmap when usage reaches <arg>%
+	warn0col		color below lowers warning level (default)
+	warn1val		threshold for first warning level
+	warn1col		color for first warning level
+	warn2val		threshold for second warning leve
+	warn2col		color for second warning level
+	warn3val		threshold for third warning level
+	warn3col		color for third warning level
+	
+12) Troubleshooting
+
+	If you find a problem which is not listed below there are 2 things
+	you can do:
+		1) Fix it yourself. If this case please send me a short 
+		note explaining the problem and the fix. Note that the
+		code for xfsm is actually pretty simple and for the 
+		most part well commented so it should not be hard to
+		figure out what's going on. If you can, please do it 
+		this way as I am busy enough as is is.
+		2) Send me a description of the problem. I'll try to
+		attend to it as fast as I can, but work comes first so
+		this may take a while. If you mail me about problems be
+		sure to tell me *which*version* you are using and which 
+		OS you are running under so that I know if the problem has 
+		been fixed already and if it is generic or port specific 
+		(the help option will list the version number).
+
+	Problem: Compile fails with "DETAIL_NUM" undefined.
+	Solution: You didn't provide the compiler with any -D options 
+		for a particular machine type. Change your Imakefile 
+		accordingly and go back to section 7 (How do I get 
+		started?).
+
+	Problem: Compile fails with some member of the stats structure 
+		undefined.
+	Solution: You have selected inappropriate -D options in the 
+		Imakefile for your machine.  Change the option (if 
+		available) or add the appropriate code. If you really 
+		don't know how to do the latter mail me. Depending on 
+		my schedule I may decide to help you out. 
+
+	Problem: Compile failes with a problem with the catlist() function
+		definition.
+	Solution: In terms of portability this is the most fragile part 
+		of xfsm. I've done my best to make this portable, but there
+		may be systems whose compiler simply throws up once he sees 
+		catlist. If you do have problems with catlist(), there are a
+		number of things you can try:
+		1) Try using another compiler (gcc generally accepts the 
+		catlist() function as-is). 
+		2) Undef __STDC__ in your compiler directives. Most compilers
+		do this via the -U flag. 
+		If these fail, you'll have to adapt catlist() for your 
+		machine. In that case, accept my apologies for the problems
+		and please send me a mail telling me what you did so that I 
+		can integrate your fix into the sources, sparing others of 
+		this misery.
+
+	Problem: Xfsm does not show all my file systems. I seem to miss 
+		file systems which hold other mount points. 
+	Solution: I've only heard of this problem from one particular 
+		user under HPUX using lots of automounts. Apparently 
+		the automounts resulted in some valid file systems 
+		being marked ignore. The -oi switch specifies that 
+		the ignore flag (MNTOPT_IGNORE) is ignored. This should 
+		allow you to see all valid file systems. 
+
+	Problem: Xfsm compiles OK but ignores all valid command line 
+		arguments.
+	Solution: This has (as far as I know) only been observed under
+		HPUX when compiling in ANSI mode. The solution (at least 
+		under HPUX) is to compile xfsm in K&R mode. I suspect 
+		that this is a problem with my code, but as I don't have 
+		access to an HP machine, I can't really investigate this. 
+
+	Problem: Xfsm won't find my resource definitions.
+	Solution: Xfsm handles resources as follows:
+		a) xfsm checks in the directory pointed at by the environment 
+		   variable XAPPLRESDIR. If this doesn't yield any resource 
+		   definitions we go to step b. If xfsm ignores your personal 
+		   resrource definitions, make sure you have XAPPLRESDIR 
+		   set to the proper value and exorted. 
+	        b) xfsm checks the APP_DEFAULTS_DIR. This is defined in your 
+		   headers or in xfsm.h. If you want to change this you'll 
+		   have to recompile xfsm.
+		The reasoning behind this approach is to allow user preferences 
+		to take preference over the system preferences. 
+
+	Problem: When running in default mode, the size of the calculated 
+		percentages is wrong.
+	Solution: This is sort of a 'feature'. The problem is that there 
+		is no way for xfsm to figure out what amount of disk space 
+		is reserved for root. Use to -rs option to specify the 
+		amount of disk space (in percent) which is reserved for 
+		root. Usually this is 10% which is the value xfsm uses as a
+		default (under LINUX xfsm uses 5%, which is the default for 
+		the ext2 filesystem). By playing around with this setting, 
+		you should be able to configure xfsm so that it accurateley 
+		reflects the output of df. To avoid this entireley, use to -r 
+		flag to display space for root. 
+
+	Problem: When running in root (-r) mode, the size of the calculated 
+		percentages is different from what 'df' shows.
+	Solution: This is the default behaviour of the -r (root) mode. If 
+		you want to run in root mode and still get the df 
+		percentages, use the -rootdf options. This will perform 
+		the default calculation with the root data and should 
+		get you percentages which match 'df's output. . 
+
+	Problem: I have to too many file systems on my machine. Xfsm 
+		cannot display them all in one window. 
+	Solution: There are two ways of addressing this. One is to 
+		use the -d or -D options to eliminate certain file
+		system and run two sessions of xfsm on the same machine.
+		The other (this will only work if you're missing one or 
+		tow file systems on your display) is to go into main.h
+		and change the offset in the definition of LETTER_SPACE(w)
+		(currently 5) to a smaller value such as 2. You then 
+		have to recompile xfsm to use this altered setting.
+
+	Problem: The detail window does not resize correctly.
+	Solution: This probably means that you are using a non-standard
+		font. I didn't program this correctly because I'm not 
+		sure how to do it. Try tinkering with the code in
+		write_detail() to adjust this to your favorite settings
+		or, if you really do fix this, let me know how to do it.
+
+	Problem: xfsm seems to start OK but I don't get the window.
+	Solution: Check if your DISPLAY variable is set correctly (you
+		can always use the -v falg to see if it does start up 
+		correctly).
+
+13) I've found a bug. What now?
+
+	Read section 11 (Troubeshooting) to see if it falls under one of
+	the problems listed there. If not, reread the first part of
+	section 11 (11.1 and 11.2). Then decide on the best way to approch
+	your problem.
+
+14) I've come up with a feature which I think would be useful.
+
+	Here again you can do 2 things:
+		1) Implement it yourself. If you do this then
+		reread section 5 (What if you change the program?)
+		to get an idea what I would like you to do with the
+		result.
+		2) Mail me. I'll consider it and if I agree with you
+		will implement it whenever I find time.
+
+15) I would like to receive future releases of xfsm.
+
+	Send me mail telling me that. Somewhere in the mail *list* 
+	the email address you want to receive future releases at. 
+
+16) I'm extatic about this wonderful program. How can I make the author happy?
+
+	If you really feel this way, how about a short mail message
+	telling me that you are happy about using xfsm.
+
+17) I hate this worthless program. It ruins my day.
+
+	Don't use it. Don't mail me!
+
+18) Credits
+
+	The strstr used for DYNIX ports is a slightly modified version
+	of the GNU source.
+
+	Many thanks to the following people who all contributed a 
+	great deal to evolving xfsm to new levels of sophistication: 
+
+		Bruno (bp@chorus.fr)
+		Jim (etljmme@etlxd20.ericsson.se)
+		Joost (jhelberg@nl.oracle.com)
+		Jose (josem@ender.tid.es)
+		Malcolm (malcolmp@hydra.maths.unsw.edu.au) 
+		Richard (R.K.Lloyd@compsci.liverpool.ac.uk)
+
+	Lastly, my apologies for not giving credit to all the people
+	who helped me out with this, offered their suggestions and 
+	supplied platform exceptions for various UNIX falvors - the
+	list would simple become too big.
+

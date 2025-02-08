@@ -1,0 +1,23 @@
+                        CRL Technical Report 91/8
+                 Concurrency and Recovery for Index Trees
+                     David Lomet and Betty Salzberg*
+                            August 19, 1991
+
+Providing high concurrency in B+trees has been studied 
+extensively.  But few efforts have been documented for combining 
+concurrency methods with a recovery scheme that preserves well-formed trees
+across system crashes.  We describe an approach for this that works for a
+class of index trees that is a generalization of the B-link tree.  
+A major feature of our method is that it works with a range of 
+different recovery methods.  It achieves this by decomposing structure
+changes in an index tree into a sequence of atomic actions, each one leaving
+the tree well-formed and each working on a separate level of the tree.  All
+atomic actions on levels of the tree above the leaf level are independent of
+database transactions, and so are of short duration.
+
+Keywords: concurrency, recovery, indexing, access methods, B-trees
+
+Copyright 1991 by Digital Equipment Corporation and Betty Salzberg.
+
+* College of Computer Science, Northeastern University, Boston, MA.
+This work was partially supported by NSF grant IRI-88-15707 and IRI-91-02821.

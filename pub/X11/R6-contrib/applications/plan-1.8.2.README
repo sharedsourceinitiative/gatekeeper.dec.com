@@ -1,0 +1,219 @@
+plan - an X/Motif day planner
+=============================
+
+In this README:
+-- Compiling plan
+-- plan Archives
+-- What is plan?
+-- Network Security
+-- Copyright
+
+
+Compiling plan
+--------------
+
+1. cd src
+2. run "./configure"
+3. run "make"
+4. if you would like to test plan first, run "./plan" in the src directory.
+5. install plan and its subprograms and files by running "make install".
+6. it is recommended to install netplan where it is started at boot time,
+   for example in /etc/rc2.d/S99netplan (SystemV) or /etc/rc.local (BSD).
+7. If you use the web frontend, and if you have changed DIR in the Makefile,
+   also change the plan path in the web/*.cgi scripts.
+
+For troubleshooting, read misc/plan.help (look for "TROUBLESHOOTING"), or
+start plan and choose Help->Troubleshooting.
+
+Linux users: plan also works with LessTif, a free replacement for Motif.
+See http://www.hungry.com/products/lesstif/lesstif.html for details and
+ftp archives. Also check out http://www.lesstif.org. You need LessTif
+0.87.1 or higher (earlier versions may show incomplete file list menu).
+
+
+plan Archives, homepage, and mailing list
+-----------------------------------------
+
+Send bug reports to thomas@bitrot.de (new) or thomas@bitrot.in-berlin.de
+(old). Don't forget to include the version number as printed by "plan -v".
+Check out the TROUBLESHOOTING section in plan.help (or in the Help pulldown
+if that works), it contains solutions for common problems.
+
+Information on the current version can be found on plan's home page,
+http://www.bitrot.de/plan.html (new) or
+http://www.in-berlin.de/User/bitrot/plan.html (old).
+
+The main ftp site for this program is bitrot.in-berlin.de (directory plan).
+The secondary site is ftp.fu-berlin.de (directory /pub/unix/graphics/plan).
+Both servers also have static Linux executables for people without Motif,
+and SGI tardist packages.
+
+To subscribe to the plan mailing list, send a mail with "subscribe plan"
+in the message body (not the subject) to majordomo@bitrot.de. The list
+carries a low volume and is mainly used for announcements and patches.
+
+
+What is plan?
+-------------
+
+Plan is a schedule planner based on X/Motif. It displays a month calendar
+similar to xcal, but every day box is large enough to show appointments in
+small print. By pressing on a day box, the appointments for that day can be
+listed and edited. Appointments are entered with the following information
+(everything except the time is optional):
+
+- the date, time, and length (time and days) of the appointment,
+- an optional text message to be printed,
+- an optional script to be executed,
+- early-warn and late-warn triggers that precede the alarm time
+- repetitions: [n-th] weekdays, days-of-the-month, every n days, yearly
+- optional fast command-line appointment entry
+- flexible ways to specify holidays and vacations
+- extensive context help
+- multiuser capability using an IP server program (with access lists),
+- grouping of appointments into files, per-user, private, and others
+
+The action being taken when a warn or alarm time is reached is programmable;
+by default a window pops up. In addition, a program can be executed, or mail
+can be sent. Other methods of listing appointments (today, this week, next
+week, or a keyword search for regular expressions) are also available. Plan
+can be configured to display times in 12-hour or 24-hour formats, mmddyy and
+ddmmyy date formats, and can show either Monday or Sunday in the leftmost
+column. Four view modes are supported: month, year, week, day, and a 365-day
+overview. The day, week, and overview plot appointments as colored and
+labeled bars on a time chart.
+
+You do not need root access to install and run these programs.
+
+This distributions creates four binaries, one directory, and several text
+files:
+
+DIR/plan	the schedule program. It displays the calendars and allows
+		entry of appointments. It writes everything to .dayplan*
+		files in the user's home directory, and other files or to
+		the IP server, netplan. It does not check for alarms, this
+		is done by the pland daemon. plan can be used without pland
+		and notifier, but no alarms will be triggered.
+
+LIB/pland	the daemon that waits for alarm events, and pops up windows,
+		sends mail, and/or executes a program when an alarm time is
+		reached. It creates a lockfile /tmp/.planUID, with UID being
+		the user's user ID. The lockfile prevents multiple pland's.
+		It also contains pland's process ID, which is read by plan
+		to find out where change notification (HUP) signals should
+		be sent. pland should be started in the user's .sgisession
+		or .xsession file.
+
+LIB/notifier	a program that prints a file (or standard input) into a
+		window. Depending on the options, the window is green, yellow,
+		or red. pland uses notifier to display messages; notifier was
+		not integrated into pland to keep the pland executable as
+		small as possible (X/Motif programs tend to be large).
+
+LIB/netplan     an IP network server that manages appointment files. plan can
+		read appointment files directly, but this should be done ONLY
+		if files are not shared by multiple users. The netplan server
+		runs on a single server host; all plan and pland programs on
+		the net can connect to it and read and write appointments.
+		You must start netplan manually on the server host. No entry
+		in inetd.conf is required, netplan watches a well-known port.
+
+LIB/netplan.dir	the directory that netplan puts files into, and the only
+		directory that netplan will read from (see Network Security).
+
+LIB/netplan.dir/.netplan-acl
+		access list for netplan that determines which user and system
+		has read, write, and delete access to which appointment files.
+
+LIB/plan_cal.ps	the PostScript skeleton for the print functions, should go
+		into /usr/local/lib (see LIB in the Makefile)
+
+LIB/plan.help	all default English help texts
+LIB/plan.help.L	all help texts for language L
+LIB/plan.lang.L	list of all internal messages for language L. L="english" is
+		the reference language. See help->languages menu for details.
+
+Plan.icon	for SGI systems. Copy this file to your ~/.icons directory
+		to get a full-color icon.
+plan.xpm	icon pixmap for non-SGI systems.
+Mkdoc		a contributed perl script that converts plan.help to troff
+		source.
+Killpland	a contributed perl script that can be called from ~/.logout
+		to kill pland on logout (also see pland -l/-L options).
+Monochrome	a sample resource list for monochrome systems, to be appended
+		to ~/.Xdefaults .
+netplan.boot	boot script for SGI only. Copy to /etc/init.d and softlink
+		to /etc/rc0.d/K39netplan and /etc/rc2.d/S99netplan.
+
+plan and notifier print usage messages when an unknown option is used;
+pland has only one option, -k, that kills the existing daemon first if
+there is one. In particular, plan -d and notifier -d dump the default X
+resources; you can do "plan -d >>.Xdefaults" and modify the resources.
+If the EUC code is used for Japanese, a filter is needed at PostScript
+printing for conversion to the SJIS code. e.g.:
+ nkf -s | lpr -PPSprinter
+ euctosj | lpr -PPSprinter (Sun with JLE)
+
+Note -- I do not guarantee the accuracy of the .holiday template files
+in the distribution.
+
+
+Network Security
+----------------
+
+Here is information that your system administrator will want to know. IP
+services are potential security risks if written improperly. I make no
+promises that netplan is completely secure but I made every effort to
+avoid the usual pitfalls. netplan is small enough so you can check for
+yourself. If you have stringent security policies, do not trust netplan.
+
+Apart from controlling access to appointment files, netplan must satisfy
+general security concerns. In particular, it must not be usable to open
+network security holes that allow access to files that have nothing to do
+with plan. The security features are:
+
+*  if run by root or setuid root, netplan switches to "nobody". The UID and
+   GID of <nobody> are compiled in, not determined at runtime. netplan will
+   refuse to run setgid-but-not-setuid root.
+
+*  netplan does not execute other programs (this is one of the reasons why
+   there are still pland daemons).
+
+*  netplan cannot be used to access files that are not in its home directory,
+   /usr/local/lib/netplan.dir by default. Absolute paths are converted to
+   paths relative to the home directory.
+
+*  netplan refuses to access softlinks and files that have more than one
+   hardlink. This may be inconvenient at times, but without this the user
+   who started netplan would be wide open for the entire net.
+
+*  netplan is not sendmail. All buffers are checked for overflows.
+
+*  netplan (as well as the rest of the code) is Purify'd.
+
+
+Copyright
+---------
+
+plan is Copyrighted by Thomas Driemeyer, 1993-1999. License to copy, publish,
+and distribute is granted to everyone provided that three conditions are met:
+
+- my name and email address, "Thomas Driemeyer <thomas@bitrot.de>" must
+  remain in the distribution and any documentation that was not part of
+  this distribution. In particular, my name and address must be shown in
+  the About popup.
+- if you redistribute a modified version, the fact that the version is
+  modified must be stated in all places that my name is shown.
+- this copyright notice must be included in your distribution.
+
+If these conditions are met, you can do whatever you like. The idea is that
+I would be pissed if someone else claimed he wrote the thing, and I don't
+want bugs introduced by others attributed to me. Make as much money with it
+as you can. Drop me a line, I am curious.
+
+If you put plan on a CD, send me a free copy if your company policy allows
+it and you want to. (Not obligatory, I just collect trophies.)
+
+There are no implied or expressed warranties for plan. I do not claim it is
+good for anything whatsoever, and if you lose your precious data or your dog
+dies this is entirely your problem.

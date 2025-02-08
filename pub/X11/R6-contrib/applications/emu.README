@@ -1,0 +1,25 @@
+Emu is a programmable, flexible terminal emulator for the X Window
+System.  Rather than being one monolithic application, emu is written
+as a set of general-purpose widgets that can be used by other
+applications.  Emu is also fully extensible, and supports a
+configurable terminal emulation mechanism.
+
+It offers features like blinking text, blinking text cursors of
+configurable size, double width, double height text, color and
+compose character processing.
+
+It currently compiles out of the box on the following systems:
+FreeBSD, HP/UX 9.*, Linux, SunOS 4.*, Generic SysVR4, LYNX-OS.
+
+Since OS support is pretty generic, chances are that it will run on
+most Unix-type OSs with only minor hassle as long as a C compiler that
+understands prototypes is available.
+
+Changes from ver. 1.3 to 1.31:
+
+ - input focus works properly if the mouse pointer is in the
+   window manager borders.
+
+ - native FreeBSD 2.0 support
+ - LYNX support
+

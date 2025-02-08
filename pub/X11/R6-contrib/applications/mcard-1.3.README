@@ -1,0 +1,45 @@
+MOTIF CARDFILE (MCARD)
+----------------------
+31 July 1995
+
+Mcard is a Motif based application that provides the look and feel of
+the common PC Cardfile program. This is release 1.3. This version
+introduces "List View", command Line arguments, and corrects the
+functionality of several operations.
+
+On-Line Help and Documentation is now available:
+HTTP://www.ai.net/mjo/mcard/mcard.html
+
+COPYRIGHT
+---------
+
+The program uses the GNU General Public License. Please see the file
+COPYING, contained within this distribution.
+
+Neither Object Libraries nor Source for Motif is provided. Mcard
+does not require any Motif source, only linking with the libraries.
+Your site must provide Motif Libraries for this program to compile.
+
+INSTALLATION
+------------
+Installation via gcc 2.6.3 or cc with Motif 1.1 will work.
+
+I have been told that mcard also compiles with Motif 1.2 under several
+UNIX operating systems, but I do not have the Motif 1.2 libraries nor
+every OS. Any help is appreciated.
+
+The Installation procedure can be found in the file INSTALL.
+
+Author's notes and detailed informaton about mcard can be found in
+the following files in the mcard distribution:
+./docs/Authors-note.txt
+./docs/OH-NO
+
+FEEDBACK
+--------
+
+Please send all feedback to: mjo@ai.net
+
+-Mike Oehler
+mjo@ai.net
+

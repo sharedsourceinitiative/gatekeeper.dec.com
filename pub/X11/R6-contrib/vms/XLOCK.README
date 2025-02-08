@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+XLOCK.ZIP                         Locks the local X display till a password is
+                                  entered
+                                  Author: Patrick J. Naughton        
+                                          (naughton@sun.com)
+VAX                               Language: VAX C
+AXP                               Language: DEC C
+-------------------------------------------------------------------------------

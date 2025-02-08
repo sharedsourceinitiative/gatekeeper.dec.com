@@ -1,0 +1,156 @@
+<!-- This file generated automatically by mtex2html(1) -->
+<HTML>
+<HEAD>
+<TITLE>dcpicc</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#ffffff" VLINK="#006633">
+<H2>dcpicc(1)</H2>
+
+<H3>NAME</H3>
+<BLOCKQUOTE>
+<P>
+
+dcpicc - Compile C source files to produce instruction to source mapping<P>
+
+dcpicc-tokenize - Tokenize a C source file
+</BLOCKQUOTE>
+
+<H3>SYNOPSIS</H3>
+<BLOCKQUOTE>
+<P>
+
+<B>dcpicc</B> [-map_dir <I>map-directory</I>] [-tok_dir <I>token-directory</I>]
+ 	[-compiler <I>C compiler</I>] [C compiler arguments]<P>
+
+<B>dcpicc-tokenize</B> <I>map-file</I>
+</BLOCKQUOTE>
+
+<H3>DESCRIPTION</H3>
+<BLOCKQUOTE>
+<P>
+
+dcpicc is intended to be used as a C compiler to produce object code that
+would help <A HREF="dcpisource.html">dcpisource</A> in identifying which source
+token each instruction corresponds to.<P>
+
+dcpicc tokenizes each C source file named on the command line and compiles
+the tokenized source files with a real C compiler.  dcpicc-tokenize, which
+dcpicc invokes, reads the input C source file from standard input and
+writes the tokenized source file to standard output, leaving the mapping
+(as described below) in <I>map-file</I>.  A tokenized source file has one
+source token per line, so that line numbers in the object file's symbol
+table identify individual tokens rather than source lines.  dcpicc stores
+in a map file the mapping from line numbers recorded in the object file
+(which identify lines in the tokenized source file) to tokens in the
+original source file.  This mapping is used by dcpisource.<P>
+
+Other files named on the command line are not changed.  All arguments not
+recognized by dcpicc are passed to the C compiler.<P>
+
+dcpicc must be allowed to write the directory containing the original
+source files.
+</BLOCKQUOTE>
+
+<H3>FLAGS</H3>
+<BLOCKQUOTE>
+<DL>
+
+<DT>-map_dir <I>map-directory</I><DD> If set, dcpicc puts the map file for
+foo.c, named foo.cmap, in the specified directory.  Otherwise, the map file
+is in the same directory as foo.c.<P>
+
+<DT>-tok_dir <I>token-directory</I><DD> If set, dcpicc keeps the tokenized
+source file for foo.c, named foo.tok.c, in the specified directory.
+Otherwise, the tokenized source file is discarded after compilation.<P>
+
+<DT>-compiler <I>C-compiler</I><DD> If set, dcpicc invokes the specified C
+compiler.  Otherwise, dcpicc invokes the C compiler named by the
+environment variable <TT>CC</TT>, or <TT>cc</TT> if <TT>CC</TT> is not defined.<P>
+
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>LIMITATIONS</H3>
+<BLOCKQUOTE>
+<P>
+
+dcpicc should be used only for programs that have been fully debugged and
+are being studied only for performance improvement.  Since each source
+token is put on a different line, the line numbers seen by the real C
+compiler and the debugger are not those in the original source file.
+Therefore, compiler messages would become very hard to interpret, and
+debugger commands for stopping at specified source lines would be difficult
+to use.
+</BLOCKQUOTE>
+
+<H3>TYPICAL USAGE</H3>
+<BLOCKQUOTE>
+<P>
+
+Typically, <TT>dcpicc</TT> is used like a C compiler.
+<PRE>
+  dcpicc -map_dir map_directory foo.c bar.c
+</PRE>
+
+</BLOCKQUOTE>
+
+<H3>SEE ALSO</H3>
+<BLOCKQUOTE>
+<P>
+
+<A HREF="dcpi.html">dcpi(1)</A>,
+<A HREF="dcpiflow.html">dcpiflow(1)</A>,
+<A HREF="dcpiprof.html">dcpiprof(1)</A>,
+<A HREF="dcpilist.html">dcpilist(1)</A>,
+<A HREF="dcpidis.html">dcpidis(1)</A>,
+<A HREF="dcpiscan.html">dcpiscan(1)</A>,
+<A HREF="dcpiepoch.html">dcpiepoch(1)</A>,
+<A HREF="dcpiflush.html">dcpiflush(1)</A>,
+<A HREF="dcpicalc.html">dcpicalc(1)</A>,
+<A HREF="dcpilabel.html">dcpilabel(1)</A>,
+<A HREF="dcpi2ps.html">dcpi2ps(1)</A>,
+<A HREF="dcpicat.html">dcpicat(1)</A>,
+<A HREF="dcpiquit.html">dcpiquit(1)</A>,
+<A HREF="dcpidiff.html">dcpidiff(1)</A>,
+<A HREF="dcpitopstalls.html">dcpitopstalls(1)</A>,
+<A HREF="dcpiwhatcg.html">dcpiwhatcg(1)</A>,
+<A HREF="dcpictl.html">dcpictl(1)</A>,
+<A HREF="dcpisource.html">dcpisource(1)</A>,
+<A HREF="dcpiversion.html">dcpiversion(1)</A>,
+<A HREF="dcpiuninstall.html">dcpiuninstall(1)</A>,
+<A HREF="dcpi2pix.html">dcpi2pix(1)</A>,
+<A HREF="dcpikdiff.html">dcpikdiff(1)</A>,
+<A HREF="dcpix.html">dcpix(1)</A>,
+<A HREF="dcpisumxct.html">dcpisumxct(1)</A>,
+<A HREF="dcpistats.html">dcpistats(1)</A>,
+<A HREF="dcpid.html">dcpid(1)</A>,
+<A HREF="dcpiformat.html">dcpiformat(4)</A>,
+<A HREF="dcpiloader.html">dcpiloader(5)</A><P>
+
+For more information, see the 
+<A HREF="../home.html">DIGITAL Continuous
+Profiling Infrastructure project home page
+(http://www.research.digital.com/SRC/dcpi/ from outside DIGITAL)</A>.
+</BLOCKQUOTE>
+
+<H3>COPYRIGHT</H3>
+<BLOCKQUOTE>
+<P>
+
+<a href="http://www.digital.com/info/tm.html">
+Copyright 1996-97, Digital Equipment Corporation.
+</a>
+</BLOCKQUOTE>
+
+<H3>AUTHOR</H3>
+<BLOCKQUOTE>
+Shun-Tak Leung
+</BLOCKQUOTE>
+
+This page was generated automatically by
+<A HREF="http://www.research.digital.com/SRC/mtex/">mtex software</A>.
+</BODY>
+</HTML>

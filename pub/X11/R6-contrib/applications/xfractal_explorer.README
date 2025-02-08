@@ -1,0 +1,64 @@
+		==========================
+		= XFRACTAL_EXPLORER v1.0 =
+		==========================
+
+
+
+FOREWORD
+========
+	This program is provided without any guarantee of any kind.
+It can be copied and distributed freely as long as it is not used in
+any commercial program. Please contact me if you want to modify it.
+
+
+
+INTRODUCTION
+============
+
+	XFractal_explorer is, as you may have already understood, a program
+which allows you to compute and explore fractals. The types of fractals 
+available are:
+- Mandelbrot
+- Julia
+- Newton
+- Lambda & MandelLambda
+- Noel 1 & 2
+- Phoenix
+- Spider
+	
+	XFractal_Explorer can speak English as well as French.
+
+	The program runs under X Window and uses Motif. Furthermore, it needs
+a 8 plane display (256 colors).
+	You will find more information in the xfe.doc files. xfe.doc.eng is 
+English whereas xfe.doc.fra is in French.
+
+
+
+COMPILATION
+===========
+
+You will have to use the Makefile: type 'make' and wait.
+The program has been tested on hpux systems (hp 9000) and
+apollo.
+You will probably have to modify the Makefile (change the
+X11 and Motif paths for example).
+If you're platform doesn't recognize the 'long double'
+format, then you will have to add the -D_NO_LONG_DOUBLE flag.
+You may also want to modify some constants (image size...) in the
+fractal_type.h file.
+
+Enjoy it !!!
+
+
+
+
+
+For any comment, suggestion, bug, advice or whatever, please contact me:
+
+Nicolas GUERIN
+168 Avenue Parmentier
+75010 PARIS
+FRANCE
+
+email: guerin@reseau.onecert.fr

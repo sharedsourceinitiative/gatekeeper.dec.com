@@ -1,0 +1,21 @@
+Begin3
+Title:          XBlast
+Version:        2.6.1
+Entered-date:   26SEP1999
+Description:    Multi player blast the others game inspired by Dynablaster.
+		Over 100 different levels can be played with 2 to 8 players.
+		Supports color and monochrome graphics.
+Keywords:       xblast game X11 multiplayer networked 
+Author:         m.vogel@ndh.net (Oliver Vogel)
+		garthy@camtech.net.au (Garth Denley)
+		nicolay@ikp.uni-koeln.de (Norbert Nicolay)
+Maintained-by:  m.vogel@ndh.net (Oliver Vogel)
+Primary-site:   sunsite.unc.edu /pub/Linux/games/arcade
+		257 kB xblast-2.6.mono.tar.gz
+		1.4 MB xblast-2.6.color.tar.gz
+		2.9 MB xblast-2.6.sound.tar.gz	
+                75 kB  xblast-2.6-to-2.6.1.tar.gz
+Alternate-site: ftp.x.org /contrib/games
+Platforms:      X11
+Copying-policy: GNU Public License
+End

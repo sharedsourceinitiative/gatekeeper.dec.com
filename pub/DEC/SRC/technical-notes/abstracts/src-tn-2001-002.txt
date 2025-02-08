@@ -1,0 +1,7 @@
+"Why Rights Management is Wrong (and What to Do Instead)"
+Mark S. Manasse
+
+Note #2001-002, January 21, 2001. 
+
+Digital rights management based on enforcement is moribund. The bits are free and they can't be put back in the bottle. Yet, content creators want to get paid and users want superior quality content. Assuming that users are willing to pay for content they like, we propose a scheme for digital rights licensing modeled after shareware licensing.
+

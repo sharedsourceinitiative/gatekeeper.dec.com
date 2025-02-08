@@ -1,0 +1,24 @@
+      AVAILABLE ELECTRONICALLY
+
+"Extensible Syntax with Lexical Scoping"
+Luca Cardelli, Florian Matthes, and Martin Abadi.
+February 21, 1994.  35 pages
+
+A frequent dilemma in programming language design is the choice between 
+a language with a rich set of notations and a small, simple core language. 
+We address this dilemma by proposing extensible grammars, a
+syntax-definition formalism for incremental language extensions and restrictions.
+
+The translation of programs written in rich object languages into a
+small core language is defined via syntax-directed patterns. In contrast
+to macro-expansion and program-rewriting tools, our extensible grammars
+respect scoping rules. Therefore, we can introduce binding constructs
+while avoiding problems with unwanted name clashes.
+
+We develop extensible grammars and illustrate their use by extending
+the lambda calculus with let-bindings, conditionals, and constructs
+from database programming languages, such as SQL query expressions.
+We then give a formal description of the underlying rules for parsing,
+transformation, and substitution. Finally, we sketch how these
+rules are exploited in an implementation of a generic, extensible
+parser package.

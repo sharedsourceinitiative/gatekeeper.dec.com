@@ -1,0 +1,90 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.73 [en] (WinNT; U) [Netscape]">
+</head>
+<body>
+&nbsp;
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" >
+<tr>
+<td>
+<center>
+<h1>
+<b><font size=+1>Cooperative Backup System</font></b></h1></center>
+
+<center><b>Sameh Elnikety</b>
+<br><b>Rice University</b></center>
+</td>
+</tr>
+</table></center>
+
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" >
+<tr>
+<td><b>1 Introduction</b>
+<p>I am a second year Ph.D. student in the department of Computer Science
+at Rice University. I am working with Willy Zwaenepoel, my advisor, on
+distributed services. During my internship at SRC during summer 2000, I
+worked with Mark Lillibridge, my host, and Mike Burrows on building a prototype
+of a cooperative backup system.
+<p><b>2 Cooperative Backup System</b>
+<p>In this system, each machine stores its backup data remotely among a
+group of other peer machines, and in return it stores equivalent amounts
+of data from its partners in its local file system. This form of cooperation
+and distribution gives several benefits and poses several interesting challenges.
+Let us first consider the benefits. As the partners are independent and
+geographically distributed, they have independent failure modes, which
+is important for a backup system and corresponds to taking the backup tapes
+off-site. In addition, this cooperation makes the system very cost effective
+as the partners do not have to pay a fee to a third party for the backup
+service and there is no need to purchase new equipment. As for the challenges
+in the design of the system, the partners do not trust each other and it
+is possible that some partners are down at any moment. Therefore, we had
+to use several techniques to ensure confidentiality, robustness, integrity,
+and cooperation.
+<p>As the backup data might be sensitive and is stored remotely, we used
+secret key cryptography to encrypt the data. In particular, we used IDEA
+to encrypt the backup data before sending it to the partners during a backup
+operation and to decrypt the data during a restore operation. To ensure
+that the partners could not modify the data unnoticed, we used a cryptographic
+hash function to make the data blocks self-checking. So, when a machine
+is retrieving its data during a restore operation, it could check the cryptographic
+hash values in the data blocks to make sure that it is the same data that
+was backed up during the last backup operation. We used erasure codes to
+add redundancy to the data, so it is possible to do a backup or a restore
+even if a few partners are down. The possible security attacks against
+the system were novel and guarding against them was the hardest design
+issue. We used challenges to ensure that the partners of a given machine
+are keeping its backup data. To challenge a partner, a machine requests
+a randomly chosen block of data from that partner and checks it is the
+right block. Also, we had to impose several rules to ensure the cooperation
+of the partners and to prevent any partner from gaining any benefit if
+it does not apply the rules. For example, to prevent an attacker from exploiting
+one machine after the other, we imposed a commitment cost whenever a machine
+acquires a new partner. The machine pays the commitment cost by being forced
+to store its partners' data for a certain period of time without any guarantee
+that it can restore its own data. We ended our study with profiling the
+prototype system. We found out that the costs of encryption, computing
+the secure hash, and applying erasure codes are much less than what we
+had expected.
+<p><b>3 SRC</b>
+<p>I found SRC to be an exciting environment, full of very friendly, cooperative
+and brilliant people. The research taking place at SRC is very interesting
+and there is a prevailing mutual spirit of cooperation and integration
+among the different research groups. I had the chance to work closely with
+many smart people at SRC. Also, SRC is in downtown Palo Alto, which is
+a very lively place and I enjoyed a lot of fine restaurants and shopping
+places. In addition, I had the chance to visit other research labs in the
+Silicon Valley (e.g., Xerox PARC, HP Labs, IBM Almaden and Sun Labs).
+<br>&nbsp;</td>
+</tr>
+</table></center>
+
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+</body>
+</html>

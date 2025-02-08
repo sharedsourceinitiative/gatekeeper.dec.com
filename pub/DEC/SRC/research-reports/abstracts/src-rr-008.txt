@@ -1,0 +1,15 @@
+
+				AVAILABLE ELECTRONICALLY
+
+    "On Interprocess Communication."
+    Leslie Lamport.
+    December 25, 1985.  50 pages.
+
+Author's Abstract
+
+    A formalism, not based upon atomic actions, for specifying and
+    reasoning about concurrent systems is defined. It is used to specify
+    several classes of interprocess communication mechanisms and to
+    prove the correctness of algorithms for implementing them.
+
+

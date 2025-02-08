@@ -1,0 +1,203 @@
+
+
+
+    @(#)README     Mdb 1.9        97/06/23  (Linux Edition)
+
+    AUTHOR: Erland Hedman (erland@wrsec.fr)
+
+    INTRODUCTION:
+    Mdb  is  a Motif based Database Manager.  It is oriented to
+    fulfill the needs of an organized address  and  phone  book
+    utility  that takes advantage of the freeware equivalent to
+    troff, "groff", the freeware PostScript Pretty Print utili-
+    ty "mp", and finally the ispell spell checker.
+
+    FEATURES:
+        A  Motif  based  database  manager intended to maintain
+        Phone Book and Address databases.
+
+        Multiple Folder and Layout Management.
+
+        Import and Export of databases in a simple TAB separat-
+        ed  format  that can be understood by other (PCs & MAC)
+        programs.
+
+        Export of address books in Netscape's HTML format.
+
+
+        Uses troff/groff to assist in Addressing Label print.
+
+        Uses "mp" to assist in formatting hard copy Phone Books
+        suitable for several predefined Personal Organizers.
+
+        Runs ispell as a part of the Motif application to check
+        and correct spelling errors. The spell checking is done
+        word for word as you type them into mdb's editors.
+
+        Built  in Motif front-end for mail, mailx and sendmail,
+        complete with CC list dialogs, spell checking, save  to
+        sent folder and inclusion of a signature file and uuen-
+        coded/compressed attachments.
+
+        The database is completely configurable by means  of  a
+        built in configurator.
+
+    BACKGROUND:
+    The  original reason for developing this program was a need
+    for a simple address and phone book manager to fulfill  the
+    authors  need of a better organized environment in terms of
+    keeping this kind of information on-line, up  to  date  and
+    easily  maintained. The very first version did not have any
+    GUI at all, and was not intended to be distributed  to  the
+    world. However, the application started to grow as new fea-
+    tures were added, and the need of an efficient user  inter-
+    face  became  obvious. This situation challenged me to take
+    my first step into Motif Programming technique, and the re-
+    sult  was  `mdb', which simply reads: "Motif-database". Al-
+    though it should be understood that I in my  daily  profes-
+    sion,  are  not a database programmer, nor a Motif applica-
+    tion programmer, I still hope you can find it useful  some-
+    how. In any case I want to take the opportunity to communi-
+    cate my enthusiasm of Motif programming which I  found  un-
+    usually  stimulating and fun, partly due to the high reward
+    in terms of  gained  functionality  as  new  features  were
+    added. Since I am working within a market organization as a
+    Systems Support Engineer, the functionality of mdb is  ori-
+    ented  to,  or perhaps limited to the needs within my hori-
+    zons as a Customer Support Engineer.
+
+
+    LITERATURE REFERENCES:
+        Motif Programming Manual Volume Six.
+        OSF/Motif Programmer's Reference, Release 1.2.
+        OSF/Motif Style Guide, Release 1.2.
+
+
+    INTERNATIONALIZATION:
+    Mdb Version 1.9 is tested in the "C" and "sv" (Sweden)  Lo-
+    cales. In order to add other locales there may be some unix
+    to Mac/PC character translation needed to be done  (if  you
+    want to exchange data with those) in the following modules:
+        import.c, export.c and print.c.
+
+    For non "C" locales, "groff" (as opposed to troff) is high-
+    ly recommended. See GROFF switch in print.c.
+
+    The  Addressing Label Print routine defaults to metric val-
+    ues as exposed by the Scales.
+
+
+    DEVELOPMENT ENVIRONMENT:
+        Unix System V, Release 3, R32V2. SYSV, USG.
+        Unix System V, Release 4, R40V4. SVR4.
+        Solaris 2.4 (SunOS 5.4).
+        Linux 2.0.30 (RedHat)
+        GNU gcc version 2.7.2.
+        GDB version 4.16, DDD version 2.1.1 on top of GDB.
+        Editor vi, later VIM (a vi clone with Motif GUI)
+        Motif Version 1.2.2, 1.2.3 and 2.0.0.
+        mp Version 3.3.2
+        groff Version 1.10.
+        ispell version 3 and 4.
+
+
+    USAGE:
+        mdb -layout <ResourceFile> -hrz
+        Where:
+         ResourceFile:  - The mdb database layout.
+         hrz:      - Horizontal orientation.
+
+        Defaults: ResourceFile = Mdb. Orientation = Vertical.
+
+    TO BUILD AND TEST:
+        $ mmkmf
+        $ make
+        $ make install
+
+    The configuration files and the database files installs  in
+    /usr/local/lib/mdb  and  in $HOME/.mdb according to defines
+    in the Imakefile template. Mdb uses  built  in  values  for
+    "XFILESEARCHPATH"  and  "XUSERFILESEARCHPATH", and they de-
+    faults to the above mentioned  installation  directories  +
+    current working directory for config files.
+
+    $ mdb &
+
+    If  mdb  starts successfully, go to the Folder meny and se-
+    lect a folder and make it writable. Then you could  try  to
+    use  the  File->ImportDB  to  import the test database file
+    "testdb.tab". Now you can start to exercise the features of
+    mdb.
+
+    Try  to  print  the manual pages by using the "Help->Index"
+    button.
+
+    Please use the <Help> and F1 buttons extensively. There  is
+    help  attached  to  almost  any widget. Also buttons within
+    menu cascades gives help by using  the  `help  on  context'
+    (the F1 key) action.
+
+
+    There  is one bonus application included here: smterm.c. It
+    is used to exercise the pseudo terminal functionality. This
+    application  uses  ListTree.c.   ListTree is copyrighted by
+    Robert W. McMullen, under the terms defined in the file LI-
+    CENSE.
+
+
+    TO BE DONE:
+    Overall  database  improvements, especially performance im-
+    provements when collecting items for print.  You  can  keep
+    the size of folders reasonable simply by defining a new one
+    in the configurator. Approximately 1K  to  1.7K  items  per
+    folder  should  be  resonable in most cases on a local file
+    system.
+
+
+    KNOWN PROBLEMS:
+    Should not be used with pre 1.2.2 versions of Motif.
+
+    Uncomplete alphabetic sorting on machines not supporting  8
+    bit characters (non C locales only).
+
+    Motif  Version  1.2.2 does not handle Shared Text Source in
+    Scrolled Text Widgets well. This problem seems to  be  par-
+    ticular  for  Solaris 2.x, and it will cause a crash of mdb
+    when the Remarks and Email  dialogs  are  dismissed.  Undef
+    SHARED_SOURCE, or install the latest SUN Motif patches.
+    See `SHARED_SOURCE' in edit.c and mail.c
+
+    Attached  child  applications  (ispell)  are  controlled by
+    means of a slave pseudo-terminal device. This part  of  the
+    application  is  tested  on SUN Solaris 2.x and Linux only,
+    but should run on other SVR4 machines.  If you want to dis-
+    able this feature, undef TTYMON in the Imakefile.
+    See ttymon.c, smterm.c
+
+    With  the fvwm window manager, placement of dialogs may not
+    be as expected if the fvwm resource "NoPPosition" is on.
+
+
+COPYRIGHT:
+        Permission to use, copy, modify,  and  distribute  this
+        software  and its documentation is hereby granted with-
+        out fee, provided that the above copyright  notice  ap-
+        pear  in all copies and that both that copyright notice
+        and this permission notice appear in  supporting  docu-
+        mentation.  The  author  makes no representations about
+        the suitability of this software for any purpose. It is
+        provided "as is" without express or implied warranty.
+
+
+DISCLAIMER:
+        THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+        SOFTWARE, INCLUDING  ALL  IMPLIED  WARRANTIES  OF  MER-
+        CHANTABILITY  AND FITNESS, IN NO EVENT SHALL THE AUTHOR
+        BE LIABLE FOR ANY SPECIAL,  INDIRECT  OR  CONSEQUENTIAL
+        DAMAGES  OR  ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+        OF USE, DATA OR PROFITS, WHETHER IN AN ACTION  OF  CON-
+        TRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+        OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+        SOFTWARE.
+
+    Erland Hedman (erland@wrsec.fr).

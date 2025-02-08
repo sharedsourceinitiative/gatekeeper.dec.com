@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>Pcount Version 13.3 Release Notes</title>
+</head>
+<body>
+<!--#include file="includes/title.html" -->
+<br>
+Pcount Version 13.3 Release Notes
+</h1>
+<hr>
+<pre>
+Only one change was made since the previous version:
+
+  - Fixed a bug that could affect the accuracy of event counts when
+    multiple event types are multiplexed onto the same performance counter.
+
+/dev/pcount installation instructions:
+
+Become root and where &lt;config&gt; is the name of your configuration
+(usually the name of the machine in all upper-case):
+
+	# cat pcount.tar.Z  | uncompress | tar xvf -
+	# cd pcount
+	# ./INSTALL &lt;config&gt;
+
+This will put the pcount device driver configuration information into
+/sys/conf/.product.list and /sys/conf/&lt;config&gt;.list, if it exists.  If
+you are using other third party drivers and have other configurations,
+you will have to copy the PCOUNT line from .product.list to the other
+&lt;config&gt;.list files.
+
+Build the new kernel:
+
+	# doconfig -c &lt;config&gt;
+
+Test the new kernel:
+
+	# mv /vmunix{,.good}
+	# mv /sys/&lt;config&gt;/vmunix /
+	# reboot
+</pre>
+<hr>
+<!--#include file="includes/dcpi-footer.html" -->
+</body>
+</html>

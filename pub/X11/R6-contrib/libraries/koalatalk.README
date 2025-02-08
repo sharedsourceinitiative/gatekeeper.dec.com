@@ -1,0 +1,51 @@
+
+                              Koalatalk
+
+What is Koalatalk?
+------------------
+
+Koalatalk is an ICE-based message bus system. It is heavily inspired
+by Tooltalk and offers the following features :
+
+- freely distributable (X license)
+- lightweight
+- allows direct connections between clients (bypassing the server)
+- easy migration to Tooltalk if needed (close API)
+- graphic monitor to watch the traffic
+
+The following can be retrieved from ftp location avahi.inria.fr :
+
+/pub/KoalaTalk/koalatalk.tar.gz
+      Koalatalk itself
+/pub/KoalaTalk/koalatalk-article.ps
+      An article describing Koalatalk
+
+
+Koalatalk is not
+----------------
+
+... a better Tooltalk. Just aimed at different situations (for
+example, you make a heavy use of communications between two clients
+and the overhead of going through ttsession is significant) or
+architectures where Tooltalk is not available.
+
+
+Requirements :
+--------------
+
+KoalaTalk has been compiled on SunOS4, Solaris, Linux and OSF/1.
+
+KoalaTalk is based on ICE, so X11R6 is needed. However, I can most likely
+supply a libICE.a for your architecture if you don't have R6 yet.
+
+The monitor is compiled with Motif 1.2.x or 2.0. If you don't have Motif,
+you can use Koalatalk anyway but you won't be able to use ktmon.
+
+Comments welcome!
+
+
+
+--
+Cedric BEUST, Bull Research Koala project
+click <A HREF="http://www.inria.fr/~beust/beust.html">here</A>
+

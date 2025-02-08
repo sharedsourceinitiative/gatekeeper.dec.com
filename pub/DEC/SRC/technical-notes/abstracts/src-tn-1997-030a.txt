@@ -1,0 +1,9 @@
+"Composition: A Way to Make Proofs Harder"
+Leslie Lamport
+Note #1997-030. December 9, 1997. Corrected January 5, 1998.
+
+Compositional reasoning about a system means writing its specification
+as the parallel composition of components and reasoning separately
+about each component.  When distracting language issues are removed
+and the underlying mathematics is revealed, compositional reasoning is
+seen to be of little use.

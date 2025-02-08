@@ -1,0 +1,355 @@
+<HTML><HEAD>
+<!-- This document was created from RTF source by rtftohtml version 3.8 -->
+<TITLE>              Each to Each Programmer Reference Manual - APIs</TITLE></HEAD>
+<BODY BACKGROUND="" BGCOLOR="#FFFFFF" TEXT="#000000">
+<A HREF="e2e-Introduc.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="e2e-Sample.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="e2e.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="e2e.html#Contents"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+<hr size=4>
+<H1>
+APIs</H1>
+<UL>
+<LI><A HREF="#Heading5">eetypes.h</A>
+<LI><A HREF="#Heading6">Schema</A>
+<LI><A HREF="#Heading7">Consistency</A>
+<LI><A HREF="#Heading8">eepredict.h</A>
+<LI><A HREF="#Heading9">eesolve.h</A>
+</UL>
+<hr size=4>
+There are two APIs, one for the predictor and one for the solver, each defined
+in a separate header file. As mentioned earlier, these APIs perform the core
+prediction and analysis algorithms, but do not provide application-specific
+functionality such as nonvolatile storage or communication. The next section of
+this document, <b>Sample</b> <b>Application</b>, shows how to integrate the
+APIs with a complete application.<p>
+Both APIs are "thread-safe", that is the implementations do all necessary
+locking so that concurrent calls by multiple threads function correctly.<p>
+<i>Note</i>: We assume that the target platform's mutual exclusion primitives
+are fast relative to the time for a call on the prediction procedures.
+<a name="_Toc400263148"></a>
+
+<h2>
+<A NAME="Heading5">eetypes.h</A></h2>
+
+This
+header file gives the types used in the <b><i>Schema</i></b>,
+<b><i>eepredict.h</i></b>, and <b><i>eesolve.h</i></b> sections. We say that
+the types used to identify persons and items, <tt>ee_person</tt> and
+<tt>ee_item</tt> respectively, are <i>opaque</i>, meaning that the Each to Each
+code doesn't assume anything about them, such as whether or not there are
+"gaps" in the range of values in use. The one exception is that the values
+<tt>ee_person_null</tt> and <tt>ee_item_null</tt> should never be assigned to a
+real person or item; they are reserved for use as a special indicator value,
+such as indicating when an "iterator" has no more values to return (see
+<tt>ee_solve::person_iterator</tt> and <tt>ee_solve::item_iterator</tt> in
+eesolve.h).
+
+<pre>
+
+typedef int ee_bool;
+class ee_person {                          // an opaque uid for a person
+public:
+    int uid;
+    ee_person(int uu = 0): uid(uu) {};
+};
+inline int operator==(const ee_person&amp; x, const ee_person&amp; xx)
+{ return x.uid == xx.uid; }
+const ee_person ee_person_null(0);         // unused "null" value
+class ee_item {                            // an opaque uid for an item
+public:
+    int uid;
+    ee_item(int uu = 0): uid(uu) {};
+};
+inline int operator==(const ee_item&amp; y, const ee_item&amp; yy)
+{ return y.uid == yy.uid; }
+const ee_item ee_item_null(0);             // unused "null" value
+class ee_vote {                            // a vote
+public:
+    float s;                                 // score
+    float w;                                 // weight
+    ee_vote(float ss = 0.0f, float ww = 0.0f): s(ss), w(ww) {};
+};
+const ee_vote ee_vote_null(0.0f, 0.0f);    // unused "null" value
+const ee_model_ints = 32;
+class ee_model {                           // a model
+public:
+    int a[ee_model_ints];
+};
+const ee_model ee_model_null = { { 0 } };  // initial "null" value<a name="_Toc400263149"></a><a name="_Ref400263598"></a>
+</pre>
+
+<h2>
+<A NAME="Heading6">Schema</A></h2>
+
+The
+Each to Each solver and predictor require nonvolatile storage of some
+information about each person, each item, and each vote on an item by a person.
+For reasons of portability and flexibility, this storage is not managed
+directly by the Each to Each software. Instead, it is managed by
+application-specific code and is made accessible to the Each to Each software
+as part of the APIs defined in the next section of this document.<p>
+Here we define the logical schema as if this information is stored in a
+relational database with five tables, <tt>Persons</tt>, <tt>Items</tt>,
+<tt>Votes</tt>, <tt>VotesLog</tt>, and <tt>Generations</tt>. Of course, the
+application programmer is free to merge these tables with existing tables, or
+to implement them in a different storage medium such as a file system, subject
+to performance considerations.<p>
+The <tt>Persons</tt> table contains records of the form: 
+
+<pre>
+
+    ee_person person;    // unique key
+    ee_model model;
+</pre>
+The
+<tt>Items</tt> table contains records of the form:
+
+<pre>
+
+    ee_item item;        // unique key
+    ee_model model;
+</pre>
+The
+<tt>Votes</tt> table contains records of the form:
+
+<pre>
+
+    ee_person person;    // unique key: person, item
+    ee_item item;
+    ee_vote vote;
+</pre>
+The
+<tt>VotesLog</tt> table contains records of the form:
+
+<pre>
+
+    ee_person person;    // unique key: person, item, time
+    ee_item item;
+    ee_vote vote;
+    timestamp time;      // (e.g., DATE) indexed by time
+</pre>
+The
+<tt>VotesLog</tt> table helps the solver process detect updates to the
+<tt>Votes</tt> table made by the predictor process as it records new votes.
+Every transaction that modifies (inserts, updates, or deletes a record in)
+<tt>Votes</tt> must also insert a corresponding record in <tt>VotesLog</tt>. A
+deletion to <tt>Votes</tt> is indicated by a record in <tt>VotesLog</tt> with
+<tt>v</tt> equal to <tt>ee_vote_null</tt>. The <tt>time</tt> field determines
+the order in which the solver processes the entries, and so must have enough
+precision to resolve successive updates to a vote, e.g., when a person decides
+to change or delete a vote.<p>
+The <tt>Generations</tt> table contains a single record of the form:
+
+<pre>
+
+    int id;              // always equal to one
+    int generation;      // initially equal to zero
+</pre>
+The
+<tt>Generations</tt> table helps the predictor process notice updates to the
+<tt>Items</tt> table made by the solver process. Each time the solver has
+completed a set of updates to the <tt>Items</tt> table, it must update the
+record in <tt>the</tt> <tt>Generations</tt> table by increasing the generation
+field by one.
+<a name="_Toc400263150"></a>
+
+<h2>
+<A NAME="Heading7">Consistency</A></h2>
+
+The
+Each to Each APIs were designed in such a way that very few consistency
+constraints on the data are required:<p>
+1.	The models in the <tt>Persons</tt> and <tt>Items</tt> tables don't have to
+be updated atomically; they may be from different runs of the solver.<p>
+2.	If there is a vote for a person or item without a model, a model will be
+generated internally and will be available from <tt>get_*_model</tt>, etc. If
+there is a person or item without any votes, its model will be very near the
+null model.<p>
+3.	The <tt>VotesLog</tt> table, if applied to the <tt>Votes</tt> table (doing
+the insertions, modifications, deletions), gives the "truth" from which the
+system works. It is therefore okay for the <tt>VotesLog</tt> table to contain votes
+that have already been applied to the <tt>Votes</tt> table.
+<a name="_Toc400263151"></a><a name="_Ref400263630"></a>
+
+<h2>
+<A NAME="Heading8">eepredict.h</A></h2>
+
+This
+header file defines a single class <tt>ee_predict</tt>, which provides
+functions to generate person-item predictions and also person-person
+correlations. The <tt>ee_predict</tt> class doesn't have direct access to the
+nonvolatile storage in which votes and models are stored. Instead, when it
+needs a particular piece of information, it calls one of two <i>virtual
+functions</i>, <tt>get_person_votes</tt> or <tt>get_item_model</tt>. These
+functions are implemented in a class derived from <tt>ee_predict</tt> that is
+implemented by the client. See the <b>Sample</b> <b>Application</b> section for
+details.
+
+<pre>
+
+#include "eetypes.h"
+class ee_predict_impl;                          // private implementation class
+class ee_predict {
+public:
+    ee_predict();                               // constructor
+    /* Multiple distributed predictors can increase performance and
+       availability; changes to the person/item/votes model database
+       should be propagated via reset_vote() to each instance. */
+    virtual ~ee_predict();                      // destructor
+    ee_vote predict_item(const ee_person x, const ee_item y);
+    /* Return person x's predicted vote (score, weight) for item y. */
+    ee_vote predict_person(const ee_person x, const ee_person xx);
+    /* Return person x's predicted correlation (score, weight) with
+       person xx.  predict_person is not necessarily symmetric with
+       respect to x and xx; it expresses the interest of person x in
+       person xx. */
+    void reset_vote(const ee_person x, const ee_item y, const ee_vote v);
+    /* Note v as person x's new or revised vote for item y, or delete
+       if v is null. To delete a whole person or item, delete all the
+       votes for that person or item.  This call should follow a
+       change in the nonvolatile votes table; it resets any cache the
+       predictor may have kept. */
+    void reset_all_models(void);
+    /* Reset the internal state to include no knowledge of any item's
+       model. This should be called each time new models are available
+       from the solver.  This call should follow any mass changes to
+       the nonvolatile model data and resets any cache the predictor
+       might have kept. */
+    void reset_all(void);
+    /* An extension of reset_all_models that also clears any
+       cache of votes. */
+        
+/* Pure virtual functions, to be implemented by the client in a class
+   derived from ee_predict: */
+    virtual void get_person_votes(
+        const ee_person x,
+        void (*setvote)(
+            const ee_person x, const ee_item y, const ee_vote&amp; v, void* a),
+        void* arg) = 0;
+    /* Retrieve all &lt;person, item, vote&gt; records with person==x from
+       nonvolatile storage, calling (*setvote)(person, item, vote, arg)
+       for each. */
+    virtual void get_item_model(const ee_item y, ee_model&amp; m) = 0;
+    /* Retrieve item y's model from nonvolatile storage, and return it
+       in m; if there is no model, return the null model. */
+private:
+    // Disable the copy constructor and assignment operator:
+    ee_predict(const ee_predict&amp; rhs);
+    ee_predict&amp; operator=(const ee_predict&amp; rhs);
+    ee_predict_impl *impl;                  // instance data
+};<a name="_Toc400263152"></a><a name="_Ref400263665"></a>
+</pre>
+
+<h2>
+<A NAME="Heading9">eesolve.h</A></h2>
+
+This
+header file defines a single class <tt>ee_solve</tt>, which provides functions
+to analyze a set of votes, producing a compact set of models that can be used
+by <tt>ee_predict</tt> to generate predictions. Like <tt>ee_predict</tt>, the
+<tt>ee_solve</tt> class doesn't have direct access to the nonvolatile storage
+in which votes and models are used. Rather than using virtual functions,
+<tt>ee_solve</tt> provides ordinary functions to supply it with votes and
+(optionally) models, and to retrieve refined models.<p>
+<tt>ee_solve</tt> uses an iterative refinement algorithm. The longer this
+algorithm runs, the more accurate the predictions that are generated from the
+models it produces. The progress of the algorithm is reflected in a quantity
+called the <i>residue</i>, which measures the remaining opportunity for further
+refinement. The residue is proportional to the count of votes, decreases with
+time, and approaches an asymptote greater than zero. Functions are provided to
+retrieve the current residue and the count of votes. <p>
+It's possible to do a "cold start" of <tt>ee_solve</tt>, giving it only a set
+of votes. However, it will more quickly reach low residue values if it is given
+models from a previous run as well as the set of votes. As shown in the
+<b><i>Sample Application</i></b> section, it can be run continously by
+supplying it with a log of changes to the <tt>Votes</tt> database.
+
+<pre>
+
+#include "eetypes.h"
+// Private implementation classes:
+class ee_solve_impl;
+class ee_solve_person_iterator_impl;
+class ee_solve_item_iterator_impl;
+class ee_solve {              // the solver, normally with exactly one instance
+public:
+    ee_solve();               // constructor
+    ~ee_solve();              // destructor
+    void restart(void);
+    /* Reset the internal state to that following a constructor. */ 
+    void set_vote(const ee_person x, const ee_item y, const ee_vote v);
+    /* Set or update person x's vote for item y to be v, or delete if
+       v is null. */
+    void set_person_model(const ee_person x, const ee_model&amp; m);
+    /* Set the model for person x to be m. Before initialization, a
+       model is treated as null. */
+    void set_item_model(const ee_item y, const ee_model&amp; m);
+    /* Set the model for item y to be m. Before initialization, a
+       model is treated as null. */
+        
+    void solve_step();
+    /* Update models (a potentially lengthy operation!).  solve_step
+       is meant to be called repeatedly until approximate convergence
+       is reached; see get_residue. */
+    double get_residue();
+    /* Return the current value of the "residue", a non-negative
+       value.  Calling solve_step decreases in the residue; setting
+       votes or models can increase it. The residue grows with the
+       number of votes, and the client can use the residue per vote to
+       determine approximate convergence. */
+    int get_vote_count();
+    /* Return the current number of votes; overridden votes are not
+       counted. */
+    void get_person_model(const ee_person x, ee_model&amp; m);
+    /* Set m to person x's model. */
+    void get_item_model(const ee_item y, ee_model&amp; m);
+    /* Set m to item y's model. */
+    class person_iterator {
+    public:
+        person_iterator(ee_solve&amp; s); // constructor
+        ~person_iterator();           // destructor
+        ee_person get_next();         // iterate over persons
+    private:
+        // Disable the copy constructor and assignment operator:
+        person_iterator(const person_iterator&amp; rhs);
+        person_iterator&amp; operator=(const person_iterator&amp; rhs);
+        ee_solve_person_iterator_impl *impl; // instance data
+    };
+    /* A person_iterator is used to discover all the persons known to
+       the solver.  A person is known to the solver if one or more
+       votes by that person have been registered via set_vote and not
+       subsequently deleted, or if a model for that person has been
+       registered via set_person_model and not subsequently deleted.
+       Each call to get_next returns another person not previously
+       returned since the iterator was constructed, or ee_person_null
+       if none remain.  The result of interleaving calls to get_next
+       with calls to set_vote or set_person_model is undefined. */
+    class item_iterator {
+    public:
+        item_iterator(ee_solve&amp; s);   // constructor
+        ~item_iterator();             // destructor
+        ee_item get_next();           // iterate over items
+    private:
+        // Disable the copy constructor and assignment operator:
+        item_iterator(const item_iterator&amp; rhs);
+        item_iterator&amp; operator=(const item_iterator&amp; rhs);
+        ee_solve_item_iterator_impl *impl;  // instance data
+    };
+    /* An item_iterator is used to discover all the items known to the
+       solver; see person_iterator for details. */
+    friend class person_iterator;
+    friend class item_iterator;
+private:
+    // Disable the copy constructor and assignment operator:
+    ee_solve(const ee_solve&amp; rhs);
+    ee_solve&amp; operator=(const ee_solve&amp; rhs);
+    ee_solve_impl *impl;                   // instance data
+};<a name="_Toc400263153"></a><a name="_Ref400263205"></a><a name="_Ref400263552"></a><a name="_Ref400263858"></a>
+</pre>
+<P><hr size=4>
+<A HREF="e2e-Introduc.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="e2e-Sample.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="e2e.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="e2e.html#Contents"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+</body></html>

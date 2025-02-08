@@ -1,0 +1,49 @@
+** Announcing the release of XBoard and WinBoard, version 3.2 **
+
+XBoard is a graphical chessboard for the X Window System that can serve as a
+user interface for GNU Chess, for the Internet Chess Server (ICS), or for
+electronic mail correspondence chess.  XBoard can also be used by itself.
+It can read and write game files in PGN (portable game notation).
+
+You can (either now or soon) get XBoard 3.2 by anonymous ftp from the chess
+ftp server ics.onenet.net (as file pub/chess/X/xboard-3.2.pl0.tar.gz), or from
+prep.ai.mit.edu (as file pub/gnu/xboard-3.2.pl0.tar.gz), or other GNU ftp
+sites.
+
+If you plan to use XBoard 3.2 with GNU Chess, get GNU Chess 4.0 patchlevel 73
+to go with it.  It is available from prep.ai.mit.edu and other GNU ftp
+sites.
+
+WinBoard is a port of XBoard to the Microsoft Win32 programming interface.  It
+runs on Windows NT and Windows 95 (Chicago).  Most of its functions do *not*
+work on Windows 3.1, Windows for Workgroups 3.11, or other DOS-based versions
+of Windows, not even with the Win32s package.  (It works only as a standalone
+chessboard and PGN viewer/editor on the latter systems.)  WinBoard 3.2 is
+available from the chess ftp server ics.onenet.net (as file
+pub/chess/windows/winboard-3.2.pl0.zip or winboard-3.2.pl0.tar.gz).
+
+	--Tim Mann <mann@pa.dec.com>
+
+** Change highlights since the last release (XBoard 3.1.pl1) **
+
+- Show Thinking mode displays what GNU Chess is thinking about.
+
+- Book command accesses GNU Chess's book.
+
+- Automatically observe games on ICS involving your favorite players.
+
+- Menu support for position editing in ICS examine mode.
+
+- Multiple correspondence games per mail message.
+
+- Checkmate/stalemate detection in Edit Game mode.
+
+- New chess piece bitmaps (optional).
+
+- Graphical icon shows whose move it is.
+
+- WinBoard updated to match XBoard and ported to Windows 95 (beta 2).
+
+- XBoard configures itself using GNU autoconf instead of imake.
+
+- Small improvements and bug fixes too numerous to list.

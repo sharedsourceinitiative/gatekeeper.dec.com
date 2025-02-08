@@ -1,0 +1,21 @@
+		      CRL Technical Report 90/09
+
+      Non-Blocking Garbage Collection for Multiprocessors
+
+	        Maurice Herlihy and J. Eliot B. Moss
+
+Garbage collection algorithms for shared-memory multiprocessors 
+typically rely on some form of global synchronization to preserve 
+consistency.  Nevertheless, such global synchronization is poorly 
+suited for asynchronous architectures: if one process is halted or 
+delayed, other, non-faulty processes will be unable to progress.  
+By contrast, a storage management algorithm is non-blocking if (in 
+the absence of resource exhaustion) a process that is allocating or 
+collecting memory can undergo a substantial delay without forcing 
+other processes to block.  This paper presents the first algorithm 
+for non-blocking garbage collection in a realistic model.  The 
+algorithm assumes that processes synchronize by applying read, 
+write, and compare-and-swap operations to shared memory.  This 
+algorithm uses no locks or busy-waiting, it does not assume that
+processes can observe or modify one another's local variables or 
+registers, and it does not use inter-process interrupts.

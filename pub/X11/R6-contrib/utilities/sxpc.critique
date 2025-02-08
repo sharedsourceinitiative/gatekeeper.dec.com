@@ -1,0 +1,421 @@
+From: hal@pollux.cs.uga.edu (Hal N. Brooks)
+Newsgroups: comp.os.linux.misc
+Subject: sxpc critic recants (data included)
+Date: 18 Nov 1993 10:00:14 GMT
+Organization: University of Georgia, Athens
+Message-ID: <2cfh3e$7mp@hobbes.cc.uga.edu>
+
+
+In short, this critic of SXPC must confess that it is useful.
+
+My previous, less formalized observations were made with
+respect to sxpc-0.9, but this more objective look made use
+of sxpc-1.01, which I believe has benefitted from some
+enhancements.
+
+For those who want the executive summary, below (from worst to
+best) are what I assess to be the advantages of using various
+compression techniques with X11.
+
+                                      V.42bis:  84% speedup
+                             Sxpc compression: 109% speedup
+                   V.42bis + Term compression: 123% speedup
+              Term compression (i.e., txconn): 128% speedup
+V.42bis + Term compression + Sxpc compression: 146% speedup
+          Term compression + Sxpc compression: 147% speedup
+                   V.42bis + Sxpc compression: 148% speedup
+
+In brief, it is counterproductive to use TERM compression along
+with V.42bis compression, presumably because they are based on
+the same algorithm.  Therefore, if you use TERM compression (without
+SXPC), you should see a 2% speedup by disabling V.42bis.
+
+If your modem doesn't have V.42bis compression, then you are well
+served by using a combination of SXPC and TERM compression.
+
+If you do have a modem with V.42bis compression, you should see a
+speedup of about 9% by using SXPC in conjunction with V.42bis, over
+using TERM compression alone.
+ 
+
+THE DETAILS:
+
+This analysis assumes that the bottleneck lies in the telephone
+(modem-to-modem) connection, and it is therefore beneficial to
+reduce the number of bytes carried over that link.
+
+Two tests were run:
+                    1) the emacs test consisted of running an
+emacs 19.16.1 X client on a remote computer, using the file sxpc.c
+as the file to be edited.  Ctrl-L was then hit 5 times to refresh
+the screen.        
+                    2) the xfig test consisted of running Xfig 2.1.7a
+as an X client on a remote computer, initially loading the file
+dresser.fig, and pressing each of the 12 edit mode buttons along
+the lefthand side before quitting.
+
+The data was collected by doing nothing more than logging in, performing
+these operations, and logging out.  Subsequently, the link status report
+information provided by the modem was used to determine the number
+of bytes transferred.
+
+XFree86-1.3 was in use on the local computer which was running
+Linux alpha-0.99pl13h, the remote host was a Sun running SunOS 4.1.3.
+Xauth was not run, so as to ease the tedium of collecting the data.
+TERM refers to the term108 package, and SXPC refers to sxpc-1.01.
+
+Certain precautions were taken to ensure that results weren't
+adversely effected.  First, noise logs were kept on both sides
+of the connection and were examined to make sure that no more
+than 10 bytes were discarded by TERM.  Characters such as those
+from the TERM escape sequence typically find their way into the
+noise log.  Second, such things as fortune were eliminated from
+.logout (I thought of that only after getting one of those
+Dave Berry articles, which I enjoyed nonetheless).
+
+A negligible number (22) of additional characters were typed when
+invoking SXPC over TERM.  For SXPC the required sequence transmitted
+was "setenv DISPLAY `sxpc remote pollux:0`;tredir 4000 4000" while
+for TERM the sequence was limited to "setenv DISPLAY `hostname``txconn`".
+
+The numbers shown below from the modem link status reports include
+the following terms, defined by ZyXEL as follows:
+
+ Chars - data characters transmitted between DTE (computer/terminal)
+         and modem.
+
+ Octet - Data bytes transmitted between the modems, handled by error
+         control protocol, may be compressed data.  Data compression
+         efficiency may be seen from the ratio of chars count to
+         octets count.
+
+For the executive summary, I considered only the octets sent and
+received.  As a baseline, I added the octets sent and received for
+each of the 2 tests, with V.42bis disabled, TERM compression disabled,
+and using txconn.  Combinations of compression techniques were assessed
+using the same numbers, but for the appropriate algorithms in use.
+
+Below are the raw link data reports.  Preceding each is a line indicating
+the conditions under which the data were gathered, using the following
+abbreviations:
+
+V.42 = V.42 (no modem compression)
+V.42b = V.42bis (modem compression)
+
+C = term compression in effect
+NC = term compression NOT in effect
+
+T = using txconn
+S = using sxpc-1.1
+
+E = emacs test
+X = xfig test
+
+
+So, for instance, a connection in which V.42bis modem compression is
+disabled, TERM compression is on, txconn is used, and the test run is
+the xfig test would be denoted as "V.42bis/C/T/X".
+
+
+V.42b/NC/T/E:
+   ZyXEL U-MODEM LINK STATUS REPORT
+
+   Chars Sent         36663     Chars Received      19686 
+   Octets Sent        19985     Octets Received     17884 
+   Blocks Sent          986     Blocks Received       928 
+   Blocks Resent          0     Max Outstanding        15 
+   Max Block Size       128     Retrains Requested      0 
+   Link Duration          2     Retrains Granted        0 
+   T401 Timeouts          6     T402 Timeouts          28 
+   FCS Errors             0     Round Trip Delay       12 
+   Xmitter Underrun       0     Receiver Overrun        0 
+
+   Last Speed/Protocol     CONNECT 9600/ARQ/V42b
+
+   Disconnect Reason       Carrier Lost
+
+
+V.42b/NC/S/E:
+   ZyXEL U-MODEM LINK STATUS REPORT
+
+   Chars Sent         15918     Chars Received       8931 
+   Octets Sent        15980     Octets Received     10916 
+   Blocks Sent          715     Blocks Received       712 
+   Blocks Resent          0     Max Outstanding        15 
+   Max Block Size       128     Retrains Requested      0 
+   Link Duration          2     Retrains Granted        0 
+   T401 Timeouts          9     T402 Timeouts          41 
+   FCS Errors             0     Round Trip Delay       12 
+   Xmitter Underrun       0     Receiver Overrun        0 
+
+   Last Speed/Protocol     CONNECT 9600/ARQ/V42b
+
+   Disconnect Reason       Carrier Lost
+
+
+V.42b/C/T/E:
+   ZyXEL U-MODEM LINK STATUS REPORT
+
+   Chars Sent         13466     Chars Received      10587 
+   Octets Sent        15542     Octets Received     13581 
+   Blocks Sent          498     Blocks Received       721 
+   Blocks Resent          0     Max Outstanding        15 
+   Max Block Size       128     Retrains Requested      0 
+   Link Duration          1     Retrains Granted        0 
+   T401 Timeouts          5     T402 Timeouts          29 
+   FCS Errors             0     Round Trip Delay       12 
+   Xmitter Underrun       0     Receiver Overrun        0 
+
+   Last Speed/Protocol     CONNECT 9600/ARQ/V42b
+
+   Disconnect Reason       Carrier Lost
+
+
+V.42b/C/S/E:
+   ZyXEL U-MODEM LINK STATUS REPORT
+
+   Chars Sent         13131     Chars Received       7972 
+   Octets Sent        15450     Octets Received     11051 
+   Blocks Sent          549     Blocks Received       740 
+   Blocks Resent          0     Max Outstanding        15 
+   Max Block Size       128     Retrains Requested      0 
+   Link Duration          2     Retrains Granted        0 
+   T401 Timeouts          8     T402 Timeouts          43 
+   FCS Errors             0     Round Trip Delay       18 
+   Xmitter Underrun       0     Receiver Overrun        0 
+
+   Last Speed/Protocol     CONNECT 9600/ARQ/V42b
+
+   Disconnect Reason       Carrier Lost
+
+
+V.42b/NC/T/X:
+   ZyXEL U-MODEM LINK STATUS REPORT
+
+   Chars Sent         64089     Chars Received        155k
+   Octets Sent        40312     Octets Received     85552 
+   Blocks Sent         2529     Blocks Received      4254 
+   Blocks Resent          0     Max Outstanding        15 
+   Max Block Size       128     Retrains Requested      0 
+   Link Duration          6     Retrains Granted        0 
+   T401 Timeouts          6     T402 Timeouts          71 
+   FCS Errors             0     Round Trip Delay       12 
+   Xmitter Underrun       0     Receiver Overrun        0 
+
+   Last Speed/Protocol     CONNECT 9600/ARQ/V42b
+
+   Disconnect Reason       Carrier Lost
+
+
+V.42b/NC/S/X:
+   ZyXEL U-MODEM LINK STATUS REPORT
+
+   Chars Sent         27142     Chars Received      71663 
+   Octets Sent        30144     Octets Received     64267 
+   Blocks Sent         1613     Blocks Received      2476 
+   Blocks Resent          0     Max Outstanding        15 
+   Max Block Size       128     Retrains Requested      0 
+   Link Duration          4     Retrains Granted        0 
+   T401 Timeouts         20     T402 Timeouts          69 
+   FCS Errors             0     Round Trip Delay        0 
+   Xmitter Underrun       0     Receiver Overrun        0 
+
+   Last Speed/Protocol     CONNECT 9600/ARQ/V42b
+
+   Disconnect Reason       Carrier Lost
+
+
+V.42b/C/T/X:
+   ZyXEL U-MODEM LINK STATUS REPORT
+
+   Chars Sent         25396     Chars Received      66923 
+   Octets Sent        29783     Octets Received     76008 
+   Blocks Sent         1065     Blocks Received      2178 
+   Blocks Resent          0     Max Outstanding        15 
+   Max Block Size       128     Retrains Requested      0 
+   Link Duration          4     Retrains Granted        0 
+   T401 Timeouts         10     T402 Timeouts          62 
+   FCS Errors             1     Round Trip Delay       10 
+   Xmitter Underrun       0     Receiver Overrun        0 
+
+   Last Speed/Protocol     CONNECT 9600/ARQ/V42b
+
+   Disconnect Reason       Carrier Lost
+
+
+V.42b/C/S/X:
+   ZyXEL U-MODEM LINK STATUS REPORT
+
+   Chars Sent         23244     Chars Received      58993 
+   Octets Sent        28047     Octets Received     68026 
+   Blocks Sent         1139     Blocks Received      2170 
+   Blocks Resent          0     Max Outstanding        15 
+   Max Block Size       128     Retrains Requested      0 
+   Link Duration          4     Retrains Granted        0 
+   T401 Timeouts          8     T402 Timeouts          67 
+   FCS Errors             0     Round Trip Delay       16 
+   Xmitter Underrun       0     Receiver Overrun        0 
+
+   Last Speed/Protocol     CONNECT 9600/ARQ/V42b
+
+   Disconnect Reason       Carrier Lost
+
+
+V.42/NC/T/E:
+   ZyXEL U-MODEM LINK STATUS REPORT
+
+   Chars Sent         36670     Chars Received      19693 
+   Octets Sent        39440     Octets Received     23469 
+   Blocks Sent          692     Blocks Received       944 
+   Blocks Resent          0     Max Outstanding        15 
+   Max Block Size       128     Retrains Requested      0 
+   Link Duration          2     Retrains Granted        0 
+   T401 Timeouts          6     T402 Timeouts          40 
+   FCS Errors             0     Round Trip Delay       14 
+   Xmitter Underrun       0     Receiver Overrun        0 
+
+   Last Speed/Protocol     CONNECT 9600/ARQ/V42 
+
+   Disconnect Reason       Carrier Lost
+
+V.42/NC/S/E:
+   ZyXEL U-MODEM LINK STATUS REPORT
+
+   Chars Sent         15933     Chars Received       9005 
+   Octets Sent        18130     Octets Received     12093 
+   Blocks Sent          549     Blocks Received       772 
+   Blocks Resent          0     Max Outstanding        15 
+   Max Block Size       128     Retrains Requested      0 
+   Link Duration          2     Retrains Granted        0 
+   T401 Timeouts          8     T402 Timeouts          43 
+   FCS Errors             0     Round Trip Delay       16 
+   Xmitter Underrun       0     Receiver Overrun        0 
+
+   Last Speed/Protocol     CONNECT 9600/ARQ/V42 
+
+   Disconnect Reason       Carrier Lost
+
+
+V.42/C/T/E:
+   ZyXEL U-MODEM LINK STATUS REPORT
+
+   Chars Sent         13465     Chars Received      10552 
+   Octets Sent        15373     Octets Received     13296 
+   Blocks Sent          477     Blocks Received       686 
+   Blocks Resent          0     Max Outstanding        15 
+   Max Block Size       128     Retrains Requested      0 
+   Link Duration          2     Retrains Granted        0 
+   T401 Timeouts          9     T402 Timeouts          32 
+   FCS Errors             0     Round Trip Delay       14 
+   Xmitter Underrun       0     Receiver Overrun        0 
+
+   Last Speed/Protocol     CONNECT 9600/ARQ/V42 
+
+   Disconnect Reason       Carrier Lost
+
+
+V.42/C/S/E:
+   ZyXEL U-MODEM LINK STATUS REPORT
+
+   Chars Sent         13143     Chars Received       7966 
+   Octets Sent        15195     Octets Received     10906 
+   Blocks Sent          513     Blocks Received       735 
+   Blocks Resent          0     Max Outstanding        15 
+   Max Block Size       128     Retrains Requested      0 
+   Link Duration          2     Retrains Granted        0 
+   T401 Timeouts          9     T402 Timeouts          67 
+   FCS Errors             0     Round Trip Delay       12 
+   Xmitter Underrun       0     Receiver Overrun        0 
+
+   Last Speed/Protocol     CONNECT 9600/ARQ/V42 
+
+   Disconnect Reason       Carrier Lost
+
+
+V.42/NC/T/X:
+   ZyXEL U-MODEM LINK STATUS REPORT
+
+   Chars Sent         64795     Chars Received        155k
+   Octets Sent        71511     Octets Received       167k
+   Blocks Sent         1678     Blocks Received      3102 
+   Blocks Resent          0     Max Outstanding        15 
+   Max Block Size       128     Retrains Requested      0 
+   Link Duration          5     Retrains Granted        0 
+   T401 Timeouts          6     T402 Timeouts          49 
+   FCS Errors             0     Round Trip Delay       12 
+   Xmitter Underrun       0     Receiver Overrun        0 
+
+   Last Speed/Protocol     CONNECT 9600/ARQ/V42 
+
+   Disconnect Reason       Carrier Lost
+
+
+V.42/NC/S/X:
+   ZyXEL U-MODEM LINK STATUS REPORT
+
+   Chars Sent         28266     Chars Received      72567 
+   Octets Sent        32910     Octets Received     80761 
+   Blocks Sent         1161     Blocks Received      2048 
+   Blocks Resent          0     Max Outstanding        15 
+   Max Block Size       128     Retrains Requested      0 
+   Link Duration          4     Retrains Granted        0 
+   T401 Timeouts          5     T402 Timeouts          49 
+   FCS Errors             0     Round Trip Delay       12 
+   Xmitter Underrun       0     Receiver Overrun        0 
+
+   Last Speed/Protocol     CONNECT 9600/ARQ/V42 
+
+   Disconnect Reason       Carrier Lost
+
+
+V.42/C/T/X:
+   ZyXEL U-MODEM LINK STATUS REPORT
+
+   Chars Sent         25265     Chars Received      66664 
+   Octets Sent        29425     Octets Received     73988 
+   Blocks Sent         1040     Blocks Received      1831 
+   Blocks Resent          0     Max Outstanding        15 
+   Max Block Size       128     Retrains Requested      0 
+   Link Duration          4     Retrains Granted        0 
+   T401 Timeouts         13     T402 Timeouts          42 
+   FCS Errors             0     Round Trip Delay       12 
+   Xmitter Underrun       0     Receiver Overrun        0 
+
+   Last Speed/Protocol     CONNECT 9600/ARQ/V42 
+
+   Disconnect Reason       Carrier Lost
+
+
+V.42/C/S/X:
+   ZyXEL U-MODEM LINK STATUS REPORT
+
+   Chars Sent         23918     Chars Received      59825 
+   Octets Sent        28238     Octets Received     67511 
+   Blocks Sent         1080     Blocks Received      1921 
+   Blocks Resent          0     Max Outstanding        15 
+   Max Block Size       128     Retrains Requested      0 
+   Link Duration          4     Retrains Granted        0 
+   T401 Timeouts          7     T402 Timeouts          57 
+   FCS Errors             0     Round Trip Delay       14 
+   Xmitter Underrun       0     Receiver Overrun        0 
+
+   Last Speed/Protocol     CONNECT 9600/ARQ/V42 
+
+   Disconnect Reason       Carrier Lost
+
+
+It can be noted that for the Chars Sent / Chars Received data, the
+presence or absence of V.42bis should make no difference, and as
+measured it made very little difference.  The speedups as measured
+by the Chars Sent / Chars Received data is somewhat more impressive
+than that given in the executive summary, but with the ordering
+(SXPC, TERM, SXPC+TERM) preserved.
+
+In short, while the TERM and V.42bis algorithms are the same, and
+nothing is gained by employing both, the SXPC algorithm shares
+a symbiotic relationship with either V.42bis or TERM compression
+and should be used in conjunction with one or the other.
+
+======================================================================
+ Hal N. Brooks     Voice: (706) 546-7792     Internet: hal@cs.uga.edu
+======================================================================

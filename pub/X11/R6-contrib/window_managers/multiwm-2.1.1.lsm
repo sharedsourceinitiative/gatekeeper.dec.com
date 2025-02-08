@@ -1,0 +1,17 @@
+Begin3
+Title: MultiWM
+Version: Release 2 (Broken)
+Entered-date: 22JUL97
+Description: An interactive bash-script to choose right window manager and
+             window manager configuration before starting X
+Keywords: X Window System, bash, script, window managers
+Author: juhtolv@silmu.cc.jyu.fi (Juhapekka Tolvanen)
+        mjsaaris@cc.jyu.fi (Mika Jorma Saaristo)
+Maintained-by: juhtolv@silmu.cc.jyu.fi (Juhapekka Tolvanen)
+Primary-site: http://www.cc.jyu.fi/~juhtolv/multiwm/multiwm-2.1.1.tar.gz
+Alternate-site: ftp://ftp.jyu.fi/
+Original-site:
+Platforms: At least Linux with X Window System. Probably most Unix-like
+	platforms with X Window System. 
+Copying-policy: GPL
+End

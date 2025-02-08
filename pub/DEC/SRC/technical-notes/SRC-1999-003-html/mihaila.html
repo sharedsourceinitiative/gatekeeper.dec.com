@@ -1,0 +1,76 @@
+<html>
+<head><title>Hilltop: Experiences Building a Web Search Engine</title> 
+</head>
+<body>
+<center> <h1> <b>Hilltop: Experiences Building a Web Search Engine
+</b> </h1> <br>
+<h2>George Andrei Mihaila, University of Toronto</h2>
+</center>
+
+I'm currently in the last year of my Ph.D. program at the University
+of Toronto, working with Alberto Mendelzon, my advisor. My research
+is in the area of Web querying and database integration. During my
+summer internship at SRC I worked with my host, Krishna Bharat, on
+improving the quality of Web search results. <P>
+
+More specifically, I worked on designing and implementing a
+connectivity-based search engine. We started from Topic Distillation
+algorithms. Topic Distillation algorithms assign authority scores for
+pages by computing the principal <i>eigenvector</i> of the adjacency matrix
+of a subgraph of relevant pages. According to this scheme, highly
+connected pages receive a high score which roughly corresponds to
+the subjective notion of a good quality page. The intuitive
+reason for this is that if a page is referred from many different
+places, it is probably a good page.  The key factor influencing the
+quality of the results is how the subgraph is selected.  Typically,  
+this subgraph is constructed by taking the back and forward links
+from a small set of pages on the query topic.  This method has the
+potential of including pages which are not germane to the topic--which in turn
+affects the final ranking.<P>
+
+Our objective was to design a conservative version of Topic
+Distillation in which we consider only a small fraction of the Web, 
+carefully selected based on connectivity properties. <P>
+
+The first step in implementing this idea consisted in pre-computing
+the set of pages we needed to work with. For this, I used SRC's connectivity server
+which maintains connectivity information about a large fraction of the
+Web (about 150M pages). For me, this was a great opportunity, as I was
+able to easily test several hypotheses using real data, without the
+need to access the Web (which would have been much too slow). By
+applying several connectivity-based filters on this data, a set of
+about 2.5M URLs was selected. We then used the SRC's Mercator Web crawler to
+download all these pages. Once we had this data, I wrote a program
+using the NI2 indexer library to build an index of the relevant text
+and links from these pages. This too was a very interesting
+experience for me, as it provided the opportunity
+to learn about the data structures and
+operation of the inverted index system in NI2<P>
+
+Finally, my host and I discussed several ranking algorithms. After
+experimenting with a number of different ranking functions, we decided
+on a final algorithm and I implemented it on top of the NI2 query
+library. As a last step, I wrote a limited HTTP server program that
+provides Web access to the query interface.<P>
+
+After everything was up and running, we needed to test it with real
+users in order to compare it with other popular search engines.  My
+co-summer interns were very helpful in this phase, as they volunteered to
+participate in our user study.  At this stage of the project, 
+I learned a lot about
+conducting objective tests with information retrieval systems.  It was
+also satisfying to see people finding what they were looking
+for among the highest ranked results.<P>
+
+In conclusion, my summer internship at SRC provided an excellent
+learning environment.  Having the opportunity to work with such
+knowledgeable and enthusiastic people was truly inspirational.<P>
+
+
+
+
+
+</body>
+
+</html>
+

@@ -1,0 +1,56 @@
+<HTML><HEAD><TITLE>
+Digital Systems Research Center: Report 050a</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Research Report 050a</H1>
+<H1>An Efficient Algorithm for Finding the CSG Representation      of a Simple Polygon.</H1>
+<HR>
+<H2>    David Dobkin, Leonidas Guibas, John Hershberger, and  Jack Snoeyink.</H2>
+<b>September 10, 1989</b><BR><i> 22 pages</i>
+<P>
+    Modeling two-dimensional and three-dimensional objects is an
+    important theme in computer graphics.  Two main types of models
+    are used in both cases: boundary representations, which represent
+    the surface of an object explicitly but represent its interior only
+    implicitly, and constructive solid geometry representations, which
+    model a complex object, surface and interior together, as a boolean
+    combination of simpler objects.  Because neither representation
+    is good for all applications, conversion between the two is often
+    necessary.
+<P>
+    We consider the problem of converting boundary representations of
+    polyhedral objects into constructive solid geometry (CSG)
+    representations.  The CSG representations for a polyhedron P are
+    based on the half-spaces supporting the faces of P. For certain
+    kinds of polyhedra this problem is equivalent to the corresponding
+    problem for simple polygons in the plane.  We give a new proof that
+    the interior of each simple polygon can be represented by a monotone
+    boolean formula based on the half-planes supporting the sides of
+    the polygon and using each such half-plane only once.  Our main
+    contribution is an efficient and practical O(n log n) algorithm
+    for doing this boundary-to-CSG conversion for a simple polygon of
+    n sides.  We also prove that such nice formulae do not always exist
+    for general polyhedra in three dimensions.
+<P>
+A Videotape (50b) accompanies report 50a. 
+<P>
+<H1>Boolean Formulae for Simple Polygons.</H1>
+<HR>
+<H2>    John Hershberger and Marc H. Brown.</H2>
+    Time 6:15
+<P>
+    This videotape shows the boundary-to-CSG conversion algorithm in
+    action, featuring a visualization created with the Zeus algorithm
+    animation system.  Multiple color views, updated as the program
+    runs, illustrate different aspects of the algorithm.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-050a.ps.Z">PostScript compressed with UNIX compress</A></B> -- 128 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-050a.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 91 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-050a.ps.zip">PostScript compressed with ZIP</A></B> -- 91 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-050a.ps">PostScript</A></B> -- 320 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-050a.pdf">Portable Document Format (PDF)</A></B> -- 304 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

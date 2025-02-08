@@ -1,0 +1,11 @@
+"Strengthening Passwords"
+Martin Abadi, T. Mark A. Lomas, and Roger Needham
+Note #1997-033, September 4, 1997 (with minor revisions on December 16, 1997)
+
+Despite their notorious vulnerability, traditional passwords remain 
+important for security. In this paper we describe a method for 
+strengthening passwords. Our method does not require users to memorize 
+or to write down long passwords, and does not rely on smart-cards or 
+other auxiliary hardware. The main cost of our method is that it lengthens 
+the process of checking a password.
+

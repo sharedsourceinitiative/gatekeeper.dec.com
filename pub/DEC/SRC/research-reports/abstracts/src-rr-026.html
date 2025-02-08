@@ -1,0 +1,40 @@
+<HTML><HEAD><TITLE>
+Digital Systems Research Center: Report 26</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Research Report 26</H1>
+<P>
+<H1>Parallel Compilation on a Tightly Coupled Multiprocessor.</H1>
+<HR>
+<H2>    Mark Thierry Vandevoorde</H2>
+<b>March 1, 1988</b><BR><i> 87 pages</i>
+<P>
+    This thesis describes a C compiler that runs in parallel on a
+    tightly coupled multiprocessor.  The compiler, called  PTCC,
+    consists of a two-stage pipeline.  The first stage performs extended
+    lexical analysis for the second stage, which does the parsing
+    and assembly code generation.  The second stage processes units
+    of the source program concurrently.  Units as fine as a single
+    statement are compiled in parallel.
+<P>
+    To avoid unproductive concurrency, a new scheduling abstraction,
+    called WorkCrew, is used in  PTCC.  In the WorkCrew model of
+    computation, the client creates tasks and specifies how they can
+    be subdivided.  WorkCrews favor serial execution when parallel
+    execution is unproductive and coarser grains of parallelism over
+    finer ones.
+<P>
+    Several experiments were done to measure the performance of PTCC.
+    With 5 processors,  PTCC performed up to 3.3 times better than
+    a similar sequential compiler.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-026.ps.Z">PostScript compressed with UNIX compress</A></B> -- 3480 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-026.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 2952 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-026.ps.zip">PostScript compressed with ZIP</A></B> -- 2952 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-026.ps">PostScript</A></B> -- 3736 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-026.pdf">Portable Document Format (PDF)</A></B> -- 2888 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

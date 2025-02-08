@@ -1,0 +1,1039 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0045)http://www.almaden.ibm.com/cs/k53/www9.final/ -->
+<HTML><HEAD><TITLE>www9 paper</TITLE>
+<META content="text/html; charset=iso-8859-1" http-equiv=Content-Type>
+<META content="MSHTML 5.00.2314.1000" name=GENERATOR>
+<STYLE type=text/css>BODY {
+	BACKGROUND-COLOR: #ffffff; FONT-FAMILY: arial,
+
+times new roman,
+
+        sans-serif
+}
+A:link {
+	COLOR: #0000ff; TEXT-DECORATION: none
+}
+A:visited {
+	COLOR: #0000ff; TEXT-DECORATION: none
+}
+A:active {
+	COLOR: #0000ff; TEXT-DECORATION: none
+}
+H1 {
+	FONT-WEIGHT: bold; TEXT-ALIGN: center
+}
+H2 {
+	FONT-WEIGHT: bold; TEXT-ALIGN: center
+}
+H3 {
+	FONT-WEIGHT: bold; TEXT-ALIGN: left
+}
+H4 {
+	FONT-WEIGHT: bold; TEXT-ALIGN: left
+}
+H5 {
+	FONT-WEIGHT: bold; TEXT-ALIGN: left
+}
+H6 {
+	FONT-SIZE: small; FONT-WEIGHT: bold; TEXT-ALIGN: center
+}
+H6.CAPTION {
+	FONT-SIZE: small; FONT-STYLE: italic; FONT-WEIGHT: bold; TEXT-ALIGN: center
+}
+P {
+	TEXT-INDENT: 1em
+}
+P.CODE {
+	COLOR: #ff0000; TEXT-INDENT: 0px
+}
+UL {
+	FONT-SIZE: small
+}
+OL {
+	FONT-SIZE: small
+}
+DL {
+	FONT-SIZE: small
+}
+UL {
+	LIST-STYLE: square
+}
+LI {
+	FONT-SIZE: x-small; TEXT-ALIGN: left
+}
+CODE {
+	FONT-WEIGHT: bold
+}
+CITE {
+	FONT-WEIGHT: bold
+}
+BLOCKQUOTE {
+	MARGIN-LEFT: 1em; MARGIN-RIGHT: 1em
+}
+TD {
+	VERTICAL-ALIGN: top; ALIGN: center
+}
+IMG {
+	VERTICAL-ALIGN: top; ALIGN: center
+}
+SUP {
+	COLOR: #0000ff; FONT-SIZE: small
+}
+</STYLE>
+<!-- Changed by: Sridhar Rajagopalan, 18-Nov-1999 --></HEAD>
+<BODY>
+<CENTER>
+<H1>Graph structure in the web</H1></CENTER>
+<CENTER>
+<P><BR><FONT size=+1>Andrei Broder</FONT><SUP>1</SUP><FONT size=+1>, Ravi 
+Kumar</FONT><SUP>2</SUP><FONT size=+1>, Farzin Maghoul</FONT><SUP><FONT 
+size=-1>1</FONT></SUP><FONT size=+1>, Prabhakar Raghavan</FONT><SUP>2</SUP><FONT 
+size=+1>, Sridhar Rajagopalan</FONT><SUP>2</SUP><FONT size=+1>, Raymie 
+Stata</FONT><SUP>3</SUP><FONT size=+1>, Andrew Tomkins</FONT><SUP>2</SUP><FONT 
+size=+1>, Janet Wiener</FONT><SUP>3</SUP></CENTER>
+<CENTER>
+<ADDRESS><FONT color=#000000>1: AltaVista Company, San Mateo, 
+CA.</FONT></ADDRESS></CENTER>
+<CENTER>
+<ADDRESS><FONT color=#000000>2: IBM Almaden Research Center, San Jose, 
+CA.</FONT></ADDRESS></CENTER>
+<CENTER>
+<ADDRESS><FONT color=#000000>3: Compaq Systems Research Center, Palo Alto, 
+CA.</FONT></ADDRESS></CENTER>
+<P> <BR>&nbsp; <BR>&nbsp; <BR>&nbsp; <BR>&nbsp; <BR>&nbsp; <BR>&nbsp; <BR>&nbsp; 
+<BR>&nbsp; <BR>&nbsp; <BR>&nbsp; 
+<CENTER>
+<P>
+<HR width="100%">
+<FONT size=+1>Abstract</FONT></CENTER>
+<P>The study of the web as a graph is not only fascinating in its own right, but 
+also yields valuable insight into web algorithms for crawling, searching and 
+community discovery, and the sociological phenomena which characterize its 
+evolution.&nbsp; We report on experiments on local and global properties of the 
+web graph using two Altavista crawls each with over 200M pages and 1.5 billion 
+links.&nbsp; Our study indicates that the macroscopic structure of the web is 
+considerably more intricate than suggested by earlier experiments on a smaller 
+scale. 
+<P><B>Keywords</B>: graph structure, diameter, web measurement <BR>
+<HR width="100%">
+
+<H3>Introduction</H3>Consider the directed graph whose nodes correspond to 
+static pages on the web, and whose arcs correspond to hyperlinks between these 
+pages.&nbsp; We study various properties of this graph including its diameter, 
+degree distributions, connected components, and macroscopic structure.&nbsp; 
+There are several reasons for developing an understanding of this graph: 
+<OL>
+  <LI>Designing crawl strategies on the web [<A 
+  href="http://www.almaden.ibm.com/cs/k53/www9.final/#ChoGarciaMolina">Cho and 
+  Garcia-Molina 2000</A>]. 
+  <LI>Understanding of the sociology of content creation on the web. 
+  <LI>Analyzing the behavior of web algorithms that make use of link information 
+  [<A href="http://www.almaden.ibm.com/cs/k53/www9.final/#Butafogo">Butafogo and 
+  Schneiderman 91</A>, <A 
+  href="http://www.almaden.ibm.com/cs/k53/www9.final/#mendelzonwood">Mendelson 
+  and Wood 95</A>, <A 
+  href="http://www.almaden.ibm.com/cs/k53/www9.final/#WebQuery">Carierre and 
+  Kazman 97</A>, <A 
+  href="http://www.almaden.ibm.com/cs/k53/www9.final/#Kleinberg">Kleinberg 
+  97</A>, <A href="http://www.almaden.ibm.com/cs/k53/www9.final/#BrinPage">Brin 
+  and Page 98</A>].&nbsp; To take just one example, what can be said of the 
+  distribution and evolution of PageRank [<A 
+  href="http://www.almaden.ibm.com/cs/k53/www9.final/#BrinPage">Brin and Page 
+  98</A>] values on graphs like the web? 
+  <LI>Predicting the evolution of web structures such as bipartite cores [<A 
+  href="http://www.almaden.ibm.com/cs/k53/www9.final/#yoohoo">Kumar <I>et. al. 
+  </I>(1) 99</A>] and webrings, and better algorithms for discovering and 
+  organizing them. 
+  <LI>Predicting the emergence of new, yet unexploited phenomena in the web 
+  graph. </LI></OL>We detail a number of experiments on a web crawl of 
+approximately 200 million pages and 1.5 billion hyperlinks; the scale of this 
+experiment is thus five times larger than the previous biggest study [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#yoohoo">Kumar <I>et. al. 
+</I>(1) 99</A>] of structural properties of the web graph, which used a pruned 
+data set from 1997 containing about 40 million pages.&nbsp; Recent work ([<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#yoohoo">Kumar <I>et. al. 
+</I>(1) 99</A>] on the 1997 crawl, and [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#Albert-Barabasi">Barabasi 
+and Albert 99</A>] on the approximately 325K-node <FONT face="Gill Sans">nd.edu 
+</FONT>subset of the web) has suggested that the distribution of degrees 
+(especially in-degrees) follows a <I>power law:</I> 
+<BLOCKQUOTE><B>The power law for indegree: </B>the probability that a node has 
+  in-degree <I>i</I> is proportional to <I>1/i<SUP>x</SUP></I>, for some 
+  positive <I>x &gt; 1</I>.</BLOCKQUOTE>We verify the power law phenomenon in 
+current (considerably larger) web crawls, confirming it as a basic web property. 
+
+<P>In other recent work, [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#AlbertJeongBarabasi">Albert, 
+Jeong, and Barabasi 99</A>] report the intriguing finding that most pairs of 
+pages on the web are separated by a handful of links, almost always under 20, 
+and suggest that this number will grow logarithmically with the size of the web. 
+This is viewed by some as a "small world" phenomenon.&nbsp; Our experimental 
+evidence reveals a rather more detailed and subtle picture: significant portions 
+of the web cannot at all be reached from other (significant) portions of the 
+web, and there is significant number of pairs that can be bridged, but only 
+using paths going through hundreds of intermediate pages. 
+<H4><B>Our main results</B></H4>We performed three sets of experiments on web 
+crawls from May 1999 and October 1999.&nbsp; First, we generated the in- and 
+out-degree distributions, confirming previous reports on power laws; for 
+instance, the fraction of web pages with <I>i</I> in links is proportional to 
+<I>1/i<SUP>2.1</SUP></I>, the constant <I>2.1</I> being in remarkable agreement 
+with earlier studies at varying scales [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#yoohoo">Kumar <I>et. al. 
+</I>(1) 99</A>, <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#Albert-Barabasi">Barabasi 
+and Albert 99</A>].&nbsp; In our second set of experiments we studied the 
+directed and undirected connected components of the web.&nbsp; We show that 
+power laws also arise in the distribution of <I>sizes</I> of these connected 
+components.&nbsp; Finally, we performed a number of breadth-first searches from 
+randomly-chosen start nodes.&nbsp; We detail these experiments in the <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#ExptResSec">section 
+describing our experiments and results</A>. 
+<P>Our analysis reveals an interesting picture (<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#bowtie">Figure 9</A>) of the 
+web's macroscopic structure.&nbsp; Most (over 90%) of the approximately 203 
+million nodes in our crawl form a single connected component if hyperlinks are 
+treated as <I>undirected</I> edges.&nbsp; This connected web breaks naturally 
+into four pieces.&nbsp; The first piece is a central core, all of whose pages 
+can reach one another along directed hyperlinks -- this "giant strongly 
+connected component" (<I>SCC</I>) is at the heart of the web.&nbsp; The second 
+and third pieces are called <I>IN</I> and <I>OUT</I>. <I>IN</I> consists of 
+pages that can reach the <I>SCC</I>, but cannot be reached from it - possibly 
+new sites that people have not yet discovered and linked to.&nbsp; <I>OUT</I> 
+consists of pages that are accessible from the <I>SCC</I>, but do not link back 
+to it, such as corporate websites that contain only internal links.&nbsp; 
+Finally, the <I>TENDRILS</I> contain pages that cannot reach the <I>SCC,</I> and 
+cannot be reached from the <I>SCC</I>.&nbsp; Perhaps the most surprising fact is 
+that the size of the <I>SCC</I> is relatively small -- it comprises about 56M 
+pages. Each of the other three sets contain about 44M pages -- thus, all four 
+sets have roughly the same size. 
+<P>We show that the diameter of the central core (<I>SCC</I>) is at least 28, 
+and that the diameter of the graph as a whole is over 500 (see <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#diameter">below</A> for 
+definitions of diameter).&nbsp; We show that for randomly chosen source and 
+destination pages, the probability that any path exists from the source to the 
+destination is only 24%.&nbsp; We also show that, if a directed path exists, its 
+average length will be about 16.&nbsp; Likewise, if an undirected path exists 
+(i.e., links can be followed forwards or backwards), its average length will be 
+about 6.&nbsp; These analyses appear in the <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#Interp">section on 
+interpreting our experiments.</A>&nbsp; These results are remarkably consistent 
+across two different,&nbsp; large AltaVista crawls.&nbsp; This suggests that our 
+results are relatively insensitive to the particular crawl we use, provided it 
+is large enough.&nbsp; We will say more about crawl effects under <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#other">Other 
+Observations.</A> 
+<P>In a sense the web is much like a complicated organism, in which the local 
+structure in a microscopic scale looks very regular like a biological cell, but 
+the global structure exhibits interesting morphological structure (body and 
+limbs) that are not obviously evident in the local structure. Therefore, while 
+it might be tempting to draw conclusions about the structure of the web graph 
+from a local picture of it, such conclusions may be misleading. 
+<H4><B>Related prior work</B></H4>Broadly speaking, related prior work can be 
+classified into two groups: (1) observations of the power law distributions on 
+the web; and (2) work on applying graph theoretic methods to the web. 
+<P><B><I>Zipf-Pareto-Yule and Power laws.&nbsp;&nbsp; </I></B>Distributions with 
+an inverse polynomial tail have been observed in a number of contexts. The 
+earliest observations are due to Pareto [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#Pareto">Pareto 1897</A>] in 
+the context of economic models. Subsequently, these statistical behaviors have 
+been observed in the context of literary vocabulary [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#Yule">Yule 44</A>], 
+sociological models [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#Zipf">Zipf 49</A>], and even 
+oligonucleotide sequences [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#MartindaleKonopka">Martindale 
+and Konopka 96</A>] among others.&nbsp; Our focus is on the closely related 
+power law distributions, defined on the positive integers, with the probability 
+of the value <I>i</I>&nbsp; being proportional to <I>1/i<SUP>k </SUP></I>for a 
+small positive number <I>k</I>.&nbsp; Perhaps the first rigorous effort to 
+define and analyze a model for power law distributions is due to Herbert Simon 
+[<A href="http://www.almaden.ibm.com/cs/k53/www9.final/#Simon">Simon 55</A>]. 
+<P>More recently, power law distributions have been observed in various aspects 
+of the web. Two lines of work are of particular interest to us. First, power 
+laws have been found to characterize user behavior on the web in two related but 
+dual forms: 
+<OL>
+  <LI>access statistics for web pages, which can be easily obtained from server 
+  logs (but for caching effects); see [<A 
+  href="http://www.almaden.ibm.com/cs/k53/www9.final/#Glassman">Glassman 97</A>, 
+  <A 
+  href="http://www.almaden.ibm.com/cs/k53/www9.final/#Hubermanetal">Huberman&nbsp;<I> 
+  et. al. </I>98</A>, <A 
+  href="http://www.almaden.ibm.com/cs/k53/www9.final/#AdamicHuberman1">Adamic 
+  and Huberman&nbsp; (1) 99,</A> and <A 
+  href="http://www.almaden.ibm.com/cs/k53/www9.final/#AdamicHuberman2">Adamic 
+  and Huberman (2) 99</A>]. 
+  <LI>the number of times users at a single site access particular pages also 
+  enjoy power laws, as verified by instrumenting and inspecting logs from web 
+  caches, proxies, and clients (see [<A 
+  href="http://www.almaden.ibm.com/cs/k53/www9.final/#Crovella">Barford 
+  <I>et.al. </I>99</A>] and references therein, as well as [<A 
+  href="http://www.almaden.ibm.com/cs/k53/www9.final/#LukoseHuberman">Lukose and 
+  Huberman 98</A>]). </LI></OL>Second, and more relevant to our immediate context 
+is the distribution of degrees on the web graph.&nbsp; In this context, recent 
+work (see <A href="http://www.almaden.ibm.com/cs/k53/www9.final/#yoohoo">Kumar 
+<I>et. al</I> (1) 99</A>, <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#Albert-Barabasi">Barabasi 
+and Albert 99</A>) suggests that both the in- and the out-degrees of vertices on 
+the web graph have power laws. The difference in scope in these two experiments 
+is noteworthy. The first (<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#yoohoo">Kumar <I>et.al.</I> 
+(1) 99</A>) examines a web crawl from 1997 due to Alexa, Inc., with a total of 
+over 40 million nodes. The second (<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#Albert-Barabasi">Barabasi 
+and Albert 99</A>), examines web pages from the University of Notre Dame domain, 
+<FONT face="Gill Sans">*.nd.edu, </FONT>as well as a portion of the web 
+reachable from 3 other URLs. In this paper, we verify these power laws on more 
+recent (and considerably larger) web crawls.&nbsp; This collection of findings 
+reveals an almost fractal like quality for the power law&nbsp; in-degree and 
+out-degree distributions, in that it appears both as a macroscopic phenomenon on 
+the entire web, as a microscopic phenomenon at the level of a single university 
+website, and at intermediate levels between these two. 
+<P>There is no evidence that users' browsing behavior, access statistics and the 
+linkage statistics on the web graph are related in any fundamental way, although 
+it is very tempting to conjecture that this is indeed the case.&nbsp; It is 
+usually the case, though not always so, that pages with high in-degree will also 
+have high PageRank [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#BrinPage">Brin and Page 
+98</A>]. Indeed, one way of viewing PageRank is that it puts a number on how 
+easy (or difficult) it is to find particular pages by a browsing-like activity. 
+Consequently, it is plausible that the in-degree distributions induce a similar 
+distribution on browsing activity and consequently, on access statistics. 
+<P><A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#Faloutsosss">Faloutsos, 
+Faloutsos, and Faloutsos 99</A> observe <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#zipf">Zipf/Pareto 
+distributions</A> (power law distributions on the <I>ranks</I> of values) on the 
+internet network topology using a graph of the network obtained from the routing 
+tables of a backbone BGP router. 
+<P><B><I>Graph theoretic methods.</I></B> Much recent work has addressed the web 
+as a graph and applied algorithmic methods from graph theory in addressing a 
+slew of search, retrieval, and mining problems on the web. The efficacy of these 
+methods was already evident even in early local expansion techniques [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#Butafogo">Butafogo and 
+Schneiderman 91</A>]. Since then, the increasing sophistication of the 
+techniques used, the incorporation of graph theoretical methods with both 
+classical and new methods which examine context and content, and richer browsing 
+paradigms have enhanced and validated the study and use of such methods.&nbsp; 
+Following Butafogo and Schneiderman, the view that connected and strongly 
+connected components represent meaningful entities has become accepted. [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#PirolliPitkowRao">Pirolli, 
+Pitkow and Rao 96</A>] augment graph theoretic analysis to include document 
+content, as well as usage statistics, resulting in a rich understanding of 
+domain structure and a taxonomy of roles played by web pages.. 
+<P>Graph theoretic methods have been used for search [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#Kleinberg">Kleinberg 97</A>, 
+<A href="http://www.almaden.ibm.com/cs/k53/www9.final/#BrinPage">Brin and Page 
+98</A>, <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#cleverwww">Chakrabarti 
+<I>et. al. </I>(1) 98</A>,&nbsp; <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#Clever">Chakrabarti <I>et. 
+al. </I>(2) 98</A>, <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#BharatHenzinger">Bharat and 
+Henzinger 98</A>],&nbsp; browsing and information foraging [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#Butafogo">Butafogo and 
+Schniederman 91</A>, <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#PirolliPitkowRao">Pirolli, 
+Pitkow, and Rao 96</A>, <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#WebQuery">Carierre and 
+Kazman 97</A>, <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#Pitkow-Pirolli">Pitkow and 
+Pirolli 97</A>, <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#backlinks">Chakrabarti, 
+Gibson, and McCurley 99</A>], and web mining [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#mendelzonwood">Mendelzon and 
+Wood 95</A>, <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#WebSQL">Mendelzon, Mihaila 
+and Milo 97</A>, <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#yoohoo">Kumar <I>et. al. 
+</I>(1) 99</A>, <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#VLDB">Kumar <I>et.al.</I> 
+(2) 99</A>]. We expect that a better structural characterization of the web will 
+have much to say in each of these contexts. 
+<P>In this section we formalize our view of the web as a graph; in this view we 
+ignore the text and other content in pages, focusing instead on the links 
+between pages.&nbsp; Adopting the terminology of graph theory [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#Harary">Harary</A>], we 
+refer to pages as <I>nodes</I>, and to links as <I>arcs</I>.&nbsp; In this 
+framework, the web becomes a large graph containing several hundred million 
+nodes, and a few billion <I>arcs</I>.&nbsp; We will refer to this graph as the 
+<I>web graph</I>, and our goal in this paper is to understand some of its 
+properties.&nbsp; Before presenting our model for web-like graphs, we begin with 
+a brief primer on graph theory, and a discussion of graph models in general. 
+<H4>A brief primer on graphs and terminology</H4>The reader familiar with basic 
+notions from graph theory may skip this primer. 
+<P>A <U>directed graph</U> consists of a set of <I>nodes, </I>denoted <I>V</I> 
+and a set of <I>arcs, </I>denoted <I>E</I>.&nbsp; Each arc is an ordered pair of 
+nodes <I>(u,v)</I> representing a directed connection from <I>u</I> to <I>v</I>. 
+The <I>out-degree</I> of a node <I>u</I> is the number of distinct arcs 
+<I>(u,v<SUB>1</SUB>)...(u,v<SUB>k</SUB>)</I> (i.e., the number of links from 
+<I>u</I>), and the <I>in-degree</I> is the number of distinct arcs 
+<I>(v<SUB>1</SUB>,u)...(v<SUB>k</SUB>,u)</I> (i.e., the number of links to 
+<I>u</I>).&nbsp; A path from node <I>u</I> to node <I>v</I> is a sequence of 
+arcs <I>(u,u<SUB>1</SUB>), (u<SUB>1</SUB>,u<SUB>2</SUB>), ... 
+(u<SUB>k</SUB>,v)</I>. One can follow such a sequence of arcs to "walk" through 
+the graph from <I>u</I> to <I>v</I>.&nbsp; Note that a path from <I>u</I> to 
+<I>v</I> does not imply a path from <I>v</I> to <I>u</I>. The <I>distance</I> 
+from <I>u</I> to <I>v&nbsp;</I> is one more than the smallest <I>k</I> for which 
+such a path exists. If no path exists, the distance from <I>u</I> to <I>v</I> is 
+defined to be infinity. If (<I>u,v</I>) is an arc, then the distance from <I>u 
+</I>to <I>v</I> is 1. 
+<P>Given a directed graph, a <U>strongly connected component</U> (strong 
+component for brevity) of this graph is a set of nodes such that for any pair of 
+nodes <I>u</I> and <I>v</I> in the set there is a path from <I>u</I> to 
+<I>v</I>.&nbsp; In general, a directed graph may have one or many strong 
+components.&nbsp; The strong components of a graph consist of disjoint sets of 
+nodes. One focus of our studies will be in understanding the distribution of the 
+sizes of strong components on the web graph. 
+<P>An <U>undirected graph</U> consists of a set of nodes and a set of 
+<I>edges</I>, each of which is an unordered pair {<I>u,v</I>} of nodes.&nbsp; In 
+our context, we say there is an edge between <I>u</I> and <I>v </I>if there is a 
+hyperlink between <I>u</I> and <I>v, </I>without regard to whether the link 
+points from <I>u</I> to <I>v </I>or the other way around.&nbsp; The 
+<I>degree</I> of a node <I>u</I> is the number of edges incident to 
+<I>u</I>.&nbsp; A path is defined as for directed graphs, except that now the 
+existence of a path from <I>u</I> to <I>v </I>implies a path from<I> v</I> to 
+<I>u</I>.&nbsp; A <U>component</U> of an undirected graph is a set of nodes such 
+that for any pair of nodes <I>u</I> and <I>v</I> in the set there is a path from 
+<I>u</I> to <I>v.&nbsp; </I>We refer to the components of the undirected graph 
+obtained from a directed graph by ignoring the directions of its arcs as the 
+<I>weak components</I> of the directed graph.&nbsp; Thus two nodes on the web 
+may be in the same weak component even though there is no <I>directed</I> path 
+between them (consider, for instance, a node <I>u</I> that points to two other 
+nodes <I>v </I>and <I>w; </I>then<I>v </I>and <I>w</I> are in the same weak 
+component even though there may be no sequence of links leading from <I>v</I> to 
+<I>w</I> or vice versa).&nbsp; The interplay of strong and weak components on 
+the (directed) web graph turns out to reveal some unexpected properties of the 
+web's connectivity. 
+<P>A <U>breadth-first search</U> (BFS) on a directed graph begins at a node 
+<I>u</I> of the graph, and proceeds to build up the set of nodes reachable from 
+<I>u</I> in a series of layers.&nbsp; Layer 1 consists of all nodes that are 
+pointed to by an arc from <I>u.</I> Layer <I>k</I> consists of all nodes to 
+which there is an arc from some vertex in layer <I>k-1, </I>but are not in any 
+earlier layer. Notice that by definition, layers are disjoint. The distance of 
+any node from <I>u</I> can be read out of the breadth-first search.&nbsp; The 
+shortest path from <I>u</I> to <I>v</I> is the index of the layer <I>v</I> 
+belongs in -- if there is such a layer. On the other hand, note that a node that 
+cannot be reached from <I>u</I> does not belong in any layer, and thus we define 
+the distance to be infinity.&nbsp; A BFS on an undirected graph is defined 
+analogously. 
+<P><A name=diameter></A>Finally, we must take a moment to describe the exact 
+notions of diameter we study, since several have been discussed informally in 
+the context of the web.&nbsp; Traditionally, the <U>diameter</U> of a graph, 
+directed or undirected, is the maximum over all ordered pairs <I>(u,v)</I> of 
+the shortest path from <I>u</I> to <I>v</I>.&nbsp; Some researchers have 
+proposed studying the <U>average distance</U> of a graph, defined to be the 
+length of the shortest path from <I>u</I> to <I>v</I>, averaged over all ordered 
+pairs <I>(u,v)</I>; this is referred to as diameter in [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#AlbertJeongBarabasi">Albert, 
+Jeong, and Barabasi 99</A>].&nbsp; The difficulty with this notion is that even 
+a single pair <I>(u,v)</I> with no path from <I>u</I> to <I>v</I> results in an 
+infinite average distance.&nbsp; In fact, as we show from our experiments below, 
+the web is rife with such pairs (thus is it is not merely a matter of discarding 
+a few outliers before taking this average).&nbsp; This motivates the following 
+revised definition: let P be the set of all ordered pairs <I>(u,v)</I> such that 
+there is a path from <I>u</I> to <I>v</I>.&nbsp; The <U>average connected 
+distance</U> is the expected length of the shortest path, where the expectation 
+is over uniform choices from P. <BR>&nbsp; 
+<H3><A name=ExptResSec></A>Experiments and results</H3>
+<H4><B>Infrastructure</B></H4>All experiments were run using the Connectivity 
+Server 2 (CS2) software built at Compaq Systems Research Center using data 
+provided by AltaVista.&nbsp; CS2 provides fast access to linkage information on 
+the web. A build of CS2 takes a web crawl as input and creates a representation 
+of the entire web graph induced by the pages in the crawl, in the form of a 
+database that consists of all URLs that were crawled together with all in-links 
+and out-links among those URLs.&nbsp; In addition, the graph is extended with 
+those URLs referenced at least 5 times by the crawled pages.&nbsp; 
+(Experimentally, we have determined that the vast majority of URLs encountered 
+fewer than five times but not crawled turn out to be invalid URLs.) 
+<P>CS2 improves on the original connectivity server (CS1) described in [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#Conn">Bharat <I>et.al.</I> 
+98</A>] in two important ways. First, it significantly increases the compression 
+of the URLs and the links data structures. In CS1, each compressed URL is, on 
+average, 16 bytes. In CS2, each URL is stored in 10 bytes. In CS1, each link 
+requires 8 bytes to store as both an in-link and out-link; in CS2, an average of 
+only 3.4 bytes are used. Second, CS2 provides additional functionality in the 
+form of a host database. For example, in CS2, it is easy to get all the in-links 
+for a given node, or just the in-links from remote hosts. 
+<P>Like CS1, CS2 is designed to give high-performance access to all this data on 
+a high-end machine with enough RAM to store the database in memory.&nbsp; On a 
+465 MHz Compaq AlphaServer 4100 with 12GB of RAM, it takes 70-80 <FONT 
+face=Symbol>m</FONT>s to convert a URL into an internal id or vice versa, and 
+then only 0.15 <FONT face=Symbol>m</FONT>s/link to retrieve each in-link or 
+out-link.&nbsp; On a uniprocessor machine, a BFS that reaches 100M nodes takes 
+about 4 minutes; on a 2-processor machine we were able complete a BFS every two 
+minutes. 
+<P>In the experiments reported in this paper, CS2 was built from a crawl 
+performed at AltaVista in May, 1999. The CS2 database contains 203 million URLs 
+and 1466 million links (all of which fit in 9.5 GB of storage).&nbsp; Some of 
+our experiments were repeated on a more recent crawl (October, 1999) containing 
+271 million URLs and 2130 million links. 
+<P>In general, the AltaVista crawl is based on a large set of starting points 
+accumulated over time from various sources, including voluntary 
+submissions.&nbsp; The crawl proceeds in roughly a BFS manner, but is subject to 
+various rules designed to avoid overloading web servers, avoid robot traps 
+(artificial infinite paths), avoid and/or detect spam (page flooding), deal with 
+connection time outs, etc.&nbsp; Each build of the AltaVista index is based on 
+the crawl data after further filtering and processing designed to remove 
+duplicates and near duplicates, eliminate spam pages, etc.&nbsp; Then the index 
+evolves continuously as various processes delete dead links, add new pages, 
+update pages, etc.&nbsp; The secondary filtering and the later deletions and 
+additions are not reflected in the connectivity server. But overall, CS2's 
+database can be viewed as a superset of all pages stored in the index at one 
+point in time.&nbsp; Note that due to the multiple starting points, it is 
+possible for the resulting graph to have many connected components. 
+<H4><B>Experimental data</B></H4>The following basic algorithms were implemented 
+using CS2: (1) a BFS algorithm that performs a breadth-first traversal; (2) a 
+WCC algorithm that finds the weak components; and (3) an SCC algorithm that 
+finds the strongly connected components. Recall that both WCC and SCC are simple 
+generalizations of the BFS algorithm. Using these three basic algorithms, we ran 
+several interesting experiments on the web graph. 
+<P><B>Degree sequences.&nbsp;</B> The first experiment we ran was to verify 
+earlier observations that the in- and out-degree distributions on the web are 
+distributed according to power laws.&nbsp; We ran the experiment on both the May 
+and October crawls of the web.&nbsp;&nbsp; The results, shown in <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#figure12">Figure 1</A>, show 
+remarkable agreement with each other, and with similar experiments from data 
+that is over two years old [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#yoohoo">Kumar <I>et. al. 
+</I>(1) 99</A>].&nbsp; Indeed, in the case of in-degree, the exponent of the 
+power law is consistently around 2.1, a number reported in [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#yoohoo">Kumar <I>et. al. 
+</I>(1) 99,Barabasi</A><A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#Albert-Barabasi"> and Albert 
+99</A>].&nbsp; The anomalous bump at 120 on the <I>x</I>-axis is due a large 
+clique formed by a single spammer.&nbsp; In all our log-log plots, straight 
+lines are linear regressions for the best power law fit. 
+<P>Out-degree distributions also exhibit a power law, although the exponent is 
+2.72, as can be seen in <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#figure12">Figure 
+2</A>.&nbsp;&nbsp; It is interesting to note that the initial segment of the 
+out-degree distribution deviates significantly from the power law, suggesting 
+that pages with low out-degree follow a different (possibly Poisson or a 
+combination of Poisson and power law, as suggested by the concavity of the 
+deviation) distribution.&nbsp; Further research is needed to understand this 
+combination better. <BR>&nbsp; 
+<CENTER>
+<TABLE cols=2 width="100%">
+  <TBODY>
+  <TR align=middle>
+    <TD align=middle><IMG height=240 src="www9_files/fig1.gif" width=320></TD>
+    <TD><IMG height=240 src="www9_files/fig2.gif" width=320></TD></TR>
+  <CAPTION align=bottom><A name=figure12></A>Figures 1 and 2: In-degree and 
+  out-degree distributions subscribe to the power law. The law also holds if 
+  only off-site (or "remote-only") edges are 
+considered.</CAPTION></TABLE></CENTER><BR>&nbsp; 
+<CENTER>
+<TABLE cols=2 width="100%">
+  <TBODY>
+  <TR align=middle>
+    <TD align=middle><IMG height=240 src="www9_files/fig3.gif" width=320></TD>
+    <TD><IMG height=240 src="www9_files/fig4.gif" width=320></TD></TR>
+  <CAPTION align=bottom>Figures 3 and 4: In- and out-degree distributions show a 
+  remarkable similarity over two crawls, run in May and October 1999. Each crawl 
+  counts well over 1 billion distinct edges of the web 
+graph.</CAPTION></TABLE></CENTER>
+<P><B>Undirected connected components.</B>&nbsp; In the next set of experiments 
+we treat the web graph as an undirected graph and find the sizes of&nbsp; the 
+undirected components. We find a giant component of 186 million nodes in which 
+fully 91% of the nodes in our crawl are reachable from one another by following 
+either forward or backward links. This is done by running the WCC algorithm 
+which simply finds all connected components in the undirected web graph. Thus, 
+if one could browse along both forward and backward directed links, the web is a 
+very well connected graph.&nbsp;&nbsp; Surprisingly, even the distribution of 
+the sizes of WCC's exhibits a power law with exponent roughly 2.5 (<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#figure56">Figure 5</A>). 
+<BR>&nbsp; 
+<CENTER>
+<TABLE cols=2 width="100%">
+  <TBODY>
+  <TR align=middle>
+    <TD align=middle><IMG height=240 src="www9_files/fig7.gif" width=320></TD>
+    <TD><IMG height=240 src="www9_files/fig8.gif" width=320></TD></TR>
+  <CAPTION align=bottom><A name=figure56></A>Figures 5 and 6: Distribution 
+  of&nbsp; weakly connected components&nbsp; and strongly connected components 
+  on the web. The sizes of these components also follow a power 
+law.</CAPTION></TABLE></CENTER>
+<P>Does this widespread connectivity result from a few nodes of large in-degree 
+acting as "junctions"?&nbsp; Surprisingly, this turns out not to be the 
+case.&nbsp; Indeed, even if all links to pages with in-degree 5 or higher are 
+removed (certainly including links to every well-known page on the web), the 
+graph still contains a giant weak component of size 59 million. This provides us 
+with two interesting and useful insights. First, the connectivity of the web 
+graph as an undirected graph is extremely resilient and does not depend on the 
+existence of nodes of high in-degree. Second, such nodes, which are very useful 
+and tend to include nodes with high PageRank or nodes that are considered good 
+hubs and authorities, are embedded in a graph that is well connected without 
+them. This last fact may help understand why algorithms such as HITS [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#Kleinberg">Kleinberg</A>] 
+converge quickly. <BR>&nbsp; 
+<CENTER>
+<TABLE border=1 cols=7 width="50%">
+  <TBODY>
+  <TR align=middle>
+    <TD><I>k</I></TD>
+    <TD>1000</TD>
+    <TD>100</TD>
+    <TD>10</TD>
+    <TD>5</TD>
+    <TD>4</TD>
+    <TD>3</TD></TR>
+  <TR align=middle>
+    <TD>Size (millions)</TD>
+    <TD>177</TD>
+    <TD>167</TD>
+    <TD>105</TD>
+    <TD>59</TD>
+    <TD>41</TD>
+    <TD>15</TD></TR>
+  <CAPTION align=bottom>Table 1: Size of the largest surviving weak component 
+  when links to pages with in-degree at least <I>k</I> are removed from the 
+  graph.</CAPTION></TABLE></CENTER>
+<P><B>Strongly connected components.</B>&nbsp; Motivated in part by the 
+intriguing prediction of&nbsp; [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#AlbertJeongBarabasi">Albert, 
+Jeong, and Barabasi 99</A>] that the average distance (referred to in their 
+paper as diameter) of the web is 19 (and thus it should be possible to get from 
+any page to any other in a small number of clicks), we turned to the strongly 
+connected components of the web as a directed graph.&nbsp; By running the 
+strongly connected component algorithm, we find that there is a single large SCC 
+consisting of about 56M pages, all other components are significantly smaller in 
+size. This amounts to barely 28% of all the pages in our crawl. One may now ask: 
+where have all the other pages gone?&nbsp; The answer to this question reveals 
+some fascinating detailed structure in the web graph; to expose this and to 
+further study the issues of the diameter and average distance, we conducted a 
+further series of experiments.&nbsp; Note that the distribution of the sizes of 
+SCCs also obeys a power law (<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#figure56">Figure 6</A>). 
+<P><B>Random-start BFS.&nbsp; </B>We ran the BFS algorithm twice from each of 
+570 random sample of starting nodes: once in the <I>forward</I> direction, 
+following arcs of the web graph as a browser would, and once <I>backward</I> 
+following links in the reverse direction.&nbsp; Each of these BFS traversals 
+(whether forward or backward) exhibited a sharp bimodal behavior: it would 
+either "die out" after reaching a small set of nodes (90% of the time this set 
+has fewer than 90 nodes; in extreme cases it has a few hundred thousand), or it 
+would "explode" to cover about 100 million nodes (but never the entire 186 
+million).&nbsp; Further, for a fraction of the starting nodes, both the forward 
+and the backward BFS runs would "explode", each covering about 100 million nodes 
+(though not the same 100 million in the two runs).&nbsp; As we show below, these 
+are the starting points that lie in the SCC. 
+<P>The cumulative distributions of the nodes covered in these BFS runs are 
+summarized in <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#figure7">Figure 7</A> -- 
+they reveal that the true structure of the web graph must be somewhat subtler 
+than a "small world" phenomenon in which a browser can pass from any web page to 
+any other with a few clicks.&nbsp; We explicate this structure in the <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#Interp">section below on 
+Interpretation.</A> <BR>&nbsp; 
+<CENTER>
+<TABLE cols=3 width="100%">
+  <TBODY>
+  <TR>
+    <TD><IMG height=240 src="www9_files/fig61.gif" width=320></TD>
+    <TD align=middle><IMG height=240 src="www9_files/fig62.gif" width=320></TD>
+    <TD><IMG height=240 src="www9_files/fig63.gif" width=320></TD></TR>
+  <CAPTION align=bottom><A name=figure7></A>Figure 7: Cumulative distribution on 
+  the number of nodes reached when BFS is started from a random node. Figure (a) 
+  follows in-links, (b) follows out-links, and (c) follows both in and out 
+  links. Notice that there are two distinct regions of growth, one at the 
+  beginning and an "explosion" in 50 % of the start nodes in the case of in- and 
+  out-links, and for 90% of the nodes in the undirected case. These experiments 
+  form the basis of our structural analysis.</CAPTION></TABLE></CENTER>
+<P><A name=zipf></A><B>Zipf distributions vs power law distributions.</B>&nbsp; 
+The <U>Zipf distribution</U> is an inverse polynomial function of <I>ranks</I> 
+rather than magnitudes -- for example, if only in-degrees 1, 4, and 5 occurred 
+then a power law would be inversely polynomial in those values, whereas a Zipf 
+distribution would be inversely polynomial in the ranks of those values:&nbsp; 
+i.e., inversely polynomial in 1, 2, and 3.&nbsp; The in-degree distribution in 
+our data shows a striking fit with a Zipf (more so than the power law) 
+distribution; <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#figure8">Figure 8</A> shows 
+the in-degrees of pages from the May 1999 crawl plotted against both ranks and 
+magnitudes (corresponding to the Zipf and power law cases).&nbsp; The plot 
+against ranks is virtually a straight line in the log-log plot, without the 
+flare-out noticeable in the plot against magnitudes. <BR>&nbsp; 
+<CENTER>
+<TABLE border=0 cellPadding=0 cellSpacing=0 cols=1 width="50%">
+  <TBODY>
+  <TR>
+    <TD><IMG border=0 height=240 src="www9_files/fig5.gif" width=320></TD></TR>
+  <TR>
+    <TD>
+      <CENTER><A name=figure8></A>Figure 8: In-degree distributions plotted as a 
+      power law and as a Zipf 
+distribution.</CENTER></TD></TR></TBODY></TABLE></CENTER>
+<H3><A name=Interp></A>Interpretation and further work</H3>Let us now put 
+together the results of the connected component experiments with the results of 
+the random-start BFS experiments.&nbsp; Given that the set SCC contains only 56M 
+of the 186M nodes in our giant weak component, we use the BFS runs to estimate 
+the positions of the remaining nodes.&nbsp; The starting points for which the 
+forward BFS "explodes" are either in SCC, or in a set we call IN, that has the 
+following property: there is a directed path from each node of IN to (all the 
+nodes of) SCC.&nbsp; Symmetrically, there is a set we call OUT containing all 
+starting points for which the backward BFS "explodes"; there is a directed path 
+from any node in the SCC to any node in OUT.&nbsp; Thus a forward BFS from any 
+node in either the SCC or IN will explode, as will a backward BFS from any node 
+in either the SCC or OUT.&nbsp; By analyzing forward and backward BFS from 570 
+random starting points, we can compute the number of nodes that are in SCC, IN, 
+OUT or none of these.&nbsp; <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#bowtie">Figure 9</A> shows 
+the situation as we can now infer it. <BR>&nbsp; 
+<CENTER>
+<TABLE border=0 cols=1 width="74%">
+  <TBODY>
+  <TR>
+    <TD>
+      <CENTER><IMG border=0 height=394 src="www9_files/temp.gif" 
+      width=522></CENTER></TD></TR>
+  <TR>
+    <TD><A name=bowtie></A>Figure 9: Connectivity of the web: one can pass 
+      from any node of IN through SCC to any node of OUT.&nbsp; Hanging off IN 
+      and OUT are TENDRILS containing nodes that are reachable from portions of 
+      IN, or that can reach portions of OUT, without passage through SCC.&nbsp; 
+      It is possible for a TENDRIL hanging off from IN to be hooked into a 
+      TENDRIL leading into OUT, forming a TUBE -- a passage from a portion of IN 
+      to a portion of OUT without touching SCC.</TD></TR></TBODY></TABLE></CENTER>
+<P>We now give a more detailed description of the structure in <A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#bowtie">Figure 9</A>.&nbsp; 
+The sizes of the various components are as follows: <BR>&nbsp; 
+<TABLE border=1 cols=7 width="100%">
+  <TBODY>
+  <TR>
+    <TD>Region</TD>
+    <TD>SCC</TD>
+    <TD>IN</TD>
+    <TD>OUT</TD>
+    <TD>TENDRILS</TD>
+    <TD>DISC.</TD>
+    <TD>Total</TD></TR>
+  <TR>
+    <TD>Size</TD>
+    <TD>56,463,993</TD>
+    <TD>43,343,168</TD>
+    <TD>43,166,185</TD>
+    <TD>43,797,944</TD>
+    <TD>16,777,756</TD>
+    <TD>203,549,046</TD></TR></TBODY></TABLE>
+<P>These sizes were determined as follows.&nbsp; We know the total number of 
+nodes in our crawl, so by subtracting the size of the giant weak component we 
+determine the size of DISCONNECTED.&nbsp; Then our strong component algorithm 
+gives us the size of SCC.&nbsp; We turn to our breadth-first search data.&nbsp; 
+As noted, searching from a particular start node following a particular type of 
+edges (in-edges or out-edges) would either terminate quickly, or grow the search 
+to about 100M nodes.&nbsp; We say that a node <I>explodes</I> if it falls into 
+the latter group.&nbsp; Thus, if a node explodes following in-links, and also 
+explodes following out-links, it must be a member of a strong component of size 
+at least 100M+100M-186M=14M.&nbsp; Since the second largest strong component is 
+of size 150K, we infer that SCC is the unique strong component that contains all 
+nodes exploding following in- as well as out-links.&nbsp; In fact, this 
+observation contains two corroborating pieces of evidence for the structure in 
+the figure above: first, it turns out that the fraction of our randomly chosen 
+BFS start nodes that explode under in- and out-links is the same as the fraction 
+of nodes in the SCC as returned by our SCC algorithm.&nbsp; Second, every BFS 
+start node in the SCC reaches exactly the same number of nodes under in-link 
+expansion -- this number is 99,807,161.&nbsp; Likewise, under out-link expansion 
+every node of SCC reaches exactly 99,630,178 nodes. 
+<P>Thus, we know that SCC + IN = 99,807,161, and similarly SCC + OUT = 
+99,630,178.&nbsp; Having already found the size of SCC, we can solve for IN and 
+OUT.&nbsp; Finally, since we know the size of the giant weak component, we can 
+subtract SCC, IN, and OUT to get TENDRILS.&nbsp; We now discuss each region in 
+turn. 
+<H5>TENDRILS and DISCONNECTED</H5>We had 172 samples from TENDRILS and 
+DISCONNECTED; our BFS measurements cannot be used to differentiate between these 
+two regions.&nbsp; By following out-links from a start point in this region, we 
+encounter an average of 20 nodes before the exploration stops.&nbsp; Likewise, 
+by following in-links we encounter an average of 52 nodes. <BR>&nbsp; 
+<H5>IN and OUT</H5>Our sample contains 128 nodes from IN and 134 from OUT.&nbsp; 
+We ask: when following out-links from nodes in OUT, or in-links from nodes in 
+IN, how many nodes do we encounter before the BFS terminates?&nbsp; That is, how 
+large a neighborhood do points in these regions have, if we explore in the 
+direction "away" from the center?&nbsp; The results are shown below in the row 
+labeled "exploring outward -- all nodes." 
+<P>Similarly, we know that if we explore in-links from a node in OUT, or 
+out-links from a node in IN, we will encounter about 100M other nodes in the 
+BFS.&nbsp; Nonetheless, it is reasonable to ask:&nbsp; how many other nodes will 
+we encounter?&nbsp; That is, starting from OUT (or IN), and following in-links 
+(or out-links), how many nodes of TENDRILS and&nbsp; OUT (or IN) will we 
+encounter?&nbsp; The results are shown below in the row labeled "exploring 
+inwards -- unexpected nodes".&nbsp; Note that the numbers in the table represent 
+averages over our sample nodes. <BR>&nbsp; 
+<CENTER>
+<TABLE border=1 width="50%">
+  <TBODY>
+  <TR>
+    <TD>Starting Point</TD>
+    <TD>OUT</TD>
+    <TD>IN</TD></TR>
+  <TR>
+    <TD>Exploring outwards -- all nodes</TD>
+    <TD>3093</TD>
+    <TD>171</TD></TR>
+  <TR>
+    <TD>Exploring inwards -- unexpected nodes</TD>
+    <TD>3367</TD>
+    <TD>173</TD></TR></TBODY></TABLE></CENTER>
+<P>As the table shows, OUT tends to encounter larger neighborhoods.&nbsp; For 
+example, the second largest strong component in the graph has size approximately 
+150K, and two nodes of OUT encounter neighborhoods a few nodes larger than this, 
+suggesting that this component lies within OUT.&nbsp; In fact, considering that 
+(for instance) almost every corporate website not appearing in SCC will appear 
+in OUT, it is no surprise that the neighborhood sizes are larger. 
+<H5>SCC</H5>Our sample contains 136 nodes from the SCC.&nbsp; To determine other 
+properties of SCC, we require a useful property of IN and OUT:&nbsp; each 
+contains a few long paths such that, once the BFS proceeds beyond a certain 
+depth, only a few paths are being explored, and the last path is much longer 
+than any of the others.&nbsp; We can therefore explore the radius at which the 
+BFS completes, confident that the last long path will be the same no matter 
+which node of SCC we start from.&nbsp; The following figure shows the depth at 
+which the BFS terminates in each direction (following in-links or out-links) for 
+nodes in the SCC: <BR>&nbsp; 
+<CENTER>
+<TABLE border=1 cols=4 width="75%">
+  <TBODY>
+  <TR align=middle>
+    <TD>Measure</TD>
+    <TD>Minimum depth</TD>
+    <TD>Average depth</TD>
+    <TD>Maximum depth</TD></TR>
+  <TR align=middle>
+    <TD>In-links</TD>
+    <TD>475</TD>
+    <TD>482</TD>
+    <TD>503</TD></TR>
+  <TR align=middle>
+    <TD>Out-links</TD>
+    <TD>430</TD>
+    <TD>434</TD>
+    <TD>444</TD></TR></TBODY></TABLE></CENTER>
+<P>As the table shows, from some nodes in the SCC it is possible to complete the 
+search at distance 475, while from other nodes distance 503 is required.&nbsp; 
+This allows us to conclude that the directed diameter of SCC is at least 28. 
+<H5><A name=other></A>Other observations</H5>As noted above, the (min, average, 
+max) depths at which the BFS from SCC terminates following in-links are (475, 
+482, 503).&nbsp; For IN, we can perform the same analysis, and the values are: 
+(476, 482, 495).&nbsp; These values, especially the average, are so similar that 
+nodes of IN appear to be quite close to SCC. 
+<P>Likewise, for SCC the (min, average, max) depths for termination under 
+out-links are (430, 434, 444).&nbsp; For OUT, the values are (430, 434, 444). 
+<P>Now, consider the probability that an ordered pair <I>(u,v)</I> has a path 
+from <I>u</I> to <I>v</I>.&nbsp; By noting that the average in-size of nodes in 
+IN is very small (171) and likewise the average out-size of nodes in OUT is very 
+small (3093), the pair has a path with non-negligible probability if and only if 
+<I>u</I> is in SCC+IN, and <I>v</I> is in SCC+OUT.&nbsp; The probability of this 
+event for node pairs drawn uniformly from our crawl is only 24%; for node pairs 
+drawn from the weak component it is only 28%.&nbsp; This leads to the somewhat 
+surprising conclusion that, given a random start and finish page on the web, one 
+can get from the start page to the finish page by traversing links barely a 
+quarter of the time. 
+<P>The structure that is now unfolding tells us that it is relatively 
+insensitive to the particular large crawl we use.&nbsp; For instance, if 
+AltaVista's crawler fails to include some links whose inclusion would add one of 
+the tendrils to the SCC, we know that the resulting change in the sizes of SCC 
+and TENDRIL will be small (since any individual tendril is small). Likewise, our 
+experiments in which we found that large components survived the deletion of 
+nodes of large in-degree show that the connectivity of the web is resilient to 
+the removal of significant portions. 
+<H5>Diameter</H5>As we discussed above, the directed diameter of the SCC is at 
+least 28.&nbsp; Likewise, the maximum finite shortest path length is at least 
+503, but is probably substantially more than this:&nbsp; unless a short tube 
+connects the most distant page of IN to the most distant page of OUT without 
+passing through the SCC, the maximum finite shortest path length is likely to be 
+close to 475 + 430 = 905. 
+<P>We can estimate the average connected distance using our 570 BFS start 
+points, under both in-links and out-links.&nbsp; The values are shown below; the 
+column headed "Undirected" corresponds to the average undirected distance. 
+<BR>&nbsp; 
+<CENTER>
+<TABLE border=1 cols=4 width="80%">
+  <TBODY>
+  <TR>
+    <TD>Edge type</TD>
+    <TD>In-links (directed)</TD>
+    <TD>Out-links (directed)</TD>
+    <TD>Undirected</TD></TR>
+  <TR>
+    <TD>Average connected distance</TD>
+    <TD>16.12</TD>
+    <TD>16.18</TD>
+    <TD>6.83</TD></TR></TBODY></TABLE></CENTER>
+<P>These results are in interesting contrast to those of [<A 
+href="http://www.almaden.ibm.com/cs/k53/www9.final/#AlbertJeongBarabasi">Albert, 
+Jeong and Barabasi 99</A>], who predict an average distance of 19 for the web, 
+based on their crawl of the nd.edu site; their calculations are unclear on 
+whether directed or undirected distances are considered.&nbsp; Our results on 
+the other hand show that over 75% of time there is no directed path from a 
+random start node to a random finish node; when there <I>is</I> a path, the 
+figure is roughly 16. However, if links can be traversed in either direction, 
+the distance between random pairs of nodes can be much smaller, around 7, on 
+average. 
+<H4>Further work</H4>Further work can be divided into three broad classes: 
+<OL>
+  <LI>More experiments aimed at exposing further details of the structures of 
+  <I>SCC, IN, OUT,</I> and the <I>TENDRILS</I>.&nbsp; Would this basic 
+  structure, and the relative fractions of the components, remain stable over 
+  time? 
+  <LI>Mathematical&nbsp; models for evolving graphs, motivated in part by the 
+  structure of the web; in addition, one may consider the applicability of such 
+  models to other large directed graphs such as the phone-call graph, 
+  purchase/transaction graphs, etc. 
+  <LI>What notions of connectivity (besides weak and strong) might be 
+  appropriate for the web graph?&nbsp; For instance, what is the structure of 
+  the undirected graph induced by the co-citation relation or by bibliographic 
+  coupling [<A href="http://www.almaden.ibm.com/cs/k53/www9.final/#biblio">White 
+  and McCain89</A>]? </LI></OL><B>Acknowledgment.&nbsp; </B>We thank Keith Randall 
+for his insights into our SCC algorithm and implementation. 
+<P>
+<HR width="100%">
+
+<H2><FONT face=Arial,Helvetica>References</FONT></H2>
+<UL>
+  <LI><A name=AdamicHuberman1></A><FONT face=Arial,Helvetica><FONT 
+  size=-1><B>Adamic and Huberman (1) 99. </B>L. Adamic and B. Huberman. <I><A 
+  href="http://www.parc.xerox.com/istl/groups/iea/www/webmarkets.html">The 
+  nature of markets on the World Wide Web</A>, </I>Xerox PARC Technical Report, 
+  1999.</FONT></FONT> 
+  <LI><A name=AdamicHuberman2></A><FONT face=Arial,Helvetica><FONT 
+  size=-1><B>Adamic and Huberman (2) 99.</B> L. Adamic and B. Huberman. <I><A 
+  href="http://www.parc.xerox.com/istl/groups/iea/www/bacomment.html">Scaling 
+  behavior on the World Wide Web,</A> </I>Technical comment on Barabasi and 
+  Albert 99.</FONT></FONT> 
+  <LI><A name=aiello></A><FONT face=Arial,Helvetica><FONT size=-1><B>Aiello, 
+  Chung, and Lu 00.</B> W. Aiello, F. Chung and L. Lu.&nbsp; <I><A 
+  href="http://www.parc.xerox.com/istl/groups/iea/www/bacomment.html">A random 
+  graph model for massive graphs,</A></I></FONT></FONT> <FONT 
+  face=Arial,Helvetica><FONT size=-1>ACM Symposium on the Theory and Computing 
+  2000.</FONT></FONT> 
+  <LI><A name=AlbertJeongBarabasi></A><FONT face=Arial,Helvetica><FONT 
+  size=-1><B>Albert, Jeong, and Barabasi 99. </B>R. Albert, H. Jeong, and A.-L. 
+  Barabasi. <I>Diameter of the World Wide Web,</I> Nature 401:130-131, Sep 
+  1999.</FONT></FONT> 
+  <LI><A name=Albert-Barabasi></A><FONT face=Arial,Helvetica><FONT 
+  size=-1><B>Barabasi and Albert 99. </B>A. Barabasi and R. Albert. <I>Emergence 
+  of scaling in random networks, </I>Science, 286(509), 1999.</FONT></FONT> 
+  <LI><A name=Crovella></A><B><FONT face=Arial,Helvetica><FONT size=-1>Barford 
+  <I>et. al. </I>99. </FONT></FONT></B><FONT face=Arial,Helvetica><FONT 
+  size=-1>P. Barford, A. Bestavros, A. Bradley, and M. E. Crovella. <I>Changes 
+  in Web client access patterns: Characteristics and caching implications</I>, 
+  in World Wide Web, Special Issue on Characterization and Performance 
+  Evaluation,&nbsp; 2:15-28, 1999.</FONT></FONT> 
+  <LI><A name=Conn></A><B><FONT face=Arial,Helvetica><FONT size=-1>Bharat <I>et. 
+  al.</I> 98. </FONT></FONT></B><FONT face=Arial,Helvetica><FONT size=-1>K. 
+  Bharat, A. Broder, M. Henzinger, P. Kumar, and S. Venkatasubramanian. <I><A 
+  href="http://www.research.digital.com/SRC/personal/Andrei_Broder/cserv/386.html">The 
+  connectivity server: fast access to linkage information on the web,</A></I> 
+  Proc. 7th&nbsp; WWW, 1998.</FONT></FONT> 
+  <LI><A name=BharatHenzinger></A><FONT face=Arial,Helvetica><FONT 
+  size=-1><B>Bharat and Henzinger 98. </B>K. Bharat, and M. Henzinger. <I><A 
+  href="http://www.research.digital.com/SRC/personal/monika/papers/sigir98.ps.gz">Improved 
+  algorithms for topic distillation in hyperlinked environments,</A> </I>Proc. 
+  21st SIGIR, 1998.</FONT></FONT> 
+  <LI><A name=BrinPage></A><FONT face=Arial,Helvetica><FONT size=-1><B>Brin and 
+  Page 98. </B>S. Brin, and L. Page. <I><A 
+  href="http://google.stanford.edu/~backrub/google.html">The anatomy of a large 
+  scale hypertextual web search engine,</A>&nbsp;</I> Proc.&nbsp; 7th WWW, 
+  1998.</FONT></FONT> 
+  <LI><A name=Butafogo></A><FONT face=Arial,Helvetica><FONT size=-1><B>Butafogo 
+  and Schniederman 91. </B>R. A. Butafogo and B. Schneiderman. <I>Identifying 
+  aggregates in hypertext structures,&nbsp;</I> Proc. 3rd ACM Conference on 
+  Hypertext, 1991.</FONT></FONT> 
+  <LI><A name=WebQuery></A><FONT face=Arial,Helvetica><FONT size=-1><B>Carriere 
+  and Kazman 97. </B>J. Carriere, and R. Kazman. <I><A 
+  href="http://www.cgl.uwaterloo.ca/Projects/Vanish/webquery-1.html">WebQuery: 
+  Searching and visualizing the Web through connectivity</A></I>,&nbsp; Proc. 
+  6th WWW, 1997.</FONT></FONT> 
+  <LI><A name=cleverwww></A><B><FONT face=Arial,Helvetica><FONT 
+  size=-1>Chakrabarti <I>et. al.</I> (1) 98. </FONT></FONT></B><FONT 
+  face=Arial,Helvetica><FONT size=-1>S. Chakrabarti, B. Dom, D. Gibson, J. 
+  Kleinberg, P. Raghavan, and S. Rajagopalan. <I><A 
+  href="http://decweb.ethz.ch/WWW7/1898/com1898.htm">Automatic resource 
+  compilation by analyzing hyperlink structure and associated text,</A></I> 
+  Proc. 7th WWW, 1998.</FONT></FONT> 
+  <LI><A name=Clever></A><B><FONT face=Arial,Helvetica><FONT size=-1>Chakrabarti 
+  <I>et. al.</I> (2) 98. </FONT></FONT></B><FONT face=Arial,Helvetica><FONT 
+  size=-1>S. Chakrabarti, B. Dom, D. Gibson, S. Ravi Kumar, P. Raghavan, S. 
+  Rajagopalan, and A. Tomkins. <I><A 
+  href="http://www.almaden.ibm.com/cs/k53/abstract.html">Experiments in topic 
+  distillation,</A></I> Proc.&nbsp; ACM SIGIR workshop on Hypertext 
+  Information&nbsp; Retrieval on the Web, 1998.</FONT></FONT> 
+  <LI><A name=backlinks></A><FONT face=Arial,Helvetica><FONT 
+  size=-1><B>Chakrabarti, Gibson, and McCurley 99. </B>S. Chakrabarti, D. 
+  Gibson, and K. McCurley.<I>Surfing the Web backwards</I>, Proc. 8th WWW, 
+  1999.</FONT></FONT> 
+  <LI><A name=ChoGarciaMolina></A><FONT face=Arial,Helvetica><FONT 
+  size=-1><B>Cho and Garcia-Molina 2000 </B>J. Cho, H. Garcia-Molina <I><A 
+  href="http://www-db.stanford.edu/~cho/papers/cho-synch.pdf">Synchronizing a 
+  database to Improve Freshness</A></I>. To appear in 2000 ACM International 
+  Conference on Management of Data (SIGMOD), May 2000.</FONT></FONT> 
+  <LI><A name=Faloutsosss></A><FONT face=Arial,Helvetica><FONT 
+  size=-1><B>Faloutsos, Faloutsos, and Faloutsos 99. </B>M. Faloutsos, P. 
+  Faloutsos, and C. Faloutsos. <I>On power law relationships of the internet 
+  topology,</I> ACM SIGCOMM, 1999.</FONT></FONT> 
+  <LI><A name=Glassman></A><FONT face=Arial,Helvetica><FONT size=-1><B>Glassman 
+  94. </B>S. Glassman. <I><A 
+  href="http://www.research.digital.com/SRC/personal/Steve_Glassman/CachingTheWeb/paper.html">A 
+  caching relay for the world wide web</A></I>, Proc. 1st WWW, 
+  1994.</FONT></FONT> <BR><A name=Harary></A><FONT face=Arial,Helvetica><FONT 
+  size=-1><B>Harary 75. </B>F. Harary. <I>Graph Theory,</I> Addison Wesley, 
+  1975.</FONT></FONT> 
+  <LI><A name=Hubermanetal></A><B><FONT face=Arial,Helvetica><FONT 
+  size=-1>Huberman <I>et. al. </I>98. </FONT></FONT></B><FONT 
+  face=Arial,Helvetica><FONT size=-1>B. Huberman, P. Pirolli, J. Pitkow, and R. 
+  Lukose. <I>Strong regularities in World Wide Web surfing</I>, Science, 
+  280:95-97, 1998.</FONT></FONT> 
+  <LI><A name=Kleinberg></A><FONT face=Arial,Helvetica><FONT 
+  size=-1><B>Kleinberg 98. </B>J. Kleinberg. <I><A 
+  href="http://simon.cs.cornell.edu/home/kleinber/auth.ps">Authoritative sources 
+  in a hyperlinked environment,</A></I> Proc. 9th ACM-SIAM SODA, 
+  1998.</FONT></FONT> 
+  <LI><A name=yoohoo></A><B><FONT face=Arial,Helvetica><FONT size=-1>Kumar 
+  <I>et. al. </I>(1) 99. </FONT></FONT></B><FONT face=Arial,Helvetica><FONT 
+  size=-1>R. Kumar, P. Raghavan, S. Rajagopalan, and A. Tomkins. <I>Trawling the 
+  Web for cyber communities, </I>Proc<I>.&nbsp;</I> 8th WWW , Apr 
+  1999.</FONT></FONT> 
+  <LI><A name=VLDB></A><B><FONT face=Arial,Helvetica><FONT size=-1>Kumar <I>et. 
+  al. </I>(2) 99. </FONT></FONT></B><FONT face=Arial,Helvetica><FONT size=-1>R. 
+  Kumar, P. Raghavan, S. Rajagopalan, and A. Tomkins. <I>Extracting large scale 
+  knowledge bases from the Web,&nbsp;</I> Proc. VLDB, Jul 1999.</FONT></FONT> 
+  <LI><A name=LukoseHuberman></A><FONT face=Arial,Helvetica><FONT 
+  size=-1><B>Lukose and Huberman 98. </B>R. M. Lukose and B. Huberman.&nbsp;<I> 
+  Surfing as a real option, </I>Proc. 1st&nbsp; International Conference on 
+  Information and Computation Economies, 1998.</FONT></FONT> 
+  <LI><A name=MartindaleKonopka></A><FONT face=Arial,Helvetica><FONT 
+  size=-1><B>Martindale and Konopka 96. </B>C. Martindale and A K Konopka. 
+  <I>Oligonucleotide frequencies in DNA follow a Yule distribution</I>, Computer 
+  &amp; Chemistry, 20(1):35-38, 1996.</FONT></FONT> 
+  <LI><A name=WebSQL></A><FONT face=Arial,Helvetica><FONT size=-1><B>Mendelzon, 
+  Mihaila, and Milo 97. </B>A. Mendelzon, G. Mihaila, and T. Milo. <I><A 
+  href="ftp://ftp.db.toronto.edu/pub/papers/jodl97.ps.Z">Querying the World Wide 
+  Web</A>,</I> Journal of Digital Libraries 1(1), pp. 68-88, 1997.</FONT></FONT> 
+
+  <LI><A name=mendelzonwood></A><FONT face=Arial,Helvetica><FONT 
+  size=-1><B>Mendelzon and Wood 95. </B>A. Mendelzon and P. Wood. <I><A 
+  href="ftp://ftp.db.toronto.edu/pub/papers/sicomp95.ps.Z">Finding regular 
+  simple paths in graph databases</A>,</I> SIAM J. Comp. 24(6):1235-1258, 
+  1995.</FONT></FONT> 
+  <LI><A name=Pareto></A><FONT face=Arial,Helvetica><FONT size=-1><B>Pareto 
+  1897. </B>V Pareto. <I>Cours d'economie politique,</I> Rouge, Lausanne et 
+  Paris, 1897.</FONT></FONT> 
+  <LI><A name=PirolliPitkowRao></A><FONT face=Arial,Helvetica><FONT 
+  size=-1><B>Pirolli, Pitkow, and Rao 96. </B>P. Pirolli, J. Pitkow, and R. Rao. 
+  <I><A 
+  href="http://www.acm.org/sigchi/chi96/proceedings/papers/Pirolli_2/pp2.html">Silk 
+  from a sow's ear: Extracting usable structures from the Web</A></I>,&nbsp; 
+  Proc.&nbsp; ACM SIGCHI, 1996.</FONT></FONT> 
+  <LI><A name=Pitkow-Pirolli></A><FONT face=Arial,Helvetica><FONT 
+  size=-1><B>Pitkow and Pirolli 97.&nbsp; </B>J. Pitkow and P. Pirolli. <I>Life, 
+  death, and lawfulness on the electronic frontier, </I>Proc. ACM SIGCHI, 
+  1997.</FONT></FONT> 
+  <LI><A name=Simon></A><FONT face=Arial,Helvetica><FONT size=-1><B>Simon 55. 
+  </B>H.A. Simon. <I>On a class of stew distribution functions</I>, Biometrika, 
+  42:425-440, 1955.</FONT></FONT> 
+  <LI><A name=biblio></A><FONT face=Arial,Helvetica><FONT size=-1><B>White and 
+  McCain 89.</B> H.D. White and K.W. McCain, <I>Bibliometrics</I>, in: Ann. Rev. 
+  Info. Sci. and Technology, Elsevier, 1989, pp. 119-186.</FONT></FONT> 
+  <LI><A name=Yule></A><FONT face=Arial,Helvetica><FONT size=-1><B>Yule 44. 
+  </B>G.U. Yule. <I>Statistical Study of Literary Vocabulary,</I>&nbsp; 
+  Cambridge University Press, 1944.</FONT></FONT> 
+  <LI><A name=Zipf></A><FONT face=Arial,Helvetica><FONT size=-1><B>Zipf 49. 
+  </B>G.K. Zipf. <I>Human Behavior and the Principle of Least Effort,</I> 
+  Addison-Wesley, 1949.</FONT></FONT> </LI></UL></BODY></HTML>

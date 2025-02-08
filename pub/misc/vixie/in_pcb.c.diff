@@ -1,0 +1,26 @@
+--- in_pcb.c	1998/04/26 07:59:21	1.1
++++ in_pcb.c	1998/04/26 08:03:21
+@@ -200,6 +200,13 @@
+ 		    sin->sin_addr = satosin(&in_ifaddr->ia_broadaddr)->sin_addr;
+ 	}
+ 	if (inp->inp_laddr.s_addr == INADDR_ANY) {
++#ifdef VIXLADDR
++		if (ntohs(sin->sin_port) != 520) {
++			ia = in_ifaddr;
++			if (ia == 0)
++				return (EADDRNOTAVAIL);
++		} else {
++#endif
+ 		register struct route *ro;
+ 
+ 		ia = (struct in_ifaddr *)0;
+@@ -269,6 +276,9 @@
+ 					return (EADDRNOTAVAIL);
+ 			}
+ 		}
++#ifdef VIXLADDR
++		}
++#endif
+ 		ifaddr = (struct sockaddr_in *)&ia->ia_addr;
+ 	}
+ 	if (in_pcblookup(inp->inp_head,

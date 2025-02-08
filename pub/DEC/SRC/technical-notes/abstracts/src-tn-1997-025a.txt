@@ -1,0 +1,15 @@
+"Recursive object types in a logic of object-oriented programs"
+K. Rustan M. Leino
+Note #1997-025a. October 27, 1997. Revised January 12, 1998.
+
+This paper formalizes a small object-oriented programming notation.
+The notation features imperative commands where objects can be
+shared (aliased), and is rich enough to allow subtypes and recursive
+object types. The syntax, type checking rules, axiomatic semantics, 
+and operational semantics of the notation are given. A soundness 
+theorem, showing the consistency between the axiomatic and operational 
+semantics is stated and proved. A simple corollary of the soundness 
+theorem demonstrates the soundness of the type system.  Because of 
+the way types, fields, and methods are declared, no extra effort is 
+required to handle recursive object types.
+

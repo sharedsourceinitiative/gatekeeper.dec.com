@@ -1,0 +1,21 @@
+                    CRL Technical Report 92/1
+                       Rollback Databases
+                  David Lomet and Betty Salzberg*
+                         January 10, 1992
+
+Rollback databases are multiversion databases that use transaction time to
+identify the versions of the data.  Such databases support queries that request
+information "as-of" some specific past time.  This report describes most of
+the technical aspects of supporting rollback databases.  It shows
+how to to do the timestamping itself, including how to cope with distributed
+systems.  Using the TSB-tree, we show how multi-version data can be
+efficiently  indexed, efficient both in space and in query time.  How one
+provides high concurrency while updating a TSB-tree is described next. 
+Finally, we show how one can use a rollback database as a backup source to
+provide media failure recovery.
+
+Keywords: rollback databases, multiversions, timestamping, concurrency,
+media recovery
+ 
+* College of Computer Science, Northeastern University, Boston, MA.
+This work was partially supported by NSF grant IRI-88-15707 and IRI-91-02821.

@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Threads</TITLE>
+<META NAME="description" CONTENT="Threads">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node26.html">
+<LINK REL="previous" HREF="node24.html">
+<LINK REL="up" HREF="node22.html">
+<LINK REL="next" HREF="node26.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html499"
+ HREF="node26.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html495"
+ HREF="node22.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html489"
+ HREF="node24.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html497"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html498"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html500"
+ HREF="node26.html">Security</A>
+<B> Up:</B> <A NAME="tex2html496"
+ HREF="node22.html">Concepts and Facilities</A>
+<B> Previous:</B> <A NAME="tex2html490"
+ HREF="node24.html">Address Spaces</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04023000000000000000">
+Threads</A>
+</H2>
+<P><A NAME="516">&#160;</A>
+<A NAME="517">&#160;</A>
+<A NAME="518">&#160;</A>
+A process can create any reasonable number (e.g., hundreds) of threads of
+control to deal with asynchronism or to perform independent computations
+in parallel.  The Taos implementation of Topaz can execute as many threads
+concurrently as it has processors (currently five).  The Taos scheduler
+chooses the highest priority ready threads without regard to the address
+spaces in which those threads are running.  The Ultrix implementation of
+Topaz simulates concurrent threads within a single-threaded Ultrix
+process.
+<P><A NAME="519">&#160;</A>
+<A NAME="520">&#160;</A>
+The Thread interface contains procedures for forking new threads and
+rejoining terminated threads, for allowing threads to synchronize via
+mutexes and condition variables, and for associating private data with a
+thread.  For convenience, Modula-2+ also provides a LOCK statement.
+<P><A NAME="521">&#160;</A>
+The implementation of OS avoids serializing concurrent calls from
+different threads (in the same or different processes) except where
+dictated by the semantics of the individual procedures.  For example, two
+threads concurrently writing the same byte of the same file are
+serialized.  But a thread that blocks within the operating system (e.g.
+waiting for a character to be typed on a tty device) does not prevent
+other threads in the same process from calling OS procedures.
+<P><A NAME="522">&#160;</A>
+<A NAME="1973">&#160;</A>
+<A NAME="524">&#160;</A>
+Sometimes it is necessary to cancel a computation.  Topaz provides the
+thread alert mechanism for this purpose.  Whenever an alert is sent to a
+thread that is blocked for an indefinite period within a call to a
+procedure of the OS interface (and most other Topaz interfaces), that
+procedure will raise the Alerted exception.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html499"
+ HREF="node26.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html495"
+ HREF="node22.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html489"
+ HREF="node24.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html497"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html498"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html500"
+ HREF="node26.html">Security</A>
+<B> Up:</B> <A NAME="tex2html496"
+ HREF="node22.html">Concepts and Facilities</A>
+<B> Previous:</B> <A NAME="tex2html490"
+ HREF="node24.html">Address Spaces</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

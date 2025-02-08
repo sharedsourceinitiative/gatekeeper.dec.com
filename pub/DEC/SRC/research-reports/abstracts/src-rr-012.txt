@@ -1,0 +1,30 @@
+
+
+
+    "Fractional Cascading."
+    Bernard Chazelle and Leonidas J. Guibas.
+    June 23, 1986.  58 pages.
+
+Authors' Abstract
+
+    In computational geometry many search problems and range queries
+    can be solved by performing an iterative search for the same key
+    in separate ordered lists.  In Part I of this report we show that,
+    if these ordered lists can be put in a one-to-one correspondence
+    with the nodes of a graph of degree  d  so that the iterative
+    search always proceeds along edges of that graph, then we can
+    do much better than the obvious sequence of binary searches. Without
+    expanding the storage by more than a constant factor, we can build
+    a data-structure, called a fractional cascading structure,
+    in which all original searches after the first can be carried
+    out at only  log d  extra cost per search.  Several results related
+    to the dynamization of this structure are also presented. Part
+    II gives  numerous applications of this technique to geometric
+    problems.  Examples include intersecting a polygonal path with
+    a line, slanted range search, orthogonal range search, computing
+    locus functions, and others. Some results on the optimality of
+    fractional cascading, and certain extensions of the technique
+    for retrieving additional information are also included.
+
+
+

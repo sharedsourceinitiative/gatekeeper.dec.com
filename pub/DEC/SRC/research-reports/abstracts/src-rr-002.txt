@@ -1,0 +1,23 @@
+
+    "Optimal Point Location in a Monotone Subdivision."
+    Herbert Edelsbrunner, Leo J. Guibas, and Jorge Stolfi.
+October 25, 1984.   33 pages.
+
+Authors' Abstract
+
+    Point location, often known in graphics as "hit detection," is
+    one of the fundamental problems of computational geometry.  In
+    a point location query we want to identify which of a given
+    collection of geometric objects contains a particular point.  Let
+    S  denote a subdivision of the Euclidean plane into monotone
+    regions by a straight-line graph of  m  edges.  In this paper
+    we exhibit a substantial refinement of the technique of Lee and
+    Preparata for locating a point in  S  based on separating chains.
+    The new data structure, called a layered dag, can be built in
+    O(m) time, uses O(m) storage, and makes possible point location
+    in O(log m) time.  Unlike previous structures that attain these
+    optimal bounds, the layered dag can be implemented in a simple
+    and practical way, and is extensible to subdivisions with edges
+    more general than straight-line segments.
+
+

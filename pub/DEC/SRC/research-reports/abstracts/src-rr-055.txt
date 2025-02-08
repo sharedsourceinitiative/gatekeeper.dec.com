@@ -1,0 +1,27 @@
+
+		AVAILABLE ELECTRONICALLY
+
+    "A Semantic Basis for Quest"
+    Luca Cardelli and Giuseppe Longo
+     February 14, 1990.  51 pages
+
+Authors' abstract
+  Quest is a programming language based on impredicative type 
+  quantifiers and subtyping within a three-level structure of kinds, 
+  types and type operators, and values.
+  
+  The semantics of Quest is rather challenging. In particular, 
+  difficulties arise when we try to model simultaneously features 
+  such as contravariant function spaces, record types, subtyping,
+  recursive types, and fixpoints.
+
+  In this paper we describe in detail the type inference rules for
+  Quest, and we give them meaning using a partial equivalence relation 
+  model of types. Subtyping is interpreted as in previous work by 
+  Bruce and Longo, but the interpretation of some aspects, namely 
+  subsumption, power kinds, and record subtyping, is novel. The latter
+  is based on a new encoding of record types.
+
+  We concentrate on modeling quantifiers and subtyping; recursion 
+  is the subject of current work.
+

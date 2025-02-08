@@ -1,0 +1,208 @@
+<!-- This file generated automatically by mtex2html(1) -->
+<HTML>
+<HEAD>
+<TITLE>dcpiformat</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#ffffff" VLINK="#006633">
+<H2>dcpiformat(4)</H2>
+
+<H3>NAME</H3>
+<BLOCKQUOTE>
+<P>
+
+dcpiformat - DIGITAL Continuous Profiling Infrastructure profile file format.
+</BLOCKQUOTE>
+
+<H3>DESCRIPTION</H3>
+<BLOCKQUOTE>
+<P>
+
+Each DIGITAL Continuous Profiling Infrastructure profile file contains
+the samples collected for some particular program or shared-library.
+A profile file has two parts.  The first part is a human-readable
+ASCII header.  The second part is a binary encoding of the samples
+associated with each distinct instruction address in the image to
+which this profile belongs.
+</BLOCKQUOTE>
+
+<H3>ASCII HEADER</H3>
+<BLOCKQUOTE>
+<P>
+
+The header has the following form:
+<PRE>
+	&lt;header&gt;	: &lt;line&gt;+ &lt;terminator&gt;
+	&lt;terminator&gt;	: "samples" &lt;space&gt;* "\n"
+	&lt;line&gt;		: &lt;required&gt; "\n"
+			| &lt;optional&gt; "\n"
+			| &lt;unknown&gt;  "\n"
+	&lt;required&gt;	: "version"	&lt;space&gt;+ pdb-&lt;major&gt;.&lt;minor&gt;
+			| "image"	&lt;space&gt;+ &lt;hex_digit&gt;+
+			| "epoch"	&lt;space&gt;+ &lt;time&gt;
+			| "platform"	&lt;space&gt;+ &lt;rest_of_line&gt;
+			| "event"	&lt;space&gt;+ &lt;rest_of_line&gt;
+			| "period"	&lt;space&gt;+ &lt;digit&gt;+
+			| "tstart"	&lt;space&gt;+ &lt;hex_digit&gt;+
+			| "tsize"	&lt;space&gt;+ &lt;digit&gt;+
+			| "cpuspeed"	&lt;space&gt;+ &lt;digit&gt;+
+	&lt;optional&gt;	: "cpuamask"	&lt;space&gt;+ &lt;hex_digit&gt;+
+			| "cpuimplv"	&lt;space&gt;+ &lt;digit&gt;+
+			| "cpucount"	&lt;space&gt;+ &lt;digit&gt;+
+			| "period"	&lt;space&gt;+ &lt;digit&gt;+
+			| "path"	&lt;space&gt;+ &lt;rest_of_line&gt;
+	&lt;unknown&gt;	: &lt;word&gt;	&lt;space&gt;+ &lt;rest_of_line&gt;
+
+	&lt;major&gt;		: &lt;digit&gt;+
+	&lt;minor&gt;		: &lt;digit&gt;+
+	&lt;time&gt;		: YYMMDDHHMM	   /* Digits indicating UCT time */
+			| YYYYMMDDHHMMSS   /* (Not yet supported) */
+
+	&lt;space&gt;		: [ \t]
+	&lt;hex_digit&gt;	: &lt;digit&gt; | [a-f] | [A-F]
+	&lt;digit&gt;		: [0-9]
+	&lt;word&gt;		: [^ \t\n]+
+	&lt;rest_of_line&gt;	: [^ \t\n][^\n]*
+</PRE>
+
+For each kind of line that falls under <TT>&lt;required&gt;</TT>, the profile
+header should contain exactly one occurrence of that line.  To support
+future extensions to the file format, all programs that modify profile
+files should preserve all <TT>&lt;unknown&gt;</TT> header lines when writing out
+the modified profile.<P>
+
+The format of the binary data is dependent on the major version number
+present in the ASCII header.  The current version number used by the
+profiling tools is <TT>1.01</TT>.  The documentation below describes the
+binary data format for the obsolete versions <TT>0.06</TT> and <TT>0.07</TT>.
+We plan to document major-version 1 in the near future.
+</BLOCKQUOTE>
+
+<H3>BINARY DATA FOR MAJOR-VERSION 0</H3>
+<BLOCKQUOTE>
+<P>
+
+The binary section of the profile begins immediately after the newline
+character that terminates the ASCII header.  (No whitespace is allowed
+after the newline.)  This section contains a mapping from each
+instruction address in the image, to a count of the number of samples
+associated with that address.<P>
+
+The binary section consists of a list of chunks, followed by a fixed
+length footer.  
+<PRE>
+	&lt;samples&gt;	: &lt;chunk&gt;* &lt;footer&gt;
+</PRE>
+
+Each chunk contains the sample counts for a contiguous range of instruction
+addresses.  For each address within this range, the chunk stores the
+number of samples associated with this address.
+<PRE>
+	&lt;chunk&gt;		: &lt;offset&gt; &lt;number&gt; &lt;count&gt;+
+	&lt;offset&gt;	: &lt;uint32&gt;
+	&lt;number&gt;	: &lt;uint32&gt;
+	&lt;count&gt;		: &lt;uint32&gt;
+</PRE>
+
+The beginning of the address range is <TT>text_start(image) +
+&lt;offset&gt;</TT>, where <TT>text_start(image)</TT> is recorded in the
+<TT>tstart</TT> field in the profile header.  The length of the address
+range is <TT>&lt;number&gt;</TT>.  The number of <TT>&lt;count&gt;</TT> entries in the
+chunk is <TT>&lt;number&gt;</TT>.  The number of samples associated with the
+<I>i</I>th address in the address range is given by the <I>i</I>th
+<TT>&lt;count&gt;</TT> entry in the chunk.<P>
+
+The instruction-address ranges associated with two distinct chunks in
+one profile cannot overlap.  Furthermore, if two chunks <TT>a</TT> and
+<TT>b</TT> occur in the same profile and <TT>a</TT> occurs before <TT>b</TT>, then
+the offset associated with <TT>a</TT> has to be smaller than the offset
+associated with <TT>b</TT>.<P>
+
+The footer consists of two 4-byte values.  The first value is the
+total number of instruction addresses in the image that have at least
+one associated sample.  The second value is the sum of the sample
+counts associated with all of the instruction addresses in the image.
+<PRE>
+	&lt;footer&gt;	: &lt;total_offsets&gt; &lt;total_samples&gt;
+	&lt;total_offsets&gt;	: &lt;uint32&gt;
+	&lt;total_samples&gt;	: &lt;uint32&gt;
+</PRE>
+
+All values in the binary section are stored in little-endian format.
+<PRE>
+	&lt;uint32&gt;	/* Unsigned little-endian 32 bit value */
+</PRE>
+
+For good performance, the length of the ASCII header should be made a
+multiple of four (by adding extra whitespace at the end of the last
+line of the ASCII header) so that the binary section is aligned
+to a 32-bit boundary relative to the beginning of the profile.
+</BLOCKQUOTE>
+
+<H3>VERSION HISTORY</H3>
+<BLOCKQUOTE>
+<P>
+
+This file documents version <TT>0.07</TT> of the profile file format.
+</BLOCKQUOTE>
+
+<H3>SEE ALSO</H3>
+<BLOCKQUOTE>
+<P>
+
+<A HREF="dcpi.html">dcpi(1)</A>,
+<A HREF="dcpiflow.html">dcpiflow(1)</A>,
+<A HREF="dcpiprof.html">dcpiprof(1)</A>,
+<A HREF="dcpilist.html">dcpilist(1)</A>,
+<A HREF="dcpidis.html">dcpidis(1)</A>,
+<A HREF="dcpiscan.html">dcpiscan(1)</A>,
+<A HREF="dcpiepoch.html">dcpiepoch(1)</A>,
+<A HREF="dcpiflush.html">dcpiflush(1)</A>,
+<A HREF="dcpicalc.html">dcpicalc(1)</A>,
+<A HREF="dcpilabel.html">dcpilabel(1)</A>,
+<A HREF="dcpi2ps.html">dcpi2ps(1)</A>,
+<A HREF="dcpicat.html">dcpicat(1)</A>,
+<A HREF="dcpiquit.html">dcpiquit(1)</A>,
+<A HREF="dcpidiff.html">dcpidiff(1)</A>,
+<A HREF="dcpitopstalls.html">dcpitopstalls(1)</A>,
+<A HREF="dcpiwhatcg.html">dcpiwhatcg(1)</A>,
+<A HREF="dcpictl.html">dcpictl(1)</A>,
+<A HREF="dcpisource.html">dcpisource(1)</A>,
+<A HREF="dcpicc.html">dcpicc(1)</A>,
+<A HREF="dcpiversion.html">dcpiversion(1)</A>,
+<A HREF="dcpiuninstall.html">dcpiuninstall(1)</A>,
+<A HREF="dcpi2pix.html">dcpi2pix(1)</A>,
+<A HREF="dcpikdiff.html">dcpikdiff(1)</A>,
+<A HREF="dcpix.html">dcpix(1)</A>,
+<A HREF="dcpisumxct.html">dcpisumxct(1)</A>,
+<A HREF="dcpistats.html">dcpistats(1)</A>,
+<A HREF="dcpid.html">dcpid(1)</A>,
+<A HREF="dcpiloader.html">dcpiloader(5)</A><P>
+
+For more information, see the 
+<A HREF="../home.html">DIGITAL Continuous
+Profiling Infrastructure project home page
+(http://www.research.digital.com/SRC/dcpi/ from outside DIGITAL)</A>.
+</BLOCKQUOTE>
+
+<H3>COPYRIGHT</H3>
+<BLOCKQUOTE>
+<P>
+
+<a href="http://www.digital.com/info/tm.html">
+Copyright 1996-97, Digital Equipment Corporation.
+</a>
+</BLOCKQUOTE>
+
+<H3>AUTHORS</H3>
+<BLOCKQUOTE>
+<P>
+
+Sanjay Ghemawat,
+Carl Waldspurger
+</BLOCKQUOTE>
+
+This page was generated automatically by
+<A HREF="http://www.research.digital.com/SRC/mtex/">mtex software</A>.
+</BODY>
+</HTML>

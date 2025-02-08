@@ -1,0 +1,17 @@
+
+
+    "Can fair choice be added to Dijkstra's calculus?."
+    Manfred Broy and Greg Nelson.
+    February 16, 1989.  17 pages.
+
+Authors' Abstract
+
+    The paper studies the incorporation of a fair nondeterministic
+    choice operator into a generalization of Dijkstra's calculus of
+    guarded commands.  The new operator is not monotonic for the
+    orderings that are generally used for proving the existence of
+    least fixpoints for recursive definitions.  To prove the existence
+    of a fixpoint it is necessary to consider several orderings at
+    once, and to restrict the class of recursive definitions.
+
+

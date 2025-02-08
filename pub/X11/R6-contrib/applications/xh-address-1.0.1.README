@@ -1,0 +1,4 @@
+xh-address  - simple address and telephone register with motif interface.
+uses xrolo-data format.
+
+c++ (g++) compiler and motif development environment is required.

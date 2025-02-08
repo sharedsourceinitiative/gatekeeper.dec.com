@@ -1,0 +1,102 @@
+	README file for Xvan 1.2 (X11/R6 multiple screen server)
+	Peter C. Jones, Sun Microsystems Laboratories, Chelmsford, MA
+	last updated June 1995
+
+This is the README file for the X11/R6 version of the Xvan server.
+This latest release features a couple of bug fixes and the necessary
+updates to remain consistent with patch level 11 of the X11/R6
+distribution.
+
+Xvan is a modification of the X11/R6 sample server that allows
+multiple physical screens to comprise one logical screen.  It is
+currently only fully implemented for Sun workstations, so there is
+only one machine-specific subdirectory, "sun", in the "hw" branch of
+the source tree.  However, for any other machine that could use the
+code in the standard "mfb" and "cfb*" directories, it should be rather
+simple to port Xvan functionality.
+
+Building Xvan
+=============
+
+The file Xvan-1.2.tar should be unpacked in the base directory of the
+X11/R6 source tree (the one with the "xc" and "contrib" subdirectories
+in it).  It will create a "Xvan" directory tree in the "xc/programs"
+directory similar to the "Xserver" tree.
+
+- In the Imakefile in the "xc/programs" directory, add "Xvan" to the
+list of directories assigned to the "XSDIR" variable.  The line will
+then probably look like this:
+
+	XSDIR = Xserver Xvan
+
+- To just build the Xvan server, enter the following commands from
+within the "xc/programs/Xvan" directory:
+	% xmkmf -a ../.. programs/Xvan
+	% make
+and the various executables will be generated both in that directory
+and in the "xc/programs/Xvan/hw/sun" directory.  (Alternatively, to
+rebuild the entire X11/R6 build tree, execute a "make World" or a
+"make Everything", as appropriate, from the top level "xc" directory.)
+
+- To install the executables and man pages in the binary target tree,
+enter the following commands from within the "xc/programs/Xvan"
+directory (as root):
+	% make install
+	% make install.man
+
+On any Sun machine running SunOS 4.x or SunOS 5.x, you should be able
+to build Xvan just like any other piece of the X11/R6 package.  The
+sunGX graphics accelerator, used with cgsix* screen devices, is fully
+supported.
+
+Note that Xvan for X11/R6 requires a C++ compiler for some pieces of
+the server.  It was tested with SPARCompiler C++ 4.0.1.
+
+Starting Xvan
+=============
+
+The command line interface to the standard server has been slightly
+enhanced to access Xvan's mutiple screen functionality.  The "-dev"
+command line switch to the "Xvan" command allows you to use the plus
+(+) operator to combine multiple screens into one logical screen.  A
+comma (,) followed by an appropriate direction keyword indicates the
+desired relative position of this screen to the previous one.  The
+allowable direction keywords are "left", "right", "top", and "bottom".
+If no direction keyword is specified for a screen device (other than
+the first one), then that screen is placed logically to the right of
+the previous one.  The colon (:) operator still serves to specify
+using multiple screens the standard X way, i.e., multiple logical
+screens.
+
+For example, the following command will start up Xvan with two
+screens, /dev/cgsix0 and /dev/cgsix1, side by side, with the latter
+on the right:
+
+% Xvan -dev /dev/cgsix0+/dev/cgsix1
+
+This more complicated example illustrates a way to set up a 2x2
+screen grid with cgsix0 and cgsix1 across the top row, and with
+cgsix2 and cgsix3 across the bottom row:
+
+% Xvan -dev /dev/cgsix1+/dev/cgsix3,bottom+/dev/cgsix2,left+/dev/cgsix0,top
+
+Of course, the server will normally be started within another command,
+such as "xinit", as shown in the following command (which assumes that
+the default server "X" is linked to Xvan):
+
+% xinit -- -dev /dev/cgsix0+/dev/cgsix1
+
+The logical screen must be rectangular, but it is possible with the
+command syntax to set up a non-rectangular combination of the
+available physical screens (with three or more).  Xvan will create
+the logical screen to be a rectangle enclosing all the specified
+physical screens, but the behavior of windows that reside in the 
+areas of the logical screen that are not physically mapped will be
+incorrest.  Also, it is possible to use the same physical screen in
+more than one place on the logical screen, with the resulting
+behavior being erroneous as would be expected.
+
+	Questions or comments can be sent to:
+	Peter.C.Jones@East.Sun.COM
+
+

@@ -1,0 +1,105 @@
+<html>
+<head><title>The Connectivity Server</title></head>
+<body>
+<center>
+<h1><b>The Connectivity Server</b></h1><br>
+<h2>Suresh Venkatasubramanian, Stanford University</h2>
+</center>
+
+
+I'm a third year Ph.D student in Computer Science at Stanford
+University. At Stanford, I work with Rajeev Motwani and Jean-Claude
+Latombe on problems in geometric pattern matching (with application to
+drug design). In general, I'm interested in theoretical work as applied to
+real-world problems, and within that framework, the project that was
+proposed to me at SRC sounded interesting.<P>
+
+The problem is the following: Using link information on web pages,
+construct a database that maintains the graph of web pages (and the edges
+between them) and answer connectivity queries about this structure.
+This information is useful for a variety of reasons. One of
+the most important is as a filter for ranking algorithms that use
+connectivity information to determine the relevance of query results. <P>
+
+What I mainly worked on was designing and implementing the architecture
+for this server. Some of the design issues were the following:<P>
+
+<ol>
+
+<LI>Resources: We use a 4GB machine with a large disk, so we can handle
+large amounts of main memory storage.</li>
+<LI>Updates: We chose an update model that is batched (due to the 
+fact that we obtain updates from the AltaVista crawler once a day).</li> 
+<LI>Querying flexibility: We keep the API simple so as to allow a variety
+of search mechanisms to be built on top of it.</li>
+<LI>Communication with clients: Our current interface is HTTP based, via a
+custom HTTP server - again, this is flexible.</li></ol><P>
+
+The graph structure is relatively straightforward. We maintain a record
+for each node containing a list of its inlinks and outlinks. In the actual
+implementation, this list is actually a pointer into a table of all the
+(in/out)lists. The nodes are represented not as URLs, but using an
+internal node ID.<P>
+
+Designing the URL database turned out to be the non-trivial
+part. Initially, we were using the Altavista-assigned fingerprint as a
+node ID, and used a huge file containing the ID-URL correspondence to
+compute the mapping from an ID to a URL. The forward mapping is a function
+computation. However, this approach was not useful for two reasons:<P>
+
+<ol>
+
+<LI>Fingerprints are 64 bit objects, which is unnecessarily large (we only
+have 250 million URLs right now). This translates into a space wastage
+both in the URL database and in the graph structure.</li>
+<LI>The list of sorted URLs is over 19 GB. This is very difficult to
+manage, and we need to compress the data to improve space and lookup.</li>
+</ol><P>
+
+As a result, we use assigned 32 bit numbers as node IDs, and use an encoding
+scheme to represent the URLs. This scheme is a delta-encoding scheme,
+where each string is stored not in its entirety, but as the difference
+between it and the string before it. This allows us to significantly compress the data -
+down to about 5.3 GB. Note that each compressed entry also contains the
+node ID stored within it.<P>
+
+We also build an index to search this database (delta-encoding a file
+forces the search to be linear, so we need an index containing fully
+formed URLs which we can use as a start point for decoding the URL).<P>
+        
+In addition to building the above structure, we also built a system for
+updates that takes a formatted Altavista crawl result and merges it into
+the database. This system is non-trivial, owing to the sizes involved and
+the need to perform updates quickly.<P>
+
+The interesting part of the work was designing the data structures. We
+came up with a variety of schemes that could be used to represent the URL
+database, and even toyed with the idea of changing the graph
+representation to something more intricate. Ultimately though, and this is
+probably the main lesson to be drawn, simplicity should not be
+underrated. Our final structures are quite simple, which means that
+writing code for them is easy, and performance is generally acceptable. Moreover,
+a simple structure allows us to (potentially) play with many different
+types of query families without introducing a bias into performance.
+The largest single amount of effort however, went into initializing the
+databases from the latest AV crawl (about a month old).<P>
+
+This work has no real connection to the work I do at Stanford, (which is
+more theoretical in nature), but I found it interesting mainly because
+it is a good example of the sort of problem I'm interested in, namely, 
+where there are theoretical issues to explore as well as non-trivial
+system-building problems. Due to time constraints, I was unable to look at related graph-theoretic
+work (mostly because of time), but this project gave me a lot of
+experience in the nitty-gritty  of data structure design and
+implementation.<P>
+
+
+Acknowledgements: I'd like to thank Puneet Kumar and Andrei Broder for their constant
+help and support, and for making sure I didn't keep veering off the focus
+of the project. A special thanks to Hannes Marais for always being
+around as a "covert" third host. I would also like to thank Krishna
+Bharat, Mike Burrows, Sanjay Ghemawat, and Monika Henzinger for their help.<P>
+
+</BODY>
+</HTML>
+

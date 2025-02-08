@@ -1,0 +1,44 @@
+This directory contains miscellaneous documentation related to Tcl
+and Tk.  Additional documentation can be found via our web site at
+http://sunscript.sun.com/
+
+engManual.tar.Z         Compressed tar file for a directory containing
+                        the Tcl/Tk Engineering Manual, which describes
+                        the C coding and testing conventions used to develop
+                        Tcl and Tk.  I strongly encourage other Tcl/Tk
+                        developers to follow these conventions, particularly
+                        if you want to submit code for possible inclusion
+                        into official releases.
+
+styleGuide.tar.Z	Compressed tar file for a directory containing
+			the Tcl Style Guide, which describes the coding
+			conventions the Tcl group uses for writing Tcl
+			code.  Other Tcl programmers are strongly
+			encouraged to uses these guidelines for thier
+			own Tcl programs.
+
+portable-tk.ps		A postscript version of the paper Ray Johnson
+			and Scott Stanton presented at the 1996 Tcl
+			workshop about making Tk cross platform.
+			
+portable-tk-slides.ps	A postscript version of the slides on the
+			making of Tk portable to the Macintosh and
+			Windows platforms presented by Ray Johnson &
+			Scott Stanton at the 1996 Tcl workshop.
+	
+book.examples.Z         Compressed file containing ASCII text for nearly all
+                        of the examples from the book "Tcl and the Tk Toolkit".
+ 
+tclUsenix90.ps          Postscript for a paper on Tcl that appeared in the
+                        Winter 1990 USENIX Conference.
+ 
+ 
+tkUsenix91.ps           Postscript for a paper on Tk that appeared in the
+                        Winter 1991 USENIX Conference.
+ 
+tkF10.ps                Postscript for Figure 10 of the Tk paper.
+ 
+tut.tar.Z               A collection of materials from a full-day tutorial
+                        on Tcl and Tk.  Includes viewgraphs from four
+                        one-hour talks.
+ 

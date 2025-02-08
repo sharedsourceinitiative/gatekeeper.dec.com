@@ -1,0 +1,132 @@
+/*
+ * Copyright (C) 1994 Communications and Systems Specialists, Inc.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a 
+ * copy of this software and associated documentation files (the 
+ * "Software"), to deal in the Software without restriction, including 
+ * without limitation the rights to use, copy, modify, merge, publish, 
+ * distribute, sublicense, and/or sell copies of the Software, and to 
+ * permit  persons to whom the Software is furnished to do so, subject to 
+ * the following conditions:
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ * IN NO EVENT SHALL COMMUNICATIONS AND SYSTEMS SPECIALISTS, INC. BE 
+ * LIABLE FOR ANY CLAIM,  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of Communications and 
+ * Systems Specialists, Inc. shall not be used in advertising or otherwise
+ * to promote the sale, use or other dealings in this Software without 
+ * prior written authorization from Communications and Systems 
+ * Specialists, Inc.
+ */
+
+			Xmsg Version 1.0
+			================
+			10 October 1994
+
+
+WHAT IS Xmsg?
+=============
+The Xmsg library is a general-purpose message-reporting framework that 
+provides an extensible and customizable error- and message-reporting 
+facility to the application writer. 
+
+The Xmsg library is modeled after the X Toolkit Intrinsics error- and 
+warning-handling facilities. Messages are created using abstract keys. 
+The keys are used to determine the actual message text, to control the 
+dispatching of messages to specific handlers, and to provide handler-
+specific configuration.
+
+Configuration of the facility is achieved via entries in the 
+error database.  Message content and routing can be specified,
+if desired, on a message-by-message basis.
+
+Messages generated within Xlib and the Intrinsics can be trapped, 
+controlled, and handled through this facility as well.
+
+It was developed on a SPARC-based workstation running Solaris 2.3 and OpenWindows 3.3, which is based on X11R5.  It has been verified to 
+work under X11R6 on a SPARC.
+
+Refer to Issue 12 of "The X Resource" for detailed information on this
+library.
+
+
+WHAT IS XmsgXm?
+===============
+The XmsgXm library is an optional component of the facility; it uses the 
+Xmsg framework to display Xlib- and Xt-generated messages, as well as 
+application-generated messages, in Motif pop-up dialogs.
+
+
+HOW TO GET Xmsg?
+================
+The Xmsg and XmsgXm libraries are available through anonymous FTP from 
+ftp.x.org in the directory /contrib/libraries.
+
+
+DOCUMENTATION:
+==============
+There are some man pages provided with this version.  I experimented with
+a tool called c2man which automatically creates man pages from 
+strategically placed comments in the header files.  I have mixed feelings
+about the results.
+
+First of all, I did not spend much time actually writing the comments.
+The tool did write the man pages, but it was not as smart as I had
+hoped.  I may continue to use c2man in the future, or I might just write
+the man pages by hand.  The one thing I *really* like about c2man is that
+it will generate the man pages in a number of different formats.
+
+If you *really* want to figure out how to use this tool, start with The
+X Resource (Issue 12) article.
+
+
+FUTURE DIRECTION:
+=================
+Plans for the future are focused on XmsgXm:
+1) Dialog caching
+2) Smart word-wrapping/geometry
+3) XPM support for icons
+4) Variable length argument lists when generating messages
+5) Dialogs with responses returned to the application
+?) Let me know your ideas...
+
+
+INSTALLATION:
+=============
+I did not prepare an Imakefile for this release.  One will be provided
+next time.  What I do have is a makefile which is used on a Solaris 2
+SPARC box.  
+
+- If you do not have Motif, comment out the MOTIF... variables in the 
+  makefile.  Change other variables as necessary.
+
+- Type 'make' to build the library and test programs.
+
+- Type 'make install' to install the library, include files, and man pages.
+
+This package was written and tested with:
+   cc from SparcWorks 3.0 under Solaris 2.3 with Motif 1.2.2.
+
+
+COPYRIGHT:
+==========
+
+  Copyright 1994 CSSi --
+  See license conditions in the COPYRIGHT file of the Xmsg distribution
+
+Please mail any bug reports or modifications done, comments, suggestions,
+requests for updates or patches to port on another machine to:
+
+rwerne@corp.cssi.net		(INTERNET)
+
+Rob Werner			(SURFACE MAIL)
+CSSi
+10260 Old Columbia Road
+Columbia, MD  21046 (USA)

@@ -1,0 +1,61 @@
+To whom it may concern,
+
+This is the preliminary, uninspected and largely untested source for a
+version of xstdcmap and associated Xmu routines that supports creation
+of color ramps for PEX.  The specification for the changes has previously
+been distributed on pex-spec.
+
+Almost all the source is directly leveraged from the familiar Xmu and 
+xstdcmap source available from export.lcs.mit.edu.  In fact, I have included 
+a side-by-side difference listing (180-character-wide format) where the left 
+side is the original Xmu/xstdcmap code and the right side only shows the 
+changes made during addition of the PEX support.  You will also see a couple
+of defect fixes I made.
+
+At this point, I have only done some cursory testing of an earlier version
+of the code at the PEX-IC, and some hand-testing has been done on HP and IBM
+systems.  I have made some changes since the PEX-IC testing but
+nothing I think would invalidate the success I had there.  I have tried it 
+on a variety of HP systems and it seems to be working, but I plan to 
+eventually write some kind of test script that will verify that without 
+the new options (-pex, -fullDefault, -ramp), the xstdcmap client still 
+behaves the same as always (except for a couple of defects I fixed), and will 
+also produce some output so that correct behavior under the new options can 
+be verified (probably only by an expert on the particular PEX implementation 
+being tested).
+
+To aid in early testing, I have found the following tools to be useful:
+
+xdpyinfo 	tells you general info about the X server
+
+xprop  		tells you about the properties that exist on
+		the server; its main flaw in this usage is that it 
+		only dumps one entry of the RGB_DEFAULT_MAP property;
+		usage for this testing is
+
+		xprop -root
+
+xwininfo	handy to find out the IDs of Windows and Colormaps, and
+		the Visuals they've been created in
+
+colorinq 	a somewhat HP-specific inquiry program I hacked that
+		can dump all the entries in the properties;
+		this should be easy to port to other systems; takes no
+		paramaters, uses DISPLAY
+
+dump_cmap 	another program I wrote to dump out the contents of an
+		X colormap; usage is either of these forms:
+
+		dump_cmap <window_id>
+		dump_cmap <colormap_id> <visual_id>
+
+delete_all	just a shell script that removes all the properties
+
+I still need to try to make an Imakefile for this code; since I'm not 
+an expert in Imake arcana, I've been procrastinating it.
+I have included a Makefile that works on HP and IBM but of course will need to 
+be modified for other systems.  It's not even a very good Makefile.
+
+John Waitz
+Hewlett-Packard
+6/17/93

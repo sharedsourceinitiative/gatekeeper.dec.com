@@ -1,0 +1,50 @@
+<TITLE>Digital Systems Research Center: Note 1998-001</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Technical Note 1998-001</H1>
+<H1>On the Analysis of Randomized Load Balancing Schemes</H1>
+<HR>
+<H2>Michael Mitzenmacher</H2>
+Note #1998-001, February 8, 1998.
+<P>
+It is well known that simple randomized load balancing schemes can
+balance load effectively while incurring only a small overhead, making
+such schemes appealing for practical systems. In this paper, we
+provide new analyses for several such dynamic randomized load
+balancing schemes.  
+<P>
+Our work extends a previous analysis of the supermarket model, a
+model that abstracts a simple, efficient load balancing scheme in the
+setting where jobs arrive at a large system of parallel processors.
+In this model, customers arrive at a system of n servers as a
+Poisson stream of rate lambda n, lambda < 1, with service
+requirements exponentially distributed with mean 1.  Each customer
+chooses d servers independently and uniformly at random from the n
+servers, and is served according to the First In First Out (FIFO)
+protocol at the choice with the fewest customers.  For the supermarket
+model, it has been shown that using d = 2 choices yields an
+exponential improvement in the expected time a customer spends in the
+system over d = 1 choice (simple random selection) in equilibrium.
+Here we examine several variations, including constant service times
+and threshold models, where a customer makes up to d
+successive choices until finding one below a set threshold.  
+<P>
+Our approach involves studying limiting, deterministic models
+representing the behavior of these systems as the number of servers
+n goes to infinity.  Results of our work include useful general
+theorems for showing that these deterministic systems are stable or
+converge exponentially to fixed points.  We also demonstrate that
+allowing customers two choices instead of just one leads to
+exponential improvements in the expected time a customer spends in the
+system in several of the related models we study, reinforcing the concept
+that just two choices yields significant power in load balancing.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-001.ps.Z">PostScript compressed with UNIX compress</A></B> -- 200 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-001.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 168 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-001.ps.zip">PostScript compressed with ZIP</A></B> -- 168 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-001.ps">PostScript</A></B> -- 384 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-001.pdf">Portable Document Format (PDF)</A></B> -- 144 Kbytes<BR>
+</UL></P>

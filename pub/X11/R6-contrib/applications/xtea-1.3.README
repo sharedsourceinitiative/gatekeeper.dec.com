@@ -1,0 +1,158 @@
+
+		README file for xtea 1.3
+
+
+1. WHAT IS XTEA?
+
+xtea is a distributed multimedia tool to help users negotiate the
+exchange of vital resources like tea, coffee, and beer. To do
+this, every participating user starts xtea, indicating for which
+resources he wants to act as a producer and/or consumer.
+
+The xtea processes notify a central xtead (for xtea daemon) which
+manages the flow of information and keeps track of the users.
+
+When somebody has finished cooking his or her one-of-a-kind extra-strong
+morning coffee, e.g., he can query a list of potential consumers
+and invite them with a few mouse clicks.
+
+xtea has been tested exhaustively in our department during the last
+months and has proven to be a very stable and useful tool, not only for
+beverage distribution, but also for group communications. You can
+create quite a bit of activity by offering 500 units of jellybeans
+to all those guys ...
+
+xtea uses socket TCP/IP communications, Athena widgets and the
+XPM library. It should compile out-of-the-box on most Unices using an 
+ANSI C compiler; we've tested it on
+
+		Intel with Linux
+		Intel with BSDI
+		DEC MIPS with Ultrix 4.4
+		DEC Alpha with OSF/1
+
+Please send me an email if it works or doen't work on your kind of
+machine.
+
+
+2. HOW DO I GET IT?
+
+You can get xtea from
+
+	ftp.x.org:/contrib/applications
+
+or one of its mirrors.
+
+The home site of xtea is
+
+	ftp.regent.e-technik.tu-muenchen.de:/local/regent/xtea/
+
+The file name is
+
+	xtea-1.3.tar.gz
+
+You may also look at
+
+	http://www.regent.e-technik.tu-muenchen.de/proj/xtea
+
+Questions may be directed to
+
+	xtea@regent.e-technik.tu-muenchen.de
+
+
+2. HOW DO I COMPILE IT?
+
+Unpack the distributions using
+
+	zcat xtea-1.3.tgz | tar xvf -
+
+and take a look at the files.
+
+First, edit XTea.config to suit your needs. You have to
+
+  - specify a search path for icon files
+  - specify where to install the supplied icons
+  - give parameters for the client-server communication
+  - give the location of XPM include and library files
+  - specify the language to be used (currently, english or german)
+
+Then, type
+
+	xmkmf
+	make Makefiles
+	make
+
+to compile the program. You may now give it a test run by changing
+into the icons directory (so that the icons can be found) and
+starting xtead and one xtea client:
+
+	cd icons
+	../src/xtead -v &
+	xrdb -merge ../src/XTea-english.ad
+	../src/xtea -p all -c all
+
+Finally, install the programs, icons, application resources and manual
+pages by typing
+
+	make install
+	make install.man
+
+
+3. HOW DO I RUN IT?
+
+First, you have to start xtead on the host specified in the
+XTea.config file. If it isn't started from some /etc/rc.* at boot time,
+you may want to start xtead in its own process group so that it 
+continues running after you log out. Using ksh, this can be done using
+
+	nohup xtead &
+
+Now, all users can start xtea clients using e.g.
+
+    	xtea -pall -call &
+    	
+and start drinking.	    
+
+
+4. CUSTOMISATION
+
+To add new resources, edit the string list in src/config.c. In addition,
+you may want to change the application resource file to specify
+the pixmaps. Some constants like timeouts etc. are specified in
+src/config.h
+
+
+5. SOUND SUPPORT
+
+When the xtea client is started or when some resource is offered, a program
+specified by X resources is executed with appropriate arguments. This can
+be used to play sounds whenever some resource is being offered. For example,
+if aplay is used for sound output, the following lines can be added to 
+the .Xresources file:
+
+	XTea.eventprogram: aplay %s
+	XTea.default_event: ping.au
+	XTea.startup_event: -g 10 xtea.au
+	XTea.tea_event: teaready.au
+	XTea.coffee_event: coffeeready.au
+	XTea.beep: false
+
+This requires that aplay is in your PATH and that it can find the sound
+files (using the SOUND_PATH environment variable).
+
+The last line is used to turn the default double-beep off. 
+
+
+
+6. COPYRIGHT AND CREDITS
+
+This program is Copyright (c) 1994,1995 by Henning Spruth and the Institute of
+Electronic Design Automation, Technical University of Munich, Germany. It may
+be freely copied and used as long as this README is left intact.
+
+If you have suggestions, questions, icons, sounds, or language-specific 
+application resources, send an email to:
+
+	xtea@regent.e-technik.tu-muenchen.de
+
+

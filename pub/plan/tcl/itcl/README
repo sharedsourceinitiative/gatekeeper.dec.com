@@ -1,0 +1,18 @@
+[incr Tcl] 3.2.0
+
+The itcl3.2.tar.gz file is the [incr Tcl] snapshot used for
+TclPro 1.4.  itcl32.zip is the corresponding ZIP file.
+This version is compatible with Tcl 8.3.
+
+The [incr Tcl] home page is
+http://incrtcl.sourceforge.net/
+
+However, currently I can make no guarantee about the
+completeness of this distribution.  We build and release
+directly from our CVS workspaces as opposed to using
+this particular source release.  All this is to say, don't
+be too suprised if there are glitches building from this 
+release.  Ideally you should be able to use "configure"
+and "make" to build for the UNIX platform of your choice.
+
+March 4, 2004

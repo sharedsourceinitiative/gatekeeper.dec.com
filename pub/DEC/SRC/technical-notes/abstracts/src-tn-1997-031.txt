@@ -1,0 +1,18 @@
+"Fast Integrated Tools for Circuit Design with FPGAs"
+Stephan W. Gehring and Stefan H.-M. Ludwig
+Note #1997-031. December 16, 1997
+
+To implement high-density and high-speed FPGA circuits, designers 
+need tight control over the circuit implementation process. However, 
+current design tools are unsuited for this purpose as they lack fast 
+turnaround times, interactiveness, and integration. We present a system 
+for the Xilinx XC6200 FPGA, which addresses these issues. It consists 
+of a suite of tightly integrated tools for the XC6200 architecture 
+centered around an architecture-independent tool framework. The system 
+lets the designer easily intervene at various stages of the design
+process and features design cycle times (from an HDL specification to 
+a complete layout) in the order of seconds.
+
+
+
+

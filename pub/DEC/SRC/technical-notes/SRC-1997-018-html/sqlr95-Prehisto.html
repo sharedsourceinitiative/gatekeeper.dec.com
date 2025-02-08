@@ -1,0 +1,400 @@
+<HTML><HEAD>
+<!-- This document was created from RTF source by rtftohtml version $Revision: 3.6 $ -->
+<TITLE>The 1995 SQL Reunion: People, Projects, and Politics - Prehistory</TITLE></HEAD>
+<BODY BACKGROUND="" BGCOLOR="#FFFFFF" TEXT=#000000>
+<A HREF="sqlr95-The.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="sqlr95-System.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="sqlr95-The.html"><IMG SRC="images/upg.gif" ALT="Up " border=0></A>
+ <A HREF="sqlr95.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="sqlr95-Contents.html"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+ <A HREF="sqlr95-Index.html"><IMG SRC="images/indexg.gif" ALT="Index" border=0></A>
+<hr size=4>
+<H2>
+Prehistory</H2>
+<b>Mike Blasgen:</b> So now we have a discussion about how it all began and how
+it proceeded. I have a timeline - some of you have seen it because I sent out
+one version of it - which acts to make me remember how to prompt people and
+also help me remember stuff that I remember myself. So I will do this. The
+earliest I remember is I was at [The University of California at] Berkeley and
+I remember a sign on the wall somewhere in the 2nd or 4th floor [of Cory Hall]
+saying that there were some interesting things going on in San Jose. I was
+still a student, so this would have been in 1968, roughly. So already San Jose
+was doing work in database. I don't think it was called that, then. It was
+called data management or file systems, or - I don't remember what it was
+called. But it had to do with work that Mike Senko was leading. And of course
+the research laboratory itself was always associated with data because the
+original development of the disk drive occurred there in the early fifties. So
+already by the late sixties there was a focus on software for the management of
+data. And I'm not familiar with that at all, nor was I involved in any of the
+work prior to the Phase Zero prototype of SEQUEL. But there was much work that
+went on in the company.<p>
+Irv, what led to Codd's<A NAME="Index14"></A>
+paper<a name="fnB3" href="#fn3">[4]</a>, which was published in 1970?<p>
+<b>Irv Traiger:</b> I<A NAME="Index15"></A>
+honestly don't know. There were two departments back then, the Systems Department<A NAME="Index16"></A>
+under Jim Eaton<A NAME="Index17"></A>
+and later Glenn Bacon<A NAME="Index18"></A>,
+and another one - I think it was called Information Systems or something like
+that - under Senko<A NAME="Index19"></A>,
+and they were very different worlds. People might play Ping-Pong together at
+lunch - there was a lot of Ping-Pong then - but essentially no technical
+interaction. You'd hear about things over there. In fact at one point there was
+a big project called <A NAME="Index20"></A>DIAM<a
+name="fnB4" href="#fn4">[5]</a><sup>, 6</sup> with a very complex structure, a
+complex query language. And we knew that this man was over there named Ted Codd
+and that there were some disagreements, but I really don't know what led to
+what. At one point, Ted Codd suddenly showed up in the Systems Department and
+after some delay he built up a small group of people - it was actually three
+people originally: Dines Bj&oslash;rner<A NAME="Index21"></A>,
+Ken Deckert<A NAME="Index22"></A>,
+and me. We began to work on a project called GAMMA-0<A NAME="Index23"></A>,
+and I brought the GAMMA-0 paper<a name="fnB5" href="#fn5">[7]</a> with me.<p>
+<b>Mike Blasgen:</b> Oh, really? Is it on the artifact table?<p>
+<b>Irv Traiger:</b> Not yet; it will be there. GAMMA-0 was meant to be the
+lowest-level thing that anybody would get value from, and even then there was
+the notion of supporting multiple things on top, which would happen again in
+System R and in Eagle, the big project at Santa Teresa. Nevertheless, what
+kicked off this work was a key paper by Ted Codd<A NAME="Index24"></A>
+- was it published in 1970 in CACM?<p>
+<b>Mike Blasgen:</b> Yes.<p>
+<b>Irv Traiger:</b> A couple of us from the Systems Department had tried to
+read it - couldn't make heads nor tails out of it.<i> [laughter]</i> At least
+back then, it seemed like a very badly written paper: some industrial
+motivation, and then right into the math.<i> [laughter]</i><p>
+<b>Bob Yost:</b> I went over there with several other people - I was in the
+Advanced Systems Development Division - I remember going over there in about
+1970 to see this because we were working with the IMS<a name="fnB6"
+href="#fn6">[8]</a> guys at the time. We couldn't believe it; we thought it's
+going to take at least ten years before there's going to be anything. And it
+was ten years.<i> [laughter]</i> <p>
+<b>Irv Traiger:</b> So we had this 1970 paper; there were a couple of other
+papers that Ted had written after that; one on a language called DSL/Alpha<a
+name="fnB7" href="#fn7">[9]</a><A NAME="Index25"></A>,
+which was based on the predicate calculus. Glenn Bacon, who had the Systems
+Department, used to wonder how Ted could justify that everybody would be able
+to write this language that was based on mathematical predicate calculus, with
+universal quantifiers and existential quantifiers and variables and really,
+really hairy stuff.<p>
+Somehow, again, I don't know how, there grew up around IBM a bunch of pockets
+of activity. There was a project in the Peterlee Science Center<A NAME="Index26"></A>
+in England of all places. Peterlee was a manufactured town. The English
+government was trying to seed industry and business in different parts of the
+UK and they invented Peterlee and IBM said, "Sure, we'll put a lab there."
+There was a person - was it Terry Borden? - Terry Rogers<A NAME="Index27"></A>
+who was heading up this project based on the relational algebra - a very weird
+language that occasionally gets used nowadays as an intermediate layer in a
+system. There was a project in Hursley (kind of interesting how much activity
+in England) called the Hursley Prototype<A NAME="Index28"></A>
+- was that Peter King?<p>
+<b>Raymond Lorie:</b> Peter Tilman<A NAME="Index29"></A>.<p>
+<b>Irv Traiger:</b> OK, Tilman. There was a project at the Cambridge,
+Massachusetts, Scientific Center<A NAME="Index30"></A>.
+Raymond Lorie<A NAME="Index31"></A>,
+Andrew Symonds<A NAME="Index32"></A>,
+and others, were doing that<a name="fnB8" href="#fn8">[10]</a><A NAME="Index33"></A><A NAME="Index34"></A>.
+And there was a predecessor project<a name="fnB9" href="#fn9">[11]</a> that had
+been done at MIT Lincoln Laboratory by Paul Rovner<A NAME="Index35"></A>
+(who went to school with Mike and Jim Gray and Mario [Schkolnick] and me at
+Berkeley) and Jerry Feldman<A NAME="Index36"></A>,
+who later became a Stanford professor and is now the head of ICSI<a
+name="fnB10" href="#fn10">[12]</a> at Berkeley. So there were these pockets,
+and so Ted Codd<A NAME="Index37"></A>
+wanted to establish his own pocket, and that turned into this GAMMA-0<A NAME="Index38"></A>
+project.<p>
+At one point Codd<A NAME="Index39"></A>
+decided to set up a symposium at Yorktown<A NAME="Index40"></A>
+- you know, the seat of power in the Research Division - and it was to
+basically have a scan of all the activity across IBM related to his relational
+ideas. We went through that, with the various labs being represented, and a
+bunch of others, and somehow or other a few months later this project<A NAME="Index41"></A>
+happened. It was to be in San Jose; it was to have an infusion of people from
+Yorktown; and we didn't know what that would be like, but it wasn't a problem.
+People like Frank King and Don Chamberlin and Ray Boyce were certainly aware of
+the fact that they were the incoming horde, but they were very sensitive about
+it and they tried very, very hard to involve the San Jose people. Mike Senko
+and his department were merged into the Systems Department,<A NAME="Index42"></A>
+which was renamed Computer Science, under Leonard Liu<A NAME="Index43"></A>.
+Glenn Bacon went off to SSD, or what's now called SSD<a name="fnB11"
+href="#fn11">[13]</a>. Mike Senko went back east, stayed in IBM, and died not
+too long after that, I think in Europe on a business trip. Frank King kept us
+kind of in task force mode for quite a few months, trying all kinds of crazy
+management schemes, like mentors, and inner circles, and teams. Out of that
+grew System R. That's kind of the long story. I don't want to steal the whole
+stage here. That's kind of the vague memory of how it all began.<p>
+<b>Mike Blasgen:</b> That's great. So actually you mentioned a lot of the
+points in my list here: I have Mike Senko, the Ted Codd paper, PRTV<a
+name="fnB12" href="#fn12">[14]</a>, Cambridge, ... So now, how did the Codd<A NAME="Index44"></A>-Bachman<A NAME="Index45"></A>
+thing come about? How did that fight come about? Is that related to DBTG<A NAME="Index46"></A>?<p>
+<b>Irv Traiger:</b> Yeah, there was this standard going on. It was organized by
+the Database Task Group and it was called CODASYL<a name="fnB13"
+href="#fn13">[15]</a><A NAME="Index47"></A>:
+Common Data something - Systems Language - how does that sound? It's kind of
+<i>deja vu</i> because you hear today about how important it is to follow
+standards, and if we had done it back then none of this stuff would have
+happened because DBTG was richer than <A NAME="Index48"></A>IMS<a
+name="fnB14" href="#fn14">[16]</a>; it was a network, which certainly includes
+a hierarchy; and for that matter, if you wanted flat files, you basically had
+that in DBTG. You could just omit the named relationships. What's the big deal,
+right? You want a good language, we'll give you a language. The technical
+community, which was kind of small then for database, had its own SIG and I
+don't remember what it was called. SIGMOD<A NAME="Index49"></A>
+was new.<p>
+<b>Raymond Lorie:</b> SIGFIDET<A NAME="Index50"></A>.<p>
+<b>Irv Traiger:</b> SIGFIDET<A NAME="Index51"></A>.
+SIGMOD was the kind of grass roots, revolutionary, not taken seriously bunch
+and SIGFIDET and CODASYL just sort of ran the whole game, and Bachman<A NAME="Index52"></A>
+was Mr. CODASYL<a name="fnB15" href="#fn15">[17]</a>. On several occasions, and
+I don't remember them all, maybe one at an early SIGMOD conference, these
+people would go at each other, I mean just hurling thunderbolts, about better
+and worse, complicated and simple, and mathematical foundations, and who
+cares.<p>
+<b>Mike Blasgen:</b> One of those debates was published and widely circulated<a
+name="fnB16" href="#fn16">[18]</a>. <p>
+<b>C. Mohan:</b> NCC panel, I think. National Computer Conference.<p>
+<b>Don Chamberlin:</b> There was one at the SIGFIDET<A NAME="Index53"></A>
+conference in Ann Arbor, Michigan in 1974.<p>
+<b>Franco Putzolu:</b> I think for a while people who eventually worked on
+System R worked on design techniques for DBTG<A NAME="Index54"></A>
+databases. Also there was a project I remember in Yorktown<A NAME="Index55"></A>
+in 1972-73 on how to design DBTG databases.<p>
+<b>Don Chamberlin:</b> I was working on that. I was recruited by Leonard Liu<A NAME="Index56"></A><A NAME="Index57"></A>
+in Yorktown in 1971 to work on an operating system project called System A<A NAME="Index58"></A>.
+Leonard Liu was a first-level manager in those days and I worked for Leonard
+for a year or so, until the System A project broke up in 1972. It seemed like
+every time there was an upheaval, Leonard got promoted and that was what
+happened in 1972.<i> [laughter]</i> Leonard got promoted to be a second-level
+manager and I started working for Frank King. We were in kind of a state of
+chaos in Yorktown in 1972 because our operating system project had broken up
+and we didn't have anything to do. Leonard was pretty astute politically and he
+thought that database was an important field to get into, so he kind of
+organized us into study group mode to try and figure out what needed to be done
+in databases. I got a particular job in this. I thought it was a plum of a job.
+My job was to study this CODASYL DBTG proposal and learn about it and give
+presentations on it and figure out what needed to be done to it and things like
+that. So I became an expert on DBTG and I just loved it and thought it was
+neat. It had all sorts of real complicated pointers and set-oriented selection
+rules and you could just study it all day. It was a real puzzle. I was kind of
+a programmer type; I really grooved on that and gave a lot of talks on it and
+things like that. I was the CODASYL expert in our group; other people studied
+other things: CICS<a name="fnB17" href="#fn17">[19]</a><A NAME="Index59"></A>
+and IMS<A NAME="Index60"></A>
+and different things like that.<p>
+We knew sort of peripherally that there was some work going on in the provinces<A NAME="Index61"></A>,
+in San Jose. There was this guy Ted Codd<A NAME="Index62"></A>
+who had some kind of strange mathematical notation, but nobody took it very
+seriously. Ray Boyce was hired at about this time, and we kind of got into this
+game called the Query Game where we were thinking of ways to express
+complicated queries. But actually before the Query Game started, I had a
+conversion experience, and I still remember this. Ted Codd came to visit
+Yorktown, I think it might have been at this symposium that Irv alluded to. He
+gave a seminar and a lot of us went to listen to him. This was as I say a
+revelation for me because Codd had a bunch of queries that were fairly
+complicated queries and since I'd been studying CODASYL, I could imagine how
+those queries would have been represented in CODASYL by programs that were five
+pages long that would navigate through this labyrinth of pointers and stuff.
+Codd would sort of write them down as one-liners<A NAME="Index63"></A>.
+These would be queries like, "Find the employees who earn more than their
+managers."<i> [laughter]</i> He just whacked them out and you could sort of
+read them, and they weren't complicated at all, and I said, "Wow." This was
+kind of a conversion experience for me, that I understood what the relational
+thing was about after that.<p>
+Ray Boyce<A NAME="Index64"></A>
+had just been hired at that time, and we organized between the two of us this
+game that we called the Query Game<A NAME="Index65"></A><A NAME="Index66"></A>,
+where we'd think of different questions that needed to be expressed and we'd
+try to find out syntax to express them in. These are some original foils from
+back in those days that we put together to try and convince people of things.
+We called the notation SQUARE<A NAME="Index67"></A><A NAME="Index68"></A>;
+it stands for Specifying Queries as Relational Expressions. We had this idea,
+that Codd had developed two languages, called the relational algebra and the
+relational calculus. In the relational algebra, the basic objects were tables,
+and you combined these tables with operations like joins and projections and
+things like that. The relational calculus was a kind of a strange mathematical
+notation with a lot of quantifiers in it. We thought that what we needed was a
+language that was different from either one of those, in which the basic
+objects that you worked on were sets of values, and the things you did to those
+sets of values were you mapped one set of values into another using some kind
+of a table. So we had the usual database of sales and departments and items
+being located on different floors and we would take a value like two and map it
+through this notation into the departments that were on that floor, and then
+we'd map it again into the items that were sold by those departments. We would
+try to show that this mapping notation was simpler than some of the complex
+ways that you'd have to express this query in relational calculus, or of course
+far worse, using something like CODASYL.<p>
+So that was where this idea called SQUARE came from, and that was what Ray and
+I were working on when we transferred to San Jose in 1973, along with Leonard<A NAME="Index69"></A>
+and Frank and Vera Watson and Robin Williams<A NAME="Index70"></A>,
+who all came to San Jose at the same time. Jim Gray had come out the year
+earlier because he liked it on the west coast. Franco and Mike followed, I
+believe, in the following year, in 1974. So that was what was happening in
+Yorktown during the same period of time that Irv was working with Ted Codd at
+San Jose.<p>
+<b>Mike Blasgen:</b> That's great; I'm learning all kinds of things I didn't
+know.<p>
+Something that Irv mentioned was that there was a number of us who had an
+association with the University of California at Berkeley<A NAME="Index71"></A>,
+and it is an amazingly large number. You wouldn't guess it - well, maybe it's
+because of geography. It's Irv, and Bruce [Lindsay], and Paul [McJones], and
+me, and Mario [Schkolnick], and Bob Selinger later, Bob Yost, and of course Jim
+Gray, who's actually a McKay fellow at the University of California at Berkeley
+right as we speak, is that right?<p>
+<b>Jim Gray:</b> As we speak, until midnight.<i> [laughter]</i><p>
+<b>Mike Blasgen:</b> May 31 is his last day.<p>
+In case anyone is interested, here is the 1968 General Catalog for the
+University of California at Berkeley. That happened to be the year I taught at
+Berkeley. My name's not in here. Butler Lampson's name is in here, as teaching
+a course in operating systems.<p>
+<b>Bruce Lindsay:</b> I took that course.<p>
+<b>Mario Schkolnick:</b> I have heard rumors that you could flunk this course
+just by having grammatical typos in your reports. I was very sensitive to this,
+having just arrived from Chile to study at Berkeley.<p>
+<b>Franco Putzolu:</b> Do you know when INGRES started?<p>
+<b>Mike Blasgen:</b> I actually have that here, but I don't know the answer:
+about the same time. I went to Berkeley at the beginning of 1975. Gene Wong<A NAME="Index72"></A>
+was my advisor when I was at Berkeley, Wong was one of the developers. Wong had
+a particular optimization procedure that he was advocating, and INGRES
+implemented it. Stonebraker<A NAME="Index73"></A>
+had developed QUEL<A NAME="Index74"></A>.
+So QUEL was mapped to this trick which I don't actually remember and which is
+not the fundamental contribution that INGRES made to the world.<p>
+<b>Irv Traiger:</b> It was to optimize based on how the query was doing
+dynamically, right?<p>
+<b>Mike Blasgen:</b> Well, it was a specific technique ...<p>
+<b>Raymond Lorie:</b> Single-variable query.<p>
+<b>Mike Blasgen:</b> That's right, it was a single-variable trick. I went to
+see that in 1975 and it was running. You could type QUEL into a UFI-like thing.
+They supported only query - there was no possibility of update. I guess you
+could have multiusers given that it was a timesharing system. It ran on a
+PDP-11/45.<p>
+<b>Jim Gray:</b> In about 1972 Stonebraker<A NAME="Index75"></A>
+got a grant to do a geo-query database system. It was going to be used for
+studies of urban planning. The project did do some geographic database stuff,
+but fairly quickly it gravitated to building a relational database system. The
+result was the INGRES<A NAME="Index76"></A>
+system<a name="fnB18" href="#fn18">[20]</a>. INGRES started in about 1972 and a
+whole series of things spun off from that: Ingres<a name="fnB19"
+href="#fn19">[21]</a><A NAME="Index77"></A><A NAME="Index78"></A><A NAME="Index79"></A>,
+Britton-Lee<A NAME="Index80"></A>,
+and Sybase.<p>
+Hostility developed between the San Jose IBM group and the Berkeley<A NAME="Index81"></A>
+group because they were working on very, very similar things and had very, very
+similar ideas. Almost everybody was young and insecure (untenured), so there
+was a lot of concern about the priority of publishing. As a consequence we came
+to the conclusion that the best thing was not to talk to each other. Every time
+we talked, papers would appear that reflected the conversations without
+attribution. Occasionally people would go back and forth; Randy Katz<A NAME="Index82"></A>
+was in both camps. We occasionally had summer students come to IBM and
+occasionally we would all give talks but always very carefully. In the chron
+file there are letters from Stonebraker saying, "Thanks for pointing out that
+in paragraph so-and-so of paper such-and-such we forget to cite ???". Of course
+this was not one-sided. The Berkeley folks thought the IBM guys were ripping
+off ideas from the INGRES<A NAME="Index83"></A>
+project. We had a strained relationship<a name="fnB20" href="#fn20">[22]</a>.<p>
+<b>Mike Blasgen:</b> I actually personally have fairly fond memories of the
+relationship. But I know that lots of others like Frank and many others have
+bad feelings about it because apparently ideas were being taken from us and
+used by them without any credit.<p>
+<b>Jim Gray:</b> And conversely.<p>
+<b>Franco Putzolu:</b> Vice versa.<p>
+<b>Mike Blasgen:</b> OK, and vice versa. But I always heard the accusation the
+other way.<i> [laughter]</i> <p>
+But I personally had only good interactions with - well Gene Wong was my
+research advisor and was one of the key players in this thing. John Paul Jacob<A NAME="Index84"></A>
+organized an event at the Catholic University in Rio in 1975 I would guess, the
+summer of 1975: it might have been the summer of 1976. Sharon<A NAME="Index85"></A>
+and I<A NAME="Index86"></A>
+went down to Rio, which was a really nice trip, we stopped in other places in
+South America. At that thing was Mike Stonebraker<A NAME="Index87"></A>
+staying there for a month, Dennis Tsichritzis<A NAME="Index88"></A>
+and his wife from the University of Toronto, Sharon and I, and others. I don't
+remember who else from IBM was there; was anybody in this room there? Jim
+wasn't there. I was in Rio for maybe two weeks: one week by myself giving
+lectures at this conference they had, and one week with Sharon just fooling
+around and giving more lectures. We were kind of stuck there, the five of us:
+Dennis and his wife, Sharon and me, and Mike Stonebraker (who was single). And
+so we palled around together. And so I got to be like a friend of Mike's
+because I was stuck in this place far away where you had nothing to do except
+go drink, which we did a lot of. So I got very close personally with Mike; Mike
+has always treated me, I always thought, very nicely. 'Course I don't know:
+maybe he talks behind my back.<p>
+<b>Jim Gray:</b> The good news was you worked on B-trees<A NAME="Index89"></A>;
+they didn't do B-trees.<i> [laughter]</i> I worked on locks and they didn't do
+locks, so I was also OK.
+<p>
+<a name="fn3" href="#fnB3">[4]</a> E.F. Codd. "A Relational Model of Data for
+Large Shared Data Banks" <i>CACM 13</i>, 6 (June 1970) pages 377-387.<p>
+<a name="fn4" href="#fnB4">[5]</a> M.M. Astrahan, E.B. Altman, P.L. Fehder, and
+M.E. Senko. "Concepts of a Data Independent Access Model" <i>1972 ACM SIGFIDET
+Workshop Report</i>, pages 349-362.<p>
+<sup>6</sup> E.B. Altman, M.M. Astrahan, P.L. Fehder. and M.E. Senko.
+"Specifications in a Data Independent Access Model" <i>1972 ACM SIGFIDET
+Workshop Report</i>, pages 363-376.<p>
+<a name="fn5" href="#fnB5">[7]</a> D. Bj&oslash;rner, E.F. Codd, K.L. Deckert,
+and I.L. Traiger. The GAMMA-0 <i>n</i>-ary Relational Data Base Interface:
+Specification of Objects and Operations. IBM Research Report RJ1200. San Jose,
+California (April 1973).<p>
+<a name="fn6" href="#fnB6">[8]</a> IMS stands for Information Management
+System, IBM's first database management system.<p>
+<a name="fn7" href="#fnB7">[9]</a> E.F. Codd. A database sublanguage founded on
+the relational calculus. <i>Proc. ACM SIGFIDET Workshop on Data Description,
+Access, and Control</i>, San Diego, California (November 1971) pages 35-68.<p>
+<a name="fn8" href="#fnB8">[10]</a> The RM (Relational Memory) system supported
+binary relations; see:<p>
+A.J. Symonds and R.A. Lorie. "A schema for describing a relational data base"
+<i>Proc. ACM SIGFIDET Workshop on Data Description, Access, and Control</i>,
+(November 1970) pages 201-229.<p>
+R.A. Lorie and A.J. Symonds. "A Relational Access Method for Interactive
+Applications." <i>Courant Computer Science Symposia, Vol. 6: Data Base
+Systems</i>. Prentice-Hall, Englewood Cliffs, New Jersey (1971).<p>
+The successor XRM (Extended Relational Memory) system supported n-ary
+relations; see:<p>
+R.A. Lorie. XRM--An Extended (N-ary) Relational Memory. IBM Technical Report
+G320-2096. Cambridge Scientific Center, Cambridge, Mass. (January 1974).<p>
+<a name="fn9" href="#fnB9">[11]</a> J.A. Feldman and P.D. Rovner. "An
+Algol-Based Associative Language" <i>CACM 12</i>, 8 (August 1969) pages
+439-449.<p>
+<a name="fn10" href="#fnB10">[12]</a> International Computer Science
+Institute.<p>
+<a name="fn11" href="#fnB11">[13]</a> SSD stands for Storage Systems
+Division.<p>
+<a name="fn12" href="#fnB12">[14]</a> PRTV stands for Peterlee Relational Test
+Vehicle. See:<p>
+Stephen Todd. "PRTV, an efficient implementation for large relational data
+bases" <i>Proc. VLDB</i>, Florence, Italy (1975), pages 554-556.<p>
+<a name="fn13" href="#fnB13">[15]</a> Actually, CODASYL stands for Conference
+on Data Systems Languages, which was formed in 1959 to design the business data
+processing language COBOL. CODASYL's Data Base Task Group defined what has
+become known as the DBTG database model:<p>
+CODASYL Data Base Task Group. Report of the CODASYL Data Base Task Group. ACM
+(April 1971).<p>
+R.W. Taylor and R.L Frank. "CODASYL Data-Base Management Systems" <i>ACM
+Computing Surveys 8</i>, 1 (March 1976) pages 67-103.<p>
+<a name="fn14" href="#fnB14">[16]</a> IMS is hierarchical.<p>
+<a name="fn15" href="#fnB15">[17]</a> C. Bachman. "The programmer as navigator"
+(Turing Award lecture) <i>CACM 16</i>, 11 (November 1973) pages 653-658.<p>
+<a name="fn16" href="#fnB16">[18]</a> "Data Models: Data Structure Set versus
+Relational" Supplement to <i>Proc. ACM SIGMOD Workshop on Data Description,
+Access and Control</i>, Ann Arbor, Michigan (May 1974).<p>
+<a name="fn17" href="#fnB17">[19]</a> CICS stands for Customer Information
+Control System, IBM's TP monitor, or framework for writing online
+transaction-processing applications.<p>
+<a name="fn18" href="#fnB18">[20]</a> M. Stonebraker, E. Wong, P. Kreps, and G.
+Held. "The Design and Implementation of INGRES" <i>ACM TODS 1</i>, 3 (September
+1976) pages 189-222.<p>
+<a name="fn19" href="#fnB19">[21]</a> The company was first called Relational
+Technology Inc., and was then renamed Ingres Corporation. ASK bought Ingres,
+and was itself bought by Computer Associates International, Inc.<p>
+<a name="fn20" href="#fnB20">[22]</a> The 1988 ACM Software System Award was
+shared by System R (Donald Chamberlin, James Gray, Raymond Lorie, Gianfranco
+Putzolu, Patricia Selinger and Irving Traiger) and INGRES (Gerald Held, Michael
+Stonebraker and Eugene Wong).
+
+<p>
+<P><hr size=4>
+<A HREF="sqlr95-The.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="sqlr95-System.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="sqlr95-The.html"><IMG SRC="images/upg.gif" ALT="Up " border=0></A>
+ <A HREF="sqlr95.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="sqlr95-Contents.html"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+ <A HREF="sqlr95-Index.html"><IMG SRC="images/indexg.gif" ALT="Index" border=0></A>
+</body></html>

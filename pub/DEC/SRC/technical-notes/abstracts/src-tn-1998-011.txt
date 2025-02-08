@@ -1,0 +1,10 @@
+"Computing on Data Streams"
+Monika Rauch Henzinger, Prabhakar Raghavan, Sridar Rajagopalan
+Note #1998-011, May 8, 1998
+
+In this paper we study the space requirement of algorithms that 
+make only one (or a small number of) pass(es) over the input data.
+We study such algorithms under a model of data streams that we introduce 
+here. We give a number of upper and lower bounds for problems stemming 
+from query-processing, invoking in the process tools from the area of
+communication complexity.

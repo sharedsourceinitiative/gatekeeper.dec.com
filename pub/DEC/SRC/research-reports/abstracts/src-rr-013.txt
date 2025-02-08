@@ -1,0 +1,22 @@
+
+
+    "Retiming Synchronous Circuitry."
+    Charles E. Leiserson and James B. Saxe.
+    August 20, 1986.  42 pages.
+
+Authors' Abstract
+
+    This paper shows how the technique of retiming can be used to
+    transform a given synchronous circuit into a more efficient circuit
+    under a variety of different cost criteria. We model a circuit
+    as a graph, and we give an O(|V|  |E| lg |V|) algorithm for
+    determining an equivalent circuit with the smallest possible clock
+    period. We show that the problem of determining an equivalent
+    retimed circuit with minimum state (total number of registers)
+    is polynomial-time solvable. This result yields a polynomial-time
+    optimal solution to the problem of pipelining combinational
+    circuitry with minimum register cost. We also give a
+    characterization of optimal retiming based on an efficiently
+    solvable mixed-integer linear programming problem.
+
+

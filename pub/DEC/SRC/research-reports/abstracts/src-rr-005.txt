@@ -1,0 +1,23 @@
+			(SUPERSEDED BY #58, #60, #72, #74 and #82)
+
+    "Larch in Five Easy Pieces."
+    J. V. Guttag, J. J. Horning, and J. M. Wing.
+    July 24, 1985.  119 pages.
+
+Authors' Abstract
+
+    The Larch Project is developing tools and techniques intended
+    to aid in the productive use of formal specifications.  A major
+    part of the Larch Project is a family of specification languages.
+    Each Larch specification has one component written in a language
+    derived from a programming language and another component written
+    in a language independent of any programming language.  We call
+    the former "Larch interface languages" and the latter the "Larch
+    Shared Language."  We have gathered together five documents about
+    the Larch family of languages: an overview, an informal description
+    of the Shared Language, a reference manual for the Shared Language,
+    a handbook of specifications written in the Shared Language, and
+    a report on using Larch/CLU, which is one of the interface
+    languages.
+
+

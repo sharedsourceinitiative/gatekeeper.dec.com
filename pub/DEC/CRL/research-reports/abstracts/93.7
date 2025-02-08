@@ -1,0 +1,22 @@
+
+			CRL Technical Report 93/7
+
+	       Robust Shape Recovery from Occluding Contours
+			  Using a Linear Smoother
+
+			     Richard Szeliski
+			       Richard Weiss
+
+			      December, 1993
+
+Recovering the shape of an object from two views fails at occluding
+contours of smooth objects because the extremal contours are view
+dependent.  For three or more views, shape recovery is possible, and
+several algorithms have recently been developed for this purpose.  We
+present a new approach to the multiframe stereo problem which does not
+depend on differential measurements in the image, which may be noise
+sensitive.  Instead, we use a linear smoother to optimally combine all of
+the measurements available at the contours (and other edges) in all of the
+images.  This allows us to extract a robust and dense estimate of surface
+shape, and to integrate shape information from both surface markings and
+occluding contours.

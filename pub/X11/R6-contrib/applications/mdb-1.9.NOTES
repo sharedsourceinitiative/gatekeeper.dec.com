@@ -1,0 +1,15 @@
+
+To ftp.x.org administrator:
+
+Please move:
+mdb-Linux386-1.9.tar.gz
+mdb-1.9.README
+
+To: contrib/applications
+
+Please also delete the "mdb-1.8.README" file from the same directory.
+
+Thanks in advance.
+
+Erland Hedman <erland@wrs.se>
+

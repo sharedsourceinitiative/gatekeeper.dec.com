@@ -1,0 +1,17 @@
+Package name:     plotter
+Version number:   6.0pl8
+Tested on:        Data General AViiON running DGUX 5.4R3.00,
+		  Slackare Linux with kernel 2.00, XFree 3.2
+		  and InfoMagic Mootif
+
+NOTE:
+	I searched over the NET and saw the last patchlevel was 7,
+	so I called my version patchlevel 8. The changes I did
+	are minor. Think that promoting to V7.0 is not necessary.
+
+	If you have any knowledege of an already existing
+	patchlevel 8 or higher please let me know.
+
+	cristiv@logicnet.ro
+	CRISTIAN.VLASCEANU@logic.romail.sprint.com
+

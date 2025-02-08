@@ -1,0 +1,40 @@
+
+  netpbm-1mar1994.p1   README file.
+
+   ftp://ftp.x.org/contrib/utilities/netpbm-1mar1994.p1.tar.gz
+
+This is a patched version of the netpbm-1mar1994 pbmplus filters.  I have
+tried to include any and all patches mailed to the pbmplus mailing list
+into this release but kept the original files in *.orig backups.
+
+As I use X windows X11R6 to install I have moved the original makefiles to
+Makefile.std in each directory. I have also modified the Template file so
+I suggest you look at this and change it to suit your setup.
+
+I do not make any gurrentees with this archive and only release it so
+others may used patched versions of the NetPbm Utilities. I still
+eagerly await Jef Poskanzer's offical PbmPlus release but after a year
+and nothing but promises from Jef, I have given up on it.
+
+I am NOT coordinating netpbm and do NOT want to recieve additions and
+patches for this release other than via the pbmplus mailing list.
+I do NOT plan to make another patch release and only did this one as
+I needed it for the up keep of my Icon Library.
+
+
+   PbmPlus Mailing List
+       pbmplus@netcom.com
+
+   Requests to Join / Remove from this list
+       majordomo@netcom.com
+
+   Anthony's Icon Library (for X Window and WWW Users)
+       http://www.sct.gu.edu.au/~anthony/icons/
+
+
+  Anthony Thyssen ( System Programmer )    http://www.sct.gu.edu.au/~anthony/
+-------------------------------------------------------------------------------
+      Shells are a tool, and we are its carpenters.
+  Sometimes we need a hammer and sometimes a screwdriver.   --- John Navarra
+-------------------------------------------------------------------------------
+     PGP Public Key available -- finger anthony@lyrch.cit.gu.edu.au

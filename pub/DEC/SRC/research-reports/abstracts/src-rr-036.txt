@@ -1,0 +1,46 @@
+
+    "Primitives for Computational Geometry."
+    Jorge Stolfi.
+    January 27, 1989.  228 pages.
+
+Author's Abstract
+
+    Many geometric algorithms become simpler, more general, and more
+    efficient when recast in the language of projective geometry.
+    Some reasons for this are the uniform handling of points at
+    infinity, the attendant reduction in the number of special cases,
+    and the perfect duality between points and hyperplanes that are
+    possible in the projective model.  In fact, the homogeneous
+    coordinates so widely used in computer graphics are essentially
+    an analytical model of classical projective geometry.
+
+    However, projective space is topologically quite different from
+    Euclidean space.  For example, in the projective plane lines have
+    only one side, all triangles have the same handedness, and there
+    are two distinct segments with any given pair of endpoints.  These
+    differences are a serious practical problem, since many geometric
+    algorithms depend on orientation, ordering and separation tests
+    that make sense only in the Euclidean model.
+
+    This dissertation describes a slightly modified form of projective
+    geometry which is free from this problem.  Analytically, the change
+    consists in making the signs of homogeneous coordinates more
+    significant.  Geometrically, the change consists in adopting
+    oriented lines and planes as the elementary objects of the model,
+    and redefining the basic geometric operation of meet and join
+    so as to produce results with a definite orientation.
+    Topologically, this is equivalent to working with a double covering
+    projective space, which is equivalent to an  n-dimensional sphere.
+
+    The resulting framework, here called oriented projective
+    geometry, combines the elegance of classical projective geometry
+    with the ability to talk about oriented lines and planes, signed
+    angles, line segments, convex figures, and many other concepts
+    that cannot be conveniently defined within that model.  The goals
+    of this dissertation are: (1) to develop an intuitive understanding
+    of oriented projective geometry in two and three dimensions; (2)
+    to describe a formal geometric calculus for handling oriented
+    lines, planes, and flat spaces of arbitrary dimension; and (3)
+    to investigate the efficient representation of such objects in
+    computers.
+

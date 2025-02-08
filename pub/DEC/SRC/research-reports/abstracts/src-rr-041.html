@@ -1,0 +1,44 @@
+<HTML><HEAD><TITLE>
+Digital Systems Research Center: Report 41</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Research Report 41</H1>
+<P>
+<H1>Evaluating the Performance of Software Cache Coherence.</H1>
+<HR>
+<H2>    Susan Owicki and Anant Agarwal.</H2>
+<b>March 31, 1989</b><BR><i> 29 pages</i>
+<P>
+    In a shared-memory multiprocessor with private caches, cached 
+    copies of a data item must be kept consistent.  This is called 
+    cache coherence.  Both hardware and software coherence schemes 
+    have been proposed.  Software techniques are attractive because 
+    they avoid hardware complexity and can be used with any 
+    processor-memory interconnection.  This paper presents an 
+    analytical model of the performance of two software coherence 
+    schemes and, for comparison, snoopy-cache hardware.  The model 
+    is validated against address traces from a bus-based 
+    multiprocessor.  The behavior of the coherence schemes under 
+    various workloads is compared, and their sensitivity to variations 
+    in workload parameters is assessed.  The analysis shows that 
+    the performance of software schemes is critically determined 
+    by certain parameters of the workload:  the proportion of data 
+    accesses, the fraction of shared references, and the number of 
+    times a shared block is accessed before it is purged from the 
+    cache.  Snoopy caches are more resilient to variations in these 
+    parameters.  Thus, when evaluating a software scheme as a design 
+    alternative, it is essential to consider the characteristics 
+    of the expected workload.  The performance of the two software 
+    schemes with a multistage interconnection network is also 
+    evaluated, and it is determined that both scale well.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-041.ps.Z">PostScript compressed with UNIX compress</A></B> -- 1736 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-041.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 1472 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-041.ps.zip">PostScript compressed with ZIP</A></B> -- 1472 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-041.ps">PostScript</A></B> -- 1864 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-041.pdf">Portable Document Format (PDF)</A></B> -- 1432 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

@@ -1,0 +1,35 @@
+<TITLE>Digital Systems Research Center: Note 1997-012</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Technical Note 1997-012</H1>
+<H1>Online Throughput-Competitive Algorithm for Multicast Routing and Admission Control</H1>
+<HR>
+<H2>Ashish Goel, Monika Rauch Henzinger and Serge Plotkin</H2>
+<b>Note #1997-012. June 24, 1997</b><BR><i>21 pages</i>
+<P>
+We present the first polylog-competitive online algorithm for the
+general multicast problem in the throughput model.  The ratio of the
+number of requests accepted by the optimum offline algorithm to the
+expected number of requests accepted by our algorithm is O(log M
+(log n+log log M)log n), where M is the number of multicast groups and
+n is the number of nodes in the graph. We show that this is close to
+optimum by presenting an Omega(log n log M) lower bound on this ratio
+for any randomized online algorithm against an oblivious adversary,
+when M is much larger than the link capacities. We also show that it
+is impossible to be competitive against an adaptive online adversary.
+<P>
+As in the previous online routing algorithms, our algorithm uses edge-costs
+when deciding on which is the best path to use. In contrast to the previous
+competitive algorithms in the throughput model, our cost is not a direct
+function of the edge load. The new cost definition allows us to decouple the
+effects of routing and admission decisions of different multicast groups.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-012.ps.Z">PostScript compressed with UNIX compress</A></B> -- 120 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-012.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 104 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-012.ps.zip">PostScript compressed with ZIP</A></B> -- 104 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-012.ps">PostScript</A></B> -- 232 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-012.pdf">Portable Document Format (PDF)</A></B> -- 160 Kbytes<BR>
+</UL></P>

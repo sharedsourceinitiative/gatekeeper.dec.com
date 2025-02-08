@@ -1,0 +1,28 @@
+		      CRL Technical Report 90/11
+	      Counting Networks and Multi-Processor Coordination
+			      (Extended Abstract)
+				       
+				 James Aspnes
+			  Carnegie Mellon University
+				Maurice Herlihy
+			  DEC Cambridge Research Lab.
+				  Nir Shavit
+			  IBM Almaden Research Center
+
+
+Many fundamental multi-processor coordination problems can be expressed as {\em
+counting problems:} processes must cooperate to assign successive values from a
+given range, such as addresses in memory or destinations on an interconnection
+network.  Conventional solutions to these problems perform poorly because of
+synchronization bottlenecks and high memory contention.
+
+Motivated by observations on the behavior of sorting networks, we offer a
+completely new approach to solving such problems.  We introduce a new class of
+networks called {\em counting networks}, i.e., networks that can be used to
+count.  We give a counting network construction of depth $\log^2 n$ using $n
+\log^2 n$ ``gates,'' avoiding the sequential bottlenecks inherent to former
+solutions, and having a provably lower contention factor on its gates.
+
+Finally, to show that counting networks are not merely mathematical creatures,
+we provide experimental evidence that they outperform conventional
+synchronization techniques under a variety of circumstances.

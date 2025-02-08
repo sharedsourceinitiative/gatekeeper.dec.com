@@ -1,0 +1,17 @@
+"The 1993 SRC Algorithm Animation Festival"
+Marc H. Brown
+July 29, 1994. 31 pages.
+
+This report describes the 1993 SRC Algorithm Animation Festival. The
+festival continues an experiment in developing algorithm animations by
+non-experts, started the previous year, and described in 
+SRC Research Report 98. This year nineteen researchers at Digital Equipment
+Corporation's Systems Research Center worked for two weeks on
+animating algorithms. Most of the participants had little (if any)
+experience writing programs that involved graphics. This report
+explains why we organized the festival, and describes the logistics of
+the festival and the advances in our algorithm animation system. This
+report presents the complete code for a simple, but non-trivial,
+animation of first-fit binpacking. Finally, this report contains
+snapshots from the animations produced during the festival.
+

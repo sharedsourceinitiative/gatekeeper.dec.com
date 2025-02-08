@@ -1,0 +1,6 @@
+"Introduction to TLA"
+Leslie Lamport
+Note #1994-001, December 16, 1994. 7 pages
+
+A short (7-page) introduction to what TLA formulas mean. It should
+allow you to understand TLA specifications.

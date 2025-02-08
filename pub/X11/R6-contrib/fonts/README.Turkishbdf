@@ -1,0 +1,16 @@
+This distribution contains Turkish Latin-5 ( iso8859-9 ) bdf fonts and some
+simple executable scripts for Latin-5 support. All bdf fonts have been taken
+from MIT's X11R6 distribution and necessary editing for Latin 5 has been done
+by:
+	Mehmet Ugur YILMAZ(ugur@ceng.metu.edu.tr) and
+	Kursat AKER (e102499@narwhal.cc.metu.edu.tr),
+	Onur Tolga SEHITOGLU (onur@ceng.metu.edu.tr).
+
+
+			Date:  95/25/01
+			Department of Computer Engineering
+			Middle East Technical University
+			ANKARA
+
+ The Copyrights of the corresponding Latin 1 (ISO-8859-1) font are granted  as 
+they are in MIT distribution. 

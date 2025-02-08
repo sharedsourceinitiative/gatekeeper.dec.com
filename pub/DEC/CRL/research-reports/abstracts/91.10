@@ -1,0 +1,25 @@
+		       
+				       
+			  CRL Technical Report 91/10
+	 A Methodology for Implementing Highly Concurrent Data Objects
+				Maurice Herlihy
+				 October 1991
+
+A concurrent object is a data structure shared by concurrent processes.
+Conventional techniques for implementing concurrent objects typically rely on
+critical sections: ensuring that only one process at a time can operate on the
+object.  Nevertheless, critical sections are poorly suited for asynchronous
+systems: if one process is halted or delayed in a critical section, other,
+non-faulty processes will be unable to progress.  By contrast, a concurrent
+object implementation is non-blocking if it always guarantees that some process
+will complete an operation in a finite number of steps, and it is wait-free if
+it guarantees that each process will complete an operation in a finite number
+of steps.  This paper proposes a new methodology for constructing non-blocking
+and wait-free implementations of concurrent objects.  The object's
+representation and operations are written as stylized sequential programs, with
+no explicit synchronization.  Each sequential operation is automatically
+transformed into a non-blocking or wait-free operation using novel
+synchronization and memory management algorithms.  These algorithms are
+presented for a multiple instruction/multiple data (MIMD) architecture in which
+n processes communicate by applying read, write, load-linked, and
+store-conditional operations to a shared memory.

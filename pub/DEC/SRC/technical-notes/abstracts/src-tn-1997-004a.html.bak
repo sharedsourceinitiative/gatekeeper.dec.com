@@ -1,0 +1,27 @@
+<TITLE>Digital Systems Research Center: Note 1997-004a</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Technical Note 1997-004a</H1>
+<H1>Fully Dynamic 2-Edge Connectivity Algorithm in Polylogarithmic  Time per Operation</H1>
+<HR>
+<H2>Monika Rauch Henzinger and Valerie King</H2>
+<b>Note #1997-004a. June 27, 1997</b><BR><i>18 pages</i>
+<P>
+This paper presents the first dynamic algorithm that maintains 2-edge
+connectivity in polylogarithmic time per operation.  The algorithm is
+a Las-Vegas type randomized algorithm.
+<P>
+The expected time for p = Omega(m + n) insertions or deletions of edges
+is O(p log^5n), where m is the number of edges in the initial graph
+with n nodes.  The worst-case time for a query is O(log n).  If only
+deletions are allowed then the cost for p updates is O(p log^4 n)
+expected time.
+<P>
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-004a.ps.Z">PostScript compressed with UNIX compress</A></B> -- 144 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-004a.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 120 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-004a.ps.zip">PostScript compressed with ZIP</A></B> -- 120 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-004a.ps">PostScript</A></B> -- 264 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-004a.pdf">Portable Document Format (PDF)</A></B> -- 216 Kbytes<BR>
+</UL></P>

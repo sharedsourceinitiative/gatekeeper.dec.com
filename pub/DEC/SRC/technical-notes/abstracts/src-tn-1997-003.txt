@@ -1,0 +1,12 @@
+"Hypermedia Presentation and Authoring System"
+Jin Yu and Yuanyuan Xiang
+Note #1997-003, May 6, 1997. 15 pages
+
+This paper describes the Hypermedia Presentation and Authoring System
+(HPAS), a Web browser with built-in authoring capabilities. In
+contrast to traditional browsers, it manages time-based hypermedia
+presentations and the associated dynamic spatial layout with respect
+to time. The system manipulates various media types by embedding
+object presenters, editors, and converters, which
+combine to provide transparent operations on hypermedia
+objects, such as MPEG videos, GIF images, rich text files, etc.

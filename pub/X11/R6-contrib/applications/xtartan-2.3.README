@@ -1,0 +1,161 @@
+This is version 2.3 of Xtartan, a program to draw Scottish tartans.
+New Capabilities:
+
+Gif file support, using the GD library (recommend version 1.2).  Files
+created are named just like the Xpm files, but with ".gif" for a suffix.
+
+XTartan can be found on ftp.x.org in /contrib/applications/xtartan-2.3.tar.gz
+(URL: ftp://ftp.x.org/contrib/applications/xtartan-2.3.tar.gz )
+
+Xpm can be found on at ftp.x.org in /contrib/libraries/xpm-3.4h.tar.gz
+
+GD can be downloaded from url: http://www.boutell.com/gd/gd1.2.tar.Z.  I do
+not know of an FTP site for downloading the file.
+
+XTartan can now install tartans onto the root window during interactive
+mode.  At present, this can only happen once due to the mysterious
+relationship between X Windows and Pixmaps.  I'm working on making it more
+interactive.
+
+App-Default file "XTartan" does not need to be installed.  Tartans are now
+embedded in as Fallback resources.  This option can be turned off in the
+Imakefile.  Note, if using this feature, any OLD xtartan installation will
+need to be removed.
+
+New Tartans:
+Wallace_Hunting (green), Wallace_Blue, "Mine" (based on a cotton flanel
+blanket I use for a great kilt in SCA events).
+
+--
+To Build:
+
+After extracting the files, edit the Imakefile to configure the location of
+the xpm library and header files (or to disable xpm if you don't have it),
+and to turn on VRoot if necessary, type "xmkmf" and then "make".  It has
+been tested on a DECStation 5000 (Ultrix 4.3, X11R5), a DECStation 3000
+(Digial Unix 3.2C, DecWindows X11R5) and an SGI Indy (Irix 5.2, X11R5; Irix
+5.3, X11R6).  I do NOT suggest you run "make install" at present.
+
+It does not require Motif, but Xpm support requires the xpm library which
+can be found in ftp.x.org (/contrib/libraries).  Vroot support requires
+vroot.h, which is provided in a contrib subdirectory.  It will need to be
+installed separately.
+
+Once built, the App-Defaults file (XTartan.ad) will need to be placed where
+it can be read by the normal Xrm methods, e.g.
+        $HOME/XTartan
+        $HOME/.desktop-<hostname>/XTartan (for SGI's)
+        /usr/lib/X11/app-defaults/XTartan (global location for standard X)
+        /usr/openwin/lib/X11/app-defaults/XTartan (global for OpenWindows)
+
+        or some matching directory based on your X installation or
+        XENVIRONMENT/XAPPLRESPATH variable values.
+
+If using the included fallbacks option (which is the default), then you
+will not need to install the App-Defaults file.
+
+I do NOT recommend using the "xrdb -merge" option, as that can affect other
+applications as well as xtartan, which may not be desired.
+
+--
+Version 2.2 was created by Joseph Shelby in December, 1995.
+Several new capabilities were added.
+
+The code should be MUCH more portable.  I was originally not aware of
+several "BSD-isms" in the code (specifically, "bcopy", and a extern
+declaration of "strrchr").  These have been replaced by the POSIX
+complient methods.  All warnings from the GNU compiler have been eliminated
+except for "implicit declarations".
+
+VRoot support is available for window managers with virtual root windows.
+In particular, tvtwm, swm, and ctwm use virtual roots.  vroot.shar is
+provided in the contrib directory and will need to be installed separately
+in some location (even just ./X11/vroot.h will suffice for building this
+program).  After installing vroot.h, edit the Imakefile to turn vroot on.
+
+Faded colors are now available.  Faded tartans can be saved using the xpm
+feature, and then converted to a gif using an outside program (xv,
+ImageMagic, or netpbm) to create files usable as WWW page backgrounds. See
+my home page and the xtartan home page for examples. The resource "*fade"
+toggles faded colors with normal, and "*fadeValue" determines the
+brightness.  Faded colors can be toggled interactively, but the value is
+constant once read as a resource.  Dark and Fade modes can be combined.
+
+Xpm mode now names files better.  The default name is the tartan's name,
+followed by "_dark" if in dark mode, followed by "_fade" if in fade mode,
+followed by ".xpm".
+
+The "minimum" tartan can be displayed on the screen.  If minimum is on (by
+resource or by interactive mode), then the window will always be the minimum
+size of the tartan (after scaling).  The window in this mode will change
+when the tartan or the scaling value is changed.
+
+A better algorithm has been implemented for setting the line width.  This
+version no longer lets "background" colors leak.  The new algorithm only
+lets one set the width up to 11.  Values larger than 3 still start looking
+pretty bad, since it doesn't work "across the tartan".
+
+A home page has been created.
+		http://www.io.com/~acroyear/XTartan.html
+
+Joseph Shelby			December 5, 1995
+Autometric, Inc., Alexandria, VA (USA)
+jshelby@autometric.com		http://www.io.com/~acroyear
+--
+Version 2.1 was created by Joseph Shelby in 1994/1995.
+Several new capabilities were added.
+
+XTartan now allows for window managers other than mwm to allow input.  Mwm
+has a bug that considers shell-widget only program to accept input.  Other
+window managers like 4Dwm and fvwm ignore that window unless the "Input"
+hint is added.  This version works for those two window managers and
+probably twm as well.
+
+The ability to create an Xpm3.4 file of a tartan was added.
+This can be useful for creating files of tartans to use in other programs or
+in odd environments such as SGI Irix 5.2 (where you can't set the root
+window except by xbm/xpm files).  Hit the key "x" in the tartan window to
+create an xpm file of the current tartan in the current directory.  The file
+will contain the exact version from the screen, including scale, linewidth,
+and "dark" factors (see below).  The filename will be the name of the
+tartan.
+
+Xpm must be configured before compiling.  Edit the Imakefile and change the
+directories of the Xpm headers and libraries before typing "xmkmf", or
+comment the lines out if the xpm library is not available.  Xpm can be found
+in ftp.x.org.  The latest version is 3.4c, found in /contrib/libraries.
+
+A new color mode, "dark" was added.  This allows tartans to be shown in
+either their brighter "ancient" colors, or in their darker "modern" colors. 
+To toggle dark mode, hit "d" in the tartan's window.  To make it the
+default, use the "-dark" or "-modern" command line options or change the
+XTartan.ad resource file.  Xpm filenames of "dark" colors will have "_dark"
+added to the end of the tartan name.  Not all tartans look good in the dark
+colors, especially ones with pink in them.  I optimized the dark algorithm
+(if you can call it that) for heavy blue-green patterns like MacLeod.  The
+code is in "color.c". 
+
+Joseph Shelby			January 7, 1995
+Autometric, Inc., Alexandria, VA (USA)
+jshelby@autometric.com
+--
+Version 2 allows you to specify tartan information using X resources
+(rather than having to compile them in as in the previous version),
+so you can quite easily add your own definitions if you wish (see the
+man page for details on how to do this.)  However, you probably will not
+need to do this unless you are creating a new tartan, since Xtartan now
+comes with the definitions for over 240 tartans included.
+
+If you have another tartan that is not in this list that you would like
+me to add, or if you have a variation or think that one of these tartans
+is wrong, you must send me the thread count and the source of your
+information.  Please tell me about the copyright on that source as well.
+
+Xtartan requires its resource file to run.  If you have trouble getting it
+to use the file directly, you can try "xrdb -merge XTartan.ad" before
+running xtartan.
+
+Jim McBeath		February 11, 1991
+Globetrotter Software, Saratoga, California
+jimmc@hisoft.uucp (Highland Software) or jimmc@netcom.com
+

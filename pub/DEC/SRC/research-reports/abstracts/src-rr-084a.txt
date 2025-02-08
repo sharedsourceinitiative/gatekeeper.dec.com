@@ -1,0 +1,29 @@
+"Graphical Fisheye Views of Graphs"
+Manojit Sarkar and Marc H. Brown
+March 17, 1992. 24 pages.
+
+A fisheye camera lens is a very wide angle lens that magnifies nearby
+objects while shrinking distant objects.  It is a valuable tool for
+seeing both "local detail" and "global context" simultaneously.  This
+paper describes a system for viewing and browsing graphs using a
+software analog of a fisheye lens.  We first show how to implement such
+a view using solely geometric transformations.  We then describe a more
+general transformation that allows hierarchical or structured
+information about the graph to affect the view. Our general
+transformation is a fundamental extension to previous research in fisheye views.
+
+
+A videotape (84b) accompanies report 84a:
+"Graphical Fisheye Views of Graphs"
+Marc H. Brown, James R. Meehan, Manojit Sarkar
+Time: 3:51 minutes
+
+In SRC Research Report #84 also entitled "Graphical Fisheye Views of
+Graphs" by Manojit Sarkar and Marc H. Brown, a system for viewing and
+browsing graphs using a software fisheye lens was described. Such a
+lens shows nearby objects large and with detail, while shrinking
+distant objects. It is a valuable tool for seeing both "local detail"
+and "global context" simultaneously. This videotape shows the system in 
+action.
+
+

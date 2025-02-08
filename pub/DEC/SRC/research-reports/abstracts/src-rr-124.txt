@@ -1,0 +1,18 @@
+"A Block-sorting Lossless Data Compression Algorithm"
+M. Burrows and D. J. Wheeler
+May 10, 1994.  18 pages.
+
+We describe a block-sorting, lossless data compression algorithm, and
+our implementation of that algorithm.  We compare the performance of
+our implementation with widely available data compressors running on
+the same hardware.
+
+The algorithm works by applying a reversible transformation to a
+block of input text.  The transformation does not itself compress
+the data, but reorders it to make it easy to compress with simple
+algorithms such as move-to-front coding.
+
+Our algorithm achieves speed comparable to algorithms based on the
+techniques of Lempel and Ziv, but obtains compression close to the best
+statistical modelling techniques.  The size of the input block must be
+large (a few kilobytes) to achieve good compression.

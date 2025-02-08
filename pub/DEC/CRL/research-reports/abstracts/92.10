@@ -1,0 +1,23 @@
+			CRL Technical Report 92/10
+
+			  Are DSP Chips Obsolete?
+
+			    Lawrence C. Stewart
+			      Andrew C. Payne
+                            Thomas M. Levergood
+
+		   	     November 5, 1992
+
+
+     Today's fastest general purpose microprocessors have performance
+     equaling or exceeding that of the fastest available DSP chips.
+     This paper argues that signal processing applications will migrate
+     from specialized DSP coprocessors into the host processor of
+     high performance personal computers and workstations.  DSP chips
+     will have a place in synchronous, low latency data handling, but
+     increasingly, the computation of signal processing algorithms will
+     be handled by general purpose processors.
+
+Keywords: digital signal processing, RISC
+
+

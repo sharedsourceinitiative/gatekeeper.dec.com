@@ -1,0 +1,9 @@
+"Processes are in the Eye of the Beholder"
+Leslie Lamport
+December 25, 1994. 23 pages.
+
+A two-process algorithm is shown to be equivalent to an N-process
+one, illustrating the insubstantiality of processes.  A completely
+formal equivalence proof in TLA (the Temporal Logic of Actions) is
+sketched.
+

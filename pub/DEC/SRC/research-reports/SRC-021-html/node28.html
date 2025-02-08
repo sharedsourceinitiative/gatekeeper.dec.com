@@ -1,0 +1,273 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>The File Name Space: Directories and Path Names</TITLE>
+<META NAME="description" CONTENT="The File Name Space: Directories and Path Names">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node29.html">
+<LINK REL="previous" HREF="node27.html">
+<LINK REL="up" HREF="node22.html">
+<LINK REL="next" HREF="node29.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html535"
+ HREF="node29.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html531"
+ HREF="node22.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html525"
+ HREF="node27.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html533"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html534"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html536"
+ HREF="node29.html">Logical Volumes</A>
+<B> Up:</B> <A NAME="tex2html532"
+ HREF="node22.html">Concepts and Facilities</A>
+<B> Previous:</B> <A NAME="tex2html526"
+ HREF="node27.html">Files, Open-File Objects, and</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04026000000000000000">
+The File Name Space: Directories and Path Names</A>
+</H2>
+ <A NAME="Gilroy">&#160;</A>
+<P><A NAME="595">&#160;</A>
+The file name space seen by a client of OS is a conglomeration of the
+local file name spaces of a set of machines.  Roughly speaking, mapping a
+name to a file proceeds by using part of the name to determine a machine
+and then using the rest of the name to determine an individual file on
+that machine.  The actual semantics of names is fairly complicated, but
+was designed to be able to handle several important cases:
+<P><DL COMPACT>
+<DT>1.
+<DD>Naming a specific file located on a specific machine.
+<DT>2.
+<DD>Naming a replicated (read-only) file located on any of a set of machines.
+<P><DT>3.
+<DD>Naming a generic file relative to the real user name of the process.
+</DL>
+<P><A NAME="598">&#160;</A>
+The name of a file or related entity in the name space is called a path
+name, as given by the nonterminal <TT>&#60;</TT>pathname<TT>&#62;</TT> in the following BNF grammar:
+<P><PRE>
+&lt;pathname&gt; ::= &lt;machine&gt; &lt;abspath&gt; | &lt;abspath&gt; | &lt;relpath&gt;
+&lt;machine&gt;  ::= # &lt;element&gt; | &lt;machine&gt; : &lt;element&gt;
+&lt;element&gt;  ::= $u | &lt;mname&gt;
+&lt;mname&gt;    ::= &lt;one or more characters, excluding # and :&gt;
+&lt;abspath&gt;  ::= &lt;slash&gt; &lt;relpath&gt;
+&lt;relpath&gt;  ::= &lt;empty&gt; | &lt;relpath1&gt; | &lt;relpath1&gt; &lt;slash&gt;
+&lt;relpath1&gt; ::= &lt;pname&gt; | &lt;relpath1&gt; &lt;slash&gt; &lt;pname&gt;
+&lt;slash&gt;    ::= / | &lt;slash&gt; /
+&lt;pname&gt;    ::= &lt;one or more characters, excluding / and null&gt;
+</PRE>
+<P><A NAME="601">&#160;</A>
+First we'll look at how a path name (<TT>&#60;</TT>abspath<TT>&#62;</TT> or <TT>&#60;</TT>relpath<TT>&#62;</TT>) is looked up
+in the local name space, then we'll look at the extension to remote files
+(<TT>&#60;</TT>machine<TT>&#62;</TT>).
+<P><A NAME="608">&#160;</A>
+<A NAME="609">&#160;</A>
+<A NAME="610">&#160;</A>
+<A NAME="611">&#160;</A>
+<A NAME="612">&#160;</A>
+<A NAME="613">&#160;</A>
+The file name space local to each machine is defined by a hierarchy of
+directories.  A directory is a set of entries each consisting of a <TT>&#60;</TT>pname<TT>&#62;</TT>
+and a reference to another directory, a file (regular or device), or a
+symbolic link.  There is a distinguished root directory for each machine;
+the path name of the root directory itself is a single slash character: /.
+An <TT>&#60;</TT>abspath<TT>&#62;</TT>, or absolute path name, is translated by looking up each
+<TT>&#60;</TT>pname<TT>&#62;</TT> in sequence from left to right, starting at the root directory.
+<P><A NAME="620">&#160;</A>
+<A NAME="621">&#160;</A>
+<A NAME="622">&#160;</A>
+Since the name space is hierarchical, it makes sense to consider any
+directory as the root of a smaller hierarchy and to look up a path name
+relative to that directory.  A <TT>&#60;</TT>relpath<TT>&#62;</TT>, or relative path name, is
+translated by looking up each <TT>&#60;</TT>pname<TT>&#62;</TT> in turn, starting at a specified
+base directory.  Every procedure in OS that accepts a path name parameter
+also accepts an optional directory handle parameter; if the path name is a
+<TT>&#60;</TT>relpath<TT>&#62;</TT>, it is looked up relative to the directory specified by that
+handle.  (If the path name is a <TT>&#60;</TT>relpath<TT>&#62;</TT>, but the directory handle
+parameter is defaulted, then the working directory of the process is
+used--see Section <A HREF="node30.html#DalyCity">2.8</A>, page <A HREF="node30.html#DalyCity"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).
+<P><A NAME="633">&#160;</A>
+<A NAME="634">&#160;</A>
+<A NAME="635">&#160;</A>
+<A NAME="636">&#160;</A>
+Every directory contains an entry .. (dot-dot) referring to its parent
+directory and an entry . (dot) referring to itself.  For references to
+local files, the root directory is its own parent, so the two path names
+/../ and / mean the same thing.  (The entry .. in the root of a remote
+file system works differently, as described later in this section.)
+<P><A NAME="637">&#160;</A>
+<A NAME="638">&#160;</A>
+The directory-manipulation procedures maintain the invariant that there is
+a unique <TT>&#60;</TT>abspath<TT>&#62;</TT> (not containing . or ..) leading to each directory or
+symbolic link.  This invariant does not apply to files: the HardLink
+procedure (see page <A HREF="node47.html#Pleasanton"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>) creates an additional path name
+referring to a given file.
+<P><A NAME="SanPablo">&#160;</A><A NAME="643">&#160;</A>
+<A NAME="644">&#160;</A>
+Hard links can't be used for directories, and, as explained in Section
+<A HREF="node29.html#Hayward">2.7</A>, page <A HREF="node29.html#Hayward"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>, they can't span logical volumes.
+To alleviate these limitations, an additional form of aliasing exists: the
+symbolic link.  A symbolic link is an entity that appears in the name
+space and whose value is the character string representing another path
+name.  During the translation of a path name, when a symbolic link is
+encountered as the value of a <TT>&#60;</TT>pname<TT>&#62;</TT>, the value of the symbolic link is
+normally substituted for the path name up to that point and translation
+continues.  The SymLink procedure (see page <A HREF="node47.html#RedwoodCity"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>) creates
+a symbolic link.
+<P><A NAME="650">&#160;</A>
+<A NAME="651">&#160;</A>
+<A NAME="652">&#160;</A>
+Now it is time to look at how remote path names are translated.  A path
+name beginning with <TT>&#60;</TT>machine<TT>&#62;</TT> (always flagged by the # character) means
+that the following <TT>&#60;</TT>abspath<TT>&#62;</TT> is to be interpreted relative to the root
+directory of the specified machine.  Such a path name could be passed
+directly to an OS procedure, or could arise as the value of a symbolic
+link encountered in the translation of a local path name.
+<P><A NAME="657">&#160;</A>
+The translation of a <TT>&#60;</TT>machine<TT>&#62;</TT> in a path name to an actual machine
+(technically, an instance of a remote file service) proceeds as follows:
+<P><A NAME="660">&#160;</A>
+<A NAME="661">&#160;</A>
+<A NAME="662">&#160;</A>
+<A NAME="663">&#160;</A>
+<DL COMPACT>
+<DT>1.
+<DD>An <TT>&#60;</TT>element<TT>&#62;</TT> of the form `$u' is replaced by the real user name of the
+process requesting the translation.
+<DT>2.
+<DD>If the <TT>&#60;</TT>machine<TT>&#62;</TT> consists of more than one <TT>&#60;</TT>mname<TT>&#62;</TT>, it is replaced with
+the value found by looking up the sequence of <TT>&#60;</TT>mname<TT>&#62;</TT>s as a path in the
+Interim Name Service tree (see ns(8) and the NS interface); the result
+should be a single NS.Label conforming to the syntax of <TT>&#60;</TT>mname<TT>&#62;</TT>.
+<P><DT>3.
+<DD>The remaining <TT>&#60;</TT>mname<TT>&#62;</TT> is looked up in the Interim Name Service; it is
+expected to have an attribute `type' whose value is `instance', `host', or
+`nameset'.  In either of the first two cases, the <TT>&#60;</TT>mname<TT>&#62;</TT> is expected to
+have an attribute `address' that determines an instance of a remote file
+service.  If the `type' is `nameset', then the <TT>&#60;</TT>mname<TT>&#62;</TT> is expected to have
+an attribute `members' whose value is a list of <TT>&#60;</TT>mname<TT>&#62;</TT>s and an attribute
+`next' whose value is a single <TT>&#60;</TT>mname<TT>&#62;</TT>.  This step is repeated on each
+element in the `members' list in random order; if none lead to an
+available server, this step is repeated using the value of the `next'
+attribute.
+</DL>
+<P>
+If the last <TT>&#60;</TT>mname<TT>&#62;</TT> encountered when translating a path name is a
+`nameset', then the path name is normally considered to refer to a
+read-only server set, causing operations that would involve modifying the
+name space or the data or attributes of a file to be disallowed (and to
+raise ProtectionViolationEC).  This is because the main purpose of server
+sets is to increase the availability of immutable files.  There are
+several qualifications to this rule:
+<P><UL>
+<LI> Whether a given server set is considered read-only is actually determined
+by the value of the additional attribute `readOnly' of an <TT>&#60;</TT>mname<TT>&#62;</TT> whose
+`type' is `nameset'.  This attribute should have a value of `true' or
+`false'.  Currently all server sets at SRC are read-only.
+<LI> Once OS.OpenDir is used (see page <A HREF="node46.html#Cupertino"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>) to open a directory
+using a path name involving a read-only server set, then it is permissible
+to perform file system modifications using that directory handle.  This is
+because the directory handle determines a specific machine.
+<LI> Currently, modifications are disallowed if any server set (not just the
+last) encountered during a path name translation is read-only.  This is a
+bug.
+</UL>
+<P><A NAME="693">&#160;</A>
+<A NAME="694">&#160;</A>
+<A NAME="695">&#160;</A>
+<A NAME="696">&#160;</A>
+To facilitate the illusion of a single tree spanning several machines, the
+parent of the root of the remote file system on a machine, say m, appears
+to be the local directory /remote/m if it exists, or the root itself
+otherwise.  By convention, each subdirectory of /remote, such as m,
+contains a single entry named r that is a symbolic link containing #m/.
+The prefix /remote/ is actually a configuration parameter (see Appendix
+<A HREF="node60.html#Lafayette">A.6</A>, page <A HREF="node60.html#Lafayette"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).
+<P>
+Here are some examples corresponding to the concepts enumerated at the
+beginning of this section:
+<P><DL COMPACT>
+<DT>1.
+<DD>A specific file on a specific machine: #jumbo/etc/passwd
+<DT>2.
+<DD>A replicated (read-only) file: #server/etc/passwd
+<P><DT>3.
+<DD>A generic file: #$u:homeServer:/user/spool/mail
+</DL>
+<P><A NAME="701">&#160;</A>
+<A NAME="702">&#160;</A>
+Only regular files can be accessed remotely; devices can not.
+<P><A NAME="703">&#160;</A>
+<A NAME="704">&#160;</A>
+Ultrix note:  Access via the OS interface to remote files is not
+implemented.  (This functionality is available, however, through the
+RFS/RFSClient interface.)
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html535"
+ HREF="node29.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html531"
+ HREF="node22.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html525"
+ HREF="node27.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html533"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html534"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html536"
+ HREF="node29.html">Logical Volumes</A>
+<B> Up:</B> <A NAME="tex2html532"
+ HREF="node22.html">Concepts and Facilities</A>
+<B> Previous:</B> <A NAME="tex2html526"
+ HREF="node27.html">Files, Open-File Objects, and</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+XISOLA.ZIP                       Isola game under X window
+                                 Author: Yves Lafon lafon@enseeiht.fr
+                                                    lafon@vlsi.polymtl.ca
+VAX                              Language: VAX C 3.2 or DEC C
+AXP                              Language: DEC C
+                                 Needs XAW, XMU & XVMSUTILS libraries
+-------------------------------------------------------------------------------

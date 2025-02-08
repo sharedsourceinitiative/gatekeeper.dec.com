@@ -1,0 +1,15 @@
+Begin3
+Title:        XCmail
+Version:      0.12
+Entered-date: 27Feb1998
+Description:  X11 mailtool using Xclasses layout library (statically linked)
+              with many features (file attachment, charset encoding, MIME 
+              support, POP3, address book, PGP support, and more) 
+              - really quick!
+Keywords:     mail, mailtool, X11, X-Windows, Xclasses, POP, POP3,MIME, PGP 
+Author:       schmitzj@fsai.fh-trier.de (Juergen Schmitz)
+Maintained-by:
+Primary-site: http://www.fsai.fh-trier.de/~schmitzj/Xclasses/XCmail
+Alternate-site: sunsite.unc.edu:/pub/Linux/system/mail/mua
+Copying-policy: Freeware
+End

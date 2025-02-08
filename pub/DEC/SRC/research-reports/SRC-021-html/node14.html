@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Signals</TITLE>
+<META NAME="description" CONTENT="Signals">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node15.html">
+<LINK REL="previous" HREF="node13.html">
+<LINK REL="up" HREF="node11.html">
+<LINK REL="next" HREF="node15.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html286"
+ HREF="node15.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html282"
+ HREF="node11.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html276"
+ HREF="node13.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html284"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html285"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html287"
+ HREF="node15.html">Process Creation</A>
+<B> Up:</B> <A NAME="tex2html283"
+ HREF="node11.html">Topaz Operating System Interface</A>
+<B> Previous:</B> <A NAME="tex2html277"
+ HREF="node13.html">File System</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION02043000000000000000">
+Signals</A>
+</H2>
+<A NAME="sec-signals">&#160;</A>
+<A NAME="296">&#160;</A>
+<A NAME="297">&#160;</A>
+A UNIX signal is used to communicate an event to a process or to exercise
+supervisory control over a process (termination or temporary suspension).
+A UNIX signal communicates either a synchronous event (a trap, stemming
+directly from an action of the receiving process) or an asynchronous one
+(an interrupt, stemming from another process, user, or device).
+<P>
+UNIX models signal delivery on hardware interrupts.  A process registers a
+handler procedure for each signal it wants to handle.  When a signal is
+received, the current computation is interrupted by the creation of an
+activation record for the handler procedure on the top of the stack of the
+process.  This handler procedure may either return normally, resulting in
+the interrupted computation continuing, or may do a ``long jump'',
+unwinding the stack to a point specified earlier in the computation.  If a
+signal is received for which no handler procedure was registered, a
+default action takes place.  Depending on the signal, the default action
+is either to do nothing, to terminate the process, to stop the process
+temporarily, or to continue the stopped process.  Following the hardware
+interrupt model, 4.2BSD UNIX allows each signal to be ignored or
+temporarily masked.
+<P><A NAME="298">&#160;</A>
+Topaz signals are patterned after UNIX signals, and in fact Topaz and UNIX
+programs running on the same machine can send each other signals.
+However, UNIX signal delivery is another ad hoc way of multiplexing the
+single program counter of a process.  Trying to use interrupt-style signal
+delivery in a multithreaded environment leads to problems.  Which thread
+should receive the signal?  What does a signal handler procedure do if it
+needs to acquire a lock held by the thread it has interrupted?  Rather
+than answering these questions, we avoided them.
+<P><A NAME="299">&#160;</A>
+<A NAME="300">&#160;</A>
+<A NAME="301">&#160;</A>
+A Topaz process can specify that it wants to handle a particular signal,
+but it doesn't register a handler procedure.  Instead, it arranges for one
+of its threads to call <TT>WaitForSignal</TT>.  This procedure blocks until a
+signal arrives, then returns its signal number.  The calling thread then
+takes whatever action is appropriate, for example initiating graceful
+shutdown.   <TT>WaitForSignal</TT> takes a parameter that specifies a subset
+of the handled signals, so a program may have more than one
+signal-handling thread.  The set of signals that it makes sense to handle
+is smaller in Topaz than in UNIX, since those used as part of various UNIX
+ad hoc multiplexing schemes (e.g., <TT>SIGALRM</TT>, <TT>SIGURG</TT>, <TT>SIGIO</TT>,
+and <TT>SIGCHLD</TT>) are never sent to multithreaded processes.  Topaz
+provides the same default actions as UNIX for signals not handled by the
+process.  The decision about which signals to handle and which to default
+is necessarily global to the entire process; any dynamic changes must be
+synchronized by the client.
+<P><A NAME="308">&#160;</A>
+<A NAME="309">&#160;</A>
+UNIX system calls that do unbounded waits (e.g., reading from a terminal
+or waiting for a child process to terminate) are interruptible by signals.
+But this interruptibility leads to difficulties that are avoidable in the
+multithreaded case.  A client program will normally want to restart a
+system call interrupted by a signal that indicates completion of some
+asynchronous operation, but will probably not want to restart a system
+call interrupted by a signal that indicates a request for cancellation of
+a computation.  Different versions of UNIX have tried different approaches
+to the restartability of system calls.  In Topaz, there is no need for
+signal delivery itself to interrupt any system call.  The signal handling
+thread may decide to alert one or more other threads, which raises an
+<TT>Alerted</TT> exception in any thread doing an unbounded wait in a system call.
+<P><A NAME="311">&#160;</A>
+Instead of using signals to report synchronous events, Topaz uses
+Modula-2+ exceptions.  For example, the <TT>AddressFault</TT> exception is
+raised when a thread dereferences an invalid address.  Since the contexts
+statically and dynamically surrounding where an exception is raised
+determine what handler is invoked for that exception, different threads
+can have different responses.
+<P><A NAME="313">&#160;</A>
+Modula-2+ exceptions are based on a termination model: scopes between the
+points where an exception is raised and where it is handled are
+<I>finalized</I> (given a chance to clean up and then removed from the stack)
+before the handler is given control.  While this model has proven its
+worth in constructing large modular systems, it does lead to a
+complication involving traps.  An exception is an appropriate way to
+report a trap considered to be an error, but isn't appropriate for a trap
+such as breakpoint or page fault whose handler wishes to resume.  Topaz
+therefore provides a lower-level trap mechanism that suspends a thread at
+the point of the trap and then wakes up a trap-handling thread.  The
+trap-handling thread either converts the trap to an exception in the
+trapping thread, or handles it and restarts the thread, as appropriate.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html286"
+ HREF="node15.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html282"
+ HREF="node11.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html276"
+ HREF="node13.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html284"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html285"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html287"
+ HREF="node15.html">Process Creation</A>
+<B> Up:</B> <A NAME="tex2html283"
+ HREF="node11.html">Topaz Operating System Interface</A>
+<B> Previous:</B> <A NAME="tex2html277"
+ HREF="node13.html">File System</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,44 @@
+
+		    PerfVisS: A Performance Visualizer for
+	    High Performance Fortran Programs on Workstation Farms
+				       
+			      Gudrun J. Klinker
+			   Cambridge Research Lab,
+			Digital Equipment Corporation
+				       
+				     and
+				       
+				  I-Yu Chen
+			       Mercury Computer
+				       
+			       August 23, 1994
+				       
+
+				   ABSTRACT
+
+Writing efficient code for parallel processors is still a rather complex and
+little understood task.  Tools to gather and analyze performance information
+during program execution are essential for understanding the reasons for
+inefficient executions.  Current performance visualization systems provide
+only a limited set of capabilities, hardwired into huge, monolithic programs.
+Programmers need a very flexible environment in which they can mix and match
+different performance visualization tools.
+
+Research in scientific visualization has developed several environments to
+visualize, explore and analyze large quantities of data.  Reusing these
+capabilities to visualize MIMD performance data significantly helps in the
+development of a performance profiler.  However, scientific visualization
+methods have to be altered appropriately to address the non-geometric nature
+of performance data.
+
+This paper presents a profiler, PerfVisS, which builds upon existing
+Telecollaborative Data Exploration (TDE) technology.  PerfVisS provides
+several linked views of the performance data, both for gaining a general
+overview of the program performance and for detailed data and code inspection.
+It also allows users to adapt the system to their own viewing preferences,
+using the AVS visual programming interface.  Furthermore, it provides tools
+for telecollaborative performance tuning, allowing programmers to share their
+views with colleagues at remote sites.  PerfVisS runs on Alpha AXP workstation
+farms but could be used as well on other similar MIMD architectures such as
+symmetric multiprocessors (SMPs).
+

@@ -1,0 +1,152 @@
+XMOTD 1.16 README
+
+December, 1999
+Luis Fernandes, <elf@ee.ryerson.ca>
+Toronto, Canada
+
+xmotd is a message-of-the-day browser for X11 and
+dumb-terminals. Refer to: http://www.ee.ryerson.ca/~elf/xmotd/ for
+details.
+
+WHAT'S NEW
+
+ o xmotd checks whether another copy of itself is already running and
+   exits if there is (this usually happened when xmotd was run with
+   -wakeup and a user logged in and out multiple times within the
+   sleep-duration).
+
+ o xmotd now supports the Editres protocol (i.e. X resources may be
+   edited via editres(1)).
+
+ o -tail option allows the end of files to be watched; the text will
+   scroll to the bottom when xmotd pops up.
+
+REQUIREMENTS
+
+xmotd requires, a C compiler and at minimum, X11R5 including Xt (the X
+Toolkit) for the resource and command-line parsing functions, and the
+Athena widget (Xaw) libraries. Optionally, Xm (the Motif toolkit)
+should be installed if you wish to compile the Motif version; the Xpm
+library should be installed if you wish to compile-in support for
+colour logos.
+
+The HTML library is not included with the 'lite' distribution.
+
+BUILDING
+
+First, unpack the distribution with:
+
+    zcat xmotd-1.16.tar.gz | tar xvf -
+
+A directory called xmotd-1.16 will be created; cd into that
+directory and to build the default flavour type:
+
+    xmkmf -a; make all
+
+Note: If your xmkmf does not support the -a option
+(e.g. /usr/openwin/bin/xmkmf), type:
+
+   xmkmf; make makefiles; make all
+
+xmotd can be built in different flavours:
+    - with the Athena widget library (default), or;
+    - with Athena & HTML widget, or;
+    - with the Motif widget library, or;
+    - with Motif and HTML widget.
+
+Refer to the commentary in the Imakefile for details on customizing
+the build for HTML, Motif and XPM support.
+
+After the compilation is complete (ignore compilation warnings when
+the HTML widget is being compiled) and if you wish to install xmotd
+automatically, type:
+
+    make install
+
+PLATFORMS
+
+xmotd was developed on a Sun SPARCstation 5 under X11R6.3 using gcc
+2.7.1 and emacs 19.34 and gdb. It has been sucessfully compiled under
+SunOS 4.1.4, Solaris 2.5.1 and 2.6 and Linux 2.30.
+
+xmotd has also been successfully compiled on the following platforms:
+
+    HP 9000/735 running HP-UX 9.03 (X11R5).  
+    IBM RS/6000 model C10 (PowerPC) running AIX v3.2.5.
+    Silicon Graphics INDY running Irix 5.3 (X11R5)
+    Mips/CDC (running EPIX) and PCS/M68030 (running MUNIX/SysV). 
+
+MANIFEST
+
+This distribution contains the following files:
+
+        README                  (this file)
+        ACKNOWLEDGEMENTS        (contributors to xmotd)
+        GNU                     (Terms of GPL)
+        Imakefile               (X Consortium's gift to humanity)
+        Makefile                (...3 guesses)
+        XMotd                   (app-defaults)
+        XMotd_motif             (Motif app-defaults)
+        xmotd.8                 ([nt]roff man-page)
+        xlogo.bm                (default bitmap, the "X"-logo)
+        xlogo.xpm               (default pixmap used w/ xpm support)
+        *.c, *.h                (source)
+        patchlevel.h            (version tag)
+        browser                 (shell script)
+        libhtmlw/               (NCSA HTML widget; not in 'lite' version)
+
+
+xmotd has many options. Refer to the man-page for further details on
+customizing and more examples showing xmotd in use. You can read the
+man-page, without installing it, with the following command:
+
+    nroff -man xmotd.8 | less
+
+APP-DEFAULTS
+
+xmotd can be customized via editres.
+
+Reasonably adequate application defaults are compiled into xmotd so it
+is NOT necessary to install the supplied app-defaults file.
+
+You can also customize the resources with the supplied app-defaults
+file, XMotd. The Motif version is called XMotd_motif; rename it XMotd
+before installing and comment-out appropriate resources if building
+with HTML support. The app-defaults file installs in:
+
+         $ProjectRoot/lib/X11/app-defaults/XMotd
+
+All resources are available as command-line option equivalents so
+xmotd may be customized completely via the command-line.
+
+COPYRIGHT (xmotd)
+
+xmotd Copyright 1993 (as xbanner), 1994-97, 1999 Luis Fernandes
+
+Permission to use, copy, hack, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies and
+that both that copyright notice and this permission notice appear in
+supporting documentation.
+
+xmotd IS PRESENTED AS IS, WITHOUT ANY IMPLIED OR WRITTEN WARRANTY.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+COPYRIGHT (HTML widget)
+
+libhtmlw is copyright (C) 1993, Board of Trustees of the University of
+Illinois. See the file libhtmlw/HTML.c for the complete text of the
+NCSA copyright.

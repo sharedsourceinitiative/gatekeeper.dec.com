@@ -1,0 +1,137 @@
+Welcome to...
+-------------
+	asedit text editor Version 1.3.2  (International Release)
+
+What
+----
+asedit is an easy to use text editor for X Window System built around Motif
+text widget. Version 1.3.2, international free Release, includes the following
+language versions: English, Danish, Dutch, French, German, Polish, Portuguese 
+and Swedish. All commands and messages are localized for each
+language. The on-line help is available only in English.
+
+Versions for other left to right languages, with single-byte character
+sets, can be easily developed.
+
+Features
+--------
+The main features of Version 1.3.2 include:
+
+  - (*) international release (versions for 8 languages)
+  - graphical user interface (GUI)
+  - multiple editing windows
+  - easy to use "point and click" interface
+  - drag and drop support (Motif 1.2 and above only)
+  - file selection via file selection dialog
+  - read only mode to view files
+  - file insert functionality
+  - print dialog that allows:
+	(i)  selection of a printer and using extra print options
+	(ii) selection of a print range (selected text only or
+	     the complete document)
+  - (*) comprehensive context sensitive, hypertext on-line help
+  - multiple undo and redo of edit actions
+  - Cut/Copy/Paste features
+  - bookmarks (up to 10)
+  - (*) parenthesis (pair) matching
+  - comprehensive search and replace
+  - line and column numbers
+  - automatic indentation
+  - shortcut keys for the most common edit features (based on CUA)
+  - (*) pop-up menu for mouse oriented editing
+  - (*) special version with keyboard bindings for EMACS's users
+  - (*) customization via the standard X11/Motif resources method
+  - (*) easy localization for left to right languages (8-bit characters)
+  - (*) spell and sort commands
+  - (*) commands to change case of letters
+  - (*) formatting commands (expand/unexpand, move left/right, indent with,
+	reformat margins)
+  - (*) user customizable filters (up to 10); following filters are
+	preconfigured: word count, compress multiple blank lines, delete
+	blank lines, double space the text, delete extra spaces;
+	new filter dialog is also available;
+  - (*) user customizable commands (up to 10); following commands are
+	preconfigured:	pwd, date, hostname;
+	new command dialog is also available
+  - (*) extended syntax (on program startup: show line <N>, open multiple
+	files, set tabstops interval, set autoindent, etc.)
+
+(*) - means a completely new or dramatically improved feature in ver. 1.3
+
+
+Tested on...
+------------
+I have personally built and run the program on the following systems:
+
+   System		OS		X11 	Motif Ver.
+   -------------------------------------------------------
+   IBM RS/6000		AIX 3.2.x  	R4	1.1.x
+   IBM RS/6000		AIX 3.2.5  	R5	1.2.2
+   SGI IRIS Indigo      IRIX 4.0.x	R4, R5	1.1.4
+   SGI INDY      	IRIX 5.[12]	R5	1.2.[23]
+   SUN Sparc            SunOS 4.1.[23]  R4,5,6  1.1.4
+   SUN Sparc            SunOS 4.1.3     R5 	1.2.1
+   SUN Sparc            SunOS 5.3     	R5 	1.2.2
+   DEC Alpha		OSF/1 V2.0	R5	1.2.2
+   HP9000/700		HP-UX 9.x	R5	1.2.1
+
+
+I have also built previous versions on the following other
+systems (so this version should be OK as well):
+
+   HP9000/700		HP-UX 8.x	R4	1.1.x
+   DG AViiON		DG/UX 5.x	R5 	1.2.2
+   88-open		88-open		R5	1.2.2
+
+
+For a proper international support you *should* really use X11R5 or R6 
+and Motif 1.2 (or higher).
+
+
+Who by
+------
+Andrzej Stochniol   (A.Stochniol@ic.ac.uk)
+30 Hatch Road, London SW16 4PN, UK.
+
+(Please use telephone and fax numbers only when absolutely necessary !!)
+	Tel: +44 (0)181 679 5795                 Fax: +44 (0)171 584 1560
+ (work) Tel: +44 (0)171 594 7076
+
+
+Release Date
+-----------
+10 November 1994
+
+
+Availability
+------------
+asedit is available by anonymous ftp from:
+    ftp.x.org (198.112.44.100)  in  /contrib/editors/asedit-1.3.2.tar.Z
+    or in Europe from:
+    src.doc.ic.ac.uk   (146.169.2.10) in  /packages/X11-contrib/editors/asedit-1.3.2.tar.Z
+and from several other ftp sites.
+Check your nearest using xarchie.
+
+If you can't ftp, try sending email to ftpmail@decwrl.dec.com with the
+word "help" alone in your message body (in Europe you can use
+ftpmail@doc.ic.ac.uk).  You will receive instructions on how to ftp
+via email.
+
+
+Continue reading...
+--------------------
+See:
+     COPYRIGHT to know what you can and what you cannot (in short, asedit is
+	free for most users, but it is NOT a public domain software);
+     INSTALL for instructions on building & installing of asedit.
+
+See also:
+     ACKNOWLE.LOC to learn who contributed to asedit localization;
+     HISTORY if you would like to know what has changed;
+     COMMERCL.VER if you would like to know about an extended and
+	performance oriented commercial version of asedit.
+
+
+
+
+

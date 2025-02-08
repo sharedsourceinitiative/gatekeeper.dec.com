@@ -1,0 +1,16 @@
+"Virginity:  A contribution to the specification of object-oriented software"
+K. Rustan M. Leino and Raymie Stata
+Note #1997-001, April 30, 1997. 11 pages
+
+In object-oriented programs built in layers, an object at a higher
+level of abstraction is implemented by objects at lower levels of
+abstraction. It is usually crucial to correctness that a lower-level 
+object not be shared among several higher-level objects. This paper 
+unveils some difficulties in writing procedure specifications strong 
+enough to guarantee that a lower-level object can be used in the 
+implementation of another object at a higher level of abstraction.
+To overcome these difficulties, the paper presents "virginity",
+a convenient way of specifying that an object is not globally
+reachable and thus can safely be used in the implementation of a
+higher-level abstraction.
+

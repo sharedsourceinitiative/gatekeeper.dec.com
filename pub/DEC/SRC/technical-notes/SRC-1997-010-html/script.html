@@ -1,0 +1,419 @@
+<SCRIPT LANGUAGE="JavaScript">
+  userkilllevel = 2;
+  numbering = 0;
+  killlevel = 2; curlevel = 0; pseudolevel = 0;
+  bitno = 0;
+
+  function getCookieVal (offset) {
+    var endstr = document.cookie.indexOf (";", offset);
+    if (endstr == -1)
+      endstr = document.cookie.length;
+    return unescape(document.cookie.substring(offset, endstr));
+  }
+
+  function GetCookie (name) {
+    var arg = name + "=";
+    var alen = arg.length;
+    var clen = document.cookie.length;
+    var i = 0;
+    while (i < clen) {
+      var j = i + alen;
+      if (document.cookie.substring(i, j) == arg)
+        return getCookieVal (j);
+      i = document.cookie.indexOf(" ", i) + 1;
+      if (i == 0) break;
+    }
+    return "";
+  }
+
+  function SetCookie (name,value,expires,path,domain,secure) {
+    document.cookie = name + "=" + escape (value) +
+      ((expires) ? "; expires=" + expires.toGMTString() : "") +
+      ((path) ? "; path=" + path : "") +
+      ((domain) ? "; domain=" + domain : "") +
+      ((secure) ? "; secure" : "");
+  }
+
+  if (GetCookie("cc") == "") firstvisit = true; else firstvisit = false;
+
+  function GetState(item) {
+    cookie = GetCookie("cc"); tmp = cookie;
+    while (item + 1 > cookie.length) cookie = cookie + "0";
+ 
+    if (cookie != tmp) SetCookie("cc", cookie, null, null, null, false);
+    return cookie.substring(item, item+1);
+  }
+
+  function SetState(item, val) {
+    x = GetCookie("cc");
+    var expdate = new Date ();
+    expdate.setTime (expdate.getTime() + (24 * 60 * 60 * 1000)); // 24 hrs from now
+    SetCookie("cc", x.substring(0, item) + val + x.substring(item+1, x.length),
+                    expdate, null, null, false);
+  }
+
+  function Toggle(item) {
+    if (GetState(item) == "1") SetState(item, "0");
+    else SetState(item, "1");
+    history.go(0);
+    location.hash = "zippo" + item;
+  }
+
+  function Visible(item) {
+    return (GetState(item) == "1");
+  }
+
+  function Hint(bitno) {
+     if (Visible(bitno)) return "<IMG SRC=\"Open.gif\" border=0>"
+     else return "<IMG SRC=\"Close.gif\" border=0>";
+  }
+
+  function max(x, y) {
+    if (x < y) return y; else return x;
+  }
+  
+  function Head(level, align, text) {
+    if (level > curlevel) { // going down 
+        pseudolevel++;
+        db[pseudolevel] = 1;
+        for(i = curlevel + 1; i <= level; i++)
+           pl[i] = pseudolevel;
+    } else if (level < curlevel) {
+        pseudolevel = pl[level];
+        db[pseudolevel]++
+    } else { // staying still
+      db[pseudolevel]++;
+    }
+
+    if (pseudolevel < max(userkilllevel, killlevel)) {
+      document.write("<H", level);
+      if (align != "")
+        document.write(" align=" + align);
+      document.write(">");
+      
+      if (pseudolevel >= userkilllevel-1)
+        document.write("<A HREF=\"javascript: Toggle(",
+                bitno,
+                ");\">",
+                Hint(bitno),
+                "</A> ");
+      document.write("<A NAME=zippo", bitno, ">");
+
+      // write number
+      if (numbering == 1)
+        for(i = 1; i <= pseudolevel; i++)
+           document.write(db[i], ".");
+      document.write(" ", text, "</H", level, ">");
+      if (Visible(bitno))
+         killlevel = pseudolevel + 2
+      else
+         killlevel = pseudolevel + 1;
+    }
+    bitno++;
+    curlevel = level;
+  }
+
+  function Txt(text) {
+    if (pseudolevel + 1 < max(userkilllevel, killlevel)) document.write(text);
+  }
+
+  function MakeArray(n) {
+    this.length = n;
+    return this
+  }
+  
+  // initialize the counters
+    db = new MakeArray(7);
+    i = 1;
+    while (i <= 7) { db[i] = 0; i++ }
+
+    pl = new MakeArray(7);
+    i = 1;
+    while (i <= 7) { pl[i] = 0; i++ }
+</SCRIPT>
+
+
+<SCRIPT>
+Txt("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 3.2//EN\">\n <HTML>\n <HEAD>\n    <TITLE>Focus+Context Displays of Web Pages: Implementation");
+Txt(" Alternatives</TITLE>\n </HEAD>\n <BODY BGCOLOR=\"#FFFFFF\">\n \n ");
+Head(2, "CENTER", "Focus+Context Display of Web Pages: Implementation Alternatives");
+Txt("\n \n <CENTER>Marc H. Brown, Hannes Marais, Marc A. Najork, William\n E. Weihl</CENTER>\n \n <CENTER><P>\n <HR></P></CENTER>\n \n <CENTE");
+Txt("R><P><IMG SRC=\"DEC-logo.gif\" ALT=\"DIGITAL\" HEIGHT=47 WIDTH=151><BR>\n <B>Systems Research Center<BR>\n </B>130 Lytton");
+Txt(" Avenue<BR>\n Palo Alto, CA 94301<BR>\n <A HREF=\"http://www.research.digital.com/SRC/\">http://www.research.digital.com/SRC/</A>\n <");
+Txt("/P></CENTER>\n \n <CENTER><P ALIGN=CENTER>\n <HR>Copyright 1997 Digital Equipment Corporation. All rights reserved \n <HR></P></CENT");
+Txt("ER>\n \n ");
+Head(2, "CENTER", "Abstract");
+Txt("\n \n <BLOCKQUOTE>\n <P><I>This paper describes an outline processor display of Web pages. We\n attach icons, called zippers, to the");
+Txt(" HTML heading tags (H1, H2, ...), and\n the user can dynamically include or elide the body of each section by clicking\n on the zi");
+Txt("pper. We have implemented zippers in three different ways: zippers\n that are inserted by a custom-built Web browser and that con");
+Txt("trol the browser's\n display engine; zippers that are inserted into the HTML document by a Web\n proxy and that use the proxy to g");
+Txt("enerate modified HTML reflecting the changed\n state of the zipper; and zippers that trigger a JavaScript program which\n redispla");
+Txt("ys an appropriately modified version of the page. </I></P>\n \n <P><I>A good way to experience the ideas presented here is to view");
+Txt(" the\n <A HREF=\"script.html\">outline version of this paper</A>. You will\n need to use Netscape Navigator 3 or higher. </I");
+Txt("></P>\n </BLOCKQUOTE>\n \n ");
+Head(2, "", "Introduction");
+Txt("\n \n <P>As people rush to put information onto the World Wide Web, more and\n more structured documents are appearing. These docum");
+Txt("ents include home pages\n with lots of hierarchically organized links, papers with many sections\n and subsections, and other leng");
+Txt("thy documents such as books and manuals.</P>\n \n <P> All Web browsers that we know of display each page as a continuous\n scroll. ");
+Txt("Unfortunately, it is easy to lose context when viewing a snippet\n of the whole, and it is hard to jump to arbitrary places in th");
+Txt("e page. These\n problems become more severe with longer pages.</P>\n \n <P> Outline processors provide one well known technique for");
+Txt(" addressing\n these problems. Outline processors allow a user to expand and contract\n selected sections and subsections of a docu");
+Txt("ment, thus retaining the high-level\n structure of the document while also displaying individual sections. In\n addition, outline ");
+Txt("processors allow the user to rapidly jump within the\n document.</P>\n \n <P> This paper describes how we have integrated outline p");
+Txt("rocessor technology\n into Web browsers. We use the heading tags (i.e., H1, H2, ..., H6) in the\n HTML source to derive an outline");
+Txt(" structure of the document, and we mark\n each heading with an icon called a <I>zipper</I>. Clicking on the zipper\n causes the se");
+Txt("ction introduced by the heading to expand and contract. Re-expanding\n a section causes the state of all subsections to reappear ");
+Txt("as they were\n before the section was contracted.</P>\n \n <P> The three screen dumps below show different states of a session in\n ");
+Txt("which we viewed the HTTP 1.0 specification. The well-structured hierarchy\n of this document makes it ideal for outline viewing. ");
+Txt("The left screen dump\n shows the document with the top-level zipper expanded (&quot;open&quot;)\n and all second-level zippers con");
+Txt("tracted (&quot;closed&quot;). In the middle\n screen dump, the user has opened the zipper of section 10; and in the screen\n dump ");
+Txt("on the right, he has further opened subsections 10.2, 10.5, and 10.7.</P>\n \n <P> </P>\n \n <CENTER><TABLE>\n <TR>\n <TD><A HREF=\"SRC");
+Txt("-1997-010/proxy1.gif\"><IMG SRC=\"proxy1-third.gif\" HEIGHT=327 WIDTH=222></A></TD>\n \n <TD><A HREF=\"proxy");
+Txt("2.gif\"><IMG SRC=\"proxy2-third.gif\" HEIGHT=327 WIDTH=222></A></TD>\n \n <TD><A HREF=\"proxy3.gif\"><IMG SRC");
+Txt("=\"proxy3-third.gif\" HEIGHT=327 WIDTH=222></A></TD>\n </TR>\n </TABLE></CENTER>\n \n <P>The rest of this paper is organi");
+Txt("zed as follows: The next three sections\n describe three alternative implementations of zippers: </P>\n \n <UL>\n <LI>The <A HREF=\"#");
+Txt("approach1\">first approach</A> is to build a custom Web\n browser that inserts zipper buttons into the display of HTML pages. Beca");
+Txt("use\n the buttons are not part of the HTML but are widgets of the browser, they\n can access the browser directly. Clicking on a b");
+Txt("utton causes the browser\n to change the state of the zipper and to redisplay the page.</LI>\n \n <P> </P>\n \n <LI>The <A HREF=\"#app");
+Txt("roach2\">second approach</A> is to build a proxy that\n inserts zippers into HTML pages, which then can be viewed by a standard\n W");
+Txt("eb browser. In this approach, zippers are represented through standard\n HTML, as links attached to images. Clicking on a zipper ");
+Txt("sends an HTTP request\n to the proxy, which causes it to generate a new HTML page.</LI>\n \n <P> </P>\n \n <LI>The <A HREF=\"#approach");
+Txt("3\">third approach</A> is to build a transducer\n that inserts a script (e.g., JavaScript or VBScript) into the HTML page.\n The sc");
+Txt("ript, executed by a suitable Web browser, generates an outline view\n of the page. Clicking on a zipper causes the browser to re-");
+Txt("execute the\n script, which then generates an appropriately updated outline view of the\n page. </LI>\n </UL>\n \n <P>Following that,");
+Txt(" we discuss <A HREF=\"#discussion\">related work</A>. Finally,\n we offer some <A HREF=\"#conclusion\">concluding thoughts</A> on the");
+Txt(" merits\n of zippers and on the general applicability of the various implementation\n alternatives we explored.</P>\n \n <P> </P>\n ");
+Txt("\n ");
+Head(2, "", "<A NAME=\"approach1\"></A>Approach 1: A Custom Web Browser");
+Txt("\n \n <P>We have built a family of Web browsers that support zippers. These browsers\n are implemented in Modula-3, an object-orien");
+Txt("ted language akin to Java.\n Modula-3 comes with a sophisticated UI toolkit, called Trestle <A HREF=\"#trestle\">[5]</A>.</P>\n \n <P");
+Txt("> In Trestle, each window is organized as a tree of widgets, called &quot;virtual\n bitmap terminals,&quot; or VBTs. VBTs can be ");
+Txt("classified by the number of\n their children. Leaf VBTs have no children; they are used for displaying\n text and images, for scro");
+Txt("llbars, for type-in fields, and so on. Filter\n VBTs have a single child and modify it in some way, such as by adding a\n border, ");
+Txt("by making it reactive to mouse clicks, and so on. Finally, split\n VBTs have an arbitrary number of children, and typically arran");
+Txt("ge their\n children spatially or temporally. For example, a horizontal box arranges\n its children horizontally, a vertical box ar");
+Txt("ranges them vertically, a pack\n split arranges them like words in a paragraph, and a temporal split displays\n one child at a tim");
+Txt("e.</P>\n \n <P> </P>\n \n ");
+Head(3, "", "The WebVBT Widget");
+Txt("\n \n <P>New VBTs are often created by combining existing VBTs. The heart of\n our Web browsers is a VBT for fetching and displayin");
+Txt("g a URL. Individual\n words are displayed through text VBTs, images through image VBTs, and white\n space and horizontal rules thr");
+Txt("ough texture VBTs. The basic elements of\n HTML forms are implemented using the corresponding VBTs, e.g., type-in\n fields, button");
+Txt("s, check boxes, and radios. These leaf VBTs are combined\n into paragraphs using a pack split, and the paragraphs are arranged in");
+Txt("to\n pages by vertical boxes.</P>\n \n <P> Below is the interface of the WebVBT class. For the sake of simplicity,\n we do not show ");
+Txt("the methods related to image maps, index pages, and forms.\n We also don't show the methods for fine tuning display attributes su");
+Txt("ch\n as fonts and colors.</P>\n \n <P> </P>\n \n <PRE>  INTERFACE WebVBT;\n   IMPORT VBT;\n   TYPE\n     T = VBT.T OBJECT\n       page: P");
+Txt("age := NIL;\n     METHODS\n       init (): T;\n       fetch (url: TEXT);\n       stop ();\n       ready (n: CARDINAL); \n       hotlin");
+Txt("k (link: TEXT; cd: VBT.MouseRec); \n     END;\n \n     Page &lt;: ROOT;\n     PlainPage = Page OBJECT ... END;\n     ImagePage = Page");
+Txt(" OBJECT ... END;\n     HTMLPage = Page OBJECT\n     METHODS\n       getBase(): TEXT;\n       getTitle(): TEXT;\n       ...\n     END;");
+Txt("\n   END WebVBT.\n </PRE>\n \n <P>The <TT>init</TT> method initializes the WebVBT and leaves it blank.\n The <TT>fetch</TT> method (ev");
+Txt("entually) displays the contents of the <TT>url</TT>\n parameter. More precisely, it cancels any fetching in progress, forks a\n th");
+Txt("read to actually retrieve the contents of the URL, and then returns.\n The <TT>stop</TT> method is used to cancel any ongoing fet");
+Txt("ches.</P>\n \n <P> The <TT>ready</TT> method will be called by an ongoing <TT>fetch</TT>\n operation when the page (but not necessa");
+Txt("rily all of its images or applets)\n has been retrieved. At this point, the <TT>page</TT> field has been set\n to an object that i");
+Txt("s specific to the MIME type of the document. Fetching\n continues until all of the images and applets have been loaded, and the\n ");
+Txt("<TT>ready</TT> method is called each time that an image or applet is loaded,\n with the <TT>n</TT> parameter updated to indicate ");
+Txt("the number of images\n and applets still to be loaded. The default <TT>ready</TT> method does\n nothing; client applications using");
+Txt(" WebVBT may override this method.</P>\n \n <P> The <TT>hotlink</TT> method is called each time the user clicks on\n a hyperlink in ");
+Txt("the displayed Web page. The default method does nothing;\n the typical WebVBT client overrides it to fetch the target of the hype");
+Txt("rlink,\n specified by the <TT>link</TT> parameter.</P>\n \n <P> The following is a <I>fully-functional</I> Web browser; it starts o");
+Txt("ut\n at the Alta Vista home page:</P>\n \n <P> </P>\n \n <PRE>  MODULE Main;\n   IMPORT Trestle, VBT, Web, WebVBT;\n \n   PROCEDURE HotL");
+Txt("ink(self: WebVBT.T; link: TEXT; cd: VBT.MouseRec) =\n     VAR page: WebVBT.HTMLPage := self.page;\n     BEGIN\n       self.fetch(We");
+Txt("b.AbsoluteURL(page.getBase(), link);\n     END HotLink;\n \n   VAR v := NEW(WebVBT.T, hotlink := HotLink).init();\n   BEGIN\n     v.f");
+Txt("etch(&quot;http://www.altavista.digital.com/&quot;);\n     Trestle.Install(v);\n     Trestle.AwaitDelete(v);\n   END Main.\n </PRE>");
+Txt("\n \n ");
+Head(3, "", "Adding Zippers to WebVBT");
+Txt("\n \n <P>The ease with which new VBTs can be composed from existing ones makes\n it very easy to implement zippers. In particular, ");
+Txt("zippers make use of two\n types of VBTs: a button (with one of two images, to indicate the expanded\n or contracted state) and a t");
+Txt("emporal split (to show either a heading alone\n or a heading and its body).</P>\n \n <P> The WebVBT walks the internal representati");
+Txt("on of the parsed HTML, looking\n for heading tags (H1, H2, ...). Each time it finds a tag, a new temporal\n split is created. The ");
+Txt("temporal split has two children. One child is the\n zipper button in the closed state along with the heading text. The other\n chi");
+Txt("ld is a vertical box containing the zipper button in the open state\n along with the heading text, followed by the body of the se");
+Txt("ction and all\n its subsections.</P>\n \n <P> Clicking on a zipper button toggles which child of the temporal split\n is displayed. ");
+Txt("Shift-clicking on a zipper button toggles the heading and\n visits all subheadings, setting the state of their zippers to match t");
+Txt("hat\n of the clicked zipper.</P>\n \n <P> The screen dumps below show DeckScape <A HREF=\"#deckscape\">[3]</A>\n (left) and WebCard <A");
+Txt(" HREF=\"#webcard\">[2]</A> (right), browsers we have\n built on top of WebVBT.</P>\n \n <P> </P>\n \n <CENTER><TABLE>\n <TR>\n <TD><A HRE");
+Txt("F=\"deckscape.gif\"><IMG SRC=\"deckscape-thumb.gif\" HEIGHT=256 WIDTH=320></A></TD>\n \n <TD><A HREF=\"SRC-19");
+Txt("97-010/webcard.gif\"><IMG SRC=\"webcard-thumb.gif\" HEIGHT=243 WIDTH=208></A></TD>\n </TR>\n </TABLE></CENTER>\n \n <P>Dec");
+Txt("kScape and WebCard are part of the SRC Modula-3 distribution, which\n is available in source form at <TT><A HREF=\"http://www.rese");
+Txt("arch.digital.com/SRC/modula-3/html/srcm3.html\">http://www.research.digital.com/SRC/modula-3/html/srcm3.html</A></TT>.\n </P>\n \n ");
+Head(2, "", "<A NAME=\"approach2\"></A>Approach 2: A Web Proxy");
+Txt("\n \n <P>The main drawback of the approach described in the previous section\n is that it limits users to our custom Web browser. C");
+Txt("ustom browsers are\n problematic because of the rapid evolution of HTML and the resources required\n to match the feature set of t");
+Txt("he two industry-leading browsers.</P>\n \n <P> An alternative approach for implementing outline views of Web pages\n is to build a ");
+Txt("Web proxy that dynamically changes the HTML of retrieved\n pages, and services requests by the user to expand or contract parts o");
+Txt("f\n the outline view. We have implemented such a &quot;zipper proxy,&quot;\n intended to be run on the same machine as the Web bro");
+Txt("wser. Users can configure\n their standard Web browser to hand all HTTP requests to the zipper proxy.\n </P>\n \n <P>Conceptually, t");
+Txt("he zipper proxy maintains a table that reflects the outline\n state of all documents retrieved so far. Each retrieved document is");
+Txt(" assigned\n a unique &quot;document number&quot;. A table entry consists of the document's\n URL, its number, and an array of bool");
+Txt("ean values (called the &quot;state\n vector&quot;). The length of the array corresponds to the number of potential\n zippers, i.e.");
+Txt(" the number of heading tags in the document, and each entry\n reflects the state of one zipper.</P>\n \n <P> When the browser reque");
+Txt("sts a document for the first time, the proxy\n retrieves the document from the appropriate Web server, and parses the\n HTTP heade");
+Txt("r to determine the document's MIME type. If the document is not\n of type &quot;text/html&quot;, it is immediately forwarded to t");
+Txt("he browser.\n Otherwise, the proxy parses the HTML to determine the number of heading\n tags, creates a state vector with one entr");
+Txt("y per heading, initializes it\n such that all zippers are closed, and adds an entry consisting of the document's\n URL, its number");
+Txt(", and the state vector to the table. Furthermore, the proxy\n uses the document's original HTML and the state vector to generate ");
+Txt("a modified\n version of the document, which is then returned to the browser.</P>\n \n <P> The way in which the proxy modifies a doc");
+Txt("ument's HTML is key to understanding\n the zipper proxy technique. First, the proxy inserts an <TT>Expires:0</TT>\n field into the");
+Txt(" HTTP header, replacing any existing <TT>Expires:</TT> field.\n The 0 value indicates that the document expires immediately and s");
+Txt("hould\n therefore not be cached by the Web browser. The proxy then scans over the\n HTML of the original document, until it encoun");
+Txt("ters a heading tag. </P>\n \n <P>Assume the zipper proxy runs on machine &quot;ash&quot;, is processing\n document number 5 (whose ");
+Txt("URL is <TT>http://www.carroll.com/poems.html</TT>),\n and just encountered the third heading: </P>\n \n <PRE>    &lt;H2&gt;The Walr");
+Txt("us and the Carpenter&lt;/H2&gt;\n </PRE>\n \n <P>If the state vector indicates that the zipper corresponding to this\n heading is op");
+Txt("en, the proxy replaces the heading with the following HTML\n code: </P>\n \n <PRE>    &lt;H2&gt;\n       &lt;A HREF=&quot;http://ash");
+Txt("/zip&amp;5&amp;3&quot;&gt;&lt;IMG BORDER=0 SRC=&quot;http://ash/open.xbm&quot;&gt;&lt;/A&gt;\n       The Walrus and the Carpenter");
+Txt("\n     &lt;/H2&gt;\n </PRE>\n \n <P>The URL <TT>http://ash/open.xbm</TT> refers to the image of an open\n zipper, available from the ");
+Txt("zipper proxy. After replacing the original with\n the modified heading, the proxy continues to scan for headings.</P>\n \n <P> If t");
+Txt("he state vector indicates that the zipper is closed, the proxy\n replaces the heading in a similar fashion, but uses the image of");
+Txt(" a closed\n zipper instead. Furthermore, it will omit all the HTML between this heading\n and the next H1 or H2 heading from the m");
+Txt("odified document.</P>\n \n <P> The net result of this rewriting process is that the user is presented\n with a outline view of the ");
+Txt("document. Headings that are not elided are preceded\n by zipper icons. The zippers are enclosed into HTML anchors; clicking on\n a");
+Txt(" zipper sends an HTTP request to the zipper proxy. Encoded in this request\n is the number of the document and of the zipper that");
+Txt(" is to be toggled.\n The zipper proxy uses those two numbers to update the document's state\n vector accordingly, and then generat");
+Txt("es a new modified version of the document,\n based on the original HTML and the updated state vector.</P>\n \n <P> If the proxy wer");
+Txt("e to simply return the modified HTML, the browser would\n display the updated document, but show the wrong URL (e.g. a URL of the");
+Txt("\n form <TT>http://ash/zip&amp;5&amp;3</TT> instead of <TT>http://www.carroll.com/poems.html</TT>).\n The proxy avoids this proble");
+Txt("m by returning a &quot;moved temporarily&quot;\n status code instead: </P>\n \n <PRE>    HTTP/1.0 302 ok\n     Location: http://www.");
+Txt("carroll.com/poems.html\n </PRE>\n \n <P>This causes the Web browser (transparently to the user) to emit a second\n HTTP request, thi");
+Txt("s time for the document at URL <TT>http://www.carroll.com/poems.html</TT>.\n This request is then intercepted by the proxy, which");
+Txt(" now returns the modified\n HTML, thus causing the browser to display the updated document and associating\n it with the correct U");
+Txt("RL.</P>\n \n <P> As a performance optimization, our zipper proxy implementation caches\n <I>n</I> documents, where <I>n</I> is adju");
+Txt("stable by the user. The cache\n eviction strategy is least-recently used. We cache only documents of MIME\n type &quot;text/html&q");
+Txt("uot;, for three reasons: First, only HTML documents\n can contain zippers, and these documents are more likely to be requested\n m");
+Txt("ultiple times, since every zipper toggling generates an HTML request for\n the document. Second, zipper toggling has to be an ins");
+Txt("tantaneous operation\n in order to improve the quality of the user's Web browsing experience.\n Third, we assume that documents wh");
+Txt("ose MIME type is not &quot;text/html&quot;\n will typically be cached by the Web browser, making it unnecessary for\n the proxy to");
+Txt(" duplicate this caching. After introducing caching and streamlining\n the code, we found the human-perceivable performance of the");
+Txt(" zipper proxy\n to be indistinguishable from that of the custom Web browser described in\n the previous section.</P>\n \n <P> The zi");
+Txt("pper proxy is reconfigured by visiting a Web page served by the\n proxy that contains a form for adjusting various parameters: th");
+Txt("e proxy's\n port; the IP address and port of an outer proxy (such as the gateway of\n a corporate firewall); IP addresses that can");
+Txt(" be accessed directly, without\n going through the outer proxy; the number of parallel threads for servicing\n requests; the maxim");
+Txt("um number of state vectors retained; the maximum number\n of cached documents; and whether newly retrieved documents are zipped u");
+Txt("p\n by default or not. The form also provides a button that allows the user\n to save those settings to disk. Our proxy also provi");
+Txt("des a control window\n that allows users to switch zipping on and off on a per-document basis.\n However, this feature requires a ");
+Txt("recent version of JavaScript.</P>\n \n <P> The screen dump below shows a Windows 95 desktop with three Netscape\n Navigator windows");
+Txt(". The leftmost window shows a zipped view of the World\n Wide Web Consortium's HTTP overview page, the window to its right shows");
+Txt("\n the zipper proxy configuration page, and the small window at the far right\n shows the zipper proxy control window. </P>\n \n <CEN");
+Txt("TER><P><A HREF=\"proxy4.gif\"><IMG SRC=\"proxy4-half.gif\" HEIGHT=512 WIDTH=640></A>\n </P></CENTER>\n \n <P>");
+Txt("Our zipper proxy is available in binary form for Intel/Windows 95 and\n for Alpha/Digital Unix platforms at <TT>http://www.resear");
+Txt("ch.digital.com/SRC/webbrowsing/zipperproxy</TT>.\n The current version does not preserve the scroll position of a page when\n a zi");
+Txt("pper is clicked. This problem could be remedied by attaching anchor\n names to each zipper. Now, when the proxy receives an HTTP ");
+Txt("request because\n a zipper was clicked, it can add the name of the zipper to the <TT>Location</TT>\n field in the &quot;302&quot; ");
+Txt("reply. Still, this &quot;trick&quot; does\n not completely solve the problem: the clicked zipper will move to the top\n of the pag");
+Txt("e, causing visual discontinuity. In contrast, our custom Web\n browser has no such visual discontinuity. </P>\n \n ");
+Head(2, "", "<A NAME=\"approach3\"></A>Approach 3: HTML Scripting");
+Txt("\n \n <P>The incorporation of scripting languages such as <A HREF=\"http://home.netscape.com/eng/mozilla/3.0/handbook/javascript/in");
+Txt("dex.html\">JavaScript</A>\n and <A HREF=\"http://www.microsoft.com/vbscript/\">VBScript</A> into Web\n browsers provides an easy way ");
+Txt("to enhance a Web page. Scripting code is\n embedded into Web pages, and the script is executed while the HTML is parsed\n by the b");
+Txt("rowser. The typical use for scripts is to generate HTML on-the-fly\n and to associate code with HTML form elements on the page. S");
+Txt("ome scripting\n languages, and JavaScript in particular, are powerful enough to implement\n zippers. This script-based implementat");
+Txt("ion differs from the proxy-based\n approach in that toggling zippers does not require communication with a\n server or a proxy; al");
+Txt("l computation takes place in a script running inside\n the browser. The rest of this section describes a zipper implementation\n i");
+Txt("n JavaScript.</P>\n \n <P>Our script-driven implementation of zippers is based on three observations.\n First, an HTML page can be ");
+Txt("rewritten as a JavaScript program that generates\n the HTML as the script is executed. Second, the contents of a Web page\n can be");
+Txt(" modified by redisplaying the current page (thus re-executing the\n script) and varying the output of the script. Third, persiste");
+Txt("nt client\n state can be used to keep track of the state of the zippers. We now elaborate\n on these observations.</P>\n \n ");
+Head(3, "", "Rewriting HTML as JavaScript");
+Txt("\n \n <P>We can rewrite the following HTML:</P>\n \n <UL>\n <P><TT>&lt;HTML&gt;<BR>\n &lt;H1&gt;My Home page&lt;/H1&gt;<BR>\n Welcome t");
+Txt("o my home page ...<BR>\n &lt;/HTML&gt;</TT></P>\n </UL>\n \n <P>as the JavaScript program:</P>\n \n <UL>\n <P><TT>&lt;SCRIPT LANGUAGE=&");
+Txt("quot;JavaScript&quot;&gt;<BR>\n <BR>\n function Emit(t) { document.write(t); }<BR>\n <BR>\n Emit(&quot;&lt;HTML&gt;\\n&quot;);<BR>\n E");
+Txt("mit(&quot;&lt;H1&gt;My Home page&lt;/H1&gt;\\n&quot;);<BR>\n Emit(&quot;Welcome to my home page ...\\n&quot;);<BR>\n Emit(&quot;&lt;");
+Txt("/HTML&gt;\\n&quot;);<BR>\n <BR>\n &lt;/SCRIPT&gt;</TT></P>\n </UL>\n \n <P>As the script is executed by the browser, it generates the ");
+Txt("original\n HTML one line at a time.</P>\n \n ");
+Head(3, "", "Modifying the Contents of a Page");
+Txt("\n \n <P>Multiple, slightly different versions of a page can be obtained by changing\n the <TT>Emit</TT> function such that it gene");
+Txt("rates HTML only if a condition\n is met (which depends on the state of the zipper):</P>\n \n <UL>\n <P><TT>function Emit(t)<BR>\n { i");
+Txt("f (some_condition) document.write(t); }</TT></P>\n </UL>\n \n <P>To keep track of headings in HTML, we introduce a second function,");
+Txt(" similar\n to <TT>Emit</TT>, but taking the heading level as an additional argument.\n The purpose of this function is to put appr");
+Txt("opriate headings into the document:</P>\n \n <UL>\n <P><TT>function Heading(level, t) <BR>\n { if (...some_condition...) ... documen");
+Txt("t.write(t); ... }</TT></P>\n </UL>\n \n <P>Here <TT>some_condition</TT> and the elided code refer to JavaScript\n that detects if, a");
+Txt("t the current position and state vector of the document,\n the emitted text and headings should be visible or not. Essentially, w");
+Txt("e\n need to keep track of the fact that when a zipper is closed, all text up\n to the following heading of the same or a higher le");
+Txt("vel is contracted and\n thus not emitted. This is solved using counters to keep track of the current\n level and which levels are ");
+Txt("currently visible.</P>\n \n <P>The outcome of <TT>some_condition</TT> varies as the user opens or closes\n zippers. We associate th");
+Txt("is toggling code with inline images of zipper icons\n that reflect the state of the zipper. The code has the function of changing");
+Txt("\n the state vector and then instructing the browser to redisplay the current\n page:</P>\n \n <UL>\n <P><TT>function Toggle(headingn");
+Txt("o) {<BR>\n &nbsp;&nbsp;if (State(headingno)==1) then SetState(headingno, 0);<BR>\n &nbsp;&nbsp;else SetState(headingno, 1);<BR>\n &");
+Txt("nbsp;&nbsp;history.go(0);<BR>\n }</TT><BR>\n </P>\n </UL>\n \n <P>As before, heading numbers are assigned sequentially for each headi");
+Txt("ng\n in the document. In this implementation, the state of the zipper is equal\n to 1 when open and equal to 0 when closed. The <T");
+Txt("T>Heading</TT> function\n will emit HTML of the following general form (in this particular case,\n to close zipper number 5):</P>");
+Txt("\n \n <UL>\n <P><TT>&lt;H2&gt;<BR>\n &lt;A HREF=&quot;JavaScript: Toggle(5);&quot;&gt;&lt;IMG SRC=&quot;Open.gif&quot;&gt;&lt;/A&gt;<");
+Txt("BR>\n Heading Text<BR>\n &lt;/H2&gt;</TT><BR>\n </P>\n </UL>\n \n <P>The heading, inline image and invocation of the toggle function (");
+Txt("the\n lines above) are emitted by several JavaScript functions, as the zipper\n number to toggle varies according to the heading n");
+Txt("umber, and the inline\n image is dependent on the state of the zipper. </P>\n \n <P>Modifying the current contents of a page is don");
+Txt("e by forcing the browser\n to redisplay all of the currently visible page. This is done by calling\n <TT>history.go(0)</TT>, which");
+Txt(" fetches the top page in the history stack.</P>\n \n <P>Although redisplaying the complete page is inefficient, it seldom turns\n o");
+Txt("ut to be a problem, because the page is already located in the browser's\n cache.</P>\n \n ");
+Head(3, "", "Keeping Track of the Zipper State");
+Txt("\n \n <P>The only remaining problem is how to keep track of the state of the\n zippers. &quot;<A HREF=\"http://home.netscape.com/new");
+Txt("sref/std/cookie_spec.html\">Cookies</A>&quot;\n are a way to associate persistent client state with a specific document,\n and Java");
+Txt("Script allows us to inspect and to modify the document's cookie.\n We use cookies to save the zipper state of each document as a ");
+Txt("bit vector.\n </P>\n \n ");
+Head(3, "", "Where to Rewrite?");
+Txt("\n \n <P>The rewriting of the original HTML source into JavaScript can be controlled\n by the content provider or by the user. </P>");
+Txt("\n \n <P>Content providers can choose to instrument their Web server to transform\n documents dynamically as they are requested. Th");
+Txt("e most portable mechanism\n to achieve this is the Common Gateway Interface (CGI). In addition, there\n are vendor-specific ways t");
+Txt("o dynamically transform documents, such as Netscape\n server plug-ins and Microsoft ISAPI filters. </P>\n \n <P>The content provide");
+Txt("r can also transform documents in an offline fashion,\n and offer the transformed document through a standard Web server. We have");
+Txt("\n implemented a batch converter for Windows 95; it can be downloaded at <TT>http://www.research.digital.com/SRC/webbrowsing/zipp");
+Txt("o</TT>.\n (The <A HREF=\"script.html\">zipped</A>\n version of this paper</A> was prepared in this way.) </P>\n \n <P>When rew");
+Txt("riting is done by the content provider, the user does not need\n to take any action to see the zipper-enhanced version of the doc");
+Txt("ument.\n On the other hand, he can see the document in its original form only if\n the content provider chooses to make it availab");
+Txt("le. Thus, the user has maximum\n convenience and transparency, but no control.</P>\n \n <P> Alternatively, the user can be in contr");
+Txt("ol of the document transformation.\n The prototypical mechanism for doing so is through a local proxy. This\n approach gives the u");
+Txt("ser the freedom to decide which pages should be zipped\n up, at the cost of convenience (appropriate infrastructure must be insta");
+Txt("lled).</P>\n \n <P> Finally, the user could visit a &quot;zipping service&quot; Web site,\n enter an arbitrary URL into a form, and");
+Txt(" get in return a zipped version\n of the URL. This scenario is both convenient (there is no software to install)\n and places the ");
+Txt("user in control, but it is not transparent because the returned\n document shows the URL of the zipping service rather than that ");
+Txt("of the requested\n page. Also, this approach is tedious since it requires the user to type\n a URL. </P>\n \n ");
+Head(2, "", "<A NAME=\"discussion\"></A>Discussion");
+Txt("\n \n <P>Zippers work well on Web pages that use heading tags to indicate the\n logical structure of the page. Unfortunately, many ");
+Txt("authors use heading\n tags to produce particular formatting effects, such as font and point size\n changes, rather than to indicat");
+Txt("e logical structure. On such pages, users\n can simply turn off the zippers and the page is displayed conventionally.</P>\n \n <P> ");
+Txt("We know of one Web site that has hand-coded zippers <A HREF=\"#handcoded-zippers\">[7]</A>.\n The drawback of hand coding zippers i");
+Txt("s that it requires server interaction\n to expand or contract, and an exponential number of files to capture all\n states.</P>\n \n ");
+Txt("<P> Authors of long pages frequently add a table of contents to the top\n of the page, with entries in the table linking to the v");
+Txt("arious sections.\n Sometimes, each section appears on its own page, with &quot;next,&quot;\n &quot;previous,&quot; &quot;up,&quot;");
+Txt(" and &quot;top&quot; links on each\n page. Unfortunately, it is easy for the viewer to lose the big picture\n because the table of");
+Txt(" contents is not visible while looking at the contents\n of a particular section.</P>\n \n <P> An alternative to zippers for retain");
+Txt("ing the big picture while viewing\n the details is a multi-panel display, such as in SuperBook <A HREF=\"#superbook\">[1]</A>.\n One");
+Txt(" panel displays the table of contents and the other panel displays sections\n in the document. Clicking on an entry in the table ");
+Txt("of contents causes the\n other panel to display the corresponding part of the document. The user\n can also open and close levels ");
+Txt("of the table of contents, but the body of\n a section is always displayed in the second panel. A multi-panel display\n such as Sup");
+Txt("erBook could be implemented using frames, by adding appropriate\n HTML markups and scripting code to a source document.</P>\n \n <P");
+Txt("> Another related system is SoftQuad's Panorama Pro <A HREF=\"#panorama\">[6]</A>,\n which displays SGML documents using a two-pane");
+Txt("l viewer similar to that\n of SuperBook. Panorama Pro is also loosely integrated with the Web: The\n application can be configured");
+Txt(" as an external viewer of documents whose\n MIME type is SGML. Clicking on a URL in a document displayed by Panorama\n Pro will ca");
+Txt("use Netscape (or some other user-specified browser) to fetch\n <I>and display</I> the URL. Electronic Book Technologies' DynaText");
+Txt(" <A HREF=\"#ebt\">[4]</A>\n is another impressive SGML viewer; it is integrated into Netscape as a\n plug-in. It's important to real");
+Txt("ize, however, that Panorama Pro and DynaText\n are not Web browsers.</P>\n \n <P> </P>\n \n ");
+Head(2, "", "<A NAME=\"conclusion\"></A>Conclusion");
+Txt("\n \n <P>Viewing a Web page using zippers makes it possible to see details of\n parts of the page while maintaining the global cont");
+Txt("ext of the entire page.\n The larger the Web page - or the smaller the vertical space available for\n the display - the more benef");
+Txt("it there is to this technique. </P>\n \n <P>Using the heading tags to infer a document's outline structure has two\n limitations: F");
+Txt("irst, as mentioned, content providers in practice often do\n not use heading tags to indicate the logical structure of a document");
+Txt(". Second,\n content providers have no flexibility in the granularity of the material\n being elided. Both of these limitations cou");
+Txt("ld be addressed by adding a\n zipper tag to HTML. One possibility would be to parallel the DL, DT, and\n DD tags: the ZL tag would");
+Txt(" introduce a series of zippers; the ZT tag would\n be the heading of a zipper; and the ZD tag would be the body of the zipper.</P");
+Txt(">\n \n <P> Each of the implementations discussed in this paper has advantages\n and drawbacks. The advantages of the custom browser");
+Txt(" approach are responsiveness,\n ease of installation (there is no proxy to configure), and visual continuity\n when clicking zippe");
+Txt("rs. The drawback is that Web browsers are on a fast\n evolutionary trajectory and browsers built in a research lab cannot keep\n p");
+Txt("ace with the industry leaders. The advantage of the proxy approach is\n that it interoperates with standard Web browsers; the dra");
+Txt("wbacks are visual\n discontinuity when clicking a zipper, and some effort of configuring the\n proxy. The advantage of using the s");
+Txt("cript-based approach is that it works\n with most standard Web browsers, and it allows content providers to prepare\n documents wh");
+Txt("ich include zippers by default (without requiring any actions\n from the user). The drawbacks are visual discontinuity when click");
+Txt("ing a\n zipper and (at least at the moment) efficiency issues.</P>\n \n <P> </P>\n \n ");
+Head(2, "", "References");
+Txt("\n \n <DL compact>\n <DT>[<A NAME=\"superbook\"></A>1] </DT>\n \n <DD>About Bellcore's SuperBook(R) Document Browser.<BR>\n <TT><A HREF=");
+Txt("\"http://superbook.bellcore.com:80/SB/\">http://superbook.bellcore.com:80/SB/</A></TT></DD>\n \n <P> </P>\n \n <DT>[<A NAME=\"webcard\">");
+Txt("</A>2] </DT>\n \n <DD>Marc H. Brown.<BR>\n Browsing the Web with a Mail/News Reader.<BR>\n <I>Proc. of the 8th ACM Symposium on User");
+Txt(" Interface Software and Technology</I>,\n pages 197-198, November 1995. </DD>\n \n <DT>[<A NAME=\"deckscape\"></A>3] </DT>\n \n <DD>Mar");
+Txt("c H. Brown and Robert A. Shillner.<BR>\n DeckScape: An Experimental Web Browser.<BR>\n <I>Computer Networks and ISDN Systems</I>, ");
+Txt("<B>27</B>(1995) 1097-1104. </DD>\n \n <DT>[<A NAME=\"ebt\"></A>4] </DT>\n \n <DD>EBT--Product Information.<BR>\n <TT><A HREF=\"http://ww");
+Txt("w.ebt.com/docs/prodinfo.html\">http://www.ebt.com/docs/prodinfo.html</A></TT></DD>\n \n <P> </P>\n \n <DT>[<A NAME=\"trestle\"></A>5] <");
+Txt("/DT>\n \n <DD>Mark S. Manasse and Greg Nelson.<BR>\n </DD>\n \n <DD>Trestle Reference Manual.<BR>\n Research Report 68, Systems Resear");
+Txt("ch Center, Digital Equipment Corp., Palo\n Alto, CA, December 1991. </DD>\n \n <DT>[<A NAME=\"panorama\"></A>6] </DT>\n \n <DD>SoftQuad");
+Txt(": Panorama PRO.<BR>\n <TT><A HREF=\"http://www.sq.com/products/panorama/panor-fe.htm\">http://www.sq.com/products/panorama/panor-fe");
+Txt(".htm</A></TT></DD>\n \n <P> </P>\n \n <DT>[<A NAME=\"handcoded-zippers\"></A>7] </DT>\n \n <DD>UCI Bookstore Ordering Information.<BR>\n ");
+Txt("<TT><A HREF=\"http://bookweb.cwis.uci.edu:8042/Orders/orders-pt.html\">http://bookweb.cwis.uci.edu:8042/Orders/orders-pt.html</A><");
+Txt("/TT>\n </DD>\n </DL>\n \n </BODY>\n </HTML>");
+</SCRIPT>

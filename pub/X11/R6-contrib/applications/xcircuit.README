@@ -1,0 +1,280 @@
+XCircuit v1.6
+-----------------------------------------------------------------------------
+
+An X11 drawing program [especially for circuit schematics]
+By Tim Edwards
+August 1993 -- August 1997
+-----------------------------------------------------------------------------
+
+Compile-time notes:
+
+   All compile-time features are set from within Imakefile.
+
+   Decide where you want xcircuit and its library files to reside, and
+set XCIRCUIT_LIB_DIR, XCIRCUIT_MAN_DIR, and XCIRCUIT_BIN_DIR accordingly.
+A typical path (which is the default) would be /usr/local/lib/xcircuit/.
+
+  (Do not attempt to change the variables (and the programs) BUILTINS_FILE,
+PROLOGUE_FILE, and BUILTINS_DEP* unless you know what you are doing.)
+
+   Other compile-time options are explained in the Imakefile.
+
+   Make the same changes to Xw/Imakefile as you did to the top-level
+Imakefile (namely the CC and CCOPTIONS variables).
+
+   (The part of Xw used by xcircuit is conveniently attached to this
+distribution and can be found in the subdirectory Xw.  The (scaled down)
+Xw library is made as part of the distribution by default.  The Xw source
+code has been pruned down a bit, and numerous errors in typecasting have
+been repaired.  This version of Xw has successfully compiled under Irix
+5.3, Linux 2.0.8, Solaris, and Ultrix 4.2.)
+
+Xcircuit should be made using the following commands:
+
+   xmkmf
+   make
+   make install
+
+If the make grinds to a halt after running "makedep", just do "make"
+a second time.  I found this to be necessary under Solaris, but I don't
+know exactly why.
+
+The makefile should automatically install the application defaults
+file "XCircuit.ad" in /usr/lib/X11/app-defaults/XCircuit.
+
+If you have a system which does not use catman man pages, then
+install the man page "xcircuit.1" in a suitable manpage directory, such
+as /usr/local/man/man1/xcircuit.1.
+Otherwise, if you trust what imake does, use:
+
+   make install.man
+
+If the program is extremely slow in rendering the screen or if the
+system tends to swap during program execution, you may need to
+undefine DO_BUFFER in the Imakefile.  Clean, no-flicker rendering
+is made possible by drawing on a Pixmap and then doing a quick copy
+from the Pixmap to the screen.  Depending on the default screen
+depth (usually 8 or 16 bits) and the window size, the Pixmap can take
+a MB of memory or more.  Systems with too little memory or systems
+(like Intel-based computers) without a video card with Bit-BLT
+(block transfers) can erase all the gains of graphics buffering.
+Xcircuit will operate fine without buffering, but the screen will
+flicker every time there is a refresh;  consequently, without
+buffering the system is designed not to refresh as often, and there
+will be more "pixel trash" on the screen.  It is expected that under
+these conditions the user will simply use the space bar to refresh
+the screen as needed.
+
+-----------------------------------------------------------------------------
+
+Rationale:
+
+   This program was written with a number of things in mind.  The major
+point in writing it was that I found all of the drawing programs freely
+distributed at the usual X11 ftp sources (ftp.uu.net, export.lcs.mit.edu,
+etc.), which includes xpic and xfig, and even some other programs like
+idraw and commercial programs like framemaker, were lacking in some manner.
+Some of them, like xpic, are missing fundamental parts, while others, like
+xfig and framemaker, have a cumbersome user interface and require
+inordinately large amounts of time to create simple pictures.  The really
+powerful programs like Adobe Illustrator are, naturally, expensive.
+There has been a long-standing tradition of making MacDraw lookalikes which
+I find particularly disturbing, since a number of features of that GUI are
+fundamentally screwed up, including the dependence on a black-and-white color
+scheme for things such as grid lines and edit points which can make the screen
+cluttered and difficult to work with.  I have chosen to freely ignore all such
+standards in cases where they seem to hinder rather than help the user.
+   Disclaimer:  The above comments refer to versions of the abovementioned
+programs available as of 1993 and do not necessarily reflect the programs'
+current status.  Particularly the latest (from 1995 or so) version of xfig 
+is quite good, though it continues to have a "MacDraw" feel to it.
+
+   The properties of xcircuit are as follows:
+
+A) Structural backbone
+   1) There are five drawing elements which are considered "primary".  
+      These are as follows:  
+
+      a) polygon (multiple lines which may or may not be closed and filled)
+      b) arc (ellipse segment which may be closed and/or filled as above)
+      c) label (any text)
+      d) curve (based on the PostScript "curveto" algorithm)
+      e) object instance (see below)
+
+   2) There are two drawing elements which are considered "secondary", which
+      is to say, contain instances of primary elements.  These are:
+
+      a) path (a connected series of polygons, arcs, and/or curves)
+      b) object (something containing polygons, arcs, labels, 
+		 curves, paths, and instances of other objects)
+
+      Each object is instanced by a primary element called the "object
+      instance", a self-contained unit which allows an object to be scaled, 
+      rotated, and translated within another object.  Since objects contain
+      object instances and object instances point to objects, there is a
+      two-step recursion which is central to the concept of xcircuit.
+
+   3) There is one primary object instance called the TopObject, which is
+      the program window, and its associated object, which is whatever
+      appears on the screen.  TopObject is a pointer, so that any object
+      in memory may be the top object, allowing a push/pop edit stack.
+      All other objects are organized in an array of pointers called the
+      Library.  The Library is filled on startup with the contents of a
+      Library file, and is expanded whenever a new object is created.
+      
+      Actually, there are many different TopObjects, called "pages",
+      which can be switched between at will by typing the number of
+      the page, 1 through 9 and 0 for page 10, or through the "Page"
+      menu command, which allows access to as many pages as are
+      defined.  The "load" and "save" commands act only on the
+      present page (unless multiple pages are loaded at a time), as
+      do all the drawing commands.
+
+   4) All elements allocate memory as they are created and release the
+      memory as they are destroyed, so the only limit on the number of
+      elements in a drawing is the memory of the workstation.
+
+B) Input/Output
+
+   1) All input and output is in PostScript, albeit a version of PostScript
+      with extremely restricted syntax:  xcircuit is in no sense a PS
+      interpreter!  The primary element types are defined as procedures
+      in the PostScript prologue;  all secondary elements are defined as
+      "def" structures in PostScript, the only restriction being that no
+      definition can be called before it is defined.
+
+   2) Text is vector-drawn, in order to best match the flexibility of
+      PostScript, which unlike X11 allows text to be scaled to any size
+      and rotated to any orientation.  The limitation is that different
+      font types (other than some characters from the "Symbol" font)
+      cannot be differentiated on the drawing window.  The quality of
+      the text on the screen is relatively poor;  however, the end
+      product of xcircuit is the PostScript file, which does not suffer
+      from those limitations.  Spacing of the text is accurate under
+      all scalings except for user-defined fonts, for which spacing
+      information is not available.
+
+   3) X11 does not have any capability for generalized curves (splines).
+      Therefore, splines are constructed by an N-segment approximation
+      which internally looks like a polygon.  The PostScript output is a 
+      smooth curve instead of the approximation.
+
+   4) X11 does not have any capability for generalized ellipses (ellipses
+      under any rotation).  Similarly to the splines, arcs are constructed
+      by an N-segment approximation.
+
+   5) Implementing all arcs and curves as N-segment approximation allows
+      the possibility of general paths, or sequences of polygons, arc
+      sections, and curves which form a path that can be bordered, closed
+      and/or filled like an individual arc, curve, or polygon.
+
+   6) Other than the qualitative appearance of the text, the screen output
+      of xcircuit is meant to be the closest possible match to the
+      rendering of the PostScript output.  A PostScript hack allows
+      stipple pattern fills to be effectively "transparent" (something
+      that PostScript does not do naturally).  However, the effect is
+      *extremely* device-dependent because it overrides the printer's
+      halftoning operators.  One effect of this is that halftoning
+      will look abnormally large when viewed at screen resolutions,
+      e.g., with GhostScript.
+
+C) User Interface
+
+   1) The mouse button system and the object library are based on the
+      Caltech circuit-simulation program "log" (either "analog" or "diglog").
+      As is usual for most applications, mouse button 1 is used to select
+      things or cycle between selections, button 2 usually terminates a
+      command, and button 3 will abort a command.  In addition, button 1
+      has a function called "grab", which occurs after the button has
+      been continually pressed for a short length of time (about 1/5 second).
+      As the name implies, "grab" grabs hold of an element which can then
+      be moved around the screen.
+
+      Because this program is tailored to circuit drawing, the most common
+      functions are drawing lines and moving object instances.  Therefore,
+      these two functions are made directly available from the mouse
+      button 1 (ater a "tap" or a "grab", respectively).  The next most
+      common function is selection of elements singly or in groups.
+      Button 2 can be used to select an item if tapped, and if pressed
+      and held down, a box will be drawn and everything inside that box
+      selected when the button is released.  All other commands are 
+      available from the pulldown menus and/or from the keyboard as
+      single-key macros.  Keyboard macros are quicker, since they act
+      on the present cursor position, whereas menu commands require an
+      extra step.
+      
+      The libraries are intended to provide a convenient way to store and
+      retrieve elements of a picture which will be used more than once.
+      For the application of circuit drawing, a built-in library provides
+      basic objects such as transistors, amplifiers, resistors, capacitors,
+      arrows, circles, power and ground symbols, and the like.  This file
+      ("builtins.lps") is loaded on startup;  the program first looks in
+      the current directory, and then searches in a given global directory
+      (something like ~cad/lib/xcircuit/) if it could not find it initially.
+      Thus each user can add to or modify the file of builtins to reflect
+      personal taste.  Since the PostScript output contains all object
+      definitions, these changes to the built-in functions are inherently
+      transferrable.  The program checks objects with the same name for
+      equivalence of their contents, and changes names as necessary to
+      avoid conflicts.
+
+      An additional library, the user library, contains all of the
+      objects which are created (using the "make object" command)
+      during a session or objects which are loaded from a file but
+      do not belong to the built-in library.  The user library can
+      be saved by itself and reloaded later either into the user
+      library or into the built-in library.  This is the way to
+      create a personalized built-in library set.
+
+      The special file "builtins.lps" can be edited to include lines
+      such as the following:
+	% filename loadlibrary
+      The loadlibrary command will automatically include another
+      library file.  This method makes it convenient to divide up
+      libraries into separate files according to (for instance)
+      function (digital, analog, clip art, etc.), and use the
+      loadlibrary commands to choose which ones will be loaded
+      on startup.  Caveat:  If the order of loading is such that
+      an object contains an instance of another object which has
+      not yet been loaded, xcircuit will complain.
+
+      By default, libraries have the extension ".lps".  As they
+      contain only macros, they cannot be displayed with any
+      PostScript interpreter.  The "loadlibrary" command is
+      hidden behind a PostScript comment (%) character, and so
+      is not recognized by general-purpose PS interpreters.
+
+   2) Xcircuit has an absolute sense of zooming and snap-to grid.  Objects
+      scale absolutely;  line widths and text sizes will increase/decrease
+      proportionally with the zoom, as well as dot/dash spacing and all
+      other features.  Xcircuit does have a minimum integer grid in
+      coordinate space, which translates to 0.005 inches at an output scale
+      of 1.  The maximum zoom scale gives a screen size translating to
+      about 100 by 100 inches at an output scale of 1.  The effective
+      scale can be varied by changing the output scale (reached from the
+      "File/Write" menu selection) in order to fit a drawing to a page or
+      to get a grid matched to a specific dimension.  A separate scale
+      parameter changes the scale of the reported position relative to
+      the output scale (as it will appear on a printed page).
+
+      The snap-to grid is an all-important feature for circuit drawing,
+      wherein it is critical that wires line up properly with one another.
+      In xcircuit, there is no way to get off the snap-to grid except by
+      turning the snap function off and physically pushing elements off
+      the grid.  In any case, objects can always be returned to the snap
+      grid with the "snap" function (key 'S').
+
+-----------------------------------------------------------------------------
+
+Using Xcircuit:  See the manpage, "xcircuit.1"
+
+-----------------------------------------------------------------------------
+
+Online tutorial: See
+     "http://olympus.ece.jhu.edu/~tim/programs/xcircuit/tutorial.html"
+
+-----------------------------------------------------------------------------
+
+Things to do: See the file "Manifest"
+	  
+-----------------------------------------------------------------------------

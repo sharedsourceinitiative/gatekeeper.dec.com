@@ -1,0 +1,250 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.73 [en] (WinNT; U) [Netscape]">
+   <title>navarro</title>
+</head>
+<body>
+&nbsp;
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" HEIGHT="1%" >
+<tr>
+<td>
+<center><b><font size=+1>Feedback-directed binary code specialization</font></b></center>
+</td>
+</tr>
+</table></center>
+
+<br>&nbsp;
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" >
+<tr>
+<td>
+<center><b>Juan Navarro</b>
+<br><b>Rice University</b>
+<br><b>with</b>
+<br><b>Sharon Smith, David Hunter</b>
+<br><b>Alpha Technology Solutions</b></center>
+</td>
+</tr>
+</table></center>
+
+<br>&nbsp;
+<br>&nbsp;
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="70%" HEIGHT="1%" >
+<tr>
+<td><b>1. Introduction</b>
+<p>The current approach to binary performance optimization is to apply
+all known or available optimizations at once. The problem is that there
+are complex -- sometimes negative -- interactions between individual optimizations,
+and deciding what subset to apply is a difficult task.
+<p>The use of profile-directed feedback to make that decision can help,
+because optimization is done in accordance to the actual program behavior.
+In addition, run-time information that is not available to the compiler
+can be used to discover new optimization opportunities.
+<p>Specialization or partial evaluation is an optimization technique that
+eliminates unnecessary generality from an application; it can benefit from
+profile-directed feedback to identify that excess generality.
+<p>The goal of this project is to study the potential of specialization
+in isolation of other optimizations. In the long term, the results are
+intended to help in realizing cost-benefit analysis of specialization,
+which allows for adaptation to specific workloads.
+<br>&nbsp;
+<p><b>2. Spector</b>
+<p>Spector is an off-line binary specializer that we built for this project.
+It optimizes entire functions for a particular value of one of its arguments.
+<p>The binary is first profiled to determine what the hot functions are.
+Then, hot functions are instrumented at the entry point to detect frequent
+values passed in the arguments. The instrumented program is run and the
+results are used to select what functions to specialize and for what argument
+and value.
+<p>To specialize a function, Spector builds the function's control-flow
+graph, propagates known values through the graph by interpreting each basic
+block's code, removes unreachable blocks, and deletes instructions mainly
+by means of constant folding. Guard code is inserted to fall back to the
+original function when not in the presence of the special case. If not
+enough instructions are deleted, the specialization for that function is
+discarded. A better approach would be to try to optimize for a different
+argument, but Spector currently does not do that.
+<p>Spector uses Atom to profile, instrument, and navigate the binary. Ideally,
+L'Atom (a Linux port and extension of Atom, that supports arbitrary modifications)
+would be used to rewrite the binary, but it was not available when Spector
+was built. The temporary solution was to use the application's source code
+(which will not be required once L'Atom is available) to produce assembly
+code. Since there is a one-to-one correspondence between machine instruction
+in the binary file and assembly instructions in the assembly listing, an
+ed script line is generated for each modification. Perl code is used to
+glue everything together.
+<p>Due to a bug in the compiler, this approach didn't work for some programs,
+especially large ones. When a workaround was found it was to late to try
+it.
+<br>&nbsp;
+<p><b>3. Results</b>
+<p>The table below shows the results for 6 small benchmark programs. The
+column "%" shows the percentage of cycles spent in the hottest specialized
+function. Column "Deleted" tells how many instructions where deleted from
+that function, out of the total number of instructions in the original
+version of the function.
+<br>&nbsp;
+<br>&nbsp;
+<center><table BORDER COLS=4 WIDTH="65%" >
+<tr>
+<td>
+<center>Program&nbsp;</center>
+</td>
+
+<td>
+<center>%&nbsp;</center>
+</td>
+
+<td>
+<center>&nbsp;Deleted Speedup&nbsp;</center>
+</td>
+
+<td>
+<center>(%)</center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center>fib&nbsp;</center>
+</td>
+
+<td>
+<center>&nbsp;100.0&nbsp;</center>
+</td>
+
+<td>
+<center>5/29</center>
+</td>
+
+<td>
+<center>-11.1</center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center>hanoi&nbsp;</center>
+</td>
+
+<td>
+<center>100.0</center>
+</td>
+
+<td>
+<center>11/53</center>
+</td>
+
+<td>
+<center>-1.5</center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center>linpack</center>
+</td>
+
+<td>
+<center>&nbsp;87.0</center>
+</td>
+
+<td>
+<center>6/57</center>
+</td>
+
+<td>
+<center>0.0</center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center>sim</center>
+</td>
+
+<td>
+<center>15.5</center>
+</td>
+
+<td>
+<center>4/857</center>
+</td>
+
+<td>
+<center>+1.0</center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center>fft&nbsp;</center>
+</td>
+
+<td>
+<center>56.0</center>
+</td>
+
+<td>
+<center>2/193</center>
+</td>
+
+<td>
+<center>+1.8</center>
+</td>
+</tr>
+
+<tr>
+<td>
+<center>dhrystone</center>
+</td>
+
+<td>
+<center>10.8&nbsp;</center>
+</td>
+
+<td>
+<center>7/53&nbsp;</center>
+</td>
+
+<td>
+<center>+3.7</center>
+</td>
+</tr>
+</table></center>
+
+<blockquote>&nbsp;</blockquote>
+
+<p><br>The specialized functions in fib and hanoi are recursive ones, and
+Spector specialized them for the base case. As a consequence, the overhead
+of the guard code is paid for nothing. This problem is easy to solve.
+<p>The noise in the experiments was negligible; therefore, a 1% speedup,
+as small as it is, does represent an improvement because it's clearly above
+the noise.
+<br>&nbsp;
+<p><b>4. Conclusions and future work</b>
+<p>More experimentation is required to better assess specialization's potential
+and discover formulas or heuristics to predict whether a given specialization
+would yield speedups or slowdowns. From the table above, the number of
+instructions deleted is clearly useless as a predictor.
+<p>Many improvements can be done, including the following:
+<blockquote>- There is a long list of special cases that allow for more
+instruction deletions and are not currently being detected.
+<p>- Code modification introduces new optimization opportunities. A final
+pass with standard optimizations such as instruction rescheduling and dead
+code removal would most likely pay off.
+<p>- Polyvariant specialization: specialize for more that one argument
+per function or more than one value per argument.
+<p>- Specialize also the original code for the complement of the special
+case, since it will never be executed when the special case holds.
+<p>- Floating point operations were not considered at this time.
+<p>- Ignoring function boundaries and specializing for sets of basic blocks
+instead, would increase specialization opportunities.
+<br>&nbsp;</blockquote>
+&nbsp;</td>
+</tr>
+</table></center>
+
+</body>
+</html>

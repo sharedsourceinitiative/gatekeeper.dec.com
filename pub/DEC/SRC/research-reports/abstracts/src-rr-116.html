@@ -1,0 +1,41 @@
+<HTML><HEAD><TITLE>
+Digital Systems Research Center: Report 116</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Research Report 116</H1>
+<P>
+<H1>Distributed Garbage Collection for Network Objects</H1>
+<HR>
+<H2>Andrew Birrell, David Evers, Greg Nelson, Susan Owicki, Edward Wobber</H2>
+<b>December 15, 1993</b><BR><i> 18 pages</i>
+<P>
+In this report we present a fault-tolerant and efficient algorithm for
+distributed garbage collection and prove its correctness. The
+algorithm is a generalization of reference counting; it maintains a set
+of identifiers for processes with references to an object. The set is
+maintained with pair-wise communication between processes, so no global
+synchronization is required. The primary cost formaintaining the set
+is one remote procedure call when an object reference is transferred to
+a new process for the first time. The distributed collector collaborates 
+with the local collector in detecting garbage; any localcollector may
+be used, so long as it can be extended to provide notification when an
+object is collected. In fact, the distributed collector could be used
+without a local collector; in that case, the programmer would insert
+explicit "dispose" commands to release an object.  The algorithm was 
+designed and implemented as part of the Modula-3 network objects system, 
+but it should be suitable for a wide range of applications. It tolerates
+communication and process failure, and can reclaim the space for objects 
+held by a crashed process.  The algorithm balances functionality,
+performance, and fault-tolerance in a way that makes it highly
+practical to use in implementing distributed systems.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-116.ps.Z">PostScript compressed with UNIX compress</A></B> -- 84 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-116.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 64 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-116.ps.zip">PostScript compressed with ZIP</A></B> -- 64 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-116.ps">PostScript</A></B> -- 216 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-116.pdf">Portable Document Format (PDF)</A></B> -- 184 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

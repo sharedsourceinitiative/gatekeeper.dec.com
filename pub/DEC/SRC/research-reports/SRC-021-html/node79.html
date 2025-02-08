@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Files</TITLE>
+<META NAME="description" CONTENT="Files">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node80.html">
+<LINK REL="previous" HREF="node78.html">
+<LINK REL="up" HREF="node74.html">
+<LINK REL="next" HREF="node80.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html1177"
+ HREF="node80.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html1173"
+ HREF="node74.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html1167"
+ HREF="node78.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html1175"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html1176"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1178"
+ HREF="node80.html">Communication</A>
+<B> Up:</B> <A NAME="tex2html1174"
+ HREF="node74.html">Running Ultrix Applications on</A>
+<B> Previous:</B> <A NAME="tex2html1168"
+ HREF="node78.html">Security</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04095000000000000000">
+Files</A>
+</H2>
+<P><A NAME="1744">&#160;</A>
+Taos supports arbitrarily long path names, although it still limits each
+component of a path name (as defined by the nonterminal <TT>&#60;</TT>pname<TT>&#62;</TT> in the
+syntax defined in Section <A HREF="node28.html#Gilroy">2.6</A>, page <A HREF="node28.html#Gilroy"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>) to 255
+characters, as does Ultrix.
+<P><A NAME="1749">&#160;</A>
+Taos supports access to remote files via kernel calls just as through the
+OS interface.  The kernel interprets path names starting with # as remote.
+To access a file #foo in the current directory, use ./#foo instead. For
+more information on remote path names see Section <A HREF="node28.html#Gilroy">2.6</A>, page
+<A HREF="node28.html#Gilroy"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.  Any operation on a remote file may return EIO, signifying
+that a remote file server call failed (see OS.RemoteFileEC).  This may
+cause programs that don't check error returns carefully to fail in strange
+ways.  Note that a remote file operation is not interruptable by an
+asynchronous signal, so for example a Control-C may take a long time to
+respond.
+<P><A NAME="1752">&#160;</A>
+<A NAME="1753">&#160;</A>
+Taos allows an unlimited number of descriptors.  However, the select
+kernel call limits its mask parameters to 32 bits, and the dup kernel call
+only duplicates descriptors less than 64.
+<P><A NAME="1754">&#160;</A>
+<A NAME="1755">&#160;</A>
+<A NAME="1756">&#160;</A>
+Taos does not serialize the write kernel call with respect to reads and
+other writes of the same bytes of the same file.
+<P><A NAME="1757">&#160;</A>
+<A NAME="1758">&#160;</A>
+Taos doesn't allow the root directory of the file system to be changed;
+the chroot kernel call returns EPERM unless called with a path name of /
+(and an effective user name of root).
+<P>
+Taos makes up the device numbers for file systems on the fly as file
+systems are accessed. These device numbers may be different on each boot
+of the system, although they will be unique and invariant during one run.
+<P><A NAME="1759">&#160;</A>
+<A NAME="1760">&#160;</A>
+Taos maintains the atime, ctime, and mtime files attributes to the nearest
+microsecond.  The times returned by the stat and fstat kernel calls
+include the microsecond information in the `spare' field following each
+time field.  The atime field for a device file is not kept up to date.
+(This is for efficiency.)
+<P><A NAME="1761">&#160;</A>
+Ultrix supports `holes' in files by not allocating disk storage for large
+unwritten regions, but Taos allocates and zeroes such regions.
+<P><A NAME="1762">&#160;</A>
+Taos may allow more levels of symbolic links than Ultrix before returning
+the ELOOP error on a a path name lookup, especially when multiple machines
+are spanned.  The length of the value of a symbolic link is unlimited.
+<P><A NAME="1763">&#160;</A>
+<A NAME="1764">&#160;</A>
+Pipes on Taos support non-blocking I/O.  A program can (but typically will
+not) be given a pipe with an internal buffer size different than 4096; a
+pipe created by the pipe kernel call always has a 4096-byte buffer.
+<P>
+Appendix <A HREF="node84.html#MenloPark">D.10</A>, page <A HREF="node84.html#MenloPark"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>, lists the devices
+supported by Taos.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1177"
+ HREF="node80.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html1173"
+ HREF="node74.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html1167"
+ HREF="node78.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html1175"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html1176"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1178"
+ HREF="node80.html">Communication</A>
+<B> Up:</B> <A NAME="tex2html1174"
+ HREF="node74.html">Running Ultrix Applications on</A>
+<B> Previous:</B> <A NAME="tex2html1168"
+ HREF="node78.html">Security</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

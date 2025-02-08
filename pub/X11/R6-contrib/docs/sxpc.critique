@@ -1,0 +1,38 @@
+From: hal@pollux.cs.uga.edu (Hal N. Brooks)
+Newsgroups: comp.os.linux.misc
+Subject: sxpc critic recants (data included)
+Date: 18 Nov 1993 10:00:14 GMT
+Organization: University of Georgia, Athens
+Message-ID: <2cfh3e$7mp@hobbes.cc.uga.edu>
+
+
+In short, this critic of SXPC must confess that it is useful.
+
+My previous, less formalized observations were made with
+respect to sxpc-0.9, but this more objective look made use
+of sxpc-1.01, which I believe has benefitted from some
+enhancements.
+
+For those who want the executive summary, below (from worst to
+best) are what I assess to be the advantages of using various
+compression techniques with X11.
+
+                                      V.42bis:  84% speedup
+                             Sxpc compression: 109% speedup
+                   V.42bis + Term compression: 123% speedup
+              Term compression (i.e., txconn): 128% speedup
+V.42bis + Term compression + Sxpc compression: 146% speedup
+          Term compression + Sxpc compression: 147% speedup
+                   V.42bis + Sxpc compression: 148% speedup
+
+In brief, it is counterproductive to use TERM compression along
+with V.42bis compression, presumably because they are based on
+the same algorithm.  Therefore, if you use TERM compression (without
+SXPC), you should see a 2% speedup by disabling V.42bis.
+
+If your modem doesn't have V.42bis compression, then you are well
+served by using a combination of SXPC and TERM compression.
+
+If you do have a modem with V.42bis compression, you should see a
+speedup of about 9% by using SXPC in conjunction with V.42bis, over
+using TERM compression a

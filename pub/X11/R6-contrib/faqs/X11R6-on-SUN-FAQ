@@ -1,0 +1,131 @@
+   X11R6 on sparc FAQ
+
+-------------------------------------------------------------------------------
+The original of this file lies on "http://mistral.enst.fr/~pioch/X11/". If you
+have WWW access, the hypertext version should be easier to decypher. Thanks to
+Kaleb Keithley (XConsortium) for his help.
+
+The views herein are not those of the XConsortium, and the patches or fixes are
+not official, except when marked otherwise, such as ``XConsortium fix-01''. You
+must be present to win, no warranty, use at your own risk, void where
+prohibited and not recommended for children. (read the disclaimer in my home
+page). You are welcome to email me any comments about this. Please use an
+appropriate subject in your mails, starting with the ``X11R6:'' keyword.
+-------------------------------------------------------------------------------
+Before thinking of anything else,
+
+Read the RELNOTES and apply X11R6 fix-12!
+
+-------------------------------------------------------------------------------
+
+Contents
+
+   * General Tips
+   * ld.so: R5 apps won't run (SunOS 4.1.3 only)
+   * the compose key
+
+   * binary distribution for sun3
+   * binary distribution for sparc-sun-sunos4.1.3
+   * binary distribution for sparc-sun-solaris2.4
+
+   * Benchmark compared to OpenWindows 3
+
+-------------------------------------------------------------------------------
+
+General Tips
+
+   *  On Solaris systems, if you have gcc installed but not Sun CC, you need to
+     symlink 'cc' to 'gcc', since X11R6 forces the initial imake compilation
+     via 'cc'. Thus, the first 'cc' in the path must be 'gcc'.
+   *  Don't use gas or gnu-ld on your system, they work worse than the
+     sun-shipped ones, assuming you have applied Sun ld patches 100170-06,
+     100170-10... Hence, delete gas or gnu-ld, or the build will fail miserably
+     with ``as: warning: -k is an unknown flag''.
+   *  Don't #define BuildXInputExt YES
+     or at compile time, something won't link in X11R6/xc/programs/Xserver/Xi/.
+     The missing functions are in a file called stubs.c, which is not in the
+     Imakefile OBJS.
+
+          ``It would be incorrect to compile stubs.c by default. The
+          functions in that file must be provided by the ddx that is
+          supporting extension devices. See, for example,
+          xc/programs/Xserver/hw/hp/input/x_hilinit.c. stubs.c is really
+          just a form of documentation (admittedly a very misleading
+          one).'' (XConsortium)
+
+-------------------------------------------------------------------------------
+
+ld.so problems with R5-compiled apps (SunOS 4.1.3 only)
+
+Symptoms: Some applications compiled with R5 dynamically won't run with R6,
+ld.so barfs about some undefined functions.
+
+If you have the R6 libs path before R5 in your LD_LIBRARY_PATH, and defined the
+XKB stuff (default), the applications will take some of their shared libs in
+the R6 pool, except libX11.so.* which doesn't exist anymore, since it's now
+named libX11kb.so.4.20. This is because the XConsortium has not done a major
+increase in the SunOS 4.1.x major shared lib number...
+
+Fix: Add a symbolical link, from libX11.so.4.20 to libX11kb.so.4.20
+-------------------------------------------------------------------------------
+
+The compose key won't work
+
+The XConsortium says it's the applications fault, and they won't provide any
+patch for it. Who did the hack for X11R5 says he won't for R6.
+
+     ``For example with any correctly written Motif, OLIT, or R6 Xaw based
+     product, I make certain that my LANG environment variable is set,
+     e.g. on Suns I do 'setenv LANG C; setenv LC_CTYPE iso_8859_1', on an
+     SGI, I do 'setenv LANG fr_BE' or perhaps 'setenv LANG nl_BE', on an
+     HP I do 'setenv LANG french', then I run the program. Then compose
+     sequences work.
+
+     Note: The definition of a correctly written program, in this case, is
+     defined as a program that calls XtSetLanguageProc prior to
+     initializing the Intrinsics. [...]
+
+     xterm has not been internationalized, so compose processing won't
+     work. You might try hterm or cxterm; Martin Forssen
+     (maf@math.chalmers.se) has made a patch to xterm to internationalize
+     it: http://www.dtek.chalmers.se:80/~maf/i18n/. As much as I think
+     xterm ought to be internationalized, I'm doubtful that it will happen
+     any time soon. If you really need xterm to be internationalized then
+     you'll have to use one of the above options.'' (Kaleb Keithley,
+     XConsortium)
+
+Note: If you want cheap internationalization for GNU emacs, use Bernd Petersohn
+(muecke@cs.tu-berlin.de) latin1-mode.el mode.
+-------------------------------------------------------------------------------
+
+X11R6 binary distribution for sun3/sunos 4.1
+
+Vincent Fox (vincent@cad.gatech.edu) has made a binary distribution available
+on ftp://ftp.cad.gatech.edu/pub/X11R6/. Details here.
+-------------------------------------------------------------------------------
+
+X11R6 binary distribution for sparc-sun-sunos4.1.3
+
+ftp://ftp.enst.fr/pub/unix/X11/X11R6/ ftp server also holds the R6 distribution
+and fixes, however you should seek a closer server to download it.
+
+A binary distribution of X11R6 for sparc-sun-sunos4.1.3, compiled with gcc, is
+also available there, in ftp://ftp.enst.fr/pub/unix/X11/X11R6/local/. The
+tar.gz file is 20 Megabytes big. Be sure to check out the various README* and
+site.def we have used, since you have no need to download it if you don't want
+the same compilation setup.
+
+Also, it's compiled with ProjectRoot defined as /usr/X11R6, so if you planned
+to install it somewhere else and can't make a symbolical link to the new place,
+bad luck.
+-------------------------------------------------------------------------------
+
+X11R6 binary distribution for sparc-sun-solaris2.4
+
+Binary distribution for Solaris 2.4, available from
+ftp://ftp.enst.fr/pub/unix/X11/X11R6/local/.
+-------------------------------------------------------------------------------
+                 © 5 Aug 1995, Nicolas Pioch - Top - Up - Info
+
+ Thanks to the BMW Foundation, the WebMuseum mirrors, partners and contributors
+                              for their support.

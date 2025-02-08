@@ -1,0 +1,29 @@
+ 				AVAILABLE ELECTRONICALLY
+
+    "An Algorithm for Data Replication."
+    Timothy Mann, Andy Hisgen, and Garret Swart.
+    June 1, 1989.  55 pages.
+
+Authors' Abstract
+
+    Replication is an important technique for increasing computer 
+    system availability.  In this paper, we present an algorithm for 
+    replicating stored data on multiple server machines.  The algorithm 
+    organizes the replicated servers in a master/slaves scheme, with 
+    one master election being performed at the beginning of each 
+    service period.  The status of each replica is summarized by a 
+    set of monotonically increasing epoch variables.  Examining the 
+    epoch variables of a majority of the replicas reveals which 
+    replicas have up-to-date data.  The set of replicas can be changed 
+    dynamically.  Replicas that have been off-line can be brought 
+    up to date in background, and witness replicas, which store the 
+    epoch variables but not the data, can participate in the majority 
+    voting.  The algorithm does not require distributed atomic 
+    transactions.  The algorithm also permits client machines to cache 
+    copies of data, with strict cache consistency being ensured by 
+    having the replicated servers keep track of which clients have 
+    cached what data.  The work reported in this paper is part of 
+    an ongoing project to build a new replicated distributed file 
+    system with client caching, called Echo.
+
+

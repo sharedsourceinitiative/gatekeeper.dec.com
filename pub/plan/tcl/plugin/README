@@ -1,0 +1,13 @@
+ see http://sunscript.sun.com/plugin/
+
+ The solaris, sunos4, linux, and Mac distributions were built by the
+ SunScript team (Jacob Levy, Laurent Demailly, Jim Ingham).
+
+ IRIX plugin compiled and contributed by <robert.r.ratcliff@boeing.com>
+
+ Alpha OSF1 plugin compiled and contributed by Daniel J. Lashua
+     <djl@stftx9.irngtx.tel.gte.com>
+     It was built on (uname -a)
+     OSF1 stftx9.irngtx.tel.gte.com V4.0 878 alpha
+     LibC Revision = 1.1.21.3  (1997/03/06)
+

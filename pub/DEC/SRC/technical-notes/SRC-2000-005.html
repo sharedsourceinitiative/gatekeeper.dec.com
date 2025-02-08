@@ -1,0 +1,178 @@
+<HTML>
+<HEAD>
+<TITLE>SRC Technical Note 2000-005</TITLE>
+</HEAD>
+<BODY bgcolor="#ffffff">
+<HR>
+<CENTER>
+<H2><B>SRC Technical Note</B></H2><P>
+<h3><B>2000-005</B></h3><P>
+<h3>October 28, 2000</h3><P>
+<HR>
+<H2>On variants of block-sorting compression using context from both the
+left and right</H2>
+<P>
+<h3>Mike Burrows and Li Zhang</h3>
+<HR>
+<P>
+<IMG SRC="http://www.research.digital.com/SRC/pics/cpq-logo.gif"
+ALT="Compaq"><BR>
+<B>Systems Research Center</B><BR>
+130 Lytton Avenue<BR>
+Palo Alto, CA 94301<BR>
+<A HREF="http://www.research.digital.com/SRC/"
+>http://www.research.digital.com/SRC/</A>
+<P>
+<HR>
+Copyright 2000 Compaq Computer Corporation. All rights reserved
+<HR>
+</CENTER>
+
+<h3>Abstract</h3>
+<p>
+The block-sorting text compression algorithm can be viewed as associating a
+context with each character to be compressed, and then sorting the characters
+on their contexts.  Normally, the context associated with each character is the
+string to the left of the character.  Recently, Ratushnyak suggested that it
+might be possible instead to build a context by interleaving characters taken
+alternately from the left and right.  We show that transformations of this type
+are not reversible in general unless additional information is supplied.
+Further, the amount of additional information needed to reverse the
+transformation is necessarily large, and so such transformations are unlikely
+to be of interest as part of a compression algorithm.
+
+<h3>Introduction</h3>
+
+<p>
+The first step of the block-sorting compression algorithm [<a href="#bw">1</a>] transforms
+a string by sorting its characters on their left-contexts.  (The left-context
+of character <i>i</i> is the string composed from characters <i>i</i>-1, <i>i</i>-2, <i>i</i>-3,
+..., treating the string as cyclic.)  The transformation is interesting
+because it is reversible and because it yields a result that is amenable to
+compression by straightforward algorithms.
+
+
+<p>
+Recently, A. Ratushnyak suggested a possible variant of the block-sorting
+compression algorithm that would sort the characters on contexts composed of an
+interleaving of the left- and right-contexts [<a href="#ratushnyak">2</a>].  In his variant, the
+context for character <i>i</i> consists of the string composed from characters
+<i>i</i>-1, <i>i</i>+1, <i>i</i>-2, <i>i</i>+2, <i>i</i>-3, <i>i</i>+3 etc.  Context information from both
+sides is likely to be a better predictor for a character than context
+information from one side, and indeed this suggestion results in significantly
+better compression of the result of the transformation.
+
+<p>
+Ratushnyak provides a worked example demonstrating how one can reverse the
+transformation on a 13-character string.  The techniques he uses are
+interesting and may lead to further insights.  However, he gives neither a
+complete algorithm for reversing his transformation nor a proof that any such algorithm
+exists.  This left open the question of whether his
+suggestion could indeed form the basis of a useful compression algorithm.
+
+<h3>Ratushnyak's transformation is not reversible</h3>
+
+<p>
+At the suggestion of Jim Saxe, we applied Ratushnyak's algorithm to short
+binary strings and we soon found collisions.  That is, we found inputs that are
+distinct under rotation yet which are mapped to the same string by Ratushnyak's
+transformation.  The shortest colliding strings have length 6.  An example
+colliding pair is 110100 and 101100, which both map to 110100 under
+Ratushnyak's transformation.  As the length of the strings increases, the
+number of collisions quickly becomes large.
+
+<h3>A more general negative result</h3>
+
+<p>
+The presence of collisions in Ratushnyak's transformation does not necessarily
+undermine its use in a compression algorithm since we may add additional bits
+to resolve ambiguity.  Indeed, in the original block-sorting algorithm, we have
+to add a log <i>n</i>-bit string in order to distinguish the <i>n</i> possible
+rotations of the decoded string. 
+
+<p>
+In general, we have to use at least log <i>M</i> bits to resolve an
+<i>M</i>-way collision.  In the following, we construct a set of
+<i>c<sup>n</sup></i>
+strings of length <i>n</i>, where <i>c</i>&gt;1, all of which are transformed
+to the same string under Ratushnyak's algorithm.  In other words, we need
+linearly many additional bits, <i>n</i> log <i>c</i> of them, to resolve the
+ambiguity.
+
+<p>
+For an even number <i>n</i>&gt;0, consider a string <i>s</i> with the
+following properties:
+
+<ul>
+<li> it consists of 3<i>n</i>/2 0's and <i>n</i> 1's;
+<li> it starts with 0 and ends with 1;
+<li> it does not contain two consecutive 1's; and
+<li> it does not contain three consecutive 0's. 
+</ul>
+
+Now, we claim that:
+
+<ul>
+
+<li> <b>Any such string <i>s</i> is transformed to the string
+1&middot;&middot;&middot;10&middot;&middot;&middot;0.</b>
+
+<p>
+For each 0 in <i>s</i>, its context starts with either 10 (when it
+appears first in two consecutive 0's), 01 (when it appears second
+in two consecutive 0's), or 11 (when it is sandwiched by two
+1's). For each 1, since it is always between two 0's, its context
+always starts with 00. Thus, all the 1's have contexts that sort before
+the 0's. Therefore, <i>s</i> is transformed to the string
+1&middot;&middot;&middot;10&middot;&middot;&middot;0.
+
+<li> <b>The number of such strings is Theta(2<sup><i>n</i></sup>/sqrt (<i>n</i>)).</b>
+
+<p>
+We can construct such strings as follows.  Consider a permutation of <i>n</i>/2
+<i>a</i>'s and <i>n</i>/2 <i>b</i>'s.  We first insert a 1 after each letter in the string.
+Then, we replace each <i>a</i> with 0 and each <i>b</i> with 00.  It is easy to
+verify that strings constructed this way satisfy the required constraints.  The
+number of such permutations is <sup><i>n</i></sup> C <sub><i>n</i>/2</sub> = Theta(2<sup><i>n</i></sup>/sqrt(<i>n</i>)).
+</ul>
+
+<p>
+We thus have constructed Theta(2<sup><i>n</i></sup>/sqrt(<i>n</i>)) strings with length
+5<i>n</i>/2 so that they are all transformed to the same string
+1&middot;&middot;&middot;10&middot;&middot;&middot;0 under the algorithm where the context of each character
+starts with its two neighboring characters.  Or equivalently, we need to use
+about 2/5 = 0.4 additional bits, per bit in the original string, to resolve
+the ambiguity.  A similar, but more complex construction shows that the number
+of additional bits required can be as high as 0.4057.
+
+<p>
+Notice that this argument applies not only to Ratushnyak's transformation but
+also to any similar transformation in which the context of a character starts
+with its two neighboring characters, in either order. 
+
+<h3>Acknowledgement</h3>
+
+We would like to thank Lyle Ramshaw for many useful comments on a draft of this
+note.
+
+<h3>References</h3>
+<a name="bw">[1]</a>
+M. Burrows and D.J. Wheeler.
+"A Block-sorting Lossless Data Compression Algorithm".
+Research report 124.   10th May 1994.
+Digital Equipment Corporation Systems Research Center,
+130 Lytton Ave, Palo Alto, CA USA.
+<a href="http://gatekeeper.dec.com/pub/DEC/SRC/research-reports/abstracts/src-rr-124.html">
+http://gatekeeper.dec.com/pub/DEC/SRC/research-reports/abstracts/src-rr-124.html</a>
+
+<p>
+<a name="ratushnyak">[2]</a>
+A. Ratushnyak.
+"Sorting the matrix of two-sided contexts".
+Usenet news article &lt;8pt96o$nua$1@nnrp1.deja.com&gt;
+posted to comp.compression. 15 September 2000.
+Also available at <a href="http://geocities.com/eri32/slrm.htm">http://geocities.com/eri32/slrm.htm</a>
+and <a href="http://artest1.tripod.com/slrm.htm">http://artest1.tripod.com/slrm.htm</a>
+
+</BODY>
+</HTML>

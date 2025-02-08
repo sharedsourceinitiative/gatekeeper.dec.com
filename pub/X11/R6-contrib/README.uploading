@@ -1,0 +1,39 @@
+This directory is provided as a service of X.Org.  It is
+here so that people will have a place to upload programs and information
+related to the X Window System that they would like to share.  Please
+do not upload pirated or commercial software to this directory.
+
+In the past, the /contrib directory has been very unstructured,
+and because of this, difficult to use.  Beginning with R6, we are
+going to try and impose some structure on the /contrib.  To do this
+successfully, we need your help.
+
+Here are some guidelines that you should try to use when uploading 
+files to ftp.x.org:
+
+1.) When you upload files, tar and compress them (using either compress 
+    or gzip). 
+
+2.) Upload your files to the INCOMING directory. Files in the INCOMING
+    directory will be periodically moved to the appropriate directory.
+    If you'd like to specify which directory your files belong in
+    make sure you include a note indicating your preference.
+
+3.) If your files don't fall into a good existing category, create a
+    new directory as appropriate, but use your judgement to try and 
+    avoid making the directory hierarchy either too deep (no more than
+    2 or 3 levels) or too wide.  
+
+4.) Name your README files <package>.README, so that it appears near
+    the package file in listings.  (This also avoids having people 
+    overwriting each others README's in directories with many packages.)
+
+5.) Consider following the packaging suggestions in section 1 of the
+    /pub/DOCS/XConsortium/Contrib.howto file.  These suggestions are a
+    good idea, even if your software is not on the R6 contrib tape.
+
+6.) When you've uploaded your contribution please send email
+    xorg_info@x.org, cc: r6-contrib@x.org
+
+X.Org reserves the right to remove files from this system
+without cause or notice.

@@ -1,0 +1,23 @@
+
+    "WorkCrews: An Abstraction for Controlling Parallelism."
+    Eric S. Roberts and Mark T. Vandevoorde.
+    April 2, 1989.  17 pages.
+
+Authors' Abstract
+
+    When implementing parallel programs, it is important to find 
+    strategies for controlling parallelism that make the most effective 
+    use of available resources. In this paper, we introduce a dynamic 
+    strategy called WorkCrews for controlling the use of parallelism 
+    on small-scale, tightly-coupled multiprocessors. In the WorkCrew 
+    model, tasks are assigned to a finite set of workers. As in other 
+    mechanisms for specifying parallelism, each worker can enqueue 
+    subtasks for concurrent evaluation by other workers as they become 
+    idle. The WorkCrew paradigm has two advantages. First, much of 
+    the work associated with task division can be deferred until a 
+    new worker actually undertakes the subtask, and avoided altogether 
+    if the original worker ends up executing the subtask serially. 
+    Second, the ordering of queue requests under WorkCrews favors 
+    coarse-grained subtasks, which reduces further the overhead of 
+    task decomposition.
+

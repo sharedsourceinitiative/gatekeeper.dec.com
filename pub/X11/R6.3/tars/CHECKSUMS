@@ -1,0 +1,23 @@
+BSD checksums:
+
+34978 13779 xc-1.tar.gz
+50965 14230 xc-2.tar.gz
+22202 12358 xc-3.tar.gz
+
+SYSV checksums:
+
+14892 27557 xc-1.tar.gz
+33057 28459 xc-2.tar.gz
+53 24715 xc-3.tar.gz
+
+POSIX checksums (cksum):
+
+4036002032 14108746 xc-1.tar.gz
+2108537481 14570855 xc-2.tar.gz
+887467373 12653638 xc-3.tar.gz
+
+POSIX checksums [Digital Unix] (cksum):
+1899184786 14108746 xc-1.tar.gz
+4113861647 14570855 xc-2.tar.gz
+3998639753 12653638 xc-3.tar.gz
+

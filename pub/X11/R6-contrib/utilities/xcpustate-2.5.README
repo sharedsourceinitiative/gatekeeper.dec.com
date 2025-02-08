@@ -1,0 +1,28 @@
+Mar 5, 1998
+
+XCPUSTATE is a snapshot performance monitor. It was originally written by
+Mark Moraes to watch the load distribution on the CPUs on an Silicon Graphics
+Iris 4D/240. It has since been ported to a wide variety of multiprocessors and
+uniprocessors.
+
+On some systems (eg. Suns),  XCPUSTATE can monitor disk performance, and on
+Suns running SunOS 4.x, it can monitor OMNI network coprocessor performance.
+It supports the RSTAT RPC protocol, and both tiled/stippled and
+color/grayscale bars.
+
+Native support for the following systems is included:
+
+AIX 3.x and 4.x, BSD 4.3 and earlier, BSD 4.4 and derivitives
+(FreeBSD, NetBSD, OpenBSD), BSDI, Gould NP1, SGI IRIX, MACH, NCR SVR4,
+Solbourne OS/MP, SunOS 4.x, Solaris 2.x, USL SVR4, Digital Ultrix, Cray
+UNICOS, Linux.  
+
+If your system is not listed here, RSTAT RPC may still be used.
+
+New in version 2.5: "-avg" flag added, support for fractional intervals.
+
+The latest version of xcpustate can be obtained via anonymous ftp from:
+    ftp://ftp.cs.toronto.edu/pub/jdd/xcpustate
+    ftp://ftp.x.org/contrib/utilities/
+
+John DiMarco <jdd@cs.toronto.edu>

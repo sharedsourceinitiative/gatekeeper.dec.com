@@ -1,0 +1,606 @@
+                           N E T P B M
+                           Release 9.0
+
+Netpbm is a toolkit for conversion of images between a variety of
+different formats, as well as to allow a few basic image operations.
+The package is intended to be portable to many platforms. It has, at
+least at one time, been tested under various Unix-based systems, VMS
+and Amiga OS.  There are also compiler directives in it for MS-DOS.
+The maintainer uses and builds it on a platform that consists (in
+relevant part) mainly of GNU software (you probably know this kind of
+system by the name "Linux").
+
+There are over 180 separate tools in the package.
+
+The idea behind Netpbm is to define 3 very basic (and inefficient)
+portable graphics formats: PBM for black and white, PGM for grayscale,
+and PPM for color.  These are collectively referred to as PNM.  To
+convert from one common graphics format to another, you use a PNM
+format as an intermediate format.  So if you want to convert among N
+image formats, you only need 2*N conversion filters, instead of the
+N^2 you would need if you wrote each conversion tool separately.
+
+In addition to the converters, the package includes some simple tools
+for manipulating the portable formats.  For example, you can shrink
+an image or cut the top 10% off or make a mirror image.
+
+Among the 3 PNM formats, the Netpbm tools are are upwards compatible:
+A program to read PGM files will also read a PBM file, and a program
+to read PPM files reads all three.  The image editing programs usually
+write the same type as they read.  Whenever a program makes an
+exception and "promotes" a file to a higher format, it lets you know.
+
+The goal of Netpbm is to be a single source for all the primitive
+graphics utilities, especially converters, one might need.  So if you
+know of some freely redistributable software in this vein which is not
+in the package yet, you should bring it to the attention of the Netpbm
+maintainer so it can be included in the next release.
+
+Netpbm replaces the widely spread Pbmplus package (release: 10 Dec
+91).  A lot of improvements and additions have been made.  After the
+latest release of pbmplus, a lot of additional filters began
+circulating on the net.  The aim of Netpbm was to collect these and to
+turn them into a package.  This work has been performed by programmers
+all over the world. If *you* have some code to add, please contact the
+Netpbm maintainer.
+
+
+DISTRIBUTION
+------------
+
+You'll find the latest release of Netpbm at metalab.unc.edu, in the
+FTP directory /pub/Linux/apps/graphics/convert.  Don't let the
+directory name fool you -- There are no Netpbm releases specific to
+Linux.  If you have a problem with a recently released version, also
+check /pub/Linux/incoming, because it might have been followed
+immediately by a fixed release, which isn't yet installed in the
+regular directory.
+
+
+PREREQUISITES
+-------------
+
+Don't sweat the prerequisites too much.  In most cases, if you're
+missing something, the build of the programs that depend on it will
+bomb, but the rest of the Netpbm programs will build just fine.  And
+you may not need the more demanding programs.
+
+If you have trouble getting, building, or installing the
+prerequisites, the Netpbm maintainer wants to know.  Since he uses
+them himself, he can help you.  And if there is a problem with a
+prerequisite package that its own maintainer cannot fix, it may be
+possible to ship a fix with Netpbm.
+
+Ordinarily, the Tiff library would be a prerequisite for building the
+Tiff tools, but we have included a complete version of the Tiff
+library in Netpbm.  The main reason we did this is to make it easier
+for you to build, particularly in a way compatible with Netpbm.  The
+automatic configuration tool that comes with the regular distribution
+of the library has bugs.  The official source for the Tiff library is
+http://www.libtiff.org.
+
+To build ppmtojpeg or jpegtoppm, you need the JPEG/JFIF library from
+the Independent JPEG Group (IJG).  You can get it at
+ftp://ftp.uu.net/graphics/jpeg.  See http://www.ijg.org for more
+information.
+
+If you want the tiff programs to be able to deal with JPEG-compressed
+tiff files, you need the jpeg library (above).  If you don't have the
+jpeg library, you must specify so in Makefile.config or you won't be
+able to build the tiff tools at all.
+
+The same goes for ppmtompeg.  You need the jpeg library if you want to
+create mpegs from jpegs (without the loss of quality that comes with
+converting from jpeg to ppm first), and if you don't have the jpeg
+library and don't say so in Makefile.config, you won't be able to build
+ppmtompeg at all. 
+
+To build or use pnmtopng and pngtopnm, you need the zlib compression
+library and the png library (libpng).  You can get zlib from
+ftp://quest.jpl.nasa.gov/pub/zlib or
+ftp://metalab.unc.edu/pub/Linux/libs.  You can get libpng from
+ftp://ftp.au.netbsd.org/pub/NetBSD/packages/distfiles.
+
+To build or use pnmtorle and rletopnm, you need the Utah Raster Toolkit
+library.  You can get it from ftp://iastate.edu.  I haven't found any 
+better source.
+
+Pstopnm (the Postscript to PNM image converter) requires Ghostscript
+(installed with the name 'gs' in your command search path).  And it 
+requires in particular that Ghostscript be built with the relevant 
+PNM device drivers.  See http://www.gnu.org/ghostscript/ .
+
+
+
+INSTALLATION
+------------
+
+If you are building Netpbm on and for a typical system running GNU
+tools (as virtually any system that uses the Linux kernel is), you can
+just do:
+
+    make
+
+To build all the programs.  Then
+
+    make install
+
+to install them all.  
+
+The only tricky part about installing is setting up the shared libraries
+that are part of Netpbm.  'make install' copies them into place, but that
+may not be enough.  If you get mysterious "file not found" kinds of 
+errors and are not an expert with shared libraries, see the section
+"SHARED LIBRARIES" below.
+
+If you want to install manually, you can use
+
+  make --dry-run install 
+
+to see all of what has to be installed.
+
+If you don't need the whole package, but just want one tool in it that you
+heard about, you can make just that one.  For example, to make ppmtojpeg,
+just CD to the ppm directory and run
+   
+  make ppmtojpeg  .
+
+It will build any ppmtojpeg and any of its dependencies, but nothing
+else.  You have to install it manually.
+
+The --keep-going option to Make is handy, because it causes Make to
+make anything it can, as opposed to quitting as soon as something goes
+wrong.  With so many parts having so many requirements, it's not
+unusual for a few things to fail to build, but that doesn't affect
+everything else.  You can work on the failed parts and repeat the make
+and it will attempt to build whatever it hasn't successfully built
+yet.
+
+INSTALLATION - NOT GNU
+----------------------
+
+Unless you want to do some make file rewriting, you will need to use
+GNU Make even if nothing else on your system is GNU, because the
+Netpbm make files exploit some advanced features of GNU Make.  Often,
+systems have both GNU Make and a native Make.  In this case, GNU Make
+is named 'gmake'.  If you don't have it yet, see www.gnu.org/software.
+GNU Make is free, easy to install, and works just about anywhere.
+
+If the standard make files don't work on your platform, then update
+Makefile.config.  This file contains settings for various things that
+vary from one system to the next, like file paths.  If you've messed
+up Makefile.config and need to start over, Makefile.config.in is a
+copy of the distributed version of Makefile.config.
+
+If your system is even too exotic for that, you may need to modify
+things in the main make files or pbmplus.h.  Also, the package
+contains some old make files and Imakefiles that once worked for
+certain less common platforms, and they may be of use.
+
+If you figure out how to install on other platforms, contact the
+Netpbm maintainer to have these instructions improved for the next
+person.
+
+
+INSTALLATION - BeOS
+-------------------
+
+With BeOS, you have to change the LDSHLIB variable in Makefile.config as
+explained in that file.
+
+
+INSTALLATION - MISCELLANEOUS
+----------------------------
+
+After installing the manual pages, you may want to create the "whatis"
+file by doing a catman -w -M <directory>, or makewhatis -w, or
+whatever the equivalent is on your system.  Without Whatis, you may
+have a hard time finding the Netpbm tools you have installed.
+
+
+INSTALLATION - SHARED LIBRARIES
+-------------------------------
+
+There are over 180 programs in the Netpbm package and they do a lot of 
+common things.  In order to avoid the expense of copying the code for 
+those common things into every program, Netpbm places it in 4 shared
+libraries:  libpbm, libpgm, libppm, and libpnm.  There is also a libtiff
+shared library that comes with Netpbm.  When you invoke a Netpbm program,
+your system notices that it needs these libraries and accesses them too.
+
+The tricky part of installing the shared (runtime) libraries is
+telling your system where to find them in the event that you invoke a
+Netpbm program.  And that varies from one system to the next.
+
+Systems with a Linux kernel invariably use a program called
+ld-linux.so to locate shared libraries at runtime, with companion
+programs 'ldconfig' and 'ldd' and files /etc/ld.so.conf and
+/etc/ld.so.cache.
+
+On a Linux-based system, if you put the Netpbm shared libraries in a
+conventional spot (say, /lib) and reboot your system, chances are you
+will have no trouble running Netpbm programs.  But if you want to fine
+tune things, read up on ld-linux.so and ldconfig and consider the
+/etc/ld.so.conf file and LD_LIBRARY_PATH environment variables.  Use
+'ldd' to see if you have a shared library issue.  If it shows any
+shared library as "not found", you've got library trouble.
+
+One final note: New Netpbm executables often can run OK with old
+Netpbm shared libraries.  This means if you don't correctly install
+the new libraries, you may run what you think is a new Netpbm program,
+but in actuality be accessing the old Netpbm library, and you may not
+even notice a problem right away.  But eventually, you may find some
+things not working the way they should.  Again, 'ldd' will give you 
+peace of mind.
+
+
+
+HOW TO FIND THE RIGHT CONVERTER
+-------------------------------
+
+Some people get confused by all the different names.  If you want to
+convert a pbm file to a Sun raster file, is it pbmtorast, pgmtorast,
+ppmtorast, or pnmtorast?  A useful tool for answering this question,
+if you have it configured, is man -k.  You say "man -k <keyword>" and
+it gives you all the one-line descriptions with that keyword in them.
+All the Netpbm man pages have nice useful one-line descriptions, that
+mention all the relevant keywords.  Try it, you'll like it.
+
+Here is a brief directory of some of the Netpbm tools.
+
+A "pgmtoxxx" tool accepts PBM as well as PGM input and likewise a
+"ppmtoxxx" tool accepts PBM, PGM, and PPM.  But a "xxxtopgm" tool
+always creates a PGM file and a "xxxtoppm" tool always creates a PPM
+file.  A "pnmtoxxx" tool accepts all three input formats and behaves
+differently according to which it is.  A "xxxtopnm" tool creates any
+of two or more of the formats, depending on input and command line
+options.
+
+
+  CONVERTERS
+
+    ppmtompeg     convert series of ppm frames to an mpeg movie
+    jpegtopnm     convert JFIF/JPEG file to Netpbm format
+    anytopnm      convert any graphics format to Netpbm format
+    ppmtojpeg     convert portable pixmap to JPEG/JFIF format
+    bmptoppm      convert Windows or OS/2 Bitmap file to portable pixmap
+    ppmtobmp      convert portable pixmap to Windows or OS/2 Bitmap file
+    giftopnm      convert GIF to portable anymap
+    ppmtogif      convert portable pixmap to GIF
+    pnmtopng      convert portable anymap to Portable Network Graphics
+    pngtopnm      convert Portable Network Graphics to portable anymap.
+    atktopbm      convert Andrew Toolkit raster object to portable bitmap
+    pbmtoatk      convert portable bitmap to Andrew Toolkit raster object
+    brushtopbm    convert Xerox doodle brushes to portable bitmap
+    cmuwmtopbm    convert CMU window manager format to portable bitmap
+    g3topbm       convert Group 3 FAX to portable bitmap
+    pbmtog3       convert portable bitmap to Group 3 FAX
+    icontopbm     convert Sun icon to portable bitmap
+    pbmtoicon     convert portable bitmap to Sun icon
+    gemtopbm      convert GEM .img format to portable bitmap
+    macptopbm     convert MacPaint to portable bitmap
+    pbmtomacp     convert portable bitmap to MacPaint
+    mgrtopbm      convert MGR format to portable bitmap
+    pbmtomgr      convert portable bitmap to MGR format
+    pi3topbm      convert Atari Degas .pi3 to portable bitmap
+    pbmtopi3      convert portable bitmap to Atari Degas .pi3
+    xbmtopbm      convert X10 or X11 bitmap to portable bitmap
+    pbmtoxbm      convert portable bitmap to X11 bitmap
+    pbmtox10bm    convert portable bitmap to X10 bitmap
+    ybmtopbm      convert Bennet Yee "face" file into portable bitmap
+    pbmtoybm      convert portable bitmap into Bennet Yee "face" file
+    pbmto10x      convert portable bitmap to Gemini 10x printer graphics
+    pbmtoascii    convert portable bitmap to ASCII graphic form
+    asciitopgm    convert ASCII character graphics to portable graymap
+    pbmtobbnbg    convert portable bitmap to BBN BitGraph graphics
+    pbmtocmuwm    convert portable bitmap to CMU window manager format
+    pbmtoepson    convert portable bitmap to Epson printer graphics
+    pbmtogem      convert portable bitmap into GEM .img file
+    pbmtogo       convert portable bitmap to GraphOn graphics
+    pbmtolj       convert portable bitmap to HP LaserJet graphics
+    pbmtoplot     convert portable bitmap into Unix plot(5) file
+    pbmtoptx      convert portable bitmap to Printronix graphics
+    pbmtozinc     convert portable bitmap to Zinc Interface Library icon
+    fitstopnm     convert FITS format to portable anymap
+    pnmtofits     convert portable anymap to FITS format
+    fstopgm       convert Usenix FaceSaver(tm) format to portable graymap
+    pgmtofs       convert portable graymap to Usenix FaceSaver(tm) format
+    hipstopgm     convert HIPS format to portable graymap
+    lispmtopgm    convert a Lisp Machine bitmap file into pgm format
+    pgmtolispm    convert a portable graymap into Lisp Machine format
+    psidtopgm     convert PostScript "image" data to portable graymap
+    rawtopgm      convert raw grayscale bytes to portable graymap
+    pgmtopbm      convert portable graymap to portable bitmap
+    pbmmask       create a mask bitmap from a regular bitmap
+    ppmcolormask  create mask of areas of a certain color in an image
+    gouldtoppm    convert Gould scanner file to portable pixmap
+    ilbmtoppm     convert IFF ILBM to portable pixmap
+    ppmtoilbm     convert portable pixmap to IFF ILBM
+    imgtoppm      convert Img-whatnot to portable pixmap
+    mtvtoppm      convert MTV ray-tracer output to portable pixmap
+    pcxtoppm      convert PC Paintbrush format to portable pixmap
+    pgmtoppm      colorize a portable graymap into a portable pixmap
+    pi1toppm      convert Atari Degas .pi1 to portable pixmap
+    ppmtopi1      convert portable pixmap to Atari Degas .pi1
+    picttoppm     convert Macintosh PICT to portable pixmap
+    ppmtopict     convert portable pixmap to Macintosh PICT
+    pjtoppm       convert HP PaintJet file to portable pixmap
+    ppmtopj       convert portable pixmap to HP PaintJet file
+    qrttoppm      convert QRT ray-tracer output to portable pixmap
+    rawtoppm      convert raw RGB bytes to portable pixmap
+    rgb3toppm     combine three portable graymaps into one portable pixmap
+    ppmtorgb3     separate a portable pixmap into three portable graymaps
+    sldtoppm      convert an AutoCAD slide file into a portable pixmap
+    spctoppm      convert Atari compressed Spectrum to portable pixmap
+    sputoppm      convert Atari uncompressed Spectrum to portable pixmap
+    tgatoppm      convert TrueVision Targa file to portable pixmap
+    ppmtotga      convert portable pixmap to TrueVision Targa file
+    ximtoppm      convert Xim to portable pixmap
+    xpmtoppm      convert XPM format to portable pixmap
+    ppmtoxpm      convert portable pixmap to XPM format
+    yuvtoppm      convert Abekas YUV format to portable pixmap
+    eyuvtoppm     convert Encoder/Berkeley YUV format to portable pixmap
+    ppmtoeyuv     convert portable pixmap to Encoder/Berkeley YUV format
+    ppmtoyuv      convert portable pixmap to Abekas YUV format
+    ppmtoyuvsplit convert portable pixmap to 3 subsampled raw YUV files
+    yuvsplittoppm merge 3 subsampled raw YUV files to one portable pixmap
+    ppmtoacad     convert portable pixmap to AutoCAD database or slide
+    ppmtoicr      convert portable pixmap to NCSA ICR graphics
+    ppmtopcx      convert portable pixmap to PC Paintbrush format
+    ppmtopgm      convert portable pixmap to portable graymap
+    ppmtopuzz     convert portable pixmap to X11 "puzzle" file
+    ppmtosixel    convert portable pixmap to DEC sixel format
+    ppmtouil      convert portable pixmap to Motif UIL icon file
+    rasttopnm     convert Sun raster file to portable anymap
+    pnmtorast     convert portable anymap to Sun raster file
+    tifftopnm     convert TIFF file to portable anymap
+    pnmtotiff     convert portable anymap to TIFF RGB file
+    pnmtotiffcmyk convert portable anymap to TIFF CMYK file
+    xwdtopnm      convert X10 or X11 window dump to portable anymap
+    pnmtoxwd      convert portable anymap to X11 window dump
+    pnmtops       convert portable anymap to Postscript
+    pstopnm       convert Postscript to portable anymap
+    pnmtoplainpnm convert a regular portable anymap into plain pnm format
+    pbmtoepsi     convert a PBM image to encapsulated Postscript preview bitmap
+    pbmtopgm      convert PBM file to PGM by averaging areas
+    sbigtopgm     convert Santa Barbara Instrument Group CCD file to PGM
+    vidtoppm      convert Parllax XVideo JPEG to sequence of PPM files
+    pnmtorle      convert PNM to Utah Raster Toolkit (urt/rle) file
+    rletopnm      convert Utah Raster Toolkit (urt/rle) file to PNM
+
+
+  IMAGE GENERATORS
+
+    pbmmake       create a blank portable bitmap image of a specified size
+    ppmmake       create a pixmap of a specified size and color
+    ppmpat        create a pretty pixmap
+    pgmnoise      create a portable graymap of white noise
+    pbmtext       render text into a portable bitmap image
+    pbmupc        create a Universal Product Code portable bitmap image
+    ppmcie        generate a CIE color map image
+
+
+  IMAGE EDITORS
+
+    ppmlabel      Add text to an image
+    pnmshadow     add a shadow to an image so it looks like it's floating
+    ppmbrighten   brighten or dim an image -- change saturation and value
+    ppmdim        dim a portable pixmap image - different way from ppmbrighten
+    pbmreduce     reduce a portable bitmap N times, using Floyd-Steinberg
+    pgmnorm       normalize contrast in a portable graymap image
+    ppmnorm       normalize contrast in a portable pixmap image
+    pbmpscale     englarge a portable bitmap image with edge smoothing
+    pnmscale      scale a portable anymap image
+    ppmdither     ordered dither for color images
+    ppmquant      quantize colors in an image down to a specified number
+    ppmquantall   quantize colors down to a specified number on many files
+    ppmrelief     run a Laplacian Relief filter on a portable pixmap
+    pnmarith      perform arithmetic on two portable anymaps
+    pnmcat        concatenate portable anymaps
+    ppmmix        mix (overlay) two images.
+    pnmconvol     general MxN convolution on a portable anymap
+    pnmcrop       crop all like-colored borders off a portable anymap
+    pnmcut        select a rectangular region from a portable anymap
+    pnmdepth      change the maxval in a portable anymap
+    pnmenlarge    enlarge a portable anymap N times
+    pnmflip       perform one or more flip operations on a portable anymap
+    pnminvert     invert a portable anymap
+    pnmgamma      perform gamma correction on a portable anymap
+    pnmmargin     add a margin to a portable anymap
+    pnmpaste      paste a rectangle into a portable anymap
+    pnmrotate     rotate a portable anymap
+    pnmshear      shear a portable anymap
+    pnmsmooth     smooth a portable anymap image
+    pnmtile       replicate a portable anymap into a specified size
+    pbmclean      remove lone pixels (snow) from a portable bitmap image
+    pnmalias      antialias a portable anymap image
+    pnmcomp       create composite (overlay) of two portable anymap images
+    pnmpad        add borders to a portable anymap
+    ppmchange     change all of one color to another in portable pixmap image
+    ppmshift      shift lines of PPM image left or right a random amount
+    ppmspread     move pixels of PPM image a random amount
+    pbmlife       apply Conway's rules of Life to a portable bitmap image
+    ppmdist       map colors to high contrast grayscales arbitrarily
+
+
+  IMAGE ANALYZERS
+    pgmedge       edge-detect a portable graymap
+    pgmenhance    edge-enhance a portable graymap
+    pgmramp       generate a grayscale ramp
+    pgmtexture    calculate textural features on a portable graymap
+    pgmhist       print a histogram of the values in a portable graymap
+    ppmhist       print a histogram of a portable pixmap
+    pnmfile       describe a portable anymap
+    ppmtomap      generate a map of all colors in an image
+
+  MISCELLANEOUS
+
+    pgmbentley    Bentleyize a portable graymap
+    pgmcrater     create cratered terrain by fractal forgery
+    pgmoil        turn a portable graymap into an oil painting
+    ppmforge      fractal forgeries of clouds, planets, and starry skies
+    pnmindex      build a visual index of a bunch of anymaps
+    pgmkernel     generate a convolution kernel
+
+
+
+  UNCATALOGUED AS YET
+
+    bioradtopgm
+    hpcdtoppm
+    pbmto4425
+    pbmtoln03
+    pbmtolps
+    pbmtopk
+    pktopbm
+    pnmhisteq
+    pnmhistmap
+    pnmnlfilt
+    pnmtoddif
+    pnmtosgi
+    pnmtosir
+    ppm3d
+    ppmflash
+    ppmntsc
+    ppmqvga
+    ppmtomitsu
+    ppmtopjxl
+    sgitopnm
+    sirtopnm
+    spottopgm
+    xvminitoppm
+    zeisstopnm
+
+
+APPLICATION NOTES
+-----------------
+
+As a collection of primitive tools, the power of Netpbm is multiplied
+by the power of all the other unix tools you can use with them.  These
+notes remind you of some of the more useful ways to do this.  Often,
+when people want to add high level functions to the Netpbm tools, they
+have overlooked some existing tool that, in combination with Netpbm,
+already does it.
+
+Often, you need to apply some conversion or edit to a whole bunch of files.
+
+As a rule, Netpbm programs take one input file and produce one output file,
+usually on Standard Output.  This is for flexibility, since you so often 
+have to pipeline many tools together.
+
+Here is an example of a shell command to convert all your of PNG files
+(named *.png) to JPEG files named *.jpg:
+
+  for i in *.png; do pngtopnm $i |ppmtojpeg >`basename $i .png`.jpg; done
+
+Or you might just generate a stream of individual shell commands, one
+per file, with awk or perl.  Here's how to brighten 30 YUV images that
+make up one second of a movie, keeping the images in the same files:
+
+ls *.yuv \
+  | perl -ne 'chomp; 
+              print "yuvtoppm $_ | ppmbrighten -v 100 | ppmtoyuv >tmp$$.yuv;", 
+                    "mv tmp$$.yuv $_\n" 
+             ' \
+  | sh 
+
+The tools Find (with the '-exec' option) and Xargs are also useful for simple
+manipulation of groups of files.
+
+Some shells' "process substitution" facility can help where a
+non-Netpbm program expects you to identify a disk file for input and
+you want it to use the result of a Netpbm manipulation.  Say printcmyk
+takes the filename of a Tiff CMYK file as input and what you have is a
+PNG file abc.png.  Try:
+
+  printcmyk <({ pngtopnm abc.png | pnmtotiffcmyk ; })
+
+It works in the other direction too, if you have a program that has you
+name its output file and you want the output to go through a Netpbm tool.
+
+
+SUPPORT
+-------
+
+The maintainer of Netpbm, since September 1999, is Bryan Henderson:
+bryanh@giraffe-data.com.  Bryan actively maintains the package and
+wants to know about any problems people have with Netpbm or
+suggestions for improvement.
+
+
+
+OTHER GRAPHICS SOFTWARE
+-----------------------
+
+Netpbm contains primitive building blocks.  It certainly is not a complete
+graphics library.
+
+The first thing you will need to make use of any of these tools is a viewer.
+Zgv is a good viewer to use on a GNU/Linux system with the SVGALIB graphics
+display driver library.  You can find zgv at 
+ftp://metalab.unc.edu/pub/Linux/apps/graphics/viewers.
+
+Zgv even has a feature in it wherein you can visually crop an image
+and write an output file of the cropped image using pnmcut.  See the
+-s option to Zgv.
+
+The Utah Raster Toolkit serves a lot of the same purpose as Netpbm,
+but without the emphasis on format conversions.  This package is based
+on the RLE format, which to can convert to and from the Netpbm
+formats.  http://www.cs.utah.edu/research/projects/alpha1/urt.html
+gives some information on the Utah Raster Toolkit, but does not tell
+where to get it.
+
+
+There are some Netpbm-like graphics tools distributed by the Army High
+Performance Computing Research Center at
+http://www.arc.umn.edu/gvl-software/media-tools.html.  These operate
+directly on non-Netpbm format images, so they aren't included in the
+Netpbm package.  However, you can use them with any image format by
+using the Netpbm format converters.
+
+
+
+HISTORY
+-------
+
+See the file HISTORY.
+
+
+MORE INFORMATION
+----------------
+
+A good place to start for information about the wide world of computer
+graphics is http://www.faqs.org/faqs/graphics/  .
+
+
+
+COPYRIGHTS
+----------
+
+All the software in this package, regardless of who wrote and contributed 
+it, has a copyright similar to this one:
+
+    Permission to use, copy, modify, and distribute this software and its
+    documentation for any purpose and without fee is hereby granted, provided
+    that the above copyright notice appear in all copies and that both that
+    copyright notice and this permission notice appear in supporting
+    documentation.  This software is provided "as is" without express or
+    implied warranty.
+
+Many people get confused by this legalese, especially the part about
+"without fee".  Does this mean you can't charge for any product that
+uses Netpbm?  No.  All it means is that you don't have to pay me.
+You can do what you want with this software.  Build it into your
+package, steal code from it, whatever.  Just be sure to let people
+know where it came from.
+
+Another restriction that some of the software has is that in order to
+have permission to copy it (which includes writing anything derived
+from it), you must distribute source code for your copy or derivation
+and propagate the same restriction to people who would copy your
+derivation.  In other words, the price the author wants for the use of
+his proprietary work is your contribution to the free software cause.
+
+The copyrights on individual components of this package are detailed 
+at appropriate places within the package.

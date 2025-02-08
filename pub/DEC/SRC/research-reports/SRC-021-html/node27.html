@@ -1,0 +1,176 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Files, Open-File Objects, and File Handles</TITLE>
+<META NAME="description" CONTENT="Files, Open-File Objects, and File Handles">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node28.html">
+<LINK REL="previous" HREF="node26.html">
+<LINK REL="up" HREF="node22.html">
+<LINK REL="next" HREF="node28.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html523"
+ HREF="node28.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html519"
+ HREF="node22.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html513"
+ HREF="node26.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html521"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html522"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html524"
+ HREF="node28.html">The File Name Space:</A>
+<B> Up:</B> <A NAME="tex2html520"
+ HREF="node22.html">Concepts and Facilities</A>
+<B> Previous:</B> <A NAME="tex2html514"
+ HREF="node26.html">Security</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04025000000000000000">
+Files, Open-File Objects, and File Handles</A>
+</H2>
+ <A NAME="Aptos">&#160;</A>
+<P><A NAME="565">&#160;</A>
+<A NAME="566">&#160;</A>
+<A NAME="567">&#160;</A>
+A file is something that the Read and Write procedures can work on.  One
+way of categorizing files is by whether they provide storage.  Regular
+files provide storage (with a lifetime and addressibility independent of
+the execution of a single process).
+<P><A NAME="568">&#160;</A>
+<A NAME="569">&#160;</A>
+<A NAME="570">&#160;</A>
+<A NAME="1977">&#160;</A>
+Device files provide an input/output interface to peripheral devices.
+There are two subclasses of device files: unstructured and structured.
+Unstructured devices allow stream-like transfers; some of them may be
+manipulated in idiosyncratic ways via the IOCtl procedure (see page
+<A HREF="node45.html#Fremont"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).  Structured devices provide block-level access to storage
+devices such as disks and tapes.  (No structured devices currently exist
+in the Taos implementation of OS.)
+<P><A NAME="573">&#160;</A>
+<A NAME="574">&#160;</A>
+<A NAME="575">&#160;</A>
+Pipes and the more general sockets provide an alternative to RPC for
+stream-style interprocess communication.  Pipes only allow communication
+between processes with a common ancestor, and therefore within the same
+machine.  Sockets allow communication between arbitrary processes on
+arbitrary machines interconnected by any of several internetwork
+protocols.  (Sockets are not currently available via OS, nor are they
+present in the kernel-call interface to Taos.)
+<P>
+Taos note: Appendix <A HREF="node84.html#MenloPark">D.10</A>, page <A HREF="node84.html#MenloPark"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>, describes
+the available devices.
+<P>
+Associated with each regular or device file is a set of attributes
+intended to help manage the file.  These attributes include the user name
+of the owner of the file, the access group of the file, and timestamps
+recording file usage.  The full set of attributes is enumerated in Section
+<A HREF="node45.html#Concord">4.6</A>, page <A HREF="node45.html#Concord"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.
+<P><A NAME="580">&#160;</A>
+<A NAME="581">&#160;</A>
+<A NAME="582">&#160;</A>
+<A NAME="SantaCruz">&#160;</A>An open-file object represents the ability to perform a specific set of
+operations on a specific file. It also maintains temporary state
+associated with access to that file, namely flags governing transfer
+direction and related matters, a file pointer recording a position (for a
+regular file), and an advisory lock (for regular files and for device
+files).  Open-file objects are created by the procedures Open, OpenRead,
+OpenWrite, OpenSearch, and OpenPipe (see Section <A HREF="node41.html#Berkeley">4.2</A>, page
+<A HREF="node41.html#Berkeley"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).
+<P>
+A file is marked for deletion when the last name for it is removed from
+the name space (see the Remove procedure, page <A HREF="node47.html#PaloAlto"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>), but
+the actual deletion is postponed as long as one or more open-file objects
+referring to the file continue to exist.
+<P><A NAME="587">&#160;</A>
+<A NAME="588">&#160;</A>
+<A NAME="589">&#160;</A>
+A client of OS uses a file handle (a value of type File) to refer to an
+open-file object.  File handles are returned by the procedures that create
+new open-file objects.  They are also returned by Dup and GetDescriptor,
+which return file handles referring to existing open-file objects.  A
+process should call Close (see page <A HREF="node43.html#Pescadero"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>) when it is
+finished with a file handle.  Close breaks a file handle's reference to
+the open-file object; it is called automatically when there are no more
+references to a file handle (via the Modula-2+ object cleanup mechanism).
+Also, when a process terminates, all file handles it holds are closed.
+<P>
+An open-file object continues to exist as long as there are one or more
+file handles referring to it; when the last such file handle is closed,
+the open-file object ceases to exist.
+<P>
+Each process has an array of file handles that were supplied to it when it
+was started (see the SetDescriptor procedure on page <A HREF="node51.html#Piedmont"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).
+Elements of the array are obtained via the GetDescriptor procedure (see
+page <A HREF="node43.html#PleasantHill"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).  The array itself is read-only, though any
+of the procedures provided in OS, including Close, can be applied to the
+file handles returned by GetDescriptor.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html523"
+ HREF="node28.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html519"
+ HREF="node22.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html513"
+ HREF="node26.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html521"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html522"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html524"
+ HREF="node28.html">The File Name Space:</A>
+<B> Up:</B> <A NAME="tex2html520"
+ HREF="node22.html">Concepts and Facilities</A>
+<B> Previous:</B> <A NAME="tex2html514"
+ HREF="node26.html">Security</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

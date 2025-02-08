@@ -1,0 +1,12 @@
+"Firelink: A Reconfigurable Firewire Testbed"
+Oskar Mencer, Mark Shand, Michael J. Flynn
+Note #1998-012, June 1, 1998.
+
+We describe the design and implementation of a reconfigurable 
+high-speed interface for IEEE 1394 Firewire and measurements 
+obtained with this system. For the physical and link layers we 
+use a commercial chip-set. Field-Programmable Gate Arrays on 
+the PCI Pamette and a secondary FireLink board are used to 
+implement a simple transaction layer interfacing the link 
+layers to the host CPU.
+

@@ -1,0 +1,18 @@
+1-nov-94
+Matt Day <mday@artisoft.com> found and fixed an aggrevating bug
+in charproc.c.  Did some cleanup of the diff to make it compatible with
+R6-pl5.
+
+9-jun-94
+More clean up. Removed a bunch of R5'isms that worked their way into the 
+patches.
+
+7-jun-94
+
+color-xterm-R6-patch contains a set of patches to convert a stock, X11R6 xterm 
+to color. These patches were produced by reworking the original X11R5-color
+xterm hack [which was a rework of the X11R4-color xterm hack].
+
+Enjoy.
+
+-jsacco@ssl.com

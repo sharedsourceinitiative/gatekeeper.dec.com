@@ -1,0 +1,26 @@
+
+	AVAILABLE ELECTRONICALLY
+
+"Automated Proofs of Object Code for a Widely Used Microprocessor"
+Yuan Yu
+October 5, 1993.  122 pages.
+
+Computing devices can be specified and studied mathematically. Formal
+specification of computing devices has many advantages; it provides
+a precise characterization of the computational model, and allows for
+mathematical reasoning about models of the computing devices and
+programs executed on them.  While there has been a large body of
+research on program proving, work has almost exclusively focused on
+programs written in high-level programming languages.  Here we address
+the important but largely ignored problem of machine-code program
+proving.  This work formally describes a substantial subset of the
+MC68020, a widely used microprocessor built by Motorola, within the 
+mathematical logic of the automated reasoning system Nqthm a.k.a. the
+Boyer-Moore Theorem Proving System.  Based on this formal model, we 
+mechanized a mathematical theory to automate reasoning about object
+code programs.  We then mechanically checked the correctness of MC68020 object 
+code programs for binary search, Hoare's Quick Sort, the Berkeley Unix C
+string library, and other well-known algorithms.  The object code for
+these examples was generated using the Gnu C, the Verdix Ada, and the AKCL 
+Common Lisp compilers.
+

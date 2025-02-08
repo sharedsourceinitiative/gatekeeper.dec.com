@@ -1,0 +1,36 @@
+Begin2
+Title        =XDiskFree
+Version      =1.0L0 Linux version
+Desc1        =The up to date version of "XDiskFree" for Unix Systems
+Desc2        =xdf displays the current size and usage of all mounted
+Desc3        =harddisk- and (optional) NFS- partitions in a Window
+Desc4        =
+Desc5        =xdf was written on/for Linux but compiling it on other
+Desc6        =systems should be easy enough.
+Author       =Georg Greve
+AuthorEmail  =development@fusebox.hanse.de
+Maintainer   =Georg Greve
+MaintEmail   =development@fusebox.hanse.de
+Site1        =
+Path1        =
+File1        =xdf.tgz
+FileSize1    =7.2KB
+Required1    =C++ Compiler / Linker
+Required2    =xview, olgx, X11 Libraries
+Required3    =XFree 3.x Window System
+Required4    =
+CopyPolicy1  =Use, copy, modify, and distribute this software and its
+CopyPolicy2  =documentation for any purpose is granted without fee.
+Keywords     =xdf, X, XDiskFree, diskfree, df
+Comment1     =Installation instructions as ROOT:
+Comment2     =   cd /usr/src
+Comment3     =   tar xvfz xdf.tgz
+Comment4     =   cd /usr/src/xdf/
+Comment5     =   Read README.1st
+Comment6     =   make ; make install
+RelFiles1    =
+Entered      =
+EnteredBy    =
+CheckedEmail =
+End
+

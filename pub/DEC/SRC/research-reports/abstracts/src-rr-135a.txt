@@ -1,0 +1,20 @@
+"DeckScape: An Experimental Web Browser"
+Marc H. Brown and Robert A. Shillner
+March 1, 1995. 13 pages.
+
+This report describes DeckScape, an experimental World-Wide Web
+browser based on a "deck" metaphor. A deck consists of a
+collection of Web pages, and multiple decks can exist on the screen at
+once. As the user traverses links, new pages appear on top of the
+current deck.  Retrievals are done using a background thread, so all
+visible pages in any deck are active at all times. Users can move and
+copy pages between decks, and decks can be used as a general-purpose
+way to organize material, such as hotlists, query results, and
+breadth-first expansions.
+
+This report has an accompanying videotape, report 135b:
+
+"DeckScape: An Experimental Web Browser"
+Marc H. Brown and Robert A. Shillner
+Time: 7 minutes
+

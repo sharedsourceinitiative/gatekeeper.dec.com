@@ -1,0 +1,11 @@
+"TLA in Pictures"
+Leslie Lamport
+September 1, 1994. 20 pages.
+
+Predicate-action diagrams, which are similar to standard
+state-transition diagrams, are interpreted as formulas of TLA (the
+Temporal Logic of Action).  We explain how these diagrams can be used
+to describe aspects of a specification, even when the complete
+specification cannot be written as a diagram, and to illustrate
+proofs.
+

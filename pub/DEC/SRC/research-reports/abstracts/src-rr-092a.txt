@@ -1,0 +1,24 @@
+"Hector: Connecting Words with Definitions"
+Lucille Glassman, Dennis Grinberg, Cynthia Hibbard, James Meehan, Loretta Guarino Reid, Mary-Claire van Leunen
+October 20, 1992.  46 pages
+
+Hector is a feasibility study on high-tech corpus lexicography.  Oxford
+University Press provided the lexicographers and a corpus of 20
+millionwords of running English text; Digital Equipment Corporation
+Systems Research Center provided the high-tech tools to enable the
+lexicographers to do all of their work on-line.
+
+The tools provide the ability to query the corpus in various ways and
+see the resulting matches, to write and edit dictionary entries, and
+to link each occurrence of a word in the corpus with its sense as
+displayed in the entry editor.  Additional support tools give
+statistical information about words in the corpus, derivatives and
+related words, syntactic structures, collocates, and case-variants.
+
+This report describes the tools and the status of the project as of
+July 1992. 
+
+Videotape 92b accompanies the above report (Time: 14:34)
+
+
+

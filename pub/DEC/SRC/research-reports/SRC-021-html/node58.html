@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Manipulating Process Templates</TITLE>
+<META NAME="description" CONTENT="Manipulating Process Templates">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node59.html">
+<LINK REL="previous" HREF="node57.html">
+<LINK REL="up" HREF="node54.html">
+<LINK REL="next" HREF="node59.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html910"
+ HREF="node59.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html906"
+ HREF="node54.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html900"
+ HREF="node57.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html908"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html909"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html911"
+ HREF="node59.html">Manipulating Logical Volumes</A>
+<B> Up:</B> <A NAME="tex2html907"
+ HREF="node54.html">The OSFriends Interface</A>
+<B> Previous:</B> <A NAME="tex2html901"
+ HREF="node57.html">Miscellaneous File-System Operations</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04064000000000000000">
+Manipulating Process Templates</A>
+</H2>
+ <A NAME="Felton">&#160;</A>
+<P><A NAME="2247">&#160;</A>
+<A NAME="2248">&#160;</A>
+<PRE>
+TYPE
+  STrace = (STNever, STOnce, STAlways);
+
+PROCEDURE SetSTrace(template: ProcessTemplate; exec, fork: STrace)
+  RAISES {Error};
+</PRE>
+<P><A NAME="1580">&#160;</A>
+SetSTrace sets the exec and fork STrace flags in the specified process
+template; it is for use by the Taos debugger (and has no Ultrix
+implementation).  The fork STrace flag is currently ignored.
+<P><A NAME="2249">&#160;</A>
+<PRE>
+PROCEDURE SetPriority(
+    template: ProcessTemplate;
+    priority: ThreadFriends.Priority)
+  RAISES {Error};
+</PRE>
+<P><A NAME="1582">&#160;</A>
+<A NAME="1583">&#160;</A>
+<A NAME="1584">&#160;</A>
+<A NAME="1585">&#160;</A>
+<A NAME="1586">&#160;</A>
+SetPriority sets the initial priority for the first thread in the new
+process to be created from the specified process template.  The supplied
+priority should be one of the three constants defined in the ThreadsPort
+interface: BackgroundPriority, NormalPriority, or ForegroundPriority;
+other values are not advised.  The default when SetPriority is not called
+is to use the priority of the calling process's initial thread as of the
+time the process template was created.
+<P>
+<BR><HR>
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

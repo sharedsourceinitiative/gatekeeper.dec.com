@@ -1,0 +1,6 @@
+"Finding stale-value errors in concurrent programs"
+Michael Burrows and K. Rustan M. Leino
+Note #2002-004, May 14, 2002. 15 pages
+
+Concurrent programs can suffer from many types of errors, not just the well-studied problems of deadlocks and simple race conditions on variables.  This paper addresses a kind of race condition that arises from reading a variable whose value is possibly out-of-date. The paper introduces a simple technique for detecting such stale values, and reports on the encouraging experience with a compile-time checker that uses the technique.
+

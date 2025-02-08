@@ -1,0 +1,256 @@
+<!-- This file generated automatically by mtex2html(1) -->
+<HTML>
+<HEAD>
+<TITLE>dcpidiff</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#ffffff" VLINK="#006633">
+<H2>dcpidiff(1)</H2>
+
+<H3>NAME</H3>
+<BLOCKQUOTE>
+dcpidiff - compare two sets of profiles for a procedure 
+</BLOCKQUOTE>
+
+<H3>SYNOPSIS</H3>
+<BLOCKQUOTE>
+<B>dcpidiff</B>
+[global options]
+<I>procedure-name</I>
+-set 
+[set options]
+<I>image-name</I>
+-set 
+[set options]
+<I>image-name</I>
+</BLOCKQUOTE>
+
+<H3>FLAGS</H3>
+<BLOCKQUOTE>
+</BLOCKQUOTE>
+
+<H3>Global Options</H3>
+<BLOCKQUOTE>
+<P>
+
+<DL>
+<DT>-help<DD> Print out usage information.<P>
+
+<DT>-version<DD> Print out the version number.<P>
+
+<DT>-verbose<DD> Verbose.  Print out additional information.<P>
+
+<DT>-source_line<DD>
+Print out statistics by source line number.  If the <I>image-name</I> of
+the two sets are the same, then the default is to print out the statistics
+by basic block.  If the <I>image-name</I> is different, then the
+statistics can only be printed by source line number. <P>
+
+<DT>-compare type<DD> 
+Specify the kind of information compared.  The <I>type</I> is a comma-separated
+list of the following keywords: <I>cpi</I>, <I>frequency</I>, <I>stalls</I>, 
+<I>static_stalls</I>, <I>dynamic_stalls</I> or <I>all</I>.  The default is
+to compare CPI only.<P>
+
+<DT>-set<DD>
+Denote the start of a set of sample files.  All samples within a set
+are combined, and samples across different sets are compared.
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>Set Options</H3>
+<BLOCKQUOTE>
+<P>
+
+<DL>
+<DT>-conf_low<DD>  Compare low, medium, and high-confidence data.<P>
+
+<DT>-conf_high<DD> Compare only high-confidence data. (Default is to compare
+medium and high-confidence data).<P>
+
+<DT>-cross_procedure [optimistic | pessimistic | selective]<DD> Choose what
+assumption to make when encountering a procedure call boundary while
+looking for reasons to explain dynamic stalls.  A procedure call boundary
+is either a call made by the procedure being analyzed or the beginning or
+end of that procedure.  With <I>pessimistic</I>, we assume that
+whatever happens outside the analyzed procedure can cause a dynamic stall
+inside it.  With <I>optimistic</I>, we assume that it cannot.  With
+<I>selective</I>, the assumption is based on standard procedure call
+convention.  (The default is <I>optimistic</I>.)<P>
+
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>PROFILE FILE FLAGS</H3>
+<BLOCKQUOTE>
+<P>
+
+By default, this command automatically finds all of the relevant
+profile files.  The following options can be used to guide the search
+for the profile files.<P>
+
+<DL>
+<DT>-db &lt;directory name&gt;<DD>
+Search for profile files in the specified profile database directory.
+The directory name should be the same name as the one specified when
+<TT>dcpid</TT> was started.  I.e., the named directory should contain a
+set of epochs.  If this option is not specified, the directory name is
+obtained from the <TT>DCPIDB</TT> environment variable.  If neither this
+option, nor the <TT>DCPIDB</TT> environment variable are set, the name of
+the directory used by the last invocation of <TT>dcpid</TT> on this
+machine is used.  If none of these methods succeed in finding the
+appropriate directory, and no explicit set of profile files is
+provided via the <TT>-profiles</TT> option, then the command fails.<P>
+
+<DT>-epoch latest<DD>
+Search for profile files in the latest epoch.  This is the default.<P>
+
+<DT>-epoch latest-k<DD>
+Search for profile files in the "k+1"th oldest epoch.  For example,
+search in the third last epoch if "-epoch latest-2" is specified.<P>
+
+<DT>-epoch all<DD>
+Search for profile files in all epochs.<P>
+
+<DT>-epoch &lt;name&gt;<DD>
+Search for profile files in the named epoch.  The epoch name should be
+the name of a subdirectory corresponding to a single epoch within the
+profile database directory.  Epoch subdirectory names usually take
+the form <TT>YYMMDDHHMM</TT> (year-month-day-hours-minutes).  For example,
+an epoch started on December 4, 1996 at 23:34 is named <TT>9612042334</TT>.
+If an epoch is given a symbolic name by creating a symbol link to
+the actual epoch directory, then the symbolic name can also be used
+as an argument to the <TT>-epoch</TT> option.<P>
+
+<DT>-events all<DD>
+Search for profile files corresponding to all event types such as
+cycles, icache misses, branch mispredictions, etc.  This is the default.<P>
+
+<DT>-events type(+type)*<DD>
+Search for profiles files for the specified event types.  For example,
+search for cycles, icache misses, and data cache misses when the
+option <TT>-events cycles+imiss+dmiss</TT> is specified.<P>
+
+<DT>-events all(-type)*<DD>
+Search for profile files for all event types except for the specified
+types.  For example, search for all event types except for branch
+mispredictions when the option <TT>-events all-branchmp</TT> is specified.<P>
+
+<DT>-label &lt;label&gt;<DD>
+Search for profile files with the specified label (see <TT>dcpilabel</TT>).
+If no labels are specified on the command line, profile file labels
+are ignored entirely.  If any labels are specified on the command line
+(this option can be repeated several times), only profile files that
+have one of the specified labels are used.<P>
+
+<DT>-profiles &lt;file names...&gt; --<DD>
+Use just the profile files named by the specified file names.  The
+list of profile file names can be terminated either via <TT>--</TT>, or by
+the end of the option list.  The command prints an error message and
+fails if the <TT>-profiles</TT> option is used in conjunction with any of
+the earlier automatic profile finding options.  (Use either the
+automatic profile lookup mechanism, or explicitly name the profile
+file with the <TT>-profile</TT> option, but not both.)
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>DESCRIPTION</H3>
+<BLOCKQUOTE>
+Dcpidiff compares two sets of profiles for a procedure and prints out
+various statistics.  It can compare the CPI, frequency, and static and
+dynamic stall cycles.  If the images for the two sets of profiles are
+the same, then it compares them by basic block.  If the images differ,
+then it compares by source line number.  <P>
+
+For each basic block (or source line) it prints the normalized range
+(i.e. the difference between the values over the sum of the values,
+expressed as a percentage), the two values and the ratio of the
+values.  All entries are sorted by the normalized range so that the
+focus is on the entries that differ the most.  The available options
+for each of the two sets is similar to the options for
+<A HREF="dcpicalc.html">dcpicalc(1)</A>.
+</BLOCKQUOTE>
+
+<H3>EXAMPLE USAGE</H3>
+<BLOCKQUOTE>
+<DL>
+
+<DT><TT>dcpidiff the_proc -set &lt;image-name&gt; -epoch latest
+                            -set &lt;image-name&gt; -epoch latest-1</TT><DD>
+Use dcpidiff to compare the CPI of procedure <TT>the_proc</TT> in two
+different sets of sample files.<P>
+
+<DT><TT>dcpidiff -compare frequency the_proc -set &lt;image-name&gt; -epoch latest
+              -set -xct the_program.xct -tab the_program.tab &lt;image-name&gt; -epoch latest-1</TT><DD>
+Use dcpidiff to compare the basic block frequencies in procedure
+<TT>the_proc</TT> as estimated by the dcpi tools, against the frequencies
+computed by the <A HREF="dcpix.html">dcpix(1)</A>.<P>
+
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>SEE ALSO</H3>
+<BLOCKQUOTE>
+<P>
+
+<A HREF="dcpi.html">dcpi(1)</A>,
+<A HREF="dcpiflow.html">dcpiflow(1)</A>,
+<A HREF="dcpiprof.html">dcpiprof(1)</A>,
+<A HREF="dcpilist.html">dcpilist(1)</A>,
+<A HREF="dcpidis.html">dcpidis(1)</A>,
+<A HREF="dcpiscan.html">dcpiscan(1)</A>,
+<A HREF="dcpiepoch.html">dcpiepoch(1)</A>,
+<A HREF="dcpiflush.html">dcpiflush(1)</A>,
+<A HREF="dcpicalc.html">dcpicalc(1)</A>,
+<A HREF="dcpilabel.html">dcpilabel(1)</A>,
+<A HREF="dcpi2ps.html">dcpi2ps(1)</A>,
+<A HREF="dcpicat.html">dcpicat(1)</A>,
+<A HREF="dcpiquit.html">dcpiquit(1)</A>,
+<A HREF="dcpitopstalls.html">dcpitopstalls(1)</A>,
+<A HREF="dcpiwhatcg.html">dcpiwhatcg(1)</A>,
+<A HREF="dcpictl.html">dcpictl(1)</A>,
+<A HREF="dcpisource.html">dcpisource(1)</A>,
+<A HREF="dcpicc.html">dcpicc(1)</A>,
+<A HREF="dcpiversion.html">dcpiversion(1)</A>,
+<A HREF="dcpiuninstall.html">dcpiuninstall(1)</A>,
+<A HREF="dcpi2pix.html">dcpi2pix(1)</A>,
+<A HREF="dcpikdiff.html">dcpikdiff(1)</A>,
+<A HREF="dcpix.html">dcpix(1)</A>,
+<A HREF="dcpisumxct.html">dcpisumxct(1)</A>,
+<A HREF="dcpistats.html">dcpistats(1)</A>,
+<A HREF="dcpid.html">dcpid(1)</A>,
+<A HREF="dcpiformat.html">dcpiformat(4)</A>,
+<A HREF="dcpiloader.html">dcpiloader(5)</A><P>
+
+For more information, see the 
+<A HREF="../home.html">DIGITAL Continuous
+Profiling Infrastructure project home page
+(http://www.research.digital.com/SRC/dcpi/ from outside DIGITAL)</A>.
+</BLOCKQUOTE>
+
+<H3>COPYRIGHT</H3>
+<BLOCKQUOTE>
+<P>
+
+<a href="http://www.digital.com/info/tm.html">
+Copyright 1996-97, Digital Equipment Corporation.
+</a>
+</BLOCKQUOTE>
+
+<H3>AUTHOR</H3>
+<BLOCKQUOTE>
+Jennifer Anderson
+</BLOCKQUOTE>
+
+This page was generated automatically by
+<A HREF="http://www.research.digital.com/SRC/mtex/">mtex software</A>.
+</BODY>
+</HTML>

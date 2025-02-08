@@ -1,0 +1,14 @@
+					
+		AVAILABLE ELECTRONICALLY
+
+"How to Make a Correct Multiprocess Program Execute Correctly on a Multiprocessor"
+Leslie Lamport
+February 14, 1993.  8 pages.
+
+A multiprocess program executing on a modern multiprocessor must issue
+explicit commands to synchronize memory accesses.  A method is proposed
+for deriving the necessary commands from a correctness proof of the
+algorithm.
+
+
+

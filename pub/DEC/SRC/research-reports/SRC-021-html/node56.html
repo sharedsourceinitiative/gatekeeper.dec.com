@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Manipulating User Specifications</TITLE>
+<META NAME="description" CONTENT="Manipulating User Specifications">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node57.html">
+<LINK REL="previous" HREF="node55.html">
+<LINK REL="up" HREF="node54.html">
+<LINK REL="next" HREF="node57.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html886"
+ HREF="node57.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html882"
+ HREF="node54.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html876"
+ HREF="node55.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html884"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html885"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html887"
+ HREF="node57.html">Miscellaneous File-System Operations</A>
+<B> Up:</B> <A NAME="tex2html883"
+ HREF="node54.html">The OSFriends Interface</A>
+<B> Previous:</B> <A NAME="tex2html877"
+ HREF="node55.html">Manipulating the State of</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04062000000000000000">
+Manipulating User Specifications</A>
+</H2>
+<P>
+A user specification is an efficient encoding of the text of a user name.  As
+described on page <A HREF="node26.html#BoulderCreek"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>, all OS and OSFriends procedures that
+do local access checking accept a user specification parameter, of type User.
+The super-user is allowed to supply a non-nil user specification, thereby
+masquerading as another user.  To make the parameter passing across the RPC
+interface more efficient, the type User is implemented as an opaque ref.
+<P><A NAME="Pacifica">&#160;</A><A NAME="2241">&#160;</A>
+<PRE>
+PROCEDURE LookUpUser(username: Text.T): User RAISES {};
+</PRE>
+<P><A NAME="1556">&#160;</A>
+<A NAME="1557">&#160;</A>
+LookUpUser converts the text of a user name into a user specification
+suitable for passing as the euser parameter to an OS or OSFriends
+procedure.  LookUpUser returns NIL if the user name is not known.
+<P><A NAME="2242">&#160;</A>
+<PRE>
+PROCEDURE GetUserName(user: User): Text.T RAISES {Error};
+</PRE>
+<P><A NAME="1559">&#160;</A>
+<A NAME="1560">&#160;</A>
+GetUserName retrieves the text of a user name from a user specification,
+or raises InvalidArgumentEC if user is NIL.
+<P>
+<BR><HR>
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,203 @@
+<HTML><HEAD>
+<!-- This document was created from RTF source by rtftohtml version $Revision: 3.6 $ -->
+<TITLE>The 1995 SQL Reunion: People, Projects, and Politics - Oracle</TITLE></HEAD>
+<BODY BACKGROUND="" BGCOLOR="#FFFFFF" TEXT=#000000>
+<A HREF="sqlr95-Tandem.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="sqlr95-And.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="sqlr95-System-3.html"><IMG SRC="images/upg.gif" ALT="Up " border=0></A>
+ <A HREF="sqlr95.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="sqlr95-Contents.html"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+ <A HREF="sqlr95-Index.html"><IMG SRC="images/indexg.gif" ALT="Index" border=0></A>
+<hr size=4>
+<H2>
+Oracle</H2>
+<b>Roger Bamford:</b> Franco, do you want to start with Oracle?<p>
+<b>Franco Putzolu:</b> Well, I interviewed before you.<p>
+<b>Roger Bamford:</b> That's right. Well, you know, I was at Esvel, and I got
+kind of burned out, and I went back to IBM, which you may not know. I worked in
+the Scientific Center for a while.<p>
+<b>C. Mohan:</b> This was Palo Alto, is that right?<p>
+<b>Roger Bamford:<A NAME="Index404"></A></b>
+Yes, Palo Alto. Well, there was this guy there doing an expert system - Harry
+Rhinstein I think his name was. He built it first in APL, and he was porting it
+to Pascal and they really didn't know how to do factoring, so every routine was
+copied many, many times and there'd be a few lines of change in each copy.<p>
+So I was looking for a job, and went to the restaurant at the end of Page Mill
+Road - at Foothill Expressway, and I was meeting this head-hunter, and it was a
+woman. So I'm looking around for a single woman standing around looking for
+somebody, and there was a woman standing around looking for somebody, so I
+started talking to her. It was an Oracle employee, and she goes, "Oh, do you
+know Jack Harper?" who, like many sales people, had a very brief employment at
+Esvel. He was at Oracle, and I started talking to her. Don [Slutz] had talked
+to Oracle and he said, "Check these guys out." So when I got back to my office,
+I thought, well maybe I'll give Oracle a call. So I called Information and got
+their number, and I was thinking of calling them - you know: working myself up
+for it - the phone rang. I picked it up, and it was Jenny Overstreet, who was
+the assistant to Larry Ellison, calling me up to see if I wanted to go up for
+an interview. This was in 1984 I guess, so I got on my motorcycle and I rode
+over to Oracle, which was only a little ways away, and I got rained on in the
+process. I had a nice interview with Bob and Larry<A NAME="Index405"></A>.
+It struck me that Larry had a lot of charisma and energy, and definitely had
+the drive for success. Bob Miner<A NAME="Index406"></A>
+was a really nice guy and very smart too. And so I went to work at Oracle. It
+was funny, because when I got there, I'd come from IBM and Esvel, where the
+customer's data's sacred. The first day, walking down the hall, Ed Oates<A NAME="Index407"></A>,
+one of our early employees, said "Oh, so-and-so's database got hosed again."<i>
+[laughter]</i> So we sent them out the latest version of the system. The only
+way you could use Oracle at the time was you'd export all your data, every day,
+and then plan on having the database get hosed, and then you'd load it back in
+again. And they were really happy. I mean, customers didn't like this, but they
+didn't mind too much, because it was really being used not as a transaction
+processing system at all; it was being used as an early decision-support
+system. And the software was really simple. It was feature rich: there were
+lots of these nifty built-in functions. There were a lot of datatypes that were
+very useful. It was there. It was a language that IBM had endorsed, so Bob and
+Larry figured out it was going to be the next standard language. At the time
+that I joined they were embarking on this portability strategy, which actually
+made a lot of sense, because hardware was expensive in 1984, and by making the
+software portable, you could essentially commoditize hardware. Which is what
+Oracle did, and that created a lot of revenue potential for Oracle, because
+they got back the money that the customers were saving by going to open
+systems. It cost you some other stuff to go to open systems, as they later
+discovered.<p>
+<b>Tom Price:</b> It transferred money from the hardware vendors to Oracle.<p>
+<b>Roger Bamford:</b> Right; to Larry<A NAME="Index408"></A>,
+in particular. At Oracle for a long time, there was a running joke of Stu Feigin<A NAME="Index409"></A>,
+you know, one of the other early founders of Oracle; I guess he was the first
+employee. He'd always say when we'd go out to lunch and spend a bunch of money
+on lunch or dinner, "Well, it's only money, and it's only Larry's money." That
+used to be a running joke.<p>
+In terms of System R's influence on Oracle: some ideas came from Esvel, and
+some of those came from System R. But the original code they'd written was
+really like somebody had a paper that described the language, and they had a
+computer and nothing else. And you could kind of tell that it had been coded
+... I mean, all the data structures were like, "Well, there's this query block,
+and then the query block has a select part, and the select part ... and it has
+a this and a that." There was a totally straightforward mapping from the
+language directly onto hardware; very little intermediate stuff. I mean, if
+there were some indexes, they would use them. Tom [Price] used to be working on
+these papers with all the different join strategies, analyzing them. They never
+read any of that stuff. It was what Larry called an AI optimizer, which is now
+called a rule-based optimizer. So it's actually quite a long time before we
+even had a cost-based optimizer.<p>
+<b>Franco Putzolu:</b> It's really true when you look at Oracle code that there
+is no System R origin.<p>
+<b>Roger Bamford:</b> No, they just ground right through it.<p>
+<b>Mike Blasgen:</b> It's also historically correct, because there was no
+access, first of all: they wouldn't have had access to the code. And it's in
+parallel; it's not like they succeeded in history; they didn't come second,
+they came at the same time.<p>
+<b>Roger Bamford:</b> Yes, actually Oracle<A NAME="Index410"></A>
+had an earlier SQL product than IBM. IBM invented the language, but Oracle
+shipped it first.<p>
+<b>Mike Blasgen:</b> I don't know when the first Oracle code shipped.<p>
+<b>Jim Gray:</b> 1979?<p>
+<b>Roger Bamford:</b> Version 2. The first version of Oracle was Version 2,
+because they figured nobody would buy Version 1.<i> [laughter]</i> It's true;
+another brilliant move on Larry's part.<p>
+<b>Brad Wade:</b> Well, when was Ted Codd<A NAME="Index411"></A>
+made an IBM Fellow?<p>
+<b>Mike Blasgen:</b> 1976.<p>
+<b>Brad Wade:</b> I remember the reception they had for him in the Building 28
+Cafeteria. At that time he said, "It's the first time that I recall of someone
+being made an IBM Fellow for someone else's product." It was Oracle's.<p>
+<b>Mike Blasgen:</b> It was very early.<p>
+<b>Roger Bamford:</b> When I got there, they were on Version 3, which had been
+almost finished by a guy named Bruce Scott<A NAME="Index412"></A>,
+who later went to Gupta; he wrote a lot of the expression-evaluation code in
+the first and second version; I guess in Version 3. Version 2 had been written
+in assembly language for PDP-11; Version 3 was written in C. He did that, and
+he wrote this really nice beautiful, compact code - very well structured; a lot
+of it's still around now. The next version I think worked really well, and
+accounted for a lot of the growth. Then we kind of went on from there. There
+was a decision support and distributed query - Version 5 - went out after that.
+And 6 was a rewrite for transaction processing.<p>
+<b>Franco Putzolu:</b> How much was rewritten in Version 6?<p>
+<b>Roger Bamford:</b> Well, kind of the equivalent of the RSS, so that would be
+about half. And it was all thrown out, and written again from scratch.<p>
+<b>Jim Gray:</b> The same data structures on disk though, right?<p>
+<b>Roger Bamford:</b> No, volume formats changed. Everything's completely
+different. Like rows in Versions 3 and 4 and 5 were concatenated in blocks -
+you know: byte, byte, byte, byte, byte, byte, byte ... with no index or
+anything. So if you wanted row sequence number twelve, you'd start at the
+beginning of the block, and you'd start scanning over columns, and rows ...;
+and eventually there'd you'd be, right where you were looking for.<i>
+[laughter]</i> So how do you update a row and make one of the columns bigger?
+Well, you shift the rest of the block to the right ...<p>
+<b>???:</b> Oh, my god.<p>
+<b>Roger Bamford:</b> Right, so we changed that in Version 6. I was kind of the
+lead designer in 6. When you were saying about the SARGS ... at the time, there
+was no abstraction between what was the RDS and the RSS. There was an
+interface, but it was violated all the time. One of the things that you would
+do is you'd be deep in the middle of some block, looking around, and you'd call
+back through these upper layers, and it would do some SQL thing, like a
+sub-query evaluation. And since Oracle had consistent reads, it was OK to do
+that, because you could be holding this block and it wasn't preventing somebody
+from changing it, because they'd get their own copy and just change that. That
+stuff we preserved, because it turned out to be OK. But the logging, and the
+recovery and the way consistent read itself worked and all the locking<A NAME="Index413"></A>
+- basically everything to do with data management was replaced in 6. And then,
+since then on, we've just been building on that pretty much.<p>
+That's kind of the Oracle story. Does anybody have any questions? <p>
+<b>Don Slutz:</b> Larry<A NAME="Index414"></A>
+started out kind of copying System R as-is. How long did he kind of think of
+going that way versus shooting ahead?<p>
+<b>Roger Bamford:</b> What do you mean?<p>
+<b>Don Slutz:</b> You know, adding more function beyond. He started out
+directly with System R.<p>
+<b>Roger Bamford:</b> Well they took the published SQL specification and they
+built that, and they added stuff that customers wanted.<p>
+<b>C. Mohan:</b> Even Version 1 you had more user-defined functions, and so
+on?<p>
+<b>Roger Bamford:</b> No, Version 2 was all assembly language; I don't know
+what was in there. But 3, yes, they built a bunch of stuff into that, more
+functions for this ...<p>
+<b>Franco Putzolu:</b> When did they add the forms, you know forms tools for
+writing applications more easily?<p>
+<b>Roger Bamford:</b> Oh, yes: IAP<A NAME="Index415"></A>,
+I think: Interactive something-or-other. There was a precursor of SQL*Forms, I
+think went out in 3 or 4; I think it went out in 3. Yes, they hired this guy -
+this is typical Oracle, actually - they hired this guy straight out of school;
+a smart guy; he'd done a little programming. And the first thing he did was the
+UFI thing, and then he built IAP, which is this forms-based application.<p>
+<b>Bruce Lindsay:</b> Like SREDIT?<p>
+<b>Roger Bamford:</b> There were blocks, and then there were tables; it was
+like a table editor with a lot of escapes for transitions from one table to
+another. Nobody at Oracle was held back by lack of experience.<i>
+[laughter]</i><p>
+<b>Mike Blasgen:</b> I remember seeing the Oracle system running for the first
+time at some computer conference like SIGMOD or something. There was a
+demonstration area, and in a little booth was Larry Ellison<A NAME="Index416"></A>
+and one other person, showing off their system. I introduced myself (Jim Mehl
+was with me) and Larry knew about System R and about our work and he gave me a
+little demo. I was impressed, because it was obviously simple, in the sense
+that ... well, you'll see why in a minute. It seemed fast. He loaded the
+database, queried it, and updated it, all in a few seconds. It was - I don't
+know how many - maybe five-hundred records. And it loaded instantly.<p>
+<b>Roger Bamford:</b> What year was this?<p>
+<b>Mike Blasgen:</b> I don't remember; probably 1979 or 1980. The thing that
+impressed me the most was that it ran on a little PDP-11. The machine looked to
+be the size of a carton of cigarettes. It must have been an LSI-11 version of
+the machine, if my recollection of the size is correct. And System R at the
+time in most of our joint studies and at IBM was running on 168s. Now a 168 is
+only maybe the power of a 486DX2 or something, but the fact of the matter is it
+was a huge machine which would probably not fit in this room.<p>
+<b>Jim Gray:</b> It was water-cooled.<p>
+<b>Mike Blasgen:</b> It was a huge computer. And Don [Chamberlin] was talking
+about, "Well System R wasn't so big; it was only 1.5 megabytes of code and 87
+thousand lines of code." But it did in fact run on a computer that filled this
+room. And the little Oracle thing ran on a machine that was the size of a
+carton of cigarettes. I remember because it was right there, stuck sideways
+onto the shelf. It was up on a little shelf above the desk, attached to a glass
+teletype. And that was all that it needed, and it ran fast, and I thought,
+"Simple, fast, cheap; that's neat. People will buy it." Exactly for the
+application that Roger mentioned: the query application, for decision support.
+<p>
+<P><hr size=4>
+<A HREF="sqlr95-Tandem.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="sqlr95-And.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="sqlr95-System-3.html"><IMG SRC="images/upg.gif" ALT="Up " border=0></A>
+ <A HREF="sqlr95.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="sqlr95-Contents.html"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+ <A HREF="sqlr95-Index.html"><IMG SRC="images/indexg.gif" ALT="Index" border=0></A>
+</body></html>

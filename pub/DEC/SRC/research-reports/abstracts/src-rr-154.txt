@@ -1,0 +1,12 @@
+"Protection in Programming-Language Translations"
+Martin Abadi
+Report #154, April 17, 1998.
+21 pages.
+
+We discuss abstractions for protection and the correctness of 
+their implementations. Relying on the concept of full abstraction, 
+we consider two examples: (1) the translation of Java classes to 
+an intermediate bytecode language, and (2) in the setting of the 
+pi calculus, the implementation of private channels in terms of
+cryptographic operations.
+

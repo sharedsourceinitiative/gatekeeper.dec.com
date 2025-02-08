@@ -1,0 +1,1018 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>SRC Technical Note 1997-015, Syntactic Clustering of the Web</TITLE>
+</HEAD>
+<BODY>
+<HR>
+<CENTER>
+<H2><B>SRC Technical Note</B></H2><P>
+<H3><B>1997-015</B></H3><P>
+<H3>July 25, 1997</H3><P>
+<HR>
+<H2>Syntactic Clustering of the Web</H2>
+<P>
+<H3>Andrei Z. Broder, Steven C. Glassman, Mark S. Manasse, Geoffrey Zweig</H3>
+<HR>
+<P>
+<IMG SRC="http://www.research.digital.com/SRC/pics/DEC-logo.gif"
+ALT="DIGITAL"><BR>
+<B>Systems Research Center</B><BR>
+130 Lytton Avenue<BR>
+Palo Alto, CA 94301<BR>
+<A HREF="http://www.research.digital.com/SRC/"
+>http://www.research.digital.com/SRC/</A>
+<P>
+<HR>
+Copyright 1997 Digital Equipment Corporation. All rights reserved
+<HR>
+</CENTER>
+
+<H3><A NAME="Abstract"><STRONG>Abstract</STRONG></A></H3>
+
+<BLOCKQUOTE><I>
+We have developed an efficient way to determine the syntactic similarity
+of files and have applied it to every document on the World Wide Web. Using
+this mechanism, we built a clustering of all the documents that are syntactically
+similar. Possible applications include a &quot;Lost and Found&quot; service,
+filtering the results of Web searches, updating widely distributed web-pages,
+and identifying violations of intellectual property rights.
+</I></BLOCKQUOTE>
+
+<H2><A NAME="Contents">Contents</A></H2>
+
+<UL>
+<LI><A HREF="#Abstract">Abstract</A></LI>
+
+<LI><A HREF="#Introduction">Introduction</A></LI>
+
+<UL>
+<LI><A HREF="#URNs">URNs</A></LI>
+
+<LI><A HREF="#Related work">Related work</A></LI>
+</UL>
+
+<LI><A HREF="#Defining similarity of documents">Defining similarity </A></LI>
+
+<LI><A HREF="#Estimating the resemblance and the containment">Estimating
+the resemblance and the containment</A> </LI>
+
+<LI><A HREF="#Algorithms">Algorithms</A></LI>
+
+<UL>
+<LI><A HREF="#The clustering algorithm">The clustering algorithm</A></LI>
+
+<LI><A HREF="#Query support">Query support</A></LI>
+</UL>
+
+<LI><A HREF="#Clustering Performance Issues">Clustering Performance Issues</A></LI>
+
+<UL>
+<LI><A HREF="#Common shingles">Common shingles</A></LI>
+
+<LI><A HREF="#Identical documents">Identical documents</A></LI>
+
+<LI><A HREF="#Super shingles">Super shingles</A></LI>
+</UL>
+
+<LI><A HREF="#Applications">Applications</A></LI>
+
+<UL>
+<LI><A HREF="#web-based applications">Web-based applications</A></LI>
+<LI><A HREF="#Lost and found">Lost and found</A></LI>
+
+<LI><A HREF="#Clustering of search results">Clustering of search results</A></LI>
+
+<LI><A HREF="#Updating widely distributed information">Updating widely
+distributed information </A></LI>
+
+<LI><A HREF="#Characterizing how pages change over time">Characterizing
+how pages change over time </A></LI>
+
+<LI><A HREF="#Intellectual property and plagiarism">Intellectual property
+and plagiarism</A></LI>
+</UL>
+
+<LI><A HREF="#Status">Status</A></LI>
+
+<LI><A HREF="#Conclusions">Conclusions</A></LI>
+
+<LI><A HREF="#Acknowledgments">Acknowledgments</A></LI>
+
+<LI><A HREF="#References">References</A></LI>
+
+<LI><A HREF="#Authors">Authors</A></LI>
+
+</UL>
+
+<H2><A NAME="Introduction">Introduction</A></H2>
+
+<P>The Web has undergone exponential growth since its birth, and this expansion
+has generated a number of problems; in this paper we address two of these:
+</P>
+
+<OL>
+<LI>The proliferation of documents that are identical or almost identical.
+</LI>
+
+<LI>The instability of URLs. </LI>
+</OL>
+
+<P>The basis of our approach is a mechanism for discovering when two documents
+are &quot;roughly the same&quot;; that is, for discovering when they have
+the same content except for modifications such as formatting, minor corrections,
+webmaster signature, or logo. Similarly, we can discover when a document
+is &quot;roughly contained&quot; in another. Applying this mechanism to
+the entire collection of documents found by the AltaVista spider yields
+a grouping of the documents into clusters of closely related items. As
+explained below, this clustering can help solve the problems of document
+duplication and URL instability.</P>
+
+<P>The duplication problem arises in two ways: First, there are documents
+that are found in multiple places in identical form. Some examples are
+</P>
+
+<UL>
+<LI>FAQ (Frequently Asked Questions) or RFC (Request For Comments) documents.
+</LI>
+
+<LI>The online documentation for popular programs. </LI>
+
+<LI>Documents stored in several mirror sites. </LI>
+
+<LI>Legal documents. </LI>
+</UL>
+
+<P>Second, there are documents that are found in almost identical incarnations
+because they are: </P>
+
+<UL>
+<LI>Different versions of the same document. </LI>
+
+<LI>The same document with different formatting. </LI>
+
+<LI>The same document with site specific links, customizations or contact
+information. </LI>
+
+<LI>Combined with other source material to form a larger document. </LI>
+
+<LI>Split into smaller documents. </LI>
+</UL>
+
+<P>The instability problem arises when a particular URL becomes undesirable
+because: </P>
+
+<UL>
+<LI>The associated document is temporarily unavailable or has moved. </LI>
+
+<LI>The URL refers to an old version and the user wants the current version.</LI>
+
+<LI>The URL is slow to access and the the user wants an identical or similar
+document that will be faster to retrieve.</LI>
+</UL>
+
+<P>In all these cases, the ability to find documents that are syntactically
+similar to a given document allows the user to find other, acceptable versions
+of the desired item.</P>
+
+<H3><A NAME="URNs">URNs</A></H3>
+
+<P>URNs (Uniform Resource Names) <A HREF="#urn">[6]</A> have often been
+suggested as a way to provide functionality similar to that outlined above.
+URNs are a generalized form of URLs (Uniform Resource Locators). However,
+instead of naming a resource directly - as URLs do by giving a specific
+server, port and file name for the resource - URNs point to the resource
+indirectly through a <I>name server</I>. The name server is able to translate
+the URN to the &quot;best&quot; (based on some criteria) URL of the resource.</P>
+
+<P>The main advantage of URNs is that they are location independent. A
+single, stable URN can track a resource as it is renamed or moves from
+server to server. A URN could direct a user to the instance of a replicated
+resource that is in the nearest mirror site, or is given in a desired language.
+Unfortunately, progress towards URN's has been slow. The mechanism we present
+here provides an alternative solution.</P>
+
+<H3><A NAME="Related work">Related work</A></H3>
+
+<P>Our approach to determining syntactic similarity is related to the sampling
+approach developed by Heintze [<A HREF="#heintze">2</A>], though there are
+many differences in detail and in the precise definition of the measures
+used. Since our domain of interest is much larger (his prototype implementation
+is on a domain 50,000 times smaller) and we are less concerned with plagiarism,
+the emphasis is often different. Related sampling mechanisms for determining
+similarity were also developed by Manber [<A HREF="#manber">3</A>] and
+within the Stanford SCAM project [<A HREF="#scam1">1</A>, <A HREF="#scam2">4</A>,
+<A HREF="#scam3">5</A>].</P>
+
+<P>With respect to clustering, there is a large body of literature related
+to <I>semantic clustering,</I> a rather different concept. Again, clustering
+based on syntactic similarity (on a much smaller scale) is discussed in
+the context of the SCAM project.</P>
+
+<H2><A NAME="Defining similarity of documents">Defining similarity
+of documents</A></H2>
+
+<P>To capture the informal notions of &quot;roughly the same&quot; and
+&quot;roughly contained&quot; in a rigorous way, we use the mathematical
+concepts of <I>resemblance</I> and <I>containment</I> as defined below.
+</P>
+
+<P>The <I>resemblance</I> of two documents <I>A</I> and <I>B</I> is a number
+between 0 and 1, such that when the resemblance is close to 1 it is likely
+that the documents are &quot;roughly the same&quot;. Similarly, the <I>containment</I>
+of <I>A</I> in <I>B</I> is a number between 0 and 1 that, when close to
+1, indicates that <I>A</I> is &quot;roughly contained&quot; within <I>B</I>.
+To compute the resemblance and/or the containment of two documents it suffices
+to keep for each document a <I>sketch</I> of a few hundred bytes. The sketches
+can be efficiently computed (in time linear in the size of the documents)
+and, given two sketches, the resemblance or the containment of the corresponding
+documents can be computed in time linear in the size of the sketches. </P>
+
+<P>We view each document as a sequence of words, and start by lexically
+analyzing it into a canonical sequence of tokens. This canonical form ignores
+minor details such as formatting, html commands, and capitalization. We
+then associate with every document <I>D</I> a set of subsequences of tokens
+<I>S</I>(<I>D</I>, <I>w</I>). </P>
+
+<P>A contiguous subsequence contained in <I>D</I> is called a <I>shingle</I>.
+Given a document <I>D</I> we define its <I>w-shingling</I> <I>S</I>(<I>D</I>,
+<I>w</I>) as the set of all unique shingles of size <I>w</I> contained
+in <I>D</I>. So for instance the 4-shingling of </P>
+
+<CENTER><P>(<TT>a,rose,is,a,rose,is,a,rose</TT>) </P></CENTER>
+
+<P>is the set </P>
+
+<CENTER><P>{ (<TT>a,rose,is,a</TT>), (<TT>rose,is,a,rose</TT>), (<TT>is,a,rose,is</TT>)
+} </P></CENTER>
+
+<P>For a given shingle size, the resemblance <I>r</I> of two documents
+<I>A</I> and <I>B</I> is defined as </P>
+
+<P><IMG SRC="img1.gif" ALT="displaymath97" HEIGHT=45 WIDTH=354 ALIGN=BOTTOM>
+<BR>
+Where |A| is the size of set A.</P>
+
+<P>The containment of <I>A</I> in <I>B</I> is defined as </P>
+
+<P><IMG SRC="img2.gif" ALT="displaymath103" HEIGHT=45 WIDTH=353 ALIGN=BOTTOM>
+</P>
+
+<P>Hence the resemblance is a number between 0 and 1, and it is always
+true that <I>r</I>(<I>A</I>, <I>A</I>) = 1, i.e. that a document resembles
+itself 100%. Similarly, the containment is a number between 0 and 1 and
+if <IMG SRC="img3.gif" ALT="tex2html_wrap_inline109" HEIGHT=31 WIDTH=53 ALIGN=CENTER>
+then <I>c</I>(<I>A</I>,<I>B</I>) = 1. </P>
+
+<P>Experiments show that these mathematical definitions effectively capture
+our informal notions of &quot;roughly the same&quot; and &quot;roughly
+contained.&quot; </P>
+
+<P>Notice that resemblance is not transitive (a well-known fact bemoaned
+by grandparents all over), but neither is our informal idea of &quot;roughly
+the same;&quot; for instance consecutive versions of a paper might well
+be &quot;roughly the same,&quot; but version 100 is probably quite different
+from version 1. Nevertheless, the <I>resemblance distance</I> defined as
+</P>
+
+<P><IMG SRC="img4.gif" ALT="displaymath113" HEIGHT=19 WIDTH=339 ALIGN=BOTTOM>
+</P>
+
+<P>is a metric and obeys the triangle inequality. (The proof of this, as
+well as most of the mathematical analysis of the algorithms discussed here
+are the subject of a separate paper, in preparation.) </P>
+
+<H2><A NAME="Estimating resemblance and containment">Estimating the
+resemblance and the containment</A></H2>
+
+<P>Fix a shingle size <I>w</I>, and let <I>U</I> be the set of all shingles
+of size <I>w</I>. Without loss of generality we can view <I>U</I> as a
+set of numbers. Now fix a parameter <I>s</I>. For a set <IMG SRC="img5.gif" ALT="tex2html_wrap_inline125" HEIGHT=29 WIDTH=59 ALIGN=CENTER>
+define <IMG SRC="img6.gif" ALT="tex2html_wrap_inline127" HEIGHT=29 WIDTH=77 ALIGN=CENTER>
+as </P>
+
+<P><IMG SRC="img7.gif" ALT="displaymath129" HEIGHT=48 WIDTH=553 ALIGN=BOTTOM>
+</P>
+
+<P>where &quot;smallest&quot; refers to numerical order on <I>U</I> , and
+define </P>
+
+<P><IMG SRC="img8.gif" ALT="displaymath133" HEIGHT=19 WIDTH=486 ALIGN=BOTTOM>
+</P>
+
+<P><B>Theorem.</B><I> Let <IMG SRC="img9.gif" ALT="tex2html_wrap_inline135" HEIGHT=14 WIDTH=85 ALIGN=BOTTOM>
+be a permutation of U chosen uniformly at random. Let <IMG SRC="img10.gif" ALT="tex2html_wrap_inline139" HEIGHT=29 WIDTH=192 ALIGN=CENTER>
+and <IMG SRC="img11.gif" ALT="tex2html_wrap_inline141" HEIGHT=29 WIDTH=206 ALIGN=CENTER>
+. Define F(B) and V(B) analogously. Then </I></P>
+
+<UL>
+<LI><I>The value </I></LI>
+
+<P><IMG SRC="img12.gif" ALT="displaymath147" HEIGHT=45 WIDTH=404 ALIGN=BOTTOM></P>
+
+<P><I>is an unbiased estimate of the resemblance of A and B.</I></P>
+
+<LI><I>The value </I></LI>
+
+<P><IMG SRC="img13.gif" ALT="displaymath153" HEIGHT=45 WIDTH=310 ALIGN=BOTTOM></P>
+
+<P><I>is an unbiased estimate of the resemblance of A and B.</I></P>
+
+<LI><I>The value </I></LI>
+
+<P><IMG SRC="img14.gif" ALT="displaymath159" HEIGHT=45 WIDTH=310 ALIGN=BOTTOM></P>
+
+<P><I>is an unbiased estimate of the containment of A in B. </I></P>
+</UL>
+
+<P>In view of the above, we can choose a random permutation and afterwards
+keep for each document <I>D</I> a <I>sketch</I> consisting only of the
+set <I>F</I>(<I>D</I>) and/or <I>V</I>(<I>D</I>). The sketches suffice
+to estimate the resemblance or the containment of any pair of documents
+without any need for the original files. </P>
+
+<P>The set <I>F</I>(<I>D</I>) has the advantage that it has a fixed size,
+but it allows only the estimation of resemblance. The size of <I>V</I>(<I>D</I>)
+grows as <I>D</I> grows, but allows the estimation of both resemblance
+and containment. </P>
+
+<P>To limit the size of <I>V</I>(<I>D</I>) we can proceed as follows: for
+documents that have size between (say) <IMG SRC="img15.gif" ALT="tex2html_wrap_inline179" HEIGHT=17 WIDTH=58 ALIGN=BOTTOM>
+and <IMG SRC="img16.gif" ALT="tex2html_wrap_inline181" HEIGHT=17 WIDTH=75 ALIGN=BOTTOM>
+, we store the set <IMG SRC="img17.gif" ALT="tex2html_wrap_inline183" HEIGHT=29 WIDTH=211 ALIGN=CENTER>
+. The expected size of <IMG SRC="img18.gif" ALT="tex2html_wrap_inline185" HEIGHT=29 WIDTH=45 ALIGN=CENTER>
+is always between 50 and 100. On the other hand, we can easily compute
+<IMG SRC="img19.gif" ALT="tex2html_wrap_inline187" HEIGHT=29 WIDTH=62 ALIGN=CENTER>
+from <IMG SRC="img18.gif" ALT="tex2html_wrap_inline189" HEIGHT=29 WIDTH=45 ALIGN=CENTER>
+. (We simply keep only those elements divisible by <IMG SRC="img21.gif" ALT="tex2html_wrap_inline191" HEIGHT=16 WIDTH=29 ALIGN=BOTTOM>
+.) Thus, if we are given two documents, <I>A</I> and <I>B</I>, and <IMG SRC="img22.gif" ALT="tex2html_wrap_inline197" HEIGHT=16 WIDTH=12 ALIGN=BOTTOM>
+was the modulus used by the longer document, we use <IMG SRC="img23.gif" ALT="tex2html_wrap_inline199" HEIGHT=29 WIDTH=43 ALIGN=CENTER>
+and <IMG SRC="img24.gif" ALT="tex2html_wrap_inline201" HEIGHT=29 WIDTH=44 ALIGN=CENTER>
+for our estimates. The disadvantage of this approach is that the estimation
+of the containment of very short documents into substantially larger ones
+is rather error prone due to the paucity of samples. </P>
+
+<P>In our system, we implement the sketches as follows: </P>
+
+<UL>
+<LI>We canonicalize documents by removing HTML formatting and converting
+all words to lowercase. </LI>
+
+<LI>The shingle size <I>w</I> is 10. </LI>
+
+<LI>We use a 40 bit fingerprint function, based on Rabin fingerprints
+<A HREF="#rabin">[7]</A>, enhanced to behave as a random
+permutation. (When we refer to a <I>shingle</I> or <I>shingle
+value</I> in the rest of this paper, we will mean this fingerprint
+value.) </LI>
+
+<LI>We use the &quot;modulus&quot; method for selecting shingles with an
+<I>m</I> of 25. </LI>
+</UL>
+
+<H2><A NAME="Algorithms">Algorithms</A></H2>
+
+<P>Conceptually, applying this resemblance algorithm to the entire Web
+is quite simple. We: </P>
+
+<UL>
+<LI>retrieve every document on the Web (this data was available to us from
+an AltaVista spider run),</LI>
+
+<LI>calculate the sketch for each document, </LI>
+
+<LI>compare the sketches for each pair of documents to see if they exceed
+a threshold of resemblance, </LI>
+
+<LI>combine the pairs of similar documents to make clusters of similar
+documents. </LI>
+</UL>
+
+<P>While this algorithm is quite simple, a naive implementation is impractical.
+Our test case is a set 30,000,000 HTML and text documents retrieved from
+the Web. A pairwise comparison would involve O(10<SUP>15</SUP>) (a quadrillion)
+comparisons. This is clearly infeasible.</P>
+
+<P>The magnitude of the input data imposed severe restrictions on the design
+of our data structures and algorithms. Just one bit per document in a data
+structure requires 4 Mbytes. A sketch size of 800 bytes per document requires
+24 Gbytes. One millisecond of computation per document translates into
+8 hours of computation. Any algorithm involving random disk accesses or
+that causes paging activity is completely infeasible.</P>
+
+<P>In the design of our algorithms, we use a single, simple approach for
+dealing with so much data - divide, compute, merge. We take the data, divide
+it into pieces, compute on each piece separately and then merge the results.
+We choose the piece size <EM>m</EM> so that the computation can be done entirely
+in memory. Merging the results is a simple, but time consuming process
+due to the required I/O. Each merge pass is linear, but log(n/m) passes
+are required, so the overall performance of the process is dominated by
+a O(n log(n/m)) term.</P>
+
+<H3><A NAME="The clustering algorithm">The clustering algorithm</A></H3>
+
+<P>We perform the clustering algorithm in four phases. In the first phase,
+we calculate a sketch for every document. This step is linear in the total
+length of the documents.</P>
+
+<P>In the second phase, we produce a list of all the shingles and the documents
+they appear in, sorted by shingle value. To do this, the sketch for each
+document is expanded into a list of &lt;shingle value, document ID&gt;
+pairs. We sort this list using the divide, sort, merge approach outlined
+above.</P>
+
+<P>In the third phase, we generate a list of all the pairs of documents
+that share any shingles, along with the number of shingles they have in
+common. To do this, we take the file of sorted &lt;shingle, ID&gt; pairs
+and expand it into a list of &lt;ID, ID, count of common shingles&gt;
+triplets by taking each shingle that appears in multiple documents and
+generating the complete set of &lt;ID, ID, 1&gt; triplets for that shingle.
+We then apply the divide, sort, merge procedure (adding the counts for
+matching ID - ID pairs) to produce a single file of all &lt;ID, ID, count&gt;
+triplets sorted by the first document ID. This phase requires the greatest
+amount of disk space because the initial expansion of the document ID triplets
+is quadratic in the number of documents sharing a shingle, and initially
+produces many triplets with a count of 1.</P>
+
+<P>In the final phase, we produce the complete clustering. We examine each
+&lt;ID, ID, count&gt; triplet and decide if the document pair exceeds our
+threshold for resemblance. If it does, we add a link between the two documents
+in a union-find algorithm. The connected components output by the union-find
+algorithm form the final clusters. This phase has the greatest memory requirements
+because we need to hold the entire union-find data structure in memory.
+</P>
+
+<H3><A NAME="Query support">Query support</A></H3>
+
+<P>After we have completed the clustering, we need several auxiliary data
+structures to make queries more convenient. We produce: </P>
+
+<UL>
+<LI>the mapping of a URL to its document ID: </LI>
+
+<UL>
+<LI>Fingerprint each URL and pair it with the document ID. </LI>
+
+<LI>Sort the &lt;fingerprint, ID&gt; pairs by fingerprint value. </LI>
+
+<LI>When given a URL, we fingerprint it, find it in the sorted list and
+output the document ID. </LI>
+</UL>
+
+<LI>the mapping of document ID to the cluster containing it </LI>
+
+<UL>
+<LI>this is a inversion of the cluster to document ID mapping, ordered
+by document ID </LI>
+</UL>
+
+<LI>the mapping of a cluster to the documents it contains </LI>
+
+<UL>
+<LI>this is the output of the clustering algorithm </LI>
+</UL>
+
+<LI>the mapping of a document ID to its URL </LI>
+
+<UL>
+<LI>an array of all the URLs in document ID order </LI>
+</UL>
+</UL>
+
+<H2><A NAME="Clustering Performance Issues">Clustering Performance
+Issues</A></H2>
+
+<H3><A NAME="Common shingles">Common shingles</A></H3>
+
+<P>Very common shingles (for us, this means shingles shared by more than
+1000 documents) are a performance problem during the third phase of our
+algorithm. As we have discussed, the number of document ID pairs is quadratic
+in the number of documents sharing a shingle. Overly common shingles can
+greatly expand the number of the document ID pairs we have to deal with.</P>
+
+<P>When we looked at the most common shingles,  we found that they were
+nearly all mechanically generated. They include: </P>
+
+<UL>
+<LI>HTML comment tags identifying the program that generated the HTML </LI>
+
+<LI>Shared header or footer information on a large number of automatically
+generated pages (forms or views on databases) </LI>
+
+<LI>Extremely common text sequences (the numbers 3-12, ...) </LI>
+
+<LI>Mechanically generated pages with artificially different URLs and internal
+links </LI>
+</UL>
+
+<P>These common shingles either have no effect on the overall resemblance
+of the documents or they have the effect of creating a false resemblance
+between two basically dissimilar documents. Therefore, we ignore all very
+common shingles. </P>
+
+<H3><A NAME="Identical documents">Identical documents</A></H3>
+
+<P>Identical documents do not need to be handled specially in our
+algorithm, but they add to the computational workload and can be
+eliminated quite easily. Identical documents obviously share the same
+set of shingles and so, for the clustering algorithm, we only need to
+keep one representative from each group of identical
+documents. Therefore, for each document we generate a fingerprint that
+covers its entire contents. When we find documents with identical
+fingerprints, we eliminate all but one from the clustering
+algorithm. After the clustering has been completed, the other
+identical documents are added into the cluster containing the one kept
+version. </P>
+
+<P>We can expand the collection of identical documents with the
+&quot;lexically-equivalent&quot; documents and the
+&quot;shingle-equivalent&quot; documents.  The lexically-equivalent
+documents are identical after they have been converted to canonical
+form.  The shingle-equivalent documents are documents that have
+identical shingle values after the set of shingles has been selected.
+Obviously, all identical documents are lexically-equivalent, and all
+lexically equivalent documents are shingle equivalent.</P>
+
+<P>We can find each set of documents with a single fingerprint.
+Identical documents are found with the fingerprint of the entire
+original contents.  Lexically-equivalent documents are found with the
+fingerprint of the entire canonicalized contents.  Shingle equivalent
+documents are found with the fingerprint of the set of selected
+shingles.</P>
+
+
+<H3><A NAME="Super shingles">Super shingles</A></H3>
+
+<P>The second and third phases of our algorithm require a great deal of
+disk space for the &lt;shingle, ID&gt; pairs and the &lt;ID, ID, count&gt;
+triplets. We have investigated a method for more directly determining document
+resemblance from the document sketches.</P>
+
+<P>Sketches are an effective method for estimating the resemblance of two
+documents because they are easily compared, canonical representations
+of the documents. Hence, we can estimate the resemblance of two documents
+with the ratio of the number of shingles they have in common to
+total number of shingles between them.</P>
+
+<P>Similarly, we can estimate the resemblance of two sketches by
+computing the <I>meta-sketch</I> (sketch of a sketch). We compute <I>super shingles</I> by
+sorting the sketch's shingles and then shingling the shingles. The document's
+meta-sketch is then determined by its set of super shingles. If two documents
+have even one super shingle in common, then that means their sketches have
+a <I>sequence</I> of shingles in common.</P>
+
+<P>If the number of shingles in a super shingle is chosen correctly, then
+it is highly probably that two similar documents will have 
+at least one common super shingle.  In addition, the existence
+of a single common super shingle means it is likely that two 
+documents resemble each other.  To compute resemblance with
+regular shingles, we need to collect and count the common shingles.
+To detect resemblance with super shingles, we only need
+to find a single common super shingle.  So, super shingles are a 
+simpler and more efficient method of computing resemblance.</P>
+
+<P>A clustering algorithm based on super shingles is: </P>
+
+<UL>
+<LI>Compute the list of super shingles for each document. </LI>
+
+<LI>Expand the list of super shingles into a sorted list of &lt;super shingle,
+ID&gt; pairs. </LI>
+
+<LI>Any documents that share a super shingle resemble each other are added
+into the cluster. (If we want a higher threshold we can compute their actual
+resemblance.) </LI>
+</UL>
+
+<P>So, the entire third phase of the basic algorithm where we generate
+and merge the document ID pairs is not needed.</P>
+
+<P>Unfortunately, super shingles are not as flexible or as accurate as
+computing resemblance with regular sketches. First, 
+super shingles do not work well for short documents.
+Short documents do not contain many shingles and so,
+even with regular shingles, the error in estimating
+document resemblance is greater. Super shingles make this problem worse.
+
+A super shingle represents a sequence of shingles, and so, shorter documents,
+with fewer super shingles, have a lower probability of producing a common
+super shingle.</P>
+
+<P>Second, super shingles cannot detect containment. Suppose we have
+two documents and the larger one completely contains the smaller one.
+Then, the sketch of the larger document includes all of the shingles
+of the smaller document along with additional shingles from its extra
+material.  When we sort the shingles for the larger document and
+calculate its super shingles, the extra shingles will be interspersed
+with the common shingles.  Therefore, the sequences of shingles - and
+thus the super shingles - for the larger document will be different
+than those of the smaller document.</P>
+
+<H2><A NAME="Applications">Applications</A></H2>
+
+<P>While we will soon discuss some specific applications related to
+clustering the Web, we also want to point out that our resemblance and
+clustering techniques are not limited to text documents.  
+Our general technique only depends on the ability to extract a
+set of features from objects.  Once we are given the set of
+features for each object, we can then apply the algorithms described
+above to compute the resemblance of the objects and to cluster
+groups of similar objects.</P>
+
+<P>For documents and objects other than text, there are many potential features
+for computing resemblance. An audio message of human speech could have
+features based on sequences of phonemes.  For documents in
+foreign language, the features could be labels from a multi-lingual
+concordance.  Musical features could be based on Sequences of notes or chords.
+As techniques are developed for identifying features in other data
+types, there are no limits on the objects that can be compared for
+resemblance: images, video sequences, or databases.</P>
+
+<H3><A NAME="web-based applications">Web-based applications</A></H3>
+
+<P>Now, we will consider some of the Web-related applications of our
+methods.  Once we have the sketches, clusters and auxiliary data
+structures, we can use them for several interesting applications. As
+we discuss the different applications, we will consider their storage
+and performance characteristics.  There are two approaches: </P>
+
+<OL>
+<LI>Basic clustering </LI>
+
+<P>The most straightforward application is a service to locate highly similar
+alternatives to a given URL. In this case, the user has the URL of a document
+and for some reason wants to find another document that resembles it. This
+relationship is exactly what clustering gives us.</P>
+
+<P>Given a complete clustering and the auxiliary files for mapping URLs
+to document IDs and mapping document IDs back to URLs, we can very efficiently
+compute all of the URLs for the documents in the cluster.</P>
+
+<P>Unfortunately, clustering must be done with a single fixed threshold
+for resemblance and we must decide in advance if we want contained and
+containing documents included in the clusters. We can get around this and
+produce clusters based on a variety of policies by repeating the final
+phase of the clustering algorithm for each different policy. This phase
+is relatively inexpensive and the output clusters are relatively compact.</P>
+
+<P>Another issue is that basic clustering can only support queries about
+URLs that are part of the input, and the clusters are based on the contents
+of the URLs at the time they were retrieved. We can solve this problem
+by computing sketches for new or modified documents on demand. </P>
+
+<LI>On the fly resemblance </LI>
+
+<P>If we are able to keep the full sketches of every document and the
+file of sorted &lt;shingle, ID&gt; pairs, then we can perform on the
+fly resemblance.  In this case, the input can be any document; 
+either from a URL or stored locally; whether is was part of the initial 
+clustering or not; whether it has changed or not.  The algorithm is as
+follows: </P>
+
+<UL>
+<LI>Get the sketch of the input document by </LI>
+
+<UL>
+<LI>Looking up the sketch for the URL, or </LI>
+
+<LI>Computing the sketch from the document itself. </LI>
+</UL>
+
+<LI>Look up each shingle from the input document in the sorted &lt;shingle,
+ID&gt; file.</LI>
+
+<LI>For each document that shares a shingle, maintain the count of common
+shingles.</LI>
+
+<LI>Based on the number of shingles in each document, compute the resemblance
+and contained/containment value.</LI>
+
+<LI>Sort, threshold and present the result.</LI>
+</UL>
+
+<P>This method requires more space and time, but it offers greater flexibility
+than precomputed clusters. It also allows any document, even a document
+that was not part of the original input, to be compared for resemblance.
+We have found that the performance of this method is quite good (a few
+seconds) unless the input document is quite big or resembles a large number
+of documents. </P>
+</OL>
+
+<H3><A NAME="Lost and found">Lost and found</A></H3>
+
+<P>Everyone is aware that URLs are not good forever. Pages get
+renamed, pages move, web sites get rearranged, servers get renamed,
+and users change internet service providers. Every good URL eventually
+becomes yet another dead link.</P>
+
+<P>Our clustering method can create a World Wide Web lost and found,
+where we automatically notice that the URL for a page has changed and
+find its new URL. Instead of just clustering the current contents of
+the Web, we cluster the contents of the web from multiple sweeps over
+the web done at different times. As long as any one sweep has found a
+particular URL, we can find its current location by taking the most
+recent URL from its cluster. The clustering algorithm remains the
+same, except that the URLs of the document are also tagged with a
+date.</P>
+
+<P>Clustering the documents found in a series of sweeps can be made relatively
+efficient as it is not necessary to perform the entire clustering from
+scratch each time. Instead, we need only sketch the documents from the
+last sweep and merge them into the existing clusters. In addition, there
+will be a large number of identical documents between sweeps and these
+can be extracted early in the algorithm.</P>
+
+<H3><A NAME="Clustering of search results">Clustering of search results</A></H3>
+
+<P>Current search engines like AltaVista try to return the most relevant answers
+to a query first. Often this means several similar versions of a document
+are returned as separate entries. Clustering allows us to display this
+similarity to the user and present the search results more compactly. 
+The user selects the preferred version to
+retrieve and avoids examining nearly identical copies.
+</P>
+
+<H3><A NAME="Updating widely distributed information">Updating widely
+distributed information</A></H3>
+
+<P>Some important information is widely disseminated and quoted
+throughout the Web, with slight local changes. For instance there are
+many slightly reformatted, full or partial copies of an FTC (Federal
+Trade Commission) ruling regarding consumer credit.  If this ruling
+were to change, one would hope that FTC would try to notify all the
+sites with any version of this document.  The cluster containing the
+original ruling would assist in producing the list of contacts.  In
+contrast, with a search engine a query wide enough to cover all the
+variations would result in a large number of irrelevant hits that
+would have to be filtered out.</P>
+
+<H3><A NAME="Characterizing how pages change over time">Characterizing
+how pages change over time</A></H3>
+
+<P>In addition to updating URLs, we can use the technique of comparing
+sketches over time to characterize the behavior of pages on the web. For
+instance, we can observe a page at different times and see how similar
+each version is to the preceding version. When we have this information
+for many web pages, we can answer some basic questions about the Web: </P>
+
+<UL>
+<LI>How often do pages change? </LI>
+
+<LI>How much do they change per time interval? </LI>
+
+<LI>How often do pages move? Within a server? Between servers? </LI>
+
+<LI>How long do pages live? How many are created? How many die? </LI>
+</UL>
+
+<P>A better understanding of these issues will make it possible to build
+better proxies, search engines, directories and browsers. </P>
+
+<H3><A NAME="Intellectual property and plagiarism">Intellectual property
+and plagiarism</A></H3>
+
+<P>One final application is the detection of illegal copies or modifications
+of intellectual property. Given a source document we can detect if all
+or parts of it have been substantially copied or if small changes were
+made to documents that were supposed to be left unchanged (eg license agreements).
+However, the security of our approach is rather limited, since we have
+a single, static sketching policy. The approach taken by Heintze [<A HREF="#heintze">2</A>]
+whereby a new set of samples is selected from a larger stored set, is more
+secure at the cost of a substantial storage penalty. </P>
+
+<H2><A NAME="Status">Status</A></H2>
+
+<P>We have implemented the sketching, clustering and clustering on the
+fly algorithms and produced a working demonstration system.</P>
+
+<P>We tested our algorithms on a collection of 30,000,000 HTML and
+text documents from a walk of the web performed by AltaVista in April
+of 1996. The total input data was 150 Gbytes (an average of about 5k
+per document).  The file containing just the URLs of the documents took up 1.8
+Gbytes (an average of 60 bytes per URL). We sketched all of the
+documents with 10 word long shingles to produce 40 bit (5 byte)
+shingle fingerprints. We kept 1 in 25 of the shingles found. </P>
+
+<P>There were about 600M shingles so the raw sketch files took up 3
+Gbytes (5 bytes per shingle). During the first phase of the clustering
+algorithm, this expanded to about 5.5 Gbytes (9 bytes per entry - 5
+bytes for the shingle and 4 bytes for the document ID). At the
+maximum, we required 10 Gbytes of storage because we need two copies
+of the data during the merge operation.</P>
+
+<P>In the third phase - the creation of &lt;ID, ID, count&gt; triples -
+the storage requirements grew to about 20 Gbytes. (We save some space because
+there are shingles that only appear in one document, but we lose on the
+quadratic expansion of document ID lists to document ID pairs. The maximum
+storage reflects the fact that the document ID pairs are initially duplicated
+in each separate file. However, they are gradually combined together as
+the files are merged.) At the end of the third phase, the sorted file of
+&lt;ID, ID, count&gt; triples took up 6 Gbytes.</P>
+
+<P>The final clustering phase is the most memory intensive phase since
+we want the entire union-find data structure to be in memory. The final
+file containing the list of the documents in each cluster took up less
+than 100 Mbytes.</P>
+
+<P>We calculated our clusters based on a 50% resemblance. We found 3.6
+million clusters containing a total of 12.3 million documents. Of these,
+2.1 million clusters contained only identical documents (5.3 million documents).
+The remaining 1.5 million clusters contained 7 million documents (a mixture
+of exact duplicates and similar). Here is how the processing time for the
+different operations breaks down (if an operation is parallelizable, then
+much of it - usually all but the final merge - can be performed independently
+on many machines at once): </P>
+
+<CENTER><TABLE BORDER=1 >
+<TR >
+<TH NOWRAP>Phase</TH>
+
+<TH>Time (CPU-days)</TH>
+
+<TH>Parallelizable</TH>
+</TR>
+
+<TR>
+<TD>
+<CENTER><P>Sketching </P></CENTER>
+</TD>
+
+<TD>
+<CENTER><P>4.6 </P></CENTER>
+</TD>
+
+<TD>
+<CENTER><P>YES </P></CENTER>
+</TD>
+</TR>
+
+<TR>
+<TD>
+<CENTER><P>Duplicate Elimination </P></CENTER>
+</TD>
+
+<TD>
+<CENTER><P>0.3 </P></CENTER>
+</TD>
+
+<TD>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD>
+<CENTER><P>Shingle Merging </P></CENTER>
+</TD>
+
+<TD>
+<CENTER><P>1.7 </P></CENTER>
+</TD>
+
+<TD>
+<CENTER><P>YES </P></CENTER>
+</TD>
+</TR>
+
+<TR>
+<TD>
+<CENTER><P>ID-ID Pair Formation </P></CENTER>
+</TD>
+
+<TD>
+<CENTER><P>0.7 </P></CENTER>
+</TD>
+
+<TD>&nbsp;</TD>
+</TR>
+
+<TR >
+<TD>
+<CENTER><P>ID-ID Merging </P></CENTER>
+</TD>
+
+<TD>
+<CENTER><P>2.6 </P></CENTER>
+</TD>
+
+<TD>
+<CENTER><P>YES </P></CENTER>
+</TD>
+</TR>
+
+<TR>
+<TD>
+<CENTER><P>Cluster Formation </P></CENTER>
+</TD>
+
+<TD>
+<CENTER><P>0.5 </P></CENTER>
+</TD>
+
+<TD>
+<CENTER><P>&nbsp; </P></CENTER>
+</TD>
+</TR>
+
+<TR>
+<TH>Total</TH>
+
+<TD>
+<CENTER><P>~10.5 </P></CENTER>
+</TD>
+
+<TD>
+<CENTER><P>&nbsp; </P></CENTER>
+</TD>
+</TR>
+</TABLE></CENTER>
+
+<H2><A NAME="Conclusions">Conclusions</A></H2>
+
+<P>We believe that our system provides new functionality for dealing with
+the sea of information on the Web. It allows users to find syntactically
+related documents anywhere on the World Wide Web. It allows search engines
+to better present results to their clients. And, it allows for new services
+to track URLs over time, and detect and fix links to moved URLs.</P>
+
+<P>We also believe that our techniques can generalize to other problem
+domains.  Given any technique that extracts a set of features from
+an object, we can measure the similarity of any two objects or cluster
+the sets of similar objects from a large number of objects.</P>
+
+<H2><A NAME="Acknowledgments">Acknowledgments</A></H2>
+
+<P>We wish to thank Greg Nelson for helping to develop the ideas behind
+the resemblance definition and computation.</P>
+
+<H2><A NAME="References">References</A></H2>
+
+<OL>
+<LI><A NAME="scam1">S. Brin, J. Davis, H. Garcia-Molina.</A><I>Copy Detection
+Mechanisms for Digital Documents.</I> Proceedings of the ACM SIGMOD Annual
+Conference, San Francisco, CA, May 1995. Available from<BR>
+<A HREF="http://www-db.stanford.edu/pub/brin/1995/copy.ps">http://www-db.stanford.edu/pub/brin/1995/copy.ps
+</A></LI>
+
+<LI><A NAME="heintze">Nevin Heintze.</A> <I>Scalable Document Fingerprinting.
+</I>Proceedings of the Second USENIX Workshop on Electronic Commerce, Oakland,
+California, , November 18-21, 1996. Available from: <A HREF="http://www.cs.cmu.edu/afs/cs/user/nch/www/koala/main.html">http://www.cs.cmu.edu/afs/cs/user/nch/www/koala/main.html</A>
+</LI>
+
+<LI><A NAME="manber">U. Manber. </A><I>Finding similar files in a large
+file system.</I> Proceedings of the 1994 USENIX Conference, pp. 1-10, January
+1994. </LI>
+
+<LI><A NAME="scam2">N. Shivakumar, H. Garcia-Molina. </A><I>SCAM: A Copy
+Detection Mechanism for Digital Documents. </I>Proceedings of the 2nd International
+Conference on Theory and Practice of Digital Libraries, Austin, Texas,
+1995. Available from <A HREF="http://www-db.stanford.edu/~shiva/Pubs/scam.ps">http://www-db.stanford.edu/~shiva/Pubs/scam.ps</A>
+</LI>
+
+<LI><A NAME="scam3">N. Shivakumar and H. Garcia-Molina. </A><I>Building
+a Scalable and Accurate Copy Detection Mechanism. </I>Proceedings of the
+3nd International Conference on Theory and Practice of Digital Libraries,
+1996. Available from <A HREF="http://www-db.stanford.edu/~shiva/Pubs/performance.ps">http://www-db.stanford.edu/~shiva/Pubs/performance.ps</A>
+</LI>
+
+<LI><A NAME="urn">URN Resource Names, </A><A HREF="http://www.ietf.org/html.charters/urn-charter.html">IETF&nbsp;Working
+Group</A></LI>
+
+<LI><A NAME="rabin">M. O. Rabin, </A><I>Fingerprinting by random polynomials.</I>
+Center for Research in Computing Technology, Harvard University, Report
+TR-15-81, 1981. </LI>
+</OL>
+
+<H2><A NAME="Authors">Authors</A></H2>
+
+<P><A HREF="http://www.research.digital.com/SRC/home.html">Systems
+Research Center<BR>
+</A><A HREF="http://www.digital.com/">Digital Equipment Corporation</A></P>
+<UL>
+<LI><A HREF="http://www.research.digital.com/people/Andrei_Broder/bio.html">Andrei
+Z. Broder</A>, broder@pa.dec.com</LI>
+<LI> <A HREF="http://www.research.digital.com/people/Steve_Glassman/bio.html">Steve
+Glassman</A>, steveg@pa.dec.com</LI>
+<LI>
+<A HREF="http://www.research.digital.com/people/Mark_Manasse/bio.html">Mark
+S. Manasse</A>, msm@pa.dec.com</LI>
+</UL>
+
+<P><A HREF="http://www.cs.berkeley.edu/">Department of Computer
+Science<BR>
+</A><A HREF="http://www.berkeley.edu">University of California, Berkeley</A></P>
+<UL>
+<LI><A HREF="http://http.cs.berkeley.edu/~zweig/">Geoffrey Zweig</A>, zweig@cs.berkeley.edu</LI>
+</UL>
+
+<!--  Local IspellWords:  shiva parallelizable
+ --><!--  Local IspellWords:  DOCTYPE HTML DTD EN UL HREF BR http www zweig cs URL
+ --><!--  Local IspellWords:  berkeley FAQ DT URNs URLs URN's eg html nbsp TT IMG
+ --><!--  Local IspellWords:  img gif ALT displaymath edu lt gt sketch's document's
+ --><!--  Local IspellWords:  OL IDs AltaVista CELLSPACING CELLPADDING TR VALIGN TH
+ --><!--  Local IspellWords:  NOWRAP TD Brin SIGMOD db Shivakumar nd stanford Nevin
+ --><!--  Local IspellWords:  Heintze cmu ietf bio Ph ol  brin shivakumar afs
+ --><!--  Local IspellWords:  nch org Mozilla WinNT Netscape quot Heinze Manber
+ -->
+
+
+</BODY>
+</HTML>

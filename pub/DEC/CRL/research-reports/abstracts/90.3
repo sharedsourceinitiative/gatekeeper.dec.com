@@ -1,0 +1,18 @@
+		      CRL Technical Report 90/3
+   Consistent Timestamping for Transactions in Distributed Systems
+			     David B. Lomet
+			    September 1990
+
+Tagging data in a database with timestamps that indicate when data was
+entered can be very useful.  It permits a user to query the database
+as of some historical time.  Further, it permits a user to see a
+transaction consistent "recent" version of the database without having
+this transaction interfere with ongoing updates.  This support
+requires that timestamp ordering represent a valid serialization of
+the transactions.  Achieving this in a distributed system is
+potentially troublesome.  This paper suggests that the two phase
+commit protocol messages can be used to establish and distribute a
+correct timestamp to all transaction cohorts.  Refinements permit this
+concept to deal with heterogenous systems where not all cohorts
+perform timestamping.  Early release of read locks can be supported
+via bounding the range in which a transaction is permitted to commit.

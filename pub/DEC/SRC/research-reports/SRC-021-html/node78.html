@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Security</TITLE>
+<META NAME="description" CONTENT="Security">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node79.html">
+<LINK REL="previous" HREF="node77.html">
+<LINK REL="up" HREF="node74.html">
+<LINK REL="next" HREF="node79.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html1165"
+ HREF="node79.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html1161"
+ HREF="node74.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html1155"
+ HREF="node77.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html1163"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html1164"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1166"
+ HREF="node79.html">Files</A>
+<B> Up:</B> <A NAME="tex2html1162"
+ HREF="node74.html">Running Ultrix Applications on</A>
+<B> Previous:</B> <A NAME="tex2html1156"
+ HREF="node77.html">Debugging and Profiling</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04094000000000000000">
+Security</A>
+</H2>
+<P><A NAME="1726">&#160;</A>
+As discussed in Section <A HREF="node26.html#StinsonBeach">2.4</A>, the Topaz security model differs
+significantly from that of Ultrix; luckily this has little or no impact on
+most application programs.
+<P><A NAME="1728">&#160;</A>
+Internally, Taos associates user names rather than user identifiers with
+files and processes.  However, it translates between names and identifiers
+as necessary at the kernel-call interface (e.g., the stat kernel call).
+<P><A NAME="1729">&#160;</A>
+As described in Section <A HREF="node26.html#StinsonBeach">2.4</A>, page <A HREF="node26.html#StinsonBeach"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>,
+Taos always uses the real user name and password for validating access to
+remote files; it uses the effective user name for validating access to
+local files and for all other local operations.  If the execve kernel call
+is given the path name of a remote file, it ignores the setuid bit.  (In
+the future, Taos will allow `trusted' servers to provide setuid programs.)
+<P><A NAME="1732">&#160;</A>
+<A NAME="1733">&#160;</A>
+<A NAME="1734">&#160;</A>
+Taos does not implement the notion of the real and effective group
+identifiers of a process.  The getgid and getegid kernel calls always
+return 0, and the setregid kernel call is a no-op.
+<P><A NAME="1735">&#160;</A>
+<A NAME="1736">&#160;</A>
+Taos implements the group access list of a process in a different way than
+Ultrix.  The setgroups kernel call is a no-op; instead Taos determines
+group membership by looking up the current effective and real user names
+in a database stored in the Interim Name Service.  The getgroups kernel
+call always raises SIGSYS; the Interim Name Service querying facilities
+can be used instead.  (See ns(8).)
+<P><A NAME="1737">&#160;</A>
+Taos implements the setreuid kernel call by translating the user
+identifiers to user names and then calling OSFriends.SetMyUser (see page
+<A HREF="node55.html#Sunnyvale"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.)  (The Taos implementation of setreuid also accepts
+an optional third argument: a character pointer specifying a password to
+pass to SetMyUser.)
+<P><A NAME="1739">&#160;</A>
+Taos implements the access kernel call differently than Ultrix does.  The
+Ultrix implementation of access uses the real user where other kernel
+calls would use the effective user; apparently the access kernel call was
+originally intended to allow a program running as effective user root to
+check whether the user who invoked it is allowed to access a specified
+path name with a specified mode.  However, many programs (e.g., emacs and
+csh) invoke the access kernel call assuming that real = effective, and
+don't work correctly when that assumption is false.  For example, the
+enable command runs a program with effective = root and real = you.
+Therefore the Taos implementation of access always uses the effective
+user.  This change may break certain setuid programs, but we haven't
+encountered any yet.
+<P><A NAME="1740">&#160;</A>
+<A NAME="1741">&#160;</A>
+<A NAME="1742">&#160;</A>
+The Ultrix login and su commands won't work on Taos; see instead the Taos
+login and enable commands.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1165"
+ HREF="node79.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html1161"
+ HREF="node74.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html1155"
+ HREF="node77.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html1163"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html1164"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1166"
+ HREF="node79.html">Files</A>
+<B> Up:</B> <A NAME="tex2html1162"
+ HREF="node74.html">Running Ultrix Applications on</A>
+<B> Previous:</B> <A NAME="tex2html1156"
+ HREF="node77.html">Debugging and Profiling</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

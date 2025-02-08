@@ -1,0 +1,10 @@
+"A small dual-automorphic lattice with no involutory dual automorphism"
+K. Rustan M. Leino and Lyle Ramshaw
+Note #1997-008. May 27, 1997. 4 pages
+
+An exercise in Garrett Birkhoff's renowned book on lattice
+theory asks for a lattice with 18 elements and of length 5 that has
+a dual automorphism, but no involutory dual automorphism.  This note
+constructs a smaller lattice, 15 elements and length 4, with the
+same property.
+

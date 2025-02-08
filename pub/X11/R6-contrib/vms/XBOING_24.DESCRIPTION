@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+XBOING-24.ZIP                     XBOING version 2.4 (fine blockout type game)
+                                  Author: Justin C. Kibell - jck@citri.edu.au
+VAX                               Language: GNU C 2.5.8 or DEC C 5.x
+AXP                               Language: DEC C 5.x
+                                  Needs XPM 3.4 library (VAX & AXP.OLBs
+                                  of XPM 3.4.G provided)
+-------------------------------------------------------------------------------

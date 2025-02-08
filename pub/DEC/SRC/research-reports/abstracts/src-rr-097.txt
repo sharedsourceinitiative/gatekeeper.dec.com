@@ -1,0 +1,27 @@
+
+			AVAILABLE ELECTRONICALLY
+	
+"An Implementation of F<:"
+Luca Cardelli
+February 23, 1993.  52 pages
+
+
+Abstract
+
+F<: is a highly expressive typed lambda calculus with subtyping. This 
+paper describes an implementation of F<: (extended with recursive types), 
+and documents the algorithms used. Using this implementation, one can 
+test F<: programs and examine typing derivations.
+ 
+To facilitate the writing of complex F<: encodings, we provide a
+flexible syntax-extension mechanism. New syntax can be defined from
+scratch, and the existing syntax can be extended on the fly. It is
+possible to introduce new binding constructs, while avoiding problems
+with variable capture.
+
+To reduce the syntactic clutter, we provide a practical type inference 
+mechanism that is applicable to any explicitly typed polymorphic
+language. Syntax extension and type inference interact in useful ways.
+
+
+

@@ -1,0 +1,33 @@
+		    CRL Technical Report 93/5
+
+				STDL
+	    A Portable Language for Transaction Processing
+                  
+                            
+                          Philip A. Bernstein
+
+                      	     March 8, 1993
+
+
+Structured Transaction Definition Language (STDL) is a language 
+for distributed transaction processing, developed by the Multivendor
+Integration Architecture consortium.  STDL is a block-structured
+language, specialized for transaction processing.  It is designed
+for application portability across multiple STDL implementations
+on different vendors' transaction processing systems.  This paper
+describes STDL's transaction features: transaction bracketing,
+transactional remote procedure call, transactional queuing, 
+recoverable terminal I/O, and transactional exception handling.
+
+STDL relies on standard C and COBOL for most application logic and
+all operations on SQL databases and files.  All transactional features 
+of STDL and new features outside standard C and COBOL are isolated in
+procedures written in the STDL language.  These procedures are called
+tasks.  This isolation of transactional features is quite different 
+than other persistent programming languages: one can use applications 
+written in standard C or COBOL; and to implement STDL, it is possible 
+to map clauses of task language onto operations of most any distributed
+TP monitor.
+
+Keywords: transactions, transaction processing, TP monitor, remote      
+procedure call, queuing, exception handling		

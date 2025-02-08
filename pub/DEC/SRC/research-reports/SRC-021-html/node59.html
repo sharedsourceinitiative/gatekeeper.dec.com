@@ -1,0 +1,318 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Manipulating Logical Volumes</TITLE>
+<META NAME="description" CONTENT="Manipulating Logical Volumes">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node60.html">
+<LINK REL="previous" HREF="node58.html">
+<LINK REL="up" HREF="node54.html">
+<LINK REL="next" HREF="node60.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html922"
+ HREF="node60.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html918"
+ HREF="node54.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html912"
+ HREF="node58.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html920"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html921"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html923"
+ HREF="node60.html">More Taos-only File-System Operations</A>
+<B> Up:</B> <A NAME="tex2html919"
+ HREF="node54.html">The OSFriends Interface</A>
+<B> Previous:</B> <A NAME="tex2html913"
+ HREF="node58.html">Manipulating Process Templates</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04065000000000000000">
+Manipulating Logical Volumes</A>
+</H2>
+ <A NAME="Hillsborough">&#160;</A>
+<P><A NAME="1589">&#160;</A>
+<P>
+The procedures in this section do not have Ultrix implementations.
+<P><A NAME="1590">&#160;</A>
+In addition to the procedures defined here for files and volumes, even
+lower-level manipulations can be performed using the LocalFile interface.
+<P>
+Before modifying a volume at the LocalFile level, make sure that it is
+dismounted. Before manipulating a file at the LocalFile level, make sure
+that there will be no simultaneous access to it through the OS interface.
+<P>
+All files created by OS have a LocalFile.FileType of 1.
+<P><A NAME="2250">&#160;</A>
+<A NAME="1592">&#160;</A>
+<PRE>
+TYPE
+  VC =
+    (AlreadyMountedVC, BusyVC, NotMountedVC,
+     RootNotADirectoryVC, VolumeHasFilesVC);
+
+EXCEPTION
+  VolumeError (VC);
+</PRE>
+<P>
+An error associated with manipulating a volume is reported by raising the
+exception VolumeError with an accompanying code of type VC describing the
+particular problem.  See Appendix <A HREF="node63.html#ElCerrito">B.2</A>, page
+<A HREF="node63.html#ElCerrito"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>, for descriptions of the individual VC values.
+<P><A NAME="2251">&#160;</A>
+<PRE>
+TYPE
+  LogicalVolume = REF;
+</PRE>
+<P>
+A value of type LogicalVolume is a reference to a logical volume.  The
+type is implemented as a LocalFile.LogicalVolume, and the LocalFile
+interface must be used to perform operations on logical volumes not
+defined here (such as creation, deletion, and enumeration). The definition
+of OSFriends.LogicalVolume is opaque to avoid all clients of OS needing to
+be linked with an implementation of LocalFile, but a program that imports
+both LocalFile and OSFriends can include the definitions:
+<P>
+<BR>
+<BR>
+<IMG WIDTH="413" HEIGHT="92" ALIGN="BOTTOM" BORDER="0"
+ SRC="img11.gif"
+ ALT="\begin{boxedverbatim}
+TYPE
+ LogicalVolume = LocalFile.LogicalVolume;
+ LogicalVolume = OSFriends.LogicalVolume;\end{boxedverbatim}">
+<BR>
+<BR>
+<P><A NAME="2252">&#160;</A>
+<PRE>
+TYPE
+  AVState = (VSReady, VSInUse, VSBadInUse, VSBad, VSScanning);
+</PRE>
+<P>
+The AVState values enumerate the states that a logical volume can be in:
+<P><DL>
+<DT><STRONG>VSReady:</STRONG>
+<DD>The volume is ready to be mounted; it doesn't need
+scavenging.
+<P>    <DT><STRONG>VSInUse:</STRONG>
+<DD>The volume is mounted.
+<P>    <DT><STRONG>VSBadInUse:</STRONG>
+<DD>The volume needs scavenging, but is still mounted; there
+    may be information about the volume that has not yet been written to
+    it.
+<P>    <DT><STRONG>VSBad:</STRONG>
+<DD>The volume needs scavenging; it is not mounted.
+<P>    <DT><STRONG>VSScanning:</STRONG>
+<DD>The volume is currently being scavenged.
+</DL>
+<P><A NAME="2253">&#160;</A>
+<PRE>
+TYPE
+  BadReason = (ZeroLinkFiles, ActiveOps, NoRootFile, BadRootFile);
+</PRE>
+<P>
+A value of type BadReason indicates why a logical volume needs to be
+scavenged:
+<P><DL>
+<DT><STRONG>ZeroLinkFiles:</STRONG>
+<DD>The volume contains one or more files with a zero link
+count (that is, files for which there are no directory entries);
+    scavenging the volume will delete these files and recover the space
+    they occupy.
+<P>    <DT><STRONG>ActiveOps:</STRONG>
+<DD>The volume went offline, or the system crashed, in the
+    middle of an operation involving a series of writes to the volume.
+<P>    <DT><STRONG>NoRootFile:</STRONG>
+<DD>The volume has no file system root file.
+<P>    <DT><STRONG>BadRootFile:</STRONG>
+<DD>The volume has a file system root file, but it is not a
+    proper directory.
+</DL>
+<P><A NAME="2254">&#160;</A>
+<PRE>
+TYPE
+  VolumeInfo = RECORD
+    CASE state: AVState OF
+
+    | VSInUse:
+        numActiveOps: CARDINAL;
+        numZeroLinkFiles: CARDINAL;
+
+        asPath: PathName;
+
+    | VSBadInUse: badAsPath: PathName;
+
+    | VSBad: reason: BadReason;
+
+    ELSE
+    END;
+  END; (* VolumeInfo *)
+</PRE>
+<P>
+Information pertaining to the file system's use of a logical volume is
+packaged as a record of type VolumeInfo.
+<P>
+The numActiveOps and numZeroLinkFiles fields give reference counts of
+in-progress operations that would require the volume to be scavenged if
+the system crashed or the volume went offline.  The numActiveOps field
+currently counts directory rename operations to the volume.  The
+numZeroLinkFiles counts files that have no more directory entries but
+can't be deleted until the outstanding open-file objects are closed.  (See
+section <A HREF="node27.html#Aptos">2.5</A>, page <A HREF="node27.html#Aptos"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.)
+<P>
+The asPath field gives the path name where the volume is mounted in the
+local file name space; the badAsPath field gives the same information for
+a mounted volume that needs scavenging.
+<P>
+The reason field tells why the volume needs scavenging.
+<P><A NAME="2255">&#160;</A>
+<PRE>
+PROCEDURE GetVolumeInfo(
+    volume: LogicalVolume)
+    : VolumeInfo
+  RAISES {VolumeError};
+</PRE>
+<P><A NAME="1610">&#160;</A>
+GetVolumeInfo returns information about the volume, including directory
+system information.  See also LocalFile.LogicalVolumeInfo.
+<P><A NAME="2256">&#160;</A>
+<PRE>
+PROCEDURE Mount(
+    volume: LogicalVolume;
+    dir: Dir;
+    path: PathName;
+    force: BOOLEAN := FALSE)
+  RAISES {Error, VolumeError};
+  (* AlreadyMountedVC, RootNotADirectoryVC, BusyVC, ... *)
+</PRE>
+<P><A NAME="1612">&#160;</A>
+Mount adds the specified logical volume into the local file name space by
+identifying the root of the volume with the specified path name.  The
+first call to Mount after the system starts must specify a path name of /
+to establish the root volume of the local file system.
+<P><A NAME="1613">&#160;</A>
+If Mount is successful, it sets the state of the volume to VSInUse.  If
+force is FALSE, the volume must initially be in the state VSReady.  If
+force is TRUE, the volume will be mounted regardless of its state.  Rather
+than do this you should really run a scavenger. (Currently the scavenger
+can only be run from the tshell.)
+<P><A NAME="2257">&#160;</A>
+<PRE>
+TYPE
+  DismountLevel = [0 .. 2];
+</PRE>
+<P><A NAME="2258">&#160;</A>
+<PRE>
+PROCEDURE Dismount(
+    volume: LogicalVolume;
+    force: DismountLevel := 0)
+  RAISES {Error, VolumeError}; (* IOErrorEC, PvOfflineEC, BusyVC *)
+</PRE>
+Dismount removes the specified logical volume from the local file name
+space.  All cached files on the logical volume are written out.  If force
+is 0, Dismount raises BusyVC if there are any open files on the volume.
+<P>
+If force is 1, Dismount tries to close open files but raises errors such
+as IOErrorEC or PvOfflineEC if it has problems flushing the file data.
+<P><A NAME="1616">&#160;</A>
+If force is 2, Dismount closes open files, and ignores errors writing to
+the volume (however if it gets an error it does make an attempt to mark
+the volume as needing scavenging).
+<P><A NAME="1617">&#160;</A>
+<A NAME="1618">&#160;</A>
+<A NAME="1619">&#160;</A>
+<A NAME="1620">&#160;</A>
+Before calling NubMisc.Reboot or removing a physical volume, call Dismount
+on each mounted volume; follow that up with a call to
+LocalFile.FinishWrites.
+<P><A NAME="2259">&#160;</A>
+<PRE>
+PROCEDURE OpenFromFID(
+    volume: LogicalVolume;
+    block, seq: CARDINAL;
+    flags: OpenMode;
+    getLocks: BOOLEAN := FALSE)
+  : File
+  RAISES {Error, VolumeError};
+</PRE>
+<P>
+OpenFromFID opens a file from its unique identifier.  It uses the same
+rules as OS.Open except it may only be done by a super user program.
+<P><A NAME="2260">&#160;</A>
+<PRE>
+PROCEDURE InsertFID(
+    dir: Dir;
+    path: PathName;
+    block, seq: CARDINAL)
+  RAISES {Error}; (* NotSuperUserEC, ... *)
+</PRE>
+<P><A NAME="1623">&#160;</A>
+<A NAME="1624">&#160;</A>
+<A NAME="2261">&#160;</A>
+InsertFID inserts the specified file identifier in the directory as given.
+The rules for path are the same as those for OS.HardLink (see page
+<A HREF="node47.html#Pleasanton">4.8</A>.  The file with that id must exist and must have a valid
+property page.  The property page of a file stores most of the attributes
+of the file; see the Props interface for details. InsertFID raises
+NotSuperUserEC unless the caller is the super-user.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html922"
+ HREF="node60.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html918"
+ HREF="node54.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html912"
+ HREF="node58.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html920"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html921"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html923"
+ HREF="node60.html">More Taos-only File-System Operations</A>
+<B> Up:</B> <A NAME="tex2html919"
+ HREF="node54.html">The OSFriends Interface</A>
+<B> Previous:</B> <A NAME="tex2html913"
+ HREF="node58.html">Manipulating Process Templates</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

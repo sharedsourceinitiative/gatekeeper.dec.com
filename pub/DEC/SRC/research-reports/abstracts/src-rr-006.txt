@@ -1,0 +1,23 @@
+
+		AVAILABLE ELECTRONICALLY
+
+    "A Caching File System for A Programmer's Workstation."
+    Michael D. Schroeder, David K. Gifford, and Roger M. Needham.
+    October 19, 1985. 23 pages.
+
+Authors' Abstract
+
+    This paper describes a workstation file system that supports a
+    group of cooperating programmers by allowing them both to manage
+    local naming environments and to share consistent versions of
+    collections of software.  The file system has access to the
+    workstation's local disk and to remote file servers, and provides
+    a hierarchical name space that includes the files on both.  Local
+    names can refer to local files or be attached to remote files.
+    Remote files, which also may be referred to directly, are immutable
+    and cached on the local disk.  The file system is part of the
+    Cedar experimental programming environment at Xerox PARC and has
+    been in use since late 1983.
+
+
+

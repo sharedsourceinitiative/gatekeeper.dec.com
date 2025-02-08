@@ -1,0 +1,199 @@
+*** net/if.c	1995/11/29 21:17:03	2.5
+--- net/if.c	1997/01/31 05:46:15
+***************
+*** 1,3 ****
+! /*	BSDI $Id: if.c,v 2.5 1995/11/29 21:17:03 karels Exp $	*/
+  
+  /*
+--- 1,3 ----
+! /*	BSDI $Id: if.c,v 2.7 1997/01/09 07:56:22 mellon Exp $	*/
+  
+  /*
+***************
+*** 500,503 ****
+--- 500,578 ----
+  		return (ENXIO);
+  	switch (cmd) {
++ 
++ #ifdef IFDEFAULT
++ 	/* Set the per-interface default route. */
++ 	case SIOCSIFROUTE: {
++ 		struct rtentry *def;
++ 		struct ifaddr *ifa;
++ 		struct sockaddr *sa;
++ 
++ 		if (error = suser(p->p_ucred, &p->p_acflag))
++ 			return (error);
++ 
++ 		/* Delete the old default route? */
++ 		if (ifp -> if_default_route) {
++ 			int s;
++ 		      delifroute:
++ 			s = splimp ();
++ 			ifp -> if_default_route -> rt_flags &= ~RTF_UP;
++ 			RTFREE (ifp -> if_default_route);
++ 			ifp -> if_default_route = 0;
++ 			splx (s);
++ 			if (cmd == SIOCDIFROUTE)
++ 				break;
++ 		}
++ 
++ 		/* Allocate the route structure... */
++ 		R_Malloc (def, struct rtentry *, sizeof *def);
++ 		if (!def)
++ 			return (ENOBUFS);
++ 		bzero (def, sizeof *def);
++ 
++ 		/* Initialize the flags... */
++ 		def -> rt_flags = (RTF_UP | RTF_GATEWAY | RTF_STATIC);
++ 
++ 		/* Set up the gateway... */
++ 		R_Malloc (sa, struct sockaddr *,
++ 			  ROUNDUP ((sizeof *sa) - sizeof sa -> sa_data) +
++ 			  ROUNDUP (ifr -> ifr_addr.sa_len));
++ 		if (!sa) {
++ 			Free(def);
++ 			return (ENOBUFS);
++ 		}
++ 		def -> rt_gateway =
++ 			((struct sockaddr *)((caddr_t)sa +
++ 					     ROUNDUP ((sizeof *sa) -
++ 						      sizeof sa -> sa_data)));
++ 		Bcopy (&ifr -> ifr_addr, def -> rt_gateway,
++ 		       ifr -> ifr_addr.sa_len);
++ 		sa -> sa_len = (sizeof *sa) - sizeof (sa -> sa_data);
++ 		sa -> sa_family = AF_UNSPEC;
++ 		def -> rt_nodes [0].rn_key = (caddr_t)sa;
++ 
++ 		/* Get the interface for this route... */
++ 		if (!(ifa = ifa_ifwithdstaddr (def -> rt_gateway)) &&
++ 		    !(ifa = ifa_ifwithnet (def -> rt_gateway))) {
++ 			Free (sa);
++ 			Free (def);
++ 			return (ENETUNREACH);
++ 		}
++ 
++ 		def -> rt_refcnt = 1;
++ 
++ 		ifa -> ifa_refcnt++;
++ 		def -> rt_ifp = ifa -> ifa_ifp;
++ 		def -> rt_ifa = ifa;
++ 
++ 		ifp -> if_default_route = def;
++ 		break;
++ 	}
++ 		
++ 	/* Delete the per-interface default route... */
++ 	case SIOCDIFROUTE:
++ 		if (ifp -> if_default_route)
++ 			goto delifroute;
++ 		break;
++ #endif
+  
+  	case SIOCGIFFLAGS:
+*** net/if.h	1995/11/03 17:25:22	2.4
+--- net/if.h	1997/01/31 05:45:00
+***************
+*** 1,3 ****
+! /*	BSDI $Id: if.h,v 2.4 1995/11/03 17:25:22 ewv Exp $	*/
+  
+  /*
+--- 1,3 ----
+! /*	BSDI $Id: if.h,v 2.5 1997/01/07 12:32:15 mellon Exp $	*/
+  
+  /*
+***************
+*** 144,147 ****
+--- 144,150 ----
+  		__P((int));
+  	struct	ifqueue if_snd;		/* output queue */
++ #ifdef IFDEFAULT
++ 	struct	rtentry *if_default_route; /* Per-interface default route. */
++ #endif
+  };
+  #define	if_mtu		if_data.ifi_mtu
+*** netinet/tcp_input.c	1997/01/09 08:12:31	2.6
+--- netinet/tcp_input.c	1997/01/31 05:53:12
+***************
+*** 1,3 ****
+! /*	BSDI $Id: tcp_input.c,v 2.6 1997/01/09 08:12:31 mellon Exp $	*/
+  
+  /*
+--- 1,3 ----
+! /*	BSDI $Id: tcp_input.c,v 2.8 1997/01/09 09:10:19 mellon Exp $	*/
+  
+  /*
+***************
+*** 720,723 ****
+--- 720,767 ----
+  		dropsocket = 0;		/* committed to socket */
+  		tcpstat.tcps_accepts++;
++ 
++ #ifdef IFDEFAULT
++ 		/* If there's a per-interface default route on the
++ 		   interface on which this packet arrived, try to
++ 		   allocate a route back to the sender now, and if we
++ 		   get the default route, use the per-interface
++ 		   default instead. */
++ 		if (m -> m_pkthdr.rcvif &&
++ 		    m -> m_pkthdr.rcvif -> if_default_route &&
++ 		    (m -> m_pkthdr.rcvif ->
++ 		     if_default_route -> rt_flags & RTF_UP)) {
++ 			struct sockaddr_in *sin =
++ 				(struct sockaddr_in *)&inp -> inp_route.ro_dst;
++ 
++ 			/* Try allocating a route. */
++ 			sin -> sin_family = AF_INET;
++ 			sin -> sin_len = sizeof (*sin);
++ 			sin -> sin_addr = inp->inp_faddr;
++ 			rtalloc (&inp -> inp_route);
++ 
++ 			/* See if we got the default route... */
++ 			if (inp -> inp_route.ro_rt) {
++ 				sin = ((struct sockaddr_in *)
++ 				       inp -> inp_route.ro_rt ->
++ 				       rt_nodes [0].rn_key);
++ 				if (sin -> sin_family != AF_INET ||
++ 				    sin -> sin_addr.s_addr != INADDR_ANY)
++ 					goto keeproute;
++ 
++ 				/* Release our reference to the default
++ 				   route, 'cuz we're tossing it! */
++ 				RTFREE(inp -> inp_route.ro_rt);
++ 			}
++ 
++ 			/* We either got no route or got the default
++ 			   route, so use the per-interface default
++ 			   route instead. */
++ 			inp -> inp_route.ro_rt =
++ 				m -> m_pkthdr.rcvif -> if_default_route;
++ 			inp -> inp_route.ro_rt -> rt_refcnt++;
++ 		}			
++ 	      keeproute:
++ #endif
++ 
+  		goto trimthenstep6;
+  		}
+*** sys/sockio.h	1995/12/02 05:37:45	2.3
+--- sys/sockio.h	1997/01/31 05:41:29
+***************
+*** 1,3 ****
+! /*	BSDI $Id: sockio.h,v 2.3 1995/12/02 05:37:45 karels Exp $	*/
+  
+  /*-
+--- 1,3 ----
+! /*	BSDI $Id: sockio.h,v 2.4 1997/01/07 12:32:20 mellon Exp $	*/
+  
+  /*-
+***************
+*** 79,82 ****
+--- 79,87 ----
+  #define SIOCGETVIFCNT	_IOWR('u', 51, struct sioc_vif_req)/* vif pkt cnt */
+  #define SIOCGETSGCNT	_IOWR('u', 52, struct sioc_sg_req) /* s,g pkt cnt */
++ 
++ #ifdef IFDEFAULT
++ #define SIOCSIFROUTE     _IOW('i', 53, struct ifreq)	/* Set IF default */
++ #define SIOCDIFROUTE     _IOW('i', 54, struct ifreq)	/* Rm IF default */
++ #endif
+  
+  #endif /* !_SYS_SOCKIO_H_ */

@@ -1,0 +1,292 @@
+<HTML><HEAD>
+<!-- This document was created from RTF source by rtftohtml version $Revision: 3.6 $ -->
+<TITLE>The 1995 SQL Reunion: People, Projects, and Politics - SQL/DS</TITLE></HEAD>
+<BODY BACKGROUND="" BGCOLOR="#FFFFFF" TEXT=#000000>
+<A HREF="sqlr95-IBM.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="sqlr95-Shoot-ou.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="sqlr95-IBM.html"><IMG SRC="images/upg.gif" ALT="Up " border=0></A>
+ <A HREF="sqlr95.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="sqlr95-Contents.html"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+ <A HREF="sqlr95-Index.html"><IMG SRC="images/indexg.gif" ALT="Index" border=0></A>
+<hr size=4>
+<H2>
+SQL/DS</H2>
+<b>Mike Blasgen:</b> OK, now into this picture comes System R, which as you
+point out is basically irrelevant except for the fact that you thought maybe
+you'd do an implementation of SQL on this code that you were writing. But
+something happened, and suddenly it was OK to talk about System R in Santa
+Teresa.<p>
+<b>Franco Putzolu:</b> Bob Jolls should talk about this. I really don't know
+the background of this transition. The only thing I know is that as far as the
+high-level components are concerned, there were problems in execution of the
+plan, but I don't know what prompted the transition to SQL and real DB2.<p>
+<b>Bob Jolls:<A NAME="Index272"></A><A NAME="Index273"></A></b>
+I think the best way to talk about this is to make it personal, because that's
+really what it is for each of us. We all personally got involved in this in one
+way or another. My way was that I came out to Santa Teresa<A NAME="Index274"></A>
+from New York in August of 1977. I don't think I was part of any New York Mafia<A NAME="Index275"></A><A NAME="Index276"></A>
+coming out here like some of the rest of you. I came out to be manager of
+Database Design at Santa Teresa. I had some technical background and some
+business background and I was quite comfortable being able to do this job. I
+was actually worried a little more about being in California. You know, all the
+people that I knew on the east coast had all kinds of things to say about what
+it was like to live in California, and raise your children in California, and
+so on. So I came in sort of thinking of California as the land of alternative
+life styles, and found out that in fact it was the land of alternative data
+models.<i> [laughter]</i><p>
+I had this group of people working for me, and there was a data model per
+person.<i> [laughter]</i> So like we had the DBTG folks - that was a small
+group. We had people that were so enamored with the data dictionary; they kind
+of thought if you just put all the information in the dictionary, you wouldn't
+need to bother with those databases anymore, it would just all be there in the
+dictionary, right? Then we had UDL<A NAME="Index277"></A>;
+Franco mentioned that. That was the idea that relational might be OK as long as
+you put it in the guise of really long-lasting products like PL/1, COBOL, and
+FORTRAN, so long as you didn't have to talk about it separately. So I was
+confused, to say the least, by all these people with all these arguments.<p>
+And then I started to learn about System R from some of my people and from
+coming down and meeting with some of you all. So I started using System R,
+frankly, as the sort of benchmark. I'd ask, "How does this compare to what
+they're doing with System R?" and always would learn about all the problems
+with System R, or all the problems, let's say at the beginning with SQL.
+Sometimes we're a little too tied up I think in this whole discussion today
+with what happened to the code. In my mind, what happened to the code is
+obviously important to those of you who wrote parts of the code, but the real
+thing that we all did as an entire group of people was to make relational real
+and to make SQL real, and there can be lots of different implementations of
+that. I would always hear what all the limitations of SQL were, and problems
+would be stated that couldn't possibly be solved with SQL. And then if you
+could write down the question and get a proper answer with SQL syntax and
+semantics, then here's all the performance reasons why this can never work, and
+etc., etc., etc. I guess this is, I'd say myself and some of the other people
+who were involved in this, at least for me, my experience as a programmer
+helped me here because I kept realizing, "Gee, here's something that is
+actually operating, that's working every day in different environments. All the
+people with the concept of how things might work are making up lists of reasons
+about what's wrong with the thing that is working." And I think this is
+sometimes the way that we operate in Programming, or was back then.<p>
+So I guess the biggest friend that System R or SQL had in this process at Santa
+Teresa was Eagle<A NAME="Index278"></A>.
+You might think of Eagle as a tremendous resource drain, and so on, and so on,
+and it was, but the fact that Santa Teresa was completely preoccupied with how
+to completely replace IMS<A NAME="Index279"></A>
+and do something much better than IMS and do many of the things that were in FS
+and all this stuff, sort of kept all the guns away from us, while we looked at
+what would be the best way to do what we then called DS/2. In other words, they
+sort of carved out everything but MVS and gave it to my group and said, "Well
+you guys go figure out what to do for database for the VM and DOS environment,
+and we'll worry about the really big `Production' problems," which was what
+Eagle was going to address. So I think it was the best friend of the whole
+process, in that we got to look at that in our own pace without an awful lot of
+help from White Plains<A NAME="Index280"></A>
+or local management or Poughkeepsie<A NAME="Index281"></A>
+or any of that. We were able to make a decision to go ahead and use System R as
+the basis for SQL/DS, and without that being a politically-incorrect decision.
+Which if we had tried to make that decision at that point in time to supplant a
+lot of the Eagle work with System R, I don't think it would have been possible
+for people to make that decision.<p>
+<b>Mike Blasgen:</b> My recollection is the midrange product that was in the
+field was DOS DL/1<A NAME="Index282"></A>.<p>
+<b>Bob Jolls:</b> Yes.<p>
+<b>Mike Blasgen:</b> And fortunately for us DOS DL/1 was not considered to be a
+success. IMS<A NAME="Index283"></A>,
+in contrast, was a big success.<p>
+<b>Bob Jolls:</b> Right.<p>
+<b>Mike Blasgen:</b> So it's very hard to take on IMS. But it was easy to take
+on DOS DL/1 because it was not thought of as being a good product. So when you
+got responsibility for the successor to DOS DL/1, much like Eagle was the
+successor to IMS, you didn't have as big a hurdle to get over.<p>
+<b>Bob Jolls:</b> Right, there wasn't a lot of baggage that came with it.<p>
+<b>Jim Gray:</b> I think <A NAME="Index284"></A>ADABAS<a
+name="fnB49" href="#fn49">[53]</a> was cleaning IBM's clock at that point.<p>
+<b>Bob Jolls:</b> Right.<p>
+<b>Jim Gray:</b> So the Europeans said, "We need a low-end database system."
+And the fascinating thing is that Jim Frame<A NAME="Index285"></A>,
+who I think was the manager of Santa Teresa, did the standard thing: he put
+low-end database as "out plan." IBM Fall planning was built around the notion
+of in plan (funded) and out plan (unaffordable). You put your pet projects in
+plan, and put their pet projects out plan. You know that they'll give you more
+money to make you do what they want you to do. You put everything they don't
+want you to do in plan, and the stuff they want you to do out plan, and then
+you get more money. This was how the funding game was played. Endicott<A NAME="Index286"></A>
+- maybe we're getting ahead of the story, but - Endicott just had its operating
+system effort canceled. It was going to do a unified VM and DOS. So there were
+seventy zombies wandering around without anything to do, and they said, "Gosh,
+there's this thing that Santa Teresa can't do; they're just too busy: this
+low-end database stuff. Now we don't know anything about low-end databases, but
+maybe we could learn, and it would be a job." So they bid on this low-end
+database stuff. Is that a ...?<p>
+<b>Bob Jolls:</b> Yes, that's right, and I have a personal reaction to that
+one, too. It's very painful for me and my little cadre of people, because we
+had finally gotten on the bandwagon with System R, and we were saying, "Hey, we
+can make an interesting, successful product out of this." And because of all
+these management machinations that Jim's talking about, even though we had a
+lab of 1200 people, and this was - I don't know - a thirty-person effort, or
+something like this, it was "Out-plan". So, yes, it got all of a sudden
+migrated to [IBM] Endicott.<a name="fnB50" href="#fn50">[54]</a><p>
+That's when we came up with what we called Plan B<A NAME="Index287"></A><A NAME="Index288"></A>.<i>
+[laughter]</i> Since our mission went away, we said, "OK, we don't have that
+mission anymore. We'll do the database part of Eagle<A NAME="Index289"></A>.
+We came up with Plan B as saying if something perchance should happen to all
+the rest of Eagle, here's what we would do. Somehow again, talking about
+politically correct and incorrect, it wasn't OK to say that would happen, but
+it was OK to say, "Well if it did happen, here's what we'd do," and that's Plan
+B. So my team and I began working on Plan B, which was to essentially build DB2<A NAME="Index290"></A>.
+There were a lot of debates within the group, and I think John Nauman can talk
+about this too, about how much code we should import from System R versus what
+we should develop ourselves, and there were a lot of good arguments on both
+sides of that, as there always are<a name="fnB51" href="#fn51">[55]</a><A NAME="Index291"></A><A NAME="Index292"></A><A NAME="Index293"></A>.
+The surprise in the reverse direction happened with this one, frankly from my
+point of view. The surprise of SQL/DS was that it went out from under me, or
+us, I should say. The surprise of the MVS project was that it happened faster
+than I thought it would. In other words, Plan A collapsed, all right? Eagle
+collapsed, and all of a sudden, everyone turned to us and said, "OK, when can
+you ship this database product?"<i> [laughter]</i> And that's when we had to
+make some fairly hasty, difficult decisions on ...<p>
+<b>Franco Putzolu:</b> When was it realized that Eagle wasn't going anywhere? I
+mean, is there a date that you can ...<p>
+<b>Bob Jolls:</b> When was <i>it</i> realized that? Well, I don't know. I found
+the whole process very mysterious. I don't know how you - well, I guess I do
+know how you felt.<i> [laughter]</i> As a former programmer and a manager of
+development, I sort of knew how to ask questions of groups to find out whether
+they were on track or not. It was very obvious to me that that group was never
+on track. We had the same phenomenon at Santa Teresa with Andy [Heller<A NAME="Index294"></A>]
+that you described, in that he was kind of the great guru of this whole
+project. In this case, it wasn't just some people trying to write down some
+algorithms; there was like one hundred fifty - two hundred - three hundred
+people programming based on these meetings that were sort of fly-ins. Andy
+would fly in; they'd have a meeting about how something was supposed to be
+designed. He'd leave and the ripple effect - three weeks later somebody's
+writing a module where there's really no overall design.<p>
+<b>C. Mohan:</b> Was he in Watson<A NAME="Index295"></A>
+at that time?<p>
+<b>Bob Jolls:</b> He was in Austin a lot.<p>
+<b>C. Mohan:</b> No, was he working in Yorktown Heights, or where was he at
+that time?<p>
+<b>Franco Putzolu:</b> He was everywhere.<p>
+<b>C. Mohan:</b> Probably had a home location somewhere.<p>
+<b>Mike Blasgen:</b> He lived in New York.<p>
+<b>Bob Jolls:</b> Yes; he was all over the place. But he was at Santa Teresa
+I'd say one day a month - maybe two days a month - something like that. There'd
+be all these big meetings, and all these decisions made ...<p>
+<b>Franco Putzolu:</b> Lots of shouting.<p>
+<b>Bob Jolls:</b> Yes, lots of shouting, screaming, and all this stuff.<p>
+<b>Josephine Cheng:</b> That's how we found out he was there.<p>
+<b>Bob Jolls:</b> Right; if you were anywhere near that wing, you could tell he
+was here. So I think if you asked anybody who was an experienced, professional
+programmer, they would have told you this thing was going to crater. But I
+think there were so many layers of management, and frankly there was so much
+politics around - you know, "What does Poughkeepsie think? What does Harrison<A NAME="Index296"></A>
+think?" and all that stuff, that people just kind of blindly went out on -
+management people did. I think the one thing that, you know, Mike when he asked
+me to come and speak at this meeting, I told him and I told Jim, that I think
+the biggest thing I had going for me in this whole process was that I was
+politically naive. I wasn't from either the Poughkeepsie establishment or the
+Harrison establishment, or any of the old Santa Teresa establishment, so I
+could decide that we should make System R into a product based on what I
+thought was best for the company, the customers, et cetera, and it was actually
+pretty easy.<p>
+<b>C. Mohan:</b> Where were you before you came to STL? Which organization of
+IBM were you in?<p>
+<b>Bob Jolls:</b> I had worked for five years on a very large internal
+transaction processing application, as a programmer and manager. And then I'd
+worked for five years or so in Business Planning in Harrison, so I'd done
+product forecasting and that kind of thing.<p>
+<b>Mike Blasgen:</b> So I'll just tell a personal thing, because this is all
+very consistent with my view of what happened. My<A NAME="Index297"></A>
+job was to make the sale, close the deal, right. System R, with all its warts,
+take it, love it all; love me, love my daughter. We met a lot with Bob,
+personally, not just Bob's group, I mean Bob as a single person. And he looked
+at System R and I guess he took it away and maybe we installed it, or you
+installed it; I don't remember exactly what happened. Anyway, it was for this
+DOS DL/1<A NAME="Index298"></A>,
+this midrange database opportunity that Bob had been given responsibility for.
+And he came in one day to my office, or called me, or something, and said,
+"Well, we decided to use System R." I couldn't even think of that; the most I
+was hoping for was we'd have a meeting to discuss it again.<i> [laughter]</i>
+We hadn't been rejected. At that time, not being rejected was good; meets
+minimum. But this was way more than I ever expected, and he was serious. I
+thought, well, he doesn't even know what he's saying, but he did. He was
+actually going to take System R and ship it out of Santa Teresa as a midrange
+database product. I'm sure there were lots of things were going to be redone
+and modified.<p>
+Anyway, then there was this game you talked about - out-plan, and Endicott
+appeared on the scene. The thing that was so important about that is that
+Endicott didn't re-decide. They didn't say, "Oh, we have the midrange database
+mission; now let's go out and do a bunch of research to see what the market
+requires," because that would have been two more years of no progress. They
+actually said, "OK, now we've got to ship this code. What do we have to do to
+make this code ready to go?" That was pretty much the attitude of the Endicott
+team. Bob's team actually helped in this transition a lot, and we got very
+heavily involved. We were talking about sending off people to live in Endicott,
+and that was eventually not considered to be a good idea.<i> [laughter]</i> Not
+considered salable. But those guys did not re-decide, and that saved two
+years.<p>
+<b>Bob Yost:</b> They basically sent two or three people here to live with us
+for a period of six weeks or so, and they took it all back.<p>
+<b>Mike Blasgen:</b> They took the RSS with almost no change; they took the RDS
+with almost no change, but they completely rewrote it - they transliterated it
+from PL/1 to PL/S.<p>
+<b>Bob Yost:</b> In fact they were under instructions not to do anything more
+than that.<p>
+<b>Mike Blasgen:</b> When I was living in Washington, I went up to Endicott to
+help them with some problems, and I remember that they were concerned that the
+bug curve wasn't dropping at the rate that they wanted it to be, and they were
+having performance problems and working set problems and all this stuff. It was
+touch-and-go near the end. And then there was a big announcement, which was at
+some conference in Atlanta or some place like that, I went to as part of the
+announcement roll-out. In fact a lot of these slides that you saw earlier were
+actually a part of a talk that I gave as one of the front-men for the
+announcement of that. I have a copy of the booklet that Ted Codd wrote, called
+<i>The Significance of the SQL/DS Announcement</i><a name="fnB52"
+href="#fn52">[56]</a>, which he published in 1981. So I think once that
+transition to Endicott occurred, and Endicott didn't have any new ideas, it
+wasn't the data model of the week, the data language of the week, that they
+were just going to do it, then all that debate ended. And then we were able to
+take advantage of the situation that Bob just described, about what happened to
+Eagle, which was the cratering of Eagle. Would you like to be called on?
+<p>
+<a name="fn49" href="#fnB49">[53]</a> ADABAS is Software AG's database
+system.<p>
+<a name="fn50" href="#fnB50">[54]</a> For details on the evolution of System R
+to SQL/DS, see:<p>
+Donald D. Chamberlin, Arthur M. Gilbert, and Robert A. Yost. "A History of
+System R and SQL/Data System" <i>Proc. VLDB</i>, Cannes, France (September
+1981) pages 456-464.<p>
+<a name="fn51" href="#fnB51">[55]</a> Bob Jolls notes: "Irv Traiger, since he
+was on assignment to Mike Saranga, had the opportunity to view these arguments
+from both the System R and the STL perspective. Perhaps he'll want to add his
+perspective to this discussion." Irv Traiger responds: "It was a tricky
+situation. I was obviously a Research Division guy, on assignment at STL for a
+year (which later turned into two years). So anything I said or did favoring
+System R, or feeding "intelligence"-type information back to Research, could
+obviously hurt my usefulness at STL. So I had made a decision early on to spend
+the year as a Saranga advocate, helping any way I could, and building
+credibility. There were several things I got involved in, but the biggest one
+was to help him understand how Eagle was doing, how serious some of the
+weaknesses were, how or if they could be improved, etc. So I'd work with some
+of those folks. And at the same time, I had gotten to know Bob quite well. We
+had a lot of discussions about Eagle, and also about the database work. Saranga
+made the decision to stop Eagle, which took a lot of courage. Once that
+decision was made, STL was focused on a couple of tough questions that I was
+able to help on. One was to help figure out what should be salvaged from all
+the system services part of Eagle. And of course the other was to get the
+database work moving quickly. As Bob mentioned, there were good arguments on
+both sides, about whether to use the RDS from System R, or the so-called LSS
+that was being designed at STL. But it was pretty clear that the LSS had quite
+a ways to go, and that they'd have the usual problems along the way when you
+build any complex system. And the RDS, with all of its warts, at least already
+existed, and could be improved over time. So I tried to help Bob and Mike from
+that perspective."<p>
+<a name="fn52" href="#fnB52">[56]</a> E.F. Codd. "The Significance of the
+SQL/Data System Announcement" <i>Computerworld</i> (February 16, 1981).
+
+<p>
+<P><hr size=4>
+<A HREF="sqlr95-IBM.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="sqlr95-Shoot-ou.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="sqlr95-IBM.html"><IMG SRC="images/upg.gif" ALT="Up " border=0></A>
+ <A HREF="sqlr95.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="sqlr95-Contents.html"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+ <A HREF="sqlr95-Index.html"><IMG SRC="images/indexg.gif" ALT="Index" border=0></A>
+</body></html>

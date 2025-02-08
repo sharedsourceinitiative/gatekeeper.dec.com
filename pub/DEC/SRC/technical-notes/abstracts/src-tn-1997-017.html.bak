@@ -1,0 +1,39 @@
+<TITLE>Digital Systems Research Center: Note 1997-017</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Technical Note 1997-017</H1>
+<H1>Dynamic Coscheduling on Workstation Clusters</H1>
+<HR>
+<H2>Patrick G. Sobalvarro, Scott Pakin, William E. Weihl, and Andrew A. Chien</H2>
+Note #1997-017. March 14, 1997
+<P>
+Coscheduling has been shown to be a critical factor in achieving
+efficient parallel execution in timeshared environments.  However, the
+most common approach, gang scheduling, has limitations in scaling, can
+compromise good interactive response, and requires that communicating
+processes be identified in advance.
+<P>
+We explore a technique called dynamic coscheduling (DCS) which
+produces emergent coscheduling of the processes constituting a
+parallel job.  Experiments are performed in a workstation environment
+with high performance networks and autonomous timesharing schedulers
+for each CPU.  The results demonstrate that DCS can achieve effective,
+robust coscheduling for a range of workloads and background loads.
+Empirical comparisons to implicit scheduling and uncoordinated
+scheduling are presented.  Under spin-block synchronization, DCS
+reduces job response times by up to 20% over implicit scheduling while
+maintaining fairness; and under spinning synchronization, DCS reduces
+job response times by up to two decimal orders of magnitude over
+uncoordinated scheduling.  The results suggest that DCS is a promising
+avenue for achieving coordinated parallel scheduling in an environment
+that coexists with autonomous node schedulers.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-017.ps.Z">PostScript compressed with UNIX compress</A></B> -- 256 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-017.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 144 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-017.ps.zip">PostScript compressed with ZIP</A></B> -- 144 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-017.ps">PostScript</A></B> -- 568 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-017.pdf">Portable Document Format (PDF)</A></B> -- 152 Kbytes<BR>
+</UL></P>

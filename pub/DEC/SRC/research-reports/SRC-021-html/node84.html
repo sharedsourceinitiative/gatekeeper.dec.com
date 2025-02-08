@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Taos Devices</TITLE>
+<META NAME="description" CONTENT="Taos Devices">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="previous" HREF="node83.html">
+<LINK REL="up" HREF="node74.html">
+<LINK REL="next" HREF="node85.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html1235"
+ HREF="node85.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html1231"
+ HREF="node74.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html1227"
+ HREF="node83.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html1233"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html1234"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1236"
+ HREF="node85.html">Topaz Interfaces Imported by</A>
+<B> Up:</B> <A NAME="tex2html1232"
+ HREF="node74.html">Running Ultrix Applications on</A>
+<B> Previous:</B> <A NAME="tex2html1228"
+ HREF="node83.html">Taos-only Kernel Calls</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION040910000000000000000">
+Taos Devices</A>
+</H2>
+ <A NAME="MenloPark">&#160;</A>
+The following table lists the devices supported by Taos:
+<P><A NAME="1869">&#160;</A>
+<P>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1">
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP><EM>Major</EM></TD>
+<TD ALIGN="LEFT" NOWRAP><EM>Minor</EM></TD>
+<TD ALIGN="LEFT" NOWRAP><EM>Description</EM></TD>
+<TD ALIGN="LEFT" NOWRAP><EM>Normal path name</EM></TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>2</TD>
+<TD ALIGN="LEFT" NOWRAP>&nbsp;</TD>
+<TD ALIGN="LEFT" NOWRAP>Console device or window</TD>
+<TD ALIGN="LEFT" NOWRAP>/dev/console</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>3</TD>
+<TD ALIGN="LEFT" NOWRAP>&nbsp;</TD>
+<TD ALIGN="LEFT" NOWRAP>Null</TD>
+<TD ALIGN="LEFT" NOWRAP>/dev/null</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>3</TD>
+<TD ALIGN="LEFT" NOWRAP>1</TD>
+<TD ALIGN="LEFT" NOWRAP>Control terminal</TD>
+<TD ALIGN="LEFT" NOWRAP>/dev/tty</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>4</TD>
+<TD ALIGN="LEFT" NOWRAP>&nbsp;</TD>
+<TD ALIGN="LEFT" NOWRAP>UART</TD>
+<TD ALIGN="LEFT" NOWRAP>/dev/tty00</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>5</TD>
+<TD ALIGN="LEFT" NOWRAP>&nbsp;</TD>
+<TD ALIGN="LEFT" NOWRAP>TEm window 24x80</TD>
+<TD ALIGN="LEFT" NOWRAP>/dev/ety</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>6</TD>
+<TD ALIGN="LEFT" NOWRAP>0-30</TD>
+<TD ALIGN="LEFT" NOWRAP>Pty slave</TD>
+<TD ALIGN="LEFT" NOWRAP>/dev/tty[p-r][0-9a-f]</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>7</TD>
+<TD ALIGN="LEFT" NOWRAP>0-30</TD>
+<TD ALIGN="LEFT" NOWRAP>Pty master</TD>
+<TD ALIGN="LEFT" NOWRAP>/dev/pty[p-r][0-9a-f]</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>8</TD>
+<TD ALIGN="LEFT" NOWRAP>&nbsp;</TD>
+<TD ALIGN="LEFT" NOWRAP>Ivy typescript window</TD>
+<TD ALIGN="LEFT" NOWRAP>/dev/ts</TD>
+</TR>
+</TABLE></DIV>
+<P>
+The tty driver (used for the console device, TEm windows, and pseudo
+terminals) always uses the `new line discipline'; the TIOCSETD ioctl is a
+no-op and the TIOCGETD ioctl always returns 2 (NTTYDISC).
+<P>
+The tty driver treats several other ioctl requests as no-ops:
+TIOCSBRK/TIOCCBRK (set/clear break bit), TIOCSDTR/TIOCCDTR (set/clear data
+terminal ready), TIOCHPCL (hang up on last close), and TIOCWONLINE (wait
+for device to come online).
+<P>
+The tty driver does not support packet mode for pseudo terminal devices.
+Using the TIOCPKT ioctl to clear packet mode is a no-op; using TIOCPKT to
+set packet mode raises SIGSYS.
+<P>
+Finally, the tty driver treats another group of ioctl requests as ASSERT
+failures that stop Taos (this should be changed!): TIOCSMLB/TIOCCMLB
+(set/clear loopback mode), TIOCSFIFO/TIOCCFIFO (set/clear FIFO
+transmission mode), TIOCMODG/TIOCMODS (get/set modem control state),
+TIOCMSET/TIOCMGET (set/get modem bits), TIOCMBIS/TIOCMBIC (bis/bic modem
+bits), TIOCNMODEM/TIOCMODEM (ignore/don't ignore modem status),
+TIOCNCAR/TIOCCAR (ignore/don't ignore soft carrier), and TIOCOUTQ (return
+size of output queue).
+<P>
+The only way to set the actual line speed of the console device is to turn
+the rotary switch on the back panel of the Firefly; the line speed
+returned by the TIOCGETP ioctl and set by the TIOCSETP and TIOCSETN ioctls
+is unrelated to the rotary switch position.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1235"
+ HREF="node85.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html1231"
+ HREF="node74.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html1227"
+ HREF="node83.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html1233"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html1234"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1236"
+ HREF="node85.html">Topaz Interfaces Imported by</A>
+<B> Up:</B> <A NAME="tex2html1232"
+ HREF="node74.html">Running Ultrix Applications on</A>
+<B> Previous:</B> <A NAME="tex2html1228"
+ HREF="node83.html">Taos-only Kernel Calls</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

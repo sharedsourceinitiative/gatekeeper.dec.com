@@ -1,0 +1,31 @@
+
+			AVAILABLE ELECTRONICALLY
+
+"Authentication and Delegation with Smart-cards"
+M. Abadi, M. Burrows, C. Kaufman, B. Lampson
+October 22, 1990.  24 pages
+
+Authors' abstract
+
+  The authentication of users in distributed systems poses special
+  problems because users lack the ability to encrypt and decrypt.  The
+  same problems arise when users wish to delegate some of their
+  authority to nodes, after mutual authentication.
+
+  In most systems today, the user is forced to trust the node he wants
+  to use.  In a more satisfactory design, the user carries a smart-card
+  with sufficient computing power to assist him; the card provides
+  encryption and decryption capabilities for authentication and
+  delegation.
+
+  Authentication is relatively straightforward with a sufficiently
+  powerful smart-card.  However, for practical reasons, protocols that
+  place few demands on smart-cards should be considered.  These
+  protocols are subtle, as they rely on fairly complex trust relations
+  between the principals in the system (users, hosts, services).  In
+  this paper, we discuss a range of public-key smart-card protocols,
+  and analyze their assumptions and the guarantees they offer.
+
+
+
+

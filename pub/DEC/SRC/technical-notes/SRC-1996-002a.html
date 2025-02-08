@@ -1,0 +1,921 @@
+<!-- This file generated automatically by mtex2html(1) -->
+<HTML>
+<HEAD><TITLE>The Module Structure of TLA+</TITLE></HEAD>
+<BODY>
+<HR>
+<center>
+<H2><b>SRC Technical Note</b></H2><BR>
+<H3><b>1996-002a</b></H3><BR>
+<H3> September 12, 1996 </H3><BR>
+<H3> Minor correction, January 5, 1997 </H3><BR>
+<HR>
+<H2><b>The Module Structure of TLA+</b></H2>
+<P>
+<H3>Leslie Lamport</H3>
+<HR>
+<IMG SRC="http://www.research.digital.com/SRC/pics/DEC-logo.gif"><br>
+<b>Systems Research Center</b><BR>
+130 Lytton Avenue<BR>
+Palo Alto, CA 94301<BR>
+http://www.research.digital.com/SRC/
+<P>
+<HR>
+Copyright 1997 Digital Equipment Corporation. All rights reserved
+<HR>
+</center>
+</BODY>
+</HTML>
+<P> 
+<P>
+<A HREF="http://www.research.digital.com/SRC/tla/">Back to TLA home page</A>
+</H4>
+This note informally describes the syntax and semantics of TLA+ down
+to, but not including, the level of expressions.  Its main purpose is
+to introduce and explain the constructs for including modules that
+were introduced in August, 1996.
+<H3>Table of Contents</H3>
+<BLOCKQUOTE>
+<UL>
+<LI> <A HREF="#Section1">Modules, Declarations, and Definitions</A>
+<LI> <A HREF="#Section2">Including One Module in Another</A>
+<LI> <A HREF="#Section3">Modules Inside Modules</A>
+<LI> <A HREF="#Section4">Local Definitions</A>
+<LI> <A HREF="#Section5">Higher-Order Operators</A>
+<LI> <A HREF="#Section6">Assumptions and Theorems</A>
+<LI> <A HREF="#Section7">Expression Levels</A>
+<LI> <A HREF="#Section8">A Closer Look at Instantiation</A>
+<LI> <A HREF="#Note1">Notes</A>
+</UL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3><A NAME="Section1">Modules, Declarations, and Definitions</A></H3>
+<BLOCKQUOTE>
+<P>
+
+A TLA+ specification is organized as a collection of modules.  A
+module looks like this:<A HREF="#Note1"> (Note 1)</A>
+<PRE>
+   ----------- MODULE DirectedGraphs ------------
+    body                       
+   ----------------------------------------------
+    more body
+   ==============================================
+</PRE>
+
+The body consists of a sequence of statements, where a statement is a
+declaration, definition, assumption, or theorem.  We will ignore
+assumptions and theorems for now.  Horizontal lines like
+<PRE>
+   ---------------------------------------------
+</PRE>
+
+can appear between statements; they are purely decorative.<P>
+
+A declaration statement looks like this:
+<PRE>
+   CONSTANTS Node, Edge
+</PRE>
+
+It adds to the module the declarations of <TT>Node</TT> and <TT>Edge</TT> as
+constant symbols.  TLA+ also allows variable symbols, identified by
+the keyword "<TT>VARIABLES</TT>".<A HREF="#Note2"> (Note 2)</A> A declared
+symbol is a "free parameter" of the module.<P>
+
+A definition statement looks like this:
+<PRE>
+   NonEdge == (Node \X Node) \ Edge
+</PRE>
+
+Assuming that <TT>Edge</TT> and <TT>Node</TT> are declared as above, this
+statements adds to the module the definition that defines the symbol
+<TT>NonEdge</TT> to equal the expression
+<PRE>
+   (Node \X Node) \ Edge
+</PRE>
+
+We will not worry about the meaning of this and other expressions.<P>
+
+We can follow this definition statement with the definition statement
+<PRE>
+   NonTrivialNonEdge == NonEdge \ {&lt;&lt;n, n&gt;&gt; : n \in Node}
+</PRE>
+
+This defines the symbol <TT>NonTrivialNonEdge</TT> to be the expression
+<PRE>
+   ((Node \X Node) \ Edge) \ {&lt;&lt;$n, $n&gt;&gt; : $n \in Node}
+</PRE>
+
+Observe that to obtain this definition, we replace the defined symbol
+<TT>NonEdge</TT> by its definition, and we replace the bound variable
+<TT>n</TT> with a new symbol <TT>$n</TT> that cannot be declared or defined by
+the user.<P>
+
+In this way, a definition always defines a symbol to equal an
+expression containing only declared symbols, bound variables that are
+different from any symbols typed by the user, and the built-in
+operators of TLA+ like <TT>\X</TT> and <TT>\</TT>.<P>
+
+Symbols can also be defined to equal operators that take
+arguments.<A HREF="#Note3"> (Note 3)</A> For example,
+<PRE>
+   Nbrs(n, m) == &lt;&lt;n, m&gt;&gt; \in Edge
+</PRE>
+
+defines the symbol <TT>Nbrs</TT> to be an operator that
+assigns to any expressions <TT>exp_1</TT> and <TT>exp_2</TT> the
+expression
+<PRE>
+   &lt;&lt;exp_1, exp_2&gt;&gt; \in  Edge
+</PRE>
+
+We will denote this operator 
+<PRE>
+   LAMBDA $n, $m : &lt;&lt;$n, $m&gt;&gt; \in \ Edge
+</PRE>
+
+We use <TT>LAMBDA</TT> only to describe the semantics of modules; it is
+not an operator of TLA+.  (As before, we replaced the bound variables
+<TT>n</TT> and <TT>m</TT> by "untypable" symbols <TT>$n</TT> and
+<TT>$m</TT>.)<A HREF="#Note4"> (Note 4)</A><P>
+
+TLA+ allows you to define prefix, infix, and postfix operators.  For
+example, writing
+<PRE>
+   n ?? m == &lt;&lt;n, m&gt;&gt; \in Edge
+</PRE>
+
+defines the infix operator <TT>??</TT> to be the same as the ordinary
+operator <TT>Nbrs</TT>.<A HREF="#Note5"> (Note 5)</A><P>
+
+In a definition, the expression to the right of the "<TT>==</TT>" can
+contain only TLA+ primitives, symbols that have already been defined
+or declared, and definition parameters (for example, the symbols
+<TT>n</TT> and <TT>m</TT> in the definition of <TT>Nbrs</TT>).  Circular
+definitions are not allowed.  (Recursive definitions will be discussed
+elsewhere.)
+</BLOCKQUOTE>
+
+<H3><A NAME="Section2">Including One Module in Another</A></H3>
+<BLOCKQUOTE>
+<P>
+
+One builds large hierarchical specifications by building a new module
+"on top of" old modules.  One way to do this is with the
+<TT>EXTENDS</TT> statement at the beginning of the module.  The statement
+<PRE>
+   EXTENDS Foo, Bar
+</PRE>
+
+simply adds the declarations and definitions from modules <TT>Foo</TT> and
+<TT>Bar</TT><A HREF="#Note6"> (Note 6)</A> to the current module.  (It adds
+assumptions and theorems, as described <A HREF="#Section6">below</A>.)  This
+has approximately<A HREF="#Note7"> (Note 7)</A> the same effect as inserting
+the body of those modules in the current module.<P>
+
+The other way to use an existing module is with the <TT>INSTANCE</TT>
+statement, which instantiates (substitutes for) the module's declared
+symbols.  Suppose that module <TT>DirectedGraphs</TT> declares the symbols
+<TT>Node</TT> and <TT>Edge</TT>, and defines the symbols <TT>NonEdge</TT> and
+<TT>Nbrs</TT>, as above.  Consider the following module:
+<PRE>
+   ------------------ MODULE SGraphs ------------------
+   CONSTANT S
+
+   Edge == { &lt;&lt;m, n&gt;&gt; \in S \X S : m \in n }
+
+   INSTANCE DirectedGraphs WITH Node &lt;- S, Edge &lt;- Edge
+   ====================================================
+</PRE>
+
+The <TT>INSTANCE</TT> statement adds to module <TT>SGraphs</TT> all
+definitions obtained from the definitions of <TT>DirectedGrahs</TT> by
+substituting <TT>S</TT> for the symbol <TT>Node</TT> and substituting the
+definition of <TT>Edge</TT> (from module <TT>SGraphs</TT>) for the symbol
+<TT>Edge</TT>.  Thus, the <TT>INSTANCE</TT> statement adds the following
+definitions to module <TT>SGraphs</TT>:
+<UL>
+<LI> <TT>NonEdge</TT> is defined to equal
+<PRE>
+   (S \X S) \ { &lt;&lt;$m, $n&gt;&gt; \in S \X S : $m \in $n }
+</PRE>
+
+<LI> <TT>Nbrs</TT> is defined to equal
+<PRE>
+LAMBDA $n, $m : &lt;&lt;$n, $m&gt;&gt; \in 
+                  { &lt;&lt;$m, $n&gt;&gt; \in S \X S : $m \in $n }
+</PRE>
+
+</UL>
+<P>
+
+Substitutions such as <TT>Edge &lt;- Edge</TT>, in which a symbol is
+substituted for itself, are quite common.  We therefore introduce the
+convention that if no substitution for a declared symbol <TT>s</TT> of an
+instantiated module appears in the <TT>WITH</TT> clause, then there is an
+implicit <TT>s &lt;- s</TT>.  (This means that <TT>s</TT> must already be
+declared or defined in the current module.)  Thus, the <TT>INSTANCE</TT>
+statement of module <TT>SGraphs</TT> above can be written
+<PRE>
+   INSTANCE DirectedGraphs WITH Node &lt;- S
+</PRE>
+
+If there are no explicit substitutions, the "<TT>WITH</TT>" is omitted.<P>
+
+A module may need to use more than one instantiation of the same
+module.  For example, we may want to use two different instances of
+the <TT>DirectedGraphs</TT> module, with different substitutions for the
+parameters <TT>Node</TT> and <TT>Edge</TT>.  We can't let the same symbol have
+two different definitions, so we must rename the defined symbols.  The
+statement
+<PRE>
+   Foo == INSTANCE DirectedGraphs WITH Node &lt;- S 
+</PRE>
+
+is the same as the <TT>INSTANCE</TT> statement in module <TT>SGraphs</TT>
+above except that it defines the symbols <TT>Foo.NonEdge</TT> and
+<TT>Foo.Nbrs</TT> instead of the symbols <TT>NonEdge</TT> and
+<TT>Nbrs</TT>.<A HREF="#Note8"> (Note 8)</A><P>
+
+Sometimes we need to use a whole family of instantiations of the same
+module.  We do this as indicated by the following example:
+<PRE>
+   E(Set) == { &lt;&lt;T1, T2&gt;&gt; \in (SUBSET Set) \X (SUBSET Set)
+                 : T1 \subseteq T2 }
+
+   DG(S) == INSTANCE DirectedGraphs 
+              WITH Node &lt;- SUBSET S, Edge &lt;- E(S)
+</PRE>
+
+(<TT>T1</TT> and <TT>T2</TT> are bound variables in the first definition.)
+For any expression <TT>exp</TT>, this defines <TT>DG(exp).NonEdge</TT> to
+equal the expression obtained from the definition of <TT>NonEdge</TT> in
+the <TT>DirectedGraphs</TT> module by substituting <TT>SUBSET S</TT> for
+<TT>Node</TT> and substituting the definition of <TT>E(exp)</TT> for
+<TT>Edge</TT>.  In other words, <TT>DG(exp).NonEdge</TT> equals
+<PRE>
+   ((SUBSET exp) \X (SUBSET exp))
+      \ { &lt;&lt;$T1, $T2&gt;&gt; \in (SUBSET exp) \X (SUBSET exp) 
+          : $T1 \subseteq $T2 }
+</PRE>
+
+We can think of <TT>DG(exp).NonEdge</TT> as meaning <TT>DG.NonEdge(exp)</TT>,
+where <TT>DG.NonEdge</TT> is defined to be
+<PRE>
+   LAMBDA $S : ((SUBSET $S) \X (SUBSET $S)) \ 
+                 { &lt;&lt;$T1, $T2&gt;&gt; \in (SUBSET $S) \X (SUBSET $S) 
+                   : $T1 \subseteq $T2 }
+</PRE>
+
+The <TT>INSTANCE</TT> statement above similarly defines
+<TT>DG(exp_1).Nbrs(exp_2,exp_3)</TT> for any expressions <TT>exp_1</TT>,
+<TT>exp_2</TT>, and <TT>exp_3</TT>.  Again, we can think of
+<TT>DG(exp_1).Nbrs(exp_2,exp_3)</TT> as meaning
+<TT>DG.Nbrs(exp_1)(exp_2,exp_3)</TT>, where <TT>DG.Nbrs</TT> is defined to be
+<PRE>
+   LAMBDA $S : LAMBDA $n, $m : 
+      &lt;&lt;$n, $m&gt;&gt; \in { &lt;&lt;$T1, $T2&gt;&gt; \in (SUBSET $S) \X (SUBSET $S) 
+                       : $T1 \subseteq $T2 }
+</PRE>
+
+To summarize:
+<DL>
+<DT><TT>EXTENDS M</TT><DD> Adds to the current module the declarations and
+definitions (and assumptions and theorems) from module <TT>M</TT>.<P>
+
+<DT><TT>INSTANCE M WITH s_1 &lt;- exp_1, ...  , s_k &lt;- exp_k</TT><DD> The
+<TT>s_i</TT> must be the declared symbols of module <TT>M</TT>.  (If <TT>k=0</TT>,
+we omit the "<TT>WITH</TT>".  Omitting an explicit instantiation of a
+declared symbol <TT>s</TT> from the <TT>WITH</TT> clause is equivalent to
+adding the instantiation <TT>s &lt;- s</TT>.)  This <TT>INSTANCE</TT> expression
+represents a mapping that assigns to each defined symbol <TT>ds</TT> a
+definition <TT>ds_def</TT>, defined as follows.  Let <TT>EXP_i</TT> be the
+expression obtained from <TT>exp_i</TT> by replacing every symbol defined
+in the current module with its definition, and replacing bound
+variables by new symbols.  We let <TT>ds_def</TT> equal the expression
+obtained from the definition of <TT>ds</TT> in <TT>M</TT> by replacing each
+declared symbol <TT>s_i</TT> with <TT>EXP_i</TT>.<P>
+
+<UL>
+<LI> If this instance expression appears as a statement by itself,
+then each defined symbol <TT>ds</TT> of <TT>M</TT> is defined in the current
+module to equal <TT>ds_def</TT>.<P>
+
+<LI> If this instance expression appears in the statement <TT>IM(p_1,
+..., p_j) == INSTANCE...</TT>, then <TT>IM.ds</TT> is defined to equal
+<PRE>
+   LAMBDA $p_1, ... , $p_j : DS_def
+</PRE>
+
+for each defined symbol <TT>ds</TT> of <TT>M</TT>, where <TT>DS_def</TT> is obtained
+from <TT>ds_def</TT> by replacing each symbol <TT>p_i</TT> by the new symbol
+<TT>$p_i</TT>.  We write <TT>IM(e_1, ... , e_j).ds</TT> instead of
+<TT>IM.ds(e_1, ... , e_j)</TT>.  If <TT>j=0</TT>, we write
+<TT>IM ==...</TT> and <TT>IM.ds</TT> instead of <TT>IM()==...</TT> and <TT>IM().ds</TT>.
+</UL>
+</DL>
+The keyword <TT>INSTANCE</TT> can be followed by a comma-separated list of
+instantiations, as in
+<PRE>
+   INSTANCE Naturals, Sequences
+</PRE>
+
+If a module <TT>M</TT> has no declared symbols, then <TT>EXTENDS M</TT> and
+<TT>INSTANCE M</TT> are equivalent.  <TT>EXTENDS</TT> should be used only for
+breaking up what is logically a single specification into smaller
+pieces.  If <TT>M</TT> is a general-purpose module, <TT>INSTANCE M</TT> should
+be used.
+</BLOCKQUOTE>
+
+<H3><A NAME="Section3">Modules Inside Modules</A></H3>
+<BLOCKQUOTE>
+<P>
+
+One can put one module inside another, as in
+<PRE>
+   ------------- MODULE Outer ------------
+   CONSTANT z 
+   ...
+      ----------- MODULE IMod -----------
+      CONSTANT x, y
+      ...
+      ====================================
+
+   Inner(x,y) == INSTANCE IMod
+   ...
+</PRE>
+
+Module <TT>IMod</TT> is like any module, except that it can use the
+declared symbol <TT>z</TT> and any other symbols declared or defined
+before it in module <TT>Outer</TT>.  Module <TT>IMod</TT> may be used only
+inside module <TT>Outer</TT>.<A HREF="#Note9"> (Note 9)</A><P>
+
+Submodules such as <TT>IMod</TT> are often used in the following way.
+Suppose we want to define
+<PRE>
+   Spec == \exists x, y : InnerSpec
+</PRE>
+
+where <TT>InnerSpec</TT> is some complicated formula involving <TT>x</TT> and
+<TT>y</TT>.  The obvious way to do this is:
+<PRE>
+   CONSTANT x, y
+   ...
+   InnerSpec == ...
+   Spec == \exists x, y : InnerSpec
+</PRE>
+
+However, the definition of <TT>Spec</TT> is illegal because it violates
+the following syntactic rule of TLA+:
+<UL>
+<LI> A symbol that is already declared or defined cannot be used as a
+bound variable.
+</UL>
+(The purpose of this rule is to prevent confusion between bound
+variables and defined or declared symbols.)  We could write
+<PRE>
+   InnerSpec(x, y) == ...
+   Spec == \exists x, y : InnerSpec(x,y)
+</PRE>
+
+However, <TT>InnerSpec</TT> may be defined in terms of a sequence of other
+defined symbols, each of which is defined in terms of <TT>x</TT> and
+<TT>y</TT>.  We would have to make <TT>x</TT> and <TT>y</TT> explicit parameters
+of all those definitions.  Instead, using the module structure in the
+example above, we can put the definition of InnerSpec in
+submodule <TT>IMod</TT> and define
+<PRE>
+   Spec == \exists x, y : Inner(x, y).InnerSpec
+</PRE>
+
+</BLOCKQUOTE>
+
+<H3><A NAME="Section4">Local Definitions</A></H3>
+<BLOCKQUOTE>
+<P>
+
+It often happens that a module <TT>A</TT> extends modules <TT>B</TT> and
+<TT>C</TT>, both of which extend module <TT>D</TT>.  For example, <TT>D</TT> might
+declare symbols and make some definitions that are used by both <TT>B</TT>
+and <TT>C</TT>.  Module <TT>A</TT> then obtains two copies of the definitions
+and declarations of <TT>D</TT>--one obtained by extending <TT>B</TT> and the
+other obtained by extending <TT>C</TT>.  TLA+ allows the same symbol to be
+declared or defined two or more times, if the declarations or
+definitions are the same.<A HREF="#Note10"> (Note 10)</A><P>
+
+Adding more and more definitions with each level of module inclusion
+will eventually lead to unintended name clashes.  We don't want to
+know what modules are included by <TT>Naturals</TT> (the module that
+defines the natural numbers and operators like <TT>+</TT>), so we need a
+way to avoid name clashes with symbols defined by those modules.  TLA+
+provides local definitions as a way of avoiding such name clashes.
+Preceding a definition with the keyword <TT>LOCAL</TT> makes that
+definition local to the current module.  For example, writing
+<PRE>
+   LOCAL Temp(x) == x + y
+</PRE>
+
+defines <TT>Temp</TT> in the current module.  But the definition of
+<TT>Temp</TT> is not obtained by a module that includes the current
+module--whether with <TT>EXTENDS</TT> or <TT>INSTANCE</TT>.
+Similarly, writing
+<PRE>
+   LOCAL INSTANCE M WITH ...
+</PRE>
+
+or
+<PRE>
+   LOCAL Temp(x) == INSTANCE M WITH ...
+</PRE>
+
+makes all the definitions included from <TT>M</TT> local to the current
+module.  <P>
+
+Declarations cannot be made local.  Symbols are defined in terms of
+declared symbols, and it wouldn't make sense to make a symbol local if
+it appeared in a nonlocal definition.  (Remember that the statement
+<TT>df == exp</TT> defines <TT>df</TT> to be the expression obtained from
+<TT>exp</TT> by replacing defined symbols with their definitions, so the
+definition of <TT>df</TT> has no defined symbols.)  Hence, one cannot
+precede a declaration or an <TT>EXTENDS</TT> statement with
+"<TT>LOCAL</TT>".  (Remember that <TT>EXTENDS M</TT> adds <TT>M</TT>'s declared
+symbols to those of the current module.  If <TT>M</TT> declares no
+symbols, one can write <TT>INSTANCE M</TT> instead of <TT>EXTENDS M</TT>.)<P>
+
+When writing a general-purpose module, definitions included from other
+modules should be made local.  For example, a general-purpose
+<TT>Graphs</TT> module should include the <TT>Naturals</TT> module by
+<PRE>
+   LOCAL INSTANCE Naturals
+</PRE>
+
+That way, a module that includes <TT>Graphs</TT> can define <TT>+</TT> to mean
+something other than addition of natural numbers.
+</BLOCKQUOTE>
+
+<H3><A NAME="Section5">Higher-Order Operators</A></H3>
+<BLOCKQUOTE>
+<P>
+
+Operators can take operators as arguments.  For example
+<PRE>
+   Double(A, F(_,_)) == F(A,A) 
+</PRE>
+
+defines <TT>Double</TT> to be an operator that takes two arguments---the
+first of which is an expression, and the second of which is an
+operator that takes two arguments, both of which are expressions.  For
+example, <TT>Double(3,+)</TT> equals <TT>3+3</TT>, and <TT>Double({a},Nbrs)</TT>
+equals <TT>Nbrs({a},{a})</TT>.<P>
+
+TLA+ does not allow an operator to take as an argument an operator
+that takes as an argument an operator.  In other words, there can be
+at most two levels of parentheses to the left of the "<TT>==</TT>".  
+One cannot define an operator that is any "higher-order" than
+<TT>Double</TT>.<P>
+
+The value of a TLA+ expression cannot be an operator; it must be a
+simple value.  (A <TT>LAMBDA</TT> expression is one whose value is an
+operator, but one cannot write <TT>LAMBDA</TT> expressions in TLA+.)<P>
+
+One can declare constant symbols to be operators.  For example,
+<PRE>
+   CONSTANT Foo(_, _)
+</PRE>
+
+declares <TT>Foo</TT> to be an operator that takes two arguments.  Since
+the value of an expression cannot be an operator, the declared
+operator <TT>Foo</TT> can be instantiated only by an operator that has the
+same number of arguments---for example, by writing
+<PRE>
+    INSTANCE ... WITH Foo &lt;- +
+</PRE>
+
+One cannot declare variable symbols to be operators.
+</BLOCKQUOTE>
+
+<H3><A NAME="Section6">Assumptions and Theorems</A></H3>
+<BLOCKQUOTE>
+<P>
+
+A module can contain assumptions and theorems, of the form <TT>ASSUME
+exp</TT> and <TT>THEOREM exp</TT>, where <TT>exp</TT> is an expression.  The
+expression <TT>exp</TT> can contain symbols declared or defined anywhere
+in the module.<P>
+
+For simplicity, suppose that module <TT>M</TT> contains only the single
+assumption <TT>ASSUME a</TT> and the single theorem <TT>THEOREM t</TT>.  (The
+generalization is obvious.)  Let <TT>A</TT> and <TT>T</TT> be the expressions
+obtained from <TT>a</TT> and <TT>t</TT> by replacing all defined symbols with
+their definitions, so the free variables of <TT>A</TT> and <TT>T</TT> are
+declared symbols.  We make the syntactic requirement that <TT>A</TT>
+contain only constant symbols.<A HREF="#Note11"> (Note 11)</A>
+  Module <TT>M</TT> is <I>valid</I> iff
+the formula <TT>A =&gt; T</TT> is valid.  Writing a module asserts that the
+module is valid, so a theorem represents a proof obligation for the
+writer of the module.<P>
+
+When module <TT>M</TT> is included with an <TT>EXTENDS M</TT> statement, its
+assumptions and theorems are added to those of the current module.
+When module <TT>M</TT> is instantiated with an <TT>INSTANCE M</TT> expression,
+only its definitions are added to the current module, not its
+assumptions or theorems (or declared symbols).<P>
+
+Suppose <TT>M</TT> is valid, so <TT>A =&gt; T</TT> is a valid formula.  
+Suppose that the instantiation
+<PRE>
+   INSTANCE M WITH s_1 &lt;- exp_1, ...  , s_k &lt;- exp_k
+</PRE>
+
+is syntactically correct, meaning that every declared symbol of <TT>M</TT>
+is instantiated with an expression all of whose symbols are defined or
+declared.  Substitution preserves validity, so the formula obtained
+from <TT>A =&gt; T</TT> by replacing each <TT>s_i</TT> with <TT>exp_i</TT> is valid.<P>
+
+One often write modules with assumptions but no theorems.  These
+assumptions serve no logical function, since they are not used to
+prove anything (except perhaps if the module is extended by another
+module).  However, they serve as useful comments to the reader about
+the values one expects these symbols to assume.  For example,
+one might add to module <TT>DirectedGraphs</TT> the assumption
+<PRE>
+   ASSUME  Edge \subseteq Node \X Node
+</PRE>
+
+which indicates that one expects <TT>Edge</TT> to be a set of ordered
+pairs of elements from the set <TT>Node</TT>.  We expect the assumption to
+be satisfied when the module is instantiated, but we do not make this
+a formal requirement.<A HREF="#Note12"> (Note 12)</A>
+</BLOCKQUOTE>
+
+<H3><A NAME="Section7">Expression Levels</A></H3>
+<BLOCKQUOTE>
+<P>
+
+TLA extends "ordinary math" (first-order logic plus set theory) with
+declared variable symbols and a few nonconstant operators.  The
+nonconstant operators of TLA+ are 
+<PRE>
+   ~&gt; (leads-to)                   ' (prime)                    
+   -+-&gt; (while)                    ENABLED   
+   \cdot (action composition)      UNCHANGED 
+   [...]_   (e.g., [A]_f)          \EE (temporal \exists)       
+   &lt;&lt;...&gt;&gt;_ (e.g., &lt;&lt;A&gt;&gt;_f)        \AA (temporal \forall)
+   []     &lt;&gt;     WF     SF    
+</PRE>
+
+To define the semantics of TLA+, we take the following six to be
+primitive and we define the rest in terms of them:
+<PRE>
+   '    ENABLED    \cdot    []    -+-&gt;    \EE
+</PRE>
+
+TLA places certain syntactic restrictions on the use of these
+operators.  These restrictions are described in terms of <I>levels</I>.
+Declared symbols and primitive TLA+ operators are assigned one of four
+levels, listed below in increasing order:
+<DL>
+<DT>Constant Level<DD> Contains declared constant symbols and
+constant-level TLA+ operators.<P>
+
+<DT>State Level<DD> Contains declared variable symbols and the
+<TT>ENABLED</TT> operator.<P>
+
+<DT>Action Level<DD> Contains the operators <TT>'</TT> and <TT>\cdot</TT>.<P>
+
+<DT>Temporal Level<DD> Contains the operators <TT>[]</TT>, 
+<TT>-+-&gt;</TT>, and <TT>\EE</TT>.<P>
+
+</DL>
+The level of an expression is defined to be the level of its
+highest-level subexpression, except that <TT>ENABLED A</TT> is a
+state-level expression even when <TT>A</TT> is an action-level expression.
+Note that in determining the level of a subexpression, bound variables
+are considered to have constant level except that bound variables
+introduced by the temporal quantifiers <TT>\EE</TT> and <TT>\AA</TT> are
+state-level symbols.<P>
+
+TLA places the following syntactic restrictions on expressions.
+<UL>
+<LI> The expression <TT>exp'</TT> is allowed only if <TT>exp</TT> is a
+state-level or contant-level expression.<P>
+
+<LI> A temporal-level expression 
+is either 
+<UL>
+<LI> a constant-level or temporal-level operator applied to
+constant-level, state-level, or temporal-level expressions.<P>
+
+<LI> an expression having one of the the following forms
+<PRE>
+   [][A]_f    &lt;&gt;&lt;&lt;A&gt;&gt;_f    WF_f(A)    SF_f(A)
+</PRE>
+
+where <TT>A</TT> has at most action level and <TT>f</TT> has at most state
+level.
+</UL>
+</UL>
+These level restrictions place restrictions on the arguments of
+defined operators.  For example, consider the operator <TT>S</TT> defined
+by:
+<PRE>
+   S(U, V, x)  ==  U =&gt; Enabled (V \/ x')
+</PRE>
+
+The expression <TT>S(e_1, e_2, e_3)</TT> is legal iff expression <TT>e_2</TT>
+has at most action level, and <TT>e_3</TT> has at most state level.  The
+level of the complete expression is the maximum of the level of
+<TT>e_1</TT> and state level.<A HREF="#Note13"> (Note 13)</A><P>
+
+A constant-level module is one that has no declared variable symbols
+and uses only constant-level operators.  Constant-level modules are
+used for defining data structures and for describing "ordinary
+math".<P>
+
+We make the following rules for instantiation (by an <TT>INSTANCE</TT>
+expression):
+<UL>
+<LI> Except when instantiating a constant-level module, a constant
+symbol can be instantiated only by a constant-level expression.
+(Arbitrary instantiations of declared symbols are allowed when
+instantiating a constant-level module.)<P>
+
+<LI> Variable symbols can be instantiated only by constant-level or
+state-level expressions.
+</UL>
+These restrictions ensure that the instantiated modules satisfy the
+syntactic level restrictions of TLA. They are also needed to ensure
+that the instantiation of a valid module is valid.  For example, the
+TLA formula <TT>[][c'=c]_c</TT> is valid (true for all behaviors) if
+<TT>c</TT> is a declared constant symbol.  Substituting a variable for
+<TT>c</TT> would produce an invalid formula (one that is false for some
+behaviors).
+</BLOCKQUOTE>
+
+<H3><A NAME="Section8">A Closer Look at Instantiation</A></H3>
+<BLOCKQUOTE>
+<P>
+
+We have stated that instantiation preserves validity.  If <TT>F</TT> is
+defined in module <TT>M</TT> to equal a valid formula, and we write
+<PRE>
+    I == INSTANCE M WITH ...
+</PRE>
+
+then <TT>I.F</TT> is a valid formula.  Instantiation is substitution, and
+in the presence of quantifiers, substitution preserves validity only
+if it is defined properly.  In particular, substitution must be
+defined so capture of free variables by quantifiers is not allowed.
+For example, consider the valid formula <TT>\exists u : u /= v</TT>.
+Naive substitution of <TT>u</TT> for <TT>v</TT> in this formula would
+yield the invalid formula
+ <TT>\exists u : u /= u</TT>.
+Validity is not preserved because the free symbol <TT>u</TT>, which is
+being substituted for <TT>v</TT>, is captured by the quantifier
+<TT>\exists</TT>.<P>
+
+The problem of capture of free variables by explicit quantifiers is
+avoided in TLA+ by renaming bound variables.  The module
+<PRE>
+   ---------------- MODULE M ----------------
+   CONSTANT v
+   F == \exists u : u /= v
+   ==========================================
+</PRE>
+
+defines <TT>F</TT> to be the formula
+ <TT>\exists $u : $u /= v</TT>.
+The statement
+<PRE>
+   I == INSTANCE M WITH v &lt;- u
+</PRE>
+
+then defines <TT>I.F</TT> to be the valid formula
+ <TT>\exists $u : $u /= u</TT>.<P>
+
+Some nonconstant operators of TLA+ contain implicit
+quantification--most notably, the operator <TT>ENABLED</TT>.  Suppose module
+<TT>M</TT> is 
+<PRE>
+   ---------------- MODULE M ----------------
+   VARIABLE u, v
+   F == ENABLED ((u' = u) /\ (v' /= v))
+   ==========================================
+</PRE>
+
+Then <TT>F</TT> is a valid formula.  Now consider the statement
+<PRE>
+   I == INSTANCE M WITH u &lt;- x, v &lt;- x
+</PRE>
+
+A naive substitution would make <TT>I.F</TT> the formula
+<PRE>
+   ENABLED ((x' = x) /\ (x' /= x))
+</PRE>
+
+which is equivalent to <TT>FALSE</TT>.  The problem is that, within an
+<TT>ENABLED</TT> expression, primed variables are really bound, so this
+naive substitution results in variable capture.  The meaning of
+formula <TT>F</TT> is really
+<PRE>
+   \exists $uprime, $vprime : ($uprime = u) /\ ($vprime = v)
+</PRE>
+
+To ensure that instantiation preserves validity, we make the following
+rule for the <TT>ENABLED</TT> operator:
+<UL>
+<LI> When instantiating a module, every declared variable symbol that
+occurs primed in an <TT>ENABLED</TT> expression is renamed to a new
+variable symbol before substituting for the declared symbols.
+</UL>
+For example, 
+<PRE>
+   ------------------ MODULE M ------------------
+   VARIABLE u
+   G(v, A) == ENABLED (A \/ ({u, v}' = {u, v}))
+   H == G(u, u' /= u)
+   ==============================================
+</PRE>
+
+defines <TT>G</TT> to equal
+<PRE>
+   LAMBDA $v, $A : ENABLED ($A \/ ({u, $v}' = {u, $v}))
+</PRE>
+
+and defines <TT>H</TT> to equal
+<PRE>
+   ENABLED (u' /= u) \/ ({u, u}' = {u, u})
+</PRE>
+
+Before instantiating <TT>M</TT>, the definition of
+<TT>G</TT> is changed to to
+<PRE>
+   LAMBDA $v, $A : ENABLED ($A \/ ({$$u, $v}' = {u, $v}))
+</PRE>
+
+and the definition of <TT>H</TT> is changed to
+<PRE>
+   ENABLED ($$u' /= u) \/ ({$$u, $$u}' = {$$u, $$u})
+</PRE>
+
+(The two "<TT>$</TT>"s in the name <TT>$$x</TT> are meant to indicate that it
+is a new bound variable symbol.)  Note that the substitution for
+<TT>u'</TT> in the definition of <TT>G</TT> occurs <I>after</I> that definition
+is used in defining <TT>H</TT>.<P>
+
+As another example, consider the module
+<PRE>
+   ----------------- MODULE MM ------------------
+   VARIABLES u, v
+   A    ==  (u' = u) /\ (v' /= v)
+   B(d) ==  ENABLED d
+   C    ==  B(A)
+   ==============================================
+</PRE>
+
+and the instantiation
+<PRE>
+   VARIABLE x
+   I == INSTANCE MM WITH u &lt;- x, v &lt;- x
+</PRE>
+
+This instantiation yields 
+<PRE>
+   I.A  =  (x' = x) /\ (x' /= x)
+   I.B  =  LAMBDA $d : ENABLED $d
+   I.C  =  ENABLED (($u' = x) /\ ($v' = x))
+</PRE>
+
+Note that <TT>I.C</TT> is not equivalent to <TT>I.B(I.A)</TT>.  In fact,
+<TT>I.C</TT> is valid while <TT>I.B(I.A)</TT> is equivalent to <TT>FALSE</TT>.<P>
+
+The other TLA+ primitives that have implicit quantification are
+<TT>\cdot</TT> (action composition) and <TT>-+-&gt;</TT> (while).  The rule for
+<TT>\cdot</TT> is similar to that for <TT>ENABLED</TT>, where in the
+expression <TT>e_1 \cdot e_2</TT>, primed variables in <TT>e_1</TT> and
+unprimed variables in <TT>e_2</TT> are bound.  The rule for <TT>-+-&gt;</TT> is
+that, before instantiating a module, each instance of <TT>P -+-&gt; Q</TT> is
+replaced by an equivalent formula containing explicit quantification.
+The precise formula can be found elsewhere.<P>
+
+<HR>
+<DL>
+<DT><A NAME="Note1"><B>Note 1</B></A><DD> 
+One can also write
+<PRE>
+   BEGIN MODULE DirectedGraphs
+    body
+   END
+</PRE>
+
+The precise ASCII syntax of module delimiters and decorative
+horizontal lines has not been determined yet.<P>
+
+<DT><A NAME="Note2"><B>Note 2</B></A><DD> The "<TT>S</TT>" at the end of
+"<TT>VARIABLES</TT>" and "<TT>CONSTANTS</TT>" is optional.  The keyword
+"<TT>PARAMETER(S)</TT>" means the same as "<TT>CONSTANTS</TT>".  If you are
+using TLA+ for ordinary mathematics, with no actions or temporal
+formulas, then all the parameters are constants.<P>
+
+<DT><A NAME="Note3"><B>Note 3</B></A><DD> Operators that take arguments
+are different from functions.  Functions, and their definitions,
+will be discussed elsewhere.<P>
+
+<DT><A NAME="Note4"><B>Note 4</B></A><DD> The precise rule for turning a
+definition statement into a definition is: First replace all defined
+symbols to the right of the <TT>==</TT> by their definitions;
+"beta-reduce" <TT>LAMBDA</TT> expressions when possible--for example,
+reduce
+<PRE>
+   (LAMBDA $a : &lt;&lt;$a, $a&gt;&gt; \in S)(Y+Z)  
+</PRE>
+
+to <TT>&lt;&lt;Y+Z, Y+Z&gt;&gt; \in S</TT>--and finally, replace all bound symbols,
+including the parameters of the definition (the symbols <TT>n</TT> and
+<TT>m</TT> in the definition of <TT>Nbrs</TT>) by "untypable" symbols that
+do not already appear in the expression.<P>
+
+<DT><A NAME="Note5"><B>Note 5</B></A><DD> TLA+ provides large, fixed sets of
+infix and postfix operator symbols; they will be described
+elsewhere.<P>
+
+<DT><A NAME="Note6"><B>Note 6</B></A><DD> The translation from module names
+to modules is outside the scope of this document.  Presumably, a tool
+will have rules for finding named modules.  We suggest that a module
+named <TT>N</TT> appear in a file named <TT>N.tla</TT>.  The directory in
+which this file is to be found will be system dependent.<P>
+
+<DT><A NAME="Note7"><B>Note 7</B></A><DD> If module <TT>Foo</TT> makes local
+definitions that clash with definitions in the current module, then
+the body of <TT>Foo</TT> cannot be inserted into the current module.  This
+is the only reason <TT>EXTEND Foo</TT> is not equivalent to inserting the
+body of <TT>Foo</TT> in the current module.<P>
+
+<DT><A NAME="Note8"><B>Note 8</B></A><DD> If module <TT>DirectedGraphs</TT> had
+defined an infix operator <TT>??</TT>, then this statement defines
+<TT>Foo.??</TT> to be an infix operator.  The expression <TT>a Foo.?? b</TT>
+looks strange, but the alternatives seem worse.  In practice, one does
+not define infix operators in modules that one wants to use with this
+kind of renaming.<P>
+
+<DT><A NAME="Note9"><B>Note 9</B></A><DD> Submodules provide a scoping
+mechanism for module names, which in principle could be used to define
+the mapping between module names and modules.  For example, the
+modules written by user Jones of company XYZ could be submodules of a
+module named <TT>Jones</TT>, which is a submodule of a module named
+<TT>XYZ</TT>.  However, in practice, such name scoping will be provided by
+directory structures and file search paths.<P>
+
+<DT><A NAME="Note10"><B>Note 10</B></A><DD> 
+Two declarations of a symbol <TT>s</TT> are the same if they both declare
+<TT>s</TT> to be a constant or both declare it to be a variable.  Two
+definitions are the same if they have parse trees that differ only in
+the names of bound variables.  <P>
+
+<DT><A NAME="Note11"><B>Note 11</B></A><DD> In general, we should define
+validity of <TT>M</TT> to mean <TT>A |= T</TT>, which means that the validity
+of <TT>A</TT> implies the validity of <TT>T</TT>.  If <TT>A</TT> is a constant
+formula, then <TT>A |= T</TT> is equivalent to the validity of 
+ <TT>A =&gt; T</TT>.  For writing specifications, this special case is all we 
+need, and restricting ourselves to it allows us to avoid introducing
+the semantic operator <TT>|=</TT>.<P>
+
+<DT><A NAME="Note12"><B>Note 12</B></A><DD> 
+It is tempting to include an instantiated module's assumptions as
+theorems, so they become proof obligations of the current module.
+However, it may be impossible to discharge those proof obligations
+in the current module.  For example, suppose we were specifying a
+graph algorithm and we wrote
+<PRE>
+   VARIABLES N, E
+   INSTANTIATE DirectedGraphs WITH Node &lt;- N, Edge &lt;- E
+</PRE>
+
+where <TT>N</TT> and <TT>E</TT> represent variables of the algorithm.  The
+instantiated assumption of the <TT>DirectedGraphs</TT> module is
+ <TT>E \subseteq N \X N</TT>.  
+It is impossible to prove this formula because it is not valid; <TT>N</TT>
+and <TT>E</TT> are flexible variables, so they can assume any values.
+What we do expect to be able to prove is
+<PRE>
+(*)   Spec =&gt; [](E \subseteq N \X N)
+</PRE>
+
+where <TT>Spec</TT> is the TLA formula that specifies the algorithm.
+Formally, there is nothing special about <TT>Spec</TT>; it is just one of
+many defined symbols.  So, there is no reason to take (*) as the proof
+obligation associated with the instantiation.  Moreover, <TT>Spec</TT>
+might not even be defined in the current module, but in some other
+module that extends the current one.<P>
+
+<DT><A NAME="Note13"><B>Note 13</B></A><DD> For simplicity, we always
+consider <TT>Enabled A</TT> to have state level, even in those special
+cases when we could determine that it is a constant formula.
+</DL>
+</BLOCKQUOTE>
+
+This page was generated automatically by
+<A HREF="http://www.research.digital.com/SRC/mtex/">mtex software</A>.
+</BODY>
+</HTML>

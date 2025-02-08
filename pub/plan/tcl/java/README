@@ -1,0 +1,24 @@
+This directory contains a collection of files related to Jacl and
+Tcl Blend, all of which are available for anonymous FTP.  Below is a
+description of what is in the various files in this directory.
+See http://dev.scriptics.com/software/java/download.html for more 
+information on Jacl and
+Tcl Blend and how to download and install them.
+
+Be sure to retrieve files in image mode (type "type image" to FTP)
+in order to make sure that you don't lose bits.
+
+Most of these files are compressed tar files;  to get back the
+original directory hierarchies, type a command like the following for
+each file you retrieved:
+		zcat jacl1.0.tar.Z | tar xf -
+This will create a directory named jacl1.0 with all the source files and
+documentation for that release.  For files with ".gz" extensions, use
+a command like the following instead of the one above:
+		gunzip -c jacl1.0.tar.gz | tar xf -
+
+Each of the releases has a README file in the top-level directory that
+describes how to compile the release, where to find documentation, etc.
+
+Questions or problems with any of these distributions should be directed
+to the comp.lang.tcl newsgroup.

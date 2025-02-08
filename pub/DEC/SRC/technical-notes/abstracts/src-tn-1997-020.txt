@@ -1,0 +1,17 @@
+"Improved Data Structures for Fully Dynamic Biconnectivity"
+Monika Rauch Henzinger
+Note #1997-020. September 8, 1997
+
+We present fully dynamic algorithms for maintaining the biconnected
+components in general and plane graphs.
+
+A fully dynamic algorithm maintains a graph during a sequence of
+insertions and deletions of edges or isolated vertices.  Let m be the
+number of edges and n be the number of vertices in a graph.  The time
+per operation of the previously best deterministic algorithms were
+O(min {m^{2/3},n}) in general graphs and
+O(sqrt n) in plane graphs for fully dynamic biconnectivity. We improve
+these running times to O(sqrt(m) log n) in general graphs and
+O(log ^2 n) in plane graphs.  Our algorithm for general graphs can
+also find the biconnected components of all vertices in time O(n).
+

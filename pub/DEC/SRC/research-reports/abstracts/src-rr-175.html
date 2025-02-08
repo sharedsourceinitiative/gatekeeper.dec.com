@@ -1,0 +1,48 @@
+<HTML><HEAD><TITLE>
+Compaq Systems Research Center: Report 175</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/SRC/pics/cpq-logo.gif" ALT="Compaq">
+ SRC Research Report 175</H1>
+<H1>The Link Database: Fast Access to Graphs of the Web </H1>
+<HR>
+<H2>Keith H. Randall*, Raymie Stata*, Rajiv G. Wickremesinghe** Janet L. Wiener* , </H2>
+Report #175, November 16, 2001. 
+<P>
+
+*Compaq Systems Research Center, 130 Lytton Avenue, Palo Alto, CA 94301, USA 
+**Dept. of Computer Science, Duke University, Durham, NC 27708, USA 
+
+<p><br>
+
+The Connectivity Server is a special-purpose database whose schema models 
+the Web as a graph graph where URLs are nodes and hyperlinks are directed 
+edges. The Link Database provides fast access to the hyperlinks. To support 
+a wide range of graph algorithms, we find it important to fit the Link 
+Database into memory. In the first version of the Link Database, we achieved 
+this fit by using machines with lots of memory (8GB), and storing each 
+hyperlink in 32 bits. However, this approach was limited to roughly 100 
+million Web pages. This paper presents techniques to compress the links 
+to accommodate larger graphs. Our techniques combine well-known compression 
+methods with methods that depend on the properties of the web graph. The 
+first compression technique takes advantage of the fact that most hyperlinks 
+on most Web pages point to other pages on the same host as the page itself.  
+The second technique takes advantage of the fact that many pages on the 
+same host share hyperlinks, that is, they tend to point to a common set 
+of pages. Together, these techniques reduce space requirements to under 
+6 bits per link. While (de)compression adds latency to the hyperlink access 
+time, we can still compute the strongly connected components of a 6 
+billion-edge graph in under 20 minutes and run applications such as 
+Kleinberg's HITS in real time. This paper describes our techniques for 
+compressing the Link Database, and provides performance numbers for 
+compression ratios and decompression speed.
+
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-175.ps.Z">PostScript compressed with UNIX compress</A></B> -- 328 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-175.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 224 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-175.ps.zip">PostScript compressed with ZIP</A></B> -- 208 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-175.ps">PostScript</A></B> -- 832 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-175.pdf">Portable Document Format (PDF)</A></B> -- 88 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

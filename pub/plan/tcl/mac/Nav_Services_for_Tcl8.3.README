@@ -1,0 +1,22 @@
+From: James Ingham <jingham@leda.cygnus.com>
+Organization: Cygnus Solutions
+Newsgroups: comp.lang.tcl
+
+Hi, all...
+
+I posted a new set of PPC shared libraries for MacTk that add support
+for the Navigation Services File dialogs if they are present.  Among
+other things, this means that (provided you have Nav Services) you get 
+a working version of tk_chooseDirectory.  The dialogs are also in
+keeping with the MacOS 8.5+ standard.
+
+I didn't make the CFM68K ones, but included the changed files so you
+can build them if you need (or if you build a static shell, etc...)
+
+The .sea.hqx file just contains new Tcl/Tk libraries that you
+need to install by hand into the System:Extensions:Tool Command Language
+folder.
+
+Enjoy,
+
+Jim

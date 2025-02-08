@@ -1,0 +1,172 @@
+<html>
+<head><title>Min-Wise Independent Permutations</title></head>
+<body>
+<center>
+<h1><b>Min-Wise Independent Permutations</b></h1><br>
+<h2>Moses Charikar, Stanford University</h2>
+</center>
+
+<h2>Introduction</h2>
+
+I have just completed two years of graduate study in the PhD program 
+in Computer Science at Stanford. I work with Rajeev Motwani. My 
+research interests are in the design and analysis of algorithms, more 
+specifically online algorithms and approximation algorithms. 
+Still in the exploratory phase 
+of my PhD, I have tried to work on several different problems within 
+these sub-fields. Some of the work I have done includes algorithms for 
+online page migration, online load balancing, incremental clustering, 
+approximation algorithms for vehicle routing and constructing Steiner 
+trees in directed graphs.<p>
+
+I chose SRC for my summer internship because it has a strong theory group.
+I saw my internship as a good opportunity to make connections with theory
+folk at SRC, possibly continuing to work with them after the summer was over.
+Also, the problems that my host, Andrei Broder said he wanted to look at 
+sounded interesting to me. He was pretty flexible about what exactly I 
+would spend my summer doing and that appealed to me. I also realised that 
+apart from Andrei, I would be able to interact with other theoreticians here
+and that was attractive. <p>
+
+
+<h2>Research problem</h2> 
+
+I studied families of permutations which have a particular property called
+"Min-Wise Independence".<p>
+
+The problem that I studied arises in determining document similarity for
+documents on the World Wide Web. A mechanism for determining document
+similarity based on document content is essential for preventing the 
+AltaVista spider from getting caught in spider traps and eliminating 
+spam submitted to AltaVista through the submit URL button. Reducing the 
+size of the index is very valuable since a 20% reduction would reduce
+the number of TurboLasers needed by four. 
+Also, the sheer magnitude of data we need to deal with 
+makes speed an absolute necessity. 
+This theoretical problem arises in devising a fast scheme for determining
+document similarity.<p>
+
+
+<h2>Overview Specifics</h2>
+
+About a year ago, researchers at SRC came up with the concept called
+document shingling and devised a mechanism using permutations to extract
+constant size samples from shingle sets of documents. The constant 
+size samples could then be compared to estimate document resemblance fairly 
+accurately.<p>
+
+For this scheme to work, samples need small, simple families of permutations 
+which have a property called min-wise independence. For a family F of 
+permutations on {1,2, .. n}, roughly this property means that for any 
+subset of X={x_1,...x_k}, for a permutation s chosen uniformly and at
+random from F, s(x_i) has probability 1/k of being the minimum of 
+s(X) = {s(x_1),s(x_2),..s(x_k)}. Clearly the set of all permutations is 
+min-wise independent. The question is: Can we come up with smaller families
+that are min-wise independent? <p>
+
+This basic problem is termed the "exact" problem. This requires that
+the property hold for all subsets of size up to n.
+We studied the following variants of the 'exact' problem:<p>
+
+<ol>
+<li>Size limited<p>
+This requires that the property hold for sets of size up to some threshold k.
+(This is because for the web application, n=2^64. However, the maximum
+size of the subsets for which we need this property is twice the
+maximum document size which is about 2^18).<p>
+
+<li>Approximate<p>
+This requires that for a subset of size k, the probability that an element
+be the minimum of this set under a random permutation from the family
+be (1+-epsilon)/k.
+(Since we are estimating resemblance anyway, we can tolerate a small deviation
+in the exact property).
+</ol> 
+
+We looked at combinations of the Size Limited and Approximate problem.
+We were also interested in small families of permutations with weighted
+probability distributions.<p>
+
+We were also interested in the performance of simple families such as 
+linear transformations - ax+b (mod p) and in general, pair-wise independent 
+families. For a set of size k, we wanted to bound the probability that an 
+element of this set was the minimum under the family of linear transformations.
+We wanted to bound the minimum and maximum of this quantity for a set of 
+size k in the worst case as well as bound the expected values of the 
+min and max in the average case.<p>
+
+We could prove a lower bound of about e^n on the size of exact families. This
+was complemented with a construction of an exact family of size about 4^n.
+We proved a lower bound of Omega(sqrt(n)2^n) on the size of weighted
+exact families and had a non-constructive upper bound of n.2^{n-1}.
+We gave randomized constructions of approximate families of size n^2/epsilon^2
+We also gave randomized constructions of size limited approximate families
+of size k^2 log n/epsilon^2.<p>
+
+We had explicit constructions of size limited approximate families using 
+previously known constructions of approximately k-wise independent 
+distributions.<p>
+
+We proved several lower bounds for size limited and approximate families.
+In particular, we proved a lower bound of Omega(k.2^k log n) for the size
+limited problem. This bound involved the notion of Graph Entropy.<p>
+	
+For linear transformations, we could prove that the min probability 
+for a set of size k was no smaller than 1/2k in the worst case. 
+The max probability on the other hand could be as large as Omega(log k/k).
+In fact for the set {0,1,2,... k-1} we determined that the element O 
+has a probability of 3/pi^2 log k/k (asymptotically) of being the minimum.
+This result involved playing around with Farey sequences and the Mobius
+inversion formula. We do not have an upper bound on the max probability 
+but conjecture that it is O(log k/k). In the average case, we can prove
+better bounds on the max probability. Theoretically, we can prove an upper 
+bound of something like 8.3/k on the expected value of the max probability 
+for a random set of size k. Empirical tests show that in fact, the 
+min and max probability seem to be very strongly concentrated around 1/k.
+We believe that both of them are {1+-o(1)}/k in the average case.<p>
+
+For some of the results mentioned above, we used Maple extensively to 
+facilitate the manipulation of formulae and plot graphs.<p>
+
+The family of linear transformations is pretty close to the family that is 
+actually used in the implementation of the document similarity testing.
+The fact that the linear family is pretty good from the min-wise independence
+point of view (in the average case) can be viewed as some sort of theoretical
+guarantee that the implementation is sound, that is, the family of 
+permutations it uses satisfies the property that it is required to satisfy.<p>
+
+
+<h2>The Fun and Challenging Parts</h2>
+
+A lot of interesting mathematical problems came up in the course of the 
+project. We employed several interesting (and sometimes exotic) mathematical
+tools to answer the questions that arose - drawing from number theory,
+graph theory, combinatorics and probability theory. It was a learning 
+experience. I certainly widened my repertoire of mathematical tools.
+All the questions were challenging as nobody had looked at this problem
+before and we did not have any prior results to go by. It was definitely
+a lot of fun being able to answer (at least most of) the questions which
+we encountered. <p>
+
+
+<h2>Concluding Observations</h2>
+
+The most important outcome of my internship was that I made contacts
+with researchers at SRC, I think the summer internship was immensely fruitful
+as it laid the foundation for future collaborations with researchers
+which will undoubtedly be beneficial for me and contribute to 
+my research at Stanford.<p>
+
+I was also impressed by the amount of interaction 
+between the theory folk and systems people at SRC. Such a high level
+of interaction benefits both the theory and systems communities - 
+massaging good theoretical ideas into something that is implementable 
+and works well, as well as abstracting interesting theoretical
+questions from problems that arise in practice proved .
+It is really commendable how the theory people consult extensively on 
+systems projects and still manage to maintain an active theory side by 
+working on pure research problems. I would strive to achieve a good healthy
+balance of this sort.<p>
+
+</BODY>
+</HTML>

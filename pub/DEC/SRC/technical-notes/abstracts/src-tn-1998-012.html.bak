@@ -1,0 +1,26 @@
+<TITLE>Digital Systems Research Center: Note 1998-012</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Technical Note 1998-012</H1>
+<H1>Firelink: A Reconfigurable Firewire Testbed</H1>
+<HR>
+<H2>Oskar Mencer, Mark Shand, Michael J. Flynn</H2>
+Note #1998-012, June 1, 1998.
+<P>
+We describe the design and implementation of a reconfigurable 
+high-speed interface for IEEE 1394 Firewire and measurements 
+obtained with this system. For the physical and link layers we 
+use a commercial chip-set. Field-Programmable Gate Arrays on 
+the PCI Pamette and a secondary FireLink board are used to 
+implement a simple transaction layer interfacing the link 
+layers to the host CPU.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-012.ps.Z">PostScript compressed with UNIX compress</A></B> -- 144 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-012.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 112 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-012.ps.zip">PostScript compressed with ZIP</A></B> -- 112 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-012.ps">PostScript</A></B> -- 1192 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-012.pdf">Portable Document Format (PDF)</A></B> -- 41 Kbytes<BR>
+</UL></P>

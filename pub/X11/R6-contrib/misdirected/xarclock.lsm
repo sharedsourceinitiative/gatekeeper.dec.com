@@ -1,0 +1,20 @@
+Begin3
+Title:          XARClock
+Version:        1.0
+Entered-date:   29JUL95
+
+Description:    The program is an extension of the standard X clock widget.  
+		New features are: Configurable direction of rotation and font 
+		support in analog mode.
+
+Keywords:       Xclock, X, widget, athena, counter-clockwise
+Author:         Jaime Garcia-Ghirelli
+Maintained-by:  jaime@inforamp.net
+Primary-site:   ftp.x.org /contrib/games
+Alternate-site: sunsite.unc.edu /pub/Linux/X11/toys
+
+
+Platform:       Linux / Unix
+Copying-policy: My modifications: freeware
+		Code from Xclock, see README
+End

@@ -1,0 +1,24 @@
+
+	The XawPlus wiget set, Version 2.0.1
+	April 24th, 1999
+	Author: Roland Krause
+
+
+This is a bugfixed version of the XawPlus release 2.0. This version
+contains fixes to the following reported bugs:
+
+* Some sources of XawPlus (i.e. TextPop.c) contains for some systems
+  conflicting type declarations of errno, sys_nerr and sys_errlist.
+
+* Simple 'hello world' programs with only a label or command widget
+  crashes with a signal SIGSEGV (segmentation fault) in XrmPermStringToQuark().
+
+
+
+If you have any hints, suggestions or bug reports feel free to mail me:
+
+
+Roland Krause April 24th, 1999
+rokrause@aol.com
+
+

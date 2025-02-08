@@ -1,0 +1,10 @@
+"Syntactic Clustering of the Web"
+Andrei Z. Broder, Steven C. Glassman, Mark S. Manasse, Geoffrey Zweig
+Note #1997-015. July 25, 1997
+
+We have developed an efficient way to determine the syntactic similarity
+of files and have applied it to every document on the World Wide Web.
+Using this mechanism, we built a clustering of all the documents that are
+syntactically similar. Possible applications include a "Lost and Found"
+service, filtering the results of Web searches, updating widely distributed
+web-pages, and identifying violations of intellectual property rights. 

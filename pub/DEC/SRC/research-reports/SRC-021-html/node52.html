@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Terminating Processes</TITLE>
+<META NAME="description" CONTENT="Terminating Processes">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node53.html">
+<LINK REL="previous" HREF="node51.html">
+<LINK REL="up" HREF="node48.html">
+<LINK REL="next" HREF="node53.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html834"
+ HREF="node53.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html830"
+ HREF="node48.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html824"
+ HREF="node51.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html832"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html833"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html835"
+ HREF="node53.html">Examining Processes</A>
+<B> Up:</B> <A NAME="tex2html831"
+ HREF="node48.html">The OS Interface: Processes</A>
+<B> Previous:</B> <A NAME="tex2html825"
+ HREF="node51.html">Creating Processes</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04054000000000000000">
+Terminating Processes</A>
+</H2>
+ <A NAME="Alameda">&#160;</A>
+<P>
+This subsection describes the different ways a process may terminate, and
+the procedure (WaitForChild) used by a parent process to find out about
+the termination of a child process.
+<P><A NAME="1431">&#160;</A>
+<A NAME="1432">&#160;</A>
+<A NAME="1433">&#160;</A>
+<A NAME="1434">&#160;</A>
+<A NAME="1435">&#160;</A>
+<A NAME="1436">&#160;</A>
+<A NAME="1437">&#160;</A>
+<A NAME="1438">&#160;</A>
+<A NAME="1439">&#160;</A>
+A process can terminate normally or abnormally.  It terminates normally by
+calling the Modula-2+ HALT procedure.   (Running off the end or returning
+from the main program is equivalent to calling HALT(0)).  It terminates
+abnormally by making a fatal error, such as raising an exception for which
+there is no handler, or by receiving a signal for which the default action
+of termination is in force (see page <A HREF="node50.html#SanBruno"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).
+<P><A NAME="Rodeo">&#160;</A><A NAME="1442">&#160;</A>
+<A NAME="1443">&#160;</A>
+<A NAME="1444">&#160;</A>
+<A NAME="1445">&#160;</A>
+<A NAME="1446">&#160;</A>
+When a process terminates abnormally, the operating system may write a
+file named `core' in the working directory that contains an image of the
+state of the process suitable for post mortem debugging (see DebugCore(1)
+and adb(1)).  A core image is written if a process terminates because of
+making a fatal error or because of receiving one of the signals whose
+default action is defined as termination with a core image (see page
+<A HREF="node50.html#SanBruno"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).
+<P><A NAME="2210">&#160;</A>
+<A NAME="2211">&#160;</A>
+<A NAME="2212">&#160;</A>
+<PRE>
+TYPE
+  WReason = (Stopped, Killed, Exited);
+  ExitStatus = [0 .. 255];
+  WStatus = RECORD
+    CASE reason: WReason OF
+    | Stopped: wStopSig: Signal;
+    | Killed: wTermSig: Signal; wCoreDump: BOOLEAN;
+    | Exited: wRetCode: ExitStatus;
+    END;
+  END;
+</PRE>
+<P><A NAME="2213">&#160;</A>
+<A NAME="1452">&#160;</A>
+<A NAME="1453">&#160;</A>
+<A NAME="1454">&#160;</A>
+A WStatus record contains information about why a process terminated or
+stopped; it is returned by the WaitForChild procedure, described below.
+The wStopSig field indicates which signal cause the process to stop.  The
+wTermSig field indicates which signal caused the process to terminate;
+this is set to SigIll if the process terminates because of a fatal error.
+The wRetCode field contains the value passed to HALT.  (HALT performs
+clean-up of the Modula-2+ runtime environment, and then calls
+OSSpecial.Exit.)
+<P><A NAME="Oakland">&#160;</A><A NAME="2214">&#160;</A>
+<PRE>
+TYPE
+  RUsage = RECORD
+    userTime, systemTime: Time.T;
+  END;
+</PRE>
+<P>
+An RUsage record contains a summary of execution time of a process.  The
+userTime field is the sum of the CPU times of all threads in the process.
+<P>
+Taos note: CPU time spent executing an intramachine remote procedure call
+(such as to an OS procedure) is charged to the userTime of the calling
+thread.  The systemTime field is the CPU time spent in the Taos address
+space by the thread that is dedicated to watching for Ultrix-style kernel
+calls and other traps from this process.  There are also helper threads in
+the Taos address space that do work for various client address spaces but
+whose CPU time is not included in the userTime or systemTime of those
+clients.
+<P>
+Ultrix note: The systemTime field is the CPU time spent by the system
+executing kernel calls for this process.
+<P><A NAME="Newark">&#160;</A><A NAME="2215">&#160;</A>
+<PRE>
+PROCEDURE WaitForChild(
+    pid: PID;
+    VAR (* OUT *) rUsage: RUsage;
+    waitForStoppedChild: BOOLEAN := FALSE)
+    : WStatus
+  RAISES {Error, Alerted}; (* BadPIDEC *)
+</PRE>
+<P><A NAME="1459">&#160;</A>
+WaitForChild waits for the process with the specified process identifier
+to terminate.  If waitForStoppedChild is TRUE, WaitForChild also waits for
+the process to stop.  WaitForChild always returns status; if the process
+terminated, WaitForChild also returns resource usage of the child and its
+descendants.  A process should eventually call WaitForChild with the
+process identifier of each process it has started with relationship equal
+to Child (see the StartProcess procedure, page <A HREF="node51.html#MountainView"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).  A
+process should not call WaitForChild with the process identifier of any
+other processes (including ones it has started with relationship equal to
+Orphan); if it does, WaitForChild raises BadPIDEC.  WaitForChild is
+alertable.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html834"
+ HREF="node53.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html830"
+ HREF="node48.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html824"
+ HREF="node51.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html832"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html833"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html835"
+ HREF="node53.html">Examining Processes</A>
+<B> Up:</B> <A NAME="tex2html831"
+ HREF="node48.html">The OS Interface: Processes</A>
+<B> Previous:</B> <A NAME="tex2html825"
+ HREF="node51.html">Creating Processes</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+XLI116.ZIP                        This utility will view several types of
+                                  images under X11. xli is a version of
+                                  xloadimage
+                                  Author: Graeme Gill, graeme@labtam.oz.au
+VAX   AXP                         Language: VAX C (VAX), DEC C (AXP)
+Nota:                             TGA and Photo CD formats supported
+-------------------------------------------------------------------------------

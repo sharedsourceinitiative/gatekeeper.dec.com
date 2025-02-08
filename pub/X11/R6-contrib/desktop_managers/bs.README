@@ -1,0 +1,111 @@
+DESCRIPTION
+     bs is a simple button shell for X11.  It is very useful  for repetitive
+     tasks  such as edit-compile-run cycles, and also as a general purpose menu.
+
+     See the man page below for more information.
+
+INSTALLATION
+     Download bs from ftp://csg.uwaterloo.ca/pub/lhf/bs.tar.gz.
+     Then just try xmkmf; make.
+
+     bs needs an ANSI compiler.
+     if xmkmf does not use that, you might have to add
+	CC = gcc
+     or something similar to Imakefile.  Or modify and use Makefile.std.
+
+AUTHOR
+     Luiz Henrique de Figueiredo (lhf@visgraf.impa.br)
+     Please send me your comments, bug reports, corrections, etc.
+
+---- man page ---------------------------------------------------------------
+
+NAME
+     bs - a simple button shell for X11
+
+SYNOPSIS
+     bs [ file ] [ Xt options ]
+
+DESCRIPTION
+     bs is a simple button shell for X11.  It is useful for
+     repetitive tasks such as edit-compile-run cycles, and also
+     as a general purpose menu.
+
+     bs builds, displays, and let you interact with a panel com-
+     posed of labels and buttons.  Labels contain informative
+     text and buttons are associated with commands that are fed
+     to a shell, in a pipe.
+
+     bs reads a panel description from the file given in the com-
+     mand line, or from the file .bsrc in the current directory
+     if no file is given.
+
+     There are 4 kinds of lines in the file describing the panel:
+     lines starting with a TAB; lines with a TAB elsewhere; lines
+     without a TAB; and empty lines.
+
+     Lines without a TAB represent labels.  The text in the line
+     appears verbatim in the panel.
+
+     Lines with a TAB not on the first column represent buttons.
+     The text before the TAB is the button text.  The text after
+     the TAB is a command fed to the shell when the button is
+     pressed.
+
+     Lines starting with a TAB are fed to the shell as soon as bs
+     begins.  They typically contain variable definitions, but
+     they can contain command.  Because bs sends data to a shell
+     using a single pipe that remains open throughout the execu-
+     tion, variables definitions remain after this initializa-
+     tion.
+
+     Panel layout is controled by empty lines.  Buttons and
+     labels appear side by side, from left to right.  An empty
+     line signals the start of a new row in the panel.  So,
+     descriptions of "horizontal" panels have no empty lines, and
+     descriptions of "vertical" panels have an empty line after
+     each element, including the last one.
+
+     SPACE characters are significant in labels and button
+     labels.  They can be used for alignment, provided a non-
+     proportional font is used.
+
+     bs automatically adds a button labeled "quit" in the end of
+     the panel; it does the obvious thing.
+
+EXAMPLE
+     Here is an example suitable for using TeX:
+
+               F=paper
+          paper
+          edit xterm -geometry 80x57+0+0 -title $F -e vi $F.tex &
+          tex  latex $F.tex </dev/null
+          dvi  xdvi -hushspecials -geometry +0+0 $F.dvi &
+          ps   dvips -o $F.ps $F.dvi; ghostview $F.ps &
+          print     dvips -f $F.dvi | lpr -h
+
+     A similar example would be adequate for compiling C pro-
+     grams.
+
+RESOURCES
+     bs does not define any new resources.  It uses the following
+     widgets from the Athena Widget set: Command, Form, Label.
+     All standard X11 toolkit options are accepted on the command
+     line.
+
+FILES
+     .bsrc
+
+SEE ALSO
+     sh(1)
+
+BUGS
+     Buttons should stay pressed until the corresponding command
+     finishes.  Of course, this only applies to commands that are
+     run in the foreground.
+
+     /bin/sh is hard-coded into the program.  Other shells did
+     not quite work.
+
+AUTHOR
+     Luiz Henrique de Figueiredo (lhf@visgraf.impa.br)
+     Please send me your comments, bug reports, corrections, etc.

@@ -1,0 +1,166 @@
+<html>
+<head>
+<title>DCPI-V3.91 Release Notes</title>
+</head>
+<body>
+<!--#include file="includes/title.html" -->
+<br>
+DCPI-V3.91 Release Notes
+</h1>
+
+<pre>
+Changes since release V3.8:
+
+We have made two major additions: value profiling and upcall
+handlers.
+
+Dcpid now has builtin support for value profiling, which
+collects data by periodically interpreting instructions and
+saving, for each instruction, either its common result
+values (dcpid -vprof) or the PCs of instructions that might
+cause a replay trap on EV6 (dcpid -vreplay).
+
+The two examples above, -vprof and -vreplay, are hardwired
+into dcpid.  However, DCPI's value-profiling support (see
+man dcpivprofiler) also allows you to specify what values to
+capture, how to process those values before merging them
+into the profile files, and how to format the values for
+printing.  A value profiler is a dynamically loadable shared
+library written by the user.  It encapsulates the code to
+perform all user-specified processing.
+
+Two value profilers are included in the DCPI distribution:
+vp-classic.so collects the same information as the "classic
+value profiling" hardwired into dcpid (-vprof), and
+vp-addr.so collects the effective addresses of memory
+operands in load and store instructions.
+
+The second major addition is experimental support for
+performing user-level upcalls that deliver profiling
+interrupts directly to user-level handlers in profiled
+applications (see man dcpiupcalls).  Kernel support for
+upcalls is automatically included with the DCPI driver
+kernel module.  A preliminary shared library named
+libuvprof.so that performs limited user-level value
+profiling is also included with the DCPI release.  Support
+for upcalls is not complete and has not been extensively
+tested.  It works on simple programs, but fails, e.g., for
+programs that use exceptions in signal handlers.  See the
+man page for many CAVEATS.
+
+There were some minor changes: the default per-cpu hash
+table size was doubled to 512KB to reduce overhead when
+collecting profile-me data, and the dcpid man page
+now includes 21264a (EV67) aggregate events.
+
+In the release notes for V3.8, we neglected to report that
+dcpid creates a "fake" PALcode image file (suitable for use
+with dcpilist, dcpiprof, etc.) by reading memory.  The
+PALcode image is stored in the profile directory.  The
+disassembly of PALcode-specfic instructions is currently
+very limited.
+
+
+V3.9 is the last release of DCPI that SRC will be
+publishing.  Future DCPI releases will be managed by product
+groups in Spitbrook.  The SRC DCPI web pages will have prominent
+link to the new external DCPI web site, which is
+   http://www.unix.digital.com/dcpi
+This site is expected to be up soon.  The mailing lists
+   dcpi, dcpi-request, and dcpi-bugs
+now forward to the product groups.
+
+Thanks to all of our users who have helped make DCPI a success 
+and everyone who has contributed (see the authors on the man
+pages).
+
+Happy performance tuning,
+ -Carl, Mark, & Shun-Tak 
+ 
+
+
+Changes since release V3.4:
+
+- Supports ProfileMe counters on EV67 (Alpha 21264a) cpus!
+  (See "man dcpiprofileme" and "man dcpid")
+
+- Dcpiprof and dcpilist require "-help" to list descriptions of their
+  many flags.
+
+- Dcpid's command syntax for selecting events has changed (see man dcpid).
+  The new syntax supports multiplexing of profile-me modes with
+  aggregate (i.e., non-profileme) modes.
+
+- A new tool, dcpitopcounts, lists instructions with the highest event
+  counts (see man dcpitopcounts).
+
+- Dcpid supports a new -nice option to adjust its scheduling priority,
+  and a new -gc option to automatically delete old epochs.
+
+- Support for Tru64 V4.0c and earlier has been dropped.  Use DCPI-V3.4
+  for V4.0 through V4.0c.
+
+Known problems:
+
+- When collecting data using multiple "-slot"s, each slot must have at
+  least one event that occurs at least every 2^30 cycles, e.g.,
+  retires, cycles, issues, or profileme mode.  Dcpid does not
+  check this requirement
+
+<pre>
+Changes since release V2.12:
+
+- Pcount driver is dynamically loadable.
+
+- Dcpid loads pcount at startup and unloads it at exit.
+
+- A new underlying profile file format is used to store sample data
+  for all events in a single file per image.  Backwards compatibility
+  has been retained so that all tools support profiles collected with
+  previous versions of DCPI.
+
+- Dcpid supports a new -nice option to adjust its scheduling priority,
+  and a new -gc option to automatically delete old epochs.
+
+- Fixed a rare assertion failure in instruction-level analysis tools.
+
+- This version works with Digital Unix T5.0 646.2 (a.k.a. BL17)
+
+- Support for Digital Unix 3.2 has been dropped.  Use DCPI-V2.11 and
+  pcount-13.3 build 15 for machines running 3.2.
+
+Changes since release V2.11:
+
+- Added support for Alpha 21066 and other 21064-compatible cpus.
+
+Changes since release V2.10:
+
+- Adds support for compressed kernel modules.
+
+- dcpiprof listings now contain information about which named
+  procedure is near an anonymous procedure to help the user in finding
+  anonymous procedures.
+
+Changes since release V2.5:
+
+- DCPI releases V2.6 through V2.9 each had incompatibilities
+  with various versions of Digital Unix.  We believe that these
+  problems have been corrected.
+  
+- New loader for 4.0c and higher.
+  Dynamically linked images can be profiled on machines running
+  DU V3.2 or V4.0*, but not V5.0*.  The INSTALL script tests the
+  DCPI loader before installing it as the default system loader.
+
+- Minor improvements to dcpid image identification.
+  Image maps for common DU V4.0c and V4.0d binaries are compiled into dcpid.
+  Fixed identification of large images started before dcpid.
+
+- Major update to dcpi2pix to generate more accurate data.
+
+- Added support for new 21264 instructions.
+</pre>
+
+<!--#include file="includes/dcpi-footer.html" -->
+</body>
+</html>

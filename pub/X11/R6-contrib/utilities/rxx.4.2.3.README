@@ -1,0 +1,80 @@
+
+   RXX - Remote eXecution of X programs.  Version 4.2.3
+
+Copyright 1992,1993,1994 Duncan Sinclair <sinclair@dis.strath.ac.uk>
+
+Trivial to install, but there's an Imakefile to make it even more trivial.
+
+The perl script needs some customisation before it is installed, just
+edit the "rxx.pl" file, and read the comments.  Once you've done
+this you can "xmkmf", then "make install install.man".
+
+NEW IN VERSION 4.2.3:
+
+*) Perl 5 compatible.
+
+NEW IN VERSION 4.2.2:
+
+*) Clean-up for release.
+
+NEW IN VERSION 4.2.1: (unreleased)
+
+*) More configuration options/improved portability.
+
+NEW IN VERSION 4.2:  (unreleased)
+
+*) Improved remote command execution =>
+*) No limit to length of generated remote command.
+*) Magic cookie does not appear in any command line.
+
+NEW IN VERSION 4.1:  (unreleased)
+
+*) Hostname optional etc...
+
+NEW FOR VERSION 4.0:
+
+*) New name -- Glasgow RX becomes RXX.
+*) Log file may be specified from the command line.  (rxx -f output ...)
+*) Remote directory can be specified.  (rxx -d /tmp ...)
+*) Remote working directory mechanism can be turned off.  (rxx -p ...)
+*) Minor hacks to improve portability, make it more robust, etc.
+*) Second guesses xterm+flags with rxx, rather than having to use rxterm.
+
+FEATURES:
+
+*) Does the right thing for off-site remote execution.  Including
+   setting up $DISPLAY to include domain names, and passing
+   magic cookies, or doing the "xhost" stuff.
+
+*) Allow different remote user name.  (rxx -l user host ...)
+
+*) Remote host optional - will use "same", "last" or "default".
+
+*) Smart quoting of arguments - makes passing wild-cards easy.
+
+*) Custom command execution - link it to "remacs" to get a remote
+   emacs command.
+
+*) Automatic xterm options - names the xterm according to hostname,
+   and turns on "login shell".
+
+*) Default command is xterm.
+
+*) Propagates X-ish env. variables to remote session - user may
+   extend the list of variables to pass.
+
+*) Special handling for bourne shell users.
+
+*) Tries to do remote execution from same directory as local.
+   That is, it propagates $PWD, in an intelligent manner.  This can
+   be turned on and off either from the command line or in the source.
+
+*) Logs errors in a file.  This file can be specified on the command line.
+
+*) Overall Intelligence (TM) - makes reasoned decisions about what
+   you are trying to do, and tries to "do the right thing".
+
+*) Written in Perl, for portability and hackability.
+
+For more info, read the man page or the source.
+

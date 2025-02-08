@@ -1,0 +1,36 @@
+Begin2
+Title        =XPostIt
+Version      =1.0L0 Linux version
+Desc1        =The up to date version of "XPostIt" for Unix Systems
+Desc2        =xpostit enables the user to leave notes on his desktop
+Desc3        =and makes other clipboards / permanent clipboards
+Desc4        =obsolete.
+Desc5        =xpostit was written on/for Linux but compiling it on other
+Desc6        =systems should be easy enough.
+Author       =Georg Greve
+AuthorEmail  =development@fusebox.hanse.de
+Maintainer   =Georg Greve
+MaintEmail   =development@fusebox.hanse.de
+Site1        =
+Path1        =
+File1        =xpostit.tgz
+FileSize1    =3.3 kB
+Required1    =C++ Compiler / Linker
+Required2    =xview, olgx, X11 Libraries
+Required3    =XFree 3.x Window System
+Required4    =
+CopyPolicy1  =Use, copy, modify, and distribute this software and its
+CopyPolicy2  =documentation for any purpose is granted without fee.
+Keywords     =xpostit, X, XPostIt, notes, clipboard
+Comment1     =Installation instructions as ROOT:
+Comment2     =   cd /usr/src
+Comment3     =   tar xvfz xpostit.tgz
+Comment4     =   cd /usr/src/xpostit/
+Comment5     =   follow README-instructions
+Comment6     =   (basically just a make)
+RelFiles1    =
+Entered      =
+EnteredBy    =
+CheckedEmail =
+End
+

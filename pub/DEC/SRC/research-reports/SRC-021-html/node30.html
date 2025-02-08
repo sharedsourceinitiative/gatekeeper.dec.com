@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Working Directories</TITLE>
+<META NAME="description" CONTENT="Working Directories">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node31.html">
+<LINK REL="previous" HREF="node29.html">
+<LINK REL="up" HREF="node22.html">
+<LINK REL="next" HREF="node31.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html559"
+ HREF="node31.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html555"
+ HREF="node22.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html549"
+ HREF="node29.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html557"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html558"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html560"
+ HREF="node31.html">Signals</A>
+<B> Up:</B> <A NAME="tex2html556"
+ HREF="node22.html">Concepts and Facilities</A>
+<B> Previous:</B> <A NAME="tex2html550"
+ HREF="node29.html">Logical Volumes</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04028000000000000000">
+Working Directories</A>
+</H2>
+ <A NAME="DalyCity">&#160;</A>
+<P><A NAME="716">&#160;</A>
+<A NAME="717">&#160;</A>
+<A NAME="718">&#160;</A>
+<A NAME="719">&#160;</A>
+<A NAME="1978">&#160;</A>
+<A NAME="1979">&#160;</A>
+Every process has a working directory, which is a directory handle that is
+used by default as the base directory for looking up a relative path name
+when a NIL directory handle is supplied with the path name.  Normally the
+working directory of a process is specified when the process is created
+(see the SetWD procedure on page <A HREF="node51.html#Richmond"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>) and is never changed.
+Changing the working directory in a multithreaded process is likely to
+cause undesired interference between threads.  Another reason to avoid
+changing the working directory is that the operating system writes a file
+with the path name core in the working directory under some conditions,
+and it can be hard for the user to find this file if the working directory
+has been changed (see Section <A HREF="node52.html#Rodeo">5.4</A>). If it is really necessary, the
+working directory of a running process can be changed using
+OSFriends.SetMyWD, described in Appendix <A HREF="node55.html#LaHonda">A.1</A>, page
+<A HREF="node55.html#LaHonda"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.
+<P>
+<BR><HR>
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

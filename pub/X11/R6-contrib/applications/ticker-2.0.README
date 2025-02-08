@@ -1,0 +1,38 @@
+IBM infoMarket NewsTicker 2.0 README				7/19/96
+The NewsTicker is an internet client application that displays news headlines
+in real-time on your desktop from a (continuously growing) list of sources.
+
+Current sources include:
+  - Reuters (Business, Entertainment, International, Sports, Politics)
+  - ESPN SportsTicker (MLB Scores, MLS Scores, News, Etc.)
+  - Olympic Games - (ESPN SportsTicker and ACOG Official News)
+  - C|Net Central News
+  and, pending some paperwork...
+  - Computer/Technology News from an excellent online news source
+    (sorry, can't say who yet...)
+New sources should continue to be added over the summer.
+
+Requirements:
+  - One of the following UNIX variants:
+    + AIX 4.1
+    + Solaris 2.4 for Sparc
+    + HP-UX 9.0
+    + SGI IRIX 5.3
+  - 256-color display
+  - About 1Mb of free disk space
+  - Motif runtime libraries
+  - Full-time internet connection (will support both SOCKS and HTTP proxies)
+  - Netscape Navigator or NCSA Mosiac to view full text of news articles
+
+Note:
+  - Not a network hog... low network throughput and you set the update
+    interval.
+  - Not a disk space hog... does not cache any documents on your local disk.
+  - Not a screen hog... only 44 pixels high
+
+FTP Location:
+  ftp://ftp.infomkt.ibm.com/pub/ticker/
+
+Customer Support:
+  Phone: 1-800-23108219
+  Email: webmaster@www.infomkt.ibm.com

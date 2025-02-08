@@ -1,0 +1,24 @@
+                   CRL Technical Report 93/2
+
+      		 Key Range Locking Strategies 
+			     for 
+		     Improved Concurrency
+
+                         David Lomet
+
+                      February 10, 1993
+
+"Phantoms" are records inserted into a concurrently selected set of 
+records specified by a predicate such that the selection does not see 
+a transaction consistent result.  The usual locking strategy is to lock
+only existing records.  However, records that satisfy the selection 
+predicate must be locked even when they are not present in the database
+to prevent their insertion.  One way to cope with phantoms is through 
+range locking, a limited form of predicate locking.  We investigate 
+lock modes for ranges and describe new lock modes that greatly increase
+concurrency.  We explore locking strategies involving range, key, and 
+record resources that permit trade-offs between concurrency and lock 
+overhead.
+
+Keywords: concurrency, range locking, locking granularity, phantoms
+

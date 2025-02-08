@@ -1,0 +1,18 @@
+		      CRL Technical Report 90/4
+      Recovery for Shared Disk Systems Using Multiple Redo Logs
+			    David B. Lomet
+			     October 1990
+
+A new method for redo logging and recovery is described.  It is
+designed to work in a data sharing system where multiple nodes can
+access common data.  Particularly important is that each node can have
+its own log.  Crash recovery is possible based on the contents of just
+one of these logs.  Media recovery is supported via a form of merging
+of the logs.  The method requires no time synchronization between
+nodes, and does not use timestamps to order the log records during the
+merge.  The method should work with many undo recovery methods.
+Conventional checkpointing schemes can be adapted to the scheme,
+enabling the redo scan point to be advanced and the log to be
+truncated.  Finally, the method makes possible a new paradigm for
+distributed DBMSs which has the potential to exploit inexpensive
+desktop processing and improve availability and responsiveness.

@@ -1,0 +1,27 @@
+
+
+    "Blossoming: A Connect-the-Dots Approach to Splines."
+    Lyle Ramshaw.
+    June 21, 1987.  172 pages.
+
+Author's Abstract
+ 
+    The standard explanations of the theory underlying the Bezier
+    and B-spline curves and surfaces used in computer-aided geometric
+    design are not as simple as they should be, because there is no
+    easy way to tell, from the labels in the diagrams, what geometric
+    relationships hold among the labeled points.  This paper proposes
+    a new labeling scheme, based on the work of P.~de~Casteljau.  The
+    key idea is a classical mathematical principle, which we christen
+    the Blossoming Principle:  a univariate polynomial of degree  n
+    is equivalent to a symmetric polynomial in  n  variables that
+    is linear in each variable separately.  Blossoming a Bezier curve
+    or surface provides lucid labels both for its Bezier points and
+    for all of the intermediate points that arise in the de Casteljau
+    Algorithm.  Blossoming a spline curve with parametric continuity
+    provides lucid labels for its de Boor points and for the points
+    that arise in the de Boor Algorithm.  Spline curves with geometric
+    continuity and spline surfaces with triangular patches present
+    unsolved labeling challenges, however.
+
+

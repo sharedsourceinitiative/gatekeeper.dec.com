@@ -1,0 +1,83 @@
+Updated contrib releases of UPS
+-------------------------------
+
+This is an unoffical release, based on the last official release from 
+Mark Russell, version 3.14-beta. This version has only been compiled and 
+tested on Solaris 2.5, Solaris 2.6 and SunOS 4.1.3, with the Sparc 
+Compilers SC4 and SC4.2, gcc/g++ 2.7.2 and 2.8.0 and the Centerline c and 
+cfront/C++ compilers. Also built for Linux ELF 2.0.31 (Red Hat 5.0).
+
+Unpacking the distribution
+--------------------------
+You should have a compressed tar file called ups-3.31-RGA.tar.gz Change 
+directory to a disk with a six or more megabytes of free space and say:
+ 
+        gzip -dc ups-3.31-RGA.tar | tar xfp -
+ 
+This will create a directory tree called ups-3.31-RGA. Change directory into it.
+
+See the file README for build instructions.
+
+
+Changes between 3.31-RGA and 3.29-RGA 
+-------------------------------------
+   This is mostly a bug fix release. Support for gcc/g++ (including version
+   2.8.0) is much improved, and crashes when loading Sun SC4.2 compiled
+   code have been fixed.
+
+o  Fixes for reading SC4.2 code, mainly C++. 
+
+o  Many fixes for g++ to fix crashes on reading the symbol tables.
+   All data members of structs and classes should be displayed now -
+   previously these were often truncated. For g++, C++ name demangling 
+   conforms to the gnu style - for example a template method might be shown
+   as "array<array<int> *>::operator[]". 
+
+o  UPS allows spaces in function names as shown in the above example. 
+   State files and breakpoint files now enclose function names in
+   double quotes for this reason. However UPS will happily read old
+   style control files without quotes.
+
+o  There is no longer shell style globbing for breakpoint names. This
+   makes it easier to enter special characters such as brackets in operator 
+   methods. One could enter "ostream::operator<<" to break on cout
+   statements, for instance, without having to escape the "<" characters
+   as previously. Name completion works as before. 
+
+o  Provided a workaround for a problem in debugging shared libraries
+   with the Rational Clearcase source control file system. There is a
+   mismatch between the Clearcase virtual file system and the Solaris
+   /proc virtual file system such that UPS could not debug shared
+   libaries that were in a versioned object base or vob. UPS now figures 
+   out the mapping between the file systems and debugging can proceed.
+
+o  UPS understands the data type "bool" that gcc supports. Data of 
+   type bool is shown as "true" of "false" in the display window. It 
+   can be edited to be either such string, or an integer - 0 being displayed
+   as "false" and all other values as "true". In breakpoint code, it 
+   should be assigned to an integer.
+
+o  UPS will load a dymanically loaded library that occurs during a "next"
+   or "step" operation as well as during a "cont". Previously it worked
+   only for "cont".
+
+o  Fixed a bug when reattaching to a process that is stopped at a pause().
+   Previously the first attach left the target at the pause, but the
+   second attach broke it out of the pause.
+
+o  UPS should digest the occasional bad section of symbol tables without
+   croaking. A few bad stabs entries have been seen on some Solaris Centerline
+   compiled code. UPS will emit "Bad syntax in symbol table" and continue.
+
+o  Added a new help section under Help -> Breakpoints -> conditional.
+
+o  Minor updates and corrections to the man pages.
+
+o  A "ups -v" now produces:
+
+	ups version 3.31-RGA (build date: Fri Mar 20 20:57:58 PST 1998)
+
+Rod Armstrong
+rod@san-jose.ate.slb.com
+20 March 1998
+

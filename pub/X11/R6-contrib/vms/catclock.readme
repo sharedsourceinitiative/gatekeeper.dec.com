@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+CATCLOCK.ZIP                      analog / digital / cat clock for X
+                                  Authors:
+                                  Tony Della Fera (MIT-Athena, DEC)
+                                  Dave Mankins (MIT-Athena, BBN)
+                                  Ed Moy (UC Berkeley)
+                                  Deanna Hohn (DEC) created the cat pixmaps.
+        Philip Schneider (DEC) created the pendulum tails and eyes, and ported
+        the program to Motif 1.1.
+VAX                               Language: VAX C or DEC C
+AXP                               Language: DEC C
+-------------------------------------------------------------------------------

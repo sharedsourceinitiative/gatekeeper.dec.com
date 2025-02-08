@@ -1,0 +1,40 @@
+<HTML><HEAD><TITLE>
+Digital Systems Research Center: Report 85</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Research Report 85</H1>
+<P>
+<H1>On-line Data Compression in a Log-structured File System</H1>
+<HR>
+<H2>Michael Burrows, Charles Jerian, Butler Lampson, Timothy Mann</H2>
+<b>April 15, 1992</b><BR><i> 20 pages</i>
+<P>
+We have incorporated on-line data compression into the low levels of a
+log-structured file system (Rosenblum's Sprite LFS).  Each
+block of data or meta-data is compressed as it is written to the disk
+and decompressed as it is read.   The log-structuring overcomes the
+problems of allocation and fragmentation for variable-sized blocks.  We
+observe compression factors ranging from 1.6 to 2.2, using algorithms
+running from 1.7 to 0.4 MBytes per second in software on a DECstation
+5000/200.  System performance is degraded by a few percent for normal
+activities (such as compiling or editing), and as much as a factor of
+1.6 for file system intensive operations (such as copying
+multi-megabyte files).
+<P>
+Hardware compression devices mesh well with this design.  Chips are
+already available that operate at speeds exceeding disk transfer rates,
+which indicates that hardware compression would not only remove the
+performance degradation we observed, but might well increase the
+effective disk transfer rate beyond that obtainable from a system
+without compression.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-085.ps.Z">PostScript compressed with UNIX compress</A></B> -- 76 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-085.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 53 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-085.ps.zip">PostScript compressed with ZIP</A></B> -- 53 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-085.ps">PostScript</A></B> -- 184 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-085.pdf">Portable Document Format (PDF)</A></B> -- 121 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

@@ -1,0 +1,22 @@
+<TITLE>Digital Systems Research Center: Note 1997-003</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Technical Note 1997-003</H1>
+<H1>Hypermedia Presentation and Authoring System</H1>
+<HR>
+<H2>Jin Yu and Yuanyuan Xiang</H2>
+<b>Note #1997-003, May 6, 1997</b><BR><i>15 pages</i>
+<P>
+This paper describes the Hypermedia Presentation and Authoring System
+(HPAS), a Web browser with built-in authoring capabilities. In
+contrast to traditional browsers, it manages time-based hypermedia
+presentations and the associated dynamic spatial layout with respect
+to time. The system manipulates various media types by embedding
+object presenters, editors, and converters, which
+combine to provide transparent operations on hypermedia
+objects, such as MPEG videos, GIF images, rich text files, etc.
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="http://gatekeeper.dec.com/pub/DEC/SRC/technical-notes/SRC-1997-003-html/">Hypertext (HTML)</A></B><BR>
+</UL></P>

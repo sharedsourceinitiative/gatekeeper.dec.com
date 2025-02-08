@@ -1,0 +1,14 @@
+Begin3
+Title:        Xclasses
+Version:      0.19
+Entered-date: 27Jul1997
+Description:  A X11 GUI library, font and context sensitiv,
+              fully written in C++, ELF static & dynamic library
+              no X-Windows knowledge required!
+Keywords:     X11, X-Windows, GUI, Xlib, C++, layout, library, Unix
+Author:       schmitzj@fsai.fh-trier.de (Juergen Schmitz)
+Maintained-by:
+Primary-site: sunsite.unc.edu:/pub/Linux/X11/devel/libraries/c++libs
+Alternate-site: ftp.x.org:/pub/contrib/libraries
+Copying-policy: test phase is Freeware
+End

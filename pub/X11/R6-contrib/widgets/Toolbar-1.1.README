@@ -1,0 +1,73 @@
+
+/************************************************************************* 
+ * Version 1.1  on  16-Dec-1998
+ * (c) 1998 Pralay Dakua (pkanti@hotmail.com)
+ *     
+ * This is a free software and permission to use, modify, distribute,
+ * selling and using for commercial purpose is hereby granted provided
+ * that THE ABOVE COPYRIGHT NOTICE AND THIS PERMISSION NOTICE SHALL BE
+ * INCLUDED IN ALL COPIES AND THEIR SUPPORTING DOCUMENTATIONS.
+ *
+ * There is no warranty for this software. In no event Pralay Dakua
+ * will be liable for merchantability and fitness of the software and 
+ * damages due to this software.
+ *
+ * Author:
+ * Pralay Dakua (pkanti@hotmail.com)
+ *
+ **************************************************************************/
+
+XmToolbar is a manager widget derived from XmManager widget class. 
+It layouts its children horizontal and vertical order. Plus it provides
+some constraint resources to its children to show the tooltip label.
+Whenevent mouse pointer enters inside the window of its children
+and remains there for sometime, it shows the tooltip label.
+
+I made this widget while developing a image processing software where
+Windows-look toolbars were required. Here geometry management
+is handled very much simple way and providing shells for toolbar
+hasn't been taken care. Any feedback/input/suggestion is always welcome.
+
+
+File-list:
+       Toolbar.h        - Toolbar public header file
+       ToolbarP.h       - Toolbar private header file
+       Toolbar.c        - Toolbar implementation file
+       main.c           - program for demo
+       Makefile
+       XmToolbar.man    -  manual
+       
+  --------------------------------------------------------------------------
+                   Desciption of XmToolbar
+  --------------------------------------------------------------------------
+   Class Pointer: xmTollbarWidgetClass
+   Class Name:    XmToolbar
+   Include File:  Toolbar.h
+   Superclass:    XmManager
+
+    Resources:
+       Name                    Type                     Default
+       ----                    ----                     -------
+      XmNorientation           unsigned char            XmHORIZONTAL
+      XmNspacing               Dimension                0
+      XmNgroupSpacing          Dimension                5
+      XmNmarginWidth           Dimension                0
+      XmNmarginHeight          Dimension                0
+      XmNentryCount            int                      XmENTRY_UNSPECIFIED
+      XmNtipFontList           XmFontList               NULL
+      XmNtipForeground         Pixel                    dynamic
+      XmNtipBackground         Pixel                    dynamic
+      XmNtipBorderWidth        Dimension                1
+      XmNtipPosition           unsigned char            XmNOTIFY_BOTTOM_RIGHT
+      XmNtipDistance           Dimension                10
+      XmNtipNotifyDelay        int                      1000
+
+    Constraint Resources:
+       Name                    Type                     Default
+       ----                    ----                     -------
+      XmNnotifyable            Boolean                  TRUE
+      XmNtipLabel              XmString                 NULL
+      XmNnewGroup              Boolean                  FALSE
+      XmNconfigurable          Boolean                  FALSE
+
+

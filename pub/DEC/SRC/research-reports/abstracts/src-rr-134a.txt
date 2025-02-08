@@ -1,0 +1,37 @@
+"From Quadrangular Sets to the Budget Matroids"
+Lyle Ramshaw and Jim Saxe
+May, 1995. 162 pages.
+
+The complete quadrilateral is a configuration with six points and four
+lines in the projective plane.  It is a classical result that, given
+the six roots of three quadratic polynomials, we can use the complete
+quadrilateral (or its dual, the complete quadrangle) to test
+geometrically whether or not those three quadratics are linearly
+dependent.  But does there exist some configuration that provides an
+analogous geometric test for the linear dependence of four cubic
+polynomials?
+
+Yes, there is such a cubic analog of the complete quadrilateral; it
+has twelve points, two lines, and thirteen planes in 3-space.  In
+fact, the complete quadrilateral and its cubic analog are just two
+members of a large family of intriguing configurations that are
+defined in this monograph, using the notion of a "budget".  The study
+of these "budget configurations" combines old-fashioned geometry with
+modern combinatorics -- from null systems to matroids.
+
+Why didn't the classical geometers discover the budget configurations
+long ago?  Perhaps because they required their configurations to have
+a certain numeric symmetry that a typical budget configuration doesn't
+have.
+
+A videotape (134b) accompanies report 134a:
+
+"Introducing the Budget Configurations"
+Lyle Ramshaw
+Time 45:57 minutes
+
+The videotape animates the cubic analog of the complete
+quadrilateral, as well as some other budget configurations that live
+in the plane or in 3-space.  By doing so, it tries both to give
+non-mathematicians some hint of these discoveries and to lure
+mathematicians into reading the monograph.

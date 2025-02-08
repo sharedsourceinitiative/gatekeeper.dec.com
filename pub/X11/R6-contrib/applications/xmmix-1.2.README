@@ -1,0 +1,151 @@
+
+			----------------------
+			X M M I X  version 1.2
+			     patchlevel 2
+			----------------------
+			      by Ti Kan
+
+
+Xmmix is a sound mixer utility for the X Window System using the
+OSF/Motif interface.  It requires the Unix Sound System (formerly
+"VoxWare") sound driver by Hannu Savolainen (hannu@voxware.pp.fi)
+and from 4front Technologies.  This driver is also known as the Linux
+sound driver.  See notes below about how to get the sound driver.
+
+This version of xmmix has been tested by the author with the sound
+driver version 2.4, 2.5, 2.90, 3.0 and 3.5.  It is expected
+to work with earlier and future versions.
+
+The OS platforms supported by xmmix is the same as those supported
+by the sound driver, which includes several UNIX variants for the
+Intel x86 PC:
+
+	Linux
+	FreeBSD
+	NetBSD
+	Interactive (ISC) UNIX
+	SCO UNIX, Open Desktop and Open Server
+	Sun Solaris/x86 2.x
+	UNIX SVR4.2 (UnixWare and others)
+
+It should be fairly easy to port the sound driver to other
+PC UNIX platforms.
+
+Likewise, the sound cards supported by xmmix are those that
+the sound driver supports.  Currently, this includes most
+of the popular sound cards.  Please see the your sound driver
+documentation for a list.  The sound driver web page (listed
+below) also contains a list of cards that are supported by
+the most current version.
+
+Comments and questions about the sound driver and utilities should
+be directed to "hannu@voxware.pp.fi".
+
+This distribution now comes with several 32x32 pixmap files
+suitable for use as an xmmix desktop icon:
+
+	xmmix.icon - for UnixWare
+	xmmix_a.px - for SCO Open Desktop (XPM2 format)
+	xmmix_b.px - for SCO Open Desktop (XPM2 C format)
+	xmmix.xpm  - for other systems that use XPM format
+
+You can use the appropriate icon setup utilities under each of
+these environments to create an xmmix icon (with which you can use to
+launch xmmix).
+
+Comments, suggestions, and bug reports about xmmix are very welcome!
+Write to "xmmix@amb.org".
+
+If you have a CD-ROM drive, you are invited to try a full-featured
+X11/Motif CD Audio Player utility that I wrote.  It's called "xmcd"
+and supports many UNIX OS platforms and CD-ROM drives.  Xmmix and
+xmcd makes an ideal pair in your multimedia system.  A non-X
+command line CD player "cda" is also included in the xmcd package.
+See notes below about the anonymous FTP location.
+
+
+WHERE TO GET XMMIX
+------------------
+
+The source code release of xmmix v1.2 is available via
+Internet anonymous FTP.  Location:
+
+	(Instructions)
+	ftp://ftp.x.org/contrib/applications/xmmix/xmmix-1.2.README
+	(gzip'd tar archive)
+	ftp://ftp.x.org/contrib/applications/xmmix/xmmix-1.2.tar.gz
+
+Some FTP sites are not secure, as it is commonly allowed for anyone
+to anonymously post to them. The xmmix web page (see below) lists the
+checksum of all xmmix-related packages, so you can check that your
+copy is genuine.
+
+The package require the "gunzip" (GNU unzip) utility to uncompress.
+The source code to gzip/gunzip can be found on various FTP sites
+(such as prep.ai.mit.edu:/pub/gnu).
+
+
+XMMIX WORLD WIDE WEB HOME PAGE
+------------------------------
+
+For those of you with access to the WWW (via Netscape, NCSA Mosaic
+or other WWW browser), The URL for the xmmix home page is as
+follows:
+
+    http://sunsite.unc.edu/~cddb/xmmix/
+
+This home page provides up-to-date information about the
+current release version, online README file, FTP service to get
+the software, an interactive form to send comments and
+suggestions, and late breaking announcement, if any.
+
+You are invited to visit this space and make use of its services.
+
+
+WHERE TO GET THE SOUND DRIVER
+-----------------------------
+
+The sound driver source code files are included with each Linux
+kernel source code release.  It can also be obtained via anonymous
+FTP from the following directory:
+
+	sunsite.unc.edu:/pub/Linux/kernel/sound
+
+The most up-to-date information about the sound driver can be
+obtained via their web site at:
+
+	http://www.4front-tech.com/usslite
+		or
+	http://personal.eunet.fi/pp/voxware (European mirror)
+
+
+WHERE TO GET XMCD
+-----------------
+
+Xmcd files can be obtained via anonymous FTP from the following
+directory:
+
+	ftp://ftp.x.org/contrib/applications/xmcd
+
+
+CHANGES SINCE PREVIOUS RELEASES:
+--------------------------------
+
+Since Ver 1.2 patchlevel 1:
+----------------------------------------------------------
+    - Another fix to make xmmix compile correctly on systems
+      installed with the new USS and USS/lite sound driver
+      product.
+    - Minor changes for internationalization and multi-byte character
+      sets.
+
+Since Ver 1.2 patchlevel 0:
+----------------------------------------------------------
+    - Fixed to parse the /dev/sndstat output of the USS/Linux
+      driver correctly.
+
+Since Ver 1.1 patchlevel 0:
+----------------------------------------------------------
+    - Modifications to support the sound driver version 3.5.
+
+

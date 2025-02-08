@@ -1,0 +1,1198 @@
+<TITLE>Colormap FAQ List.</TITLE>
+<H1><IMG ALIGN=bottom SRC="images/FAQ.gif">Colormap FAQ List
+<IMG ALIGN=bottom SRC="images/FAQ.gif"></H1>
+<H5>Last Updated: 13th March 1998</H5>
+
+Copyright 1994-98 Sun Microsystems, Inc.<BR>
+<H4>Permission is granted to distribute this document freely,
+provided it remains unaltered.<BR>
+This permission does not extend to the targets of any links.</H4>
+
+This document is written and maintained by
+<a href="http://skaro.corp/~davet"><CITE>David.Tong@sun.com</CITE></a> or
+<a href="http://c3-a.snvl1.sfba.home.com"><CITE>dave1@home.com</CITE></a><P>
+
+I maintain this FAQ purely for the fun of it, and because if I didn't
+it wouldn't get done. If you've found it helpful, please let me know. 
+Or better still, let my manager
+<A HREF="mailto:kenneth.kadonaga@Corp.sun.com">Kenneth.Kadonaga@Corp.Sun.COM</A>
+ know!<P>
+
+I am keen to receive any corrections, updates, suggestions, etc.<BR>
+I can be contacted by email as <CITE>David.Tong@sun.com</CITE>
+or by post at <BR>
+<CITE>UMTV16-218, 901 San Antonio Road Palo Alto, California 94303</CITE><P>
+<H4>Customers please note:</H4>
+If you have a technical question that is not answered by this FAQ,
+please don't send it to me, contact your local Answer Centre.
+If you don't know the number, ask your sales representative or contact
+your local Sun office.<P>
+<HR>
+<H3>Eliminate Colormap Flashing!</H3>
+I've created a small library that will eliminate colormap flashing in many cases,
+though not all. It works by intercepting calls to XAllocColor, and checking the return.
+If the allocation failed, it returns the closest read-only match. Feedback is welcome.
+You can download <A href="progs/preload.c">the source</A> (freely distributable) and
+<A href="progs/libnoflash.so.1">the library</A> compiled for Solaris 2.5.1<P>
+To use, simply set the <STRONG>LD_PRELOAD</STRONG> environmental variable, thus:
+<PRE>
+	% setenv LD_PRELOAD /(mydir)/libnoflash.so.1
+</PRE>
+and the library will be picked up automagically.<P>
+<STRONG>NB:</STRONG> If you are using Java applications this library can cause
+Java to crash with a segmentation violation. This is related to bug 4028760,
+but fortunately there's a simple work-around; it does not crash if you also
+preload the Motif library, thus:
+<PRE>
+    % setenv LD_PRELOAD "/(mydir)/libnoflash.so.1 /usr/dt/lib/libXm.so.3"
+</PRE>
+
+<H2>Get informed of updates automatically</H2>
+The Colormap FAQ is updated occasionally. By registering this URL
+with NetMind you will receive an email notification when the page is updated.
+This service is free. I have no connection with
+<A HREF="http://www.netmind.com">NetMind</A>.<P>
+Note for Sun Internal users:
+You will have to register <A HREF="#AA">one of the mirror sites</A>.<P>
+<FORM METHOD="GET" ACTION="http://www.netmind.com/cgi-bin/uncgi/url-mind">
+<INPUT TYPE=SUBMIT VALUE=" Press Here to Register ">
+</FORM>
+
+<HR>
+
+<H3>Getting the latest copy of the FAQ</H3>
+From within Sun, go to
+<UL>
+<LI><A HREF="http://sunsolve.uk/FAQ/ColormapFAQ.html">http://sunsolve.uk/FAQ/ColormapFAQ.html</A><br>
+</UL>
+From outside Sun, try these sites:
+<UL>
+<LI><A HREF="http://c3-a.snvl1.sfba.home.com/ColormapFAQ.html">http://c3-a.snvl1.sfba.home.com/ColormapFAQ.html</A><br>
+<LI><A HREF="http://tarl.net/FAQ/ColormapFAQ.html">http://tarl.net/FAQ/ColormapFAQ.html</A><br>
+<LI><A HREF="http://www.uark.edu/sunfaq/ColormapFAQ.html">http://www.uark.edu/sunfaq/ColormapFAQ.html</A><br>
+<LI><A HREF="http://bul.eecs.umich.edu/~crowej/ColormapFAQ.html">http://bul.eecs.umich.edu/~crowej/ColormapFAQ.html</A><br>
+</UL>
+If you want to host a mirror site, please 
+<A HREF="mailto:david.tong@corp.sun.com">send me email</A>
+so I can notify you of updates.
+Glowing letters of praise should be addressed to my manager
+and/or to the Webmaster at this site.<P>
+
+I do try to maintain the accuracy of the information; your assistance is
+appreciated. No responsibility is taken for any inaccuracies.<P>
+
+<H3>A Note On Spelling</H3>
+Being English, I tend to refer to <CITE>colours</CITE> rather than <CITE>colors</CITE>.
+Where I've used the latter spelling, it's because
+X requires it. Rather than add to the confusion, I've consistently used
+the term <CITE>colormap</CITE> throughout.<P>
+<HR>
+<A NAME="99.">
+<H2> Contents </H2>
+</A>
+<H6> Click on the "?" logo to get back to here</H6>
+
+<A HREF="#0.">
+Background</A><P>
+<A HREF="#1.">
+ 1. What is Colormap Flashing?</A><P>
+<A HREF="#2.">
+ 2. How can I tell how many colours are allocated?</A><P>
+<A HREF="#3.">
+ 3. How do I stop the colours flashing as I move the cursor around?</A><P>
+<A HREF="#4.">
+ 4. Can I protect any of the colours against flashing?</A><P>
+<A HREF="#5.">
+ 5. Why do I get white or coloured text when I exit OpenWindows?</A><P>
+<A HREF="#6.">
+ 6. How does XView handle colour?</A><P>
+<A HREF="#7.">
+ 7. My canvas requires a lot of colours. How can I reduce flashing?</A><P>
+<A HREF="#8.">
+ 8. Can I guarantee the pixel values of any colours, e.g. Black and White?</A><P>
+<A HREF="#9.">
+ 9. Can I share colormaps across different frame buffers?</A><P>
+<A HREF="#10.">
+10. Lines drawn using logical operations appear in odd colours.</A><P>
+<A HREF="#11.">
+11. How does Display PostScript handle colour?</A><P>
+<A HREF="#12.">
+12. Where is clear_colormap for Solaris 2.3?</A><P>
+<A HREF="#13.">
+13. Why do Imagetool and Pageview flash?</A><P>
+<A HREF="#14.">
+14. How does NeWS handle colour?</A><P>
+<A HREF="#15.">
+15. Does the X server support the Standard colormaps?</A><P>
+<A HREF="#16.">
+16. How does Wabi access the colormap?</A><P>
+<A HREF="#17.">
+17. How do I find out what visuals are available?</A><P>
+<A HREF="#18.">
+18. How does CDE handle colour?</A><P>
+<A HREF="#19.">
+19. How can I reduce colormap flashing with Netscape?</A><P>
+<A HREF="#20.">
+20. How do PC based X servers handle colours?</A><P>
+<A HREF="#21.">
+21. What is gamma correction?</A><P>
+
+<A HREF="#Last.">
+Is there anything else I should look at?</A><P>
+<H2>Code Fragments</H2>
+<A HREF="#A.">
+A. Example of reduced colormap flashing using XView</A><P>
+<A HREF="#B.">
+B. Allocating and using the RGB_BEST_MAP standard colormap</A><P>
+<A HREF="#C.">
+C. Source to libnoflash.so</A><P>
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="0.">
+Background</H3>
+</A>
+
+If you are unfamiliar with any of the terms and concepts used,
+please look at Chapter 7 of the <CITE>Xlib Programming Manual (Volume One)</CITE>
+published by <CITE>O'Reilly & Associates Inc.</CITE>
+The explanations given there are very well written and easy to read.<P>
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="1.">
+ 1. What is Colormap Flashing?</H3>
+</A>
+
+The default colormap which is created when OpenWindows is invoked has
+a fixed number of elements, normally 256. This means that up to 256
+different colours can be allocated (note that not all will necessarily
+be visible at the time).<P>
+
+If an application attempts to allocate a new colour and there is no space
+in the colormap, it will get an error returned from the server. At this point
+the application has two alternatives: to accept the limitation and use only
+those colours which are already defined, or to create a new colormap for its
+sole use.<P>
+
+Assuming that the latter approach is taken, whenever the user moves the mouse
+cursor over the application window the server will automatically switch in the
+custom colormap to replace the default. In doing so, the colours of various
+items and windows may well be affected. In some cases other windows may
+become illegible, due to odd combinations of foreground and background colours -
+making it difficult to view multiple windows simultaneously.<P>
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="2.">
+ 2. How can I tell how many colours are allocated?</H3>
+</A>
+
+There is no easy way to do this - all you can do is to ask for a colour and
+see if you get a successful return or not. If you want to see which colours
+are allocated, run the program
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?xcolor"><CODE>xcolor</CODE></a>
+which is in the OpenWindows bin directory.<P>
+When an application frees a colour, the server does not necessarily
+reset that colour back to any default value; it retains its value until
+over-written by another application.
+When you move your cursor into the xcolor window, it will load a new colormap
+which contains a band of bright colours. When you move the cursor out again,
+those colours which are currently unallocated will keep the bright colour,
+those which are allocated will revert to the correct colour. If you do not
+want to use this function you can disable it with the option
+<CODE>-noinst</CODE><P>
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="3.">
+ 3. How do I stop the colours flashing as I move the cursor around?</H3>
+</A>
+
+One option to reduce the flashing is to "lock" a colormap, so that as the cursor
+is moved around the server does not load in new colormaps. This can be done by
+setting a resource in the <CODE>.Xdefaults</CODE> file.
+Remember to run
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?xrdb"><CODE>xrdb -merge</CODE></a>
+or to restart OpenWindows after editing the file or the changes will not take effect.<BR>
+<CITE>(These resources are documented in the manual page for
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?olwm"><CODE>olwm</CODE></a>.)</CITE><P>
+
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?olwm">
+<H4>olwm.ColorFocusLocked:</H4></A>
+If True, this instructs the server to keep the current colormap locked into the
+hardware, and not to change it as the mouse is moved around.
+The default is <B>False</B>.<P>
+
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?olwm">
+<H4>olwm.AutoColorFocus:</H4></A>
+If True, this instructs the server to load the colormap for a new window into
+the hardware as it is displayed, regardless of whether the mouse is over it.
+The default is <B>False</B>.<P>
+
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?olwm">
+<H4>olwm.KeyboardCommand.LockColormap:</H4></A>
+This allows the user to change the key sequence which locks the window's
+colormap into the hardware. The default is <B>Control-L2</B>.<P>
+
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?olwm">
+<H4>olwm.KeyboardCommand.UnlockColormap:</H4></A>
+This allows the user to change the key sequence which unlocks the colormap.
+The default is <B>Control-L4</B>. <P>
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="4.">
+ 4. Can I protect any of the colours against flashing?</H3>
+</A>
+
+There is a program called 
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?cmap_compact"><CODE>cmap_compact</CODE></a>
+which is automatically executed by the
+script <CODE>$OPENWINHOME/lib/openwin-sys</CODE> when OpenWindows is started.
+This program will look for a file
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?cmap_compact"><CODE>.owcolors</CODE></a>
+in your home directory, and if found will load those colours at the top end
+of the colormap, thus reducing the likelihood of their being over-written.<P>
+
+<CODE>.owcolors</CODE> is a binary file, and thus is difficult for the user to edit.
+It is created by calling
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?cmap_compact"><CODE>cmap_compact</CODE></a>
+with the argument <CODE>save</CODE> - this will
+store ALL the currently allocated colours in your home directory.<P>
+
+The best way to use this is to run
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?cmap_compact"><CODE>cmap_compact save</CODE></a>
+as soon as you start
+OpenWindows - this will save only those colours which are used by applications
+in your <CODE>.openwin-init</CODE> file. (Note however that if you invoke any NeWS applications on startup, the entire NeWS cube will also be saved unless you free it first - see below).<P>
+
+If you want to add extra colours to the protected set (for example, the six
+primary and secondary colours Red, Green, Blue, Cyan, Magenta, Yellow - this
+can be very helpful if you intend to run NeWS applications) it is necessary
+to first get them into the colourmap. The easiest way I have found is to
+simply start additional shelltools with the appropriate colours as their
+foreground or background colours<BR>
+(ie <CODE>shelltool -fg blue -bg yellow &</CODE>)<BR>
+before calling 
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?cmap_compact"><CODE>cmap_compact</CODE></a>
+- it's inelegant but it works.<P>
+
+It's worth pointing out that the <CODE>.owcolors</CODE> file may not be
+portable across all platforms, and that other users will most likely have
+changed the colours of their background or window borders, so the file
+should be treated as any other user-defined configuration file.<P>
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="5.">
+ 5. Why do I get white or coloured text when I exit OpenWindows?</H3>
+</A>
+
+A bug in the OpenWindows V3.3 server means that the last entry in the
+colormap, #255, does not get reset to black when the server quits.
+The system uses this colour to write to the console outside OpenWindows.
+The worst part of this is that the startup banner puts white into colour 
+cell 255. As a result the text can be white-on-white, thus the users never 
+sees the prompt, even if they press L1-A. The bug ID is 1136010
+As a workaround, start openwin with the -nobanner flag.
+The problem should be fixed by installing patch 101362.<P>
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="6.">
+ 6. How does XView handle colour?</H3>
+</A>
+
+XView adds a second level of indirection to colour allocation by using a
+COLORMAP SEGMENT (CMS). This is an XView (as opposed to Xlib) entity, and is
+explained in detail in Chapter 21 of the <CITE>XView Programming Manual</CITE>.<P>
+
+If XView can fit all the available colours within the default colormap it will
+do so, otherwise it will create a new colormap and will copy all the colours
+into it. Unfortunately it will copy these colours to the beginning of the
+colormap, which makes the effects of flashing more obvious - the colours
+which handle background, foreground, backdrop (ie root window) and window
+decoration tend to be at the start of the default colormap, since they
+are among the first to be allocated.<P>
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="7.">
+ 7. My canvas requires a lot of colours. How can I reduce flashing?</H3>
+</A>
+
+The effects of flashing can be reduced by creating a colormap, copying
+the colours across from the default colormap, and avoiding over-writing
+the most sensitive areas. These tend to be the first few and the last two
+entries (caveat: if you over-write the colours which have been protected by 
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?cmap_compact"><CODE>cmap_compact</CODE></a>
+you will make things worse, not better.)<P>
+
+Under XView, the only way to do this is by bypassing the CMS and using Xlib
+calls to create and install a colormap. There are one or two "gotcha"s here,
+in particular the use of an X atom to instruct the server to load the colormap
+when the cursor is moved over the window.<P>
+
+Consequently an example demonstrating how to do this has been written and
+is attached ath the end of this document. (All the usual disclaimers apply)<P>
+
+This is a fairly drastic solution, and should only be considered in situations
+where the previously mentioned solutions of setting resources or using
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?cmap_compact"><CODE>cmap_compact</CODE></a>
+have been rejected.<P>
+
+The example works by automatically installing a special colormap for the
+canvas paint window. This colormap is not used by the rest of the XView
+application, so if you wish to set colours for individual panel items,
+such as buttons, then you must do so by creating a CMS. This is likely
+to cause flashing, so you may wish to reconsider whether or not this is
+a good idea.<P>
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="8.">
+ 8. Can I guarantee the pixel values of any colours, e.g. Black and White?</H3>
+</A>
+
+As of V3.3, openwin supports two new options - <CODE>-whitepixel</CODE> and
+<CODE>-blackpixel</CODE>. These allow you to specify index values for black
+and white (in the range 0-255). <P>
+Prior to 3.3 you could only guarantee that "black" and "white" colours 
+would be allocated, and that
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?BlackPixel"><CODE>BlackPixel</CODE></a> and
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?WhitePixel"><CODE>WhitePixel</CODE></a>
+would return the appropriate pixel values.<BR>
+Depending on whether or not 
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?cmap_compact"><CODE>cmap_compact</CODE></a>
+has been run, the default pixel values will 
+almost certainly be either 0 and 1 or 254 and 255,
+but these values cannot be relied on.
+Other colours will need to be allocated by the user.<P>
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="9.">
+ 9. Can I share colormaps across different frame buffers?</H3>
+</A>
+
+No. It is important to realise that if a machine has two frame buffers,
+then each will have a completely different colormap table. Thus, if a pixel
+value of 5 corresponds to green on the first frame buffer, there is no
+guarantee that 5 will correspond to green on the second.<P>
+
+This can cause problems if an application intends to create windows on
+multiple screens and wants to use the same pixel values on each.
+One solution would be to attempt to allocate a large number
+of cells on each screen, and then only to use those cells which were
+common to both. Another solution would be to allocate a custom colormap
+on each screen and then to 
+<A HREF="#How do I stop the colours flashing as I move the cursor around?">
+lock</A> it using the techniques detailed above.<P>
+
+<H3>
+<A HREF="#99"><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="10.">
+10. Lines drawn using logical operations appear in odd colours.</H3>
+</A>
+
+It is a common misconception when drawing lines using logical operations such
+as XOR that the line will appear in the opposite colour; ie a black line will
+appear in white, and a green line will appear in magenta. Unfortunately this
+is not the case; the values used for the calculations are the pixel values -
+ie the index into the colormap. Thus if the program allocates the colour 
+Yellow in position 5 then drawing in XOR will generate a pixel value of 250.
+This position may contain a black pixel value (i.e. all zeroes); alternatively if 
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?xcolor"><CODE>xcolor</CODE></a>
+is running it will probably contain a red value.<P>
+
+More significantly, this colour cell is either unallocated or is owned by
+another program - either way, its value can change at any time, causing
+unexpected effects to be seen.<P>
+
+The way around this is to ensure that the appropriate colour cell is allocated
+and contains the expected colour. To prevent colormap flashing it may be
+preferable to allocate a block of colours in the centre of the colormap, 
+since in an 8 bit environment the negation of 127 is 128.<P>
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="11.">
+11. How does Display PostScript handle colour?</H3>
+</A>
+
+The first time a DPS application is started, by default a colour "cube" is
+allocated. The DPS cube is much smaller than the default NeWS cube;
+it defaults to a 4x4x4 cube (64 colours) and 9 grays for
+a total of 73 colormap cells. This is configurable by using X
+resources of the form:<P>
+<PRE>
+	DPSColorCube."visualname"."depth"."color": "size"
+</PRE>
+for example:<P>
+<PRE>
+	DPSColorCube.PseudoColor.8.reds: 6
+</PRE>
+See Adobe's Orange Book page CLX-9 for more information.<P>
+
+DPS does not use a "closest match" algorithm for choosing
+colours as NeWS did. Instead, it uses colour halftoning to produce the best
+possible representation of the requested colour for a device. 
+This is why DPS <B>has</B> to have a proper colour cube rather 
+than miscellaneous colour cells.<P>
+
+In the simplest case, DPS uses the X Standard Colormap RGB_DEFAULT_CMAP
+mechanism to leave a pointer to the colour cube it creates in the default colormap. This is done "in a valiant attempt to share its colormap 
+resources with other applications, both DPS and non-DPS". As a 
+consequence, the colormap entries are not cleared when the client 
+is exited.<P>
+
+To force the server to clear this data, enter the command<P>
+<PRE>
+	xstdcmap -delete default
+</PRE>
+This will delete the cube, regardless of whether any clients are using
+it, so this mechanism must be used with care. However, unlike NeWS
+applications, subsequent DPS clients will re-allocate this cube.<P>
+
+An advantage to using the "simple" connection which uses the default
+colormap, is that it will automatically be able to run in CDE's allocation
+of the default colormap and probably OpenStep's as well (given that it's
+based on DPS).  This will (hopefully) be a good example of where DPS's
+colormap sharing scheme works to it's best advantage.<P>
+
+DPS <B>must</B> have a gray ramp, even if it is only black and white.
+Color, on the other hand, it considers optional.  
+If you don't have your colour cube allocated in the same colormap 
+as your gray ramp, it will go with the gray ramp. 
+It uses the non-standard property "DEFAULT_GRAY" for all colormap
+types except GrayScale, for which it uses RGB_DEFAULT_GRAY, 
+due to a caveat in the Xlib specification.
+If you need to delete the gray ramp, use the command<P>
+<PRE>
+	xprop -root -remove DEFAULT_GRAY
+</PRE>
+The same caveats apply.<P>
+
+Thanks to <CITE>Richard.Goldstein@eng.sun.com</CITE> and <CITE>John.Helm@corp.sun.com</CITE> for these tips.<P>
+John has written a utility called
+<A href="progs/rst_dcmap.c"> rst_dcmap </a>
+which will search for and delete colormap cells that have been allocated
+and recorded as standard colormaps.<P>
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="12.">
+12. Where is clear_colormap for Solaris 2.3?</H3>
+</A>
+
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?clear_colormap"><CODE>clear_colormap</CODE></a>
+is no longer supplied as part of OpenWindows.
+<CITE>Carl.Fish@west.sun.com</CITE> has written a small utility,
+<A href="progs/cmap.c">cmap</a>
+to perform the same function.<P>
+
+Carl has also provided a utility called
+<A href="progs/cls.c">cls</a>,
+which will turn off the white screen on a second display when exiting OpenWindows.<P>
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="13.">
+13. Why do Imagetool and Pageview flash?</H3>
+</A>
+
+As noted above, DPS allocates a small colorcube to share with other
+applications. Unfortunately, some applications, notably ImageTool, 
+do not want to "play ball" and allocate their own private colormaps 
+for each instance of the tool. This approach is not recommended,
+and is why these tools cause such dreadful colormap flashing. 
+Apart from 
+<A HREF="#How do I stop the colours flashing as I move the cursor around?">
+locking the colormap</A>, there is nothing the user can do.<P>
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="14.">
+14. How does NeWS handle colour?</H3>
+</A>
+
+The first time a NeWS application is started, by default a colour "cube" is allocated, and the server does a "closest match" whenever a colour is requested. Unfortunately the server has no way of knowing when NeWS has actually finished with a colour, so the cube remains allocated until the server is terminated.<P>
+
+By default a "small" cube is allocated, using 140 of the 256 colormap entries.
+If the user is concerned primarily with NeWS applications it is possible to
+allocate a large colour cube, which will take up 240 of the 256 colours.
+This is done by invoking the xnews server or openwin with the option
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?xnews"><CODE>-cubesize large</CODE></a>.
+This will improve the rendering of NeWS images, but will greatly increase
+the likelihood of colormap flashing. For further details see the manual
+page for
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?xnews"><CODE>xnews</CODE></a>.<P>
+
+Once allocated, the NeWS colour cube can be freed using the following script
+(taken from the text of bug ID 1101904):<P>
+<PRE>
+	#!/bin/sh
+	psh << '%EOF'
+	/NeWS 3 0 findpackage beginpackage
+	framebuffer /Colormap get freecube
+	%EOF
+</PRE>
+(Note: This script will not work if openwin/xnews was started with the
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?xnews"><CODE>-favorstatic</CODE></a> option.)<P>
+
+However, once freed it will NOT be re-allocated. The "closest match" algorithm
+doesn't seem to be too smart, and many NeWS programs will suffer as a result.
+In particular, CG3270 and Frame Maker are adversely affected. CG3270 may display
+in barely readable characters, while Frame Maker may exhibit corruption of the
+Frame logo, the buttons and the grid among others.<P>
+
+This may also be evident if there is not sufficient space in the default
+colormap to allocate the NeWS cube. NeWS applications will not create a custom
+colormap, and therefore will not in themselves exhibit colormap flashing.<P>
+
+You can alleviate this problem by using 
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?cmap_compact"><CODE>cmap_compact</CODE></a>
+described above.
+(If you intend to run CG3270, you are advised to save the 6 Primary and
+Secondary colours, otherwise the display will be poor.)<P>
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="15.">
+15. Does the X server support the Standard colormaps?</H3>
+</A>
+
+The X standard defines a set of atoms which refer to "Standard" colormaps.
+These include: XA_RGB_BEST_MAP, XA_RGB_RED_MAP, XA_RGB_GREEN_MAP, 
+XA_RGB_BLUE_MAP and XA_RGB_GRAY_MAP. This is documented in Section 7.8
+of the <CITE>Xlib Programming Manual</CITE> (Volume One of the O'Reilley series).<P>
+
+By default, neither xnews nor Xsun allocate any of these colormaps, 
+however the user may create his/her own and associate them with 
+these defined atoms. There are a couple of tricks to doing this, 
+so an example routine is given at the end of this document.<P>
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="16.">
+16. How does Wabi access the colormap?</H3>
+</A>
+
+When Wabi is initialised, it uses a technique which seemed to the designers to be the best way of reducing colormap flashing - it allocates the entire colormap, and fills it with a colour cube and a selection of other colours. The theory behind this was that, when an application asked for a new colour there would be a colour available which was reasonably close to that requested, if
+not matching exactly. The server would offer this to the application and there would be no flashing.<P>
+
+Unfortunately, when XAllocColor returns saying that it could not allocate the colour, rather than accept this "close match" practically every application ever written goes away and allocates a private colormap. Few of them use the techniques outlined in this document, so the net result is that colormap flashing is exacerbated rather than reduced!
+The solution therefore is to start Wabi after all other colormap intensive programs have been started (particularly SunPC, and DPS or NeWS applications)<P>
+
+Newer releases of Wabi (1.1 and later) use a much better technique. They still allocate the entire colormap as far as they can, but they then create a private colormap, copy in the default colormap, and finally free a percentage of the colours in the default colormap. This value defaults to 50% but is user configurable from 0% (ie the current situation) to 100% (freeing all colours). <P>
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="17.">
+17. How do I find out what visuals are available?</A><P>
+</H3></A>
+Programatically, if you are not concerned about the visual, you can use 
+the DefaultVisual macro - this value is dependent on the frame buffer and 
+any options that the user gave when starting the 
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?Xsun"><CODE>Xsun</CODE></a>
+or
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?xnews"><CODE>xnews</CODE></a>
+server. If you want a particular depth or visual which may not be the default
+but is supported by the frame buffer, you should use the command 
+<CODE>XMatchVisualInfo</CODE>.<P>
+
+The command
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?xdpyinfo"><CODE>xdpyinfo</CODE></a>
+will list all the visual types and depths that the current display
+device supports. This is dependent on the frame buffer available.<P>
+The GX series frame buffers support PseudoColor, DirectColor, StaticColor,
+TrueColor, StaticGray and GrayScale visuals with a depth of 8 bits.
+24 bit frame buffers, such as the ZX and SX, support 24 bit TrueColor visuals.
+Under Solaris 2.4, the ZX and A24 frame buffers also support 24 bit DirectColor
+visuals.<P>
+For more information on frame buffers, see the
+<A href="FrameBuffer.html">Frame Buffer FAQ</A>.
+For more information on why software should choose its visual
+rather than accept the default, see the
+<A HREF="http://bustop.uk/ambassador/multimedia/windows/openwin.html">
+Multimedia Ambassadors OpenWindows page</A>.
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="18.">
+18. How does CDE handle colour?
+</H3></A>
+The CDE group used to maintain a FAQ page of their own.
+Foolishly I linked to it rather than taking a copy of my own,
+and it appears that the server no longer exists.<P>
+I'm still looking for a new copy of the CDE FAQ.<P>
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="19.">
+19. How can I reduce colormap flashing with Netscape?</H3>
+</A>
+Netscape has some useful features
+to help you deal with colormap flashing. If you start up
+OpenWindows in StaticColor mode:
+<PRE>
+	openwin -dev /dev/fb defclass StaticColor
+</PRE>
+you can then instruct Netscape to use the StaticColor visual
+(by default it will still try to use PseudoColor) with the command
+<PRE>
+	netscape -visual 0x25
+</PRE>
+
+Alternatively, you can ask Netscape to use fewer colours
+initially, with the command
+<PRE>
+	netscape -ncols <CITE>number_of_colours</CITE>
+</PRE>
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="20.">
+20. How do PC based X servers handle colours?</H3>
+</A>
+
+Thanks to <A HREF="mailto:WOJTEKJA@Attachmate.com">Wojtek Jarosz</A>
+of Attachmate Canada Inc. for this information.<P>
+
+PC based X servers usually use the MS Windows palette to handle 
+colours.  As far as I know this is how all the servers I have heard of 
+work: eXceed, Xoftware, XVision, PCXware and EXTRA! X.
+This imposes some restrictions on what can be done with colormaps on 
+such servers; in particular it is not possible to overwrite cells 0 
+and 255 which Windows reserves for black and white respectively. <P>
+
+Because some applications require to have the ability to write over 
+these reserved cells, some servers actually pretend to the application 
+that the write is successful while in reality no colour changes occur. 
+As far as I know this is e.g. what the eXceed server does and also 
+XVision (which has an explicit configuration option to enable this feature
+- I am currently in the process of getting more information on this).<P>
+
+Related to this is the so-called "white pixel option" which some 
+servers posses and which defines black and white at positions 0 and 1 
+in the colormap.  At present I am aware of only one server which 
+provides this feature explicitly as a configuration option: Xoftware. 
+The configuration option is called: "Change White Value".  When 
+selected, it reserves pixel position 1 for white (black is already at 
+0 as Windows default).  It should be noted that the following help 
+text associated with this option in Xoftware is incorrect and 
+confusing:<P>
+<UL>
+"'On' changes the RGB value of white from 255 to 1. 'Off' (default) 
+maintains the normal value of 255. Choose 'On' only if you are running 
+X programs that require white to be defined as 1."
+</UL>
+
+When you dig a bit deeper in the product you can find the following - 
+more correct description:<P>
+<UL>
+"'On' attempts to pre-allocate the color white in cell number 1 of 
+the X default colormap. 'Off' (default) assigns a system-specific 
+colormap cell to be white.  Choose 'Off' unless you are running a test 
+program that requires white to be defined as 1. 'On' is ignored if 
+Reserve System Colors is also 'On'."
+</UL>
+Note that whenever this option is selected, white is still defined at 
+position 255 (which cannot be changed) and what changes is that it is 
+also defined at position 1.  This can be seen easily e.g. by running 
+the Sun-based "xcolor" test client,  which attempts to load the entire 
+colormap with a range of colours, while (optionally) preserving black 
+and white: it is never possible to overwrite positions 0 and 255 which 
+stay at black and white respectively, though one can observer white 
+appearing at position 1 if the white pixel option is set.<P>
+
+I am not really certain why the white pixel option is provided, other 
+than either:<P>
+<UL>
+<LI> 1. to compensate for the loss of white value at position 255 - for 
+those applications which e.g. require to be able to write to the 
+entire upper half of the colormap (though  the loss of white would be 
+only pretend, as the cell would not let itself to be really overwritten),
+
+<LI> 2. to facilitate applications which expect black and white to occupy 
+the first two positions in the colormap - these applications would 
+probably have been written for such X environments as e.g. Sun, where 
+most frame buffers have black and white in the first two positions. 
+ However, Sun defaults to white at position 0 and black at position 1, 
+while the above mentioned white pixel option sets up the opposite: 
+white at position 1 and black at position 0, since it would not be 
+possible to set it up otherwise as MS Windows forces 0 to be black.
+</UL>
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="21.">
+21. What is gamma correction?</H3>
+</A>
+
+This question (and many others) is addressed in the
+<A HREF="FrameBuffer.html">Frame Buffer FAQ</A>, 
+also available at this site.<P>
+
+<H3>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="Last.">
+Is there anything else I should look at?</H3>
+</A>
+
+Other commands which can have an effect on the colormap include
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?reservecolors"><CODE>reservecolors</CODE></a> and
+<A href="http:/cgi-bin/man?-M/usr/openwin/man:/usr/man?xstdcmap"><CODE>xstdcmap</CODE></a> -
+these are used to allocate entries
+in the default colormap which are not freed when the program exits.<P>
+
+There is also an additional 
+<A href="preformatted/colormap_info">
+colormap information</a> document, written by <CITE>Tony.Brooks@west.sun.com</CITE>.<P>
+
+<H2>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="A.">
+ A. Example of reduced colormap flashing using XView</H2>
+</A>
+<PRE>
+
+#include &lt;sys/types.h&gt;
+#include &lt;xview/xview.h&gt;
+#include &lt;xview/canvas.h&gt;
+#include &lt;xview/cms.h&gt;
+#include &lt;xview/xv_xrect.h&gt;
+#include &lt;X11/Xatom.h&gt;
+
+#define FAILED -1
+
+#define	IMAGEWIDTH	512
+#define	IMAGEHEIGHT	 64
+#define	CMAPSIZE	 64
+#define	OFFSET		128
+
+unsigned long *colours;
+
+u_char *malloc();
+void quit();
+void canvas_repaint();
+
+Frame frame;
+Canvas canvas;
+u_char *image;
+u_char *cmap;
+XImage *ximage;
+Atom catom;
+
+
+/*
+ * GetImage supplies two pointers, one to the image we want to display
+ * and the other to an array of rgb values.
+ */
+u_char
+GetImage()
+{
+
+	int width, height;
+	int i, n;
+	u_char *im;
+
+	/*
+	 * Now generate an image, this entirely artificial but good enough
+	 * to demonstrate the principles involved.
+	 */
+	image = malloc((unsigned)(IMAGEHEIGHT * IMAGEWIDTH * sizeof(u_char)));
+	if (image == NULL) {
+		perror("Image data 'malloc' failed, giving up!\n");
+		exit(FAILED);
+	}
+
+	/*
+	 * Get some space for the colour map data.
+	 */
+	cmap = malloc((unsigned) ((CMAPSIZE) * 3 * sizeof(u_char)));
+	if (cmap == NULL) {
+		perror("Colour map data 'malloc' failed, giving up!\n");
+		exit(FAILED);
+	}
+
+	/*
+	 * We now have an empty array 512 * 64
+	 * Now fill it with some image data
+	 * This will render as 64 level grey scale image
+	 * with the correct colourmap installed.
+	 */
+	im = image;
+	for (height = 1; height &lt;= IMAGEHEIGHT; height++) {
+		for (width = 0; width &lt; IMAGEWIDTH; width++) {
+			*im++ = (u_char)((CMAPSIZE + OFFSET) - height);
+		}
+	}
+
+	/*
+	 * Now generate colour map, this information would normally
+	 * be extracted from the image data.
+	 * This colour map will display the image as a 64 level grey scale,
+	 * the principles are the same for a colour image.
+	 */
+	n = 0;
+	for (i = 0; i &lt; CMAPSIZE; i++) {
+		cmap[n++] = (CMAPSIZE - i) * 4;
+		cmap[n++] = (CMAPSIZE - i) * 4;
+		cmap[n++] = (CMAPSIZE - i) * 4;
+	}
+
+}
+
+
+main(argc, argv)
+int argc;
+char *argv[];
+{
+	Display     *display;
+	XID         win;
+	int  			scrn;
+
+	Colormap ycmap, xcmap;
+	XColor xcolours[CMAPSIZE + OFFSET];
+	XColor xc;
+	unsigned long pixels[CMAPSIZE + OFFSET];
+	int plane_masks[1];
+	int i, n;
+	XSetWindowAttributes window_attr;
+	Window pw;
+
+
+	/*
+	 * Get image data.
+	 */
+	GetImage();
+
+	/*
+	 * initalize Xview, create frame and canvas.
+	 */
+	xv_init(XV_INIT_ARGC_PTR_ARGV, &amp;argc, argv, NULL);
+
+	 frame = (Frame)xv_create(NULL, FRAME,
+		FRAME_SHOW_HEADER, TRUE,
+		FRAME_LABEL,    argv[0],
+		XV_HEIGHT, IMAGEHEIGHT,
+		XV_WIDTH, IMAGEWIDTH,
+		NULL);
+
+	canvas = xv_create(frame, CANVAS,
+		CANVAS_HEIGHT, IMAGEHEIGHT,
+		CANVAS_WIDTH, IMAGEWIDTH,
+		CANVAS_REPAINT_PROC, canvas_repaint,
+		CANVAS_X_PAINT_WINDOW, TRUE,
+		WIN_DYNAMIC_VISUAL, TRUE,
+		NULL);
+
+	/*
+	 * Get the XID's for various X objects that we need.
+	 * Most of the colour/drawing work will be done with Xlib
+	 * call rather than Xview.
+	 */
+	 pw = (Window)xv_get(frame, XV_XID);
+	 display = (Display *)xv_get(frame, XV_DISPLAY);
+    	win = (XID)xv_get(canvas_paint_window(canvas), XV_XID);
+	 scrn = DefaultScreen(display);
+
+	/*
+	 * Create an X pixmap.
+	 */
+ 	 ximage = XCreateImage(display, DefaultVisual(display,scrn), 8, 
+ 	 	ZPixmap, 0, image, IMAGEWIDTH, IMAGEHEIGHT, 8, IMAGEWIDTH);
+
+	/*
+	 * Create an X colour map
+	 */
+	xcmap = XCreateColormap(display, win, 
+		DefaultVisual(display, scrn), AllocNone);
+
+  	ycmap = DefaultColormap(display, DefaultScreen(display));
+
+	for (n = 0; n &lt; OFFSET + CMAPSIZE; n++)
+		xcolours[n].pixel = (long) n;
+	XQueryColors(display, ycmap, &amp;xcolours[0], OFFSET);
+
+
+	/*
+	 * Get colour cells
+	 */
+	if (!XAllocColorCells(display, xcmap, TRUE, NULL, 0, 
+						pixels, CMAPSIZE + OFFSET))
+		printf("Failed to allocate colour map info\n");
+
+	/*
+	 * Now we need to install the colour map values extracted from the image.
+	 * We need to translate these values into an XColor structure.
+	 */
+	i = 0;
+	for (n = OFFSET; n &lt; CMAPSIZE + OFFSET; n++) {
+		xcolours[n].red = (u_short)(cmap[i++] &lt;&lt; 8);
+		xcolours[n].blue = (u_short)(cmap[i++] &lt;&lt; 8);
+		xcolours[n].green = (u_short)(cmap[i++] &lt;&lt; 8);
+		xcolours[n].flags = DoRed | DoGreen | DoBlue;
+
+	} 
+	XStoreColors(display, xcmap, &amp;xcolours[0], CMAPSIZE + OFFSET);
+
+    	catom = XInternAtom (display, "WM_COLORMAP_WINDOWS", False);
+    	XChangeProperty (display, xv_get(frame, XV_XID), catom, XA_WINDOW, 32,
+                   PropModeAppend, &amp;win, 1);
+
+    	/* associate it with the window */
+
+    	window_attr.colormap = xcmap ;
+    	XChangeWindowAttributes(display, win, CWColormap, &amp;window_attr);
+
+	xv_main_loop(frame);
+	exit(0);
+}
+
+void
+canvas_repaint(canvas, pw, display, xid, xrects)
+Canvas canvas;
+Xv_window pw;
+Display *display;
+Window xid;
+Xv_xrectlist *xrects;
+{
+	GC gc = DefaultGC(display, DefaultScreen(display));
+	XPutImage(display, xid, gc, ximage, 0, 0, 0, 0, IMAGEWIDTH, IMAGEHEIGHT);
+}
+
+</PRE>
+
+<H2>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="B.">
+ B. Allocating and using the RGB_BEST_MAP standard colormap</H2>
+</A>
+
+<PRE>
+create_rgb_colormap()
+{
+	int i, j, k, maps, base;
+	XStandardColormap *mapinfo;
+	XColor  *exact;
+	Pixel pix;
+	Visual *viz;
+	Window win;
+	Display *display;
+	Widget w;
+
+/*
+**	Check if the RGB_BEST_MAP resource has already been defined
+*/
+	display = XOpenDisplay(NULL);
+	win = RootWindow(display, 0);
+	viz = DefaultVisual(display, 0);
+/*
+**	If XGetRGBColormaps returns non-zero then the colormap 
+**	is returned in mapinfo-&gt;colormap. 
+**	This can then be used as detailed in the previous example.
+*/
+	if (XGetRGBColormaps(display, win, &amp;mapinfo, &amp;maps, XA_RGB_BEST_MAP)) {
+		printf("XA_RGB_BEST_MAP is already defined \n");
+		XCloseDisplay(display);
+		return;
+	}
+/*
+**	Allocate the XStandardColormap structure and create the Colormap
+*/
+	mapinfo = (XStandardColormap *) malloc(sizeof(XStandardColormap));
+	mapinfo-&gt;colormap = XCreateColormap(display, win, viz, AllocAll);
+/*
+**	The following values are specific to the user's needs
+*/
+	mapinfo-&gt;red_max = 7;
+	mapinfo-&gt;green_max = 7;
+	mapinfo-&gt;blue_max = 3;
+	mapinfo-&gt;red_mult = 32;
+	mapinfo-&gt;green_mult = 4;
+	mapinfo-&gt;blue_mult = 1;
+	mapinfo-&gt;base_pixel = 0;
+/*
+**	These are necessary.
+*/
+	mapinfo-&gt;visualid = XVisualIDFromVisual(viz);
+	mapinfo-&gt;killid = (XID) mapinfo-&gt;colormap; 
+/*
+**	Now we create the RGB colour cube.
+*/
+	exact = (XColor *) calloc(sizeof(XColor), 256);
+	base = mapinfo-&gt;base_pixel;
+	for (i = 0; i &lt; mapinfo-&gt;red_max + 1; i++) {
+		for (j = 0; j &lt; mapinfo-&gt;green_max + 1; j++) {
+			for (k = 0; k &lt; mapinfo-&gt;blue_max + 1; k++) {
+				exact[base].blue = 65535 * k / mapinfo-&gt;blue_max;
+				exact[base].green = 65535 * j/mapinfo-&gt;green_max;
+				exact[base].red = 65535 * i / mapinfo-&gt;red_max;
+				exact[base].flags = DoRed | DoGreen | DoBlue;
+				exact[base].pixel = base++;
+			}
+		}
+	}
+/*
+**	Transfer the RGB values to the colormap
+*/
+	XStoreColors(display, mapinfo-&gt;colormap, exact, 256);
+/*
+**	Tell the server to use this colormap as the RGB BEST MAP
+*/
+	XSetRGBColormaps(display, win, mapinfo, 1, XA_RGB_BEST_MAP);
+/*
+**	Mark this clients resources as permanent, then return.
+*/
+	XSetCloseDownMode(display, RetainPermanent);
+	XCloseDisplay(display);
+	return;
+}
+
+</PRE>
+
+To use the colormap, you will need to calculate the pixel values 
+using a "Best Match" algorithm such as the one given below.
+In this example, values are in the range 0 to 1.
+This colour is a kind of Magenta: 90% red, 70% blue, 10% green<P>
+<PRE>
+pix = mapinfo-&gt;base_pixel +
+	((unsigned long) (0.5 + 0.9 * mapinfo-&gt;red_max)) * mapinfo-&gt;red_mult +
+	((unsigned long) (0.5 + 0.7 * mapinfo-&gt;blue_max)) * mapinfo-&gt;blue_mult +
+	((unsigned long) (0.5 + 0.1 * mapinfo-&gt;green_max)) * mapinfo-&gt;green_mult;
+</PRE>
+
+<H2>
+<A HREF="#99."><IMG ALIGN=bottom SRC="images/FAQ.gif"></A>
+<A NAME="C.">
+C. Source to libnoflash.so</H2>
+</A>
+<PRE>
+/*
+**	A utility to prevent colormap flashing by performing
+**	a closest match when the allocation fails.
+**
+**	V1.01 dated 26th March 1997.
+**	Written by David Tong, Sun Microsystems Inc.
+**
+**	To use, first build and then
+**		setenv LD_PRELOAD /<full path name>/libnoflash.so.1
+*/	
+
+/*
+**	Makefile follows:
+**
+all:	libnoflash.so.1
+
+libnoflash.so.1:	preload.c
+	cc -g -K PIC preload.c -c -I. -I/usr/openwin/include
+	ld -G -ztext preload.o -R/usr/lib -ldl -lc -o libnoflash.so
+	mv libnoflash.so libnoflash.so.1
+**
+*/
+
+#include	<sys/types.h>
+#include	<sys/timeb.h>
+#include	<X11/StringDefs.h>
+#include	<X11/Intrinsic.h>
+#include	<X11/IntrinsicP.h>
+#define NEED_REPLIES
+#include	<X11/Xlibint.h>
+
+#include <dlfcn.h>
+
+void *X11 = NULL;
+
+void init();
+
+Status (*_XAllocColor) (Display*, Colormap, XColor*);
+int (*_XFreeColors) (Display*, Colormap, unsigned long*, int, unsigned long);
+
+#define COLOR_FACTOR       3
+#define BRIGHTNESS_FACTOR  1
+
+Status XAllocColor(register Display *dpy, Colormap cmap, XColor *xcolor)
+{
+	Status retstat;
+
+	if (!X11)
+		init();
+
+	if (!(retstat = _XAllocColor(dpy, cmap, xcolor))) {
+		XColor *cols;
+		unsigned int ncols, i, closepix;
+		long int closediff;
+
+		ncols = 1 << DefaultDepth(dpy, DefaultScreen(dpy));
+
+		cols = (XColor * )calloc(ncols, sizeof(XColor));
+		for (i = 0; i < ncols; ++i) 
+			cols[i].pixel = i;
+		XQueryColors(dpy, cmap, cols, ncols);
+
+		do {
+		    for (i = 0, closediff = 0x7FFFFFFF; i < ncols; ++i) {
+
+				long int	newclosediff = 
+				  COLOR_FACTOR *(
+					abs((long)xcolor->red   -(long)cols[i].red)   + 
+					abs((long)xcolor->green -(long)cols[i].green) + 
+					abs((long)xcolor->blue  -(long)cols[i].blue)) + 
+				  BRIGHTNESS_FACTOR *abs(
+					((long)xcolor->red + (long)xcolor->green + (long)xcolor->blue) -
+					((long)cols[i].red + (long)cols[i].green + (long)cols[i].blue));
+
+				if (newclosediff < closediff) { 
+					closepix = i; 
+					closediff = newclosediff; 
+				}
+		    }
+
+		    xcolor->red   = cols[closepix].red;
+		    xcolor->green = cols[closepix].green;
+		    xcolor->blue  = cols[closepix].blue;
+		    /*
+		    ** Now paint it black so we don't loop
+		    ** in the case that this colour is read-write.
+		    */
+		    cols[closepix].red = 0;
+		    cols[closepix].green = 0;
+		    cols[closepix].blue = 0;
+		    retstat = _XAllocColor(dpy, cmap, xcolor);
+		} while (retstat == 0);
+		free(cols);
+	}
+	return(retstat);
+}
+
+void init()
+{
+
+	/* Tip from John Martin - don't hard-code the library path */
+
+	_XAllocColor = dlsym(RTLD_NEXT, "XAllocColor");
+	_XFreeColors = dlsym(RTLD_NEXT, "XFreeColors");	/* Not currently used */
+	X11 = (void *) 1;
+
+/*
+**	if ((X11 = dlopen("/usr/openwin/lib/libX11.so.4", RTLD_LAZY)) == 0) {
+**		printf("%s\n", dlerror());
+**		exit(1);
+**	}
+**
+**	_XAllocColor = dlsym(X11, "XAllocColor");
+**	_XFreeColors = dlsym(X11, "XFreeColors");
+*/
+
+}
+</PRE>
+
+<HR>
+Edited and maintained by
+<a href="http://skaro.corp/~davet"><CITE>David.Tong@sun.com</CITE></a> or
+<a href="http://c3-a.snvl1.sfba.home.com"><CITE>dave1@home.com</CITE></a><P>
+SunService TS<BR>
+Created and maintained using <STRONG>vi</STRONG>.

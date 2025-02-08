@@ -1,0 +1,17 @@
+
+
+According to the xbiff man page, xbiff has but one bug: "The mailbox
+bitmaps are ugly."  The bitmaps contained herein attempt a fix.  The
+motif is that of an envelope which sprouts contents sticking out when
+mail has arrived.  Looks swell in AfterStep.
+
+Add the following to your .Xdefaults:
+
+    XBiff*emptyPixmap:      /usr/local/include/X11/bitmaps/mail-empty
+    XBiff*emptyPixmapMask:  /usr/local/include/X11/bitmaps/mail-empty-mask
+    XBiff*fullPixmap:       /usr/local/include/X11/bitmaps/mail-full
+    XBiff*fullPixmapMask:   /usr/local/include/X11/bitmaps/mail-full-mask
+    XBiff*shapeWindow:      true
+    XBiff*flip:             false
+
+gisli@adams.com

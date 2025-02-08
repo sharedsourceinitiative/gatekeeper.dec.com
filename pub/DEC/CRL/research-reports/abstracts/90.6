@@ -1,0 +1,38 @@
+		  CRL Technical Report 90/6
+    A Replay Mechanism for Mostly Functional Parallel Programs
+
+                   Robert H. Halstead, Jr.
+                       David A. Kranz*
+                      November 13, 1990
+
+                Digital Equipment Corporation
+                    Cambridge Research Lab
+
+
+Performance measurement and debugging of parallel programs can both be
+aided by a replay mechanism that can reproduce prior, traced program
+executions by reading log information collected during tracing.  The
+primary design goals of a replay mechanism should be to (1) produce
+correct results for any program and (2) keep the overhead of tracing
+small, so it does not seriously distort program execution.  This is an
+extremely challenging pair of goals that no extant system meets
+completely.
+
+This paper introduces a novel tracing and replay scheme -- the
+side-effect touch protocol --- that always meets goal (1), and also
+meets goal (2) for programs that are mostly functional (have few side
+effects).  This scheme has been implemented in MulTVision, a system
+for visualizing the execution of parallel Multilisp programs.
+MulTVision imposes no tracing overhead on reads from memory (even from
+shared variables) and adds only a small amount of tracing overhead to
+Multilisp's touch operation.  Greater overhead is added to side-effect
+operations, since they are presumed to be rare.
+
+Measurements on MulTVision show that the overhead added for tracing is
+generally less than the overhead already incurred for task management
+and touch operations.  While currently limited to program executions
+lasting seconds or less and creating at most tens of thousands of
+tasks, MulTVision is already useful for an interesting class of
+programs.
+
+* M.I.T. Laboratory for Computer Science

@@ -1,0 +1,28 @@
+Begin3
+Title:		WINTERP -- OSF/Motif Widget INTERPreter
+Version:	2.10
+Entered-date:	November 23, 1997
+Description:	An interactive object-oriented user interface language for rapid
+		prototyping, development and delivery of extensible applications
+		with Motif GUIs and Xtango graphics/animation.
+Keywords:	Object-Oriented, X11, Motif, Lisp, 2.5 D Animation, UI, 
+		Graphics, Rapid Prototyping, Xtango, Expect, XmGraph, XmTable
+Author: 	mayer@netcom.com (Niels P. Mayer)
+Maintained-by:	mayer@netcom.com (Niels P. Mayer)
+Primary-site:	sunsite.unc.edu /pub/Linux/X11/devel/
+		2538353 winterp-2.10.tar.gz
+Alternate-site: ftp.funet.fi /pub/Linux
+		2538353 winterp-2.10.tar.gz
+Original-site:	http://www.cybertribe.com/mayer/winterp/
+Platforms:	Linux 1.X or 2.X, X11R5 & Motif 1.1, 1,2, 2.0,
+		or X11R6 & Motif 2.0/2.1. Author successfully
+		tested and ran all WINTERP applications using
+		Red Hat Linux 4.X, Red Hat Motif 2.10, and XFree86 X11R6.3
+		libs. WINTERP's XmGraph widget exhibits some refresh bugs using
+		Red Hat Motif 2.01 and XFree86 X11R6 libs; works fine with 
+		Motif 1.2.3 and X11R5... Author hopes someone else will port
+		LessTif to work with WINTERP, or vice-versa.
+Copying-policy:	MIT -- unrestricted rights to copy, use, modify, and
+		redistribute modified copies as long as a copy of the copyright
+		and license terms is retained in all modified versions.
+End

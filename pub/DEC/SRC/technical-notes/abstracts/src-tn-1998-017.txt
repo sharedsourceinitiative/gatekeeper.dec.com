@@ -1,0 +1,15 @@
+"A Note on Low Density Parity Check Codes for Erasures and Errors"
+Michael Mitzenmacher
+Note #1998-017. December 11, 1998.
+
+We analyze low density parity check codes that correct both
+errors and erasures using a simple decoding scheme. Our framework 
+unifies previous analyses for low density parity check codes
+and erasure codes. The result is a general class of codes that 
+corrects both errors and erasures, with corresponding simple 
+linear time encoding and decoding algorithms and provable 
+performance guarantees. We also describe how these codes can 
+be applied to yield a new fast algorithm for the setting of 
+Gaussian noise, and leave several open questions regarding the 
+construction of these codes and the associated decoding algorithms.
+

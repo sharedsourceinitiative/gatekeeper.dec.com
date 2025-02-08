@@ -1,0 +1,1306 @@
+%!PS-Adobe-1.0
+%%Title: prospectus.mss
+%%DocumentFonts: (atend)
+%%Creator: Brian Reid,WRL,8536628,4936012 and Scribe 5(1501)
+%%CreationDate: 23 November 1987 16:59
+%%Pages: (atend)
+%%EndComments
+% PostScript Prelude for Scribe.
+/BS {/SV save def 0.0 792.0 translate .01 -.01 scale} bind def
+/ES {showpage SV restore} bind def
+/SC {setrgbcolor} bind def
+/FMTX matrix def
+/RDF {WFT SLT 0.0 eq
+  {SSZ 0.0 0.0 SSZ neg 0.0 0.0 FMTX astore}
+  {SSZ 0.0 SLT sin SLT cos div SSZ mul SSZ neg 0.0 0.0 FMTX astore}
+  ifelse makefont setfont} bind def
+/SLT 0.0 def
+/SI { /SLT exch cvr def RDF} bind def
+/WFT /Courier findfont def
+/SF { /WFT exch findfont def RDF} bind def
+/SSZ 1000.0 def
+/SS { /SSZ exch 100.0 mul def RDF} bind def
+/AF { /WFT exch findfont def /SSZ exch 100.0 mul def RDF} bind def
+/MT /moveto load def
+/XM {currentpoint exch pop moveto} bind def
+/UL {gsave newpath moveto dup 2.0 div 0.0 exch rmoveto
+   setlinewidth 0.0 rlineto stroke grestore} bind def
+/LH {gsave newpath moveto setlinewidth
+   0.0 rlineto
+   gsave stroke grestore} bind def
+/LV {gsave newpath moveto setlinewidth
+   0.0 exch rlineto
+   gsave stroke grestore} bind def
+/BX {gsave newpath moveto setlinewidth
+   exch
+   dup 0.0 rlineto
+   exch 0.0 exch neg rlineto
+   neg 0.0 rlineto
+   closepath
+   gsave stroke grestore} bind def
+/BX1 {grestore} bind def
+/BX2 {setlinewidth 1 setgray stroke grestore} bind def
+/PB {/PV save def translate 100.0 -100.0 scale pop} bind def
+/PE {PV restore} bind def
+/SH /show load def
+/MX {exch show 0.0 rmoveto} bind def
+/W {0 32 4 -1 roll widthshow} bind def
+/WX {0 32 5 -1 roll widthshow 0.0 rmoveto} bind def
+%%EndProlog
+%%Page: 0 1 
+BS
+0 SI
+18 /NewCenturySchlbk-Bold AF
+18388 14287 MT
+(Western Research Laboratory)SH
+16 SS 
+19318 27776 MT
+(Digital Equipment Corporation)SH
+23623 29784 MT
+(100 Hamilton Avenue)SH
+24464 31792 MT
+(Palo Alto, CA 94301)SH
+26906 35808 MT
+(\050415\051 853 6616)SH
+13 /NewCenturySchlbk-Roman AF
+26788 40105 MT
+(23 November 1987)SH
+17285 58640 MT
+(Copyright)SH
+/Symbol SF
+23668 XM
+(\323)SH
+/NewCenturySchlbk-Roman SF
+25417 XM
+(1987 Digital Equipment Corporation)SH
+ES
+%%Page: 1 2 
+BS
+0 SI
+10 /NewCenturySchlbk-Bold AF
+10800 4337 MT
+(Digital Equipment Corporation)SH
+38433 XM
+(Western Research Laboratory)SH
+15 SS 
+10800 8306 MT
+(Introduction)SH
+13 /NewCenturySchlbk-Roman AF
+11912 10171 MT
+(The Western)
+283 W( Research Laboratory is a computer systems research)282 W
+10800 11767 MT
+(group that)
+4 W( was founded by Digital Equipment Corporation in 1982. Our)5 W
+10800 13363 MT
+(focus is computer science research relevant to the design)
+724 W( and)723 W
+10800 14959 MT
+(application of high performance scientific computers. We test our ideas)65 W
+10800 16555 MT
+(by designing, building,)
+167 W( and using real systems. The systems we build)166 W
+10800 18151 MT
+(are research prototypes; they are not intended to become products.)SH
+15 /NewCenturySchlbk-Bold AF
+10800 21652 MT
+(Past developments)SH
+13 /NewCenturySchlbk-Roman AF
+11912 23517 MT
+(From 1982 to 1986, WRL's research and)
+28 W( development efforts centered)29 W
+10800 25113 MT
+(around the development of a machine called the)400 W
+/NewCenturySchlbk-Italic SF
+43176 XM
+(Titan)SH
+/NewCenturySchlbk-Roman SF
+(. The Titan)399 W
+10800 26709 MT
+(processor is built from standard ECL components, provides)
+208 W( 15 MIPs,)209 W
+10800 28305 MT
+(and supports up)
+101 W( to 128 MB of primary memory. This hardware design)100 W
+10800 29901 MT
+(provided an excellent test vehicle for a wide range of innovative code-)141 W
+10800 31497 MT
+(generation techniques for a very simple load/store instruction set.)467 W
+10800 33093 MT
+(While designing)
+79 W( and building the Titan, we developed some innovative)80 W
+10800 34689 MT
+(new CAD software for)
+270 W( design capture and high-density circuit-board)269 W
+10800 36285 MT
+(layout. These programs, developed entirely within WRL, made)
+537 W( it)538 W
+10800 37881 MT
+(possible for our small group to design and)
+278 W( implement the hardware)277 W
+10800 39477 MT
+(rapidly.)SH
+11912 42213 MT
+(We have)
+4 W( built 30 Titans, which provide the basic computing resources)5 W
+10800 43809 MT
+(for all our research. We use them as personal computers in a)
+248 W( Unix-)247 W
+10800 45405 MT
+(based distributed computing environment.)SH
+15 /NewCenturySchlbk-Bold AF
+10800 48906 MT
+(Present research interests)SH
+13 /NewCenturySchlbk-Roman AF
+11912 50771 MT
+(Our present research efforts are broader than in past years; our goal)80 W
+10800 52367 MT
+(is to achieve high performance)
+156 W( on a wide range of applications. To do)155 W
+10800 53963 MT
+(this, we are making some unconventional hardware/software tradeoffs.)SH
+11912 56699 MT
+(A substantial effort in multiprocessor research is)
+321 W( underway.  The)322 W
+10800 58295 MT
+(interconnection scheme for the multiprocessor does not sacrifice)686 W
+10800 59891 MT
+(uniprocessor performance)
+167 W( to achieve shared data structure coherence.)168 W
+10800 61487 MT
+(Instead we rely on the software to)
+679 W( provide that interprocessor)678 W
+10800 63083 MT
+(coherence. This)
+1387 W( requires close cooperation between the language)513 W
+10800 64679 MT
+(processors, the operating system, and)
+1300 W( the hardware. The)1299 W
+10800 66275 MT
+(multiprocessor is based on a very-high-performance custom CMOS)
+29 W( chip)30 W
+10800 67871 MT
+(set that we have developed.  Each processor offers)
+78 W( about 15 MIPs with)77 W
+10800 69467 MT
+(a peak of)
+114 W( 20 MFLOPS of vector floating point performance. There will)115 W
+10800 71063 MT
+(be eight of these processors per machine.)SH
+10 /NewCenturySchlbk-Bold AF
+28495 75600 MT
+(November 1987)SH
+ES
+%%Page: 2 3 
+BS
+0 SI
+10 /NewCenturySchlbk-Bold AF
+10800 4337 MT
+(Digital Equipment Corporation)SH
+38433 XM
+(Western Research Laboratory)SH
+13 /NewCenturySchlbk-Roman AF
+11912 8158 MT
+(Numerous programming models have been used for)
+679 W( exploiting)678 W
+10800 9754 MT
+(parallelism. The shared memory and hardware support)
+194 W( for fine-grain)195 W
+10800 11350 MT
+(parallelism allow the)
+580 W( WRL multiprocessor to accommodate many)579 W
+10800 12946 MT
+(approaches based on)
+603 W( the needs of the application. However, we)604 W
+10800 14542 MT
+(particularly plan to exploit our language)
+510 W( processor and operating)509 W
+10800 16138 MT
+(system expertise to investigate)
+382 W( compile-time problem decomposition)383 W
+10800 17734 MT
+(and scheduling.)
+82 W( Our goal is to find relatively easy ways for application)81 W
+10800 19330 MT
+(writers to achieve faster response time on important problems.)
+17 W( Another)18 W
+10800 20926 MT
+(goal for this multiprocessor)
+593 W( research is to explore how multiple)592 W
+10800 22522 MT
+(processors can be used)
+44 W( to speed up common operating-system functions)45 W
+10800 24118 MT
+(like network transfers and I/O.)
+317 W( This work should pave the way for)316 W
+10800 25714 MT
+(future investigations of higher-bandwidth interconnects.)SH
+11912 28450 MT
+(We are also working on the development of high performance LISP)184 W
+10800 30046 MT
+(systems that can take advantage of our)
+278 W( hardware and co-exist fully)277 W
+10800 31642 MT
+(with other languages. This project is also a test of the robustness of our)26 W
+10800 33238 MT
+(code-generation and code-optimization)
+222 W( techniques using our ``Mahler'')221 W
+10800 34834 MT
+(intermediate language.  Though Mahler was)
+437 W( developed as a code-)438 W
+10800 36430 MT
+(generation interface for algebraic languages like Modula-2,)
+555 W( C, or)554 W
+10800 38026 MT
+(Fortran, we are interested in learning)
+564 W( how well it performs for)565 W
+10800 39622 MT
+(unconventional languages.)SH
+11912 42358 MT
+(As an application area for high-performance computing,)
+516 W( we are)515 W
+10800 43954 MT
+(interested in the technologies for electronic publication and)
+171 W( electronic)172 W
+10800 45550 MT
+(printing. This includes developing a theoretical basis for complex)512 W
+10800 47146 MT
+(document representation, the development of next-generation)1215 W
+10800 48742 MT
+(document interchange formats, and the communication)
+300 W( and systems)299 W
+10800 50338 MT
+(issues surrounding laser printers.)SH
+11912 53074 MT
+(We have developed a)
+54 W( number of new CAD tools as part of our custom)55 W
+10800 54670 MT
+(CMOS design)
+613 W( project. In the future we expect to focus on the)612 W
+10800 56266 MT
+(development of new tools and design styles)
+191 W( for bipolar ECL and GAs)192 W
+10800 57862 MT
+(technologies. This will lay the foundation for future)
+225 W( processor design)224 W
+10800 59458 MT
+(projects.)SH
+11912 62194 MT
+(We also have a small)
+8 W( packaging research project underway to address)9 W
+10800 63790 MT
+(the issues)
+835 W( of cooling and interconnects in high power-density)834 W
+10800 65386 MT
+(computers. This gives us the technology and expertise for packaging)250 W
+10800 66982 MT
+(future systems both at WRL and other Digital research laboratories.)SH
+10 /NewCenturySchlbk-Bold AF
+28495 75600 MT
+(November 1987)SH
+ES
+%%Page: 3 4 
+BS
+0 SI
+10 /NewCenturySchlbk-Bold AF
+10800 4337 MT
+(Digital Equipment Corporation)SH
+38433 XM
+(Western Research Laboratory)SH
+15 SS 
+10800 8306 MT
+(Connections with other research institutions)SH
+13 /NewCenturySchlbk-Roman AF
+11912 10171 MT
+(WRL is located in downtown Palo Alto, in sight of the)
+396 W( Stanford)395 W
+10800 11767 MT
+(campus and just a five-minute bicycle ride from the science and)504 W
+10800 13363 MT
+(engineering buildings. We are two blocks away from our sister)638 W
+10800 14959 MT
+(organization, Digital's Systems Research Center)
+319 W( \050SRC\051.  We have a)320 W
+10800 16555 MT
+(strong technical exchange with SRC)
+154 W( and some joint research projects.)153 W
+10800 18151 MT
+(We have very strong)
+125 W( technical ties to both Stanford and Berkeley. We)126 W
+10800 19747 MT
+(greatly encourage technical exchange)
+511 W( and cooperative efforts with)510 W
+10800 21343 MT
+(academic Computer Science)
+122 W( Departments whose research interests we)123 W
+10800 22939 MT
+(share. We have a substantial program for graduate student interns)
+15 W( and)14 W
+10800 24535 MT
+(temporary positions for)
+487 W( faculty members to join WRL as Visiting)488 W
+10800 26131 MT
+(Scientists. In 1987 we had nine visitors for two months or longer.)SH
+15 /NewCenturySchlbk-Bold AF
+10800 29632 MT
+(The role of WRL within Digital)SH
+13 /NewCenturySchlbk-Roman AF
+11912 31497 MT
+(Our role within)
+331 W( Digital is to develop new hardware and software)330 W
+10800 33093 MT
+(design principles that can be used in products. We strive)
+131 W( to share our)132 W
+10800 34689 MT
+(expertise and viewpoints)
+164 W( with groups planning or designing products.)163 W
+10800 36285 MT
+(Most of the important concepts and trends in the present commercial)167 W
+10800 37881 MT
+(computer marketplace came from universities and)
+1239 W( research)1238 W
+10800 39477 MT
+(institutions; we provide an active)
+419 W( conduit to that community. The)420 W
+10800 41073 MT
+(permanent researchers and visitors)
+347 W( to WRL help give Digital early)346 W
+10800 42669 MT
+(strategic insights into the development of)
+352 W( computer technology and)353 W
+10800 44265 MT
+(applications, and help lead the way to)
+742 W( new architectures and)741 W
+10800 45861 MT
+(technologies for Digital systems.)SH
+10 /NewCenturySchlbk-Bold AF
+28495 75600 MT
+(November 1987)SH
+ES
+%%Page: 4 5 
+BS
+0 SI
+10 /NewCenturySchlbk-Bold AF
+10800 4337 MT
+(Digital Equipment Corporation)SH
+38433 XM
+(Western Research Laboratory)SH
+15 SS 
+10800 8306 MT
+(WRL research staff)SH
+13 /NewCenturySchlbk-Roman AF
+10800 10689 MT
+(Richard Swan)SH
+25200 XM
+(Director)SH
+10800 14894 MT
+(Joel Bartlett)SH
+25200 XM
+(Titan Lisp, operating systems, fault-tolerant)SH
+25200 16319 MT
+(computing)SH
+10800 18457 MT
+(David Boggs)SH
+25200 XM
+(Networks, packet radio, system level hardware)SH
+10800 20595 MT
+(Anita Borg)SH
+25200 XM
+(Operating systems, fault-tolerant computing)SH
+10800 22733 MT
+(Jeremy Dion)SH
+25200 XM
+(CAD tools, VLSI design)SH
+10800 24871 MT
+(Mary Jo Doherty)SH
+25200 XM
+(VLSI design)SH
+10800 27009 MT
+(Alan Eustace)SH
+25200 XM
+(VLSI design tools and architecture)SH
+10800 29147 MT
+(Bill Hamburgen)SH
+25200 XM
+(Packaging and thermal design, CAD tools)SH
+10800 31285 MT
+(Norm Jouppi)SH
+25200 XM
+(Processor architecture, VLSI design and CAD)SH
+25200 32710 MT
+(tools)SH
+10800 34848 MT
+(Chris Kent)SH
+25200 XM
+(Networks, window systems, document systems,)SH
+25200 36273 MT
+(operating systems)SH
+10800 38411 MT
+(Jeff Mogul)SH
+25200 XM
+(Networks and operating systems)SH
+10800 40549 MT
+(Scott Nettles)SH
+25200 XM
+(CAD tools)SH
+10800 42687 MT
+(Brian Reid)SH
+25200 XM
+(Electronic publishing, computer security,)SH
+25200 44112 MT
+(networks, electronic mail)SH
+10800 46250 MT
+(Jeff Tang)SH
+25200 XM
+(VLSI design and architecture)SH
+10800 48388 MT
+(Silvio Turrini)SH
+25200 XM
+(VLSI design tools and architecture)SH
+10800 50526 MT
+(David Wall)SH
+25200 XM
+(Compilers, code optimization)SH
+10800 52664 MT
+(Leon Yang)SH
+25200 XM
+(VLSI design and methodology)SH
+15 /NewCenturySchlbk-Bold AF
+10800 56165 MT
+(Visiting Scientists:)SH
+13 /NewCenturySchlbk-Roman AF
+10800 58030 MT
+(John Ousterhout)SH
+25200 XM
+(Operating systems, VLSI tools)SH
+25200 59455 MT
+(\050from U.C. Berkeley\051)SH
+10 /NewCenturySchlbk-Bold AF
+28495 75600 MT
+(November 1987)SH
+ES
+%%Page: 5 6 
+BS
+0 SI
+10 /NewCenturySchlbk-Bold AF
+10800 4337 MT
+(Digital Equipment Corporation)SH
+38433 XM
+(Western Research Laboratory)SH
+15 SS 
+10800 8306 MT
+(WRL research reports)SH
+13 /NewCenturySchlbk-Roman AF
+11912 10171 MT
+(The following pages contain abstracts of WRL technical reports that)131 W
+10800 11767 MT
+(can be ordered)
+12 W( from us. Use the attached order form, or mail your order)11 W
+10800 13363 MT
+(to)SH
+13692 15379 MT
+(Technical Report Distribution)SH
+13692 16804 MT
+(DEC Western Research Laboratory, UCO-4)SH
+13692 18229 MT
+(100 Hamilton Avenue)SH
+13692 19654 MT
+(Palo Alto, California 94301)
+SH( USA)722 W
+10800 21670 MT
+(Reports can also be ordered by electronic mail. Use)
+444 W( the following)445 W
+10800 23266 MT
+(addresses:)SH
+13692 25282 MT
+(Digital E-net:)SH
+/Courier SF
+28092 XM
+(DECWRL::WRL-TECHREPORTS)SH
+/NewCenturySchlbk-Roman SF
+13692 28132 MT
+(ARPAnet:)SH
+28092 XM
+(WRL-Techreports@pa.dec.com)SH
+13692 30982 MT
+(CSnet:)SH
+28092 XM
+(WRL-Techreports@pa.dec.com)SH
+13692 33832 MT
+(UUCP:)SH
+28092 XM
+(decpa!wrl-techreports)SH
+10800 35848 MT
+(To order by electronic)
+236 W( mail, please make sure you include both your)235 W
+10800 37444 MT
+(correct mailing address and the code number that is on the mailing)252 W
+10800 39040 MT
+(label. The code number is on the line above your name, and)
+15 W( begins with)14 W
+10800 40636 MT
+(the letters "WT". We use this code number as the database)
+58 W( key to keep)59 W
+10800 42232 MT
+(track of what we)
+62 W( have sent to whom. If you are not on our mailing list,)61 W
+10800 43828 MT
+(you are still welcome to order something, but please tell us that you)
+13 W( are)14 W
+10800 45424 MT
+(not on)
+264 W( our mailing list to save us the trouble of searching for some)263 W
+10800 47020 MT
+(record of your name. We are also quite happy to put)
+28 W( you on our mailing)29 W
+10800 48616 MT
+(list.)SH
+10 /NewCenturySchlbk-Bold AF
+28495 75600 MT
+(November 1987)SH
+ES
+%%Page: 6 7 
+BS
+0 SI
+10 /NewCenturySchlbk-Bold AF
+10800 4337 MT
+(Digital Equipment Corporation)SH
+38433 XM
+(Western Research Laboratory)SH
+13 SS 
+46328 8158 MT
+(Report 86/3)SH
+16 SS 
+15843 13731 MT
+(Global Register Allocation at Link Time)SH
+13 /NewCenturySchlbk-Roman AF
+28016 16848 MT
+(David W. Wall)SH
+28426 18273 MT
+(October 1986)SH
+11912 20411 MT
+(In previous work in global register allocation, the compiler)
+198 W( colors a)197 W
+10800 22007 MT
+(conflict graph)
+87 W( constructed from liveness dataflow information, in order)88 W
+10800 23603 MT
+(to allocate)
+755 W( the same register to many variables that are not)754 W
+10800 25199 MT
+(simultaneously live.  If two procedures are in separately)
+413 W( compiled)414 W
+10800 26795 MT
+(modules, however, the compiler must do this allocation separately)
+164 W( for)163 W
+10800 28391 MT
+(each procedure.  As)
+224 W( a result, the two procedures might use different)225 W
+10800 29987 MT
+(registers for the same global, or the same register for different locals.)SH
+11912 32723 MT
+(We can remove these problems if we delay the)
+314 W( register allocation)313 W
+10800 34319 MT
+(until link time.  Our compiler produces object modules that can)
+311 W( be)312 W
+10800 35915 MT
+(linked and run without global register allocation, but)
+312 W( includes with)311 W
+10800 37511 MT
+(each object module a)
+219 W( body of information describing how the module)220 W
+10800 39107 MT
+(uses variables and procedures.)
+384 W( A)
+1128 W( link-time register allocator then)383 W
+10800 40703 MT
+(decides which variables are used most)
+140 W( frequently, selects registers for)141 W
+10800 42299 MT
+(them, and rewrites the code to)
+84 W( reflect the decision that these variables)83 W
+10800 43895 MT
+(reside in registers rather than in memory.  Construction of)
+276 W( the call)277 W
+10800 45491 MT
+(graph allows us to use the same)
+162 W( register for locals of procedures that)161 W
+10800 47087 MT
+(are not simultaneously active, giving us most of the advantages)
+223 W( of a)224 W
+10800 48683 MT
+(full-scale coloring without the expense.)SH
+11912 51419 MT
+(When we use our method)
+118 W( for 52 registers, our benchmarks speed up)117 W
+10800 53015 MT
+(by 10 to 25 percent.  Even with only 8 registers, the)
+195 W( speedup can be)196 W
+10800 54611 MT
+(nearly that large if we)
+203 W( use previously collected profile information to)202 W
+10800 56207 MT
+(guide the allocation.  We)
+299 W( cannot do much better, because programs)300 W
+10800 57803 MT
+(whose variables)
+128 W( all fit in registers rarely speed up by more than 30%.)127 W
+10800 59399 MT
+(Moreover, profiling)
+30 W( shows us that we usually remove 60% to 90% of the)31 W
+10800 60995 MT
+(loads and)
+137 W( stores of scalar variables that the program performs during)136 W
+10800 62591 MT
+(its execution, and often much more.)SH
+10 /NewCenturySchlbk-Bold AF
+28495 75600 MT
+(November 1987)SH
+ES
+%%Page: 7 8 
+BS
+0 SI
+10 /NewCenturySchlbk-Bold AF
+10800 4337 MT
+(Digital Equipment Corporation)SH
+38433 XM
+(Western Research Laboratory)SH
+13 SS 
+46328 8158 MT
+(Report 86/4)SH
+16 SS 
+21062 13731 MT
+(Optimal Finned Heat Sinks)SH
+13 /NewCenturySchlbk-Roman AF
+25389 16848 MT
+(William R. Hamburgen)SH
+28426 18273 MT
+(October 1986)SH
+11912 24649 MT
+(In a)
+374 W( multi-board computer system, the volume allocated for heat)375 W
+10800 26245 MT
+(removal is often a significant fraction of the total system)
+414 W( volume.)413 W
+10800 27841 MT
+(Cooling requirements)
+316 W( can thus impact performance, reliability, cost,)317 W
+10800 29437 MT
+(acoustic noise, and floorspace.  This work addresses the volume costs)
+19 W( or)18 W
+10800 31033 MT
+(space requirements for removing heat with optimally designed finned)172 W
+10800 32629 MT
+(heat sinks.  Simple formulas applicable)
+140 W( to both gas and liquid cooling)139 W
+10800 34225 MT
+(problems provide upper)
+24 W( bounds on the thermal resistance of an optimal)25 W
+10800 35821 MT
+(heat sink, without)
+72 W( explicitly designing the part.  Conservative junction)71 W
+10800 37417 MT
+(temperature estimates can thus be made without detailed design.)SH
+10 /NewCenturySchlbk-Bold AF
+28495 75600 MT
+(November 1987)SH
+ES
+%%Page: 8 9 
+BS
+0 SI
+10 /NewCenturySchlbk-Bold AF
+10800 4337 MT
+(Digital Equipment Corporation)SH
+38433 XM
+(Western Research Laboratory)SH
+13 SS 
+46472 8158 MT
+(Report 87/1)SH
+16 SS 
+22439 13731 MT
+(The Mahler Experience:)SH
+17588 15739 MT
+(Using an Intermediate Language as)SH
+22124 17747 MT
+(the Machine Description)SH
+13 /NewCenturySchlbk-Roman AF
+22283 20864 MT
+(David W. Wall. Michael L. Powell)SH
+28604 22289 MT
+(August 1987)SH
+11912 24427 MT
+(Division of)
+585 W( a compiler into a front end and a back end that)586 W
+10800 26023 MT
+(communicate via an intermediate language)
+93 W( is a well-known technique.)92 W
+10800 27619 MT
+(We go)
+517 W( farther and use the intermediate language as the official)518 W
+10800 29215 MT
+(description of a family of machines)
+253 W( with simple instruction sets and)252 W
+10800 30811 MT
+(addressing capabilities, hiding)
+151 W( some of the inconvenient details of the)152 W
+10800 32407 MT
+(real machine from the users and the front end compilers.)
+51 W( Then)
+461 W( we can)50 W
+10800 34003 MT
+(implement each)
+274 W( machine in this family with whatever technology is)275 W
+10800 35599 MT
+(appropriate, without having to make the)
+169 W( details match those of other)168 W
+10800 37195 MT
+(machines in the family.  Each machine can therefore be faster)
+122 W( than it)123 W
+10800 38791 MT
+(would be if we required the machines to be object-code)
+84 W( compatible, but)83 W
+10800 40387 MT
+(the front end compilers need not change)
+691 W( to accommodate that)692 W
+10800 41983 MT
+(flexibility.)SH
+11912 44719 MT
+(To do this credibly, we have had to hide not)
+76 W( only the existence of the)75 W
+10800 46315 MT
+(details but also the performance consequences)
+284 W( of hiding them.  The)285 W
+10800 47911 MT
+(back end that compiles and links the)
+248 W( intermediate language tries to)247 W
+10800 49507 MT
+(produce code that does not)
+62 W( suffer a performance penalty because of the)63 W
+10800 51103 MT
+(details that were)
+181 W( hidden from the front end compiler.  To accomplish)180 W
+10800 52699 MT
+(this, we have used a number)
+411 W( of link-time optimizations, including)412 W
+10800 54295 MT
+(instruction scheduling and interprocedural)
+179 W( register allocation, to hide)178 W
+10800 55891 MT
+(the existence of such idiosyncracies as)
+426 W( delayed branches and non-)427 W
+10800 57487 MT
+(infinite register sets.  For the most part we have been successful.)SH
+10 /NewCenturySchlbk-Bold AF
+28495 75600 MT
+(November 1987)SH
+ES
+%%Page: 9 10 
+BS
+0 SI
+10 /NewCenturySchlbk-Bold AF
+10800 4337 MT
+(Digital Equipment Corporation)SH
+38433 XM
+(Western Research Laboratory)SH
+13 SS 
+46328 8158 MT
+(Report 87/2)SH
+16 SS 
+24884 13731 MT
+(The Packet Filter:)SH
+20975 15739 MT
+(An Efficient Mechanism for)SH
+22039 17747 MT
+(User-level Network Code)SH
+13 /NewCenturySchlbk-Roman AF
+27415 20864 MT
+(Jeffrey C. Mogul)SH
+13623 22289 MT
+(Western Research Laboratory, Digital Equipment Corporation)SH
+21030 25139 MT
+(Richard F. Rashid, Michael J. Accetta)SH
+13646 26564 MT
+(Department of Computer Science, Carnegie-Mellon University)SH
+27691 27989 MT
+(November 1987)SH
+11912 30127 MT
+(Code to implement network protocols can be either)
+104 W( inside the kernel)103 W
+10800 31723 MT
+(of an operating system or in a user-level)
+69 W( process.  Kernel-resident code)70 W
+10800 33319 MT
+(is hard)
+1296 W( to develop, debug, and maintain, but user-level)1295 W
+10800 34915 MT
+(implementations typically incur significant overhead and perform)602 W
+10800 36511 MT
+(badly.)SH
+11912 39247 MT
+(The performance of user-level network code)
+809 W( depends on the)808 W
+10800 40843 MT
+(mechanism used to)
+141 W( demultiplex received packets. Demultiplexing in a)142 W
+10800 42439 MT
+(user-level process)
+286 W( increases the rate of context switches and system)285 W
+10800 44035 MT
+(calls, resulting in poor performance.  Demultiplexing)
+369 W( in the kernel)370 W
+10800 45631 MT
+(eliminates unnecessary overhead.)SH
+11912 48367 MT
+(This paper describes the)426 W
+/NewCenturySchlbk-Italic SF
+28669 XM
+(packet filter)426 W
+/NewCenturySchlbk-Roman SF
+(, a kernel-resident, protocol)426 W
+10800 49963 MT
+(independent packet demultiplexor. Individual)
+563 W( user processes have)564 W
+10800 51559 MT
+(great flexibility in selecting which packet they will)
+289 W( receive. Protocol)288 W
+10800 53155 MT
+(implementations using the packet filter)
+189 W( perform quite well, and have)190 W
+10800 54751 MT
+(been in production use for several years.)SH
+10 /NewCenturySchlbk-Bold AF
+28495 75600 MT
+(November 1987)SH
+ES
+%%Page: 10 11 
+BS
+0 SI
+10 /NewCenturySchlbk-Bold AF
+10800 4337 MT
+(Digital Equipment Corporation)SH
+38433 XM
+(Western Research Laboratory)SH
+13 SS 
+46328 8158 MT
+(Report 87/3)SH
+16 SS 
+17406 13731 MT
+(Fragmentation Considered Harmful)SH
+13 /NewCenturySchlbk-Roman AF
+26281 16848 MT
+(Christopher A. Kent)SH
+27415 18273 MT
+(Jeffrey C. Mogul)SH
+27691 19698 MT
+(November 1987)SH
+11912 26074 MT
+(Internetworks can be built from many different kinds of networks,)241 W
+10800 27670 MT
+(with varying limits on maximum packet size.  Throughput)
+192 W( is usually)193 W
+10800 29266 MT
+(maximized when the)
+371 W( largest possible packet is sent; unfortunately,)370 W
+10800 30862 MT
+(some routes can carry)
+89 W( only very small packets.  The IP protocol allows)90 W
+10800 32458 MT
+(a gateway to)290 W
+/NewCenturySchlbk-Italic SF
+19643 XM
+(fragment)SH
+/NewCenturySchlbk-Roman SF
+25737 XM
+(a packet)
+290 W( if it is too large to be transmitted.)289 W
+10800 34054 MT
+(Fragmentation is at best a necessary evil;)
+635 W( it can lead to poor)636 W
+10800 35650 MT
+(performance or complete communication failure.  There are a variety of)35 W
+10800 37246 MT
+(ways to reduce the likelihood)
+811 W( of fragmentation; some can be)812 W
+10800 38842 MT
+(incorporated into existing IP implementations without)
+519 W( changes in)518 W
+10800 40438 MT
+(protocol specifications.)
+133 W( Others)
+628 W( require new protocols, or modifications)134 W
+10800 42034 MT
+(to existing protocols.)SH
+10 /NewCenturySchlbk-Bold AF
+28495 75600 MT
+(November 1987)SH
+ES
+%%Page: 11 12 
+BS
+0 SI
+10 /NewCenturySchlbk-Bold AF
+10800 4337 MT
+(Digital Equipment Corporation)SH
+38433 XM
+(Western Research Laboratory)SH
+13 SS 
+46328 8158 MT
+(Report 87/4)SH
+16 SS 
+15409 13731 MT
+(Cache Coherence in Distributed Systems)SH
+13 /NewCenturySchlbk-Roman AF
+26281 16848 MT
+(Christopher A. Kent)SH
+27776 18273 MT
+(December 1987)SH
+11912 20411 MT
+(Caching has long been recognized as a)
+691 W( powerful performance)690 W
+10800 22007 MT
+(enhancement technique in many)
+557 W( areas of computer design. Most)558 W
+10800 23603 MT
+(modern computer systems include a hardware)
+511 W( cache between the)510 W
+10800 25199 MT
+(processor and main memory, and many)
+266 W( operating systems include a)267 W
+10800 26795 MT
+(software cache between the file system routines and the disk hardware.)SH
+11912 29531 MT
+(In a distributed file system, where the file systems of several client)164 W
+10800 31127 MT
+(machines are separated from the server backing)
+890 W( store by a)891 W
+10800 32723 MT
+(communications network, it is desirable to)
+302 W( have a cache of recently)301 W
+10800 34319 MT
+(used file blocks at the client, to avoid some)
+328 W( of the communications)329 W
+10800 35915 MT
+(overhead. In this configuration,)
+51 W( special care must be taken to maintain)50 W
+10800 37511 MT
+(consistency between the client caches, as some disk blocks may be)
+180 W( in)181 W
+10800 39107 MT
+(use by more)
+115 W( than one client. For this reason, most current distributed)114 W
+10800 40703 MT
+(file systems do not provide a cache at the)
+460 W( client machine. Those)461 W
+10800 42299 MT
+(systems that do place restrictions on the types of)
+143 W( file blocks that may)142 W
+10800 43895 MT
+(be shared, or require)
+270 W( extra communication to confirm that a cached)271 W
+10800 45491 MT
+(block is still valid each time the block is to be used.)SH
+11912 48227 MT
+(The Caching Ring is a combination of an)
+11 W( intelligent network interface)10 W
+10800 49823 MT
+(and an)
+198 W( efficient network protocol that allows caching of all types file)199 W
+10800 51419 MT
+(blocks at the client machines. Blocks)
+526 W( held in a client cache are)525 W
+10800 53015 MT
+(guaranteed to be valid copies.  We measure)
+432 W( the style of use and)433 W
+10800 54611 MT
+(performance improvement of caching in an existing file system,)
+279 W( and)278 W
+10800 56207 MT
+(develop the protocol and interface architecture of)
+284 W( the Caching Ring.)285 W
+10800 57803 MT
+(Using simulation, we study the)
+162 W( performance of the Caching Ring and)161 W
+10800 59399 MT
+(compare it to similar schemes using conventional network hardware.)SH
+10 /NewCenturySchlbk-Bold AF
+28495 75600 MT
+(November 1987)SH
+ES
+%%Page: 12 13 
+BS
+0 SI
+10 /NewCenturySchlbk-Bold AF
+10800 4337 MT
+(Digital Equipment Corporation)SH
+38433 XM
+(Western Research Laboratory)SH
+13 SS 
+46328 8158 MT
+(Report 87/5)SH
+16 SS 
+15305 13731 MT
+(Register Windows vs. Register Allocation)SH
+13 /NewCenturySchlbk-Roman AF
+28016 16848 MT
+(David W. Wall)SH
+27776 18273 MT
+(December 1987)SH
+11912 20411 MT
+(In our)
+135 W( technique for interprocedural register allocation, we generate)136 W
+10800 22007 MT
+(correct code using only a few registers, and then we)
+46 W( rewrite the code at)45 W
+10800 23603 MT
+(link time to reflect an allocation)
+12 W( based on the complete call graph.  This)13 W
+10800 25199 MT
+(rewriting requires the compiler to annotate the)
+338 W( compiled code with)337 W
+10800 26795 MT
+(information describing how the instructions)
+442 W( refer to variables and)443 W
+10800 28391 MT
+(procedures. The)
+1359 W( annotations about procedures let us deduce the)499 W
+10800 29987 MT
+(complete structure of each call, entry, or return.)SH
+11912 32723 MT
+(By changing the semantics of these annotations, we can cause the)250 W
+10800 34319 MT
+(register allocator to apply various different)
+350 W( techniques for selecting)349 W
+10800 35915 MT
+(register variables)
+602 W( and can cause the allocator to insert code to)603 W
+10800 37511 MT
+(instrument the program, counting the spills)
+586 W( and reloads that it)585 W
+10800 39107 MT
+(performs. We)
+381 W( can even)
+10 W( insert code that simulates the management of a)11 W
+10800 40703 MT
+(machine using)
+28 W( hardware register windows.  This instrumentation gives)27 W
+10800 42299 MT
+(us a way)
+3 W( to measure how many memory references a particular register)4 W
+10800 43895 MT
+(allocation scheme or register window scheme can remove.)SH
+11912 46631 MT
+(We compared four different)
+435 W( register allocation schemes using 52)434 W
+10800 48227 MT
+(registers to two register window schemes)
+44 W( using 128 registers organized)45 W
+10800 49823 MT
+(into fixed-size windows or variable-sized windows. Link-time)
+52 W( allocation)51 W
+10800 51419 MT
+(based on profile information)
+199 W( was the clear winner in some cases and)200 W
+10800 53015 MT
+(did about as well as windows)
+239 W( in the rest.  Even link-time allocation)238 W
+10800 54611 MT
+(based on an estimated)
+26 W( profile was about as good as windows.  Variable-)27 W
+10800 56207 MT
+(sized windows sometimes did better)
+111 W( than fixed-sized windows, but the)110 W
+10800 57803 MT
+(difference was usually small.)SH
+10 /NewCenturySchlbk-Bold AF
+28495 75600 MT
+(November 1987)SH
+ES
+%%Page: 13 14 
+BS
+0 SI
+10 /NewCenturySchlbk-Bold AF
+10800 4337 MT
+(Digital Equipment Corporation)SH
+38433 XM
+(Western Research Laboratory)SH
+13 SS 
+46328 8158 MT
+(Report 87/6)SH
+16 SS 
+21543 13731 MT
+(Editing Graphical Objects)SH
+18135 15739 MT
+(using Procedural Representations)SH
+13 /NewCenturySchlbk-Roman AF
+28026 18856 MT
+(Paul J. Asente)SH
+27776 20281 MT
+(December 1987)SH
+11912 22419 MT
+(Traditionally, people have created computer-generated images by)455 W
+10800 24015 MT
+(writing programs in a programming language)
+164 W( that supports graphics.)163 W
+10800 25611 MT
+(More recently, interactive graphics editors)
+119 W( have become commonplace.)120 W
+10800 27207 MT
+(Graphics editors are)
+424 W( easy to use but frequently lack many of the)423 W
+10800 28803 MT
+(capabilities found in graphics programming languages.)
+48 W( This)
+458 W( deficiency)49 W
+10800 30399 MT
+(is intrinsic to)
+603 W( graphics editors; it is not a result of neglect or)602 W
+10800 31995 MT
+(incompetence by the implementer.)SH
+11912 34731 MT
+(Tweedle is a graphics editor that attempts to bridge this gap by using)22 W
+10800 36327 MT
+(a program as its internal representation for a picture.  During an)364 W
+10800 37923 MT
+(editing session the)
+356 W( user can modify either the picture itself or the)357 W
+10800 39519 MT
+(program representation; the editor modifies the other to keep)
+148 W( the two)147 W
+10800 41115 MT
+(consistent. The)
+977 W( language used by the editor contains features that)308 W
+10800 42711 MT
+(allow the editor to incrementally execute parts)
+555 W( of a program in)554 W
+10800 44307 MT
+(response to)
+223 W( a change so that the picture can be regenerated without)224 W
+10800 45903 MT
+(completely reexecuting the program.)SH
+11912 48639 MT
+(The use of a procedural representation allows the user)
+379 W( to create)378 W
+10800 50235 MT
+(easily pictures with repetition, recursion, and calculated)
+153 W( point values.)154 W
+10800 51831 MT
+(It further allows him to define parts of a drawing)
+121 W( as variants of other)120 W
+10800 53427 MT
+(parts; these variants can differ from their original objects in quite)366 W
+10800 55023 MT
+(arbitrary ways but still respond to changes made to the original.)SH
+11912 57759 MT
+(A working prototype of)
+158 W( Tweedle has been implemented under the X)157 W
+10800 59355 MT
+(Window System.)SH
+10 /NewCenturySchlbk-Bold AF
+28495 75600 MT
+(November 1987)SH
+ES
+%%Page: 14 15 
+BS
+0 SI
+10 /NewCenturySchlbk-Bold AF
+10800 4337 MT
+(Digital Equipment Corporation)SH
+38433 XM
+(Western Research Laboratory)SH
+13 SS 
+46328 8158 MT
+(Report 87/7)SH
+16 SS 
+22306 13731 MT
+(The USENET Cookbook:)SH
+15478 15739 MT
+(an Experiment in Electronic Publication)SH
+13 /NewCenturySchlbk-Roman AF
+28257 18856 MT
+(Brian K. Reid)SH
+27776 20281 MT
+(December 1987)SH
+11912 22419 MT
+(Much of the)
+423 W( research taking place in the field called "electronic)424 W
+10800 24015 MT
+(publishing" would perhaps be better called "electronic)
+434 W( printing" or)433 W
+10800 25611 MT
+("electronic typography". In)
+210 W( December 1985 I began a venture in true)211 W
+10800 27207 MT
+(electronic publishing, "true" in the sense that)
+55 W( its primary goals were to)54 W
+10800 28803 MT
+(explore electronic)
+223 W( dissemination rather than electronic typesetting or)224 W
+10800 30399 MT
+(formatting. I wanted to start a periodical that could)
+335 W( be distributed)334 W
+10800 31995 MT
+(electronically, that would use computers for every aspect of its)638 W
+10800 33591 MT
+(production and)
+194 W( distribution process, that would be on a topic of wide)193 W
+10800 35187 MT
+(enough interest that I could get subscribers in as many countries)
+219 W( as)220 W
+10800 36783 MT
+(possible, and that was on a topic)
+554 W( that I would find sufficiently)553 W
+10800 38379 MT
+(interesting to be able to maintain interest in it long enough to get)314 W
+10800 39975 MT
+(substantial experience. The)
+505 W( obvious topic was cookery. I began a)504 W
+10800 41571 MT
+(weekly magazine whose contents are recipes.)SH
+11912 44307 MT
+(The recipes are)
+170 W( distributed in a text formatting language, and each)171 W
+10800 45903 MT
+(subscriber is sent software to)
+198 W( format that language into some output)197 W
+10800 47499 MT
+(format that he can)
+122 W( print on his machine. Subscribers typically extract)123 W
+10800 49095 MT
+(the recipes out of each weekly issue)
+21 W( and put them into a local database,)20 W
+10800 50691 MT
+(from which they can print pages for a notebook or access the recipes)196 W
+10800 52287 MT
+(with online retrieval commands. The text formatting language is)
+353 W( a)352 W
+10800 53883 MT
+(dialect of troff,)
+70 W( and the vast majority of subscribers use a special set of)71 W
+10800 55479 MT
+(troff macros to do the formatting.)SH
+11912 58215 MT
+(The publication is called)391 W
+/NewCenturySchlbk-Italic SF
+28515 XM
+(The Electronic)
+391 W( Gourmand)390 W
+/NewCenturySchlbk-Roman SF
+(. It has about)390 W
+10800 59811 MT
+(13000 subscribers worldwide.)
+201 W( Most of the subscribers are in English-)202 W
+10800 61407 MT
+(speaking countries. The)
+20 W( full text of this report has detailed descriptions)19 W
+10800 63003 MT
+(of the representation,)
+698 W( distribution, proofreading, formatting, and)699 W
+10800 64599 MT
+(database mechanisms. It also contains a few sample recipes.)SH
+10 /NewCenturySchlbk-Bold AF
+28495 75600 MT
+(November 1987)SH
+ES
+%%Trailer
+%%Pages: 15 
+%%DocumentFonts: NewCenturySchlbk-Roman NewCenturySchlbk-Bold Symbol NewCenturySchlbk-Italic Courier

@@ -1,0 +1,46 @@
+"The Juno-2 Constraint-Based Drawing Editor"
+Allan Heydon and Greg Nelson
+December, 1994. 19 pages.
+
+Constraints are an important enabling technology for interactive
+graphics applications. However, today's constraint-based systems are
+plagued by several limitations, and constraints have yet to live up to
+their potential.
+
+Juno-2 is a constraint-based double-view drawing editor that addresses
+some of these limitations. Constraints in Juno-2 are declarative, and
+they can include non-linear functions and ordered pairs. Moreover, the
+Juno-2 solver is not limited to acyclic constraint systems. Juno-2
+also includes a powerful extension language that allows users to
+define new constraints. The system demonstrates that fast constraint
+solving is possible with a highly extensible, fully declarative
+constraint language.
+
+The report describes what it is like to use Juno-2, outlines the
+methods that Juno-2 uses to solve constraints, and discusses its
+performance.
+
+A videotape (131b) accompanies Report 131a:
+
+"The Juno-2 Constraint-Based Drawing Editor"
+Allan Heydon and Greg Nelson
+Time: 13:32 minutes
+
+Computers now handle the words in the documents that we write, and
+that is good: Revising, indexing, and formatting are lots easier,
+while hyperlinks have opened up shining vistas. Computers also handle
+the illustrations in our documents, but the news on that front is not
+so good. Producing accurate drawings is still a tedious task in many
+cases, revising them later is worse, and animations are not taking off
+as fast as hypertext. Even if we grant that a picture is worth a
+thousand words to the reader, why is its cost to the writer more like
+ten thousand?
+	  
+If computers are ever to help illustrators as effectively as they help
+authors, some new ideas will be required. Juno-2 is a drawing editor
+that explores an intriguing collection of ideas about two-view
+editing, constraint-solving, and extension languages. This brief report
+gives some early indications of the strengths and weaknesses of those
+ideas. (Lyle Ramshaw)
+
+

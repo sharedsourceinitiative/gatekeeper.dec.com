@@ -1,0 +1,193 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Opening and Examining Directories</TITLE>
+<META NAME="description" CONTENT="Opening and Examining Directories">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node47.html">
+<LINK REL="previous" HREF="node45.html">
+<LINK REL="up" HREF="node39.html">
+<LINK REL="next" HREF="node47.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html759"
+ HREF="node47.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html755"
+ HREF="node39.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html749"
+ HREF="node45.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html757"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html758"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html760"
+ HREF="node47.html">Manipulating the Name Space</A>
+<B> Up:</B> <A NAME="tex2html756"
+ HREF="node39.html">The OS Interface: Files</A>
+<B> Previous:</B> <A NAME="tex2html750"
+ HREF="node45.html">Manipulating File Attributes</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04047000000000000000">
+Opening and Examining Directories</A>
+</H2>
+<P>
+This subsection contains procedures for dealing with existing directories:
+obtaining a directory handle to be used to qualify path name lookups,
+converting a (directory handle, relative path name) pair to an absolute
+path name, and listing the contents of a directory.
+<P><A NAME="Cupertino">&#160;</A><A NAME="2142">&#160;</A>
+<PRE>
+PROCEDURE OpenDir(
+    dir: Dir;
+    path: PathName;
+    euser: User := NIL)
+    : Dir
+  RAISES {Error};
+  (* NotSuperUserEC, PathES, NotADirectoryEC, FailureES? *)
+</PRE>
+<P><A NAME="1164">&#160;</A>
+OpenDir returns a directory handle for an open directory.  This directory
+handle can then be supplied to Open, OpenDir, and other operations for use
+as the base for looking up relative path names.
+<P>
+OpenDir performs access checking on the path name up to, but not
+including, the final component, which must be a directory (or else
+NotADirectoryEC is raised).  Access checking on the actual directory is
+done each time the directory handle is used by another operation.
+<P>
+OpenDir interprets the euser parameter the same way Open does.
+<P><A NAME="2143">&#160;</A>
+<PRE>
+PROCEDURE GetPath(
+    dir: Dir;
+    path: PathName := NIL;
+    euser: User := NIL)
+    : PathName
+  RAISES {Error}; (* NotSuperUserEC, PathES, FailureES? *)
+</PRE>
+<P><A NAME="1166">&#160;</A>
+<A NAME="1167">&#160;</A>
+GetPath accepts a specification of a file by the usual combination of a
+path name (possibly relative) and a directory handle; it returns an
+absolute path name for the file that contains no . or .. or symbolic link
+components.
+<P>
+The path name returned by GetPath consists of an <TT>&#60;</TT>abspath<TT>&#62;</TT>, possibly
+preceded by a <TT>&#60;</TT>machine<TT>&#62;</TT> (i.e., a # followed by a machine name).  (See
+section <A HREF="node28.html#Gilroy">2.6</A>, page <A HREF="node28.html#Gilroy"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>, for the syntax of <TT>&#60;</TT>abspath<TT>&#62;</TT>
+and <TT>&#60;</TT>machine<TT>&#62;</TT>.)  The <TT>&#60;</TT>machine<TT>&#62;</TT> is present if and only if the file or
+directory to which the path name refers resides on a remote machine.  The
+<TT>&#60;</TT>abspath<TT>&#62;</TT> specifies a sequence of directories from the root of the local
+or specified remote file system (never a symbolic link, or a . or ..
+entry).  Recall that a directory has a unique absolute path name, but a
+file may have several; it is not predictable which one GetPath returns.
+<P>
+GetPath interprets the euser parameter the same way Open does.
+<P>
+Ultrix note: The current implementation may return a path name containing
+.. entries.  This should be fixed eventually.
+<P><A NAME="2144">&#160;</A>
+<A NAME="2145">&#160;</A>
+<PRE>
+PROCEDURE ListDir(
+    dir: Dir;
+    VAR (* IN OUT *) rd: Rd.T;
+    euser: User := NIL)
+  RAISES {Error}; (* ProtectionViolationEC, FailureES *)
+
+PROCEDURE NextEntry(rd: Rd.T): BOOLEAN RAISES {Error};
+  (* ProtectionViolationEC, FailureES *)
+</PRE>
+<P><A NAME="1184">&#160;</A>
+<A NAME="1185">&#160;</A>
+<A NAME="1186">&#160;</A>
+ListDir and NextEntry enumerate the names of the entries in a directory,
+including the . and .. entries.
+<P>
+ListDir prepares a directory enumeration reader so that it is ready to
+read the first entry of the specified directory.  (The .  entry is always
+returned first.)  If ListDir is passed NIL, it allocates a new reader; if
+it is passed an old reader (that it had returned on an earlier call),
+ListDir avoids additional allocations.
+<P>
+NextEntry returns TRUE and modifies rd so it is ready to read the next
+entry if one exists; otherwise it returns FALSE and does not modify the
+reader.
+<P>
+ListDir and NextEntry raise ProtectionViolationEC if the calling process
+lacks read access to the directory being enumerated.
+<P>
+Ultrix note: On Ultrix 2.0 systems using NFS, ListDir and NextEntry do not
+work on remote directories.
+<P>
+Here is a program to list a directory:
+<P>
+<BR>
+<BR>
+<IMG WIDTH="394" HEIGHT="113" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.gif"
+ ALT="\begin{boxedverbatim}
+OS.ListDir(dir, rd);
+REPEAT
+ Wr.PrintF(Stdio.stdout,
+ ''UNTIL NOT OS.NextEntry(rd);\end{boxedverbatim}">
+<BR><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html759"
+ HREF="node47.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html755"
+ HREF="node39.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html749"
+ HREF="node45.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html757"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html758"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html760"
+ HREF="node47.html">Manipulating the Name Space</A>
+<B> Up:</B> <A NAME="tex2html756"
+ HREF="node39.html">The OS Interface: Files</A>
+<B> Previous:</B> <A NAME="tex2html750"
+ HREF="node45.html">Manipulating File Attributes</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

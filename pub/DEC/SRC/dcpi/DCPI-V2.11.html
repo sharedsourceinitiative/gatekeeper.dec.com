@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>DCPI-V2.11 Release Notes</title>
+</head>
+<body>
+<!--#include file="includes/title.html" -->
+<br>
+DCPI-V2.11 Release Notes
+</h1>
+<pre>
+Changes since release V2.5:
+
+- DCPI releases V2.6 through V2.9 each had incompatibilities
+  with various versions of Digital Unix.  We believe that these
+  problems have been corrected, and would appreciate your help
+  in testing out V2.10: please send mail to dcpi-bugs@pa.dec.com
+  and let us know whether or not V2.10 worked on your system, and
+  include the output of the command "uname -a" to identify the
+  version of Digital Unix on your machine.  We apologize for any
+  inconvenience that our earlier releases may have caused.
+  
+- New loader for 4.0c and higher.
+  Dynamically linked images can be profiled on machines running
+  DU V3.2 or V4.0*, but not V5.0*.  The INSTALL script tests the
+  DCPI loader before installing it as the default system loader.
+
+- Minor improvements to dcpid image identification.
+  Image maps for common DU V4.0c and V4.0d binaries are compiled into dcpid.
+  Fixed identification of large images started before dcpid.
+
+- Major update to dcpi2pix to generate more accurate data.
+
+- Added support for new 21264 instructions.
+
+- V2.11: adds support for compressed kernel modules.
+
+- V2.11: dcpiprof listings now contain information about which named
+  procedure is near an anonymous procedure to help the user in finding
+  anonymous procedures.
+
+</pre>
+
+<!--#include file="includes/dcpi-footer.html" -->
+</body>
+</html>

@@ -1,0 +1,89 @@
+<html>
+<head><title>Scheduling Data Transfers in a Network</title></head>
+<body>
+<center>
+<h1><b>Scheduling Data Transfers in a Network</b></h1><br>
+<h2>Ashish Goel, Stanford University</h2>
+</center>
+
+
+I am a PhD student at Stanford University, and I worked on the data transfer
+problem this summer with my host Monika Henzinger and my advisor Serge
+Plotkin. I would like to thank Monika for a wonderful summer.<p>
+
+The data transfer problem is the following: data transfer requests of the form
+<i>(a<sub>j,</sub> p<sub>j,</sub> R<sub>j</sub>)</i> 
+arrive in a network, where 
+
+<i>a<sub>j</sub></i> 
+
+is the arrival time of the
+request, 
+
+<i>p<sub>j</sub></i> 
+
+the amount of data to be transferred, and 
+
+<i>R<sub>j</sub></i> 
+
+the set of
+links on the route over which the data needs to be transferred. Our goal over
+the summer was to design centralized scheduling algorithms for this problem.
+The scheduler must assign a start time 
+
+<i>s<sub>j</sub></i> 
+
+and a data transfer rate 
+
+<i>r<sub>j</sub></i> 
+
+to
+each request. The completion time 
+
+<i>C<sub>j</sub></i> 
+
+of the request is 
+
+<i>s<sub>j</sub> + p<sub>j</sub>/r<sub>j</sub></i>. 
+
+We
+analyze the performance of our algorithms using the framework of online
+algorithms.<p>
+
+The most intuitive performance measure we considered was the average response
+time (or average flow time) where the response time (flow time) of job <i>j</i>
+
+is
+
+<i>C<sub>j</sub> - a<sub>j</sub></i>. 
+
+Notice that this is the number that a user really cares about --
+"how long did it take for the job to complete after it arrived?"<p>
+
+We came up with algorithms that give good performance guarantees for measures
+that are in some sense easier than average response time. For average response
+time, we showed that NO algorithm can guarantee close (i.e better than a
+polynomial factor close) to optimum performance against a malicious adversary.
+However, we were able to relax the model using "resource augmentation" and
+prove interesting results in this model. A writeup should be available from my
+web page at some time in the future.<p>
+
+If you have read thus far, you have probably guessed that I work in
+Algorithms. I describe my research interests as networking, approximation
+algorithms, online algorithms, randomized algorithms, graph algorithms and
+various combinations of the above. More specifics are available from 
+my <A HREF="http://www-cs-students.stanford.edu/~agoel/research.html">
+publications</A> list. One of the results
+that I am excited about is on switch scheduling. Check it out.<p>
+
+I was amazed by the diversity of interests at SRC and even more, by the amount
+of interaction between people with such diverse interests. My favourite
+experience would have to be playing softball during the Intern Salute. I had
+never played softball (or baseball) before and it was good fun.<p>
+
+</BODY>
+</HTML>
+
+
+
+

@@ -1,0 +1,56 @@
+<html>
+<head><title>WebL--Searching in Structured Text</title></head>
+<body>
+<center>
+<h1><b>WebL--Searching in Structured Text</b></h1><br>
+<h2>Thomas Kistler, University of California at Irvine</h2>
+</center>
+
+I am a third year Ph.D. student at the University of California in Irvine,
+working with Michael Franz on a new operating system that reconciles the
+advantages of portable executables with high performance. For portable
+executables, most of the traditional optimizations cannot be performed at
+compile time any longer, resulting in serious performance problems. This
+flaw can only be overcome by delaying optimization until runtime (or load
+time) and enriching current operating systems with runtime optimization
+infrastructures. Our new operating system implements such an infrastructure
+and continuously and gradually optimizes programs in the background or on
+specific request of the programmer. It also utilizes an adaptive profiler
+to custom-tailor optimizations towards system- and user-behavior. <P>
+
+At SRC this summer I have been working with Hannes Marais on the
+implementation of WebL. WebL is a new Web scripting language that has been
+designed to automate tasks such as retrieving Web documents, extracting
+structured and unstructured data from Web documents (for example HTML-, and
+XML-based Web pages), and creating and manipulating Web documents. 
+One of the main problems that we were trying to solve this summer was the
+design of an expressive, powerful and concise query language for
+WebL that allows searching on the structure and on the flat text of HTML-
+or XML-pages. Traditionally, approaches for searching in structured text
+documents have focused on either searching documents by content (e.g.
+searching with regular expressions) or by structure (e.g. subtree matching
+or context-free grammar matching), but not both at the same time. Most of
+the query languages also lack orthogonality and compositionality, and, in
+most cases, do not allow the expression of overlapping of search results.
+To overcome these problems, we developed a novel combined approach for
+searching in Web documents that allows mixing content and structure in a
+simple, orthogonal, and concise query language. Rather than being based on
+trees or grammars, it is based on set algebra. The basic components of the
+proposed search algebra are sets of pieces and set-operators. A piece is a
+continuous region in the text that can either be constructed by searching
+the text with a regular expression or searching for markup elements in the
+structure. Set operators allow combining piece-sets to construct more
+powerful queries. WebL currently supports a combination of structural,
+positional, and basic set operators (e.g. in, contain, after, before,
+union, etc.). <P>
+
+One of the most important things that I learnt this summer is that the
+design of a programming language is much more difficult than it would
+appear when reading the final language specification. Finding the essence
+of the problem and the right mix between simplicity and expressiveness is a
+tedious process that involves a lot of discussion and often requires
+starting from scratch again and discarding previous ideas and implementations.<P>
+
+
+</BODY>
+</HTML>

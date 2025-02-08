@@ -1,0 +1,14 @@
+The Common Graphics Environment for PEX 5.1 is a set of PEX 5.1 extensions 
+developed by the Common Open Software Environment vendors, including HP, 
+IBM and Sun to provide support for texture mapping, basic anti-aliasing,
+and transparency.
+
+The compressed ASCII file CGE-PEX-5.1-Spec.txt.Z, with the modifications
+to it described in compressed ASCII file CGE-PEX-51-Spec-mods.txt.Z, define
+the complete specification of the Common Graphics Environment for PEX 5.1.
+The specification is considered stable as of 3/1/94.  The only possible
+additions to CGE-PEX-51-Spec-mods.txt.Z after 3/1/94 will be clarifications. 
+
+General information or questions about this specification should be directed 
+to cge-pex-51@hpgtdadm.fc.hp.com.
+

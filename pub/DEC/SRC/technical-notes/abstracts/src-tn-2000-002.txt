@@ -1,0 +1,12 @@
+"ESC/Java User's Manual"
+K. Rustan M. Leino, Greg Nelson, and James B. Saxe
+
+Note #2000-002, October 12, 2000. 
+
+The Compaq Extended Static Checker for Java (ESC/Java) is a programming tool that attempts to find common 
+run-time errors in Java programs by static analysis of the program text. Users can control the amount and kinds of 
+checking that ESC/Java performs by annotating their program with specially formatted comments called pragmas. 
+This manual is designed to serve both as an introduction to ESC/Java and as a reference manual. It starts by providing 
+an overview of ESC/Java through an illustrative example of its use and a summary of its features, and then goes on to 
+document all the pragmas supported by ESC/Java and all the kinds of warnings that it generates. Appendices provide 
+a brief sketch of ESC/Java's implementation, information about obtaining ESC/Java, and some discussion of its limitations. 

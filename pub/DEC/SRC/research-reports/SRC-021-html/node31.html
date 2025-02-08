@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Signals</TITLE>
+<META NAME="description" CONTENT="Signals">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node32.html">
+<LINK REL="previous" HREF="node30.html">
+<LINK REL="up" HREF="node22.html">
+<LINK REL="next" HREF="node32.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html571"
+ HREF="node32.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html567"
+ HREF="node22.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html561"
+ HREF="node30.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html569"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html570"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html572"
+ HREF="node32.html">Control Terminals</A>
+<B> Up:</B> <A NAME="tex2html568"
+ HREF="node22.html">Concepts and Facilities</A>
+<B> Previous:</B> <A NAME="tex2html562"
+ HREF="node30.html">Working Directories</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04029000000000000000">
+Signals</A>
+</H2>
+ <A NAME="Burlingame">&#160;</A>
+<A NAME="728">&#160;</A>
+Signals combine interprocess communication with process supervision.  A
+signal is a one-bit message that can be sent from one process to another.
+There are a number of differently named signals; a process has a separate
+receiving port for each named signal. (Most of the types and procedures
+related to signals are described in Section <A HREF="node50.html#Bolinas">5.2</A>.)
+<P><A NAME="730">&#160;</A>
+<A NAME="731">&#160;</A>
+There are default actions that occur when some signals are received, such
+as stopping the process, restarting the process, or terminating the
+process; other signals have no default action (the signal is ignored upon
+receipt).  The default action is actually mandatory for some signals, but
+can be overridden for others.  A process overrides the default action by
+declaring either that the signal is to be ignored or that the signal will
+be handled.  To handle a signal or set of signals, a process calls the
+procedure WaitForSignal, which blocks the calling thread until one of the
+signals has been received.
+<P>
+Signals in OS are used to report asynchronous events to processes; one can
+think of sending a signal to a process as analogous to sending an alert to
+a thread.  The most frequent reason for sending a signal is to report that
+the user typed Control-C (requesting termination of the current command or
+program).
+<P><A NAME="732">&#160;</A>
+Signals in OS are based on the signals in Ultrix; indeed, OS clients and
+Ultrix clients running on the same machine can send signals to each other.
+OS differs from Ultrix in its treatment of signals in two ways:
+<P><UL>
+<LI> OS delivers a signal to a client handler by unblocking a call to
+WaitForSignal, while Ultrix delivers a signal by calling a client-supplied
+procedure, thereby interrupting the single thread.
+<LI> While OS restricts the use of signals to reporting asynchronous events,
+Ultrix also uses signals to report synchronous events, that is those
+directly related to the execution of instructions or system calls by the
+process receiving the signal.  (Synchronous events are reported to Topaz
+programs via Modula-2+ exceptions.)
+</UL><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html571"
+ HREF="node32.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html567"
+ HREF="node22.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html561"
+ HREF="node30.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html569"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html570"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html572"
+ HREF="node32.html">Control Terminals</A>
+<B> Up:</B> <A NAME="tex2html568"
+ HREF="node22.html">Concepts and Facilities</A>
+<B> Previous:</B> <A NAME="tex2html562"
+ HREF="node30.html">Working Directories</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

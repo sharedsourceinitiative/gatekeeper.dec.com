@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Process Creation</TITLE>
+<META NAME="description" CONTENT="Process Creation">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node16.html">
+<LINK REL="previous" HREF="node14.html">
+<LINK REL="up" HREF="node11.html">
+<LINK REL="next" HREF="node16.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html298"
+ HREF="node16.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html294"
+ HREF="node11.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html288"
+ HREF="node14.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html296"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html297"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html299"
+ HREF="node16.html">Other Process State</A>
+<B> Up:</B> <A NAME="tex2html295"
+ HREF="node11.html">Topaz Operating System Interface</A>
+<B> Previous:</B> <A NAME="tex2html289"
+ HREF="node14.html">Signals</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION02044000000000000000">
+Process Creation</A>
+</H2>
+<A NAME="sec-processcreation">&#160;</A>
+<A NAME="317">&#160;</A>
+<A NAME="318">&#160;</A>
+<A NAME="319">&#160;</A>
+<A NAME="320">&#160;</A>
+<A NAME="321">&#160;</A>
+UNIX provides simple but powerful facilities for creating processes and
+executing program images, involving three main system calls: <TT>fork</TT>,
+<TT>wait</TT>, and <TT>exec</TT>.  <TT>fork</TT> creates a child process whose
+memory, set of open files, and other system-maintained state components
+are all copied from the calling process.  <TT>wait</TT> waits for the next
+termination of a child of the calling process; there is also a nonblocking
+form of <TT>wait</TT> and a signal <TT>SIGCHLD</TT> sent by the system whenever
+a child process terminates.  <TT>exec</TT> overlays the address space of the
+calling process with a new program image.
+<P>
+Typically UNIX programs use these facilities in one of two stylized ways.
+One is to create an extra thread of control; for example a ``terminal
+emulator'' program uses a pair of processes for full-duplex communication
+with a remote system.  The other is to run a new program image; for
+example, the shell runs each command in a new child process.
+<P><A NAME="330">&#160;</A>
+<A NAME="331">&#160;</A>
+<A NAME="332">&#160;</A>
+In Topaz, the way to create an extra thread of control is simply to fork a
+new thread within the same process.  Topaz must still provide a mechanism
+for running a new program image, and the UNIX method won't do.  In UNIX,
+the parent calls <TT>fork</TT>; the child (initially executing the same
+program image as the parent) makes any necessary changes to its process
+state (e.g., opening and closing files or changing the user id), and
+finally calls <TT>exec</TT> to overlay itself with the new program image.
+Since  the <TT>fork</TT>-<TT>exec</TT> sequence involves a large amount of shared
+mutable state (the entire child process), it isn't surprising that it
+doesn't work for Topaz.  Would <TT>fork</TT> copy all threads?  In the Apollo
+and Mach systems, only the thread that calls <TT>fork</TT> is copied
+[<A
+ HREF="node19.html#tevanian:machthreads">17</A>].  But what happens if locks were held by
+other threads in the parent process?  If <TT>fork</TT> copied all threads,
+what would it mean to copy a thread blocked in a system call?
+<P><A NAME="341">&#160;</A>
+<A NAME="342">&#160;</A>
+<A NAME="343">&#160;</A>
+<A NAME="344">&#160;</A>
+To address this problem, Topaz replaces <TT>fork</TT> and <TT>exec</TT> with a
+single new procedure <TT>StartProcess</TT>, which accepts as parameters all
+the modifiable components of a process state (namely anything that could
+be changed between a call to <TT>fork</TT> and the subsequent call to
+<TT>exec</TT>, such as the set of open files and the user id).  Topaz also
+replaces <TT>wait</TT> with <TT>WaitForChild</TT>, which waits for the
+termination of a specific child process.
+<P>
+There are several reasons for not merging the functions of
+<TT>StartProcess</TT> and <TT>WaitForChild</TT> into a single procedure that would
+block until termination of the child process.  As it stands,
+<TT>StartProcess</TT> returns the process identifier of the new process and
+<TT>WaitForChild</TT> returns a status value indicating whether the child
+terminated or temporarily stopped.  These features allow a process to be
+observed and controlled while it executes, in a way compatible with 4.2BSD
+job control.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html298"
+ HREF="node16.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html294"
+ HREF="node11.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html288"
+ HREF="node14.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html296"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html297"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html299"
+ HREF="node16.html">Other Process State</A>
+<B> Up:</B> <A NAME="tex2html295"
+ HREF="node11.html">Topaz Operating System Interface</A>
+<B> Previous:</B> <A NAME="tex2html289"
+ HREF="node14.html">Signals</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

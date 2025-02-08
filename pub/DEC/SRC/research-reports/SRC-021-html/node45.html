@@ -1,0 +1,538 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Manipulating File Attributes</TITLE>
+<META NAME="description" CONTENT="Manipulating File Attributes">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node46.html">
+<LINK REL="previous" HREF="node44.html">
+<LINK REL="up" HREF="node39.html">
+<LINK REL="next" HREF="node46.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html747"
+ HREF="node46.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html743"
+ HREF="node39.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html737"
+ HREF="node44.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html745"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html746"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html748"
+ HREF="node46.html">Opening and Examining Directories</A>
+<B> Up:</B> <A NAME="tex2html744"
+ HREF="node39.html">The OS Interface: Files</A>
+<B> Previous:</B> <A NAME="tex2html738"
+ HREF="node44.html">Manipulating Open-File State</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04046000000000000000">
+Manipulating File Attributes</A>
+</H2>
+ <A NAME="Concord">&#160;</A>
+While the main purpose of a file is either to provide storage (regular
+files) or to provide a uniform input/output interface (device files and
+pipes), there are some miscellaneous attributes associated with each file.
+The procedures in this subsection allow examining and modifying those
+attributes.
+<P><A NAME="2107">&#160;</A>
+<A NAME="2108">&#160;</A>
+<A NAME="2109">&#160;</A>
+<A NAME="2110">&#160;</A>
+<A NAME="2111">&#160;</A>
+<A NAME="2112">&#160;</A>
+<A NAME="2113">&#160;</A>
+<A NAME="2114">&#160;</A>
+<A NAME="2115">&#160;</A>
+<A NAME="2116">&#160;</A>
+<A NAME="2117">&#160;</A>
+<A NAME="2118">&#160;</A>
+<A NAME="1098">&#160;</A>
+<A NAME="1099">&#160;</A>
+<A NAME="1100">&#160;</A>
+<A NAME="1101">&#160;</A>
+<A NAME="1102">&#160;</A>
+<PRE>
+TYPE
+  FileType =
+    (FTDirectory,
+     FTLink, (* symbolic link *)
+     FTRegular, (* disk file *)
+     FTStructured, (* none on Taos *)
+     FTUnstructured, (* so-called character device *)
+     FTPipe, (* pipe *)
+     FTSocket, (* socket--none on Taos *)
+     FTFIFO); (* System V named pipe--none on Taos *)
+  FileClass = SET OF FileType;
+
+CONST
+  FCLeaf = FileClass{FTRegular .. FTFIFO};
+  FCDevice = FileClass{FTStructured, FTUnstructured};
+</PRE>
+<P><A NAME="2119">&#160;</A>
+<A NAME="2120">&#160;</A>
+<PRE>
+TYPE
+  Major = CARDINAL;
+  Minor = CARDINAL;
+</PRE>
+<P>
+For each device file (FCDevice) there are two identifying values of type
+Major and Minor.  Major maps onto a device driver, while Minor indicates a
+particular instance.
+<P>
+Ultrix note: Instances of Major and Minor always have values less than
+256.
+<P><A NAME="1105">&#160;</A>
+Taos note: Devices with values larger than 256 are truncated when examined
+by programs using the Ultrix kernel-call interface.
+<P><A NAME="2121">&#160;</A>
+<PRE>
+TYPE
+  VID = RECORD p: UID.Constant; t: UID.Counter; END;
+</PRE>
+<P><A NAME="1107">&#160;</A>
+A VID identifies a logical volume.
+<P><A NAME="1108">&#160;</A>
+Taos note: A VID is equivalent to a LocalFile.ID.
+<P><A NAME="2122">&#160;</A>
+<PRE>
+  FileInfo = RECORD
+    size: CARDINAL;
+    length: CARDINAL;
+</PRE>
+<P><PRE>
+    atime: Time.T;
+    ctime: Time.T;
+    mtime: Time.T;
+</PRE>
+<P><PRE>
+    mode: FileMode;
+</PRE>
+<P><PRE>
+    nLinks: CARDINAL;
+</PRE>
+<P><PRE>
+    CASE fileType: FileType OF
+    | FTStructured, FTUnstructured: major: Major; minor: Minor;
+    ELSE
+    END;
+</PRE>
+<P><PRE>
+    instance: Text.T;
+    vid: VID;
+    fileSeq: CARDINAL;
+    fileBlock: CARDINAL;
+</PRE>
+<P><PRE>
+    owner: Text.T;
+    group: Text.T;
+  END; (* FileInfo *)
+</PRE>
+<P>
+A FileInfo record packages the attribute information available about a
+file via the GetInfo and PGetInfo procedures.
+<P>
+The length of a file gives the number of bytes logically contained in the
+file: it is the position at which Read reports end of file.  The size
+gives the number of bytes currently allocated to the file, in anticipation
+of further growth.
+<P><A NAME="1110">&#160;</A>
+<A NAME="1111">&#160;</A>
+<A NAME="1112">&#160;</A>
+The atime field records when the file was last accessed (read or written).
+The mtime field records when the file was last modified (written, or
+changed in length).  The ctime field records when some attribute of the
+file was last changed (by any of the procedures in this section, or those
+in Section <A HREF="node47.html#BigBasin">4.8</A>, page <A HREF="node47.html#BigBasin"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A> that affect fields of
+the FileInfo record).
+<P>
+The mode field gives the access mode and miscellaneous file state (mainly
+SetUIDonExec).
+<P><A NAME="1115">&#160;</A>
+<A NAME="1116">&#160;</A>
+The nLinks field counts the total number of directory entries (hard links)
+pointing to this file.  It may be an overestimate if the volume needs
+scavenging.
+<P>
+The fileType field specifies what kind of file this is.  For device files,
+the major and minor fields determine the device driver and instance of
+that device type.
+<P><A NAME="1117">&#160;</A>
+The instance, vid, fileSeq, and fileBlock fields map the file onto the
+underlying representation.  The instance field is NIL if the file resides
+on the local machine, otherwise it specifies the instance of the remote
+file service used to access the file.  There may be more than one such
+instance serving a particular volume, so the instance field is not a
+substitute for the vid field in testing whether two remote disk files are
+the same.
+<P><A NAME="1118">&#160;</A>
+The vid field specifies the logical volume on which the file resides; it
+is unique across all machines.
+<P><A NAME="1119">&#160;</A>
+<A NAME="1120">&#160;</A>
+The fileSeq field is a unique identifier for the file within its volume.
+On Ultrix, the number may eventually be reused (it is known as an inode
+number); on Taos, it is unique for all time.  Two regular files are
+identical if and only if they have the same vid and fileSeq values.
+<P>
+On Taos, the fileBlock field specifies the logical block number within the
+volume on which the file begins.  On Ultrix, this field is always zero.
+<P>
+The owner field specifies the user name of the owner of the file; the
+group field specifies the name of the group of users that is singled out
+to receive special access to the file (see the discussion of access modes
+on page <A HREF="node40.html#Orinda"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).
+<P><A NAME="2123">&#160;</A>
+<PRE>
+PROCEDURE GetInfo(
+    f: File;
+    VAR (* OUT *) info: FileInfo;
+    returnNames: BOOLEAN := TRUE)
+  RAISES {Error};
+  (* BadFileEC, RemoteFileEC, IOErrorEC, PvOfflineEC *)
+</PRE>
+<P><A NAME="2124">&#160;</A>
+<PRE>
+PROCEDURE PGetInfo(
+    dir: Dir;
+    path: PathName;
+    VAR (* OUT *) info: FileInfo;
+    follow: BOOLEAN := TRUE;
+    returnNames: BOOLEAN := TRUE;
+    euser: User := NIL)
+  RAISES {Error}; (* NotSuperUserEC, PathES, FailureES? *)
+</PRE>
+<P><A NAME="1124">&#160;</A>
+GetInfo and PGetInfo return information about a file.  GetInfo accepts a
+file handle for an open file, while PGetInfo accepts the path name of a
+file.  If the file is actually a symbolic link and follow is FALSE, then
+PGetInfo returns information about the link itself rather than its
+referent.
+<P><A NAME="1125">&#160;</A>
+If returnNames is TRUE, the owner and group fields are filled in;
+otherwise they are set to NIL.  (This is an optimization to avoid reading
+/etc/passwd in the Ultrix emulation and to avoid an allocation.)
+<P>
+PGetInfo interprets the euser parameter the same way Open does.
+<P><A NAME="2125">&#160;</A>
+<PRE>
+PROCEDURE SetLength(f: File; length: CARDINAL)
+  RAISES {Error};
+  (* BadFileEC, InvalidObjectEC, IOErrorEC, PvOfflineEC,
+     RemoteFileEC, NotEnoughRoomEC *)
+</PRE>
+<P><A NAME="2126">&#160;</A>
+<PRE>
+PROCEDURE PSetLength(
+    dir: Dir;
+    path: PathName;
+    size: CARDINAL;
+    euser: User := NIL)
+  RAISES {Error};
+  (* NotSuperUserEC, PathES, InvalidObjectEC, NotEnoughRoomEC,
+     FailureES? *)
+</PRE>
+<P>
+SetLength and PSetLength set the length of the file, that is the point at
+which Read and FRead report end of file, to the specified number of bytes.
+If the length increases, the size, that is the number of bytes actually
+allocated, is increased to that needed to hold the new length and each new
+byte is set to zero.  Decreasing the length has no effect on the size, so
+usually SetSize or PSetSize should be called afterward.  See SetSize and
+PSetSize below.
+<P>
+SetLength does nothing if f refers to a device; it raises InvalidObjectEC
+if f refers to a pipe or socket.  PSetLength raises InvalidObjectEC if the
+path name specifies anything other than a regular file.
+<P>
+PSetLength interprets the euser parameter the same way Open does.
+<P><A NAME="SanJose">&#160;</A><A NAME="2127">&#160;</A>
+<PRE>
+PROCEDURE SetSize(f: File; size: CARDINAL)
+  RAISES {Error};
+  (* BadFileEC, InvalidObjectEC, IOErrorEC, PvOfflineEC,
+     RemoteFileEC, NotEnoughRoomEC *)
+</PRE>
+<P><A NAME="2128">&#160;</A>
+<PRE>
+PROCEDURE PSetSize(
+    dir: Dir;
+    path: PathName;
+    size: CARDINAL;
+    euser: User := NIL)
+  RAISES {Error};
+  (* NotSuperUserEC, PathES, InvalidObjectEC, InvalidArgumentEC,
+     NotEnoughRoomEC, FailureES? *)
+</PRE>
+<P>
+SetSize and PSetSize reserve enough storage for a file so that it can grow
+to a specified number of bytes in length.  SetSize accepts a file handle
+for an open file, while PSetSize accepts the path name of a file.
+<P>
+SetSize and PSetSize do nothing if f refers to a device or to a file
+residing on an Ultrix machine.  SetSize raises InvalidObjectEC if f refers
+to a pipe or socket.
+<P>
+If a program can estimate the eventual length of a file it will be
+writing, setting the size after opening the file serves to check whether
+sufficient disk space exists and to reserve it for the specified file.
+This contributes towards minimizing the fragmentation of disk space.
+<P>
+SetSize and PSetSize raise InvalidArgumentEC if the new size is less than
+the current length of the file.
+<P>
+PSetSize interprets the euser parameter the same way Open does.
+<P>
+Taos note: Setting the size explicitly is an optimization for use by
+programmers trying to use disk space carefully.  Taos automatically
+increases the size when a SetLength or a write past the current size
+occurs.  When the last open-file object for a file is deleted, Taos
+automatically decreases the size to the minimum needed to hold the length
+if and only if the last size-setting operation was an automatic one.
+<P>
+Ultrix note: SetSize and PSetSize are ignored.
+<P><A NAME="SanCarlos">&#160;</A><A NAME="2129">&#160;</A>
+<A NAME="2130">&#160;</A>
+<PRE>
+PROCEDURE GetDevPGRP(f: File): PGRP RAISES {Error};
+  (* InvalidObjectEC, BadPIDEC *)
+
+PROCEDURE SetDevPGRP(f: File; pgrp: PGRP) RAISES {Error};
+  (* InvalidObjectEC *)
+</PRE>
+<P><A NAME="1134">&#160;</A>
+<A NAME="1135">&#160;</A>
+GetDevPGRP and SetDevPGRP get and set the distinguished process group
+associated with a device.  If the file is not a device, GetDevPGRP and
+SetDevPGRP raise InvalidObjectEC.  If the file is a device whose process
+group hasn't yet been set, GetDevPGRP raises BadPIDEC.
+<P>
+See the discussion of job control in Section <A HREF="node33.html#Alamo">2.11</A>, page
+<A HREF="node33.html#Alamo"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.
+<P><A NAME="2131">&#160;</A>
+<PRE>
+PROCEDURE SetMode(
+    f: File;
+    mode: FileMode;
+    euser: User := NIL)
+  RAISES {Error};
+  (* NotSuperUserEC, BadFileEC, NotOwnerEC,
+     IOErrorEC, PvOfflineEC, RemoteFileEC *)
+</PRE>
+<P><A NAME="2132">&#160;</A>
+<PRE>
+PROCEDURE PSetMode(
+    dir: Dir;
+    path: PathName;
+    mode: FileMode;
+    euser: User := NIL)
+  RAISES {Error};
+  (* NotSuperUserEC, PathES, NotOwnerEC, FailureES? *)
+</PRE>
+<P><A NAME="1140">&#160;</A>
+<A NAME="1141">&#160;</A>
+<A NAME="2133">&#160;</A>
+<A NAME="2134">&#160;</A>
+SetMode and PSetMode set the file mode of a file.  SetMode accepts a file
+handle for an open file, while PSetMode accepts the path name of a file or
+directory.  The file mode contains the access mode, controlling which
+processes can access the file, and also contains the FileState (e.g., the
+SetUIDonExec flag).
+<P>
+These procedures raise NotOwnerEC unless the calling process is the owner
+of the file or is the super-user.
+<P>
+SetMode and SetMode interpret the euser parameter the same way Open does.
+<P>
+Note that changing the owner of a file or opening it for writing clears
+the SetUIDonExec flag.
+<P><A NAME="2135">&#160;</A>
+<PRE>
+PROCEDURE SetOwner(
+    f: File;
+    owner: Text.T;
+    group: Text.T;
+    euser: User := NIL)
+  RAISES {Error};
+  (* NotSuperUserEC, BadFileEC, InvalidObjectEC,
+     NowOwnerEC, FailureES? *)
+</PRE>
+<P><A NAME="2136">&#160;</A>
+<PRE>
+PROCEDURE PSetOwner(
+    dir: Dir;
+    path: PathName;
+    owner: Text.T;
+    group: Text.T;
+    euser: User := NIL)
+  RAISES {Error};
+  (* NotSuperUserEC, PathES, NotOwnerEC, FailureES? *)
+</PRE>
+<P><A NAME="1146">&#160;</A>
+<A NAME="1147">&#160;</A>
+SetOwner and PSetOwner set the owner and user group of a file, and also
+clear the SetUIDonExec flag.  SetOwner accepts a file handle for an open
+file, and raises InvalidObjectEC unless it refers to a regular file or
+device.  PSetOwner accepts the path name of a file, directory, or symbolic
+link.
+<P>
+Specifying NIL for owner or group means to leave it as it stands.  A
+process must be the super-user to change the owner, otherwise
+NotSuperUserEC is raised.  A process must either be the super-user or must
+be both the owner of the file and a member of the new group to change the
+user group, otherwise NotOwnerEC is raised.
+<P>
+SetOwner and PSetOwner interpret the euser parameter the same way Open
+does.
+<P>
+Ultrix note:  SetOwner and PSetOwner also clear the SetGIDonExec flag.
+<P><A NAME="2137">&#160;</A>
+<PRE>
+PROCEDURE PAccess(
+    dir: Dir;
+    path: PathName;
+    euser: User := NIL)
+    : FileAccessMode
+  RAISES {Error};
+  (* NotSuperUserEC, PathES, FailureES? *)
+</PRE>
+<P><A NAME="2138">&#160;</A>
+PAccess determines the FileAccessMode that the calling process would have
+for the specified file: a subset of rOK, wOK, and xOK.  PAccess raises
+LookUpEC if the file doesn't exist, but it only raises
+ProtectionViolationEC if the caller has insufficient privileges to access
+the prefix of the specified path name leading up to the final directory.
+<P>
+PAccess interprets the euser parameter the same way Open does.
+<P><A NAME="2139">&#160;</A>
+<PRE>
+PROCEDURE PGetLink(
+    dir: Dir;
+    path: PathName;
+    euser: User := NIL)
+    : Text.T
+  RAISES {Error};
+  (* NotSuperUserEC, PathES, InvalidArgumentEC, FailureES? *)
+</PRE>
+<P><A NAME="1151">&#160;</A>
+PGetLink returns the value of the symbolic link with the specified path
+name; it raises InvalidArgumentEC if the path name doesn't specify a
+symbolic link.
+<P>
+PGetLink interprets the euser parameter the same way Open does.
+<P><A NAME="2140">&#160;</A>
+<PRE>
+PROCEDURE PSetTimes(
+    dir: Dir;
+    path: PathName;
+    atime: Time.T;
+    mtime: Time.T;
+    euser: User := NIL)
+  RAISES {Error};
+  (* NotSuperUserEC, PathES, NotOwnerEC, FailureES? *)
+</PRE>
+<P><A NAME="1153">&#160;</A>
+<A NAME="1154">&#160;</A>
+<A NAME="1155">&#160;</A>
+PSetTimes sets the access and modification times of the file to the
+specified values, and sets the attribute-change time (ctime) of the file
+to the current time.  It raises NotOwnerEC if called by other than the
+super-user or the owner of the file.
+<P>
+PSetTimes interprets the euser parameter the same way Open does.
+<P><A NAME="Fremont">&#160;</A><A NAME="2141">&#160;</A>
+<PRE>
+PROCEDURE IOCtl(
+    f: File;
+    operation: UNSIGNED;
+    VAR (* IN and/or OUT *) argument: ARRAY OF System.Byte)
+  RAISES {Error, Alerted};
+  (* BadFileEC, InvalidArgumentEC, OperationConflictEC,
+     InvalidObjectEC, BadIOCtlOpEC, IOErrorEC,
+     PvOfflineEC, RemoteFileEC *)
+</PRE>
+<P>
+IOCtl performs a device-specific operation on the device underlying the
+file handle f.  It raises BadIOCtlOpEC if f doesn't refer to a device or
+if f refers to a device but the operation does not apply to the particular
+device type.  It raises InvalidArgumentEC if the `argument' parameter does
+not meet the requirements (size or value) of the specified operation.
+<P><A NAME="1158">&#160;</A>
+<A NAME="1159">&#160;</A>
+<A NAME="1160">&#160;</A>
+See the documentation of the specific device for details about the
+operations and their arguments, e.g., tty(4).  The IOCtl and TtyDevice
+interfaces contain Modula-2+ types and constants for use with the IOCtl
+procedure.
+<P>
+No currently implemented IOCtl operations are actually alertable.
+<P>
+Taos note: The only commands that are implemented are the Ultrix
+device-specific commands for which OS provides no specialized procedure
+(e.g., GetDevPGRP).  This excludes FIOCLEX/FIONCLEX, FIOGETOWN/FIOSETOWN,
+FIOASYNC, FIONBIO, FIONREAD, TIOCNXCL/TIOCEXCL, TIONOTTY, and
+TIOCGPGRP/TIOCSPGRP.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html747"
+ HREF="node46.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html743"
+ HREF="node39.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html737"
+ HREF="node44.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html745"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html746"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html748"
+ HREF="node46.html">Opening and Examining Directories</A>
+<B> Up:</B> <A NAME="tex2html744"
+ HREF="node39.html">The OS Interface: Files</A>
+<B> Previous:</B> <A NAME="tex2html738"
+ HREF="node44.html">Manipulating Open-File State</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

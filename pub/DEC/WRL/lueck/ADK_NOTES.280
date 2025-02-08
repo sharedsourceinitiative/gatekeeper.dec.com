@@ -1,0 +1,466 @@
+
+
+			ADK NOTES
+			---------
+
+
+This file list the changes which have occured in recent ADK releases.
+
+
+
+Atom ADK version 2.59, released April 8, 1999:
+
+   Digital Unix is now called Tru64 Unix.  The README has been updated to 
+   reflect that change.
+
+
+    Modifications to Atom:
+
+     -  A line number problem with large C++ applications has been fixed.
+
+     -  A scoping problem in the local symbol table was fixed.
+
+     -  The cause of an assertion in the trampoline table support has been 
+	fixed.
+
+
+
+Atom ADK version 2.57, released February 12, 1999:
+
+    Modifications to Atom:
+
+     -  Binary Compatibility:  An binary compatiblity skew was introduced
+	in Atom 2.45 in the file /usr/include/cmplrs/atom.inst.h. It affected
+	the IClassType and the ITypeType.  This file has now been fixed.  If 
+	you move an instrumentation .o file from one system to another, and 
+	they have different versions of Atom, you may see an error.
+
+     -  Instrumentation points will not be inserted between load lock
+	and store conditional instructions.
+
+     -  Instrumentation points will not be inserted in a floating point
+	trap shadow.
+
+     -  ThreadExcludeProc() is more restrictive.
+
+     -  Some performance optimizations were done, and other small bugs 
+	were fixed.
+
+
+    Modifications to Hiprof:
+
+     -  A new -samples mode is now supported in Hiprof: -toolargs=-samples
+
+      	This causes hiprof to profile CPU-time in all selected code using 
+	profil(2).  The resulting profile is a statistical sampling rather 
+	than a measurement, but it reflects the memory access delays suffered 
+	by the program, and it is usefully accurate when the run-time is more 
+	than a few seconds (the longer the better). The -asm, -heavy, and 
+	-lines options of gprof(1) can be used to display more finely grained 
+	profiles at the level of source-lines and machine-instructions.
+
+     -  Hiprof's -cputime mode is no longer supported for threaded programs,
+	because the mapping of the RPCC clock from kernel threads to pthreads
+	can not be achieved reliably. Use -samples instead; it is now the 
+	default profiling technique for the hiprof(1) command.
+
+
+
+Atom ADK version 2.54, released October 21, 1998:
+
+    Modifications to Atom:
+
+	A new warning level, "-w2", has been added.  This warning level 
+	suppresses warnings from analysis routines.  It is invoked on the
+	atom command line, or in the .desc file.
+
+        A new instruction type (ITypeType) has been added for NOPs.
+        It is InstTypeNop, and it is used with the IsInstType() routine.
+        IsInstType(inst, InstTypeNop) will return TRUE if the instruction
+        is any type of NOP instruction.
+
+	A problem was fixed when instrumenting a very large application
+	with "-gp" or "-Xgprog".  The local symbol table scope uses an
+	internal stack which was not being reallocated properly.  This
+	was causing seg faults.
+
+	Branching to local labels using BSR instructions is now supported.
+	This means that a BSR instruction can be a ClassSubroutine or a 
+	ClassIbranch.  If your tool tests for the BSR opcode, it should
+	also test the class to ensure that the target is a subroutine.  
+
+	A bug in ThreadExcludeProc() was fixed.  This problem was preventing 
+	some functions from being excluded.
+
+	A bug in the tis support was fixed.  This was causing non-shared TLS
+	routines to seg fault.
+
+
+    Modifications to third(1) (Third Degree):
+	
+
+	The third(1) command now provides different default behavior,
+	as if the options "-blocks new -after exit" were used. That is,
+	instead of listing just the heap blocks it thinks are probably
+	new memory leaks (as if "-leaks new -after exit" were used), it
+	lists those that are probably leaks and those that are probably
+	not leaks, along with information on the risk of them being leaks.
+	This ensures that even low-risk potential leaks are reported.
+	Many of the leak-related messages have been reworded for clarity.
+	
+	Also, by default, reports of all kinds are generated only if a
+	procedure that was compiled -g or -gN (N>0) appears within 2 frames
+	of the top of the stack. This hides the many spurious errors that
+	result from reporting on system libraries. You can change this
+	behavior with the new -hide N option (-hide 0 prints all reports).
+
+	Most of the third(1) command's defaults are also used by the
+	"atom -tool third" form of Third Degree, but if the -Xlogformat
+	flag is specified, the old report syntax is used for compatibility
+	with dxheap (which uses this flag automatically).
+
+	The C++ "operator new" is no longer replaced for heap-tracking.
+	Instead, all the C++ allocator functions (ie the various flavors
+	of "new" in C++ V6.0) are all handled as recognized wrappers around
+	malloc. This means that heap reports' stack traces will be different
+	for C++ applications.
+
+	Several bugs are fixed. In particular:
+	- In ATMBASE500, thread stacks are now correctly handled	
+	  (ATMBASE400 never had a problem here).	
+	- Variable length stack-frames are no longer poisoned except at
+	  procedure entry, to help Fortran programs.
+	- The -dynobj option is removed from third(1), and stack-trace
+	  data is generated only for shared libraries that are selected
+	  with -all or -incobj (or that are instrumented by default).
+	  This greatly reduces the instrumentation time and the instrumented
+	  executable's size when large shared libraries (eg X windows) are not
+	  selected, but stack traces will not continue through such libraries.
+
+
+
+
+Atom ADK version 2.47, released June 12, 1998:
+
+	*****************************************************************
+	*								*
+	*	The Atom ADK is no longer supported for the 3.2x        *
+	*	versions of Digital Unix.				*
+	*								*
+	*****************************************************************
+
+    Modifications to Atom:
+
+        Support for odump-ing the dynamic sections of the instrumented
+	executable has been added.
+
+        A bug was fixed when a large application was using regular
+        relocations.  The overflow bit was not being checked.
+
+        A bug was fixed when using -A1 and the frame pointer.
+
+	Support for the new comment section format has been added.
+
+	Support for the new ldgp format has been added.
+
+        Changed the way that Atom handles WH64, ECB, and FETCH
+        instructions.  Users can now get the effective address value of 
+        these instructions using the VALUE specification in the Atom 
+        analysis routine prototype.
+
+        A new class, ClassMem, has been added to support the miscellaneous 
+        instructions.  The miscellaneous instructions which access memory 
+        were moved from ClassLoad to ClassMem.  The other miscellaneous 
+        instructions were moved from ClassLoad to ClassNull.
+
+        A new type has also been added to support the miscellaneous 
+        instructions which access memory.  InstTypeMem contains all 
+        instructions that access memory.  This is the set of all instructions 
+        in ClassLoad, ClassStore and ClassMem.
+		
+	Support for the local symbol table in the instrumented object has 
+	been improved.  This should help when debugging the instrumented
+	application.
+
+	New Thread Independent Storage (tis) routines have been added to
+	support the analysis routines.  They are: tisKeyCreateNew(), 
+	tisCondTimedWait() and tisGetExpiration.
+
+	Support was added to prevent deadlock if an analysis routine 
+	executed a fork.
+
+
+    Modifications to third(1) (Third Degree):
+	
+	The third(1) command is now installed in /usr/bin.
+
+	Third Degree no longer exits from erroneously re-entrant calls 
+	to heap-management functions if the program is non-threaded or 
+	if the -signals flag is specified.
+
+	It now provides more accurate leak, invalid-memory, and 
+	uninitialized-memory error reports.
+
+	Third Degree no longer crashes when flags with arguments are
+	specified in the THIRD_ARGS environment variable.
+
+	An instrumentation-time crash was fixed.
+
+	The "-uninit partword" option is now much faster.
+
+
+    Modifications to hiprof(1), pixie(1), and prof(1) profilers:
+
+	The hiprof(1) command is now installed in /usr/bin.
+
+	Threads without profiled procedures no longer deadlock hiprof.
+
+	hiprof(1) will not profile the __start, __INIT_*, __FINI_*, or
+	_call_* system-routines, to avoid cluttering reports.
+
+	Combining the -threads flag with -dis or (g)prof flags will no
+	longer cause the drivers to crash.
+
+	Prof now correctly reports call-counts for procedures with 
+	alternate entry points, by reporting all calls as if they were to 
+	the primary entry-point.
+
+
+
+
+Atom ADK version 2.43, released March 11, 1998:
+
+	New drivers have been added for third degree, hiprof and pixie.  
+	No longer will users need to type the atom command to use the atom 
+	tools.  See the man pages prof_intro(1), hiprof(1), third(1), and 
+	pixie(1) for more information.
+
+
+	A few problems have been fixed since the Atom 2.39 ADK:
+
+	   A problem with ProcBefore inconsistencies was fixed.  An error
+	   was reported where BlockBefore actions were executed before 
+	   ProcBefore actions.
+
+	   Support was added to disable pthread cancellation in analysis 
+	   routines as the default.  A problem was reported when a thread
+	   was cancelled while it was in an analysis routine.
+
+	   A problem was fixed when using "-gp" with a large C++ application.
+	
+
+	This ADK contains the newly structured third degree as the default.
+	Using "atom -tool third" will use the new third.  If you should 
+	experience a crash or hang, please send stack traces with both -g 
+	and -gp to atombugs@zk3.dec.com.  To use the old third, set 
+	ATOMTOOLPATH to /usr/lib/cmplrs/atom/old_third.
+
+
+Atom ADK version 2.39, released October 17, 1997:
+
+	Announcing a new version of Third Degree!  This is the version of 
+	Third Degree that will be supported in the next Digital Unix release.
+	The earlier version of Third will be replaced with this new Third.
+	The new Third was designed to reduce the number of false positives, 
+	and to provide alternative styles of report.  Several new options 
+	have been added to accomodate these features.  
+
+           uninit_partword yes|no (default no)
+                Enables additional run-time analysis to improve the accuracy
+                of "reading uninitialized heap/stack" warnings, for data
+                values that are smaller than 32 bits (eg characters).
+
+           uninit_copy yes|no (default no)
+                Reports "reading uninitialized heap/stack" warnings on
+                the first access to the uninitialized memory, instead of
+                on the first computation that uses it (which may follow
+                several copy operations).
+
+           uninit_dataflow yes|no (default no)
+                Reports "reading uninitialized heap/stack" warnings on
+                all copies and computations through which each uninitialized
+                data value flows. Implies "uninit_copies yes" and
+                "uninit_partword yes".
+
+           uninit_repeat yes|no (default no)
+                Reports "reading uninitialized heap/stack" warnings on
+                every line of a procedure that uses an uninitialized data
+                value, instead of just on the procedure's first use of it.
+                Each execution of a given line is still reported only once.
+
+
+	Otherwise, the new Third should function exactly as the old Third.  
+	Using the default "atom -tool third" will use the new Third.  To use 
+	the old Third, set ATOMTOOLPATH to /usr/lib/cmplrs/atom/old_third.
+
+
+	A few problems have been fixed since the Atom 2.37 ADK:
+
+		It was discovered that REG_PC was incorrect when replacing 
+		procedures.  REG_PC was incorrect for all procedures after 
+		the replaced procedure.  
+
+		A problem with ResolveTargetProc and symbol resolution was 
+		fixed.
+
+
+Atom ADK version 2.37, released Sept. 12, 1997:
+
+   Bugs Fixed:
+
+	- Pixie (with -toolargs=-threads), Hiprof, and Third Degree 
+	  no longer analyze any of the system libraries that are involved 
+	  with DECthreads, when "-env threads" is specified for threaded 
+	  programs. This makes the tools reliable with more complex 
+	  applications.
+
+	- Pixie has regained its support for initialization routines 
+	  that call each other out of order (support it temporarily lost 
+	  in the last ADK).
+
+	- Hiprof's -toolargs=-textout option now works again for 
+	  non-threaded programs.
+
+	- Several problems with "-gp" support in C++ applications were fixed.
+
+	- A problem with unused local labels and "-gp" support was fixed.
+
+
+Atom ADK version 2.33, released June 2, 1997:
+
+   New Features:
+
+	- Floating point support is complete.  Analysis routines may now
+	  have floating point arguments.  The term FREG must be used
+	  instead of REG when using floating point registers.  If you are
+	  currently using floating point registers, and declaring them as
+	  REG, you must change the declarations to FREG.
+
+	- Atom has a new flag "-pthread", which uses a thread-safe version 
+	  of libc.a, for instrumenting programs that link with libpthread.  
+	  This flag is now used in the .threads.desc files of the Hiprof, 
+          Pixie, and Third Degree tools, replacing the previous -Xthreads 
+	  flag.
+
+	- New instrumentation and analysis routines have been added to 
+	  perform thread-safe and per-thread analysis.  See the man page
+	  Thread(5).  An example of how to write a thread-safe Atom tool is 
+          provided by the /usr/ccs/lib/cmplrs/atom/examples/prof.* files. 
+
+	- The -[no]threads options has been added to pixie, so it can profile
+	  each thread independently, like other profilers can. The new 
+	  -nothreads option has been added to hiprof for consistency.
+
+	- The -fork option has been added to Third Degree, Hiprof and Pixie.
+	  Third Degree produces separate .3log files for forked subprocesses
+	  and a separate .3log.sig file for errors in signal handlers that 
+	  interrupt regular error reporting.  In Hiprof and Pixie, -fork allows
+	  profiling of forked subprocesses without fully instrumenting 
+	  libc.so.
+
+   Bug Fixes:
+
+        - A problem reported with "-gp" and third degree was fixed.  If the
+          application is compiled with "-g" and then instrumented with "-gp",
+	  the function name is now visible in the .3log file (instead of 
+	  <unknown>).
+
+	- A couple of bugs with line number support were fixed.
+
+	- A bug where an assertion was seen due to a block data statement was
+	  fixed.
+
+	- A bug was fixed with the -A1 format, which was using the frame
+	  register without setting it.
+
+	- Third Degree, Hiprof and Pixie can now handle an indefinite number 
+	  of threads and can do so without deadlocking in signal handlers.
+
+	- In the Hiprof tool,  the bug which caused call-graph entries for 
+	  "call_pal" system-calls where no such calls occurred has been fixed.
+
+
+Atom ADK version 2.29, released December 11, 1996:
+
+	- Instrumented application debugging now available!  Use -gp (or
+	  -Xgprog) on the Atom command line.
+
+	- Instrumented kernel debugging now available!  Use -gp (or -Xgprog)
+	  on the Atom command line. 
+
+	- Floating point values can now be passed in registers to analysis
+	  routines.  Floating point values must be passed in registers.
+	  Full floating point support is still under development.
+
+	- An earlier modification to prevent the subdividing of basic blocks
+	  was causing causing problems with certain kinds of switch statements.
+	  This modification has been removed.  
+
+	- A problem was reported that was causing "pixie -testcoverage" 
+	  information to be inaccurate.  This problem has been fixed.
+
+
+Atom ADK version 2.24, released September 27, 1996:
+
+	- An incorrect Object Id calculation was causing third degree to
+	  segmentation fault in malloc.  This occured when a library was
+	  included in an image more than once, generally by using symbolic
+	  links.  This is the index which is reported with the user call:
+		index = GetObjInfo(obj, ObjID);
+
+
+Atom ADK version 2.23, released September 18, 1996:
+
+	- An assertion error was reported on very large applications 
+	  instrumented with third.  This was caused by an oversight in
+	  the procedure replacement algorithm.  
+
+	- Absolute and relative pathnames are supported with the -incobj,
+	  -excobj or -dynobj options.  Note that this feature is only 
+	  supported in Digital Unix 4.0 or later.  
+
+	- The "prof -pixie -invocations" option again includes calls 
+	  into shared libraries.
+
+ 	- gprof now supports hiprof's 64-bit signed procedure-call counts
+ 	  without limiting the value to 32 bits.
+
+	- pixstats is now a symbolic link to prof and can be invoked
+	  either as "pixstats" or as the prof-style "prof -pixstats".
+
+	- hiprof's -pagefaults option now supports programs that fork.
+
+	- Applications instrumented with third degree were tripping an
+	  assertion error if there was a symbolic link and a hard link
+	  to the same library.  
+
+
+Atom ADK version 2.21, released July, 1996:
+
+	*) Two problems with kernel instrumentation have been fixed.
+		+ Array parameters passed to ProgramBefore
+		  instrumentation points were interfering with the kernels
+		  use of memory.  Such parameters were allocated in
+		  memory that the kernel deallocated after
+		  initialization.  Thus, the parameters were not
+		  available for the entire lifetime of the kernel.  Such
+		  array parameters are now allocated in stable memory.
+
+		+ Some call_pal instructions in the analysis code were
+		  trashing registers that Atom did not save/restore.
+		  Atom now saves and restores all the correct registers
+		  for call_pal instructions.
+
+	*) Applications with invalid branch instructions no longer cause
+	   Atom to dump core.
+
+	*) A problem with TMPDIR processing was fixed in the Atom driver.
+
+	*) Atom can now correctly process applications with shared
+	   libraries that are links to other shared libraries used by
+	   the same application.
+
+	*) Some error messages have been improved to print the source
+	   file and line number of the offending statement in the tool's
+	   instrumentation code.
+

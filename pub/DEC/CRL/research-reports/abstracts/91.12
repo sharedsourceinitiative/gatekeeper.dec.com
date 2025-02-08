@@ -1,0 +1,28 @@
+		      Technical Report CRL 91/12
+		    Linearizable Counting Networks
+			   Maurice Herlihy
+			      Nir Shavit
+			     Orli Waarts
+
+The counting problem requires n asynchronous processors to assign themselves
+successive values.  A solution is linearizable if the order of the values
+assigned reflects the real-time order in which they were requested.
+Linearizable counting lies at the heart of concurrent timestamp generation, as
+well as concurrent implementations of shared counters, FIFO buffers, and
+similar data structures.
+
+We consider solutions to the linearizable counting problem in a multiprocessor
+architecture in which processors communicate by applying read-modify-write
+operations to a shared memory.  Linearizable counting algorithms can be judged
+by three criteria: the memory contention produced, whether processors are
+required to wait for one another, and how long it takes a processor to choose a
+value (the latency).  A solution is ideal\/ if it has low contention, low
+latency, and it eschews waiting.  The conventional software solution, where
+processes synchronize at a single variable, avoids waiting and has low latency,
+but has high contention.  In this paper we give two new counting network
+constructions, one with low latency and low contention, but that requires
+processors to wait for one another, and one with low contention and no waiting,
+but that has high latency.  Finally, we prove that these trade-offs are
+inescapable: an ideal linearizable counting algorithm is impossible.  Since
+ideal non-linearizable counting algorithms exist, these results establish a
+substantial complexity gap between linearizable and non-linearizable counting.

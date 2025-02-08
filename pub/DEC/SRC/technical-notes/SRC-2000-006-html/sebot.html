@@ -1,0 +1,94 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta http-equiv="3D&quot;Content-Type&quot;" content="3D">
+   <meta name="3D&quot;GENERATOR&quot;" content="3D">
+   <meta name="GENERATOR" content="Mozilla/4.73 [en] (WinNT; U) [Netscape]">
+   <title>sebot</title>
+</head>
+<body>
+&nbsp;
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" >
+<tr>
+<td>
+<center><b><font size=+1>Performance Evaluation of the Piranha Memory Hierarchy</font></b>
+<p><b><font size=+0>Julien Sebot</font></b>
+<br><b><font size=+0>Universite Paris-Sud</font></b></center>
+</td>
+</tr>
+</table></center>
+
+<br>&nbsp;
+<br>&nbsp;
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" >
+<tr>
+<td><b><font size=+0>1 Introduction</font></b>
+<p>This summer, I explored how to improve TLB performance and second level
+cache fill policy in Piranha. Piranha is an 8-CPU on-chip multiprocessor
+targeted at database applications. The goal for this project is to achieve
+2 times the On-Line Transaction Processing (OLTP) performance in half the
+time and with one tenth of the engineering effort, when compared to contemporary
+processor design efforts.
+<p>The Piranha system will be fully synthetized in an ASIC process. The
+Piranha processing node will include 8 simple one-way alpha cores running
+at 400MHz, 32kB direct mapped first-level instruction and data caches,
+a shared 1MB 8-way set-associative second-level cache, 8-way set-associative,
+memory controllers, and an interconnect subsystem that connects processing
+nodes together.&nbsp;
+<br>&nbsp;
+<p><b><font size=+0>2 Benchmarks</font></b>
+<p>I used SimOS-Alpha and scaled-down TPC benchmarks for the performance
+evaluation. SimOS is a full-system simulation tool that models hardware
+in enough detail to boot an operating system. SimOS integrates several
+processor and memory systems simulators that I have used and improved.
+The TPC benchmarks we used are OLTP benchmarks called TPC-B and TPC-C.
+These are standard benchmarks used to model the activity of bank transactions
+and wholesale suppliers. For these programs, over 45% of the execution
+time is spent in the memory system in an architecture like Piranha.
+<br>&nbsp;
+<p><b><font size=+0>3 Evaluation</font></b>
+<p>One aspect of the memory system that has significant impact on performance
+is the address translation cache (TLB). The design constrains of the ASIC
+process to which Piranha is targeted prevents us from implementing a traditional
+fully-associative TLB. We have studied the impact of limited associativity
+on TLB performance, and concluuded that a 256-entry, 4-way set-associative
+TLB is 4% better than a 64-entry fully-associative TLB, for the scaled-down
+benchmarks at our disposal. This result is not definitive given that the
+TLB performance is affected by the scaled down nature of our benchmarks.&nbsp;
+<p>Another important area of system design that strongly effects memory
+system performance is the second-level cache. In Piranha, the combined
+first-level cache size is 512kB, and the second-level cache is 1MB. The
+Piranha team has chosen to implement a non-inclusive, shared, second-level
+cache (shared victim cache) to avoid wasting space in the second-level
+cache. We have determined that the performance impact of this choice on
+Piranha performance ranges between 5% to 9%, and that the performance gains
+over a standard inclusive policy becomes negligible for second-level cache
+sizes of 2MB or greater. The intuition behind these results is that, even
+when inclusion not enforced by hardware, in practice there will be many
+times in which a line will be present both in the L2 and one or many L1s.
+For larger caches, the penalty of enforcing inclusion decreases as the
+fraction of replicated (L1) data in the L2 is reduced.&nbsp;
+<p>In a non-inclusive cache hierarchy, the second-level cache is responsible
+for deciding when a L1 cache has to write back into the L2 (i.e., the L2
+fill policy). We have evaluated the performance of Piranha's current fill
+policy with respect to two potentially "ideal" fill policies: one that
+is very eager and one that is as lazy as possible in sending write backs
+to the L2. Both eager and lazy policies are infeasible to implement since
+the amount of L2 state that needs to be inspected would cause extra delays
+in satisfying processor requests. Therefore the comparison aims only at
+determining how different our current (implementable) policy deviates from
+the ideal cases. The results show that the 3 policies never differ more
+than 3% in performance, which further corroborates the effectiveness of
+the current scheme being implemented in Piranha.
+<br>&nbsp;</td>
+</tr>
+</table></center>
+
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+</body>
+</html>

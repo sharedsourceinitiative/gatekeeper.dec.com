@@ -1,0 +1,20 @@
+
+		AVAILABLE ELECTRONICALLY
+
+"An Old-Fashioned Recipe for Real Time"
+Martin Abadi and Leslie Lamport
+October 12, 1992.  67 pages
+
+
+Authors' abstract:
+
+Traditional methods for specifying and reasoning about concurrent
+systems work for real-time systems. Using TLA (the temporal logic of
+actions), we illustrate how they work with the examples of a queue and
+of a mutual-exclusion protocol. In general, two problems must be
+addressed: avoiding the real-time programming version of Zeno's
+paradox, and coping with circularities when composing real-time
+assumption/guarantee specifications. Their solutions rest on properties
+of machine closure and realizability.
+
+

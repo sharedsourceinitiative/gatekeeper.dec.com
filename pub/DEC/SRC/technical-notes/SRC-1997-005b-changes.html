@@ -1,0 +1,76 @@
+<HTML>
+<HEAD>
+<TITLE>Changes included in SRC Technical Note 1997-005b</TITLE>
+</HEAD>
+<BODY BGCOLOR="#ffffff" VLINK="#006633">
+<H2>Changes included in SRC Technical Note 1997-005b</H2>
+
+<P>The following list reflects the complete set of changes made to SRC
+Technical Note
+<A HREF="ftp://ftp.digital.com/pub/DEC/SRC/technical-notes/SRC-1997-005a.html"
+>1997-005a</A> to produce the revised note
+<A HREF="ftp://ftp.digital.com/pub/DEC/SRC/technical-notes/SRC-1997-005b.html"
+>1997-005b</A>.</P>
+
+<UL>
+
+<LI>The keyword <CODE>include</CODE> is changed to
+<CODE>import</CODE>.  The old keyword had a misleading connotation of
+textual macro inclusion.
+
+<P><LI> The syntax of list constructors is changed to use angle
+brackets instead of square brackets.  This syntax creates a minor
+ambiguity in the grammar; a new section explains how the ambiguity is
+resolved.
+
+<P><LI> The types t_nil, t_binding_ne, and t_list_ne are eliminated.
+Empty list and empty binding are now distinct values of type t_list
+and t_binding.  This change was made possible by the change to list
+syntax, which creates a syntactic distinction between empty list and
+empty binding that was previously lacking.
+
+<P><LI> The syntactic sugar [ = Id ] for the binding constructor [ Id
+= Id ] is removed.  New syntactic sugar [ Id ] for [ Id = Id ]
+replaces it.  This change makes the binding syntax used in the body of
+a model more consistent with that used in the files and import
+clauses.  It was made possible by the change to list syntax; formerly
+[ Id ] denoted a list.
+
+<P><LI> The desugaring of [ GenArc Delim = Id ] to [ GenArc = [ Id =
+Id ] ] is removed.  A new desugaring of [ GenArc Delim = Expr ] to [
+GenArc = Expr ] replaces it.  This change removes an apparently
+useless feature and gives meaning to certain expressions that were
+formerly syntactically legal but semantically undefined.
+
+<P><LI> The definition of the identifier token is more liberal; an
+identifier token may now begin with a digit, as long as it does not
+match the pattern for an integer token.  This change removes the need
+for extra quotation marks in certain common cases, such as when a
+model is being imported from a branch.
+
+<P><LI> Octal constants are now permitted.
+
+<P><LI> The description of tokenization is more precise.
+
+<P><LI> The meaning of an Arc nonterminal that matches an Integer
+token is clarified.
+
+<P><LI> The Files and Imports clauses now accept a general Arc on the
+left-hand side of an equal sign, but a new semantic rule forbids
+defining a top-level name that is not a legal identifier.  This clears
+up some poorly defined cases and disagreements between the spec and
+the implementation.
+
+<P><LI> Special cases in the translation of DelimPaths to filenames
+are corrected and clarified.
+
+<P><LI> The _par_map primitive is added.
+
+<P><LI> The type syntax is changed to use parentheses uniformly
+instead of using square brackets for lists and bindings.
+
+<P><LI> Some minor typos and wording errors are corrected.
+
+</UL>
+</BODY>
+</HTML>

@@ -1,0 +1,1184 @@
+<title>How to use SRC Modula-3</title>
+
+<a href="copyright.html">Copyright (c) 1993 Digital Equipment
+Corporation</a><p>
+
+
+This document describes each of the tools in the <a
+href="top.html">SRC Modula-3</a> distribution and how to use
+them.  Briefly, the tools include a <a href="#compiler">compiler</a>,
+a <a href="#linker">linker</a>, a <a href="#pp">pretty printer</a>, and a 
+<a href="#profiler">line-based profiler</a>.
+
+See also chapter~\ref{local} for tools and hints that are
+local to your installation.
+
+<a name=compiler>
+<h1>Compiling</h1>
+
+To compile a Modula-3 program, invoke <a
+href="/proj/man/mips/cat1/m3.1"><code>m3(1)</code></a>.  This driver
+is much in the style of <a
+href="/proj/man/4.2.mips/cat1/cc.1"><code>cc(1)</code></a>; the output
+is an object file, a library or an executable program, according to
+the options.<p>
+
+<code>m3</code> parses the command line and invokes
+the compiler and linker as required. <code>m3</code> tells the
+compiler where to seek imported interfaces and where to find the
+Modula-3 runtime library.  Arguments ending in <code>.m3</code> or
+<code>.i3</code> are assumed to name Modula-3 source files to be
+compiled.  Arguments ending in <code>.mo</code>, <code>.io</code> or
+<code>.o</code> are assumed to name object files, possibly created by
+other language processors, that are to be linked with the object files
+created by <code>m3</code>.  Arguments ending in <code>.mc</code>,
+<code>.ic</code>, or <code>.c</code> are assumed to name C source
+files to be compiled.  Arguments ending in <code>.ms</code>,
+<code>.is</code>, or <code>.s</code> are assumed to name assembly
+language files to be translated into object files by the assembler.
+Arguments starting with <code>-</code> specify compiler options.
+Other arguments are assumed to name library files, and are simply
+passed along to the linker.<p>
+
+The source for a module named <code>M</code> is normally in a file
+named <code>M.m3</code>.  The source for an interface named
+<code>I</code> must be in a file named <code>I.i3</code>.  The main
+program is the module that implements the interface
+<code>Main</code>.<p>
+
+There are options to compile without linking, stop compiling after
+producing C, emit debugger symbols, generate profiling hooks, retain
+intermediate files, override search paths, select non-standard
+executables for the various passes, and pass arguments to individual
+passes.  For the full details, see the <code>m3</code>(1) man page.<p>
+
+In a source file, an occurrence of <code>IMPORT Mumble</code> causes
+the compiler to seek an interface named <code>Mumble</code>.  The
+compiler will step through a sequence of directories looking for the
+file <code>Mumble.i3</code>.  It will parse the first such file that
+it finds, which is expected to contain an interface named
+<code>Mumble</code>.  If no file <code>Mumble.i3</code> exists, or if
+the parse fails, the compiler will generate an error.  The particular
+sequence of directories to be searched is determined by the options
+passed to <code>m3</code>.  See the <code>m3(1)</code> manual page for
+full details.<p>
+
+
+<h2>An example</h2>
+
+Here's a simple program composed of a main module,
+an imported interface and its implementation.<p>
+
+In the file <code>Main.m3</code>:
+<pre>
+       MODULE Main;
+       IMPORT A;
+       BEGIN
+         A.DoIt ();
+       END Main.
+</pre>
+
+In the file <code>A.i3</code>:
+<pre>
+       INTERFACE A;
+       PROCEDURE DoIt ();
+       END A.
+</pre>
+
+In the file <code>A.m3</code>:
+<pre>
+       MODULE A;
+       IMPORT Wr, Stdio;
+
+       PROCEDURE DoIt () =
+          BEGIN
+            Wr.PutText (Stdio.stdout, "Hello world.\n");
+            Wr.Close (Stdio.stdout);
+          END DoIt;
+
+       BEGIN
+       END A.
+</pre>
+
+If SRC Modula-3 is installed correctly, the command 
+<pre>
+       m3 -make -why -o hello Main.m3 A.m3 A.i3
+</pre>
+will compile the three compilation units and link them with the
+standard libraries.  The result will be left in the executable file
+named <code>hello</code>.
+
+<h2>m3makefiles</h2>
+
+Once installed, SRC Modula-3 provides <a
+href="/proj/man/mips/cat1/m3build.1"><code>m3build(1)</code></a>, a
+replacement for plain <code>make(1)</code>.  The primary benefit
+provided by <code>m3make</code> is that the operational description
+found in most <code>makefiles</code> is replaced by a more declarative
+one.  The result is that <code>makefiles</code> are smaller, simpler,
+and more portable.  You're not required to use <code>m3make</code>,
+but we believe you will like it. <p>
+
+The <code>m3makefile</code> for the example above would be:
+<pre>
+       implementation (Main)
+       module (A)
+       program (hello)
+</pre>
+
+<h2>Language restrictions</h2>
+
+
+With a few exceptions, SRC Modula-3 implements the Modula-3 language as
+defined in ``Systems Programming with Modula-3'' (\cite{m3-Nel91}).
+
+\subsection*{Arithmetic checking.}
+SRC Modula-3 does not generate any special checking for integer arithmetic
+overflow or underflow.  You get whatever checking your C compiler gives you.
+We decided that the runtime checking was too expensive in a compiler that was
+constrained to produce C.  Depending on your machine, the {\tt FloatMode}
+interface may be used to control floating point exceptions.
+
+\subsection*{Packed types.}
+                \index{packed fields}
+Packed types are restricted. <code>BITS n FOR T</code> is treated as <code>T</code>
+everywhere except when applied to a field in a record.  In that case, the
+field is implemented by a {\em bitfield} of width <code>n</code> in a C
+<code>struct</code>.  Otherwise, a \modula field is implemented as a {\em member} of
+a C <code>struct</code>.  Consequently, \modula types that would require the C field
+to span word boundaries are not accepted by SRC Modula-3.
+
+\subsection*{Stack overflow checking.}
+                \index{overflow!stacks}
+                \index{thread!stacks}
+ SRC Modula-3 does not reliably detect thread stack overflows.  Stacks
+are only checked for overflow on procedure entry.  No checking is done
+on external procedures.  Thread stacks are allocated in fixed size
+chunks.  The required <code>Thread</code> interface has been augmented with
+the <code>SizedClosure</code> type to allow arbitrary sized stacks. The default
+size can be adjusted with <code>Thread.MinDefaultStackSize</code> and
+<code>Thread.IncDefaultStackSize</code>.
+
+\subsection*{Exception semantics.}
+                \index{exceptions}
+                \index{exceptions!setjmp, longjmp@{\tt setjmp}, {\tt longjmp}}
+                \index{setjmp@{\tt setjmp}}
+                \index{longjmp@{\tt longjmp}}
+SRC Modula-3 uses C's {\tt setjmp}/{\tt longjmp} mechanism to
+unwind the stack when raising an exception.  A problem can
+occur:  assignments may appear to be undone.
+For example, consider
+<pre>
+      TRY
+        i := 3;
+        P ();
+      EXCEPT E:
+        j := i;
+      END;
+</pre>
+where {\tt P} raises exception {\tt E}.
+The compiler generates a {\tt setjmp} at the beginning of
+the try statement.  If the C compiler allocates variable {\tt i}
+to a register, the assignment of {\tt 3} may be lost during the
+{\tt longjmp} and branch that gets to the handler.
+
+\subsection*{Method constants.}
+The language definition says that if {\tt T} is an object type
+and {\tt m} one of its methods, {\tt T.m} denotes the procedure
+value that implements that method and that this value is a constant.
+In SRC Modula-3, {\tt T.m} denotes the correct procedure constant,
+but since the compiler generates runtime code to locate the method,
+some uses of the constant that the {\tt C} compiler must resolve at link
+time will cause {\tt C} errors.
+For example,
+<pre>
+      CONST P = T.m;  BEGIN P (...) ...
+</pre>
+will work, since no initialized {\tt C} storage is allocated for {\tt P}.
+But the following generates initialized storage and will fail
+<pre>
+      CONST X = ARRAY [0..2] OF Proc { T.m, ..};
+</pre>
+
+Similarly, although Modula-3 allows it, the following cannot be
+evaluated at compile time
+<pre>
+      CONST X = (T.m = MyProcedure);
+</pre>
+
+\section{Pragmas}
+%================
+
+                  \index{pragmas}
+SRC Modula-3 recognizes the pragmas described below.
+
+\subsection*{\tt <*EXTERNAL*>}
+                   \index{external linkage}
+                   \index{C linkage@{\tt C} linkage}
+                   \index{<*EXTERNAL*>@{\tt <*EXTERNAL*>}}
+The pragma <code><*EXTERNAL </code>N<code>:</code>L<code>*></code> may precede an interface
+or a procedure or variable declaration in an interface.  It asserts
+that the following entity is named ``N'' and implemented in language ``L''.
+If ``N'' is omitted, the external name is the \modula name.  The default
+and only recognized value for ``L'' is <code>C</code>.  The ``<code>:</code>'' is only
+required when specifying ``L''.  ``N'' and ``L'' may be
+\modula identifiers or string literals.
+
+The names of external procedures and variables are passed through
+to the C compiler unchanged.  {\em The types of external variables, the
+types of formal parameters, the types of results, and the raises
+clauses of external procedures are all assumed to be correct and
+are not checked
+against their external implementation.}  Standard calling conventions
+are used when calling external procedures.
+
+Beginning an interface with <code><*EXTERNAL*></code> declares all of the
+procedures and variables in that interface external.
+
+For example:
+<pre>
+      <*EXTERNAL*> INTERFACE OS;
+      VAR errno: INTEGER;
+      PROCEDURE exit (i: INTEGER);
+      END OS.
+</pre>
+allows importers of <code>OS</code> to access the standard \unix symbols
+<code>errno</code> and <code>exit</code> through the names <code>OS.errno</code> and
+<code>OS.exit</code> respectively.
+
+Alternatively, the following interface provides access to
+the same two symbols, but uses a more conventional \modula name
+for the procedure:
+<pre>
+      INTERFACE OS;
+      <*EXTERNAL errno:C *> VAR errno: INTEGER;
+      <*EXTERNAL exit:C  *> PROCEDURE Exit (i: INTEGER);
+      END OS.
+</pre>
+
+If several variables are declared within a single <code><*EXTERNAL*> VAR</code>
+declaration, they are all assumed to be external.
+
+The external pragma may optionally specify a name different from the
+\modula name.
+For example:
+<pre>
+      INTERFACE Xt;
+        <*EXTERNAL "_XtCheckSubclassFlag" *>
+        PROCEDURE CheckSubclassFlag (...);
+        ...
+</pre>
+defines a procedure named <code>Xt.CheckSubclassFlag</code> in \modula
+and named <code>_XtCheckSubclassFlag</code> in the generated C.
+
+\subsection*{\tt <*INLINE*>}
+                   \index{<*INLINE*>@{\tt <*INLINE*>}}
+The pragma <code><*INLINE*></code> may precede a procedure
+declaration.  The pragma is allowed in interfaces and modules.
+SRC Modula-3 recognizes but ignores this pragma.
+
+For example:
+<pre>
+      INTERFACE X;
+      <*INLINE*> PROCEDURE P (i: INTEGER);
+      <*INLINE*> PROCEDURE Q ();
+      END X.
+</pre>
+declares <code>X.P</code> and <code>X.Q</code> to be inlined procedures.
+
+\subsection*{\tt <*ASSERT*>}
+                   \index{<*ASSERT*>@{\tt <*ASSERT*>}}
+               \index{assertions}
+               \index{correctness}
+The pragma <code><*ASSERT </code>expr<code>*></code> may appear anywhere a statement
+may appear.  It is a static error if ``expr'' is not of type <code>BOOLEAN</code>.
+At runtime ``expr'' is evaluated.  It is a checked
+runtime error if the result is <code>FALSE</code>.
+
+Assertion checking can be disabled with the <code>-a</code> compiler
+switch.
+
+\subsection*{\tt <*TRACE*>}
+
+                   \index{<*TRACE*>@{\tt <*TRACE*>}}
+The pragma <code><*TRACE </code>expr<code>*></code> may appear at the end of any variable
+or formal declaration.  This pragma will generate tracing calls whenever
+the declared variable is modified.  
+
+The ``expr'' must evaluate to a procedure of two arguments.
+The first argument is the name of the traced variable, a <code>TEXT</code>.
+The second argument is the traced variable.
+Note that any of the formal passing modes may be used with the
+second argument.
+
+For example:
+<pre>
+       MODULE M;
+       VAR x: Foo <*TRACE MyTrace.FooChanged*>;
+</pre>
+will cause
+<pre>
+       MyTrace.FooChanged ("M.x", x)
+</pre>
+to be generated after each statement that modifies x.
+Variable aliasing is not tracked, so
+<pre>
+       WITH  alias = x DO  INC(alias) END
+</pre>
+will not generate any tracing.
+
+The pieces of Modula-3 grammar affected by <code><*TRACE </code>expr<code>*></code> are:
+<pre>
+    VariableDecl = IdList (":" Type & ":=" Expr) V_TRACE.
+    Formal       = [Mode] IdList (":" Type & ":=" ConstExpr) V_TRACE.
+    ForSt        = FOR Id V_TRACE ":=" Expr TO Expr [BY Expr] DO S END.
+    Handler      = QualId {"," QualId} ["(" Id V_TRACE ")"] "=>" S.
+    TCase        = Type {"," Type} ["(" Id V_TRACE ")"] "=>" S.
+    Binding      = Id V_TRACE "=" Expr.
+    V_TRACE      = [ "<*" TRACE  Expr "*>" ].
+</pre>
+
+The pragma <code><*TRACE </code>stmt-list<code>*></code> may appear immediately after any
+<code>BEGIN</code>.  The specified ``stmt-list'' will be inserted after each
+statement of the block started by the <code>BEGIN</code>.  For example:
+<pre>
+       BEGIN <* TRACE  INC(cnt); MyTrace(cnt) *>
+         i := j;
+         j := i;
+       END;
+</pre>
+will generate <code>INC(cnt); MyTrace(cnt)</code>  after each of
+the assignment statements.
+
+\subsection*{\tt <*FATAL*>}
+                   \index{<*FATAL*>@{\tt <*FATAL*>}}
+                \index{exceptions!lint}
+The pragma <code><*FATAL </code>id-list<code>*></code> may appear anywhere a
+declaration may appear.  It asserts that the exceptions named
+in ``id-list'' may be raised, but unhandled in the containing scope.
+If they are, it's fatal and the program should crash.  Effectively,
+the <code><*FATAL*></code> pragma disables a specific set of
+``potentially unhandled exception'' warnings.  If ``id-list'' is <code>ANY</code>,
+the pragma applies to all exceptions.  The effects of the
+<code><*FATAL*></code> pragma are limited to its containing scope ---
+they cannot be imported from interfaces.
+
+For example:
+<pre>
+      EXCEPTION InternalError;
+      <*FATAL InternalError*>
+</pre>
+at the top-level of a module <code>M</code> means that no warnings will be
+generated for procedures in <code>M</code> that raise but don't list
+<code>InternalError</code> in their <code>RAISES</code> clauses.
+
+Similarly,
+<pre>
+      PROCEDURE X() RAISES {} =
+      BEGIN
+        ...
+        <*FATAL ANY*> BEGIN
+           List.Walk (list, proc);
+        END;
+        ...
+      END X;
+</pre>
+specifies that although <code>X</code> raises no exceptions and <code>List.Walk</code>
+may, no warnings should be generated.
+
+\subsection*{\tt <*UNUSED*>}
+                   \index{<*UNUSED*>@{\tt <*UNUSED*>}}
+                  \index{unused symbols}
+The pragma <code><*UNUSED*></code> may precede any declaration.  It asserts
+that the entity in the following declaration is not used and no
+warnings should be generated.
+
+For example, the procedures that implement the default methods
+for an object may not need all of the actual parameters:
+<pre>
+      PROCEDURE DefaultClose (<*UNUSED*> wr: Wr.T) =
+         BEGIN (* do nothing *) END DefaultClose;
+</pre>
+
+\subsection*{\tt <*OBSOLETE*>}
+                   \index{obsolete symbols}
+                   \index{<*OBSOLETE*>@{\tt <*OBSOLETE*>}}
+The pragma <code><*OBSOLETE*></code> may precede any declaration
+(e.g. <code><*OBSOLETE*> PROCEDURE P ();</code>).  A warning is emitted in
+any module that references an obsolete symbol.  This feature is used
+to warn clients of an evolving interface that they are using
+features that will disappear in the future.
+
+\subsection*{\tt <*NOWARN*>}
+                   \index{<*NOWARN*>@{\tt <*NOWARN*>}}
+                   \index{warnings}
+                   \index{compiler!warnings}
+The pragma <code><*NOWARN*></code> may appear anywhere.  It prevents warning
+messages from being issued for the line containing the pragma.  It is
+probably better to use this pragma in a few places and enable
+all warnings with the <code>-w1</code> switch than to ignore all warnings.
+
+\subsection*{\tt <*LINE*>}
+                   \index{line numbers}
+                   \index{<*LINE*>@{\tt <*LINE*>}}
+For the benefit of preprocessors that generate \modula programs, the
+compiler recognizes a <code><*LINE ... *></code> pragma, in two forms:
+<pre>
+      <*LINE number filename *>
+      <*LINE number *>
+</pre>
+where \verb+number+ is an integer literal and \verb+filename+ is a
+text literal.
+This pragma causes the compiler to believe, for purposes of error
+messages and debugging, that the line number of the following source line is
+\verb+number+ and that the current input file is \verb+filename+.
+If \verb+filename+ is omitted, it is assumed to be unchanged.
+<code><*LINE ... *></code> may appear between any two Modula-3 tokens; it
+applies to the source line following the line on which it appears.
+Here's an example: \verb+<*LINE 32 "SourceLoc.nw" *>+.
+
+\subsection*{\tt <*PRAGMA*>}
+                   \index{<*PRAGMA*>@{\tt <*PRAGMA*>}}
+The pragma <code><*PRAGMA </code>id-list<code>*></code> may appear anywhere.  It notifies
+the compiler that pragmas beginning with the identifiers in ``id-list''
+may occur in this compilation unit.  Since the compiler is free to
+ignore any pragma, the real effect of <code><*PRAGMA*></code> is to tell
+the compiler that pragmas it doesn't implement are coming, but they
+shouldn't cause ``unrecognized pragma'' warnings.
+
+\section{Linking}
+%================
+
+                    \index{linking}
+SRC Modula-3 requires a special two-phase linker.  You must link
+\modula programs with <code>m3</code>.
+
+The first phase of the linker checks that all version stamps are
+consistent, generates flat <code>struct*</code> declarations for all
+opaque and object types, and builds the initialization code from the
+collection of objects to be linked.  The second phases calls {\tt ld}
+to actually link the program.
+
+              \index{files!suffixes}
+              \index{files!.ix, .mx, .ax@{\tt .ix}, {\tt .mx}, {\tt .ax}}
+              \index{.ix, .mx, .ax files@{\tt .ix}, {\tt .mx}, {\tt .ax} files}
+The information needed by the first phase is generated by the compiler
+in files ending in <code>.ix</code> and <code>.mx</code>.  Libraries containing
+\modula code must be created using <code>m3 -a</code>.  <code>m3</code> will
+combine the <code>.ix</code> and <code>.mx</code> files for the objects in the
+library into a new file ending in <code>.ax</code>.  The <code>.ix</code>, <code>.mx</code>,
+and <code>.ax</code> files must reside in the same directory as their corresponding
+<code>.io</code>, <code>.mo</code> and <code>.a</code> files.  If <code>m3</code> encounters
+a library without a <code>.ax</code> file, it assumes that the library contains
+no \modula code.
+
+               \index{version stamps}
+               \index{safe linkage}
+For every symbol <code>X.Z</code> exported or imported by a module, the
+compiler generates a version stamp.  These stamps are used to ensure that
+all modules linked into a single program agree on the type of <code>X.Z</code>.
+The linker will refuse to link programs with inconsistent version stamps.
+
+\section{Runtime arguments}
+%==========================
+
+                \index{runtime arguments}
+                \index{M3 arguments@{\tt "@M3} arguments}
+                \index{showheap@{\tt "@M3showheap}}
+                \index{M3showheap@{\tt "@M3showheap}}
+                \index{showthread@{\tt "@M3showthread}}
+                \index{M3showthread@{\tt "@M3showthread}}
+                \index{nogc@{\tt "@M3nogc}}
+                \index{M3nogc@{\tt "@M3nogc}}
+                \index{noincremental@{\tt "@M3noincremental}}
+                \index{M3noincremental@{\tt "@M3noincremental}}
+                \index{nogenerational@{\tt "@M3generational}}
+                \index{M3nogenerational@{\tt "@M3generational}}
+                \index{novm@{\tt "@M3novm}}
+                \index{M3novm@{\tt "@M3novm}}
+                \index{nogc@{\tt "@M3nogc}}
+                \index{M3nogc@{\tt "@M3nogc}}
+                \index{paranoidgc@{\tt "@M3paranoidgc}}
+                \index{M3paranoidgc@{\tt "@M3paranoidgc}}
+Command line arguments given to Modula-3 programs are divided in two
+groups.  Those that start with the characters <code>@M3</code> are reserved
+for the \modula runtime and are accessible via the <code>RTParams</code>
+interface (we call those the {\em runtime parameters}).  The others are
+accessible via the <code>Params</code>, <code>ParseParams</code>, and <code>RTArgs</code>
+interfaces (these are the {\em program arguments}).
+
+The following runtime parameters are recognized today;
+others are simply ignored.
+
+\begin{itemize}
+
+\item <code>@M3nogc</code> turns the garbage collector off.
+
+\item <code>@M3showheap=</code>{\it name} activates the logging of
+heap allocation and garbage collection events.  The program forks a
+process running the {\it name} program, and sends it these events as
+they occur.  If <code>=</code>{\it name} is ommitted, the {\tt showheap}
+program is forked (it is part of the {\tt tools} archive); this
+program displays the status of the heap pages.  See its man page for
+more details.
+
+\item <code>@M3showthread=</code>{\it name} activates the logging of
+thread switching events.  The program forks a
+process running the {\it name} program, and sends it these events as
+they occur.  If <code>=</code>{\it name} is ommitted, the {\tt showthread}
+program is forked (it is part of the {\tt tools} archive); this
+program displays the status of the various threads.  See its man page
+for more details.
+
+\item <code>@M3noincremental</code>  disables incremental garbage collection;
+   uses stop-and-copy instead.
+
+\item <code>@M3nogenerational</code> disables generational garbage collection.
+
+\item <code>@M3novm</code> disables the use of VM protection by the garbage
+collector.  Implies <code>@M3noincremental</code> and <code>@M3nogenerational</code>.
+
+\item <code>@M3paranoidgc</code> checks the heap for sanity after each collection.
+
+\end{itemize}
+
+
+\section{Garbage Collection}
+%===========================
+
+                      \index{garbage collection}
+                      \index{garbage collection!copying}
+                      \index{collector, copying}
+                      \index{hashing REFs@hashing {\tt REF}s}
+A crucial fact for clients of the garbage collector to know is that {\em
+objects in the heap move}.  If all references to a traced heap object
+are from other traced heap objects, the collector may move the
+referent.  Hence, it is a bad idea to hash pointer values.  References
+from the stack or untraced heap into the traced heap are never
+modified.
+
+The new collector is, by default, incremental and generational.  
+The interruptions of service should be very small, and the overall 
+performance should be better than with the previous collectors.
+
+The use of VM protection is currently implemented only for the DS3100 
+architecture.  On other architectures, <code>@M3novm</code> is the default.
+
+Note that the new optional background collection 
+thread is not on by default; this may change in the future.
+
+The procedures <code>RTHeap.DisableCollection</code> and
+<code>RTHeap.EnableCollection</code> are now marked as obsolete,
+although they still work; preferred new 
+alternatives are described in the \intf{RTHeap} interface. 
+
+                 \index{debugging}
+                 \index{gdb@{\tt gdb}}
+                 \index{bus error}
+                 \index{VM faults}
+When you debug a Modula-3 program, you might find it simplest to 
+run it with the <code>@M3novm</code> switch.  For example, if you use <code>gdb</code>,
+you can start your program with
+<pre>
+    (gdb) run MyProgram @M3novm
+</pre>
+
+If you do not use the <code>@M3novm</code> flag, you must set <code>gdb</code>
+to ignore VM faults generated on the collector's behalf, by typing 
+<pre>
+    (gdb) handle 11 noprint pass
+</pre>
+
+And then, without <code>@M3novm</code>, you might not be able to examine the heap 
+when the program stops, because the heap may be protected.  You can 
+turn off all current heap protection by telling gdb 
+<pre>
+    (gdb) call RTHeap__FinishVM()
+</pre>
+
+If you also want the collector not to use VM protection in the future 
+(i.e., if you wish you'd typed <code>@M3novm</code> to start with), you can type 
+<pre>
+    (gdb) call RTHeap__NoVM()
+</pre>
+
+If your program is not run from the debugger, and it dumps core, 
+the runtime automatically calls the equivalent of a <code>RTHeap.FinishVM()</code>
+to let you examine the heap in the core file.
+
+                       \index{sigvec@{\tt sigvec}}
+                       \index{fork@{\tt fork}}
+                       \index{vfork@{\tt vfork}}
+Because of the use of VM protection by the collector,
+there are some additional constraints 
+on what programs may legally do.  For example, you cannot pass an 
+address on the heap as an argument to <code>sigvec</code>(2).  These restrictions 
+are documented in \intf{RTHeapDepC.c}.
+If they seem onerous, we might be able to eliminate some.  Note also 
+that <code>fork()</code> and <code>vfork()</code> are now relatively expensive operations, 
+since they cause the current collection to finish; this situation may improve 
+in a future release. 
+
+\section{Debugging}
+%==================
+
+                      \index{debugging}
+                      \index{dbx@{\tt dbx}}
+                      \index{gdb@{\tt gdb}}
+Since an intermediate step of the \modula compiler is to produce C code,
+you may use any debugger for which your C compiler can produce
+debugging information; in most cases, this means {\tt dbx} or {\tt gdb}.
+
+However, this mechanism has limitations: the C compiler
+generates source-level information that relates the executable program
+to the intermediate C code, not to the \modula source code.
+We attempted to reflect as much as possible of the source-level \modula
+information into the intermediate C code.
+But there are still some shortcomings that you should know about.
+
+\subsection*{Names}
+%-----------------
+
+                     \index{name mangling}
+                     \index{debugging!names}
+                     \index{names, in the debugger}
+Global names (i.e. top-level procedures, constants, types, variables,
+and exceptions) are prefixed by their module's name and two underscores.
+For example, in an interface or module named <code>X</code>, the C name of a
+top-level procedure <code>P</code> would be <code>X__P</code>.  Note, there are
+two underscores between <code>X</code> and <code>P</code>.
+
+Local names (e.g. of local variables and formal parameters) are preserved.
+
+The compiler will issue a warning and append an underscore to any
+\modula name that is a C reserved word.
+
+\subsection*{Types}
+%-----------------
+
+                     \index{type names}
+                     \index{t1fc3a882@{\tt \_t1fc3a882}}
+\modula is based on structural type equivalence,
+C is not.  For this reason, the compiler maps all structurally
+equivalent \modula types into a single C type.  These C types have
+meaningless names like <code>_t1fc3a882</code>.  The \modula type names are
+equated to their corresponding C type.  Unfortunately variables
+are declared with the C type names.  So, if you ask your debugger
+``what is the type of <code>v</code>?'', it will most likely answer,
+``<code>_t13e82b97</code>''.  But, if you ask ``what is <code>_t13e82b97</code>?''
+it will most likely give you a useful type description.
+
+The table~\ref{table:conversion} indicates the C types corresponding to
+\modula types.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{p{1.3in}</code>p{4.6in}}
+\multicolumn{1}{c}{\modula} & \multicolumn{1}{</code>c}{C}\\ \hline
+
+enumeration &
+  <code>unsigned char</code>, <code>unsigned short</code> or <code>unsigned int</code> depending
+  on the number of elements in the enumeration.
+  \\ \\
+
+<code>INTEGER</code> &
+  <code>int</code>
+  \\ \\
+
+subrange &
+  <code>char</code>, <code>short</code> or <code>int</code>, possibly
+  <code>unsigned</code>, depending on the base type of the subrange.
+  Subranges of enumerations are implemented by the same type
+  as the full enumeration.
+  Subranges of <code>INTEGER</code> are implemented by the smallest
+  type containing the range.
+  For example, the type <code>[0..255]</code> is mapped to <code>unsigned char</code>
+  and <code>[-1000..1000]</code> is mapped to <code>short</code>.
+  \\ \\
+
+<code>REAL</code> &
+  <code>float</code>
+  \\ \\
+
+<code>LONGREAL</code> &
+  <code>double</code>
+  \\ \\
+
+<code>EXTENDED</code> &
+  <code>double</code>
+  \\ \\
+
+$<code>ARRAY I OF T</code>$ &
+  <code>struct { tT elts[n] }</code>, where <code>tT</code> is the C type
+  of <code>T</code> and <code>n</code> is <code>NUMBER(I)</code>.
+  \\ \\
+
+$<code>ARRAY</code>^n <code> OF T</code>$ &
+  $<code>struct { tT* elts; int size[</code>n <code>] }</code>$, where <code>tT</code>
+   is the C type of <code>T</code> and <code>elts</code> is a pointer
+  to the first element of the array.
+  \\ \\
+
+<code>RECORD ... END</code> &
+  <code>struct{ ... }</code> with the same collection of fields
+  as the original record.
+  \\ \\
+
+<code>BITS n FOR T</code> &
+  Usually <code>tT</code> where <code>tT</code> is the the C type of <code>T</code>.
+  When <code>T</code> is an ordinal type and the packed type occurs
+  within a record, it generates a C bit field.
+  \\ \\
+
+<code>SET OF T</code> &
+  <code>struct { int elts[n] }</code> where <code>n</code> is 
+  $\lceil<code>NUMBER (T)</code> / <code>sizeof(int)</code>\rceil$.
+  \\ \\
+
+\begin{tabular}[t]{@{}l@{}}
+<code>REF T</code>  \\
+<code>UNTRACED REF T</code> \\
+\end{tabular} &
+  <code>tT*</code> where <code>tT</code> is the C type of <code>T</code>.
+  \\ \\
+
+<code>OBJECT ... END</code> &
+  <code>ADDRESS</code>, a {\tt typedef} for <code>char*</code> or <code>void*</code>
+  (depending on the system) defined in <code>M3Machine.h</code>. 
+  Each use of an object reference is cast into a pointer
+  of the appropriate type at the point of use.
+  \\ \\
+
+<code>PROCEDURE (): T</code> &
+  Usually <code>tT *(proc)()</code> where <code>tT</code> is the C type of <code>T</code>.
+  If <code>T</code> is a record or array, an extra <code>VAR</code> parameter
+  is passed to the procedure which it uses to store the return
+  result.
+%%  \\ \\
+
+\end{tabular}
+\end{center}
+\caption{Type implementations}
+\label{table:conversion}
+\end{table}
+
+              \index{debugging!printing REFs@printing {\tt REF}s}
+              \index{REF!printing}
+              \index{type names}
+Despite the fact that the compiler turns all object references
+into <code>char*</code>, the linker generates useful type declarations.
+These declarations are available under the type's global name.
+For example, to print an object <code>o</code> of type <code>Wr.T</code>,
+type <code>print *(Wr__T)o</code>.  Note that if <code>o</code> was really
+a subtype of <code>Wr.T</code>, say <code>TextWr.T</code>, then you must
+use <code>print *(TextWr__T)o</code> to see the additional fields.
+If the same type appears with two names in a program, the linker
+arbitrarily picks one.
+
+               \index{debugging!printing TEXTs@printing {\tt TEXT}s}
+               \index{TEXT!printing}
+To print the null terminated string in a variable of type <code>TEXT</code>
+(or <code>Text.T</code>) named <code>txt</code>, type <code>print *(char**)txt</code>.
+
+              \index{debugging!printing REFs@printing {\tt REF}s}
+              \index{REF!printing}
+              \index{typecodes}
+              \index{typecells}
+              \index{type names}
+              \index{runtime!type headers}
+If you don't know the type of a traced reference, you may be
+able to use the runtime information to discover it.  Given a
+reference <code>r</code>, <code>print *(_refHeader*)(((char*)r)-4)</code>
+will print its typecode <code>x</code>, and <code>print *_types[x]</code>
+will print the corresponding typecell.  A typecell includes a
+type's \modula name as a C string (<code>typecell.name</code>).  If
+the type doesn't have a \modula name, its internal is the
+concatenation of ``<code>_t</code>'' and <code>typecell.selfID</code> in hex.
+
+
+\subsection*{File names and line numbers}
+%---------------------------------------
+
+Due to liberal use of the <code>#line</code> mechanism of C, the \modula
+file names and line numbers are preserved.  Your debugger should give
+you the right names and line numbers and display the correct \modula
+source code (if it includes facilities to display source code).
+
+Note that uses of the <code><*LINE*></code> pragma are propagated into
+the intermediate C code.
+
+\subsection*{Debugger quirks}
+
+                  \index{.dbxinit file@{\tt .dbxinit} file}
+                  \index{dbxinit file@{\tt .dbxinit} file}
+                  \index{SIGVTALRM@{\tt SIGVTALRM}}
+                  \index{Unix!signals}
+Most debuggers have a few quirks.  <code>dbx</code> is no exception.
+We've found that having a <code>.dbxinit</code> file in your home
+directory with the following contents prevents many surprises:
+<pre>
+    ignore SIGVTALRM
+    set $casesense = 1
+</pre>
+The first line tells <code>dbx</code> to ignore virtual timer
+signals.  They are used by the \modula runtime to trigger
+thread preemptions.
+The second line tells <code>dbx</code> that your input is
+case sensitive.
+
+\subsection*{Procedures}
+%----------------------
+
+\modula procedures are mapped as closely as possible into C procedures.
+Two differences exist:  ``large'' results and nested procedures.
+
+                     \index{structured function results}
+                     \index{procedures!structured results}
+                     \index{functions!see{procedures}}
+First, procedures that return structured values (i.e. records, arrays
+or sets) take an extra parameter.  The last parameter is a pointer to
+the memory that will receive the returned result.  This parameter was
+necessary because some C compilers return structured results by
+momentarily copying them into global memory.  The global memory scheme
+works fine until it's preempted by the \modula thread scheduler.
+
+                     \index{procedures!nested}
+                     \index{nested procedures}
+                     \index{environments, procedure}
+                     \index{closures}
+Second, nested procedures are passed an extra parameter.  The
+first parameter to a nested procedure is a pointer to the local
+variables of the enclosing block.  To call a nested procedure from the
+debugger, pass the address of the enclosing procedure's local variable
+named <code>frame</code>.
+
+When a nested procedure is passed as a parameter, the address of the
+corresponding C procedure and its extra parameter are packaged
+into a small closure record.  The address of this record is actually
+passed.  Any call through a formal procedure parameter first checks to
+see whether the parameter is a closure or not and then makes the
+appropriate call.  Likewise, assignments of formal procedure
+parameters to variables perform runtime checks for closures.
+
+<code><*EXTERNAL*></code> procedures have no extra parameters.
+{\em except if they return large results??}
+
+\subsection*{Threads}
+%-------------------
+
+                     \index{debugging!threads}
+There is no support for debugging threads.  That is, there is no mechanism to
+force the debugger to examine a thread other than the one currently
+executing.  Usually you can get into another thread by setting a breakpoint
+that it will hit.  There is no mechanism to run a single thread while keeping
+all others stopped.
+
+If your debugger allows you to call procedures in a stopped program,
+as both <code>dbx</code> and <code>gdb</code> do, then <code>print Thread__DumpEverybody()</code>
+will produce a table listing the status of all threads.
+
+\section{Thread scheduling}
+%==========================
+
+                    \index{scheduling}
+                    \index{threads!scheduling}
+                    \index{threads!user level}
+This version of SRC Modula-3 has a more flexible scheduling algorithm
+than the previous versions. Here is a rough explanation of its
+behaviour.
+
+All threads are kept in a circular list. This list is
+modified only when new threads are created or when threads exit; that
+is, the relative order of threads in this list is never modified.
+
+When the scheduler comes into action, the list of threads is scanned
+starting with the thread following the one currently running, until
+a thread that can execute is found:
+\begin{itemize}
+\item if it was preempted by the scheduler, it can execute
+\item if it is waiting for a condition or a mutex that is still held,
+      it cannot execute
+\item if it has blocked because of a call to {\tt Time.Pause} (or
+      a similar procedure), it can execute iff the timeout is now expired
+\item if it has blocked because of a call to {\tt RTScheduler.IOSelect} (or 
+      a similar procedure), it can execute iff the timeout is now expired 
+      or a polling {\tt select(2)} returns a non-zero value.
+\end{itemize}
+
+If such a thread is found, it becomes active. 
+
+                     \index{Time.Pause@{\tt Time.Pause}}
+                     \index{RTScheduler.IOSelect@{\tt RTScheduler.IOSelect}}
+                     \index{select@{\tt select}}
+                     \index{blocking, process}
+                     \index{waiting, process}
+If no thread can execute, and there are no threads blocked in a {\tt
+Time.Pause} or a {\tt RTScheduler.IOSelect}, a deadlock situation is detected
+and reported. Otherwise, a combination of the file descriptors sets
+(OR of all the file descriptors sets) and timeouts (MIN of all the
+timeouts) is formed, {\tt select(2)} is called with those arguments
+and the whole process of searching for an executable thread is redone.
+This ensure that the Unix process does not consume CPU resources while
+waiting.
+
+The scheduler is activated when the running thread tries to acquire a
+mutex which is locked, waits for a condition, calls {\tt Time.Pause}
+(or a similar procedure) with a future time, calls {\tt RTScheduler.IOSelect}
+(or a similar procedure) with a non-zero valued timeout and no files
+are ready at the time of the call, or the time allocated to the thread
+has expired (preemption).
+
+                     \index{threads!preemption}
+                     \index{preemption}
+Preemption is implemented using the Unix virtual interval timer. {\tt
+RTScheduler.SetSwitchingInterval} can be used to change the interval
+between preemptions. SRC Modula-3 no longer uses the real time interval
+timer nor the profiling interval timer for thread scheduling; these
+are available to the program.
+
+                     \index{sigpause@{\tt sigpause}}
+                     \index{select@{\tt select}}
+Because of the preemption implementation, Unix kernel calls
+will block the process (i.e. the Unix process sleeps even though
+some threads could run). However, {\tt Time.Pause} and {\tt
+RTScheduler.IOSelect} provide functional equivalents of {\tt sigpause(2)} and
+{\tt select(2)} that do not cause the process to block.
+
+\section{Profiling}
+%==================
+
+                     \index{profiling}
+                     \index{prof@{\tt prof}}
+                     \index{gprof@{\tt gprof}}
+                     \index{pixie@{\tt pixie}}
+In addition to the usual profiling tools (e.g. see <code>prof(1)</code>,
+<code>gprof(1)</code> and <code>pixie(1)</code>), SRC Modula-3 provides support
+for line-based profiling. 
+
+                     \index{analyze coverage@{\tt analyze\_coverage}}
+                     \index{coverage}
+                     \index{profiling!line-based}
+                     \index{-Z@{\tt -Z}}
+To enable collection of data during the execution of programs, give the
+<code>-Z</code> option to the <code>m3</code> command for the compilation of the
+modules you want to examine and also for the linking of the program.
+To interpret the result, run <code>analyze_coverage(1)</code>.
+
+Note that because of the extensive data collection performed by this mode of
+profiling, the execution time of the program can be significantly larger when
+it is enabled; thus, simultaneous time profiling can produce erroneous
+results.  For the same reason, the profiling data file is rather large;
+furthermore, as it is augmented by each execution of the program, you may want
+to compress it from time to time (see <code>analyze_coverage(1)</code> for more
+details).
+
+\section{Pretty printing}
+%========================
+
+                      \index{m3pp@{\tt m3pp}}
+SRC Modula-3 includes a pretty-printer for \modula programs.
+It is accessible as <code>m3pp</code>(1).  Read its man page to find out how to use
+it.
+
+\section{Gnuemacs support}
+%=========================
+
+                      \index{.emacs@{\tt .emacs}}
+                      \index{editting}
+                      \index{gnuemacs@{\tt gnuemacs}}
+                      \index{gnuemacs!Modula-3 mode}
+                      \index{epoch@{\tt epoch}}
+                      \index{emacs@{\tt emacs}}
+\subsection{\tt modula-3-mode}
+%-----------------------------
+
+                  \index{gnuemacs!Modula-3 mode}
+                  \index{command completion}
+SRC Modula-3 comes with a mode for editing Modula-3 programs under
+{\tt gnuemacs}.  Here is a list of the key things this mode provides:
+\begin{itemize}
+\item Indenting/pretty-printing
+
+\index{pretty-printing} Modula-3 mode gives you access to two methods
+of formatting code, one ``batch'' and one ``interactive.''  The batch
+method invokes the program <code>m3pp</code>, which takes a program unit
+such as a procedure and formats it completely.  The <code>gnuemacs</code>
+commands that invoke <code>m3pp</code> are <code>M-x m3::pp-buffer</code> which
+pretty prints the current buffer, <code>M-x m3::pp-region</code> which
+pretty-prints the code between mark and point, and <code>M-x
+m3::pp-unit</code> which pretty-prints the ``unit'' containing the cursor.
+(A unit is a top-level construct such as <code>CONST</code>, <code>TYPE</code>,
+<code>VAR</code>, or <code>PROCEDURE</code>.)  <code>m3::pp-buffer</code>,
+<code>m3::pp-region</code> and <code>m3::pp-unit</code> are bound to the keys
+<code>C-c b</code>, <code>C-c r</code> and <code>C-c u</code>, respectively.
+
+The other method of formatting text is a more traditional one for
+<code>gnuemacs</code>, in which there the language mode provides a key that
+indents the current line appropriately.  In keeping with the
+convention used in modes for other languages such as Lisp and C, the
+key used is <code>TAB</code>.  Typing <code>TAB</code> on a line indents the
+current line in a way that is (we hope) appropriate given the lines
+that precede it.
+
+The two formatting methods are not mutually exclusive; perhaps
+you like the way <code>m3pp</code> lines up columns in declarations,
+but you also like to keep things indented while you type.  You
+can use the electric mode to get things close, then invoke
+<code>m3pp</code> when you're done. 
+
+\item Avoidance of typing:
+
+\index{electric Modula-3 mode}
+
+Modula-3 mode offers some aid if you don't like typing a lot of
+uppercase keywords.  The <code>TAB</code> actually serves double
+duty; it not only indents the current line, but when invoked at
+the end of a word, it attempts to complete the current word as a
+keyword.  For example <code>b TAB</code> expands the <code>b</code> to
+<code>BEGIN</code>, provided the <code>b</code> appears in a context where 
+<code>BEGIN</code> may be a valid keyword.  There are some fairly extensive
+rules governing the contexts in which a given keyword is a valid
+completion; the net result is that it is seldom necessary to type
+more than one letter to get the correct completion.  If you
+specify a non-unique prefix of a set of keywords, it chooses the
+first in an ordering intended to capture frequency of use; it
+also presents the other choices, and typing <code>TAB</code> repeatedly
+cycles through these choices.
+
+A pair of related features are ``<code>END</code>-completion'' and
+``<code>END</code>-matching.''  If the elisp variable
+<code>m3::electric-end</code> is set to <code>'all</code>, completing the
+keyword <code>END</code> has the additional effect of finding the
+construct that the <code>END</code> completes.  If that construct is a
+an interface, module, or procedure, it fills in the name of the
+completed construct after the <code>END</code>; otherwise, it inserts a
+comment containing the keyword of the completed construct.  If
+<code>m3::electric-end</code> is <code>'proc-mod</code>, it only fills in
+real names, never keyword comments.  Independently, a non-<code>nil</code>
+value of the elisp variable <code>m3::blink-end-matchers</code> causes
+completion of <code>END</code> to blink the cursor briefly at the
+beginning of the completed construct.
+
+\item Finding files.
+
+                  \index{mpindex}
+                  \index{interfaces, finding}
+                  \index{browsing interfaces}
+The key <code>C-c i</code> is bound to <code>m3::show-interface</code>, which
+expects the point to be in an interface name, and attempts to
+find that interface and display it in another window.  (If you
+are using <code>epoch</code> and the value of
+<code>m3::show-file-new-screen</code> is <code>t</code>, which is the default,
+the interface will be displayed in a new <code>epoch</code> screen,
+that is, a top-level X window.  If you use <code>m3-path</code> files,
+<code>m3::show-interface</code> will use those to provide a search
+path; otherwise, it uses a built-in list of directories.  The
+default value of this list is the one used at SRC; other
+sites will probably need to modify this.
+
+The key <code>C-c m</code> is bound to <code>m3::show-implementation</code>.  This
+attempts to find the module that implements the interface in the
+current buffer.  This function relies on a SRC-specific
+convention where public interfaces are symbolic links to home
+directories for the packages that export them, which also contain
+the implementations.  Obviously, this site-specific convention
+may not work outside of SRC, and <code>m3::show-implementation</code>
+may need to be re-implemented or abandoned.
+
+\end{itemize}
+
+To have the Modula-3 mode automatically invoked when visiting a
+Modula-3 source file, you should put in your <code>.emacs</code>:
+
+<pre>
+    (autoload 'modula-3-mode "modula3")
+    (setq auto-mode-alist 
+         (append '(("\\.ig$" . modula-3-mode)
+                   ("\\.mg$" . modula-3-mode)
+                   ("\\.i3$" . modula-3-mode)
+                   ("\\.m3$" . modula-3-mode))
+                   auto-mode-alist))	
+</pre>
+
+It is also convenient to have the lines:
+<pre>
+    (setq completion-ignored-extensions
+       (append '(".mo" ".mx" ".mc" ".io" ".ix") completion-ignored-extensions))
+</pre>
+so that you don't get the files with those extensions offered as
+possible completions.
+
+Your system administrator may have inserted these lines in the default
+macro files for your system.
+
+\subsection{Tags}
+%----------------
+
+                  \index{gnuemacs!tags}
+                  \index{m3tags@{\tt m3tags}}
+                  \index{tags}
+There is also a program to build tags file for \modula programs:
+<code>m3tags</code>; see the manpage for the details.  When the system is
+installed, a tag file for the public interfaces is built.  To access
+it, you need in your <code>.emacs</code> (or in the system initialization file)
+the line:
+<pre>
+        (visit-tags-table "LIB_USE/FTAGS")
+</pre>
+where <code>LIB_USE</code> is the place where the \modula libraries have
+been installed.
+
+\section{Unix signals}
+%=====================
+
+                       \index{Unix!signals}
+                       \index{signals, Unix}
+On Unix the Modula-3 runtime catches three signals:  <code>SIGSEGV</code>,
+<code>SIGBUS</code>, and <code>SIGVTALRM</code>.  Otherwise, the runtime leaves
+the default Unix signal handlers unaltered.
+
+                       \index{SIGSEGV@{\tt SIGSEGV}}
+                       \index{segmentation violation}
+<code>SIGSEGV</code> indicates a ``segmentation violation'' and is often
+signaled when a process dereferences <code>NIL</code>.
+The runtime catches <code>SIGSEGV</code>, prints an error message, and attempts
+to crash with a ``core file''.
+
+                       \index{bus error}
+                       \index{SIGBUS@{\tt SIGBUS}}
+<code>SIGBUS</code> indicates a ``bus error'' (pdp-11 days?) and is often signaled
+when the process accesses unmapped memory (usually a thread stack overflow).
+The runtime catches <code>SIGSEGV</code>, prints an error message, and attempts
+to crash with a ``core file''.
+
+                       \index{SIGVTALRM@{\tt SIGVTALRM}}
+                       \index{threads!preemption}
+                       \index{timers}
+<code>SIGVTALRM</code> is the ``virtual timer alarm''.  It is used to periodically
+preempt the running thread.
+
+
+\section{Keeping in touch}
+%=========================
+
+                       \index{comp.lang.modula3@\newsgroup}
+                       \index{Usenet}
+                       \index{news group}
+                       \index{m3-request@{\tt m3-request"@src.dec.com}}
+\paragraph{\newsgroup\relax} is a Usenet newsgroup devoted to \modula.
+There you will find discussions on the language and how to use it,
+annoucements of releases (both of SRC Modula-3 and of other systems). Since not
+everybody has access to Usenet, we also maintain a relay mailing list, to which we
+resend the articles appearing in \newsgroup.  To be added to this list, send a
+message to <code>m3-request@src.dec.com</code>.  You may post articles to
+\newsgroup by sending them to <code>m3@src.dec.com</code>.
+
+                       \index{bug reports}
+\paragraph{Reporting bugs.} We prefer that you send bug reports to
+<code>m3-request@src.dec.com</code>.  After we have reviewed your report, we may post
+an article in \newsgroup, describing the bug and a workaround or a fix. 
+
+Needless to say, this implementation probably has many bugs.  We are
+quite happy to receive bug reports.  We can't promise to fix them, but
+we will try.  When reporting a bug, please send us a short program that
+demonstrates the problem.

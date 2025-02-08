@@ -1,0 +1,623 @@
+<HTML>
+<HEAD>
+<TITLE>
+6.  Data Analysis Overview - Continuous Profiling: Where Have All the Cycles Gone?
+</TITLE>
+</HEAD>
+
+<BODY>
+
+<H1>
+<CENTER>
+<A HREF="sosp97.html">Continuous Profiling: Where Have All the Cycles Gone?</A>
+<P>
+6.  Data Analysis Overview
+</CENTER>
+</H1>
+
+<P>
+The CYCLES samples recorded by the data collection subsystem tell
+us approximately how much total time was spent by each instruction at
+the head of the issue queue.  However, when we see a large sample
+count for an instruction, we do not know immediately from the sample
+counts whether the instruction was simply executed many times or
+whether it stalled most of the times it was executed.  In addition, if
+the instruction did stall, we do not know why.  The data analysis
+subsystem fills in these missing pieces of information.  Note that
+the analysis is done offline, after samples have been collected.
+</P>
+
+<P>
+Given profile data, the analysis subsystem produces for each
+instruction:
+<UL>
+<LI>
+	A <I>frequency</I>, which is proportional to the number of times the
+	instruction was executed during the profiled period;
+</LI>
+
+<LI>
+	A <I>cpi</I>, which is an estimate of the average number of cycles
+	spent by that instruction at the head of the issue queue for each
+	execution during the profiled period; and
+</LI>
+
+<LI>
+	A set of <I>culprits</I>, which are possible explanations for any
+	wasted issue slots (due to static or dynamic stalls).
+</LI>
+</UL>
+The analysis is done in two phases; the first phase estimates the
+frequency and cpi for each instruction, and the second phase
+identifies culprits for each stall.  The analysis is designed for
+processors that execute instructions in order; we are working on
+extending it to out-of-order processors.
+</P>
+
+<P>
+For programs whose executions are deterministic, it is possible to
+measure the execution counts by instrumenting the code directly
+(<I>e.g.</I>, using pixie).  In this case, the first phase of
+the analysis, which estimates the frequency, is not necessary.
+However, many large systems (<I>e.g.</I>, databases) are not deterministic;
+even for deterministic programs, the ability to derive frequency
+estimates from sample counts eliminates the need to create and run an
+instrumented version of the program, simplifying the job of collecting
+profile information.
+</P>
+
+<H2>6.1.  Estimating Frequency and CPI</H2>
+
+<P>
+The crux of the problem in estimating instruction frequency and cpi is
+that the sample data provides information about the total time spent
+by each instruction at the head of the issue queue, which is
+proportional to the product of its frequency and its cpi; we need to
+factor that product.  For example, if the instruction's sample count
+is 1000, its frequency could be 1000 and its cpi 1, or its frequency
+could be 10 and its cpi 100; we cannot tell given only its sample
+count.  However, by combining information from several instructions,
+we can often do an excellent job of factoring the total time spent by
+an instruction into its component factors.
+</P>
+
+<P>
+The bulk of the estimation process is focused on estimating the
+frequency, <I>F<SUB>i</SUB></I>, of each instruction <I>i</I>.
+<I>F<SUB>i</SUB></I> is simply the number of times the instruction was
+executed divided by the average sampling period, <I>P</I>, used to
+gather the samples.  The sample count <I>S<SUB>i</SUB></I> should be
+approximately <I>F<SUB>i</SUB>C<SUB>i</SUB></I>, where
+<I>C<SUB>i</SUB></I> is the average number of cycles instruction <I>i</I>
+spends at the head of the issue queue.  Our analysis first finds
+<I>F<SUB>i</SUB></I>; <I>C<SUB>i</SUB></I> is then easily obtained by
+division.
+</P>
+
+<P>
+The analysis estimates the <I>F<SUB>i</SUB></I> values by examining
+one procedure at a time.  The following steps are performed for each
+procedure:
+<OL>
+<LI>	Build a control-flow graph (CFG) for the procedure.
+</LI>
+
+<LI>	Group the basic blocks and edges of the CFG into equivalence classes
+	based on frequency of execution.
+</LI>
+
+<LI>	Estimate the frequency of each equivalence class that contains
+        instructions with suitable sample counts.
+</LI>
+
+<LI>	Use a linear-time local propagation method based on flow constraints
+	in the procedure's CFG to propagate frequency
+	estimates around the CFG.
+</LI>
+
+<LI>	Use a heuristic to predict the accuracy of the estimates.
+</LI>
+</OL>
+Some details are given below.
+</P>
+
+<H3>6.1.1.  Building a CFG</H3>
+
+<P>
+The CFG is built by extracting the code for a procedure from the
+executable image.  Basic block boundaries are identified from instructions
+that change control flow, <I>e.g.</I>, branches and jumps.  For indirect
+jumps, we analyze the preceding instructions to try to determine the
+possible targets of the jump.  Sometimes this analysis fails, in
+which case the CFG is noted as missing edges.  The current analysis
+does not identify interprocedural edges (<I>e.g.</I>, from calls to longjmp),
+nor does it note their absence.
+</P>
+
+<H3>6.1.2.  Determining Frequency Equivalence</H3>
+
+<P>
+If the CFG is noted as missing edges, each block and each edge is
+assigned its own equivalence class.  Otherwise, we use an extended
+version of the cycle equivalence algorithm in 
+<A HREF="references.html#JohPP94">[JohPP94]</A> to
+identify sets of blocks and edges that are guaranteed to be executed
+the same number of times.  Each such set constitutes one equivalence
+class.  Our extension to the algorithm is for handling CFG's with
+infinite loops, <I>e.g.</I>, the idle loop of an operating system.
+</P>
+
+<H3>6.1.3.  Estimating Frequency From Sample Counts</H3>
+
+<P>
+The heuristic for estimating the frequency of an equivalence class of
+instructions works on one class at a time.  All instructions in
+a class have the same frequency, henceforth called <I>F</I>.
+</P>
+
+<P>
+The heuristic is based on two assumptions: first, that at least some
+instructions in the class encounter no dynamic stalls, and second,
+that one can statically compute, for most instructions, the minimum number
+of cycles <I>M<SUB>i</SUB></I> that instruction <I>i</I> spends at the 
+head of the issue queue in the absence of dynamic stalls.
+</P>
+
+<P>
+<I>M<SUB>i</SUB></I> is obtained by scheduling each basic block using
+a model of the processor on which it was run.  <I>M<SUB>i</SUB></I>
+may be 0.  In practice, <I>M<SUB>i</SUB></I> is 0 for all but the
+first of a group of multi-issued instructions.  An <I>issue point</I>
+is an instruction with <I>M<SUB>i</SUB> &gt 0</I>.
+</P>
+
+<P>
+If issue point <I>i</I> has no dynamic stalls, the frequency <I>F</I>
+should be, modulo sampling error, <I>S<SUB>i</SUB> /
+M<SUB>i</SUB></I>.  If the issue point incurs dynamic stalls,
+<I>S<SUB>i</SUB></I> will increase.  Thus, we can estimate <I>F</I> by
+averaging some of the smaller ratios <I>S<SUB>i</SUB> / M<SUB>i</SUB></I> 
+of the issue points in the class.
+</P>
+
+<P>
+As an example, Figure 7 illustrates the analysis for the copy loop
+shown previously in <A HREF="examples.html#mccalpin">Figure 2</A>.
+The <I>M<SUB>i</SUB></I> column shows the output from the instruction
+scheduler, and the <I>S<SUB>i</SUB> / M<SUB>i</SUB></I> column shows
+the ratio for each issue point.  The heuristic used various rules to
+choose the ratios marked with <CODE>*</CODE> to be averaged, computing
+a frequency of 1527.  This is close to 1575.1, the true frequency for
+this example.
+</P>
+
+<HR>
+<PRE>
+<B>Addr   Instruction           S<SUB>i</SUB>    M<SUB>i</SUB>   S<SUB>i</SUB> / M<SUB>i</SUB></B>
+009810 ldq    t4, 0(t1)     3126   1     3126
+009814 addq   t0, 0x4, t0      0   0   
+009818 ldq    t5, 8(t1)     1636   1     1636
+00981c ldq    t6, 16(t1)     390   0   
+009820 ldq    a0, 24(t1)    1482   1     1482 *
+009824 lda    t1, 32(t1)       0   0   
+009828 stq    t4, 0(t2)    27766   1    27766
+00982c cmpult t0, v0, t4       0   0   
+009830 stq    t5, 8(t2)     1493   1     1493 *
+009834 stq    t6, 16(t2)  174727   1   174727
+009838 stq    a0, 24(t2)    1548   1     1548 *
+00983c lda    t2, 32(t2)       0   0  
+009840 bne    t4, 0x009810  1586   1     1586 *
+</PRE>
+<CENTER>
+<B>Figure 7:  Estimating Frequency of Copy Loop.</B>
+</CENTER>
+<HR>
+
+<P>
+There are several challenges in making accurate estimates.  First, an
+equivalence class might have few issue points.  In general, the smaller
+the number of issue points, the greater the chance that all of them
+encounter some dynamic stall.  In this case, the heuristic will
+overestimate <I>F</I>.  At the extreme, a class might have no issue
+points, <I>e.g.</I>, because it contains no basic blocks.  In this case, the
+best we can do is exploit flow constraints of the CFG to compute a
+frequency in the propagation phase.
+</P>
+
+<P>
+Second, an equivalence class might have only a small number of
+samples.  In this case, we estimate <I>F</I> as: 
+<CENTER>
+<IMG ALIGN=CENTER SRC="eqn1.gif">
+</CENTER>
+where <I>i</I> ranges over the instructions in the class.  This increases the
+number of samples used by our heuristic and generally improves the estimate.
+</P>
+
+<P>
+Third, <I>M<SUB>i</SUB></I> may not be statically determinable.  For
+example, the number of cycles an instruction spends at the head of the
+issue queue may in general depend on the code executed before the
+basic block.  When a block has multiple predecessors, there is no one
+static code schedule for computing <I>M<SUB>i</SUB></I>.  In this
+case, we currently ignore all preceding blocks.  For the block listed
+in Figure 7, this limitation leads to an error: <I>M<SUB>i</SUB></I>
+for the <CODE>ldq</CODE> instruction at 009810 should be 2 instead of
+1 because the processor cannot issue a <CODE>ldq</CODE> two cycles
+after the <CODE>stq</CODE> at 009838 from the previous iteration.
+Thus, a static stall was misclassified as a dynamic stall and the
+issue point was ignored.
+</P>
+
+<P>
+Fourth, dynamic stalls sometimes make the <I>M<SUB>i</SUB></I> values
+inaccurate.  Suppose an issue point instruction <I>i</I> depends on a
+preceding instruction <I>j</I>, either because <I>i</I> uses the
+result of <I>j</I> or because <I>i</I> needs to use some hardware
+resource also used by <I>j</I>.  Thus, <I>M<SUB>i</SUB></I> is a
+function of the latency of <I>j</I>.  If an instruction between
+<I>j</I> and <I>i</I> incurs a dynamic stall, this will cause <I>i</I>
+to spend fewer than <I>M<SUB>i</SUB></I> cycles at the head of the
+issue queue because the latency of <I>j</I> overlaps the dynamic
+stall.  To address this problem, we use the ratio:
+<CENTER>
+<IMG ALIGN=CENTER SRC="eqn2.gif">
+</CENTER>
+for the issue point 
+<I>i</I> when there are instructions between <I>j</I> and <I>i</I>.
+This estimate is more reliable than <I>S<SUB>i</SUB> / M<SUB>i</SUB></I>
+because the dependence
+of <I>i</I> on <I>j</I> ensures that the statically determined latency
+between them will not be decreased by dynamic stalls of <I>j</I> or
+intervening instructions.
+</P>
+
+<P>
+Finally, one must select which of the ratios to include in the
+average.  In rough terms, we examine clusters of issue points that
+have relatively small ratios, where a cluster is a set of issue
+points that have similar ratios (<I>e.g.</I>, maximum ratio in cluster 
+&lt= 1.5 * minimum ratio in cluster).  However, to reduce the chance of
+underestimating <I>F</I>, the cluster is discarded if its issue points
+appear to have anomalous values for <I>S<SUB>i</SUB></I> or <I>M<SUB>i</SUB></I>, <I>e.g.</I>, because the
+cluster contains less than a minimum fraction of the issue points in
+the class or because the estimate for <I>F</I> would imply an unreasonably
+large stall for another instruction in the class.
+</P>
+
+<H3>6.1.4.  Local Propagation</H3>
+
+<P>
+Local propagation exploits flow constraints of the CFG to make
+additional estimates.  Except for the boundary case where a block has
+no predecessors (or successors), the frequency of a block should be
+equal to the sum of the frequencies of its incoming (and outgoing)
+edges.
+</P>
+
+<P>
+The flow constraints have the same form as dataflow equations, so for
+this analysis we use a variant of the standard, iterative algorithm
+used in compilers.  The variations are (1) whenever a new estimate is
+made for a block or an edge, the estimate is immediately propagated to
+all of the other members in the block or edge's equivalence class, and
+(2) no negative estimates are allowed.  (The flow equations can
+produce negative values because the frequency values are only
+estimates.)  Because of the nature of the flow constraints, the time
+required for local propagation is linear in the size of the CFG.
+</P>
+
+<P>
+We are currently experimenting with a global constraint solver to
+adjust the frequency estimates where they violate the flow
+constraints.
+</P>
+
+<H3>6.1.5.  Predicting Accuracy of Estimates</H3>
+
+<P>
+The analysis uses a second heuristic to predict the accuracy of each
+frequency estimate as being <I>low</I>, <I>medium</I>, or <I>high
+confidence</I>.  The confidence of an estimate is a function of the number
+of issue points used to compute the estimate, how tightly the ratios
+of the issue points were clustered, whether the estimate was made by
+propagation, and the magnitude of the estimate.
+</P>
+
+<H2><A NAME="dcpicalc-vs-dcpix">6.2.  Evaluating the Accuracy of Estimates</A></H2>
+
+<P>
+A natural question at this point is how well the frequency estimates
+produced by our tools match the actual frequencies.  To evaluate the
+accuracy of the estimates, we ran a suite of programs twice: once
+using the profiling tools, and once using dcpix, a pixie-like tool
+that instruments both basic blocks and edges at branch points to obtain
+execution counts.  We then compared the
+estimated execution counts <I>FP</I>, where <I>F</I> is the frequency 
+estimate and
+<I>P</I> the sampling period, to the measured execution counts --
+the values should be approximately equal (modulo sampling error) for
+programs whose execution is deterministic.
+</P>
+
+<P>
+For this experiment, we used a subset of the SPEC95 suite.  The
+subset contains the "base" versions of all floating point
+benchmarks, and the "peak" versions of all integer benchmarks except
+ijpeg.  The other executables lacked the relocation symbols required
+by dcpix, and the instrumented version of ijpeg did not work.  The
+profiles were generated by running each program on its SPEC95 workload
+three times.
+</P>
+
+<P>
+Figure 8 is a histogram showing the results
+for instruction frequencies.
+The x-axis is a series of sample buckets.  Each bucket covers a
+range of errors in the estimate, <I>e.g.</I>, the -15% bucket
+contains the samples of instructions where <I>FP</I> was between .85 and
+.90 times the execution count.  The y-axis is the percentage of all
+CYCLES samples.
+</P>
+
+<CENTER>
+<IMG SRC="frequency-hist.gif" ALIGN="center">
+</CENTER>
+<BR>
+<CENTER>
+<B>Figure 8:  Distribution of Errors in Instruction Frequencies (Weighted by CYCLES Samples).</B>
+</CENTER>
+
+<P>
+As the figure shows, 73% of the samples have estimates that are
+within 5% of the actual execution counts; 87% of the samples are
+within 10%; 92% are within 15%.  Furthermore, nearly all samples
+whose estimates are off by more than 15% are marked low confidence.
+</P>
+
+<P>
+Figure 9 is a measure of the accuracy of
+the frequency estimates of edges.  Edges never get samples, so here
+the y-axis is the percentage of all edge executions as measured by
+dcpix.  As one might expect, the edge frequency estimates, which are
+made indirectly using flow constraints, are not as accurate as the
+block frequency estimates.  Still, 58% of the edge executions have
+estimates within 10%.
+</P>
+
+<CENTER>
+<IMG SRC="edge-frequency-hist.gif" ALIGN="center">
+</CENTER>
+<BR>
+<CENTER>
+<B>Figure 9:  Distribution of Errors in Edge Frequencies (Weighted by Edge Executions).</B>
+</CENTER>
+
+<P>
+To gauge how the accuracy of the estimates is affected by the number
+of CYCLES samples gathered, we compared the estimates obtained from
+a profile for a single run of the integer workloads with those
+obtained from 80 runs.  For the integer workloads as a whole, results
+in the two cases are similar, although the estimates based on 80 runs
+are somewhat more tightly clustered near the -5% bucket.
+<I>E.g.</I>, for a single run, 54% of the samples have estimates within 5%
+of the actual execution counts; for 80 runs, this increases to 70%.
+However, for the individual programs such as gcc on which our analysis does
+less well using data from a small number of runs, the estimates based on 80
+runs are significantly better.  With a single run of the gcc workload, only
+23% of the samples are within 5%; with 80 runs, this increases to 53%.
+</P>
+
+<P>
+Even using data from 80 runs, however, the &gt 45% bucket does not
+get much smaller for gcc: it decreases from 21% to 17%.
+We suspect that the samples in this bucket come from
+frequency equivalence classes with only one or two issue points where
+dynamic stalls occur regularly.  In this case, gathering more CYCLES
+samples does not improve the analysis.
+</P>
+
+<P>
+The analysis for estimating frequencies and identifying culprits is
+relatively quick.  It takes approximately 3 minutes to analyze the suite of
+17 programs, which total roughly 26MB of executables.  Roughly 20% of the
+time was spent blocked for I/O.
+</P>
+
+<H2>6.3.  Identifying Culprits</H2>
+
+<P>
+Identifying which instructions stalled and for how long reveals
+<I>where</I> the performance bottlenecks are, but users (and, eventually,
+automatic optimizers) must also know <I>why</I> the stalls occurred in order
+to solve the problems.  In this section, we outline the information
+our tools offer, how to compute it, and how accurate the analysis is.
+</P>
+
+<P>
+Our tools provide information at two levels: instruction and procedure.  At
+the instruction level, we annotate each stall with culprits (<I>i.e.</I>,
+possible explanations) and, if applicable, previous instructions that may
+have caused the stall.  Culprits are displayed as labeled bubbles between
+instructions as previously shown
+in <A HREF="examples.html#mccalpin">Figure 2</A>.
+For example, the analysis may
+indicate that an instruction stalled because of a D-cache miss and point to
+the load instruction fetching the operand that the stalled instruction
+needs.  At the procedure level, we summarize the cycles spent in the
+procedure, showing how many have gone to I-cache misses, how many to
+D-cache misses, etc., by aggregating instruction-level data.  A sample
+summary is shown earlier in
+<A HREF="examples.html#fig4">Figure 4</A>.
+With these
+summaries, users can quickly identify and focus their effort on the more
+important performance issues in any given procedure.
+</P>
+
+<P>
+For each stall, we list all possible reasons rather than a single
+culprit because reporting only one culprit would often be misleading.
+A stall shown on the analysis output is the average of
+numerous stalls that occurred during profiling.  An instruction may
+stall for different reasons on different occasions or even for
+multiple reasons on the same occasion.  For example, an instruction at
+the beginning of a basic block may stall for a branch misprediction at
+one time and an I-cache miss at another, while D-cache misses and
+write-buffer overflow may also contribute to the stall if that
+instruction stores a register previously loaded from memory.
+</P>
+
+<P>
+To compute the list of culprits for each stall, we consider both static and
+dynamic causes.  For static causes, we schedule instructions in each basic
+block using an accurate model of the processor issue logic and assuming no
+dynamic stalls.  Detailed record-keeping provides how long each
+instruction stalls due to static constraints, why it stalls, and
+which previously issued instructions may cause it to stall.  These
+explain the static stalls.  Additional stall cycles observed in the
+profile data are treated as dynamic stalls.
+</P>
+
+<P>
+To explain a dynamic stall at an instruction, we follow a
+"guilty until proven innocent" approach.  Specifically, we start from a
+list of all possible reasons for dynamic stalls in general and try to rule
+out those that are impossible or extremely unlikely in the specific case in
+question.  Even if a candidate cannot be eliminated, sometimes we can
+estimate an upper bound on how much it can contribute to the stall.  When
+uncertain, we assume the candidate to be a culprit.  In most cases, only
+one or two candidates remain after elimination.  If all have been ruled
+out, the stall is marked as unexplained, which typically accounts for under
+10% of the samples in any given procedure (8.6% overall in the entire
+SPEC95 suite).  The candidates we currently consider are I-cache misses,
+D-cache misses, instruction and data TLB misses, branch
+mispredictions, write-buffer overflows, and competition for function
+units, including the integer multiplier and floating point divider.
+Each is ruled out by a different technique.  We illustrate this for
+I-cache misses.
+</P>
+
+<P>
+The key to ruling out I-cache misses is the observation that an
+instruction is extremely unlikely to stall due to an I-cache miss if
+it is in the same cache line as every instruction that can execute
+immediately before it.
+(Even so, an I-cache miss is still
+possible in some scenarios: the stalled instruction is executed
+immediately after an interrupt or software exception returns, or the
+preceding instruction loads data that happen to displace the cache
+line containing the stalled instruction from a unified cache.  These
+scenarios are usually rare.)  More specifically, we examine the
+control flow graph and the addresses of instructions.  If a stalled
+instruction is <I>not</I> at the head of a basic block, it can stall
+for an I-cache miss if and only if it lies at the beginning of a cache
+line.  If it is at the head of a basic block, however, we can determine
+from the control flow graph which basic blocks may execute immediately
+before it.  If their last instructions are all in the same cache line
+as the stalled instruction, an I-cache miss can be ruled out.  For
+this analysis, we can ignore basic blocks and control flow edges
+executed much less frequently than the stalled instruction itself.
+</P>
+
+<P>
+If IMISS event samples have been collected, we can use them to place
+an upper bound on how many stall cycles can be attributed to I-cache
+misses.  Given the IMISS count on each instruction and the sampling
+period, we estimate how many I-cache misses occurred at any given
+instruction.  From this estimate and the execution frequency of the
+instruction, we then compute the upper bound on stall cycles by
+assuming pessimistically that each I-cache miss incurred a cache fill
+all the way from memory.
+</P>
+
+<P>
+How accurate is the analysis?  Since in any nontrivial program there
+is often no way, short of detailed simulation, to ascertain why
+individual instructions stalled, we cannot validate our analysis
+directly by comparing its results with some "correct" answer.
+Instead, we evaluate it indirectly by comparing the number of stall
+cycles it attributes to a given cause with the corresponding sample
+count from event sampling, which serves as an alternative measure of
+the performance impact of the same cause.
+(Event counts alone
+are not enough to deduce an exact number of stall cycles because
+events can have vastly different costs.  For example, an I-cache miss
+can cost from a few to a hundred cycles, depending on which level of
+the memory hierarchy actually has the instruction.)  Though not a
+direct quantitative metric of accuracy, a strong correlation would
+suggest that we are usefully identifying culprits.  Again, we
+illustrate this with I-cache misses.
+</P>
+
+<P>
+Figure 10 plots I-cache miss stall cycles against
+IMISS events for the procedures accounting for 99.9% of the execution
+time of each benchmark in the SPEC95 suite, with part of the main graph
+magnified for clarity.  Each of the 1310 procedures
+corresponds to a vertical bar.  The x-axis is the projected number of
+I-cache misses in that procedure, calculated by scaling the IMISS
+counts by the sampling period.  The y-axis is the number of stall
+cycles attributed to I-cache misses by our tools, which report a range
+because some stall cycles may be caused only in part by I-cache
+misses.
+(To isolate the effect of culprit analysis from that of
+frequency estimation in this experiment, the analysis used execution counts
+measured with instrumented executables as described in
+<A HREF="#dcpicalc-vs-dcpix">Section 6.2</A>.)
+</P>
+
+<CENTER>
+<IMG SRC="imiss.gif" ALIGN="center">
+</CENTER>
+<BR>
+<CENTER>
+<B>Figure 10:  Correlation between numbers of I-cache miss stall cycles
+and of IMISS events for procedures in SPEC95 benchmark suite.</B>
+</CENTER>
+
+<P>
+Figure 10 shows that the stall cycles generally
+increase with the IMISS counts, with each set of endpoints clustering around 
+a straight line except for a few outlier pairs.
+In more quantitative terms, the
+correlation coefficients between the IMISS count of each procedure and
+the top, bottom, and midpoint of the corresponding range of stall cycles are
+0.91, 0.86, and 0.90 respectively, all suggesting a strong (linear)
+correlation.  We would expect some points to deviate substantially from the
+majority because the cost of a cache miss can vary widely and our analysis
+is heuristic.  For example, Figure 10 has two
+conspicuous outliers near (0.05,3) and (1.8,4).  In the first case, the
+number of stall cycles is unusually large because of an overly pessimistic
+assumption concerning a single stall in the compress benchmark of SPECint95.
+In the second case, the number is smaller than expected because the
+procedure (<CODE>twldrv</CODE> in fpppp of
+SPECfp95) contains long basic blocks,
+which make instruction prefetching especially effective, thus reducing
+the penalty incurred by the relatively large number of cache misses.
+</P>
+<HR>
+
+<BLOCKQUOTE>
+<A HREF="sosp97.html"> Beginning of paper </A> <BR>
+<A HREF="abstract.html">Abstract</A> <BR>
+<A HREF="introduction.html">1. Introduction</A> <BR>
+<A HREF="related.html">2. Related Work</A> <BR>
+<A HREF="examples.html">3. Data Analysis Examples</A> <BR>
+<A HREF="collection.html">4. Data Collection System</A> <BR>
+<A HREF="collection-performance.html">5. Profiling Performance</A> <BR>
+6. Data Analysis Overview <BR>
+<A HREF="future.html">7. Future Directions</A> <BR>
+<A HREF="conclusions.html">8. Conclusions</A> <BR>
+<A HREF="acks.html">Acknowledgements</A> <BR>
+<A HREF="references.html">References</A>
+</BLOCKQUOTE>
+
+<HR>
+
+This paper was published in the Proceedings of the 16th ACM Symposium
+on Operating Systems Principles, October, 1997. Copyright 1997 by the
+Assocation for Computing Machinery. All rights reserved. Republished
+by permission.
+
+</BODY>
+</HTML>

@@ -1,0 +1,33 @@
+
+				AVAILABLE ELECTRONICALLY
+
+"Debugging Larch Shared Language Specifications"
+Stephen J. Garland, John V. Guttag, James J. Horning
+July 4, 1990.  34 pages
+
+Authors' abstract
+The Larch family of specification languages supports a two-tiered definitional
+approach to specification.  Each specification has components written in two
+languages: one designed for a specific programming language and another
+independent of any programming language.  The former are called Larch
+interface languages, and the latter the Larch Shared Language
+LSL.
+
+The Larch style of specification emphasizes brevity and clarity rather
+than executability.  To make it possible to test specifications without
+executing or implementing them, Larch permits specifiers to make claims
+about logical properties of specifications and to check these claims
+at specification time.  Since these claims are undecidable in the
+general case, it is impossible to build a tool that will automatically
+certify claims about arbitrary specifications.  However, it is feasible
+to build tools that assist specifiers in checking claims as they debug
+specifications.  This paper describes the checkability designed into
+LSL and discusses two tools that help perform the checking.
+
+This paper is a revised and expanded version of a paper presented at the 
+April 1990 IFIP Working Conference on Programming Concepts and Methods.
+
+
+
+
+

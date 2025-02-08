@@ -1,0 +1,38 @@
+<HTML><HEAD><TITLE>
+Digital Systems Research Center: Report 102</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Research Report 102</H1>
+<P>
+<H1>Safe, Efficient Garbage Collection for C++</H1>
+<HR>
+<H2>John R. Ellis and David L. Detlefs</H2>
+<b>June 10, 1993</b><BR><i> 76 pages</i>
+<P>
+We propose adding safe, efficient garbage collection to C++,
+eliminating the possibility of storage-management bugs and making 
+the design of complex, object-oriented systems much easier. This 
+can be accomplished with almost no change to the language itself 
+and only small changes to existing implementations, while retaining
+compatibility with existing class libraries.
+<P>
+Our proposal is the first to take a holistic, system-level approach,
+integrating four technologies. The language interface specifies how 
+programmers access garbage collection through the language. An optional 
+safe subset of the language automatically enforces the safe-use rules 
+of garbage collection and precludes storage bugs. A variety of collection
+algorithms are compatible with the language interface, but some are 
+easier to implement and more compatible with existing C++ and C 
+implementations. Finally, code-generator safety ensures that compilers 
+generate correct code for use with collectors.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-102.ps.Z">PostScript compressed with UNIX compress</A></B> -- 160 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-102.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 121 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-102.ps.zip">PostScript compressed with ZIP</A></B> -- 121 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-102.ps">PostScript</A></B> -- 496 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-102.pdf">Portable Document Format (PDF)</A></B> -- 216 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

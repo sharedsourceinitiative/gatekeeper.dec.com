@@ -1,0 +1,28 @@
+"A Semantic Approach to Secure Information Flow"
+K. Rustan M. Leino and Rajeev Joshi
+Note #1997-032. December 17, 1997.
+
+A classic problem in security is the problem of determining whether 
+a given program has <I>secure information flow</I>.  Informally, 
+this problem may be described as follows:  Given a program operating 
+on public and private variables, check whether observations of 
+the public variables before and after execution reveal any information 
+about the initial values of the private variables.  Although 
+the problem has been studied for several decades, most of the 
+previous approaches have been syntactic in nature, often using 
+type systems and compiler data flow analysis techniques to analyze 
+program texts.  This paper presents a considerably different 
+approach to checking secure information flow, based on a semantic 
+characterization of security.  A semantic approach has several 
+desirable features.  Firstly, it gives a more precise characterization 
+of security than that possible by conservative methods based 
+on type systems.  Secondly, it applies to any programming constructs 
+whose semantics are definable; for instance, nondeterminism and 
+exceptions pose no additional problems.  Thirdly, it can be applied 
+to reasoning about indirect leaking of information through variations 
+in program behavior (<I>e.g.</I>, whether or not the program 
+terminates).  The method is also useful in the context of automated 
+verification, since it can be used to develop a mechanically-assisted 
+technique for checking whether the flow of a given program is 
+secure.
+

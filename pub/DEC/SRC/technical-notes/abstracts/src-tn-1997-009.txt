@@ -1,0 +1,14 @@
+"Juno-2 Language Definition"
+Greg Nelson and Allan Heydon
+Note #1997-009. June 30, 1997. 15 pages.
+
+Juno-2 is a constraint-based language intended for graphics
+applications. A Juno-2 program describes a picture; a Juno-2
+implementation renders the picture. The paper describes the syntax
+and semantics of the Juno-2 language.
+
+The Juno-2 language is useful for drawing pictures, and also
+interesting for its simplicity, uniformity, and its provisions
+for solving constraints. We hope the paper will be useful to Juno-2
+users, and also of interest to programming language users and
+designers.

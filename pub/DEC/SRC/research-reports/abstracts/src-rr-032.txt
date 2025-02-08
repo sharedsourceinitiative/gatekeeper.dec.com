@@ -1,0 +1,22 @@
+
+		AVAILABLE ELECTRONICALLY
+
+    "Bounds on the Cover Time."
+    Andrei Broder and Anna Karlin.
+    October 15, 1988.  22 pages.
+
+Authors' Abstract
+
+     Consider a particle that moves on a connected, undirected graph
+      G  with  n  vertices.  At each step the particle goes from the
+     current vertex to one of its neighbors, chosen uniformly at random.
+     The cover time is the first time when the particle has
+     visited all the vertices in the graph starting from a given vertex.
+
+     In this paper, we present upper and lower bounds that relate
+     the expected cover time for a graph to the eigenvalues of the
+     Markov chain that describes the random walk above. An interesting
+     consequence is that regular expander graphs have expected cover
+     time  Theta(n ln n).
+
+

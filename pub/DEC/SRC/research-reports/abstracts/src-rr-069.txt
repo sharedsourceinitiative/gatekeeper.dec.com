@@ -1,0 +1,34 @@
+"Trestle Tutorial"
+Mark S. Manasse and Greg Nelson
+May 1, 1992. 70 pages.
+
+This is a tutorial introduction to programming with Trestle, a Modula-3
+window system toolkit currently implemented over the X window system. We
+assume that you have some experience as a user of window systems, but no
+previous experience programming with X or other window systems. To run
+Trestle, you need a copy of SRC Modula-3 and an X server. 
+
+The tutorial begins with examples of programming using built-in Trestle
+interactors and continues by showing you how to build your own interactors:
+both leaf interactors and interactors that contain their own sub-windows and
+modify their behavior. 
+
+The source code presented in the tutorial is shipped as part of the Modula-3
+release from SRC, in the package "trestletutorial." At SRC, you can fetch a
+copy of this by typing 
+
+cp -r /proj/m3/pkg/trestletutorial . 
+
+in your home directory. At other sites, you'll have to ask the people who
+installed SRC Modula-3 where they put the package sources. You will
+probably want to have a copy of the Trestle Reference Manual (SRC Report
+68) nearby as you work through the tutorial. 
+
+The first few examples in the tutorial are programs; their source code is
+reproduced in subdirectories named after that program. The later examples are
+new classes of interactors. For these, the subdirectories are named after the
+interactor, and contain both "src" and "test" subdirectories. The "src"
+directories contain the source code for the interface and implementation of the
+new interactor, and the "test" directory contains a simple program to exercise
+the interactor. 
+

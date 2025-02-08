@@ -1,0 +1,57 @@
+======================================================================
+  xshisen 1.35   <URL:http://www.st.rim.or.jp/~masaoki/xshisen.html>
+  Shisen-sho  ---  Mahjong puzzle game for X11
+======================================================================
+
+You need the following items to compile xshisen 1.35.
+
+   [1] OSF/Motif 1.2 or above, or Athena widget set
+   [2] Xpm library
+   [3] C++ compiler like gcc 2.x
+
+- Xshisen is a mahjong puzzle game for X11.  Similar to the famous
+  "Shang-hai", your objective is to remove all the pieces on the
+  board.
+- Refer to the online manual for playing game.
+- Xshisen is a free software. The program copyright is reserved by 
+  Masaoki Kobayashi.
+- The copyright of pixmap data used in xshisen is reserved by
+  Takayuki Akiyama.  It cannot be used for other purpose without
+  notifying him.
+- Xshisen is confirmed to work with the following platforms.
+
+  [1] Machine:    HP 9000 715/100
+      OS:         HP-UX 9.05
+      Compiler:   gcc 2.6.3, HP C++ B2402 A.03.50
+      Library:    X11R5, Motif 1.2, Xpm 3.4e
+      configure:  configure --enable-japanese=sjis
+                            --x-libraries=/usr/lib/X11R5
+                            --x-includes=/usr/include/X11R5
+                            --with-xpm-lib=/usr/local/lib
+                            --with-xpm-include=/usr/local/include
+                            --with-motif
+                            --with-motif-include=/usr/include/Motif1.2
+                            --with-motif-lib=/usr/lib/Motif1.2
+
+  [2] Machine:    PC/AT compatible Pentium 100
+      OS:         Linux 1.3.58
+      Compiler:   gcc 2.7.2p
+      Library:    X11R6(XFree86 3.1.2), Motif 2.0(Moo-Tiff), Xpm 3.4c
+      configure:  configure --enable-japanese=euc --with-motif
+
+  [3] Machine:    Sparc Station 4 compatible
+      OS:         SunOS 4.1.4+JLE
+      Compiler:   gcc 2.7.0
+      Library:    X11R6, Athena Widget, Xpm 3.4f
+
+  [4] Machine:    PC/AT compatible iDX4 100
+      OS:         BSD/OS 2.0.1
+      Compiler:   gcc 2.7.0
+      Library:    X11R6, Athena Widget, Xpm 3.4c
+      configure:  configure --enable-japanese=euc
+
+- Please tell the author if you found xshisen runs on other
+  platforms, of you found the bug or problems.
+  (E-mail: masaoki@tky.hp.com)
+- I appreciate any pixmap data good for this game.
+

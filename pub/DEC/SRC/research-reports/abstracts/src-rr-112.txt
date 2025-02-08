@@ -1,0 +1,20 @@
+
+		AVAILABLE ELECTRONICALLY
+
+"Availability in the Echo File System"
+Garret Swart, Andrew Birrell, Andy Hisgen, and Timothy Mann
+September 10, 1993.  43 pages
+
+The Echo file system project explored several issues in the design and
+implementation of distributed file systems. This paper describes the
+aspects of the Echo design that are related to providing high
+availability. These aspects include the provision of redundant
+components (replicated disks and backup servers), the replication of
+information, and recovery from failures. Further, we discuss some less
+obvious mechanisms needed for providing truly high availability: load
+control, dynamic reconfiguration of the system, and the detection and
+reporting of faults. Finally, we discuss some of the impact of our
+availability mechanisms on application software.
+
+
+

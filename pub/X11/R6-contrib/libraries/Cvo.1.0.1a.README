@@ -1,0 +1,198 @@
+This directory contains the code for Cvo (C++ Visual Classes).
+
+--- June 4th, 1995 README:
+
+This version of Cvo, 1.0.1a, includes Cvo-1.patch941020 as well as a
+few minor other patches.  The only change to the interface is the
+addition of BOOL Cvo_MenuLabel::State(), which returns the boolean
+state of a toggle menu button.  The "official" site for retrieving
+Cvo releases and patches is:
+
+	ftp://ftp.krystal.com/pub
+
+Mail and questions about Cvo should be sent to:
+
+	cvo@krystal.com
+
+Please note that the only platform I currently have access to is
+BSD/OS 2.x on Intel processors.  There is no reason which I should
+doubt the ability to build Cvo on other platforms, but I do not the
+ability to test this.  I will build for BSDO/OS on Sparc processors
+when it is released.
+
+This distribution contains 3 files:
+
+	Cvo.1.0.1a.src.pax.gz		A gzipped pax archive of the source
+	Cvo.1.0.1a.doc.pax.gz		A gzipped pax archive of the doc
+	Cvo.1.0.1a.bsdos.pax.gz		A gzipped pax archive for BSD/OS 2.x
+
+The last file need only be retrieved by sites running BSD/OS 2.x and who
+do not want to compile Cvo (g++ takes a long time).  This archive should
+be extracted in the directory /usr/X11.  It contains the header files
+(duplicated in Cvo.1.0.1a.src.pax.gz) and libCvo.a.
+
+The source and documentation archives should both be extracted into a
+directory called Cvo (or Cvo.1.0.1a for those who like version numbers
+in the name).
+
+				-Paul Borman
+				 June 4th, 1995
+				 prb@bsdi.com
+
+--- October 20th, 1994 README:
+
+When picking up Cvo, make sure you get Cvo-1.patch941020.  This
+patch file includes replacement files for the original Cvo distribution.
+There are a few changes for G++ as well as all the programs in the
+Examples directory now build :-)  Note that the "radio" example has
+been removed.  It requires sun audio stuff that I do not have on any
+machine at this point as well as being old enough to refer to a few
+objects which no longer exist in Cvo.
+
+Also, do not send mail to prb@cray.com, my new mail address is <prb@bsdi.com>
+
+				-Paul Borman
+				 October 20th, 1994
+				 prb@bsdi.com
+
+--- September 28th, 1994 README:
+
+Cvo is an X11 library written in C++ which allows easy development of
+X11 applications.  This library was written at Cray Research, Inc.
+between Feb 1992 and Sep 1994.  Due to internal reasons having nothing
+to do with merit of the project, Cray Research has not been able to
+continue work Cvo.  With that in mind, Cray Research has decided to
+make Cvo freely available, subject to the Copyright notice at the
+end of this file.
+
+While I have done a majority of the work on Cvo, the following people
+have made significant contributions:
+
+    Sean Ahern <ahern@llnl.gov>		Cvo Intern, Summer 1993
+    Larry Weeks <dev@ecn.purdue.edu>	Cvo Intern, Summer 1994
+    Paul Algren <augs@cray.com>
+    Dean Johnson <dtj@cray.com>
+    Jim Nowicki <jpn@cray.com>
+
+There have also been several groups in Cray Research who have used Cvo
+for product development.  Their use was invaluable.
+
+This directory should contain the following:
+
+	README		This File
+	Cvo/		Header files
+	src/		Library source code
+	util/		Utility source code
+	X11/		Revised Xmd.h that works with C++.  Use this file
+			only if your X11/Xmd.h does not work with C++.
+	RS6000/		Code for missing routines under AIX
+	SunOS/		Code for missing routines under SunOS
+	UNICOS/		This code is not included due to copyright
+			restrictions.  This is only needed for UNICOS 7.0.
+	Documentation/	Documentation
+	Examples/	Some example codes.  Some of these codes might
+			be a bit old, but I believe they all compile.
+
+And several makefiles for the architectures I build for
+
+	Makefile.bsdi	
+	Makefile.c90.70
+	Makefile.c90.80
+	Makefile.hpux
+	Makefile.irix
+	Makefile.rs6000
+	Makefile.solaris
+	Makefile.xmp.70
+	Makefile.xmp.80
+	Makefile.ymp.70
+	Makefile.ymp.80
+
+When building Cvo applications, one must typically invoke:
+
+    c++ -o prog -I$CvoDir prog.cc -L$CvoDIR -lCvo -lX11 -lm
+
+where $CvoDIR is where the Cvo/*.h++ and libCvo.a files are located.
+
+Under Solaris you also must add:
+
+    	-I/usr/openwin/include
+	-L/usr/openwin/lib
+
+Under BSD/386 from BSDI you must also add:
+
+	-I/usr/X11/include
+	-L/usr/X11/lib
+
+Other systems may vary.
+
+There is a mailing list available at cvo-list@cray.com
+(cvo-list-request@cray.com to request to be on it.)
+
+			-Paul Borman
+			 Sept 28th, 1994
+		    	 <prb@cray.com>
+		    	 <prb@vangogh.cs.berkeley.edu>
+			 <prb@bsdi.com>
+
+The canonical program:
+
+    #include <Cvo/Application.h++>
+    #include <Cvo/Label.h++>
+
+    main(int ac, char **av)
+    {
+	Cvo_Parse(&ac, &av);		// Must always have this!
+
+	Cvo_Application *app;
+	Cvo_Window *slab;
+	Cvo_Label *label;
+
+	app = new Cvo_Application("hello");
+	slab = new Cvo_Window(app);
+	label = new Cvo_Label("hello", slab, "Hello World!");
+
+	slab->ExpandFrame();
+	label->ExpandFrame();
+
+	app->MainLoop();
+    }
+
+/*
+ * Copyright 1994, Cray Research, Inc.
+ *                 
+ * Permission to use, copy, modify and distribute this software and
+ * its accompanying documentation (the "Software") is granted without
+ * fee, provided that the above copyright notice and this permission
+ * notice appear in all copies of the Software and all supporting
+ * documentation, and the name of Cray Research, Inc. not be used in
+ * advertising or publicity pertaining to distribution of the 
+ * Software without the prior specific, written permission of Cray
+ * Research, Inc.  The Software is a proprietary product of Cray
+ * Research, Inc., and all rights not specifically granted by this
+ * license shall remain in Cray Research, Inc.  No charge may be made
+ * for the use or distribution of the Software.  The Software may be
+ * distributed as a part of a different product for which a fee is
+ * charged, if (i) that product contains or provides substantial
+ * functionality that is additional to, or different from, the
+ * functionality of the Software, and (ii) no separate, special or
+ * direct charge is made for the Software.
+ *         
+ * THE SOFTWARE IS MADE AVAILABLE "AS IS", AND ALL EXPRESS AND
+ * IMPLIED WARRANTIES, INCLUDING THE IMPLIED WARRANTIES OF FITNESS
+ * FOR A PARTICULAR PURPOSE, MERCHANTABILITY, AND FREEDOM FROM
+ * VIOLATION OF THIRD PARTY INTELLECTUAL PROPERTY RIGHTS, ARE HEREBY
+ * DISCLAIMED AND EXCLUDED BY CRAY RESEARCH, INC.  CRAY RESEARCH,
+ * INC. WILL NOT BE LIABLE IN ANY EVENT FOR ANY CONSEQUENTIAL,
+ * SPECIAL, INCIDENTAL, OR INDIRECT DAMAGES ARISING OUT OF OR IN
+ * CONNECTION WITH THE PERFORMANCE OF THE SOFTWARE OR ITS USE BY ANY
+ * PERSON, OR ANY FAILURE OR NEGLIGENCE ON THE PART OF CRAY RESEARCH,
+ * INC., EXCEPT FOR THE GROSS NEGLIGENCE OR WILLFUL MISCONDUCT OF
+ * CRAY RESEARCH.
+ * 
+ * This License Agreement shall be governed by, and interpreted and
+ * construed in accordance with, the laws of the State of Minnesota,
+ * without reference to its provisions on the conflicts of laws, and
+ * excluding the United Nations Convention of the International Sale
+ * of Goods.
+ *
+ */

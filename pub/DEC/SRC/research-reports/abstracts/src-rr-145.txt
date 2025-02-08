@@ -1,0 +1,49 @@
+"Modularity in the Presence of Subclassing"
+Raymie Stata
+Report #145, April 28, 1997. 98 pages 
+
+Classes are harder to subclass than they need be.  This report
+addresses this problem, showing how to design classes that are more
+modular and easier to subclass without sacrificing the extensibility
+that makes subclassing useful to begin with.
+
+We argue that a class should have two interfaces, an "instance
+interface" used by programmers manipulating instances of the class,
+and a "specialization interface" used by programmers building
+subclasses of the class.  Instance interfaces are relatively well
+understood, but design principles for specialization interfaces
+are not.
+
+In the context of single inheritance, we argue that specialization
+interfaces should be partitioned into "class components".  A class
+component groups part of a class's state together with methods to
+maintain that state.  Class components establish abstraction
+boundaries within classes, allowing modular replacement of
+components by subclasses.  Achieving this replaceability requires
+reasoning about each component as an independent unit that depends
+only on the specifications of other components and not on their
+implementations.
+
+We introduce the concept of "abstract representation" to denote
+the view of a class's state given in its specialization interface.
+This view is more detailed than the view used to describe instances of
+the class, revealing details that describe the interfaces between
+class components.  It is less detailed than the actual implementation,
+hiding implementation details that should not be exposed even to
+specializers.
+
+We also consider multiple inheritance, specifically, Snyder's model of
+encapsulated multiple inheritance.  We advocate separating class
+components into individual classes called "mixins".  Instantiable
+classes are built by combining multiple mixins.  With the mixin style
+of design, class hierarchies have more classes than in equivalent
+single-inheritance designs.  These classes have smaller, simpler
+interfaces and can be reused more flexibly.
+
+To explore the impact our ideas might have on program design, we
+consider classes from existing libraries in light of the proposed
+single- and multiple-inheritance methodologies.  To explore the
+impact our ideas might have on language design, we present two
+different extensions to Java, one that provides a level of static
+checking for single-inheritance designs, and another that adds the
+encapsulated model of multiple inheritance.

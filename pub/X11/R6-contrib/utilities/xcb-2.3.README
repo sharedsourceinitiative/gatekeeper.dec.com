@@ -1,0 +1,121 @@
+
+What is xcb?
+============
+Do you ever wish you could cut two or more separate pieces of text
+at once from a window?  Do you ever need to save the output from one
+command for reuse in several subsequent tasks?  Do you ever find
+yourself wanting some easy means of globally exporting data, e.g.
+to a parent shell, to another xterm or application, or to another
+machine or user?  If you answer yes to any of these questions, then
+xcb is for you.
+
+Xcb provides access to the cut buffers built into every X server.
+It allows the buffers to be manipulated either via the command line,
+or with the mouse in a point and click manner.  The buffers can be
+used as holding pens to store and retrieve arbitrary data fragments,
+so any number of different pieces of data can be saved and recalled later.
+The program is designed primarily for use with textual data.
+
+
+What is so good about this release?
+===================================
+Release 2.3 fixes a bug found in the XView code that prevented data
+from being pasted from xcb to XView applications such as cmdtool.
+
+The release also adds a Motif GUI, selectable as a compile-time option.
+Now you can choose between the Athena or the Motif look and feel.
+
+
+Yes, but has it been ported to WHIZ-IX 12.1A.00x, on SRS-80 27-bit CPUs?
+========================================================================
+Xcb has been ported to a wide variety of sites and systems.
+In no particular order, the machines and operating systems known
+to be running xcb include:-
+
+	o  OSx (5.1a)  -  Pyramid MIS-2/02
+	o  DC/OSx (1.0)  -  Pyramid MIServer-S 1/32 r3000
+	o  AT&T SYSV (SVR3.2, SVR4)  -  i386, DG Aviion 5200
+	o  HP-UX (lots of versions)  -  HP 9000s
+	o  SunOS (4.1)  -  Sun3, Sun4, Solbourne Series5, SPARCstations
+	o  SPARC/OS (1.1)
+	o  Solaris (2.1)  -  SPARCstations
+	o  Irix (4.0, 5.2)  -  SGI
+	o  ULTRIX (4.2)  -  DECstations
+	o  UNICOS (6.1)  -  Cray Y-MP
+	o  ConvexOS (10.0.2)  -  Convex 3100
+	o  DYNIX (V3.0.17.10)  -  Sequent Symmetry S81
+	o  AIX (3.2)  -  RS6000
+	o  RISC/os (4.52)  -  MIPS
+	o  Domain/OS (10.4)  -  Apollo DN3000, 3500, 4500, 5500
+	o  Linux (lots of versions)  -  i486
+	o  VMS (5.5)
+	o  DGUX (5.4.2)  -  AViiON mc88100
+	o  Dynix/ptx (1.3)  -  i386
+
+
+Xcb has been written to compile using both ANSI and non-ANSI compilers.
+It is in use in X11 R3, R4, R5 and R6 environments.  The current version
+uses either the Athena widgets (libXaw.a) or the Motif widgets (libXm.a),
+plus the X Toolkit library (libXt.a).
+
+
+Ok, where is it available?
+==========================
+Versions of xcb can be obtained.....
+
+	o  from the comp.sources.x newsgroup, or any of its archive sites.
+	o  by ftp, from ftp.x.org in the file contrib/utilities/xcb-2.3.tar.gz,
+	o  by ftp, from any of the sites that mirror ftp.x.org
+	   (In Australia, archie.au:X11/contrib/utilities/xcb-2.3.tar.gz)
+
+
+So, it will compile, will it?
+=============================
+Yes!  The makefiles will, by default, build the Athena widgets version
+of xcb.  If you prefer Motif, you should adjust the $(GUI) definition
+to be -DMOTIF.  In addition, if you wish to cut and paste text between
+xcb and XView applications, you should also add the -DXVIEW flag.
+
+AT&T SVR4 sites need libnsl.a during linking.  If you are using
+SVR4, and you don't like Imakefiles, you will need to add -lnsl to the
+LIBS in Makefile.std.
+
+HP-UX users may find that the Athena widgets are not installed on their
+machine, even though the components are freely available as part of the
+MIT X11 distribution.  There is an HP maintained, but unsupported, set
+of X11R4 libraries and utilities (including the Athena widgets) for the
+HP 9000 Series 300, 400, 700, and 800.  You can get the libraries,
+include files, and config files (imake) via anonymous FTP from
+hpcvaaz.cv.hp.com (15.255.72.15) - look for pub/MitX11R4/libs.s*00.tar.Z
+
+AIX 3.2 users may find their Athena components are installed in a
+non-standard place.  Check the directory /usr/lpp/X11/Xamples/lib/Xaw.
+
+VMS and ULTRIX users may find their Athena components are installed in
+a non-standard place too.  Check the directory /usr/include/mit for the
+Athena include files.
+
+
+And how do I set the thing up?
+==============================
+That is pretty easy too.  Once you have compiled the program,
+you can start using it straight away - just put it in your favourite
+bin directory.  The program contains a minimal set of fallback resources
+so that it will behave itself even if there are no X resource specifications
+for it to feed on.  To install the program, plus its application defaults
+file, and the man page, simply type 'make install install.man', after
+checking the target directories for the install in the Imakefile/Makefile.std.
+
+
+Who is to blame?  Where do I send complaints?
+=============================================
+Blame me.  If you have any bug reports, porting problems, comments,
+more comments, suggestions, patches, unwanted cash etc. please tell me.
+I can be reached at the email address below.
+
+Better still, if you really like xcb, send me a postcard!
+(to P.O. Box 213, Belgrave, Victoria, Australia.  3160).
+
+Enjoy.
+Farrell McKay (Farrell.McKay@mpx.com.au)
+Nov 1994

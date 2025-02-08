@@ -1,0 +1,65 @@
+Macintosh Tcl & Tk
+
+by Ray Johnson
+Sun Microsystems Laboratories
+rjohnson@eng.sun.com
+
+This directory contains a collection of files related to Tcl and
+Tk for the Macintosh, all of which are available for anonymous FTP.  
+Below is a description of what is in the various files in this 
+directory:
+
+mactk8.0p1.sea.hqx
+
+	This distribution is a "binary" only release.  It contains an
+	installer program that will install a 68k or PowerPC version
+	of the "Wish" application.  In addition, in installs the Tcl &
+	Tk libraries in the Extensions folder inside your System
+	Folder.  (These are just text files - no inits are installed.)
+
+mactcltk-full-8.0p1.sea.hqx
+
+	This release contains the full release of Tcl and Tk for the
+	Macintosh plus the More Files packages which both Macintosh
+	Tcl and Tk rely on.  Warning! - This is a very large file (on
+	the order of 12 megs).
+
+mactcl-source-8.0p1.sea.mqx
+
+	This release contains the complete source for Tcl 8.0.  In
+	addition, Metrowerks CodeWarrior libraries and project files
+	are included.  However, you must already have the More Files
+	package to compile this code.
+
+mactk-source-8.0p1.sea.hqx
+
+	This release contains the complete source to Tk for the Macintosh
+	In addition, Metrowerks CodeWarrior libraries and project files
+	are included.  However, you must already have the Tcl 8.0, More
+	Files package to compile this code.
+
+
+TclProcess.sit.hqx - This is a sample application that uses the
+	Tcl/Tk libraries.  The application lists information about
+	the process running on your Macintosh.  (It's modeled off
+	of the Process Watcher application.)  Sources are included.
+	It's not really supported - but I'd love to hear your
+	feedback.  (You need the source release for Tcl7.6 &
+	Tk4.2 inorder to use this sample code.)
+
+MoreFiles1.4.3.sea.hqx - This is the source for the MoreFiles library
+			used by the Macintosh Tcl/Tk sources.  It contains
+			File releated functions that may one day be
+			in the Mac OS.
+
+
+*** old-versions - 	This is a directory that contains older
+			releases of MacTcl.  The release number
+			should be included in the file name.  These
+			versions are not supported.
+
+For more information there is a collection of Web pages on 
+Tcl and Tk at the URL: http://sunscript.sun.com/
+
+Questions or problems with any of these distributions should be directed
+to the comp.lang.tcl newsgroup or the mactcl mailing list.

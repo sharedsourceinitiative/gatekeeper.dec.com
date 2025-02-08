@@ -1,0 +1,169 @@
+<!-- This file generated automatically by mtex2html(1) -->
+<HTML>
+<HEAD>
+<TITLE>dcpix</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#ffffff" VLINK="#006633">
+<H2>dcpix(1)</H2>
+
+<H3>NAME</H3>
+<BLOCKQUOTE>
+dcpix - Instrument a program to get basic block and edge counts.
+</BLOCKQUOTE>
+
+<H3>SYNOPSIS</H3>
+<BLOCKQUOTE>
+<P>
+
+<B>dcpix</B> myprog [-conservative]
+</BLOCKQUOTE>
+
+<H3>DESCRIPTION</H3>
+<BLOCKQUOTE>
+<P>
+
+<TT>Dcpix</TT> is similar to pixie except that it measures executions of both
+basic blocks and edges between them.<P>
+
+<TT>Dcpix</TT> is used in conjunction with stall analysis tools
+(<A HREF="dcpicalc.html">dcpicalc(1)</A>,
+<A HREF="dcpitopstalls.html">dcpitopstalls(1)</A>,
+<A HREF="dcpiwhatcg.html">dcpiwhatcg(1)</A>).  Normally, these tools must
+estimate execution counts of basic blocks and edges.  These
+estimates are sometimes inaccurate.<P>
+
+For deterministic programs, one can measure the execution counts
+using <TT>dcpix</TT> and supply the results to stall analysis tools.  The
+program must be deterministic because it must be run twice: once under
+<TT>dcpix</TT> to measure execution counts, and once under
+<A HREF="dcpid.html">dcpid(1)</A> to gather sample data.<P>
+
+By default, <TT>dcpix</TT> instruments only a set of blocks and edges that is
+sufficient for computing counts for all blocks and edges by exploiting flow
+constraints.  However, this is inaccurate for programs that call <TT>longjmp</TT>
+(or similar routines).  With the <TT>-conservative</TT> flag, <TT>dcpix</TT>
+adds instrumentation to every block.
+</BLOCKQUOTE>
+
+<H3>TYPICAL USAGE</H3>
+<BLOCKQUOTE>
+<P>
+
+<PRE>
+  dcpix myprog		% creates myprog.dcpix and myprog.tab
+  myprog.dcpix		% creates myprog.xct
+  dcpicalc -tab myprog.tab -xct sum.xct -db db myprocedure myprog
+</PRE>
+
+To analyze the performance of multiple runs of myprog, one can do either:
+<PRE>
+  dcpicalc -tab myprog.tab -xct myprog1.xct \
+           -xct myprog2.xct ... -xct myprogN.xct \
+	   -db db myprocedure myprog
+</PRE>
+
+or:
+<PRE>
+  dcpisumxct myprog1.xct myprog2.xct ... -xct myprogN.xct -o sum.xct
+  dcpicalc -tab myprog.tab -xct sum.xct -db db myprocedure myprog
+</PRE>
+
+Using <A HREF="dcpisumxct.html">dcpisumxct(1)</A> is more efficient when running
+dcpicalc multiple times, e.g., on several procedures in the same program.
+</BLOCKQUOTE>
+
+<H3>IMPLEMENTATION</H3>
+<BLOCKQUOTE>
+<P>
+
+Dcpix is an atom tool that instruments all edges exiting a branching block
+plus the entry block(s) of each procedure.  These measured counts are more
+than enough to calculate counts for every block using "flow in = flow out"
+constraints, unless your program executes an infinite loop.
+</BLOCKQUOTE>
+
+<H3>ENVIRONMENT</H3>
+<BLOCKQUOTE>
+<P>
+
+If the environment variable DCPIX_ADDPID is set, the instrumented program
+(e.g., myprog.dcpix) will append its pid to the names of .xct files.  Thus,
+running the instrumented program multiple times shouldn't cause one run to
+overwrite the .xct file from a previous run.
+</BLOCKQUOTE>
+
+<H3>LIMITATIONS</H3>
+<BLOCKQUOTE>
+<P>
+
+<TT>Dcpix</TT> has no locking, so it is inaccurate for multi-threaded code.
+Also, it does not support programs that call fork().  <P>
+
+Some single-threaded programs have nondeterministic implementations, e.g.,
+implementations that uses ld_l/st_c.  Thus, the count for some blocks may
+differ when you run myprog under dcpid and myprog.dcpix to generate the
+counts files.<P>
+
+The stall analysis tools currently introduce round-off errors into the
+measured counts because it represents them as multiples of the
+sampling periord.
+</BLOCKQUOTE>
+
+<H3>SEE ALSO</H3>
+<BLOCKQUOTE>
+<P>
+
+<A HREF="dcpi.html">dcpi(1)</A>,
+<A HREF="dcpiflow.html">dcpiflow(1)</A>,
+<A HREF="dcpiprof.html">dcpiprof(1)</A>,
+<A HREF="dcpilist.html">dcpilist(1)</A>,
+<A HREF="dcpidis.html">dcpidis(1)</A>,
+<A HREF="dcpiscan.html">dcpiscan(1)</A>,
+<A HREF="dcpiepoch.html">dcpiepoch(1)</A>,
+<A HREF="dcpiflush.html">dcpiflush(1)</A>,
+<A HREF="dcpicalc.html">dcpicalc(1)</A>,
+<A HREF="dcpilabel.html">dcpilabel(1)</A>,
+<A HREF="dcpi2ps.html">dcpi2ps(1)</A>,
+<A HREF="dcpicat.html">dcpicat(1)</A>,
+<A HREF="dcpiquit.html">dcpiquit(1)</A>,
+<A HREF="dcpidiff.html">dcpidiff(1)</A>,
+<A HREF="dcpitopstalls.html">dcpitopstalls(1)</A>,
+<A HREF="dcpiwhatcg.html">dcpiwhatcg(1)</A>,
+<A HREF="dcpictl.html">dcpictl(1)</A>,
+<A HREF="dcpisource.html">dcpisource(1)</A>,
+<A HREF="dcpicc.html">dcpicc(1)</A>,
+<A HREF="dcpiversion.html">dcpiversion(1)</A>,
+<A HREF="dcpiuninstall.html">dcpiuninstall(1)</A>,
+<A HREF="dcpi2pix.html">dcpi2pix(1)</A>,
+<A HREF="dcpikdiff.html">dcpikdiff(1)</A>,
+<A HREF="dcpisumxct.html">dcpisumxct(1)</A>,
+<A HREF="dcpistats.html">dcpistats(1)</A>,
+<A HREF="dcpid.html">dcpid(1)</A>,
+<A HREF="dcpiformat.html">dcpiformat(4)</A>,
+<A HREF="dcpiloader.html">dcpiloader(5)</A><P>
+
+For more information, see the 
+<A HREF="../home.html">DIGITAL Continuous
+Profiling Infrastructure project home page
+(http://www.research.digital.com/SRC/dcpi/ from outside DIGITAL)</A>.
+</BLOCKQUOTE>
+
+<H3>COPYRIGHT</H3>
+<BLOCKQUOTE>
+<P>
+
+<a href="http://www.digital.com/info/tm.html">
+Copyright 1996-97, Digital Equipment Corporation.
+</a>
+</BLOCKQUOTE>
+
+<H3>AUTHORS</H3>
+<BLOCKQUOTE>
+Mark Vandevoorde, Jeff Dean
+</BLOCKQUOTE>
+
+This page was generated automatically by
+<A HREF="http://www.research.digital.com/SRC/mtex/">mtex software</A>.
+</BODY>
+</HTML>

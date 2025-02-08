@@ -1,0 +1,40 @@
+
+                       What is Libsx?
+
+Libsx (the Simple X library) v1.1 is a library that sits on top of and
+to the side of the Athena widget set.  Its purpose is to make writing
+graphical applications (particularly those that want to draw graphics)
+quite simple.  A hello world program is 2 lines of code. A program
+that opens a window and draws some graphics is about 5 lines.  The
+library doesn't limit programs to a single canned style however, and
+supports building sophisticated interfaces with the same ease as a
+simple program.
+
+All widgets can be created with a single function call of a few
+arguments.  Another function call positions widgets by specifying
+logical relationships.  Once this is done, the interface is created
+and user specified callbacks are called as appropriate.  Multiple
+windows are possible, as are modal windows.
+
+Libsx provides encapsulation of label, button, slider, toggle/radio
+button, text, form, scrolled lists, and menu widgets.  It also
+provides a separate drawing area widget (for drawing graphics and
+getting user input) as well as a clean single-line text entry widget. 
+Management of color is also provided.
+
+I personally tested the library on SGI, Sun, and DEC boxes. People on 
+the net have used it on HP, Linux, SCO, Solaris, and AIX. It will
+likely work on any machine that supports X, the Athena widgets, and
+ANSI C. 
+
+Numerous demo programs and two simple applications are provided with
+the library, as is documentation for all the functions.  Also included
+are a complete file requester, color chooser and form fill-out library.
+
+NOTE: This version contains some small fixes and enhancements over the
+      version posted to comp.sources.x.  No major additions (yet).
+
+--dominic giampaolo
+  dbg@sgi.com
+
+

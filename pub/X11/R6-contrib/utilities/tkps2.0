@@ -1,0 +1,1116 @@
+#!/usr/local/bin/wish -f
+#
+# This script generates a process browser, which lists the running
+# processes (using unix "ps") and allows you to send signals (such as KILL)
+# using a popup menu. 
+
+# Create a scrollbar on the right side of the main window and a listbox
+# on the left side.
+#
+# Henry Minsky (hqm@ai.mit.edu)  May 1994
+# 
+#
+proc strip_blanks { str} {
+   set tmpstr "" ;
+   foreach i $str {
+     if {$i != ""} { lappend tmpstr $i }
+   }
+   return $tmpstr
+}
+
+################################################################
+# Default settings
+
+set menufont "-Adobe-helvetica-bold-r-normal--*-120-*"
+set tfont "fixed"
+
+wm title . "Running Processes"
+
+# The default update time of display is 10 seconds
+# You can change it in the configure menu.
+set MIN_UPDATE_PERIOD 2000
+set UPDATE_PERIOD 10000 
+
+# The default double click behavior
+set USER_SIG KILL
+
+# The default command line args to "ps"
+set DEFAULT_PS_ARGS  "-auxww"
+
+################################################################
+# You can get the implementation dependent signal names for your system
+# from /usr/include/signal.h
+# 
+
+set common_sigs {
+{INT	2	interupt}
+{QUIT	3	quit}
+{IOT	6	abort}
+{KILL	9	non-catchable, non-ignorable kill}
+{STOP	17	sendable stop signal not from tty}
+{ALRM	14	alarm clock}
+{TERM	15	software termination signal}
+}
+
+
+
+# Make a button bar for the common signals
+frame .bbar
+button .bbar.kill -text KILL -command { send_signal KILL } -font $menufont
+button .bbar.int -text INT -command { send_signal INT } -font $menufont
+button .bbar.quit -text QUIT -command { send_signal QUIT } -font $menufont
+button .bbar.iot -text IOT -command { send_signal IOT } -font $menufont
+button .bbar.term -text TERM -command { send_signal TERM } -font $menufont
+button .bbar.stop -text STOP -command { send_signal STOP } -font $menufont
+button .bbar.hup -text HUP -command { send_signal HUP } -font $menufont
+
+pack .bbar.kill  .bbar.int .bbar.quit \
+     .bbar.iot .bbar.term .bbar.stop .bbar.hup \
+     -side left -padx 3m -ipadx 6m -pady 3m
+
+pack .bbar  -side bottom -expand yes -fill x -anchor w
+
+set all_sigs {
+{HUP	1	hangup}
+{INT	2	interrupt}
+{QUIT	3	quit}
+{ILL	4	illegal instruction (not reset when caught)}
+{TRAP	5	trace trap (not reset when caught)}
+{ABRT	6	abort()}
+{IOT	SIGABRT	compatibility}
+{EMT	7	EMT instruction}
+{FPE	8	floating point exception}
+{KILL	9	kill (cannot be caught or ignored)}
+{BUS	10	bus error}
+{SEGV	11	segmentation violation}
+{SYS	12	bad argument to system call}
+{PIPE	13	write on a pipe with no one to read it}
+{ALRM	14	alarm clock}
+{TERM	15	software termination signal from kill}
+{URG	16	urgent condition on IO channel}
+{STOP	17	sendable stop signal not from tty}
+{TSTP	18	stop signal from tty}
+{CONT	19	continue a stopped process}
+{CHLD	20	to parent on child stop or exit}
+{TTIN	21	to readers pgrp upon background tty read}
+{TTOU	22	like TTIN for output if (tp->t_local&LTOSTOP)}
+{IO	23	input/output possible signal}
+{XCPU	24	exceeded CPU time limit}
+{XFSZ	25	exceeded file size limit}
+{VTALRM 26	virtual time alarm}
+{PROF	27	profiling time alarm}
+{WINCH 28	window size changes}
+{INFO	29	information request}
+{USR1 30	user defined signal 1}
+{USR2 31	user defined signal 2}
+
+}
+
+set posix_sigs {
+
+{HUP	1	hangup}
+{INT	2	interrupt}
+{QUIT	3	quit}
+{ILL	4	illegal instruction (not reset when caught)}
+{ABRT	6	abort()}
+{FPE	8	floating point exception}
+{KILL	9	kill (cannot be caught or ignored)}
+{SEGV	11	segmentation violation}
+{PIPE	13	write on a pipe with no one to read it}
+{ALRM	14	alarm clock}
+{TERM	15	software termination signal from kill}
+{STOP	17	sendable stop signal not from tty}
+{TSTP	18	stop signal from tty}
+{CONT	19	continue a stopped process}
+{CHLD	20	to parent on child stop or exit}
+{TTIN	21	to readers pgrp upon background tty read}
+{TTOU	22	like TTIN for output if (tp->t_local&LTOSTOP)}
+{USR1 30	user defined signal 1}
+{USR2 31	user defined signal 2}
+}
+
+################################################################
+
+set common_ps_keywords {
+	{%cpu       percentage cpu usage (alias pcpu)}
+	{%mem       percentage memory usage (alias pmem)}
+	{uid        effective user ID}
+	{user       user name (from uid)}
+	{majflt     total page faults}
+	{minflt     total page reclaims}
+	{msgrcv     total messages received (reads from pipes/sockets)}
+	{msgsnd     total messages sent (writes on pipes/sockets)}
+	{vsz        virtual size in Kbytes (alias vsize)}
+	{nice       nice value (alias ni)}
+	{nsigs      total signals taken (alias nsignals)}
+	{nswap      total swaps in/out}
+	{pgid       process group number}
+	{pid        process ID}
+	{ppid       parent process ID}
+	{rgid       real group ID}
+	{ruid       real user ID}
+	{ruser      user name (from ruid)}
+	{start      time started}
+	{time       accumulated cpu time, user + system (alias cputime)}
+	{tpgid      control terminal process group ID}
+	{tsiz       text size (in Kbytes)}
+	{tty        full name of control terminal}
+	{lim        memoryuse limit}
+	{logname    login name of user who started the process}
+}
+
+set ALL_ps_keywords {
+	{%cpu       percentage cpu usage (alias pcpu)}
+	{%mem       percentage memory usage (alias pmem)}
+	{acflag     accounting flag (alias acflg)}
+	{cpu        short-term cpu usage factor (for scheduling)}
+	{inblk      total blocks read (alias inblock)}
+	{jobc       job control count}
+	{ktrace     tracing flags}
+	{ktracep    tracing vnode}
+	{lim        memoryuse limit}
+	{lstart     time started}
+	{majflt     total page faults}
+	{minflt     total page reclaims}
+	{msgrcv     total messages received (reads from pipes/sockets)}
+	{msgsnd     total messages sent (writes on pipes/sockets)}
+	{nice       nice value (alias ni)}
+	{nivcsw     total involuntary context switches}
+	{nsigs      total signals taken (alias nsignals)}
+	{nswap      total swaps in/out}
+	{nvcsw      total voluntary context switches}
+	{nwchan     wait channel (as an address)}
+	{oublk      total blocks written (alias oublock)}
+	{p_ru       resource usage (valid only for zombie)}
+	{paddr      swap address}
+	{pagein     pageins (same as majflt)}
+	{pgid       process group number}
+	{pid        process ID}
+	{ppid       parent process ID}
+	{pri        scheduling priority}
+	{re         core residency time (in seconds; 127 = infinity)}
+	{rgid       real group ID}
+
+	{rlink      reverse link on run queue, or 0}
+	{rss        resident set size}
+	{rsz        resident set size + (text size / text use count) (alias rs- size)}
+	{ruid       real user ID}
+	{ruser      user name (from ruid)}
+	{sess       session pointer}
+	{sig        pending signals (alias pending)}
+	{sigcatch   caught signals (alias caught)}
+	{sigignore  ignored signals (alias ignored)}
+	{sigmask    blocked signals (alias blocked)}
+	{sl         sleep time (in seconds; 127 = infinity)}
+	{start      time started}
+	{svgid      saved gid from a setgid executable}
+	{svuid      saved uid from a setuid executable}
+	{tdev       control terminal device number}
+	{time       accumulated cpu time, user + system (alias cputime)}
+	{tpgid      control terminal process group ID}
+	{tsess      control terminal session pointer}
+	{tsiz       text size (in Kbytes)}
+	{tt         control terminal name (two letter abbreviation)}
+	{tty        full name of control terminal}
+	{ucomm      name to be used for accounting}
+	{uid        effective user ID}
+	{upr        scheduling priority on return from system call (alias usrpri)}
+	{user       user name (from uid)}
+	{vsz        virtual size in Kbytes (alias vsize)}
+	{wchan      wait channel (as a symbolic name)}
+	{xstat      exit or stop status (valid only for stopped or zombie process)}
+	{logname    login name of user who started the process}
+
+}
+
+set state_fields {
+ {D Process in disk (or other short term, uninterruptable) wait.}
+ {I Process that is idle (sleeping for longer than about 20 seconds).}
+ {P Process in page wait.}
+ {R Process is Runnable.}
+ {S Process is sleeping for less than about 20 seconds.}
+ {T Process is stopped.}
+ {Z Process is dead (a ``zombie'').}
+ {+ Process is in the foreground process group of its control terminal.}
+ {< Process has raised CPU scheduling priority.}
+ {> Process has specified a soft limit on memory requirements and is currently exceeding that limit; such a pro cess is (necessarily) not swapped.}
+ {A  Process has asked for random page replacement (VA_ANOM, from vadvise(2),  for example, lisp(1) in a garbage collect).}
+ {E The process is trying to exit.}
+ {L The process has pages locked in core (for example, for raw I/O).}
+ {N The process has reduced CPU scheduling priority (see setpriority(2)).}
+ {S The process has asked for FIFO page replacement (VA_SEQL, from vadvise(2),  for example, a large image processing program using virtual memory to sequentially address voluminous data).}
+ {s The process is a session leader.}
+ {V The process is suspended during a vfork.}
+ {W The process is swapped out.}
+ {X The process is being traced or debugged.}
+}
+# get the doc string for a process state character (from ps -o state)
+proc lookup_proc_state {char} {
+  global state_fields
+  foreach entry $state_fields {
+	if {$char == [string index $entry 0]} {
+		return $entry;
+	}
+  }
+  return {}
+}
+
+  
+
+
+set PROCESS_FLAGS {
+ {SLOAD         0x0000001     in core}
+ {SSYS          0x0000002     swapper or pager process}
+ {SLOCK         0x0000004     process being swapped out}
+ {SSWAP         0x0000008     save area flag}
+ {STRC          0x0000010     process is being traced}
+ {SWTED         0x0000020     another tracing flag}
+ {SSINTR        0x0000040     sleep is interruptible}
+ {SPAGE         0x0000080     process in page wait state}
+ {SKEEP         0x0000100     another flag to prevent swap out}
+ {SOMASK        0x0000200     restore old mask after taking signal}
+ {SWEXIT        0x0000400     working on exiting}
+ {SPHYSIO       0x0000800     doing physical I/O}
+ {SVFORK        0x0001000     process resulted from vfork(2)}
+ {SVFDONE       0x0002000     another vfork flag}
+ {SNOVM         0x0004000     no vm, parent in a vfork}
+ {SPAGV         0x0008000     init data space on demand, from vnode}
+ {SSEQL         0x0010000     user warned of sequential vm behavior}
+ {SUANOM        0x0020000     user warned of random vm behavior}
+ {STIMO         0x0040000     timing out during sleep}
+ {SNOCLDSTOP    0x0080000     no SIGCHLD when children stop}
+ {SCTTY         0x0100000     has a controlling terminal}
+ {SOWEUPC       0x0200000     owe process an addupc() call at next}
+ {SSEL          0x0400000     selecting; wakeup/waiting danger}
+ {SEXEC         0x0800000     process called exec(2)}
+ {SHPUX         0x1000000     HP-UX process (HPUXCOMPAT)}
+ {SULOCK        0x2000000     locked in core after swap error}
+ {SPTECHG       0x4000000     pte's for process have changed}
+}
+
+
+
+
+################################################################
+# Define menu bar items
+#
+
+# menu bar widget
+frame .mbar -bd 2
+
+menubutton .mbar.file -relief raised -text "File" \
+		 -underline 0 -menu .mbar.file.menu -font $menufont
+menubutton .mbar.options -relief raised -text "Options" \
+		 -underline 0 -menu .mbar.options.menu -font $menufont
+menubutton .mbar.signals -relief raised -text "Send Signal" \
+		 -underline 0 -menu .mbar.signals.menu -font $menufont
+
+
+menu .mbar.file.menu 
+menu .mbar.options.menu 
+
+# a cascaded menu of signals
+menu .mbar.signals.menu 
+menu .mbar.signals.menu.com_signals -bg lightblue -bd 4 
+menu .mbar.signals.menu.all_signals -bg lightblue -bd 4
+menu .mbar.signals.menu.posix_signals -bg lightblue -bd 4
+
+
+################################################################
+# Add entries to "Signals" Menu
+#
+.mbar.signals.menu add cascade -label "Common Signals" \
+	-menu .mbar.signals.menu.com_signals -font $menufont
+
+.mbar.signals.menu add cascade -label "POSIX Signals" \
+	-menu .mbar.signals.menu.posix_signals -font $menufont
+
+.mbar.signals.menu add cascade -label "All Signals" \
+	-menu .mbar.signals.menu.all_signals -font $menufont
+
+################################################################
+# Add entries to "File" Menu
+#
+.mbar.file.menu add command -label "About" -command { about_box } \
+	-font $menufont
+.mbar.file.menu add command -label "Quit" -command { exit 0 } \
+	-font $menufont
+
+################################################################
+# Add entries to "Options" Menu
+#
+
+# defaults
+set confirm_signals 1
+set list_which_signals $common_ps_keywords
+#
+.mbar.options.menu add checkbutton -label "Confirm Signals" \
+	-variable confirm_signals -font $menufont
+.mbar.options.menu add separator
+.mbar.options.menu add radiobutton -label "List Common Process Info" \
+	-variable list_which_signals -value $common_ps_keywords -font $menufont
+.mbar.options.menu add radiobutton -label "List ALL Process Info" \
+	-variable list_which_signals -value $ALL_ps_keywords -font $menufont
+.mbar.options.menu add separator
+.mbar.options.menu add command -label "Set Update Period..." \
+   	-command "change_update_period" -font $menufont
+.mbar.options.menu add command -label "Set 'ps' Command Line Args..." \
+   	-command "change_ps_args" -font $menufont
+
+################
+# Create pull down menu entries for each of the system signals
+
+# add one menu entry for each signal 
+proc add_items {menu items} {
+    global menufont
+    foreach entry $items {
+       set signame [lindex $entry 0]
+       $menu add command -label $entry \
+                  -command [list "send_signal" $signame] \
+		-font $menufont
+    }
+}	
+
+add_items .mbar.signals.menu.com_signals $common_sigs
+add_items .mbar.signals.menu.all_signals $all_sigs
+add_items .mbar.signals.menu.posix_signals $posix_sigs
+
+pack .mbar -side top -fill x -anchor w 
+
+button .mbar.update -relief raised \
+	-text  "Update" -command { get_unix_procs $greppat} \
+	-font $menufont
+
+button .mbar.help -relief raised \
+	-text  "Help" -command { help_dialog} \
+	-font $menufont
+
+pack  .mbar.file  \
+      .mbar.options \
+      .mbar.signals \
+       -side left -anchor w -fill x -ipadx 5m 
+
+pack .mbar.update .mbar.help -side right
+
+################
+tk_menuBar .mbar  .mbar.quit \
+		  .mbar.options \
+		  .mbar.com_signals \
+		  .mbar.posix_signals  \
+		  .mbar.all_signals 
+
+
+
+################################################################
+#
+# Create an entry field for restricting the visible entries.
+# This simulates the "ps auxww | grep foo" idiom. 
+#
+
+frame .findbar -bd 2 -relief groove
+
+label .findbar.findlabel -text "Find:" -font $menufont
+label .findbar.greplabel -text "Filter:" -font $menufont
+entry .findbar.findentry  -width 20 -relief sunken -bd 2 -textvariable findpat
+entry .findbar.filterentry -width 20 -relief sunken -bd 2 -textvariable greppat
+bind .findbar.filterentry <Return> {update_unix_procs}
+bind .findbar.findentry <Return> {find_unix_proc}
+
+
+pack .findbar.greplabel .findbar.filterentry \
+     .findbar.findlabel .findbar.findentry \
+      -side left -padx 6m -ipadx 3m
+
+pack .findbar -side top -fill x -anchor w
+
+############ Listbox scrolling functions ################
+#
+# These functions (LBscroll_sb & LBscroll_drag) vastly improve
+# the action of listboxes when they are scrolled around.  Out of
+# the box TK lets you drag the listbox down to a point where there's
+# only one item at the top of the screen, whereas it is more normal
+# and better UI design to drag only to where the last item in the
+# listbox is at the bottom (rather than the top).
+#
+# These functions implement this policy.  They do this by calculating
+# where the window needs to end up.
+#
+#
+# [ listbox code from David Herron <david@twg.com> ]
+#
+# LBscroll_sb list scrollbar which total window first last
+#
+#	This is to scroll the list by means of the scrollbar.
+#	This is meant to be used as so:
+#
+#		listbox .lb	-relief sunken \
+#			-yscrollcommand "LBscroll_sb .lb .vs y" \
+#			-xscrollcommand "LBscroll_sb .lb .hs x"
+#
+#	list:	The listbox widget
+#
+#	scrollbar: The relavent scrollbar widget
+#
+#	which:	Either `x' or `y' and is used to
+#		generate the `yview' or `xview'
+#		subcommand.
+#
+#	total, window, first, last: Provided
+#		by the listbox widget.
+#
+# LBscroll_kb listbox which
+#
+#	Scrolls by the keyboard.  This is used when keyboard
+#	focus has traversed to the listbox.  Out of the box
+#	TK does not support this, but should as it is a normal
+#	part of Motif and TK is moving very strongly to the
+#	Motif L&F.
+#
+#	It is meant to be used as so:
+#
+#		bind .lb <Key-Up>   "LBscroll_kb %W Up"
+#		bind .lb <Key-Down> "LBscroll_kb %W Down"
+#		bind .lb <Key-F27>  "LBscroll_kb %W Home"
+#		bind .lb <Key-F29>  "LBscroll_kb %W PgUp"
+#		bind .lb <Key-F35>  "LBscroll_kb %W PgDn"
+#		bind .lb <Key-R13>  "LBscroll_kb %W End"
+#
+#	The F27/F29/F35/R13 are generated by my Sun type 4
+#	keyboard while running MIT X11R5 (pl19?).  I've seen
+#	other keysyms generated from other keyboards.  The
+#	ShowKey function below is useful in determining what
+#	the keysyms are on your keyboard (as TK sees them).
+#
+# LBbindScroll listbox
+#
+#	Sets up bindings as described for LBscroll_kb.
+#
+
+proc LBscroll_sb {list sb which total window first last} {
+	if {[expr $first+$window] > $total} {
+		set first [expr $total-$window]
+		set last  [expr $first+$window]
+	}
+	$list ${which}view $first
+	$sb set $total $window $first $last
+}
+
+proc LBscroll_kb {lb which} {
+
+	set cur  [$lb nearest 0]
+	set last [$lb nearest [winfo height $lb]]
+	set sz   [$lb size]
+	set disp [expr "($last - $cur) + 1"]
+
+	switch -- $which {
+	Up	{
+		set cur [expr "$cur <= 0 ? $cur : $cur - 1"]
+		$lb yview $cur
+		}
+	Down	{
+		incr cur
+		set newend [expr "$cur + $disp"]
+		if {$newend >= $sz} { set cur [expr "$sz - $disp"] }
+		$lb yview $cur
+		}
+	PgUp	{
+		incr cur "-$disp"
+		if {$cur < 0} {set cur 0}
+		$lb yview $cur
+		}
+	PgDn	{
+		incr cur $disp
+		set newend [expr "$cur + $disp"]
+		if {$newend > $sz} { set cur [expr "$sz - $disp"] }
+		$lb yview $cur
+		}
+	Home	{
+		$lb yview 0
+		}
+	End	{
+		set cur  [expr "$sz - $disp"]
+		$lb yview $cur
+		}
+	default	{
+		error "Unknown scroll request '$lb $which'." \
+			"" \
+			[list PWMERROR "" -toplevel $lb.error]
+		}
+	}
+}
+
+proc LBbindScroll {} {
+	bind Listbox <Up>   "LBscroll_kb %W Up"
+	bind Listbox <Down> "LBscroll_kb %W Down"
+	bind Listbox <Home>  "LBscroll_kb %W Home"
+	bind Listbox <Prior>  "LBscroll_kb %W PgUp"
+	bind Listbox <Next>  "LBscroll_kb %W PgDn"
+	bind Listbox <End>  "LBscroll_kb %W End"
+}
+
+
+proc ShowKey {} {
+	toplevel .showKey 
+	wm title    .showKey "Show Keypresses"
+	wm geometry .showKey 500x200
+
+	label .showKey.l -relief flat
+	button .showKey.b -text OK -command { destroy .showKey }
+	pack .showKey.l -in .showKey -fill both -expand 1 -side top
+	pack .showKey.b -in .showKey -fill x    -expand 0 -side top -padx 5 -pady 5
+
+	.showKey.l configure -text "KeyCode: %k; KeySym: %K;"
+	focus .showKey.l
+
+	bind .showKey.l <Any-KeyPress> { 
+		.showKey.l configure -text "KeyCode: %k; KeySym: %K;"
+	}
+}
+
+
+
+
+################################################################
+# This runs ps with the (optional) user command line args.
+# It fills the listbox with a list of all the processes running,
+# using the ps output. 
+#
+# How do we locate the PID of a process?
+#
+# We then look through the keyword (header) list to see if we find the PID
+# column, and remember which column that is, so we can operate on selected
+# processes. Yeesh. After we do 'split' on each line of output, we need
+# to eliminate the multiple blanks, and we still are hoping that ps
+# doesn't insert a blank between two words in a column. There is no
+# direct portable system call which gives basic process information about
+# all processes on a machine. There is just 'ps', and we are parsing the
+# random text output of a stupid utility program. 
+#
+# Argh. unix sucks. 
+	
+label .header -relief groove -anchor w -font $tfont
+pack .header -side top -anchor w -fill x
+
+
+scrollbar .scroll -command ".list yview"
+pack .scroll -side right -fill y
+
+wm minsize . 1 1
+
+listbox .list	-relief groove  -geometry 100x25 \
+	 -yscroll ".scroll set" \
+	-setgrid yes -font $tfont \
+	-yscrollcommand "LBscroll_sb .list .scroll y" \
+
+
+pack .list -side top -expand yes -fill both -anchor w
+
+# bind the keyboard command to work (pageup pagedown, uparrow, home, etc)
+LBbindScroll
+
+################################################################
+# Set up args to 'ps'.
+# We either got args from the command line, or we default
+# to -auxww
+if $argc>0 {set ps_args [lindex $argv 0]} \
+	 else {set ps_args $DEFAULT_PS_ARGS}
+
+
+# This runs ps and gets the results into a list of entries.
+# FILTER is a variable used to filter the results, a la grep.  
+
+proc get_unix_procs {filter} {
+  global ps_args
+  # The PID column is the column which has the pid numbers in it. 
+  # This can change depending on the options passed to 'ps'.
+  global pid_column argc argv
+  
+  # save the old list scroll value 
+  set oldyview [.list nearest 0]
+  set oldsize [.list size]
+
+  # Open a pipe to the "ps" program, with some args.
+  set unix_procs_fd  [open "|ps $ps_args"] 
+
+  # Get the column headers, from the first line of output from ps.
+  set header [gets $unix_procs_fd]
+  .header config -text $header
+
+  set ps_columns [strip_blanks $header]
+  set pid_column [lsearch $ps_columns "PID"]
+  if { $pid_column < 0 } {
+    puts "Couldn't locate the PID column in the output from 'ps' \
+so I can't send a signal to a process:"
+    puts $header
+    exit 1
+  }
+
+  # Clear the list items.
+  .list delete 0 [.list size ]
+  # Fill in listbox with process entries from 'ps' command output.
+  while { [set i [gets $unix_procs_fd]] != {}  }  {
+      if [regexp $filter $i] {
+      .list insert end $i
+      }
+ }
+
+ close $unix_procs_fd
+
+ # if the list has not changed size much, try to preserve viewpoint
+ if {abs([.list size] - $oldsize) < 2} {
+ .list yview $oldyview
+ }
+}
+
+proc update_unix_procs {} {
+  global greppat
+  get_unix_procs $greppat
+}
+
+################################################################
+# Finds first entry matching $findpat 
+#
+# Also scrolls the display to make the item visible if it is not already.
+
+proc find_unix_proc {} {
+  global findpat
+  set entries [.list size]
+  for { set i 0} { $i < $entries } { incr i }  {
+   if [regexp $findpat [.list get $i]] {
+      .list yview $i
+      .list select adjust $i
+      break
+      }
+  }
+}
+
+# Set up bindings for the browser.
+
+bind .list <Control-q> {destroy .}
+bind .list <Control-c> {destroy .}
+focus .list
+bind .list <Double-Button-1> \
+	{ set oldconfirm $confirm_signals
+          set confirm_signals 1
+	  foreach i [.list curselection] {show_pinfo}
+	  set confirm_signals $oldconfirm
+	}
+
+# Try to make the listbox toggle selections when you click again
+#bind .list <Button-1> {
+#	set csel  [%W nearest %y] 
+#	# Is the selected object already selected?? 
+#	if {[lsearch [.list curselection] $csel] != -1} {
+#		#If so, clear the selection 
+#		.list select clear } else {
+#		%W select from $csel
+#	}
+#}
+
+
+
+
+
+
+proc signals_menu {ps_string} {
+   global fields
+   set fields [strip_blanks [split $ps_string " "]];
+   puts $fields   	
+}
+
+
+# Send signal looks at the currently selected entries in the listbox
+# and sends the signal to all of them.
+proc send_signal {signal} {
+ global confirm_signals 
+ set pids [selected_processes]
+ set proceed 1
+ if {$pids != {}} {
+  if {$confirm_signals} {set proceed [confirm_dialog $signal $pids]}
+  if {$proceed} {
+    eval exec [format "kill -%s" $signal] $pids 
+  }
+  update_unix_procs
+ }
+}
+
+# get the selected entries from the listbox and extract
+# the pid fields from each selection
+proc selected_processes {} {
+  global pid_column 	
+  set z {}
+  foreach i [.list curselection] {
+     set fields [strip_blanks [split [.list get $i] " "]];
+     lappend z [lindex $fields $pid_column]
+  }
+  return $z
+}
+
+
+# The loop running in the background. 
+# We want to make sure that we don't update if there is 
+# a current selection in the window.
+proc update_loop {} {
+   global UPDATE_PERIOD
+   if {[.list curselection] == {}} {
+    update_unix_procs
+   }
+    after $UPDATE_PERIOD update_loop
+}
+
+################
+# The main loop !
+update_loop
+
+
+################################################################
+#
+# Dialog box for confirmation of kill command 
+#
+# Returns 1 if proceed, 0 if cancel
+#
+
+proc confirm_dialog {signame pids} {
+
+  global val
+  set val 1
+  # create top level window
+  toplevel .confirm -class Dialog
+  wm title .confirm "Confirm Kill Command"
+  wm iconname .confirm Dialog
+  frame .confirm.top -relief raised -bd 1
+  pack .confirm.top -side top -fill both
+  frame .confirm.bot -relief raised -bd 1
+  pack .confirm.bot -side bottom -fill both
+
+ message .confirm.top.msg -width 3i \
+   -text "Send $signame to processes $pids ?" \
+   -font -Adobe-helvetica-medium-r-normal--*-120-* -aspect 200 
+ pack .confirm.top.msg -side right -expand yes -fill both -padx 3m -pady 3m
+
+ label .confirm.top.bitmap  -bitmap warning 
+ pack  .confirm.top.bitmap  -side left -padx 3m -pady 3m
+
+ frame .confirm.bot.default -relief sunken -bd 1
+ raise .confirm.bot.default
+ pack .confirm.bot.default -side left -expand yes -padx 3m -pady 2m
+
+ button .confirm.bot.ok  -text "OK"  -bd 1 \
+        -command {set val 1}
+ pack  .confirm.bot.ok -in .confirm.bot.default \
+       -side left -padx 2m -pady 2m \
+       -ipadx 2m -ipady 1m
+ 
+ button .confirm.bot.cancel -text "Cancel"  -bd 1 \
+        -command {set val 0}
+ pack .confirm.bot.cancel -side left -expand yes \
+      -padx 3m -pady 2m -ipadx 2m -ipady 1m
+
+ bind .confirm <Return> ".confirm.bot.ok flash; set val 1"
+ 
+ set oldFocus [focus]
+
+ grab set .confirm
+ focus .confirm
+
+ tkwait variable val
+ destroy .confirm
+ focus $oldFocus
+ return $val
+}
+
+  
+   
+################################################################
+proc msg_dialog {msg} {
+ toplevel .helpwin
+
+ message .helpwin.msg -text $msg \
+     -font -Adobe-helvetica-medium-r-normal--*-120-* -aspect 200
+
+  button .helpwin.ok -text OK -command { destroy .helpwin }
+  pack .helpwin.msg .helpwin.ok -side top 
+}
+
+
+
+proc help_dialog {} {
+  msg_dialog {This program will send a signal to the selected process. There \
+are several equivalent ways to choose a signal to send. \
+
+First, select a process from the list below, then select a signal \
+to send to it, either using a button on the bottom of the window, \
+or from one of the signal menus. The commonly used signals have their own buttons along the bottom of the window. 
+
+The signal menus contain the following (redundant) sets of signals:
+ Common_Signals contains commonly used signals. 
+POSIX_Signals contains POSIX standard signals.
+All_signals contains all signals available. 
+
+The "Filter" text entry field is essentially equivalent to "ps auxww | grep foo" for some value of foo. 
+
+The "Find" entry box lets you select the first process matching the entry foo. 
+
+The Options menu contains some configuration settings.
+ "Confirm"  will pop up a dialog before executing a kill command.
+ "List Common Process Info": double click on process pops up dialog of common useful process info.  
+ "List ALL Process Info": double click on process pops up dialog of ALL process info available through ps.  
+ "Set Update Period" adjusts the time between updating the display (and running "ps" again, which is expensive for some reason. 
+ "Set Command Line Args" sets the option string which is sent to ps. It defaults to "-auxww" }
+
+}
+
+proc about_box {} {
+  msg_dialog {The tkps browser was written by Henry Minsky (hqm@ai.mit.edu)
+
+This is Version 1.1, May 1994
+
+Terms of the GNU public license apply.
+}
+}
+
+################################################################
+# This ought to be a generic program to change a variable's value
+proc change_update_period {} {
+  global UPDATE_PERIOD MIN_UPDATE_PERIOD menufont update_time
+  set update_time $UPDATE_PERIOD
+  catch {destroy .update}
+  # create top level window
+  toplevel .update -class Dialog
+  wm title .update "Set Update Period"
+  wm iconname .update Dialog
+  frame .update.bot -relief raised -bd 1
+  frame .update.top -relief raised -bd 1
+  pack .update.top -side top -fill both
+  pack .update.bot -side bottom -fill both
+
+  button .update.bot.ok -relief raised \
+    -text "OK" -command {destroy .update} -font $menufont
+
+  pack .update.bot.ok -side bottom -ipadx 6m -ipady 2m -expand yes
+
+ label .update.top.label -text "Update period (ms):"
+ entry .update.top.val  -width 20 -relief sunken \
+                         -bd 2 -textvariable update_time
+
+ pack .update.top.label .update.top.val \
+      -side left -padx 6m -ipadx 3m
+
+ bind .update.top.val <Return> "destroy .update"
+
+ set oldFocus [focus]
+
+ grab set .update
+ focus .update.top
+
+ tkwait window .update
+
+ focus $oldFocus
+
+ # Don't let the updates go too fast.
+ if {$update_time < $MIN_UPDATE_PERIOD} {
+     set UPDATE_PERIOD $MIN_UPDATE_PERIOD} else {
+     set UPDATE_PERIOD $update_time }
+
+
+}
+
+################################################################
+# Dialog to change args to ps. This should call a dialog subroutine.
+#
+proc change_ps_args {} {
+  global ps_args newargs menufont DEFAULT_PS_ARGS
+  catch {destroy .newargs}
+  set args $ps_args
+  # create top level window
+  toplevel .newargs -class Dialog
+  wm title .newargs "Set Command Line Args"
+  wm iconname .newargs Dialog
+  frame .newargs.bot -relief raised -bd 1
+  frame .newargs.top -relief raised -bd 1
+  pack .newargs.top -side top -fill both
+  pack .newargs.bot -side bottom -fill both
+
+  button .newargs.bot.ok -relief raised \
+    -text "OK" -command {destroy .newargs} -font $menufont
+
+  pack .newargs.bot.ok -side bottom -ipadx 6m -ipady 2m -expand yes
+
+ label .newargs.top.label -text "Command Line Args To \"ps\":"
+ entry .newargs.top.val  -width 30 -relief sunken \
+                         -bd 2 -textvariable newargs
+
+ pack .newargs.top.label .newargs.top.val \
+      -side left -padx 6m -ipadx 3m
+
+ bind .newargs.top.val <Return> "destroy .newargs"
+
+ set oldFocus [focus]
+
+ grab set .newargs
+ focus .newargs.top
+
+ tkwait window .newargs
+
+ focus $oldFocus
+
+ # Don't let the updates go too fast.
+ if {$newargs != ""} {
+	set ps_args $newargs} else {
+	set ps_args $DEFAULT_PS_ARGS }
+
+ update_unix_procs
+}
+
+# runs 'man' on the NAME given, and puts the output
+# in a text widget 
+proc manpage {name} {
+
+ text .text -releif raised -bd 2 \
+	-yscrollcommand ".scrolltext set"
+ scrollbar .scrolltext -command ".text yview"
+
+ 
+
+}
+
+################################################################
+# Routines to display a popup text widget with detailed info on a process
+
+
+# Makes a comma separated list of the first item in each list
+# in a list of lists.
+proc first_items {l} {
+ set z {}
+ foreach i $l {
+   set keyword [lindex $i 0];
+   set z [lappend z $keyword];
+ }
+ return [join $z ","];
+}
+
+
+
+# call ps on a specific pid, and put text into text widget 
+proc fill_info_window {pid widget} {
+  global list_which_signals PROCESS_FLAGS
+
+  # We need to run ps twice, once to get the command name, which has spaces
+  # in it, and once more for all the other keywords that hopefully
+  # have no spaces inside individual items. That's ps. One tool which does
+  # its job badly. 
+
+  # Oh, I hear you say. Unix processes are inexpensive. Run ps once
+  # for each keyword arg. Then you won't have to worry about ambiguous separators
+  # in the output. Yeah, ok, sure. whatever. Why fight it. I don't care anymore. 
+
+  set unix_procs_fd  [open "|ps -p $pid -o command"] 
+  gets $unix_procs_fd; # strip header
+  set command   [gets $unix_procs_fd]
+  close $unix_procs_fd
+
+  $widget insert end [format "COMMAND: %s\n_______________________________\n" $command];
+
+  # Open a pipe to the "ps" program, with some args.
+  set args [format "state,flags,%s" [first_items $list_which_signals] ]
+
+  set unix_procs_fd  [open "|ps -p $pid -o $args"] 
+
+  # Get the column headers, from the first line of output from ps.
+  gets $unix_procs_fd	
+  # actually just discard it
+
+  set pstats [strip_blanks [gets $unix_procs_fd]]
+
+  close $unix_procs_fd
+
+  # Look at the process run state, and get the doc strings for each flag
+  set pstate [lindex $pstats 0]
+  set len [string length $pstate]
+  for {set i 0} { $i < $len } { incr i }  {
+     set state_entries [lookup_proc_state [string index $pstate $i]]
+     $widget insert end $state_entries 
+     $widget insert end "\n"
+ }
+
+ scan [lindex $pstats 1] "%x" flags
+ # try to decode the process flags
+ $widget insert end "\nPROCESS FLAGS:\n"
+ # {SLOAD         0x0000001     in core}
+ # {SPTECHG       0x4000000     pte's for process have changed}
+
+ # step through the bits of the flag, see which are set
+ for { set i 0} { $i < 20} {incr i} {
+   if { ($flags & (1 << $i )) != 0} {
+      set docstring [lindex $PROCESS_FLAGS $i];
+      $widget insert end [format "%s\n" $docstring];
+   }
+ }
+
+ $widget insert end "\n_______________________________\n"
+ # Print rest of keyword fields and doc strings.
+
+ set lim [llength $list_which_signals];
+
+ for {set k 2} {$k < $lim } {incr k} {
+  set entry  [lindex $list_which_signals [expr $k - 2]]
+  $widget insert end [format "%s:\t%s\t%s\n" [lindex $entry 0] \
+	 [lindex $pstats $k] \
+	 [lrange $entry 1 end]]
+ }
+}
+
+
+proc show_pinfo {} {
+  set sp [selected_processes]
+  foreach p $sp { 
+    show_detailed_proc $p
+  }
+}
+
+proc show_detailed_proc {pid} {
+
+  global menufont 
+  set P .pinfo$pid
+  set TOP $P.top
+
+  # create top level window
+  toplevel $P -class Dialog
+
+  frame $TOP -relief raised -bd 1
+  pack $TOP -side top -fill both
+  frame $P.bot -relief raised -bd 1
+  pack $P.bot -side bottom -fill both
+
+  # text widget for process info strings
+  text $TOP.text -relief raised -bd 2 \
+	 -yscrollcommand "$TOP.scroll set"
+  scrollbar $TOP.scroll -command "$TOP.text yview"
+
+
+  fill_info_window $pid $TOP.text
+
+  pack $TOP.scroll -side right -fill y
+  pack $TOP.text -side left
+
+  wm title $P "Process $pid Info"
+  wm iconname $P "PID $pid"
+
+  frame $P.bot.default -relief sunken -bd 1
+  raise $P.bot.default
+
+  button $P.bot.ok  -text "DISMISS"  -bd 1 -relief raised\
+          -command  [list "destroy" $P] -font $menufont 
+  button $P.bot.kill  -text "KILL PROCESS"  -bd 1 -relief raised\
+          -command  [list "exec" "kill" "-KILL" $pid] -font $menufont
+
+  pack  $P.bot.ok -in $P.bot.default \
+       -side left -padx 2m -pady 2m \
+       -ipadx 2m -ipady 1m
+
+  pack $P.bot.default $P.bot.kill -side left -expand yes \
+ 	-padx 3m -pady 2m  -ipadx 2m -ipady 1m
+
+ bind $P <Return> "$P.bot.ok flash; set val 1"
+
+}

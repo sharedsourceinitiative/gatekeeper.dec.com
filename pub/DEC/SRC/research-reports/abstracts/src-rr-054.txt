@@ -1,0 +1,14 @@
+
+
+    "Explicit Substitutions"
+    Martin Abadi, Luca Cardelli, Pierre-Louis Curien, Jean-Jacques Levy
+    February 6th, 1990.  56 pages.
+
+Authors' abstract
+
+    The lambda,sigma-calculus is a refinement of the lambda-calculus
+    where substitutions are manipulated explicitly. The lambda,sigma-calculus
+    provides a setting for studying the theory of substitutions, with
+    pleasant mathematical properties. It is also a useful bridge between
+    the classical lambda-calculus and concrete implementations.
+

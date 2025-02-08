@@ -1,0 +1,18 @@
+"Checking Object Invariants"
+K. Rustan M. Leino and Raymie Stata
+Note #1997-007. January 2, 1997. 17 pages.
+
+When writing computer programs, programmers make assumptions about the
+relations among variables.  In object-oriented programs, these
+assumptions include relations among the instance variables of a single
+object, relations often referred to as \emph{object invariants}.
+It is a good idea to explicitly annotate a program with these
+assumptions.  Then, a static program-analysis tool can inspect the
+annotated program to check that routines preserve object invariants.
+This paper considers two issues that affect what object invariants a
+program analysis tool can check:  object construction and modular
+checking. The paper suggests some programming idioms and program 
+annotations that widen the range of object invariants that a static 
+program checker can check.  The paper also suggests a simple extension 
+to the Java programming language that makes the language more amenable to
+object-invariant checking.

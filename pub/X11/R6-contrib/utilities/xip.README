@@ -1,0 +1,8 @@
+Xip is a protocol analyzer and tester. It's a kind of graphical tcpdump 
+with possibility of changing packet values and resending them. It could be
+ also designed byt the term "human ip stack". It is composed of one main C
+ library called liblayer wich manages some primitive object types such as
+ integers (8, 16, 32) and other network items - These classes are called 
+"typ". The library also manages some primitive layers such as ethernet, ip,
+ udp, tcp, arp, icmp and somewell-known up-layered protocols such as rip 
+or even dns 

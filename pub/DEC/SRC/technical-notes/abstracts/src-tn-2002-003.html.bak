@@ -1,0 +1,29 @@
+<TITLE>Compaq Systems Research Center: Note 2002-003</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/SRC/pics/cpq-logo.gif" ALT="Compaq">
+ SRC Technical Note 2002-003</H1>
+<H1>Averaging on a quotient of a sphere</H1>
+<HR>
+<H2>Lyle Ramshaw</H2>
+Note #2002-003, February 28, 2002. 
+<P>
+In work at SRC on calibrating cameras automatically, the problem arose of computing "averages" or "centers of gravity" in the quotient space S^3/H, where S^3 denotes the 3-sphere (sitting in 4-space) and H is a certain subgroup of S^3 of size 48.  So the points of the 3-sphere are being identified into cosets, each of size 48.  This note considers two easier related problems: computing averages either
+
+      - in S^n, the n-sphere itself, with no identification
+        going on, or
+
+      - in the space S^n/{+1,-1}, the n-sphere in which each 
+        point is identified with its antipode, forming a coset 
+        of size 2.
+
+These easier problems have fairly satisfactory solutions. But those solutions don't seem to extend to handle cosets of size greater than 2.
+
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-2002-003.ps.Z">PostScript compressed with UNIX compress</A></B> -- 176 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-2002-003.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 144 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-2002-003.ps.zip">PostScript compressed with ZIP</A></B> -- 128 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-2002-003.ps">PostScript</A></B> -- 408 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-2002-003.pdf">Portable Document Format (PDF)</A></B> -- 74 Kbytes<BR>
+</UL><p></P>

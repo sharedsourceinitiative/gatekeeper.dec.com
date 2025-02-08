@@ -1,0 +1,24 @@
+<TITLE>Digital Systems Research Center: Note 1997-008</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Technical Note 1997-008</H1>
+<H1>A small dual-automorphic lattice with no involutory dual automorphism</H1>
+<HR>
+<H2>K. Rustan M. Leino and Lyle Ramshaw</H2>
+<b>Note #1997-008. May 27, 1997</b><BR><i>4 pages</i>
+<P>
+An exercise in Garrett Birkhoff's renowned book on lattice
+theory asks for a lattice with 18 elements and of length 5 that has
+a dual automorphism, but no involutory dual automorphism.  This note
+constructs a smaller lattice, 15 elements and length 4, with the
+same property.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-008.ps.Z">PostScript compressed with UNIX compress</A></B> -- 145 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-008.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 98 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-008.ps.zip">PostScript compressed with ZIP</A></B> -- 98 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-008.ps">PostScript</A></B> -- 296 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-008.pdf">Portable Document Format (PDF)</A></B> -- 76 Kbytes<BR>
+</UL></P>

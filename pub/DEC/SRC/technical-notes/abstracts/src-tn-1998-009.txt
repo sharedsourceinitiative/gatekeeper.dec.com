@@ -1,0 +1,20 @@
+"Improved Low-Density Parity-Check Codes Using Irregular Graphs and Belief Propagation"
+Michael Luby, Michael Mitzenmacher, Amin Shokrollahi, Dan Spielman
+Note #1998-009, April 15, 1998.
+
+
+We construct new families of error-correcting codes based on
+Gallager's low-density parity-check codes, which we call irregular 
+codes. When decoded using belief propagation, our codes can correct 
+more errors than previously known low-density parity-check codes.
+For example, for rate 1/4 codes on 16,000 bits over a binary symmetric 
+channel, previous low-density parity-check codes can correct up to 
+approximately 16% errors, while our codes can correct over 17%. Our 
+improved performance comes from using codes based on irregular
+random bipartite graphs. Previously studied low-density parity-check 
+codes have been derived from regular bipartite graphs. We report 
+experimental results for our irregular codes on both binary symmetric 
+channels and Gaussian channels. In some cases our results come very 
+close to reported results for turbo codes, suggesting that, with 
+improvements, irregular codes may be able to match turbo code 
+performance.

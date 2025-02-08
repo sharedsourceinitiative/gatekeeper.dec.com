@@ -1,0 +1,108 @@
+
+                     ***TECHNICAL REPORTS***
+Key	Author(s)	Size(KB)	Title
+=======================================================================
+90/1	Osborne		1824	Speculative Computation in Multilisp
+90/2	Simoudis/Miller	232	Validated Retrieval in Case-Based Reasoning
+90/3	Lomet		208	Consistent Timestamping for Transactions in
+				Distributed Systems
+90/4	Lomet		256	Recovery for Shared Disk Systems Using
+				Multiple Redo Logs
+90/5	Simoudis/Miller	216	Acquiring Knowledge for	Validation Models
+90/6	Halstead/Kranz	736	A Replay Mechanism for Mostly Functional Programs
+90/7	Mohr et al.	1280	Lazy Task Creation: A Technique for Increasing
+				the Granularity of Parallel Programs
+90/8	Gettys et al.	248	The X Window System, Version 11
+90/9    Herlihy/Moss    152 	Non-Blocking Garbage Collection for Multiprocessors
+90/11	Aspnes et al.	294	Counting Networks and Multi-Processor
+				Coordination (Extended Abstract)
+90/12	Szeliski	1744	Real-Time Octree Generation from Rotating Objects
+90/13	Szeliski	1800	Shape from Rotation
+90/13-figs		3160	Figures missing from 90/13
+91/1	Black/		648	Typechecking Polymorphism in Emerald
+	Hutchinson 
+91/5	Herlihy		184	Randomized Wait-Free Concurrent Objects
+91/6	Herlihy		184	Impossibility Results for Asynchronous PRAM
+91/7	Lomet/Salzberg	311	MLR: A Recovery Method for Multi-level Systems
+91/8	Lomet/Salzberg	315	Concurrency and Recovery for Index Trees
+91/9	Lomet/Salzberg	387	Media Recovery with Time-Split B-trees
+91/10	Herlihy		244	A Methodology for Implementing Highly
+				Concurrent Data Objects
+91/12	Herlihy et al.	334	Linearizable Counting Networks
+91/13	Carlbom et al.	231	SIGGRAPH '91 Workshop Report: Integrating
+			        Computer Graphics, Computer Vision, and 
+			 	Image Processing in Scientific Applications
+91/14	Szeliski/	3720	Surface Modeling with Oriented Particle Systems
+	Tonneson
+91/14-short		2136	91/14 without figures
+91/14-figs		1720	Figures missing from 91/14-short
+92/1	Lomet/Salzberg	392	Rollback Databases
+92/3	Miller et al.	200	The Organization Engine: Virtual Data
+				Integration
+92/4	Lomet et al.	328	How the Rdb/VMS Data Sharing System Became Fast
+92/5	Dwork et al.	440	Time-Lapse Snapshots
+92/6	Herlihy et al.	264	Low Contention Load Balancing on Large-Scale
+				Multiprocessors
+92/7	Herlihy/Moss	304	Transactional Memory: Architectural Support
+				for Lock-Free Data Structure
+92/9	Lomet		312	Private Lock Management
+92/10	Stewart/Payne	224	Are DSP Chips Obsolete?
+	Levergood
+92/12	Black/Immel	240	Encapsulating Plurality
+93/1	Lampson/Lomet	264	A New Presumed Commit Optimization for Two
+				Phase Commit
+93/2	Lomet		272	Key Range Locking Strategies for Improved
+				Concurrency
+93/3    Szeleski   	1896	Recovering 3D Shape and Motion from Image
+	Sing Bing Kang  	Streams using Non-Linear Least Squares
+93/4    Waters       	11488   DECface: An Automatic Lip-Synchronization 
+        Levergood       	Algorithm for Synthetic Faces
+93/5	Bernstein	120	STDL - A Portable Language for Transaction
+	Gyllstrom/Winberg	Processing
+93/6	Bernstein	 89	Middleware - An Architechture for Distributed
+				System Services
+93/7	Szeliski	8728	Robust Shape Recovery from Occluding Contours
+        Weiss                 	Using a Linear Smoother
+93/8	Levergood, Payne,2824	AudioFile: A Network-Transparent System for
+	Gettys, Treese,		Distributed Audio Applications
+	and Stewart
+93/9	Levergood	2160	LoFi: A TURBOchannel Audio Module	
+93/10	Treese/Wolman	432	X Through the Firewall, and Other Application 
+				Relays
+93/11   Aspnes/Herlihy  776	Counting Networks
+        and Shavit    
+93/12   Dwork/Herlihy 	288  	Contention in Shared Memory Algorithms
+        and Waarts
+94/1    Szeliski/       3210	Spline-Based Image Registration
+        Coughlan
+94/2    Szeliski        3977	Image Mosaicing for Tele-Reality Applications
+94/3    Antoshenkov/    334 	Order Preserving Key Compression
+        Lomet/Murray
+94/4    Klinker/Chen    5697   	PerfVisS: A Performance Visualizer for High
+                            	Performance Fortran Programs on Workstation
+				Farms
+94/5    Evangelidis/        	The hBII-tree: A Concurrent and Recoverable
+        Lomet/Salzburg      	Multi-attribute Access Method  
+94/6    Klinker/Carlbom 2846   	Scientific Data Exploration Meets
+    	Hsu/Terzopoulos	    	Telecollaboration
+94/7	Levergood/Hans	912	Echo Cancellation
+95/1	Szeliski/Shum	2656	Motion Estimation with Quadtree Splines
+95/2	Szeliski/Kang/	4528	A Parallel Feature Tracker for Extended
+	Shum			Image Sequences
+95/6	Kang/Szeliski   8560	Omnidirectional Multibaseline Stero
+95/7	Kang/Johnson/ 161847	Extraction of Concise and Realistic 3-D
+	Szeliski		Models from Real Data
+96/1    Kang/Szeliski/752       Shape Ambiguities in Structure from Motion
+
+To retrieve the PostScript for any report or note, send the server a message 
+saying "send postscript 93/1" or "send postscript 93/1 92/10", etc. 
+Capitalization does not matter.
+
+Send server requests to techreports@crl.dec.com, or 
+{ihnp4,decvax,ucbvax,hplabs,allegra}!decwrl!deccrl!techreports, 
+or CRL::TECHREPORTS.
+
+Abstracts and PostScript versions of the CRL technical reports are
+also available via anonymous FTP to crl.dec.com, in the directory
+/pub/DEC/CRL/{abstracts,tech-reports}.
+

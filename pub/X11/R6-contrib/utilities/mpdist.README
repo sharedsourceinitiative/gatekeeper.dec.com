@@ -1,0 +1,318 @@
+
+@(#)README 1.26 95/08/25
+
+README for mp, mptool and mimep. PostScript pretty printers.
+
+Version 3.3.2 August 1995.
+
+Permission is given to distribute these sources, as long as the
+copyright messages are not removed, and no monies are exchanged.
+
+--------------------------------------------------------------------------
+CONTENTS:
+
+1. What is mp?
+2. What is mimep?
+3. Getting started.
+4. How mp works.
+5. Trouble shooting hints.
+6. Acknowledgements.
+--------------------------------------------------------------------------
+
+
+1. What is mp?
+--------------
+
+The mp distribution now consists of two programs, mp and mptool.
+
+The mp program will pretty print various files for you. It can be used
+in conjunction with a mail reading utility for producing a pretty print
+of your mail items. It can be used with a news reading tool to pretty
+print news articles. Digests can also be printed, and this version can
+pretty print ordinary ASCII files as well. Support for personal organiser
+printing was added into the last released version. There are numerous 
+configuration options to allow you to adjust the way mp generates it's
+output.
+
+The mptool program is a graphical frontend to mp. It makes it easy to
+configure the printout of your documents without having to remember lots
+of complicated command line arguments. It also supports drag and drop of
+text from other Motif applications.
+
+See the manual pages for more details on these various options.
+
+----------
+
+The latest version of mp is available via anonymous ftp from:
+
+ftp.x.org [USA] in the contrib/utilities directory.
+It will be a compressed tar file called mpdist-3.3.2.tar.Z
+
+It can also probably be obtained via the Web using URL http://www.x.org
+
+----------
+
+There is a mailing list for people interested in mp. It is:
+
+  mp@stard.Eng.Sun.COM
+
+To get added to the list, send a request to:
+
+  mp-request@stard.Eng.Sun.COM
+
+Early patches are sent to the mailing list, plus active discussion on
+ideas for enhancements to mp.
+
+
+2. What is mimep?
+-----------------
+
+The mimep program allows users to print multimedia messages composed with
+any UA respecting the MIME standard. It can print most of the bodyparts
+composing this kind of mail (gif, jpeg images, text/plain, text/enriched,
+postscript files ...). To achieve its goal, mimep builds a LaTeX document
+from the MIME message. Afterwards, it converts it into a "dvi" file, then
+into Postscript, outputting either to a file or to a printer.
+
+There is a mailcap_example file in the .../mimep directory which should be
+copied to ~/.mailcap, if you don't already have one. Note that the mailcap
+file is setup to call other programs (like xloadimage and ghostview) to
+display various MIME types. You should configure this file accordingly for
+your site (ie, xv and ghostprint as possible alternates).
+
+See the mimep manual pages for more details on the various options available
+with this program.
+
+Mimep uses two other well known software distributions. If you don't have
+them, then they can be obtained from the following sites:
+
+  LaTeX    - anon ftp from labrea.stanford.edu in the pub/tex directory.
+  metamail - anon ftp from thumper.bellcom.com in the pub/nsb directory.
+
+3. Getting started.
+-------------------
+
+**** Note that you will need X11 to compile mp and/or mimep.           ****
+**** Note that you will also need Motif to compile mptool.             ****
+
+Initially there is no Makefile file present in the mpdist main directory.
+You will need to copy Makefile.dist to Makefile, then adjust accordingly.
+
+The Makefile compilation details are setup to default to compiling on a Sun4
+running Solaris v2.4. Note that there are various compilation definitions that
+might need uncommenting if you are trying to compile and run it on other
+machines or operating systems.
+
+These are:
+
+BSD_PRINT     - Set if you want mp/tool to use a BSD printer spooling system.
+EXTRALIBS    - Extra libraries that are needed to link mptool.
+GECOSFIELDS  - Number of "words" extracted from the user's gecos field.
+GECOSLENGTH  - Maximum number of characters extracted from the gecos field.
+MAILPNAMES   - (mandatory): alternate names for the mailp frontend.
+MIME_SUPPORT - Enable MIME printing options for use by mimep.
+MOTIFINCDIR  - mptool only: location of the Motif #include files.
+MOTIFLIBDIR  - mptool only: location of the Motif libraries.
+NEED_MEMORY  - Set if memory move functions aren't in <string.h>
+NO_DND       - mptool only: uncomment if using earlier than Motif v1.2.
+NO_I18N      - mptool only: uncomment if you don't want text internationised.
+OLD_OPTIONS  - Support for the previous mp's command line options.
+PROLOGUE     - Location of the mp prologue file (default: /usr/local/lib/mp)
+X11INCDIR    - (mandatory): location of the X11 #include files.
+X11LIBDIR    - (mandatory): location of the X11 libraries.
+
+See the Makefile for a detailed description of each of these definitions.
+
+Just typing "make" will print out a help message describing your options.
+These are:
+
+  make mp     - to just make the mp program.
+  make mptool - to just make the mptool program.
+  make mimep  - to just make the mimep program.
+  make all    - to make all the programs.
+
+You now need to do a "make install", to install the files in their proper
+locations. Before you do this, you should consider whether you want the
+installation to install the newsp, filep ... shell scripts. If this is not
+the case, then you will need to comment out this section of the Makefile.
+Look for the comment beginning "NOTE:". Alternatively you might only wish
+a subset to be installed, in which case you should adjust the MAILPNAMES
+definition in the Makefile accordingly.
+
+Note that you will probably have to be super-user when you do the "make
+install".
+
+
+4. How mp works.
+----------------
+
+When mp processes a file, it first reads the designated prologue and
+extracts data from the following lines:
+
+   %%PageLength nn    - the number of lines per page
+   %%LineLength nn    - the number of chars on a line
+   %%NumCols nn       - the number of columns per page
+
+Then it reads the input files and reshapes them into PostScript using the
+following structuring conventions:
+
+      %%Page: ? 1
+      (1) newpage     <- physical page #1
+      ...data...
+      (1) 1 endcol    <- logical page #1, 1st col on this page
+      ...data...
+      (2) 2 endcol    <- logical page #2, 2nd col on this page
+      ...data...
+      (3) 3 endcol    <- logical page #3, 3rd col on this page
+      (1) endpage     <- physical page #1
+      %%Page: ? 2
+      (2) newpage     <- physical page #2
+      ...data...
+      (4) 1 endcol    <- logical page #4, 1st col on this page
+      ...data...
+      (5) 2 endcol    <- logical page #5, 2nd col on this page
+      (3) endpage     <- physical page #2
+      endfile         <- end of first or only input file
+      %%Page....      <
+      ....            <- 2nd input file, if any
+      endfile         <
+      ...             <- more, if any
+      %%Trailer
+      %%Pages: nn
+      %%EOF
+
+Prologue files need to supply the above procedures, which may be empty.
+
+The following prologues are supplied with mp:
+
+      mp.pro.ps               standard prologue
+      mp.pro.alt.ps           alternative prologue, page nos. bottom right
+      mp.pro.altl.ps          alternative landscape mode prologue file.
+      mp.pro.l.ps             standard prologue, landscape, 2 columns
+      mp.pro.ff.ps            Filofax prologue
+      mp.pro.fp.ps            Franklin Planner prologue
+      mp.pro.pp.ps            ProPlan prologue
+      mp.pro.tm.ps            Time Manager prologue
+      mp.pro.tsi.ps           Time/System (International) prologue.
+      mp.pro.tsp.ps           Time/System (Partner) prologue
+
+
+5. Trouble shooting hints.
+--------------------------
+
+* From Mark Valentine <mark@spider.co.uk>
+  Possible problems with mailp. On some hybrid systems (such as MIPS' RISC/os),
+  testing for the existence of /usr/spool/lp isn't sufficient to determine the
+  spooler to use. On our systems, for example, the directory exists, but we use
+  only the Berkeley spooler (it's a site-specific decision which one you use).
+
+* From John Macdonald <mauxci!eci386!jmm@apple.com>
+  setscreen tells the printer how to generate greyscales. Depending upon
+  the screen angle and the dot density (45 and 106 above) you get differing
+  patterns for the "grey" (a mixture of black and white portions that gives
+  the impression of grey).
+
+  There are various tradeoffs in these choices (hence the red-books
+  recommendation). Small dot density gives grainier greys where the fact that
+  it is built up from dots is quite evident. High dot densities allow for
+  fewer levels of grey.
+
+  The default for LaserWriters provides 33 grey levels with somewhat visible
+  dots.
+
+  The 106 45 setting provides only 9 grey levels, but much a smoother
+  appearance.
+
+  The default is more valuable if you are doing special effects like gradual
+  changes in darkness and image reproduction.
+ 
+  The alternate is more valuable if you use only a small number of distinct
+  grey levels.
+ 
+  If you have a postscript printer that is more than 300 dots per inch,
+  it is quite possible that the manufacturer chosen default has a better
+  appearance than the 106 45 explicit setting, since the number of spots
+  per inch that are possible with such printer is much higher than with
+  a 300 dpi printer. It is also possible that there is a similar sort
+  of trade-off in their choice between levels and graininess, but it will
+  be at a much finer level - magnifying glasses might be necessary to
+  determine the best one.
+
+  For further details, see Byte, July 1990, Don Lancaster "PostScript
+  Insider Secrets"
+
+* From Bertrand Decouty <Bertrand.Decouty@irisa.fr>
+  As with patch #5 to v2.5, mailp (and friends) are now installed using
+  symbolic links, as opposed to hard links. This is a potential problem to
+  UNIX systems which don't have symbolic links.
+
+* From Bjorn P. Brox <brox@dms.corena.no>
+  The /backspace definition in the PostScript prologue files won't work on
+  all PostScript variants using Type1 fonts. The problem is that the
+  backspacefont proc is using a feature in real PostScript: A CharStrings
+  entry does not have to be a Type1 encrypted charstring, but can also be
+  a function. If this is a problem, then replace:
+
+    /backspace { -600 0 setcharwidth pop } bind def
+
+  with
+
+    /backspace <6f0878dde70d23b542> def
+
+
+6. Acknowledgements.
+--------------------
+
+The original version of mp was written by Steve Holden in the ICON language,
+when Steve worked for Sun Microsystems UK. I converted it to the C language
+and added a few features. I then converted it to C++. I then reconverted it
+back to C (it's a long story).
+
+Special thanks go to:
+
+Mikael Cam, student at the Vannes Institute of Technology with advice from
+Serge Aumont and Eric Picheral, for the mimep suite of programs which can
+print MIME messages.
+
+Bruno Pillard of Chorus Systemes, France added support for MH mail and news
+article printing, plus a shell script (mailp) which tidies up the user
+interface to mp.
+
+Dave Glowacki of Public Works Computer Services, St Paul, MN. added the
+ability to print digests and tidied up some of the other options.
+
+Rick Rodgers, UCSF School of Pharmacy, San Francicso revised the initial
+version of the mp manual page.
+
+Doug Buchanan added support for printing in filofax and Time Manager format.
+
+Jerermy Webber of the Computer Science Department at the University of
+Adelaide rewrote the message parsing and option code and made substantial
+improvements to the programs user friendliness and robustness.
+
+Sam Manogharan added support for printing multiple files specified on the
+command line, and subject line filename print for ordinary files.
+
+Michael Tuchiarone added in the landscape mode.
+
+Johan Vromans revised and tidied up the PostScript structuring and the way
+the prologue files were handled.
+
+John Macdonald who supplied two PostScript prologue files which generate
+much prettier output.
+
+To Bertrand DeCouty, who supplied support in the PostScript prologue files
+for the ISO8859 character set.
+
+Glenn Reid from Adobe Systems wrote the backspacefont.ps code used in the
+prologue files.
+
+Also other too numerous to mentioning for various bug reports, fixes and
+suggestions for improvement:
+
+----------------------------------------------------------------------------
+
+Suggestions for further improvement would be most welcome, plus bug reports
+and comments.
+
+Rich Burridge        richb@Eng.Sun.COM

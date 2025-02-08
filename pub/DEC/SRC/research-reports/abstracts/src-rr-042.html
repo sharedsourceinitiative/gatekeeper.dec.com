@@ -1,0 +1,37 @@
+<HTML><HEAD><TITLE>
+Digital Systems Research Center: Report 42</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Research Report 42</H1>
+<P>
+<H1>WorkCrews: An Abstraction for Controlling Parallelism.</H1>
+<HR>
+<H2>    Eric S. Roberts and Mark T. Vandevoorde.</H2>
+<b>April 2, 1989</b><BR><i> 17 pages</i>
+<P>
+    When implementing parallel programs, it is important to find 
+    strategies for controlling parallelism that make the most effective 
+    use of available resources. In this paper, we introduce a dynamic 
+    strategy called WorkCrews for controlling the use of parallelism 
+    on small-scale, tightly-coupled multiprocessors. In the WorkCrew 
+    model, tasks are assigned to a finite set of workers. As in other 
+    mechanisms for specifying parallelism, each worker can enqueue 
+    subtasks for concurrent evaluation by other workers as they become 
+    idle. The WorkCrew paradigm has two advantages. First, much of 
+    the work associated with task division can be deferred until a 
+    new worker actually undertakes the subtask, and avoided altogether 
+    if the original worker ends up executing the subtask serially. 
+    Second, the ordering of queue requests under WorkCrews favors 
+    coarse-grained subtasks, which reduces further the overhead of 
+    task decomposition.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-042.ps.Z">PostScript compressed with UNIX compress</A></B> -- 1216 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-042.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 1024 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-042.ps.zip">PostScript compressed with ZIP</A></B> -- 1024 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-042.ps">PostScript</A></B> -- 1304 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-042.pdf">Portable Document Format (PDF)</A></B> -- 1000 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

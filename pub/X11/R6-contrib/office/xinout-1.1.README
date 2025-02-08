@@ -1,0 +1,90 @@
+xinout-1.1-README
+August 1995
+
+
+Xinout 1.1
+----------
+
+Xinout is an X-based, multi-user, electronic version of the office in/out
+board. Users can be pegged as either "In" or "Out" and a comment can be
+placed next to their name. Comments can be selected from a pre-determined
+list, a personal list, or entered as free form text.
+
+Users can post a group message (e.g. "Staff meeting @ 3") which will
+appear at the bottom of all the xinout windows.
+
+The program can also be configured to display details about each of the
+people on the board such as phone number, beeper number, e-mail address,
+etc.
+
+
+Setting it up
+-------------
+
+There are three main parts to the application. First, the daemon process,
+xinoutd, must be running on 1 machine accessible by all the users of the
+application. Second, the client program, xinout, can run on any number of
+other hosts (typically 1 per in/out board member) and will connect
+over a TCP/IP socket to the daemon process. The client program determines
+the location of the daemon process by querying two environments variables:
+XINOUTHOST (defaults to "localhost") and XINOUTPORT (defaults to 7232).
+
+The final piece required for the application is the configuration file.
+The config file determines the names of the people who will be on the
+board, the default set of comments and a variety of other information.
+Ideally, this file will be placed in a directory mounted by all the users
+of the application, but if necessary multiple copies of the file can
+be distributed; these files must remain identical for the program to
+operate correctly, however. The default config file is "/usr/local/xinout.cfg".
+This can be overriden through the -config command line option, though. The
+sample config file has ample comments to guide you in how to set it up.
+
+The xinout program supports a "command line only" option which allows you
+to change the in/out status of a user without bringing up the xinout window.
+e.g., "xinout -name Joe -out" sets the status of Joe to out and exits.
+
+
+Command line options
+--------------------
+
+	xinout		-config		filename	# Specifies the config file to use
+
+				-name		user_name	# User name for "command line only"
+										# behavior
+
+				-in, -out				# Set status of user_name
+
+				-comment	text		# Set comment for user_name
+
+				-grpmsg		text		# Set the group message, user_name
+										# not required
+
+				-fortune	text		# Set the fortune message, user_name
+										# not required
+
+				-debug					# Output some debugging info
+
+				-help					# Print the usage message
+
+
+	xinoutd		-cmd		command		# Take the output from "command"
+										# and send it to the xinouts for
+										# display in the group message area.
+										# Note: group messages are never
+										# overriden by this feature.
+
+				-delay		minutes		# Repeat "command" every x minutes,
+										# default is 15
+
+				-fortune				# Same as
+										# -cmd "/usr/games/fortune -s"
+
+				-debug					# Output some debugging info
+
+
+
+Any comments, bugs, etc. can be sent to me at 72010.1771@compuserve.com.
+
+Copyright (c) Shaun Terry, 1995. Freeware.
+
+

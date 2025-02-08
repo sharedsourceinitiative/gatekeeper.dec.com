@@ -1,0 +1,53 @@
+
+	UWdialer-README				03/23/94
+
+
+
+	UWdialer is a communications program for UNIXWARE version 1.x.
+	This dialer works in conjunction with UW's communications server
+	and bi-directional ttymon's. UWdialer provides the following
+	features:
+
+
+	1) Graphical interface (inherited terminal/xterm)
+
+	2) Customizable personal systems directory.
+
+	3) Can dial systems found in UUCP Systems file.
+	   via modem or TCP/IP between systems.
+
+	4) Logging feature for recording sessions.
+
+	5) Built in ASCII upload/download capabilities.
+
+	6) [XYZ]modem upload/download via external protocol providers.
+
+	7) Compatible with UnixWare communications server and ttymon.
+	   In fact it was built to use these features.
+
+	8) Can send "break".
+
+	9) UnixWare installation script for installation on DeskTop.
+
+       10) Based on MoOlit.
+
+       11) Nifty Status message display area.
+
+
+	This is a nice substitute for "cu" or any other 3rd party
+	communications program. Because this program plays well
+	with the communications server you don't have to disable
+	your bi-directional ports to use it!!!
+
+
+
+	Provided by:
+
+	William C. Brown
+	AT&T Bell Labs
+	500 Northpoint Pkwy.
+	Alpharetta, Ga. 30202
+	(404)750-8071
+
+	corey@hustler.att.com
+	wcbrown@attmail

@@ -1,0 +1,78 @@
+        Robot - a scientific graph plotting and data analysis tool
+        ----------------------------------------------------------
+
+The program "robot" is available by anonymous ftp from
+ftp.astro.psu.edu.
+
+See also http://heasarc.gsfc.nasa.gov/docs/xte/SOF/robot.html
+
+
+Main Features of Robot
+----------------------
+* Graph plotting in various styles - error bars, histogram,
+        symbols, lines, dashed lines etc. Linear or logarithmic axes.
+* Data manipulation - arithmetic, functions, Fourier transforms, smoothing,
+        folding, sorting.
+* Fitting to data using built in functions such as Gaussians,
+        polynomials, Lorentzians, and/or a user defined function.
+* Annotation of graphs with text in various styles, simple
+        drawing tools.
+* Interaction with Robot is via pull-down menus, buttons
+        etc. and/or a pseudo command line type interface.
+* Commands are stored in log files for later play back, editing etc. 
+* Command files  can also include basic programming constructs:
+        loops, if tests, user defined variables.
+* Multi-color plots. Multiple plots per page. Multiple pages.
+* Output in PostScript format.
+
+
+Requirements
+------------
+Robot is XView based (version 3). User interface portions of code are
+written in 'C'. Data manipulation code is written in FORTRAN. Hence the
+public domain f2c package (available from netlib.att.com) or a
+FORTRAN compiler is required.
+Alternatively, binaries for LINUX, Sun's and DECstations are also
+available by anonymous ftp. Robot has also been compiled and run
+on a DEC alpha with OSF/1.
+
+
+The full distribution (source, documentation etc.) takes up about
+2.0Mbytes of disc space and the executable consumes approximately 1.4
+Mbytes of RAM or greater (depending on the size of the data files being
+plotted).
+
+Availability
+------------
+By anonymous ftp from ftp.astro.psu.edu in the directory pub/astrod.
+
+The relevant files are:
+robotx-.--.tar.gz        - Full source, plotting library, example scripts,
+                          documentation etc. 
+                          "-.--" is the version number, e.g. the file
+                           may be robotx4.90.tar.gz
+robot-beta.tar.gz       - most recent but less tested version of the above.
+			  				
+RobotManual.ps.Z        - just the documentation.
+robot.sun4.gz            - binary built on a SPARCstation (SunOS4.1.3).
+robot.dec.Z             - binary built on a DECstation (Ultrix).
+robot.linux.gz          - binary built on an IBM PC clone (LINUX).
+                          (compressed with gzip)
+robot.osf.gz		- binary built on a DEC Alpha (OSF/1) machine
+			  N.B. This is _not_ a static binary. Get XView from
+ftp.cs.cmu.edu:/afs/cs.cmu.edu/user/mjchan/pub/xview3.2-alpha-dist.tar.gz
+
+
+Reference
+---------
+Corbet, R.H.D., Larkin, C. & Nousek, J.A.  Proceedings of "Astronomical
+Data Analysis and Software Systems", Tucson, November, 1991. ASP
+Conference Series, 1992, 25, 106. (ISBN 0-937707-44-9)
+
+
+Robin Corbet                                |  corbet@lheamail.gsfc.nasa.gov 
+Laboratory for High Energy Astrophysics     |  
+Code 662                                    |  
+NASA/Goddard Space Flight Center            |
+Greenbelt, MD 20771                         |
+USA                                         |

@@ -1,0 +1,49 @@
+<html><head><title>Frangipani: A Scalable Distributed File System</title></head>
+<body bgcolor="#ffffff">
+
+<center><h2>Frangipani: A Scalable Distributed File System</h2></center>
+
+<center>Chandramohan Thekkath</center><br>
+
+<center>Systems Research Center</center><br>
+<center>Digital Equipment Corporation</center><p>
+
+<center><h3>Abstract</h3></center>
+
+The ideal distributed file system would provide all its users with
+coherent, shared access to the same set of files, yet would be
+arbitrarily scalable to provide more storage space and higher
+performance to a growing user community.  It would be highly available
+in spite of component failures.  It would require minimal human
+administration, and administration would not become more complex as more
+components were added. <p>
+
+Frangipani is a new file system that approximates this ideal, yet was
+relatively easy to build because of its two-layer structure.  The
+lower layer is Petal, a distributed
+storage service that provides incrementally scalable, highly
+available, automatically managed virtual disks.  In the upper layer,
+multiple machines run the same Frangipani file system code on top of a shared
+Petal virtual disk, using a distributed lock service to ensure
+coherence. <p>
+
+Frangipani is meant to run in a cluster of machines that are under a
+common administration and can communicate securely.  Thus the machines
+trust one another and the shared virtual disk approach is practical.
+Of course, a Frangipani file system can be exported to untrusted
+machines using ordinary network file access protocols. <p>
+
+We have implemented Frangipani on a collection of Alphas running
+DIGITAL Unix 4.0.  Initial measurements indicate that Frangipani has
+excellent single-server performance and scales well as servers are
+added.
+
+<hr>
+
+<b>Download/view talk as:</b>
+<ul>
+<a href=frangipani-sosp.ppt>Powerpoint</a> -- 216 Kbytes
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+
+		    ftp.x.org - X Sources Archive
+
+Important directories to look at are:
+
+    pub/R6.1        	X11 Release 6.1, core and contrib, tarred and untarred
+    pub/R6          	X11R6 sources compressed for ftp
+    pub/R5          	X11R5 sources compressed for ftp
+    pub/R4          	X11R4 sources compressed for ftp
+    pub/DOCS		Public Review documents
+    contrib		public upload space
+    R5contrib		old public upload space
+
+X11R6.1 compressed tar files are in pub/R6.1/tars.
+
+To find things, the following files might be helpful:
+
+ls-l*R.Z		list of files in /contrib and other places
+/pub/R6.1/README	guide to the X11R6.1 release area
+
+
+IMPORTANT NOTE:
+
+If you want to get R6.1, you should really connect to a mirror site.
+A list of mirror sites may be found in the file /GettingR6.1

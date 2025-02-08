@@ -1,0 +1,1080 @@
+#! /bin/sh
+# This is a shell archive.  Remove anything before this line, then unpack
+# it by saving it into a file and typing "sh file".  To overwrite existing
+# files, type "sh file -c".  You can also feed this as standard input via
+# unshar, or by typing "sh <file", e.g..  If this archive is complete, you
+# will see the following message at the end:
+#		"End of shell archive."
+# Contents:  README.decwrl Makefile.diffs ihave.c.diffs msgid.c msgid.h
+#   msgidd.c
+# Wrapped by vixie@wrl.pa.dec.com on Sat Aug 17 13:38:00 1991
+PATH=/bin:/usr/bin:/usr/ucb ; export PATH
+if test -f 'README.decwrl' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'README.decwrl'\"
+else
+echo shar: Extracting \"'README.decwrl'\" \(2158 characters\)
+sed "s/^X//" >'README.decwrl' <<'END_OF_FILE'
+NNTP daemon -- DECWRL mods
+Paul Vixie <vixie@nsl.dec.com> 17 August 1991 (cleaned up, sniffing sigpipes)
+Paul Vixie <vixie@wrl.dec.com> 13 February 1991 (ported to 1.5.11, w/ leres)
+Paul Vixie <vixie@wrl.dec.com> 04 October 1990 (improved by Steve Schoch)
+Paul Vixie <vixie@wrl.dec.com> 18 September 1990 (improved by ken@sdd.hp.com)
+Paul Vixie <vixie@wrl.dec.com> 16 June 1990 (works on 1.5.8)
+X
+These modifications add a "message ID daemon" to nntpd.  Nntpd will query
+this daemon about all offered message ID's, and the daemon will keep a
+managed, memory resident list of recent ID's.  "Recent" means ID's offered
+within the last N (~1440, or one full day) minutes.  If an ID has been
+inquired of in the last N minutes, the daemon says "don't accept it", which
+keeps nntpd from accepting things that have already been accepted but which
+are sitting in the input batch queue, waiting to be unbatched.  This whole
+scheme is obviously only useful if you run C News, since nntp-for-B-News
+just forks inews once per incoming article.
+X
+Installation is hopefully trivial.  Rebuild and reinstall nntpd with
+these diffs applied; install msgidd as well; add this line to rc.local,
+and execute it by hand (or reboot):
+X
+echo /usr/lib/news/etc/msgidd \
+X	-s /usr/lib/news/nntp_msgid \
+X	-l /usr/lib/news/msgid.log \
+X	-h 1440 "&" | su news >/dev/console
+X
+Note that /usr/lib/news/etc is where I keep nntpd and msgidd, and that
+X/usr/lib/news/nntp_msgid is the unix-domain socket used for the daemon.
+X
+XFuture enhancements:
+X	-> move all the dbz stuff out of ihave.c and just do it all here;
+X	   this will serialize the dbz reads into this one process, which
+X	   is debatable and needs more thought.
+X
+Thanks to ken@sdd.hp.com for:
+X	-> change the protocol so that requesting ID status
+X	   doesn't have the side effect of marking the article
+X	   as "received".  Marking it as received shouldn't be
+X	   done until the article has actually been written to
+X	   the batch file.
+X
+Thanks to Steve Schoch for:
+X	-> handle SIGPIPE properly, it's pretty common and I was
+X	   just SIG_IGN'ing it.
+X
+Thanks to James Brister for:
+X	-> msgidd.pid file, useful for SIGHUP'ing for logfile changes
+END_OF_FILE
+if test 2158 -ne `wc -c <'README.decwrl'`; then
+    echo shar: \"'README.decwrl'\" unpacked with wrong size!
+fi
+# end of 'README.decwrl'
+fi
+if test -f 'Makefile.diffs' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'Makefile.diffs'\"
+else
+echo shar: Extracting \"'Makefile.diffs'\" \(2970 characters\)
+sed "s/^X//" >'Makefile.diffs' <<'END_OF_FILE'
+X*** /tmp/,RCSt1a03004	Sat Aug 17 13:37:22 1991
+X--- Makefile	Sat Aug 17 12:40:00 1991
+X***************
+X*** 1,4 ****
+X! # $Header: Makefile,v 1.3 90/12/22 10:16:02 sob Exp $
+X  # Makefile for NNTP server
+X  #
+X  
+X--- 1,4 ----
+X! # $Header: Makefile,v 1.4 91/08/17 12:04:13 vixie Locked $
+X  # Makefile for NNTP server
+X  #
+X  
+X***************
+X*** 6,18 ****
+X  	ahbs.o globals.o group.o help.o ihave.o list.o misc.o netaux.o \
+X  	newgroups.o newnews.o nextlast.o ngmatch.o post.o parsit.o scandir.o \
+X  	slave.o spawn.o strcasecmp.o subnet.o time.o xhdr.o fakesyslog.o \
+X! 	batch.o auth.o timer.o ../common/version.o
+X  
+X  SRVRSRC = main.c serve.c access.c access_inet.c access_dnet.c active.c \
+X  	ahbs.c globals.c group.c help.c ihave.c list.c misc.c netaux.c \
+X  	newgroups.c newnews.c nextlast.c ngmatch.c post.c parsit.c scandir.c \
+X  	slave.c spawn.c strcasecmp.c subnet.c time.c xhdr.c fakesyslog.c \
+X! 	batch.c auth.c timer.c ../common/version.c
+X  
+X  SRVRINC = common.h ../common/conf.h ../common/nntp.h timer.h
+X  
+X--- 6,18 ----
+X  	ahbs.o globals.o group.o help.o ihave.o list.o misc.o netaux.o \
+X  	newgroups.o newnews.o nextlast.o ngmatch.o post.o parsit.o scandir.o \
+X  	slave.o spawn.o strcasecmp.o subnet.o time.o xhdr.o fakesyslog.o \
+X! 	batch.o auth.o timer.o msgid.o ../common/version.o
+X  
+X  SRVRSRC = main.c serve.c access.c access_inet.c access_dnet.c active.c \
+X  	ahbs.c globals.c group.c help.c ihave.c list.c misc.c netaux.c \
+X  	newgroups.c newnews.c nextlast.c ngmatch.c post.c parsit.c scandir.c \
+X  	slave.c spawn.c strcasecmp.c subnet.c time.c xhdr.c fakesyslog.c \
+X! 	batch.c auth.c timer.c msgid.c ../common/version.c
+X  
+X  SRVRINC = common.h ../common/conf.h ../common/nntp.h timer.h
+X  
+X***************
+X*** 21,33 ****
+X  # -ldbm here if you've #define'ed DBM in ../common/conf.h
+X  LIBS	= -ldbm
+X  
+X! CFLAGS	= -O
+X  
+X  # Where nntpd is going to live
+X  
+X! DESTDIR	= /etc
+X  
+X! all:	nntpd
+X  
+X  nntpd: ${SRVROBJ} ${SRVRINC}
+X  	${CC} ${CFLAGS} -o nntpd ${SRVROBJ} ${LIBS}
+X--- 21,33 ----
+X  # -ldbm here if you've #define'ed DBM in ../common/conf.h
+X  LIBS	= -ldbm
+X  
+X! CFLAGS	= -O -I/usr/local/include
+X  
+X  # Where nntpd is going to live
+X  
+X! DESTDIR	= /usr/lib/news/etc
+X  
+X! all:	nntpd msgidd
+X  
+X  nntpd: ${SRVROBJ} ${SRVRINC}
+X  	${CC} ${CFLAGS} -o nntpd ${SRVROBJ} ${LIBS}
+X***************
+X*** 34,48 ****
+X  
+X  ${SRVROBJ}: ${SRVRINC}
+X  
+X! install: nntpd
+X  	cp nntpd ${DESTDIR}/nntpd
+X  	chmod 711 ${DESTDIR}/nntpd
+X  
+X  lint:
+X  	lint ${SRVRSRC}
+X  
+X  clean:
+X! 	-rm -f *.o nntpd make*.out a.out
+X  
+X  distrib: clean
+X  	rm -rf SCCS save tags
+X--- 34,54 ----
+X  
+X  ${SRVROBJ}: ${SRVRINC}
+X  
+X! msgidd: msgidd.c
+X! 	${CC} ${CFLAGS} -o msgidd msgidd.c
+X! 
+X! install: nntpd msgidd
+X  	cp nntpd ${DESTDIR}/nntpd
+X  	chmod 711 ${DESTDIR}/nntpd
+X+ 	mv -f ${DESTDIR}/msgidd ${DESTDIR}/msgidd.old
+X+ 	cp msgidd ${DESTDIR}/msgidd
+X+ 	chmod 711 ${DESTDIR}/msgidd
+X  
+X  lint:
+X  	lint ${SRVRSRC}
+X  
+X  clean:
+X! 	-rm -f *.o nntpd msgidd make*.out a.out
+X  
+X  distrib: clean
+X  	rm -rf SCCS save tags
+END_OF_FILE
+if test 2970 -ne `wc -c <'Makefile.diffs'`; then
+    echo shar: \"'Makefile.diffs'\" unpacked with wrong size!
+fi
+# end of 'Makefile.diffs'
+fi
+if test -f 'ihave.c.diffs' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'ihave.c.diffs'\"
+else
+echo shar: Extracting \"'ihave.c.diffs'\" \(1238 characters\)
+sed "s/^X//" >'ihave.c.diffs' <<'END_OF_FILE'
+X*** /tmp/,RCSt1a17184	Wed Feb 13 11:37:06 1991
+X--- ihave.c	Wed Feb 13 11:24:55 1991
+X***************
+X*** 1,8 ****
+X  #ifndef lint
+X! static char	*sccsid = "@(#)$Header: ihave.c,v 1.18 90/12/23 11:49:59 vixie Locked $";
+X  #endif
+X  
+X  #include "common.h"
+X  
+X  #ifdef LOG
+X  int	ih_accepted;
+X--- 1,11 ----
+X  #ifndef lint
+X! static char	*sccsid = "@(#)$Header: ihave.c,v 1.18 90/12/23 11:49:59 sob Exp $";
+X  #endif
+X  
+X  #include "common.h"
+X+ #ifdef MSGID
+X+ #include "msgid.h"
+X+ #endif /*MSGID*/
+X  
+X  #ifdef LOG
+X  int	ih_accepted;
+X***************
+X*** 23,28 ****
+X--- 26,32 ----
+X  	char		errbuf[2 * NNTP_STRLEN];
+X  	int		retcode;
+X  	register char	*cp;
+X+ 	int		dup = 0;
+X    
+X  	if (!canxfer)
+X  		{
+X***************
+X*** 42,49 ****
+X  		return;
+X  	}
+X  
+X! 	cp = gethistent(argv[1], 1);
+X! 	if (cp != NULL) {
+X  		printf("%d Got it.\r\n", ERR_GOTIT);
+X  		(void) fflush(stdout);
+X  #ifdef LOG
+X--- 46,66 ----
+X  		return;
+X  	}
+X  
+X! #ifdef MSGID
+X! 	if (msgid(argv[1], MADD))
+X! 		dup++;
+X! #endif /*MSGID*/
+X! 
+X! 	if (!dup) {
+X! 		cp = gethistent(argv[1], 1);
+X! 		if (cp != NULL) {
+X! 			dup++;
+X! #ifdef MSGID
+X! 			(void) msgid(argv[1], MOLD);
+X! #endif /*MSGID*/
+X! 		}
+X! 	}
+X! 	if (dup) {
+X  		printf("%d Got it.\r\n", ERR_GOTIT);
+X  		(void) fflush(stdout);
+X  #ifdef LOG
+END_OF_FILE
+if test 1238 -ne `wc -c <'ihave.c.diffs'`; then
+    echo shar: \"'ihave.c.diffs'\" unpacked with wrong size!
+fi
+# end of 'ihave.c.diffs'
+fi
+if test -f 'msgid.c' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'msgid.c'\"
+else
+echo shar: Extracting \"'msgid.c'\" \(4829 characters\)
+sed "s/^X//" >'msgid.c' <<'END_OF_FILE'
+X/* msgid -- message ID test
+X * vix 13feb91 [negative caching]
+X * vix 24may90 [written]
+X *
+X * with mods ken@sdd.hp.com 01jul90
+X *
+X * $Header: msgid.c,v 1.6 91/08/17 12:04:11 vixie Locked $
+X */
+X
+X#include <stdio.h>
+X#include <ctype.h>
+X#include <sys/types.h>
+X#include <sys/time.h>
+X#ifdef hpux
+X#include <sys/param.h>
+X#include <libBSD.h>
+X#endif
+X#include <sys/socket.h>
+X#include <sys/un.h>
+X#include <syslog.h>
+X#define NEEDMSGS
+X#include "msgid.h"
+X#include "../common/conf.h"
+X
+X#ifdef MSGID
+X
+X#ifdef WANT_MAIN
+char hostname[BUFSIZ];
+X#else
+extern char hostname[];
+X#endif
+X
+X#define SERVERTIMEOUT	30
+X
+static int s = -1;
+static int read_answer();
+X
+X/*
+X * Protocol:
+X *    Return value as used here is from the server to us.  Note that this
+X *    may not be the same as the return value from msgid().
+X *
+X *    3 message types:
+X *        MCANCEL: Delete an id from the holding queues.  Return value
+X *                 is non-zero for failure.
+X *        MADD:    Check for dup and add as needed.  Return value is 
+X *                 non-zero for dup.
+X *        MHOST:   Used to inform the server who is on the other end of this 
+X *                 nntpd.  Return value is non-zero for failure.  Used only
+X *                 in msgid_init().
+X */
+X
+X
+X/* 
+X * returns: 0 for ok, 1 for failure
+X */
+msgid_init()
+X{
+X    char buf[300];
+X    struct sockaddr_un n;
+X    static dead_server_count = 0;
+X
+X    s = socket(PF_UNIX, SOCK_STREAM, 0);
+X    if (s < 0) {
+X	syslog(LOG_ERR, "msgid: can't get socket: %m");
+X	return(1);
+X    }
+X
+X    n.sun_family = AF_UNIX;
+X    (void) strcpy(n.sun_path, SOCKNAME);
+X
+X    if (0 > connect(s, &n, strlen(n.sun_path) + sizeof n.sun_family)) {
+X	close(s);
+X	s = -1;
+X	/* only syslog every 128 messages, so that dead msgidd doesn't
+X	 * lead to multi-megabyte syslog files (vix, 13feb91)
+X	 */
+X	if (!(dead_server_count++ % 128)) {
+X	    syslog(LOG_ERR, "msgid: connect to %s: %m", SOCKNAME);
+X	}
+X	return(1);
+X    }
+X
+X    (void) strcpy(buf, msgs[MHOST]);
+X    (void) strcat(buf, hostname);
+X    if (write(s, buf, strlen(buf)) < 0) {
+X	close(s);
+X	s = -1;
+X	syslog(LOG_ERR, "msgid: host message write: %m", SOCKNAME);
+X	return(1);
+X    }
+X
+X    return(read_answer());
+X}
+X
+X
+X/* 
+X * returns: nonzero = duplicate, return value doesn't mean much for the
+X *          MADD or MOLD messages
+X */
+int
+msgid(id, mtype)
+X    char *id;
+X    int mtype;
+X{
+X    char *cp, buf[256], *rindex();
+X
+X    if (s == -1 && msgid_init())
+X	return(0);
+X
+X    /*
+X     * We need to do this just because gethistent does it
+X     * "in place" so add vs old gets fried ...
+X     *
+X     * If running Bnews, converts "id" to lower case.
+X     * If running Cnews, converts "id" per rfc822.
+X     */
+X#ifdef CNEWS
+X    cp = rindex(id, '@');        /* look for @ in message id */
+X    if (cp != NULL) {
+X	for(; *cp != '\0'; ++cp)
+X#else
+X    {
+X	for (cp = msg_id; *cp != '\0'; ++cp)
+X#endif
+X	    if (isupper(*cp))
+X		*cp = tolower(*cp);
+X    }
+X    (void) strcpy(buf, msgs[mtype]);
+X    (void) strcat(buf, id);
+X    if (0 > write(s, buf, strlen(buf))) {
+X	syslog(LOG_ERR, "msgid: write: %m");
+X	close(s);
+X	s = -1;
+X	return(0);
+X    }
+X    return(read_answer()); 
+X}
+X
+X
+static int
+read_answer()
+X{
+X    unsigned char c;
+X    fd_set readfds;
+X    struct timeval to;
+X    int i;
+X
+X    FD_ZERO(&readfds);
+X    FD_SET(s, &readfds);
+X    to.tv_sec = SERVERTIMEOUT;
+X    to.tv_usec = 0;
+X    if ((i = select(s+1, &readfds, NULL, NULL, &to)) < 0) {
+X	syslog(LOG_ERR, "msgid: select: %m");
+X	goto bad;
+X    }
+X    if (i == 0 || FD_ISSET(s, &readfds) == 0 || (i = read(s, &c, 1)) == 0) {
+X	syslog(LOG_ERR, "msgid: read timeout");
+X	goto bad;
+X    }
+X    if (i < 0) {
+X	syslog(LOG_ERR, "msgid: read: %m");
+X	goto bad;
+X    }
+X    if (c)
+X	return(1);
+X    return(0);
+bad:
+X    close(s);
+X    s = -1;
+X    return 0;
+X}
+X
+X#ifdef WANT_MAIN
+main(argc, argv)
+X    int argc;
+X    char *argv[];
+X{
+X    register int n;
+X    char buf[BUFSIZ], cmd[20], id[BUFSIZ];
+X
+X    if (gethostname(hostname, BUFSIZ)) {
+X	perror("hostname");
+X	exit(1);
+X    }
+X    (void) printf("host: %s\n", hostname);
+X
+X    if (argc != 1) {
+X	(void) fprintf(stderr, "usage: %s\n", argv[0]);
+X	exit(1);
+X    }
+X
+X#ifdef LOG_DAEMON
+X    openlog("msgid-test", LOG_PID, LOG_DAEMON);
+X#else
+X    openlog("msgid-test", LOG_PID);
+X#endif
+X
+X    while (fputs("cmd msgid: ", stdout), fflush(stdout), fgets(buf, BUFSIZ, stdin))
+X	if ((n = sscanf(buf, "%[^ \t]%*[ \t]%[^\n]", cmd, id)) == 2) {
+X	    if (strcmp(cmd, "cancel") == 0)
+X		(void) printf("%s\n", (msgid(id, MCANCEL) ? "failed" : "ok"));
+X	    else if (strcmp(cmd, "add") == 0)
+X		(void) printf("%d\n", msgid(id, MADD));
+X		/* 
+X		(void) printf("%sduplicate\n", 
+X			      (msgid(id, MADD) ? "" : "not a "));
+X		*/
+X	    else if (strcmp(cmd, "old") == 0)
+X		(void) printf("%s\n", (msgid(id, MOLD) ? "failed" : "ok"));
+X	    else
+X		(void) printf("possible cmds are cancel, add, and old\n");
+X	} else
+X	    (void) printf("[%d] possible cmds are cancel, add, and old\n", n);
+X}
+X#endif
+X#endif MSGID
+END_OF_FILE
+if test 4829 -ne `wc -c <'msgid.c'`; then
+    echo shar: \"'msgid.c'\" unpacked with wrong size!
+fi
+# end of 'msgid.c'
+fi
+if test -f 'msgid.h' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'msgid.h'\"
+else
+echo shar: Extracting \"'msgid.h'\" \(418 characters\)
+sed "s/^X//" >'msgid.h' <<'END_OF_FILE'
+X/*
+X * Default place for the socket
+X */
+X#define SOCKNAME	"/usr/lib/news/nntp_msgid"
+X#define PIDFILE         "/usr/lib/news/msgidd.pid"
+X
+X
+X#ifdef NEEDMSGS
+X/*
+X * Message types from client to server
+X */
+char *msgs[] = {
+X    "add-",
+X    "can-",
+X    "hst-",
+X    "old-"
+X};
+X#endif
+X
+X/* 
+X * Messages to clinet side called with (MUST BE IN SAME ORDER AS msgs[])
+X */
+X#define MADD	0
+X#define	MCANCEL	1
+X#define	MHOST	2
+X#define MOLD	3
+END_OF_FILE
+if test 418 -ne `wc -c <'msgid.h'`; then
+    echo shar: \"'msgid.h'\" unpacked with wrong size!
+fi
+# end of 'msgid.h'
+fi
+if test -f 'msgidd.c' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'msgidd.c'\"
+else
+echo shar: Extracting \"'msgidd.c'\" \(10980 characters\)
+sed "s/^X//" >'msgidd.c' <<'END_OF_FILE'
+X/* msgidd -- message ID daemon
+X * vix 24may90 [written]
+X *
+X * with mods ken@sdd.hp.com 01jul90
+X *
+X * $Header: msgidd.c,v 1.8 91/05/21 19:47:48 vixie Locked $
+X */
+X
+X#include <stdio.h>
+X#include <ctype.h>
+X#include <signal.h>
+X#include <errno.h>
+X#include <syslog.h>
+X#include <sys/types.h>
+X#include <sys/socket.h>
+X#include <sys/un.h>
+X#include <sys/time.h>
+X#ifdef hpux
+X#include <sys/param.h>
+X#include <libBSD.h>
+X#endif
+X#define NEEDMSGS
+X#include "msgid.h"
+X
+X#define ASSERT(e, m) if (!(e)) {fputs("assert failed... ", stderr);\
+X				perror(m); exit(1);}
+X
+X#define STRN_EQ(s1, s2, n) ((*s1 == *s2) && (!strncmp(s1, s2, n)))
+X
+X#define FLAGS_RESETLOG	0x02
+X#define FLAGS_FLUSHLOG	0x04
+X#define MAX_AGE		10
+X#define ALARM_TIME	300
+X
+X#if 0
+X#define dprintf fprintf
+X#else
+X#define dprintf (void)
+X#endif
+X
+extern int errno;
+X
+static char *
+strdup(x)
+X	char *x;
+X{
+X	char *malloc();
+X	char *y = malloc(strlen(x) + 1);
+X	if (y)
+X	strcpy(y, x);
+X	return y;
+X}
+X
+int log = 0, flags = 0;
+time_t hold_time = MAX_AGE * 60;
+char *hosts[100], *lfn, *ptime();
+XFILE *logfp = NULL;
+X
+struct {
+X    int connected;
+X    int connects, drops;
+X    int new, dup, cancel;
+X    int freed;
+X} stats;
+X
+struct el {
+X    struct el *next;
+X    time_t age;
+X    int refcnt;
+X    char id[1];
+X} *ids[256];
+X
+char *months[12] = {
+X    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+X    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+X};
+X
+static int transaction();
+X
+static void savepid ()
+X{
+X  FILE *pidfp ;
+X
+X  if ((pidfp = fopen (PIDFILE,"w")) == NULL)
+X    return ;
+X
+X  (void) fprintf (pidfp,"%d\n",getpid()) ;
+X  (void) fclose (pidfp) ;
+X
+X  return ;
+X}
+X
+X
+X
+char *
+ptime(now)
+X    time_t now;
+X{
+X    static char buf[50];
+X    struct tm *tmp;
+X
+X    tmp = localtime(&now);
+X    (void) sprintf(buf, "%s %2d %02d:%02d:%02d", 
+X		   months[tmp->tm_mon], tmp->tm_mday, tmp->tm_hour, 
+X		   tmp->tm_min, tmp->tm_sec);
+X    return (buf);
+X}
+X
+X
+static void 
+usage(me) 
+X    char *me;
+X{
+X    (void) fprintf(stderr, "Usage: %s [options]\n", me);
+X    (void) fprintf(stderr, "Options: -s <unix domain socketname> [%s]\n",
+X		   SOCKNAME);
+X    (void) fprintf(stderr, "         -l <log file name>\n");
+X    (void) fprintf(stderr, "         -h <hold time in minutes>\n");
+X    exit(1);
+X}
+X
+X
+static void
+openlogfile()
+X{
+X    if (logfp)
+X	(void) fclose(logfp);
+X    if (log && (logfp = fopen(lfn, "a+")) == NULL) {
+X	syslog(LOG_ERR, "Unable to open %s: %m", lfn);
+X	log = 0;
+X	logfp = NULL;
+X    }
+X}
+X
+X
+static void
+bye()
+X{
+X    if (log)
+X	(void) fclose(logfp);
+X    dprintf(stderr,"Bye !!\n");
+X    exit(0);
+X}
+X
+X
+static void
+resetlog() {
+X    flags |= FLAGS_RESETLOG;
+X}
+X
+X
+static void 
+pstats() 
+X{
+X    char msgbuf[1024];
+X    if (log)
+X	flags |= FLAGS_FLUSHLOG;
+X    sprintf(msgbuf, "stats: %d connected, %d connects, %d drops, %d dups, %d new, %d cancel, %d freed\n",
+X	    stats.connected, stats.connects, stats.drops, stats.dup, stats.new, stats.cancel, stats.freed);
+X    dprintf(stderr, "%s\n", msgbuf);
+X    syslog(LOG_INFO, msgbuf);
+X    stats.connects = stats.drops = stats.new = stats.cancel = stats.dup = stats.freed = 0;
+X    alarm(ALARM_TIME);
+X}
+X
+int onpipe();
+X
+main(argc, argv)
+X    int argc;
+X    char *argv[];
+X{
+X    register char *sn = SOCKNAME;
+X    register int s;
+X    int highest_fd;
+X    struct sockaddr_un n, in;
+X    fd_set clients;
+X    extern char *optarg;
+X    extern int optind;
+X
+X    while ((s = getopt(argc, argv, "l:h:s:")) != EOF)
+X	switch(s) {
+X	    case 'h':
+X		hold_time = 60 * atoi(optarg);
+X		if (hold_time <= 0 || hold_time > (24 * 3600))
+X		    usage(argv[0]);	
+X		break;
+X	    case 's':
+X		sn = strdup(optarg);
+X		break;
+X	    case 'l':
+X		log++;
+X		lfn = strdup(optarg);
+X		break;
+X	    default:
+X		usage(argv[0]);	
+X		break;
+X	}
+X
+X    if (optind != argc)
+X	usage(argv[0]);
+X    
+X    if (log) {
+X	openlogfile();
+X	if (!log) {
+X	    (void) fprintf(stderr, "%s: Unable to open log file (%s)\n", 
+X			   argv[0], lfn);
+X	    exit(1);
+X	}
+X    }
+X
+X    savepid () ;
+X
+X#ifdef LOG_DAEMON
+X    openlog("msgidd", LOG_PID, LOG_DAEMON);
+X#else
+X    openlog("msgidd", LOG_PID);
+X#endif
+X
+X    s = socket(PF_UNIX, SOCK_STREAM, 0);
+X    ASSERT(s>=0, "socket");
+X    highest_fd = s;
+X
+X    n.sun_family = AF_UNIX;
+X    (void) strcpy(n.sun_path, sn);
+X
+X    (void) unlink(sn);
+X    ASSERT(0<=bind(s, &n, strlen(n.sun_path) +sizeof n.sun_family),n.sun_path);
+X
+X    FD_ZERO(&clients);
+X    listen(s, 5);
+X
+X    signal(SIGHUP, resetlog);
+X    signal(SIGINT, bye);
+X    signal(SIGALRM, pstats);
+X    signal(SIGPIPE, onpipe);
+X    alarm(ALARM_TIME);
+X
+X    for (;;) {
+X	register int nfound, fd;
+X	fd_set readfds;
+X
+X	if (flags) {
+X	    if (flags & FLAGS_FLUSHLOG)
+X		(void) fflush(logfp);
+X	    if (flags & FLAGS_RESETLOG)
+X		openlogfile();
+X	    flags = 0;
+X	}
+X	readfds = clients;	/* we want to select the clients... */
+X	FD_SET(s, &readfds);	/* ...and the main server socket. */
+X	nfound = select(highest_fd+1, &readfds, NULL, NULL, NULL);
+X	if (nfound < 0 && errno == EINTR)
+X	    continue;
+X	ASSERT(0<=nfound, "select");
+X	for (fd = 0; fd <= highest_fd; fd++) {
+X	    if (FD_ISSET(fd, &readfds)) {
+X		if (fd == s) {
+X		    int fromlen = sizeof(in);
+X		    if ((fd = accept(s, &in, &fromlen)) == -1) {
+X			syslog(LOG_ERR, "Accept failed: %m");
+X		    } else {
+X			FD_SET(fd, &clients);
+X			if (fd > highest_fd)
+X			    highest_fd = fd;
+X			stats.connects++;
+X			stats.connected++;
+X		    }
+X		} else if (FD_ISSET(fd, &clients)) {
+X		    if (-1 == transaction(fd)) {
+X			close(fd);
+X			FD_CLR(fd, &clients);
+X			stats.connected--;
+X			stats.drops++;
+X			if (hosts[fd]) {
+X			    if (log) {
+X				(void) fprintf(logfp, "%s Disconnect %s\n", 
+X				    ptime(time((time_t *)0)), hosts[fd]);
+X			    }
+X			    dprintf(stderr, "Disconnect(%d/%s)\n",
+X				fd, hosts[fd]);
+X			    free(hosts[fd]);
+X			    hosts[fd] = NULL;
+X		    	}
+X		    }
+X		} else {
+X		    dprintf(stderr, "Bad fd %d from select\n", fd);
+X		}
+X	    }
+X	}
+X    }
+X}
+X
+int sigpiped;
+X
+static int
+reply(fd, ans)
+X    register int fd, ans;
+X{
+X    int status;
+X
+X    sigpiped = 0;
+X    while ((status = write(fd, (ans ? "\001" : "\000"), 1)) < 0
+X	&& errno == EINTR && !sigpiped)
+X	;
+X    if (status < 0) {
+X	if (log) {
+X	    register time_t now = time((long *)0);
+X	    fprintf(logfp, "%s write failed (fd %d)\n", ptime(now), fd);
+X	}
+X	syslog(LOG_ERR, "write failed, closing connection: %m");
+X	return -1;
+X    }
+X    return (0);
+X}
+X
+X
+static void
+cancel(fd, bufp, now)
+X    register int fd;
+X    register char *bufp;
+X    time_t now;
+X{
+X    register struct el *i, *p;
+X    register found = 0;
+X
+X    for (i = ids[*bufp], p = NULL; i; p = i, i = i->next)
+X	if (strcmp(i->id, bufp) == 0) {
+X	    if (p == NULL)
+X		ids[*bufp] = i->next;
+X	    else
+X		p->next = i->next;
+X	    if (log)
+X		(void) fprintf(logfp, "%s Cancel %s %s\n", 
+X			       ptime(now), hosts[fd] ? hosts[fd] : "", i->id);
+X	    free(i);
+X	    found++;
+X	    stats.cancel++;
+X	    dprintf(stderr, "Cancel(%d/%s): `%s'\n", fd, hosts[fd], bufp);
+X	    break;
+X	}
+X    if (!found) {
+X	dprintf(stderr, "Bad-cancel(%d/%s): `%s'\n", fd, hosts[fd], bufp);
+X	syslog(LOG_ERR, "Cancel, %s not found", bufp);
+X	if (log)
+X	    (void) fprintf(logfp, "%s Error cancel %s %s\n", 
+X			   ptime(now), hosts[fd] ? hosts[fd] : "", i->id);
+X    }
+X}
+X
+X
+static void
+add(fd, bufp, n, now)
+X    register int fd;
+X    register char *bufp;
+X    register int n;
+X    time_t now;
+X{
+X    register struct el *i;
+X
+X    /* this malloc includes the id[1] array, which means
+X     * that there's already room for strcpy's null
+X     */
+X    i = (struct el *) malloc(sizeof(struct el) + n);
+X    i->age = now;
+X    (void) strcpy(i->id, bufp);
+X    if (log) {
+X	i->refcnt = 1;
+X	(void) fprintf(logfp, "%s Add %s %s\n", ptime(now),
+X				hosts[fd] ? hosts[fd] : "", bufp);
+X    }
+X    i->next = ids[*bufp];
+X    ids[*bufp] = i;
+X    stats.new++;
+X    dprintf(stderr, "Add(%d/%s): `%s'\n", fd, hosts[fd], bufp);
+X}
+X
+X
+static int
+search(fd, bufp, now)
+X    register int fd;
+X    register char *bufp;
+X    time_t now;
+X{
+X    register struct el *i, *p;
+X    int found = 0, searched = 0;
+X    register char bufc = *bufp;
+X
+X    /* 
+X     * search the appropriate list.
+X     */
+X    for (i = ids[bufc], p = NULL; i; p = i, i = i->next) {
+X	/* 
+X	 * if too old, everything from here to the end
+X	 * can be nuked (we always add at the top).
+X	 */
+X	if ((now - i->age) > hold_time) {
+X	    while (i) {
+X		register struct el *n = i->next;
+X
+X		if (p)
+X		    p->next = n;
+X		else
+X		    ids[bufc] = n;
+X		free(i);
+X		i = n;
+X		stats.freed++;
+X	    }
+X	    break;
+X	}
+X
+X	searched++;
+X
+X	/* 
+X	 * No need to compare first character manually since everthing
+X	 * in this list starts with bufc anyway ?
+X	 */
+X	if (strcmp(i->id, bufp) == 0) {
+X	    if (log) {
+X		i->refcnt++;
+X		(void) fprintf(logfp, "%s Lose %s %d %ld %s\n", 
+X			   ptime(now), hosts[fd] ? hosts[fd] : "", i->refcnt, 
+X			       (now - i->age), i->id);
+X	    }
+X	    found++;
+X	    stats.dup++;
+X	    break;
+X	}
+X    }
+X
+X    dprintf(stderr, "Search(%d/%s): %s(%d) `%s'\n",
+X	    fd, hosts[fd], (found ? "dup" : "new"), searched, bufp);
+X    return (found);
+X}
+X
+X
+X/* returns: -1 == client is gone, close this fd please
+X *           0 == success
+X */
+static int
+transaction(fd)
+X    register fd;
+X{
+X    char buf[1023];
+X    register int n;
+X    register char *bufp, *cmdp;
+X    register time_t now = time((long *)0);
+X
+X    /* read the request.  zero-length read means connection is gone.
+X     */
+X    do {
+X	n = read(fd, buf, sizeof(buf));
+X	if (n == 0)
+X	    return -1;
+X    } while (n < 0 && errno == EINTR);
+X    ASSERT(n>0, "read");
+X
+X    if (hosts[fd]) {
+X	dprintf(stderr, "Parse(%d/%s): `%s'\n", fd, hosts[fd], buf);
+X    }
+X
+X    /* Separate cmd from id 
+X     */
+X    cmdp = buf;
+X    bufp = buf + 4;
+X    n -= 4;
+X
+X    /* find the first useful character, saving it and its address.
+X     */
+X    if (*bufp == '<') {
+X	bufp++;
+X	n--;
+X    }
+X
+X    /* rip out useless characters at end, remembering real length.
+X     */
+X    while (n > 0) {
+X	register x = n - 1;
+X	register ch = bufp[x];
+X
+X	if (ch == '\n' || ch == '\r' || ch == '>')
+X	    n = x;
+X	else
+X	    break;
+X    }
+X    bufp[n] = '\0';
+X
+X    /* 
+X     * Which cmd ?
+X     */
+X    if (STRN_EQ(cmdp, msgs[MCANCEL], 4)) {
+X	cancel(fd, bufp, now);
+X	return reply(fd, 0);
+X    } else if (STRN_EQ(cmdp, msgs[MADD], 4)) {
+X	if (search(fd, bufp, now))
+X	    return reply(fd, 1);
+X	else { 
+X	    add(fd, bufp, n, now);
+X	    return reply(fd, 0);
+X	}
+X    } else if (STRN_EQ(cmdp, msgs[MOLD], 4)) {
+X	if (log)
+X	    (void) fprintf(logfp, "%s Old %s %s\n", ptime(now), 
+X			   hosts[fd] ? hosts[fd] : "", bufp);
+X	dprintf(stderr, "Old(%d/%s): `%s'\n", fd, hosts[fd], bufp);
+X	return reply(fd, 0);
+X    } else if (STRN_EQ(cmdp, msgs[MHOST], 4)) {
+X	if (hosts[fd])
+X		free(hosts[fd]);
+X	hosts[fd] = strdup(bufp);
+X	if (log)
+X	    (void) fprintf(logfp, "%s Connect %s\n", ptime(now), hosts[fd]);
+X	dprintf(stderr, "Connect(%d/%s)\n", fd, hosts[fd]);
+X	return reply(fd, 0);
+X    } else {
+X	syslog(LOG_ERR, "Unknown command %s", cmdp);
+X	if (log)
+X	    (void) fprintf(logfp, "%s Error %s unknown-cmd %s\n", ptime(now), 
+X			   hosts[fd], cmdp);
+X	dprintf(stderr, "Error(%d/%s) unknown-cmd %s\n", fd, hosts[fd], cmdp);
+X	return reply(fd, 0);
+X    }
+X#ifdef lint
+X    /*NOTREACHED*/
+X    return (0);
+X#endif
+X}
+X
+onpipe()
+X{
+X	register time_t now = time((long *)0);
+X
+X	if (log)
+X		fprintf(logfp, "%s Got SIGPIPE\n", ptime(now));
+X	sigpiped++;
+X}
+END_OF_FILE
+if test 10980 -ne `wc -c <'msgidd.c'`; then
+    echo shar: \"'msgidd.c'\" unpacked with wrong size!
+fi
+# end of 'msgidd.c'
+fi
+echo shar: End of shell archive.
+exit 0

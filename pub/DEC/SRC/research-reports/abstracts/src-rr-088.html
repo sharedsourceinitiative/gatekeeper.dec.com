@@ -1,0 +1,40 @@
+<HTML><HEAD><TITLE>
+Digital Systems Research Center: Report 88</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Research Report 88</H1>
+<P>
+<H1>Factors in the Performance of the AN1 Computer Network</H1>
+<HR>
+<H2>Susan S. Owicki and Anna R. Karlin</H2>
+<b>June 15, 1992</b><BR><i> 25 pages</i>
+<P>
+AN1 (formerly known as Autonet) is a local area network composed of
+crossbar switches interconnected by 100Mbit/second, full-duplex links.
+In this paper, we evaluate the performance impact of certain choices
+in the AN1 design.  These include the use of FIFO input buffering in the
+crossbar switch, the deadlock-avoidance mechanism, cut-through routing,
+back-pressure for flow control, and multi-path routing.  AN1's
+performance goals were to provide low latency and high bandwidth in
+a lightly loaded network.  In this it is successful.  Under heavy load,
+the most serious impediment to good performance is the use of 
+FIFO input buffers.  The deadlock-avoidance technique has an adverse
+effect on the performance of some topologies, but it seems to be the
+best alternative, given the goals and constraints of the AN1 design.
+Cut-through switching performs well relative to store-and-forward
+switching, even under heavy load.  Back-pressure deals adequately with
+congestion in a lightly-loaded network; under moderate load, performance
+is acceptable when coupled with end-to-end flow control for bursts.
+Multi-path routing successfully exploits redundant paths between hosts
+to improve performance in the face of congestion.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-088.ps.Z">PostScript compressed with UNIX compress</A></B> -- 192 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-088.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 136 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-088.ps.zip">PostScript compressed with ZIP</A></B> -- 136 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-088.ps">PostScript</A></B> -- 440 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-088.pdf">Portable Document Format (PDF)</A></B> -- 176 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

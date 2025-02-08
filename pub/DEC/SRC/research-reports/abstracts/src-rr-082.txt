@@ -1,0 +1,18 @@
+
+			AVAILABLE ELECTRONICALLY
+
+"A Guide to LP, The Larch Prover"
+Stephen J. Garland and John V. Guttag
+December 31, 1991.  112 pages
+
+Authors' abstract
+
+This guide provides an introduction to LP (the Larch Prover), Release
+2.2.  It describes how LP can be used to axiomatize theories in a
+subset of multisorted first-order logic and to provide assistance in
+proving theorems.  It also contains a tutorial overview of the
+equational term-rewriting technology that provides, along with
+induction rules and other user-supplied nonequational rules of
+inference, part of LP's inference engine.
+
+

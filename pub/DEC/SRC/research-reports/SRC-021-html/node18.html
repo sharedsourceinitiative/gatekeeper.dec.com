@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Conclusions</TITLE>
+<META NAME="description" CONTENT="Conclusions">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="previous" HREF="node11.html">
+<LINK REL="up" HREF="node4.html">
+<LINK REL="next" HREF="node19.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html330"
+ HREF="node19.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html326"
+ HREF="node4.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html322"
+ HREF="node17.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html328"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html329"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html331"
+ HREF="node19.html">References</A>
+<B> Up:</B> <A NAME="tex2html327"
+ HREF="node4.html">Evolving the UNIX System</A>
+<B> Previous:</B> <A NAME="tex2html323"
+ HREF="node17.html">Summary</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H1><A NAME="SECTION02050000000000000000">
+Conclusions</A>
+</H1>
+<A NAME="sec-conclusions">&#160;</A>
+<A NAME="370">&#160;</A>
+The implementation of Topaz for SRC's Firefly multiprocessor has been in
+daily use since the spring of 1986, and the version of the multithreaded
+operating system interface described here has been in use since the spring
+of 1987.  A number of multithreaded application programs and servers have
+been written for Topaz.
+<P>
+We consider both the idea of a multithreaded extension of UNIX and our new
+operating system interface to be successes.  Users have access to the
+large collection of UNIX application software, are free to investigate the
+consequences of multiple threads and remote procedure call for building
+new applications, and are often able to use UNIX and Topaz applications
+together.  For example most Firefly users use the standard C shell both
+interactively and through shell scripts to run a mixture of UNIX and Topaz
+applications. Most Fireflies run a Topaz ``distant process'' server that
+allows a user to run arbitrary processes on idle machines throughout the
+local network.
+<P>
+Supporting multiple threads instead of a single thread adds little to the
+inherent execution-time cost of the system-call interface.  And of course
+good speedups are possible when clients take advantage of opportunities
+for concurrent execution.  For example, a Topaz command called
+<I>updatefs</I> compares two file systems, bringing one up-to-date with respect
+to the other.  Changing <I>updatefs</I> to use concurrent threads to traverse
+the two trees and compare file modification times resulted in a speed-up
+of 3 to 4 (on a 5-processor Firefly).
+<P>
+The implementation of Topaz layered on UNIX allows us to write servers
+(e.g., for remote file access and remote login) that run on Fireflies and
+on VAX/UNIX systems with few or no source changes.  It also provides a way
+for us to export Topaz application software to UNIX sites.
+<P>
+We believe that the guidelines presented in this paper will be useful in
+designing other interfaces for use by multithreaded programs.  The extra
+parameterization necessary to avoid shared mutable state might not always
+be useful in a purely sequential program, although it is likely to ease
+the construction of modular programs.  Eliminating ad hoc multiplexing has
+the property that the resultant interface can be viewed as appropriate for
+use by a purely sequential program, so in some sense no complexity is
+added for use by a multithreaded program.  Making operations cancellable is
+often an externally imposed requirement; the multithreaded approach avoids
+many of the problems with interrupts and restartability.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html330"
+ HREF="node19.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html326"
+ HREF="node4.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html322"
+ HREF="node17.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html328"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html329"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html331"
+ HREF="node19.html">References</A>
+<B> Up:</B> <A NAME="tex2html327"
+ HREF="node4.html">Evolving the UNIX System</A>
+<B> Previous:</B> <A NAME="tex2html323"
+ HREF="node17.html">Summary</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

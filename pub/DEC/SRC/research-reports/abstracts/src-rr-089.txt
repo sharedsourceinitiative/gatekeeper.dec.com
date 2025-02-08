@@ -1,0 +1,28 @@
+
+
+			AVAILABLE ELECTRONICALLY
+
+"Compositional Refinement of Interactive Systems"
+Manfred Broy
+July 15, 1992.  48 pages
+
+
+
+Author's abstract:
+
+We use functional specification techniques to describe systems and 
+their components. We define the notions of property refinement and
+interaction refinement for interactive systems and their components.
+Interaction refinement allows changes to the syntactic interface (the 
+number of channels and the sorts of messages on the channels) as well 
+as the semantic interface (causality flow between messages and
+interaction granularity). We prove that these notions of refinement
+are compositional with respect to sequential and parallel composition,
+communication feedback, and recursive declarations of system
+components. These proofs demonstrate that refinements of networks can
+be accomplished in a modular way by refining their components. We
+generalize the notions of refinement to refining contexts. Finally, we
+define full abstraction for specifications and show compositionality
+with respect to this abstraction as well.
+
+

@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Security</TITLE>
+<META NAME="description" CONTENT="Security">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node27.html">
+<LINK REL="previous" HREF="node25.html">
+<LINK REL="up" HREF="node22.html">
+<LINK REL="next" HREF="node27.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html511"
+ HREF="node27.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html507"
+ HREF="node22.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html501"
+ HREF="node25.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html509"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html510"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html512"
+ HREF="node27.html">Files, Open-File Objects, and</A>
+<B> Up:</B> <A NAME="tex2html508"
+ HREF="node22.html">Concepts and Facilities</A>
+<B> Previous:</B> <A NAME="tex2html502"
+ HREF="node25.html">Threads</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04024000000000000000">
+Security</A>
+</H2>
+ <A NAME="StinsonBeach">&#160;</A>
+<P><A NAME="527">&#160;</A>
+<A NAME="528">&#160;</A>
+<A NAME="529">&#160;</A>
+<A NAME="530">&#160;</A>
+The Topaz system attempts to protect against threats to privacy and denial
+of service due to human error and, to a lesser extent, human malfeasance.
+The security model is based on an open, distributed environment of
+communicating workstations and servers.  The implication is that a user
+can do pretty much anything to his own workstation, but must provide
+authentication for access to remote resources.  There are many gaps in the
+current implementation (e.g., both data and passwords are transmitted
+unencrypted on the network), but we believe the basic structure can be
+elaborated to provide an adequate combination of flexibility and security.
+<P><A NAME="531">&#160;</A>
+<A NAME="532">&#160;</A>
+<A NAME="533">&#160;</A>
+<A NAME="534">&#160;</A>
+<A NAME="535">&#160;</A>
+The Topaz operating system implements security by validating that each
+attempt by a process to perform an operation affecting shared system state
+is allowed by a set of access control information.  The validation rules
+are based on the notion of a principal, which is supposed to represent a
+person or agency.  The operating system associates with every file and
+directory an owning principal, and with every process a sponsoring
+principal.  The operating system identifies a principal with his/her/its
+user name: a string of one or more ASCII characters.
+<P><A NAME="536">&#160;</A>
+<A NAME="537">&#160;</A>
+<A NAME="538">&#160;</A>
+<A NAME="539">&#160;</A>
+<A NAME="540">&#160;</A>
+<A NAME="1974">&#160;</A>
+<A NAME="542">&#160;</A>
+Three credentials are part of the state of every process: a real user
+name, a password, and an effective user name.  The real user name and
+password specify and authenticate the principal on whose behalf the
+process is executing; they are used for validating all access to remote
+files.  The effective user name is used for validating all access to local
+files and for all other local operations.  If the effective user name is
+root, all local file accesses and operations are permitted; such a process
+is referred to as the super-user. Normally the effective user name is
+equal to the real user name.  However, if a program object file has its
+SetUIDonExec flag set, then executing it as a process causes that process
+to have as its effective user name the owner of the file.
+<P><A NAME="1975">&#160;</A>
+<A NAME="1964">&#160;</A>
+<A NAME="1965">&#160;</A>
+A process normally inherits the credentials of the process that starts it,
+although this may be changed using SetUser for a new process or
+OSFriends.SetMyUser for an existing process.  In any case a valid password
+is checked for whenever a real user name is supplied.  (There is one
+exception: a process with effective and real user names equal to root and
+an empty password string is allowed the same remote access as the user
+named ff<TT>&#95;</TT>ftp.  The user named ff<TT>&#95;</TT>ftp is given minimal access according to
+the rules on page <A HREF="node40.html#Orinda"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>; its password is never checked.)
+<P><A NAME="549">&#160;</A>
+<A NAME="550">&#160;</A>
+A system must provide flexibility in describing access control
+relationships, or else users tend to disable the security checking.  To
+increase flexibility, the Topaz operating system allows the definition of
+arbitrary user groups (subsets of the community of users), and allows the
+owner of each file to single out one user group to receive specific access
+rights.  The owner of a file may also specify access rights to be enjoyed
+by all others (those not the owner and not in the group).
+<P><A NAME="551">&#160;</A>
+<A NAME="552">&#160;</A>
+<A NAME="553">&#160;</A>
+<A NAME="554">&#160;</A>
+<A NAME="555">&#160;</A>
+The truth for password validation and user group membership ultimately
+resides in the master files /etc/passwd and /etc/group.  (At SRC, the
+truth lives in the copies of those files residing on the machine named
+palo-alto.)  A daemon copies this information to the Interim Name Service
+every night.  The system uses the Interim Name Service if it is available;
+otherwise it uses a local copy of /etc/passwd and /etc/group.  Someday,
+the truth will move to the [Interim] Name Service.  (See ns(8).)
+<P><A NAME="556">&#160;</A>
+Although a process with effective user name equal to root has super-user
+privileges for all local operations, such a process does not automatically
+have super-user privileges when accessing remote files.  Only a process
+with real user name equal to root and having the matching `global root'
+password can exercise remote super-user privileges.
+<P><A NAME="BoulderCreek">&#160;</A><A NAME="558">&#160;</A>
+<A NAME="1976">&#160;</A>
+<A NAME="560">&#160;</A>
+<A NAME="561">&#160;</A>
+All procedures that do access checking accept an optional user
+specification to use for local access checking, which may be specified
+only by the super-user. This is to allow a server process to access local
+files on behalf of more than one client.  (User specifications are created
+by OSFriends.LookUpUser; see page <A HREF="node56.html#Pacifica"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.)
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html511"
+ HREF="node27.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html507"
+ HREF="node22.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html501"
+ HREF="node25.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html509"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html510"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html512"
+ HREF="node27.html">Files, Open-File Objects, and</A>
+<B> Up:</B> <A NAME="tex2html508"
+ HREF="node22.html">Concepts and Facilities</A>
+<B> Previous:</B> <A NAME="tex2html502"
+ HREF="node25.html">Threads</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

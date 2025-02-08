@@ -1,0 +1,106 @@
+<html>
+<head><title>Performance Comparison of Alpha and Intel NT Systems
+using DCPI</title></head>
+<body>
+<center>
+<h1><b>Performance Comparison of Alpha and Intel NT Systems using DCPI</b></h1>
+<br>
+<h2>Xiaolan (Catherine) Zhang, Harvard University</h2>
+</center>
+
+
+<h2>Introduction</h2>
+
+I am a third year Ph.D. student at Harvard University where I work
+with Brad Chen on the Morph project.  Morph is a system that aims to
+provide a framework for automatically monitoring and optimizing
+software that runs on an end user's computer.  I have developed the
+Morph Continuous Monitor that monitors the execution of the
+application by sampling the PC (program counter) of the executable.
+The samples collected by the Monitor are then fed to a profile-driven
+optimizer.<P>
+
+I was an intern from August 23 to November 21; Mark Vandevoorde was my
+host.  I chose SRC for internship because of its excellence in
+computer science research and the high reputation of its intern
+program.<P>
+
+
+<h2>SRC project</h2>
+
+While at SRC, I worked on comparing an Alpha 21164 (Miata) NT system
+with a PentiumII NT system using the DCPI (Digital Continuous
+Profiling Infrastructure) tools.  The goal was to
+figure out why some applications run faster on one system than the
+other and try to look for ways to improve applications running on the
+Alpha NT system.<P>  
+
+<h2>Experimental Setup</h2>
+
+The two systems we compared were a 500 MHz Alpha 21164 EV56 (Miata)
+system and a 266MHz PentiumII system.  The applications we studied were
+the BAPCo SYSmark NT4.0, Aladdin ghostscript 5.0.3, and MicroSoft
+SQLServer 6.5 running the TPC-B benchmark as the workload.<P>
+
+For performance analysis, we used the aggregate event counts collected
+using DCPI and the DCPI tools that provide instruction level stall
+analysis (Alpha version only).  Ntprof was used to discover unaligned
+loads.  For (manual) optimizations, we used the NT Atom
+instrumentation tool to perform binary rewriting.<P>
+
+<h2>Results</h2>
+
+<h3>Overall performance</h3>
+
+In terms of running times of the benchmarking programs, the
+performance of the two systems are pretty close except for Ghostscript
+and PowerPoint.  For Ghostscript, the Miata is much faster.  PowerPoint is
+a 16-bit Windows application and is interpreted on Alpha, which
+results in a much slower running time.<P>
+
+One interesting finding is that the number of PentiumII micro-ops (one
+Intel CISC instruction is decoded into RISC-like micro-ops before
+execution) and the number of Alpha RISC instructions are pretty
+comparable.  For system code, the number of PentiumII micro-ops are
+consistenly larger by a small fraction.<P>
+
+We also discovered that for the BAPCo SYSmark programs, the
+instruction cache performance for PentiumII system is much better than
+the Alpha, which is responsible for a large fraction of the
+stalls for Excel and Word.<P>
+
+For SQLServer 6.5, both systems performed similarly because the server
+was not CPU-bound.  We also discovered that the Alpha version was
+compiled for debugging!<P>
+
+<h3>Detailed Examples</h3>
+
+<ul>
+
+<li>Case 1: We identified an unaligned load in ghostscript for Alpha NT
+that is responsible for 29% of the total cycles, and we worked with Peter
+Deutsch to fix the problem.  The fix will appear in the next release
+of Alladin Ghostscript.<P>
+
+<LI>Case 2: We identified a misuse of mb instruction in the Alpha mga
+device driver which is responsible for 16% of the total cycles for
+ghostscript.  A driver that is optimized for Alpha can be downloaded
+from the Digital Web site which fixes this problem.<P>
+
+<LI>Case 3: A simple prefetching optimization on Texim improves running
+time by 9%.<P>
+
+</ul>
+
+<h2>The fun and challenging parts</h2>
+
+A challenging part of the project was to work with tools that were not
+yet stable and to provide useful feedback to the authors to help
+improve the tools.  I have learned a great deal about hardware
+architectures and Windows NT.<P>
+
+
+</BODY>
+</HTML>
+
+

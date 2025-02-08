@@ -1,0 +1,16 @@
+<TITLE>Digital Systems Research Center: Note 1996-002a</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Technical Note 1996-002a</H1>
+<H1>The Module Structure of TLA+</H1>
+<HR>
+<H2>Leslie Lamport</H2>
+<b>Note #1996-002, September 12, 1996. Corrected January 5, 1998</b><BR><i>15 pages</i>
+<P>
+An html document that informally describes the revised syntax and
+semantics for the module structure of TLA+. This is a preliminary draft;
+comments are welcome. 
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="http://gatekeeper.dec.com/pub/DEC/SRC/technical-notes/SRC-1996-002a.html">Hypertext (HTML)</A></B> -- 40 Kbytes<BR>
+</UL></P>

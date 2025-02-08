@@ -1,0 +1,111 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.73 [en] (WinNT; U) [Netscape]">
+   <title>Wickremesinghe</title>
+</head>
+<body>
+
+<center>
+<h1>
+<font face="Times New Roman,Times"><font size=+1>Link Compression in the
+Connectivity Server</font></font></h1></center>
+
+<center><table BORDER=0 COLS=1 WIDTH="75%" HEIGHT="1%" >
+<tr>
+<td>
+<center><b>Rajiv Wickremesinghe (Duke University)</b>
+<br><b>with Raymie Stata, Janet Wiener, and others.</b>
+<br><b>Compaq Systems Research Center</b>
+<br><b>Summer, 2000.</b></center>
+</td>
+</tr>
+</table></center>
+
+<br>&nbsp;
+<br>&nbsp;
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 WIDTH="75%" HEIGHT="1%" >
+<tr>
+<td><b><font size=+0>1 Introduction</font></b>
+<p>There is considerable interest in analyzing the manner in which web-pages
+are linked together. The link-structure of the web-graph is part of the
+page ranking criteria used by some popular web-search sites. It has also
+been used in research on the evolution and form of the web. The Connectivity
+Server (CS) provides fast, random access to this information. In order
+to accomplish this, it has to compress the graph information to fit in
+memory. The current version (CS2) can store link information for approximately
+200 million pages (about a 3-week web crawl) in 8GB of RAM.&nbsp;
+<p>During the summer, we assessed different methods for improving the compression
+in CS2. Implementing several alternatives, we produced CS3, which improves
+compression by a factor of two, allowing us to double the number of links
+we are able to store in a given memory size.&nbsp;
+<p><b><font size=+0>2 The Connectivity Server</font></b>
+<p>The CS densely allocates positive numeric IDs to all the web pages in
+the database. Link information is returned as lists of IDs forming an adjacency
+list for an ID being queried.ID order approximates alphabetical order of
+the URLs identifying pages, with the exception that pages are first separated
+into groups corresponding to having `many', `intermediate' or `few' links.
+This latter division ensures that well-referenced pages have small and
+proximate IDs (which gives better encoding), and also improves index compression
+(we are able to make assertions about the number of links of a page). CS2
+also provides other indexing and lookup functionality which is not affected
+by the changes we made.&nbsp;
+<p>There are two models we can use to reduce the amount of data required
+to store the web-graph. The first model makes predictions about the set
+of links on a page based on other pages' links. This gives us inter-row
+compression. The second model makes predictions about individual links
+on a page, given other links on the same page. This gives us intra-row
+compression. One of the main contributions of CS3 is the addition of inter-row
+compression to CS2, which already included intra-row compresion. CS3 also
+improves the overall compression by using escaped Huffman codes to encode
+the data, in place of a length and value code.&nbsp;
+<p><b><font size=+0>3 Realization</font></b>
+<p>We formulated several compression schemes based on different models
+and evaluated them by predicting the compression for some of our datasets.
+We chose the scheme sketched below because it seemed the most flexible
+(possible to adjust the speed vs. compression tradeoff easily) and efficient
+(fast).
+<p>For each set of links on a page to be compressed:&nbsp;
+<ul>
+<li>
+Examine the links in a `collection' of different pages, and pick the one
+most similar to the current page. (see below).&nbsp;</li>
+
+<li>
+Encode a reference to that page, and the differences, using Huffman codes
+combined with a differential technique.</li>
+</ul>
+There are many ways of selecting a collection of pages as candidates for
+comparison, above. We observed that the pages in close proximity by ID
+form a good (and hard to beat) collection for this purpose. They can also
+be accessed effciently when scanning the database. ID order is effective
+because pages with similar URLs have many common links (eg: menubars, homepage
+and index links etc.). We found that, on average, half the links on a page
+were common to other pages with nearby IDs. Our goal, then, was to fully
+utilize this redundency to improve compression.&nbsp;
+<p>There are several parameters that can be easily changed in the above
+scheme. These include the size of the window to examine, and the length
+of chains to allow. Increasing the size of the window results in better
+compression, though with dimishing effect; we experimented with values
+in the range 2-32. Allowing longer chains improves compression, but adversely
+affects speed.&nbsp;
+<p>Depending on the database chosen, we obtained 44%-54% compression as
+compared to the original compression scheme in CS2. We also observed that
+the new compression does not cause any significant slowdown of the program.
+We are now able to store link information for approximately 400 million
+pages in 8 GB of RAM.&nbsp;
+<p>
+<hr>
+<address>
+&copy;2001 Rajiv Wickremesinghe <a href="mailto:rajiv@cs.duke.edu">&lt;rajiv@cs.duke.edu></a></address>
+
+<br><!-- hhmts start -->
+<p>Last modified: Mon Jan 8 13:29:53 2001 by rajiv.<!-- hhmts end --></td>
+</tr>
+</table></center>
+
+<br>&nbsp;
+<br>&nbsp;
+</body>
+</html>

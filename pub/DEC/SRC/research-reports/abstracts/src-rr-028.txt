@@ -1,0 +1,19 @@
+			AVAILABLE ELECTRONICALLY
+
+    "A Theorem on Atomicity in Distributed Algorithms."
+    Leslie Lamport
+    May 1, 1988.  21 pages.
+
+Author's Abstract
+
+    Reasoning about a distributed algorithm is simplified if we can
+    ignore the time needed to send and deliver messages and can instead
+    pretend that a process sends a collection of messages as a single
+    atomic action, with the messages delivered instantaneously as
+    part of the action.  A theorem is derived that proves the validity
+    of such reasoning for a large class of algorithms.  It generalizes
+    and corrects a well known folk theorem about when an operation
+    in a multiprocess program can be considered atomic.
+
+
+

@@ -1,0 +1,56 @@
+
+OVERVIEW
+--------
+PLOTMTV is a multipurpose X11 plotting program. 
+PLOTMTV specializes in contour plots, but it can also handle 2D and 3D
+plots.  The plot-types supported are as follows:
+
+   * contour plots (rectangular grid, as well as triangular mesh)
+   * 2D line and scatter plots (x-vs-y)
+   * 3D surface , line and scatter plots 
+   * vector plots
+   * probability plots
+   * histograms
+   * barcharts
+
+The program has an rough but functional Graphical User Interface, through
+which it is possible to zoom in, zoom out, pan, toggle between 2D and 3D
+plots, and rotate 3D plots. Both color and grayscale postscript output are
+supported.
+ 
+PLOTMTV V1.4.1 is available on the following sites:
+    ftp.x.org: /contrib/applications/Plotmtv1.4.1.tar.Z.
+
+The program has been compiled on IBM RS6000, Sun SPARC, as well as
+HP700 workstations. The X11 routines use the X11R4 Xlib library,
+but the program has reportedly been compiled successfully on X11R5.
+
+PLOTMTV is based on the DRAWPLOT, CONTOUR and PDRAW programs from 
+U.C. Berkeley (yes, I'm responsible for those too!). PLOTMTV essentially
+combines all the capabilities of the three packages into one single package.
+
+
+AUTHOR INFO
+-----------
+Written by Kenny Toh (ktoh@td2cad.intel.com), software developer for
+the Technology CAD Department, Intel Corp, Santa Clara.
+ 
+If you like this software, send me a note...
+ 
+
+STANDARD DISCLAIMER
+-------------------
+#
+# Permission to use, copy, modify, and distribute this software and its
+# documentation for any purpose and without fee is hereby granted,
+# provided that the above copyright notice appear in all copies and that
+# both that copyright notice and this permission notice appear in
+# supporting documentation.
+#
+# These software is provided AS IS with no warranties of any kind.  The author
+# shall have no liability with respect to the infringement of copyrights,
+# trade secrets or any patents by these file or any part thereof.  In no
+# event will the author be liable for any lost revenue or profits or
+# other special, indirect and consequential damages.
+#
+#

@@ -1,0 +1,361 @@
+<HTML><HEAD>
+<!-- This document was created from RTF source by rtftohtml version 3.8 -->
+<TITLE>              Each to Each Programmer Reference Manual - Sample Application</TITLE></HEAD>
+<BODY BACKGROUND="" BGCOLOR="#FFFFFF" TEXT="#000000">
+<A HREF="e2e-APIs.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="e2e-Appendix.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="e2e.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="e2e.html#Contents"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+<hr size=4>
+<H1>
+Sample Application</H1>
+<UL>
+<LI><A HREF="#Heading11">Solver process</A>
+<LI><A HREF="#Heading12">Predictor process</A>
+</UL>
+<hr size=4>
+In this section we sketch out how to use the APIs in an application consisting
+of a predictor process and a solver process. The predictor process gathers and
+records votes and makes predictions. The solver process reads votes and
+computes successively more accurate models, periodically writing the models
+back to the database so they can be used by the predictor.<p>
+We start with the solver process, whose organization changes little from
+application to application. We then show a typical predictor process; here, the
+specifics will vary more between applications. Code that needs to be adapted to
+a particular environment (database, OS, etc.) is typeset<tt><i> &lt;like
+this&gt;</i></tt>.
+<a name="_Toc400263154"></a>
+
+<h2>
+<A NAME="Heading11">Solver process</A></h2>
+
+
+<pre>
+#include "eetypes.h"
+#include "eesolve.h"
+</pre>
+We
+create a single instance of the solver class:
+
+<pre>
+ee_solve ee;
+</pre>
+A
+real solver process might take command-line parameters, or even use a "GUI" to
+accept control parameters. Here we're keeping it simple:
+
+<pre>
+main() {
+</pre>
+When
+the process first starts, we read in the entire <tt>Votes</tt>,
+<tt>Persons</tt>, and <tt>Items</tt> tables.
+
+<pre>
+    &lt;SELECT * FROM Votes&gt;
+    while (&lt;records remain&gt;) {
+	ee_person p;
+	ee_item i;
+	ee_vote v;
+	&lt;get p, i, v from current record&gt;
+	ee.set_vote(p, i, v);
+	&lt;move to next record&gt;
+    }
+    &lt;SELECT * FROM Persons&gt;
+    while (&lt;records remain&gt;) {
+	ee_person p;
+	ee_model m;
+	&lt;get p, m from current record&gt;
+	ee.set_person_model(p, m);
+	&lt;move to next record&gt;
+    }
+    &lt;SELECT * FROM Items&gt;
+    while (&lt;records remain&gt;) {
+	ee_item i;
+	ee_model m;
+	&lt;get i, m from current record&gt;
+	ee.set_item_model(i, m);
+	&lt;move to next record&gt;
+    }
+</pre>
+Everything
+from here to the end of the program is a loop that is repeated until shutdown:
+
+<pre>
+    while (1) {
+</pre>
+First,
+process the <tt>VotesLog</tt> table to find out about recent updates to the
+<tt>Votes</tt> table:
+
+<pre>
+	&lt;SELECT * FROM VotesLog ORDER BY time&gt;
+	while (&lt;records remain&gt;) {
+	    ee_person p;
+	    ee_item i;
+	    ee_vote v;
+	    &lt;get p, i, v from current record&gt;
+	    ee.set_vote(p, i, v); /* deletes if v is ee_vote_null */
+	    &lt;delete current record&gt;
+	    &lt;move to next record&gt;
+	}
+</pre>
+Now run the solver algorithm. It is based on iterative refinement, so running it
+longer gives increased accuracy. In determining the number of steps to run it,
+we need to balance response time, accuracy, and the cost of writing the models
+back to the database.
+
+<pre>
+#define RESIDUE_THRESHOLD &lt;tune for application&gt;
+
+	do ee.solve_step();
+	while (RESIDUE_THRESHOLD
+		 &lt;= ee.get_residue() / ee.get_vote_count()
+	       &amp;&amp; &lt;time limit not exceeded&gt;);
+</pre>
+After
+running the solver algorithm, write back the updated models to the
+<tt>Persons</tt> and <tt>Items</tt> table. This serves two purposes:
+checkpointing our state across shutdown/restart, and making the new item models
+available to the predictor process.
+
+<pre>
+	&lt;SELECT * FROM Persons&gt;
+	while (&lt;records remain&gt;) {
+	    ee_person p;
+	    ee_model m;
+	    &lt;get p from current record&gt;
+	    ee.get_person_model(p, m);
+	    &lt;update p's model to m in current record&gt;
+	    &lt;move to next record&gt;
+	}
+	&lt;SELECT * FROM Items&gt;
+	while (&lt;records remain&gt;) {
+	    ee_item i;
+	    ee_model m;
+	    &lt;get i from record&gt;
+	    ee.get_item_model(i, m);
+	    &lt;update i's model to m in current record&gt;
+	    &lt;move to next record&gt;
+	}
+</pre>
+The
+code above depends on the <tt>Persons</tt> and <tt>Items</tt> tables having
+been initialized with an entry for each person and item, respectively. To avoid
+this dependency, we could have taken this alternate approach using
+<i>iterators</i>:
+
+<pre>
+	ee_solve::person_iterator persons;
+	for ( ; ; ) {
+	    ee_person p = persons.get_next();
+	    if (p==ee_person_null) break;
+	    ee_model m;
+	    ee.get_person_model(p, m);
+	    &lt;update p's model to m in current record&gt;
+	}
+	ee_solve::item_iterator items;
+	for ( ; ; ) {
+	    ee_item i = items.get_next();
+	    if (i==ee_item_null) break;
+	    ee_model m;
+	    ee.get_item_model(i, m);
+	    &lt;update i's model to m in current record&gt;
+	}
+</pre>
+Note
+that this approach using iterators performs the database updates in an
+arbitrary order, which may not perform as well as performing the updates in
+index order.<p>
+The final step is to signal the predictor process that it should reset its
+cache, causing it to reload the updated item models from the database:
+
+<pre>
+	&lt;SELECT * FROM Generations WHERE id==1&gt;
+	&lt;update generation = generation+1 in current record&gt;
+    }
+}<a name="_Toc400263155"></a>
+</pre>
+
+<h2>
+<A NAME="Heading12">Predictor process</A></h2>
+
+From
+the point of view of the Each to Each APIs, there are three parts of the
+predictor process:<p>
+1.	Providing database access to Each to Each functions.<p>
+2.	Gathering votes and recording them in the database.<p>
+3.	Making predictions.<p>
+Here we package all three parts in a single C++ program file.<p>
+Our first task is to provide the code that connects the Each to Each prediction
+functions with the votes and item models stored in the application-provided
+database. We do this by writing a new class, <tt>my_ee_predict</tt>, that is
+derived from <tt>ee_predict</tt>. In the new class, we will implement the
+virtual functions of the <tt>ee_predict</tt> class, which in C++ terminology is
+an "abstract" class. This means that it contains one or more "pure virtual
+functions" which aren't defined by the class itself, but which are called by
+other member functions of the class.  We will also implement two additional
+functions: one to record a vote, and one to check for new data from the solver
+process.  (In a real application, you might want to put <tt>my_ee_predict</tt>
+in a separate file.)
+
+<pre>
+#include "eetypes.h"
+#include "eepredict.h"
+class my_ee_predict : public ee_predict {
+public:
+    virtual void get_person_votes(
+	const ee_person x,
+	void (*setvote)(
+	    const ee_person x,
+	    const ee_item y,
+	    const ee_vote&amp; v,
+	    void* arg),
+	void* arg) = 0;
+    virtual void get_item_model(const ee_item y, ee_model&amp; m);
+    void record_vote(ee_person x, ee_item y, ee_vote v);
+    /* Update stable storage and the cache to indicate that v is person x's
+       new or revised vote for item y, or delete person x's vote for item y if v
+       is null. */
+    void test_generation();
+    /* Test whether the solver process has recently written updated item models
+       into stable storage, and if so flush all item models from the cache. */
+}
+</pre>
+First we provide the implementations of the two virtual functions:
+
+<pre>
+void my_ee_predict::get_person_votes(
+    const ee_person x,
+    void (*setvote)(
+	const ee_person x,
+	const ee_item y,
+	const ee_vote&amp; v,
+	void* arg),
+    void* arg)
+{
+    ee_item item;
+    ee_vote vote;
+    &lt;SELECT * FROM Votes WHERE person==x&gt;
+    while (&lt;records remain&gt;) {
+	&lt;get item, vote from record&gt;
+       (*setvote)(x, item, vote, arg);
+    }
+}
+void my_ee_predict::get_item_model(const ee_item y, ee_model&amp; m)
+{
+    ee_model model;
+    &lt;SELECT * FROM Items WHERE item==y&gt;
+    &lt;get model from record&gt;
+    m = model;
+}
+</pre>
+Now we implement the <tt>record_vote</tt> function, which needs to update the
+<tt>Votes</tt> and <tt>VotesLog</tt> tables and also flush any previous vote
+that may have been cached. This function can be used for the case when a person
+wants to erase his vote, by passing <tt>ee_vote_null</tt> for <tt>v</tt>:
+
+<pre>
+void my_ee_predict::record_vote(ee_person x, ee_item y, ee_vote v)
+{
+    timestamp t = now();
+    &lt;begin transaction&gt;
+    reset_vote(x, y, v);
+    &lt;SELECT * FROM Votes WHERE person==x AND item==y&gt;
+    if (&lt;record exists&gt;)
+	if (v==ee_vote_null)
+	    &lt;delete current record from database&gt;
+	else
+	    &lt;update vote=v in current record&gt;
+    else
+	if (v==ee_vote_null)
+	    ; // nothing to do
+	else
+	    &lt;insert new record in Votes Table with x, y, v&gt;
+    &lt;insert new record in VotesLog table with x, y, v, t&gt;
+    &lt;commit transaction&gt;
+}
+</pre>
+Since these virtual functions access the database, calling them is relatively
+expensive. Thus the <tt>ee_predict</tt> implementation caches information in
+main memory to speed up subsequent predictions for the same persons and/or
+items. In the mean time, the solver process is computing more accurate models
+(based on recent votes), which it periodically writes back to the database. At
+that point, we'd like the predictor process to flush the cached information and
+once again call the virtual functions to load the latest information. The way
+we arrange to do this is to periodically (say, once an hour) poll the
+Generations table in the database. So the predictor process needs to call this
+function every so often, say by forking a thread that loops forever, sleeping
+for a half hour and calling this:
+
+<pre>
+void ee_predict::test_generation()<br>    {
+    static int last_generation = 0;
+    int generation;
+    &lt;SELECT * FROM Generations WHERE id==1&gt;
+    &lt;get generation from current record&gt;
+    if (generation &lt; last_generation) {
+	reset_all_models();
+	last_generation = generation;
+    }
+}
+</pre>
+That ends the implementation of <tt>my</tt>_ee_predict. Now we create a single
+instance of it to use throughout the predictor process:
+
+<pre>
+my_ee_predict ee;
+</pre>
+We're
+ready to do predictions. Here's an example of how to recommend up to five new
+Chinese restaurants in Paris:
+
+<pre>
+#define WEIGHT_THRESHOLD &lt;tune for application&gt;
+#define SCORE_THRESHOLD &lt;tune for application&gt;
+ee_person p;      // input: person desiring prediction
+&lt;query database for Chinese restaurants in Paris that p has 
+    not already rated&gt;
+while (&lt;records remain&gt;) {
+    ee_item i;
+    &lt;get i from current record&gt;
+    ee_vote v = ee.predict_item(p, i);
+    if (v.w &lt; WEIGHT_THRESHOLD) continue;
+    if (v.s &lt; SCORE_THRESHOLD) continue;
+    &lt;add [i, v] to list of possibilities&gt;
+    &lt;move to next record&gt;
+}
+&lt;sort list of possibilities in descending order of v&gt;
+return &lt;first five restaurants from list&gt;;
+</pre>
+
+Here's an example of how to present up to three reviews of a hotel. You might consider
+treating user-written reviews about items as additional "first-class items".
+However, we recommend using person-person correlation
+(<tt>ee_predict::predict_person</tt>) to rank order a set of reviews in terms
+of the similarity of interests between the current user and the authors of the
+reviews.
+
+<pre>
+ee_person p;      // input: current user
+ee_item i;        // input: subject of review
+&lt;query database for reviews of hotel i&gt;
+while (&lt;records remain&gt;) {
+    ee_person q;  // author
+    &lt;get q, review from current record&gt;
+    if (q == p) continue;
+    ee_vote v = ee.predict_person(p, q);
+    if (v.w &lt; WEIGHT_THRESHOLD) continue;
+    if (v.s &lt; SCORE_THRESHOLD) continue;
+   &lt;add [review, v] to list of possibilities&gt;
+   &lt;move to next record&gt;
+}
+&lt;sort list of possibilities in descending order of v&gt;
+return &lt;first three reviews from list&gt;;<a name="_Toc400263156"></a>
+</pre>
+<P><hr size=4>
+<A HREF="e2e-APIs.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="e2e-Appendix.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="e2e.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="e2e.html#Contents"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+</body></html>

@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Logical Volumes</TITLE>
+<META NAME="description" CONTENT="Logical Volumes">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node30.html">
+<LINK REL="previous" HREF="node28.html">
+<LINK REL="up" HREF="node22.html">
+<LINK REL="next" HREF="node30.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html547"
+ HREF="node30.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html543"
+ HREF="node22.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html537"
+ HREF="node28.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html545"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html546"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html548"
+ HREF="node30.html">Working Directories</A>
+<B> Up:</B> <A NAME="tex2html544"
+ HREF="node22.html">Concepts and Facilities</A>
+<B> Previous:</B> <A NAME="tex2html538"
+ HREF="node28.html">The File Name Space:</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04027000000000000000">
+Logical Volumes</A>
+</H2>
+ <A NAME="Hayward">&#160;</A>
+<P><A NAME="707">&#160;</A>
+<A NAME="708">&#160;</A>
+The local file system of each machine is made up of a set of logical
+volumes.  A logical volume is an abstraction of a physical volume such as
+a disk pack; a logical volume can actually be implemented as a set of
+subvolumes (pieces) of one or more physical volumes.
+<P>
+Each logical volume is a self-contained unit made up of a set of files and
+the directory entries that reference them.  Before the files on a logical
+volume can be used, the logical volume has to be added to the file name
+space of the machine.  This is done by `mounting' the logical volume,
+which identifies the root directory of that logical volume with some
+existing directory in the name space.  While a logical volume is mounted,
+its directory hierarchy is a subhierarchy of the local name space.
+<P><A NAME="709">&#160;</A>
+Even while it is mounted, a logical volume still maintains its autonomy.
+A hard link (created by the HardLink procedure, page <A HREF="node47.html#Pleasanton"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>)
+in a directory residing on one logical volume cannot refer to a file
+residing on a different logical volume.  And of course free space on one
+logical volume cannot be used to create or extend a file residing on a
+different logical volume.  For these reasons, it is typical to create a
+single large logical volume occupying most of the space on all the
+physical volumes on a machine.
+<P>
+Taos note:  Operations for manipulating logical volumes are described in
+Appendix <A HREF="node59.html#Hillsborough">A.5</A>, page <A HREF="node59.html#Hillsborough"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.
+<P><A NAME="713">&#160;</A>
+Ultrix note: The Ultrix term for a logical volume is a file system.
+Ultrix allows a disk drive to be partitioned into several file systems,
+but doesn't allow a file system to span disk drives.  The Ultrix
+implementation of OS does not support the manipulation of logical or
+physical volumes.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html547"
+ HREF="node30.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html543"
+ HREF="node22.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html537"
+ HREF="node28.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html545"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html546"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html548"
+ HREF="node30.html">Working Directories</A>
+<B> Up:</B> <A NAME="tex2html544"
+ HREF="node22.html">Concepts and Facilities</A>
+<B> Previous:</B> <A NAME="tex2html538"
+ HREF="node28.html">The File Name Space:</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,18 @@
+Begin3
+Title:          EodPlot
+Version:        1.0.2
+Entered-date:   Dec11,1996
+Description:    A program to plot stocks, option, and index with moving
+                average plotting ability.
+Keywords:       stock stocks investment plot X11 financial
+Author:         ned@mail.utexas.edu <Ned Zhang>
+Maintained-by:  ned@mail.utexas.edu <Ned Zhang>
+Primary-site:   sunsite.unc.edu /pub/Linux/apps/financial
+                149764 eod-1.0.1.tar.gz
+Alternate-site: ftp.x.org /contrib/applications
+                149764 eod-1.0.1.tar.gz
+Alternate-site: tsx-11.mit.edu /pub/linux/sources/usr.bin.X11
+                149764 eod-1.0.1.tar.gz
+Platform:       Linux X11 color monitor, C++ compiler, xforms lib
+Copying-policy: No fee, copyright respect, gifts accepted
+End

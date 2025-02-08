@@ -1,0 +1,28 @@
+The files named young.* are from various books I have written about
+Motif and X. The files and matching books are:
+
+
+young.cxx.tar.Z: Examples using Motif with C++ from "Object-Oriented
+Programming with C++ and OSF/Motif", Prentice Hall, 1992. ISBN
+0-13-630252-1.
+
+young.motif2.tar.Z: Motif examples, in ANSI C, from the latest edition
+of "The X Window System: Programming and Applications with Xt, Motif
+Edition", Prentice Hall, 1994. ISBN 0-13-123803-5. This file contains
+the source for the Motif version of my Tree widget.
+
+young.motif.tar.Z: The file contains examples from the original Motif
+version of "The X Window System etc", circa 1990. ISBN 0-13-497074-8.
+Based on Motif 1.0.  Kept here for those who still are using the old
+version of this book.
+
+young.debug.tar.Z: Source examples from "Motif Debugging and
+Performance Tuning", Prentice Hall, 1995. ISBN 0-13-147984-9. Note
+that these examples often contain examples of bugs and performance
+problems. They are *supposed* to have problems, so don't copy them as
+"good" examples, and don't be surprised if these programs core dump or
+have other problems.
+
+
+Doug Young
+June, 1994

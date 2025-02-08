@@ -1,0 +1,7 @@
+-------------------------------------------------------------------------------
+XGAS.ZIP                          Animated simulation of an ideal gas
+                                  Author: Larry Medwin (MIT)
+VAX                               Language: VAX C or DEC C
+AXP                               Language: DEC C
+                                  Needs DECUS X11R4 XAW & XMU libraries
+-------------------------------------------------------------------------------

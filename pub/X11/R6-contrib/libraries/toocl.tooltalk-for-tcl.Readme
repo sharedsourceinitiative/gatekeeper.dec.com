@@ -1,0 +1,39 @@
+                             TooCL
+                        Tooltalk for TCL
+                        ----------------
+
+                Cedric BEUST (beust@sophia.inria.fr)
+
+TooCL is a Tooltalk interface to Tcl/Tk. It will allow Tcl/Tk applications
+to connect to Tooltalk and send and receive messages just like any other
+application. This is an almost fully-blown interface to Tooltalk 1.0.2
+(it has been compiled with Tooltalk 1.1.1 but doesn't cover the new
+functions yet).
+
+TooCL is based on Tcl 7.0 and Tk 4.0. You must have these distributions
+handy to compile this package.
+
+To compile,
+
+$ cd src
+
+Then edit the Makefile. You will have to provide the following
+information :
+# Where to find Tk's includes
+# Where to find Tk's sources
+# Where to find Tcl's includes
+# Where to find Tcl's sources
+# Where to find Tooltalk's tt_c.h
+# Where to find the libtcl.a, libtk.a, libtt.a
+
+Then :
+
+$ make all
+$ TCLTT_LIBRARY=$PWD/../lib
+
+At this point, you should have a ttwish executable. You can then go and take
+a look the examples directory (see the README there) :
+
+$ cd ../examples
+$ ../src/ttwish ./tclttmon.tcl
+

@@ -1,0 +1,27 @@
+
+		AVAILABLE ELECTRONICALLY
+
+    "Building User Interfaces by Direct Manipulation."
+    Luca Cardelli.
+     October 2, 1987.  45 pages.
+
+Author's Abstract
+
+    User interfaces based on mice, bitmap displays, and windows are
+    becoming commonplace, and there is a growing expectation that
+    all programs, no matter how trivial or how complicated, should
+    present a graphically elegant and sophisticated user interface.
+    Unfortunately, such polished interfaces are normally difficult
+    to build. Our goal is to make these tasks much simpler, so that
+    application builders and even application users can confront them
+    as routine and painless activities.
+
+    The approach described in this report achieves this goal by
+    separating the user interface from the application program, as
+    is done in many user interface management systems, and by using
+    a user interface editor to build the interfaces. In a sense, we
+    apply the direct manipulation style characteristic of user
+    interfaces to the very process of building them, as opposed to
+    building them by programming.
+
+

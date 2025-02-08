@@ -1,0 +1,75 @@
+<html>
+<head>
+<title>DCPI-V3.4 Release Notes</title>
+</head>
+<body>
+<!--#include file="includes/title.html" -->
+<br>
+DCPI-V3.4 Release Notes
+</h1>
+
+<pre>
+Changes since release V3.2:
+
+- Initial support for Alpha 21264* counters; see dcpid man page.
+
+- Dcpid supports a new -nice option to adjust its scheduling priority,
+  and a new -gc option to automatically delete old epochs.
+
+<pre>
+Changes since release V2.12:
+
+- Pcount driver is dynamically loadable.
+
+- Dcpid loads pcount at startup and unloads it at exit.
+
+- A new underlying profile file format is used to store sample data
+  for all events in a single file per image.  Backwards compatibility
+  has been retained so that all tools support profiles collected with
+  previous versions of DCPI.
+
+- Dcpid supports a new -nice option to adjust its scheduling priority,
+  and a new -gc option to automatically delete old epochs.
+
+- Fixed a rare assertion failure in instruction-level analysis tools.
+
+- This version works with Digital Unix T5.0 646.2 (a.k.a. BL17)
+
+- Support for Digital Unix 3.2 has been dropped.  Use DCPI-V2.11 and
+  pcount-13.3 build 15 for machines running 3.2.
+
+Changes since release V2.11:
+
+- Added support for Alpha 21066 and other 21064-compatible cpus.
+
+Changes since release V2.10:
+
+- Adds support for compressed kernel modules.
+
+- dcpiprof listings now contain information about which named
+  procedure is near an anonymous procedure to help the user in finding
+  anonymous procedures.
+
+Changes since release V2.5:
+
+- DCPI releases V2.6 through V2.9 each had incompatibilities
+  with various versions of Digital Unix.  We believe that these
+  problems have been corrected.
+  
+- New loader for 4.0c and higher.
+  Dynamically linked images can be profiled on machines running
+  DU V3.2 or V4.0*, but not V5.0*.  The INSTALL script tests the
+  DCPI loader before installing it as the default system loader.
+
+- Minor improvements to dcpid image identification.
+  Image maps for common DU V4.0c and V4.0d binaries are compiled into dcpid.
+  Fixed identification of large images started before dcpid.
+
+- Major update to dcpi2pix to generate more accurate data.
+
+- Added support for new 21264 instructions.
+</pre>
+
+<!--#include file="includes/dcpi-footer.html" -->
+</body>
+</html>

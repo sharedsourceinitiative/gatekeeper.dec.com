@@ -1,0 +1,7 @@
+-------------------------------------------------------------------------------
+XROBOTS.ZIP                       Fight off villainous robots
+                                  Author: Brian Warkentine (brianw@Sun.COM)
+VAX                               Language: VAX C 3.2
+AXP                               Language: DEC C
+                                  Need XAW, XMU and XVMSUTILS libraries
+-------------------------------------------------------------------------------

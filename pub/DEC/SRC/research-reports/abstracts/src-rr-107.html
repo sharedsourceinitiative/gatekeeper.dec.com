@@ -1,0 +1,48 @@
+<HTML><HEAD><TITLE>
+Digital Systems Research Center: Report 107</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Research Report 107</H1>
+<P>
+<H1>The Vesta Language for Configuration Management</H1>
+<HR>
+<H2>Christine B. Hanna, Roy Levin</H2>
+<b>June 14, 1993</b><BR><i> 60 pages</i>
+<P>
+Current approaches to software configuration management and system
+building do not scale up to support large-scale software engineering; 
+common practice involves numerous stopgap measures to work around this
+shortcoming. The Vesta system is designed to eliminate this problem, by
+providing (1) a language designed to support complete, concise
+system descriptions and (2) a novel caching mechanism that permits 
+efficient system building.
+<P>
+The Vesta system uses a functional programming language to describe
+configurations. This language provides the flexibility and power needed 
+to describe large software components. The system descriptions are specific 
+and complete, and include all of the sources that are used to build the 
+system and all of the instructions that tell how the sources are composed. 
+Only information written down in the description can influence construction 
+of the system. Nevertheless, the descriptions are concise and easy to read 
+and write.
+<P>
+The language evaluator caches the results of evaluating function
+applications, which are the expensive operations in the Vesta language. 
+Caching in Vesta is automatic and persistent. Because the language is 
+functional and there are no side-effects, caching is conceptually
+straightforward. Vesta caches the result of all function
+applications--from those at the leaves (e.g., compiling one source
+file), to those in the middle (e.g., packaging up a library), all the
+way to the top. Caching function applications at all levels permits
+Vesta to build and rebuild large software systems efficiently. 
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-107.ps.Z">PostScript compressed with UNIX compress</A></B> -- 200 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-107.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 144 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-107.ps.zip">PostScript compressed with ZIP</A></B> -- 144 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-107.ps">PostScript</A></B> -- 544 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-107.pdf">Portable Document Format (PDF)</A></B> -- 392 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

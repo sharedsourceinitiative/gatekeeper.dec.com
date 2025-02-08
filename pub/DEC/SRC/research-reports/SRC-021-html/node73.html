@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>The OS Interface</TITLE>
+<META NAME="description" CONTENT="The OS Interface">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="previous" HREF="node72.html">
+<LINK REL="up" HREF="node64.html">
+<LINK REL="next" HREF="node74.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html1095"
+ HREF="node74.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html1091"
+ HREF="node64.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html1087"
+ HREF="node72.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html1093"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html1094"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1096"
+ HREF="node74.html">Running Ultrix Applications on</A>
+<B> Up:</B> <A NAME="tex2html1092"
+ HREF="node64.html">Running Topaz Applications on</A>
+<B> Previous:</B> <A NAME="tex2html1088"
+ HREF="node72.html">The StableStorage Interface</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04089000000000000000">
+The OS Interface</A>
+</H2>
+ <A NAME="Watsonville">&#160;</A>
+<A NAME="1696">&#160;</A>
+<P><A NAME="1697">&#160;</A>
+The Ultrix implementation of the type OS.Dir is a text string giving a
+path name (without symbolic links) to the directory.  The Ultrix and Taos
+implementations behave differently when an open directory is renamed.
+Compared to Taos, the Ultrix implementation also causes OpenDir to be
+slower and GetPath to be faster.  The Ultrix implementation of OpenDir is
+faster than usual if the path does not contain any / characters.
+<P>
+The Ultrix implementation of OS does not support remote file access via
+path names beginning with the # character.  Thus such literal path names
+should not be coded within Topaz applications.  Programs should either
+reference files in GF (the Topaz global file name space), or should use
+environment variables or other parameterization.
+<P>
+There are many obstacles to sharing open files between an Ultrix Topaz
+process and another process.  Sharing a disk file that isn't in append
+mode will work correctly if the Topaz process uses OS.Read and OS.Write
+rather than OS.FRead and OS.FWrite.  But there are other problems due to
+the use of several Ultrix features in the Ultrix implementation of the OS
+file operations:
+<P><UL>
+<LI> All devices other than terminals and sockets are placed into non-blocking
+mode, in order to avoid having an operation performed by one thread block
+within the Ultrix kernel and therefore prevent other threads within the
+same process from executing.  Placing a terminal into non-blocking mode
+would cause unacceptable interference with the parent process, which is
+sharing the same open-file object, so it is not done.
+<LI> All files are placed in asynchronous mode, so that SigIO signals can be
+used to schedule I/O even in the presence of lower-priority compute-bound
+threads.  Note that not all device types recognize asynchronous mode.
+<LI> All files are placed in non-append mode.  This is required to implement
+OS.FWrite.
+</UL>
+<P>
+When OS.StartProcess is called, each file in the process template (set by
+OS.SetDescriptor) is unconditionally placed in blocking mode and in
+synchronous mode.  Additionally, if the file had originally come from
+OS.GetDescriptor and had been in append mode, it is returned to append
+mode.
+<P>
+For documentation of the Ultrix file modes, see fcntl(2).
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1095"
+ HREF="node74.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html1091"
+ HREF="node64.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html1087"
+ HREF="node72.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html1093"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html1094"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1096"
+ HREF="node74.html">Running Ultrix Applications on</A>
+<B> Up:</B> <A NAME="tex2html1092"
+ HREF="node64.html">Running Topaz Applications on</A>
+<B> Previous:</B> <A NAME="tex2html1088"
+ HREF="node72.html">The StableStorage Interface</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,92 @@
+The xhdg library contains a widget for layout of hierarchical directed
+graphs.  All child widgets of the graph widget will be automatically
+layouted. The first widget is treated as a title for the graph. This
+widget is centered in the top line of the graph widget. Any other
+widget is positioned according to the edges of the graph. The layout
+algorithm is a modified version of the algorithm of Sugiyama et al [Sug81].
+
+This version was released 94/11/09. The distribution should contain
+the following files:
+
+>ls -lR
+total 88
+-rw-r--r--   1 zink     asmi         194 Jun 13 18:09 Imakefile
+-rw-r--r--   1 zink     asmi        3002 May 16 15:51 LICENSE
+-rw-r--r--   1 zink     asmi        2252 Nov  9 10:21 Makefile
+-rw-r--r--   1 zink     asmi        2252 Nov  9 10:21 Makefile.orig
+-rw-r--r--   1 zink     asmi        3606 Nov  9 10:22 README
+-r--r--r--   1 zink     asmi       10521 Nov  4 15:43 graph.man
+drwxr-sr-x   2 zink     asmi        1024 Nov  9 10:23 lib
+drwxr-sr-x   2 zink     asmi         512 Nov  9 10:26 test
+-rw-r--r--   1 zink     asmi        3606 Nov  4 17:52 xhdg-1.1.README
+
+./lib:
+total 336
+-rw-r--r--   1 zink     asmi       56498 Nov  4 17:03 Graph.c
+-rw-r--r--   1 zink     asmi        6196 May 16 15:51 Graph.h
+-rw-r--r--   1 zink     asmi        8848 May 16 15:51 GraphP.h
+-rw-r--r--   1 zink     asmi       18800 Nov  4 15:07 Graph_draw.c
+-rw-r--r--   1 zink     asmi        3470 May 16 15:51 Graph_draw.h
+-rw-r--r--   1 zink     asmi       46089 Nov  4 15:20 Graph_layout.c
+-rw-r--r--   1 zink     asmi        3553 May 16 15:51 Graph_layout.h
+-rw-r--r--   1 zink     asmi         475 Jun 13 18:05 Imakefile
+-rw-r--r--   1 zink     asmi        4293 May 16 15:51 sc-queue.c
+-rw-r--r--   1 zink     asmi        3804 May 16 15:51 sc-queue.h
+
+./test:
+total 72
+-rw-r--r--   1 zink     asmi       14555 Nov  4 16:01 Graph_test.c
+-r--r--r--   1 zink     asmi        4965 Nov  9 10:26 Graph_test.man
+-r--r--r--   1 zink     asmi        4872 May 16 15:51 Graph_test.man~
+-rw-r--r--   1 zink     asmi         447 May 16 15:51 Imakefile
+
+To build and install the widget and a test program use the following
+standard procedure:
+
+xmkmf
+make Makefiles
+make depend
+make all
+make install
+make install.man
+
+If you have a color display you could use "make all
+CDEBUGFLAGS=-DCOLOR_DISPLAY" instead of the "make all" command to
+compile the test program for using colors. If you want the test
+Program to user Motif widgets instead of the athena widgets, then make
+all CDEBUGFLAGS=-DMOTIF is a way to do it. This version of the test
+program uses buttons as vertices. If you click on a button the vertex
+will vanish and a new layout computed.
+
+The above procedure isn't working for X11R5 because a change of the
+imake lib macro. Thats only a imake problem, the code itself works
+with X11R5. You can possibly use and or modify the included Makefile
+to overcome this problem.
+
+The code was tested on Suns with Solaris and X11R6, SunOS 4.1.3 and
+X11R5, SGI (IRIX Release 5.2) and on IBM RS6k (AIX3.2.5) workstations
+with X11R5. On RS6000 you my need to invoke the C Compiler as xlc or
+c89 instead of cc. Alternatively you can use gcc.
+
+If you have any questions or bug reports, send it by email to
+Roland.Zink@informatik.uni-stuttgart.de
+or by mail to
+
+Roland Zink
+Universitaet Stuttgart
+IPVR
+Breitwiesenstrasse 20 - 22
+70565 Stuttgart
+Germany
+
+enjoy
+
+Roland
+
+
+REFERENCES
+
+[Sug81] Kozo Sugiyama, Shojiro Tagawa and Mitsuhiko Toda, "Methods for
+Visual Understanding of Hierarchical System Structures", IEEE
+Transactions on Systems, Man, and Cybernetics, Vol. SMC-11, No. 2,
+February 1981, pp 109 - 125.

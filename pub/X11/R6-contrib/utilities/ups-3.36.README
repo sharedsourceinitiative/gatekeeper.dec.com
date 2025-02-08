@@ -1,0 +1,160 @@
+What is UPS?
+------------
+
+Ups is a source level C and C++ debugger that runs under X11
+or SunView.  Fortran is also supported on some systems.
+It runs in a window with two major regions: one showing the
+current state of the target program data and the other showing
+the currently executing source code.  A key feature of ups is
+that the variables display is persistent: when you add a variable
+to the display it stays there as you step through the code.  The
+current stack trace (which function called which) is always visible.
+
+Ups includes a C interpreter which allows you to add fragments
+of code simply by editing them into the source window (the source
+file itself is not modified).  This lets you add debugging printf
+calls without recompiling, relinking (or even restarting) the
+target program.  You can also add conditional breakpoints in a
+natural way - you just add a statement like "if (i == 73) #stop"
+at the appropriate place in the source window.
+
+Some things you can do with ups:
+
+   + Add variables to the display by simply clicking on them
+     in the source window.
+
+   + Expand (recursively) structures and unions to show their
+     members.
+	
+   + Assign to variables by editing the displayed value.
+
+   + Add breakpoints by pointing with the mouse at the line
+     where you want execution to stop.
+	
+   + Add interpreted code at any breakpoint, including code that
+     calls compiled functions and assigns to variables.
+
+
+Web Site
+--------
+
+The URL for the ups web site is:
+
+           http://www.concerto.demon.co.uk/UPS/
+
+It is maintained by Ian Edwards (ian@concerto.demon.co.uk).
+It includes a FAQ, html man pages, site listings where ups
+can be found, supported architectures, a history of changes
+between versions, and other information.
+
+Unpacking
+---------
+
+To build the native version, follow these steps:
+
+1)  Unpack the distribution. You should have a compressed tar file called
+    ups-3.XX.tar.gz (where 3.XX is the version number of the release).
+    Change directory to a disk with a three or more megabytes of free
+    space and say:
+ 
+        gzip -dc ups-3.XX.tar.gz  |  tar xfp -
+ 
+    If you have GNU tar say:
+
+	tar zxfp ups-3.XX.tar.gz
+
+    If the 'p' flag produces errors then don't use it.
+    This will create a directory tree called ups-3.XX.  Change directory
+    into it.
+
+2)  See the file README in that directory for further build instructions.
+
+ 
+Changes between 3.36 and 3.35
+-----------------------------
+o  3.36 has been used on Solaris 2.x, SunOS 4.3.1 and Linux Debian 2.0.34 only.  
+   Being based on 3.35, it should be possible to build it on Solaris 8, FreeBSD 3.2, 
+   FreeBSD 4.0 and RedHat Linux 6.2.
+
+o  The changes to ups make it more versatile and faster to use. It will
+   continue to work as before, but for large targets, it is more efficient
+   to load just a few standard libraries and load others on the fly as
+   needed.  This can be done with a ".upsinit" file in your home directory.
+   An example is:
+
+	load *libc.so*
+	load *libC.so*
+	load /usr/lib/lib*
+	load /usr/openwin/*
+	load /usr/platform/*
+	load /usr/dt/lib/*
+	# for target specific libraries:
+	load ./*
+	load ../*
+
+   You might want to edit this to always load certain libraries, and add 
+   source paths with the "use" command, but now there should be little need 
+   to deal with this file as libraries can be easliy loaded interactively.
+
+   By using "load" rather than "noload", ups won't be affected by different 
+   sets of libraries that each target may have.
+
+   Note that "./" now has the meaning of the directory of the target, not of
+   where ups was started.
+
+o  By only loading the minimum standard libraries, ups will start a
+   lot faster. Other libraries can be loaded on the fly by selecting 
+   "Target", then "Load library", which will display a menu of unloaded 
+   libraries - simply choose one to load it. Similarly, the stack trace will
+   display <full library name> for an unloaded library. To load it, select
+   the line and press "Load library". As always for objects in the display
+   window, multiple objects in the stack can be selected at once, and 
+   loaded as a group.
+
+   The full set of libraries that the target uses is determined
+   after the target has been started or attached to, so the "Load library"
+   list will change at that point.
+
+o  Ups is now persistent - that is, it can be kept running for weeks
+   like an editor, with no need to exit at the end of each debug
+   session. The top line of the "Target" line can be edited to a 
+   different name, and ups will read new symbols as necessary and 
+   reinstate breakpoints and variables as possible. So if you are
+   working on a shared library, and you need to test it with 
+   different targets, simply enter the new target name and 
+   attach, and the debug state information will be preserved.
+   (The unimplemented "Write target core" was changed to "Load library").
+   The target name accepts csh style tilde notation.
+
+   Similarly, one can continue to debug code that gets built each
+   night by a nightly build: detach before the rebuild, then
+   reattach afterwards and ups will read any newly built libraries and
+   restore the debug state. There should no longer be problems with 
+   reverse video caused by the debugger not updating its symbol information.
+
+o  It is now easier to use ups to examine code. Left clicking
+   on a function name in an active function causes ups to read the
+   function symbols before navigating to the function. You can bypass
+   the symbol reading by using the middle mouse button. So an 
+   unmodified left click looks up local symbols, then globals, a 
+   shift-left click does an automatic "add expr", and a middle click,
+   if not over breakpoint code, looks up global symbol lookup only.
+
+o  Fixed a refresh bug when using CDE with "click to focus" and "raise on
+   focus" - ups now repaints properly when it receives focus.
+
+o  Changed the submenu order when loading breakpoint files so that the default
+   is to save the breakpoints to the statefile.
+
+o  Changes from Terry R. Friedrichsen <terry@venus.sunquest.com>
+    - Fixes for building on Red Hat Linux 7.0
+
+o  Changes from Russ Browne <russ@amc.com>
+    - Changes to the menu editor (med3) to produce readable output.
+
+o  There are new X resources for the "Load library" menu invoked from the target 
+   line: UnloadedLibMenuForeground and UnloadedLibMenuBackground.
+
+Rod Armstrong
+rod@san-jose.tt.slb.com
+3 May 2001

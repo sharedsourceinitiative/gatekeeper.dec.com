@@ -1,0 +1,466 @@
+<HTML><HEAD>
+<!-- This document was created from RTF source by rtftohtml version $Revision: 3.6 $ -->
+<TITLE>The 1995 SQL Reunion: People, Projects, and Politics - DB2</TITLE></HEAD>
+<BODY BACKGROUND="" BGCOLOR="#FFFFFF" TEXT=#000000>
+<A HREF="sqlr95-VS_QUERY.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="sqlr95-System-3.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="sqlr95-IBM.html"><IMG SRC="images/upg.gif" ALT="Up " border=0></A>
+ <A HREF="sqlr95.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="sqlr95-Contents.html"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+ <A HREF="sqlr95-Index.html"><IMG SRC="images/indexg.gif" ALT="Index" border=0></A>
+<hr size=4>
+<H2>
+DB2</H2>
+<b>John Nauman:<A NAME="Index327"></A></b>
+I'm going to do a little Eagle<A NAME="Index328"></A>
+bashing. When I first met Jim, he had just come up [to Palo Alto] and we were
+working on a project which did not at that point have a name. I don't think it
+was named Eagle when you got there.<p>
+<b>Jim Gray:</b> No, it was called VSS.<p>
+<b>John Nauman:</b> But one of the marketing guys was looking at a slide - not
+a slide, a poster; IBM was big on posters - and it was the Santa Teresa lab
+announcement with this eagle, just sort of soaring. And he looked at it and
+said, "That's what we'll call the project; we'll call it Eagle." So we'd been
+calling it something else - it might have been VSS - and what we had to do was
+go back through the whole document (by this time the specification was probably
+forty or fifty or eighty pages) and we had to replace all the ... I don't think
+there was a global replace option in the editor we were using at the time, so
+we were using SCRIPT, so we put in &amp;PROJVAR was the name of the project, so
+you'd fill in &amp;PROJVAR and you'd get Eagle everywhere. So after about,
+probably, six months, after we'd moved into Santa Teresa and discovered there
+weren't any eagles, we decided to change the name again, and at that point we
+changed it to Ampersand<A NAME="Index329"></A>
+because that just seemed to be a better name than trying to change the project
+name all the time; we figured no one would ever figure that one out.<p>
+<b>Roger Miller:</b> I thought that was the lawyers who came in and said,
+"That's a predatory bird and you can't use that name." One of those wonderful
+stories that sounds great, but it's probably not true.<p>
+<b>John Nauman:</b> It's untrue. We just got tired of trying to think up names
+and the marketing guy had left, so we decided to just call it Ampersand.
+Probably the thing that convinced me that the project was going to die was we'd
+been working on it at Santa Teresa<A NAME="Index330"></A>
+for about a year and we were having regular review meetings of the document.
+We'd been doing this document since we were in Palo Alto, so it was more than a
+year since we'd been working on this document. The average meeting was: you'd
+go into the room to review the document - the specification - and people would
+start talking about how there were widows and orphans. Does everybody know what
+widows and orphans are? This was the topic of conversation: "There's a widow on
+this page; you've got to fix it." At that point, I said, "Nah, this is the
+wrong thing to do. We shouldn't probably be doing this. This project is
+doomed." And it was. We were trying to figure out how to go forward, and what
+to do about the database stuff. My recollection of this is we had decided that
+we were going to go relational, but how to do that was something we weren't
+sure of. And I remember a lot of meetings with Frank King.<p>
+<b>Franco Putzolu:</b> When was this?<p>
+<b>John Nauman:</b> This was 1978-1979. By then, Franco was there sort of
+working on the RSS replacement - data manager stuff - and we were wrestling
+with what to do about the upper areas - the relational data store part of the
+system. There were two camps. One camp was me and Don Haderle<A NAME="Index331"></A>,
+and the other camp was Frank King and everybody from Research. We felt like the
+right thing to do was, since MVS<A NAME="Index332"></A>
+was not the same as VM, it was going to be hard to fit this stuff into MVS
+efficiently, so we probably needed to go in and restructure this stuff a lot.
+The System R folks felt like it didn't really need that much optimization; it
+was probably going to be OK.<p>
+<b>Jim Gray:</b> Love my dog.<p>
+<b>John Nauman:</b> Love me; love my dog. I remember vividly the day that - in
+fact, I was working for Bob [Jolls] at the time - Bob came and said, "No, the
+answer is you're going to take this stuff from System R." And we said, "OK. If
+that's what you want to do, it's a business decision. Let's go do it." So we
+started working on it. We spent a lot of time and we assembled a team which is
+- some of the people are here in the room - people who included: Jay Yothers<A NAME="Index333"></A>,
+who isn't here in the room today; Josephine; Roger, who I hired out of another
+job - I think IBM was his fourth position and fourth company and he told me
+when I hired him that he wasn't sure that he was going to stick around all that
+long, but he wanted some experience with a big company,<i> [laughter]</i> and
+it was bigger then, I think, than it would be now.<p>
+<b>Roger Miller:</b> I'm not usually that forthcoming.<p>
+<b>John Nauman:</b> Let's see; we hired Mort - John Mortenson<A NAME="Index334"></A>
+- John had already been working in the company, we brought him into the group.
+We hired Jerry Baker<A NAME="Index335"></A><A NAME="Index336"></A>,
+who is probably the person who has made the most money off of this - next to
+Larry Ellison; he works for Larry; is he your boss?<p>
+<b>Franco Putzolu:</b> No, he's not my boss.<p>
+<b>John Nauman:</b> He's in one of the development organizations.<p>
+<b>Franco Putzolu:</b> Porting.<p>
+<b>John Nauman:</b> OK, that's what he did when he left; he went to Oracle to
+do UNIX<A NAME="Index337"></A>
+ports, because he had a UNIX background coming out of University of Texas, and
+didn't like MVS that much. So he made lots of money; the rest of us sort of
+worked for the good of mankind I think.<p>
+<b>Jim Gray:</b> Thank you; we really appreciate it.<p>
+<b>John Nauman:</b> But actually we had a lot of fun. There were a lot of
+interesting things going on. Jim was still helping us out to some extent.
+Franco was helping us out a lot. Franco was wrestling with how to do DL/1 and
+SQL with the same underlying data structures, and later he tried to do it
+again, as I mentioned earlier. But it was a lot of fun. The reason I left - I
+left IBM in mid-1981 - Jim had just left and called me up and said, "Gee, why
+don't you come talk to Tandem; they're looking for somebody to manage one of
+their groups." And so I came up and talked to them. Jim<A NAME="Index338"></A>
+had written a treatise called "MIPS Envy" - I'm sure some of you remember this
+- which was the reason that Jim purports that he left; I think there's probably
+some truth to it. When we were doing the DB2 stuff, we had a terminal room at
+the end of the hall that had six 3270 terminals in it. That was all we had,
+that was all the compute resource that we were allowed to do DB2. We gradually
+got more and more 3270's and put them in people's offices, and that was sort of
+a revolution. Nobody had terminals in their offices; it was terminal rooms that
+made sense.<p>
+<b>Jim Gray:</b> And you were only allowed to log on at certain times, right?<p>
+<b>John Nauman:</b> Terminals were expensive. Yes, you could log on on
+weekends, and you could log on before eight and after six. So Haderle and I and
+Baker and a few other people would come in at four o'clock in the morning, and
+you'd tune in the radio sometimes at four o'clock in the morning and you'd hear
+these whale sounds on the radio station. And we wondered what was going on; why
+were we here; what were we really trying to accomplish? I was frustrated by
+some of the same things that Jim was, but I was as frustrated by the fact that
+I'd been working on the project in 1981 for about four years - if you'd count
+the Eagle time; that doesn't count the FS time before that - and I could see it
+was just about done. Here it was, mid-1981, about six months away from
+shipment, so I figured it was OK for me to leave now, because everything was
+sort of tied up. So I told Don, "I'm getting out of here. You can take it from
+here; it's going to be OK." This was about the third time I'd done this to Don
+- left him with a project that we'd worked on. But this one took a little
+longer than the others to get finished.<p>
+So I went to Tandem, and then we recruited Franco to come to Tandem, and we
+recruited Mike [Pong] to come to Tandem, and we recruited a number of people to
+come to Tandem. We stole Don from Esvel.<p>
+<b>Don Slutz:</b> Not stole. I walked away.<p>
+<b>John Nauman:</b> We built up a pretty strong group at Tandem, which was a
+lot of fun also; I'll let somebody else talk about that. But the reason I left
+was I thought things were done, and I wanted to go someplace where it didn't
+take four years to get a product out.<p>
+<b>Franco Putzolu:</b> Yes, I had the same feeling.<p>
+<b>John Nauman:</b> And I think that was one of the reasons that Franco came
+and some of the other people joined. And we did get things done much more
+expeditiously at Tandem, and I think it was more fun for that reason. I worked
+at Tandem for four years, and in 1985, after I joined 3Com, I read about the
+full release of DB2. So I was off by about four years on how long it was going
+to take to get the full product out. And a lot of that I know, from talking to
+Don and Josephine and other people, was around just getting it to work in MVS,
+which was by no means a simple system, and I think we had all underestimated
+how complex that was going to be and how high the performance requirements were
+going to be.<p>
+<b>Roger Miller:<A NAME="Index339"></A><A NAME="Index340"></A></b>
+Because as soon as we started shipping it to the early customers in 1982, they
+started using a lot of four-letter words in their discussions. The first part
+was fun you know; "Oh my goodness, it's exciting." But right away, there were
+all these things that we'd done and John said we'd never have to do this.
+Things like Cold Start: "Oh, no; databases should never have to Cold Start." It
+took us ten or fifteen person-years to put Cold Start in, after the fact. That
+was ugly, hard programming to put it in. It took a lot of expertise. We kept
+scratching our heads and saying, "Why would a customer ever want this stuff?"
+And the answers kept coming back, "The question is not why they need it, but
+why you don't have it." So we kept going through problem after problem, and we
+kept finding these bugs. Oh, Jerry Baker would just go nuts, because Jerry was
+a high-level language kind of guy, and he was working in the RDS, but he had
+these fragments, and he had this glue code, and Jerry didn't even want to know
+what they did: pasting them together, the gluing; we couldn't fix a lot of the
+fragments, so we kept having to patch and paste. So in November 1982 we shipped
+it to the six; we shipped it to eighteen about in March of 1983. The big event
+- Blow-up Announce - and here we go shipping to forty - fifty - sixty customers
+as we announce: June 7th, 1983. Things suddenly start taking off, and we're in
+early ship, and running into problem after problem. Sixteen megabytes of memory
+isn't much; every PC in the room has that much, right? But you only get eight
+of the sixteen, and eight megs, when you start running a lot of users below the
+line, sucks. It didn't do the job, and here XA came, and MVS XA 31-bit
+addressing, and a whole stack of new problems, and incompatibilities that we
+weren't very comfortable with or used to in MVS. Which of those services go up
+above the line? "We're not telling you" - kind of responses; there's no list of
+such changes.<p>
+<b>Tom Price:</b> Get the dump.<p>
+<b>Roger Miller:</b> Yes, yes, just try it; you'll like it. And so we kept
+twisting and pacing and it was excruciating. Every once in a while you'd go up
+and talk to the people in Research and they'd say, "Well gee, I don't
+understand; it worked when I left." It's been really gratifying to have Mohan
+come down and say, "Oh, you know, that really is hard" on occasion. It's not
+really trivial. Because then as we started building users, we finally went into
+Controlled Availability in September 1984; General Availability; and then clear
+out in April of 1985 - by that time we had Release 2 coded. Release 2 came out
+about a year later than that. In Release 2, we threw away the fragments and
+built a Structure Gen just as you folks were doing HOP<a name="fnB61"
+href="#fn61">[65]</a> and started saying, "Ah, my goodness." Essentially,
+Release 2 was: go talk to those 250 early users, get the feedback, build it
+into the product, make them successful. We must have done something, because
+they've been popping and popping, but after that it gets a little less
+interesting.<p>
+<b>Franco Putzolu:</b> Can you say something about the dual-database
+strategy?<p>
+<b>Roger Miller:</b> You mean the dueling-database strategy?<p>
+<b>Franco Putzolu:</b> Was there much controversy inside IBM on the
+dual-database strategy?<p>
+<b>Roger Miller:</b> We've always had a kind of love-hate relationship with the
+folks in the tower next door, because IMS<A NAME="Index341"></A>
+has almost always been in the tower next door. On the one hand, it's this
+tremendous heritage; and on the other, a customer often comes through the door
+and says, "Well, I have to choose IMS or I have to choose DB2; now which should
+I do?" And there's a fair amount of antagonism - well, just as competing
+projects, if you will - for resources.<p>
+<b>C. Mohan:</b> Somebody should say something about this statement that Frank
+King<A NAME="Index342"></A>
+was supposed to have made in Australia which cost a lot of headaches. This was
+the IFIPS Congress or something, right? When he gave a talk on the state of
+relational or something, and he was supposed to have said this will ...<p>
+<b>Roger Miller:</b> Oh yes, and this will kill IMS<A NAME="Index343"></A>,
+essentially. Because all of our crew was painfully aware ...<p>
+<b>C. Mohan:</b> Was this 1981; I forget the year. It was some IFIPS Congress
+where he gave ...<p>
+<b>Pat Selinger:</b> It must have been 1980, because IFIPS were every two
+years.<p>
+<b>Roger Miller:</b> And the repercussions for us were minimal. We weren't
+announced. SQL/DS was about to come out, but SQL/DS wasn't about transaction
+processing. SQL/DS is VM, queryish, and not really large databases. Today's
+large databases are terabytes, and real live customers in lots of situations
+are building six - eight - ten terabyters. SQL/DS kind of runs out of gas in
+the ten - hundred megabyter range - gigabyte or two gigabyter - it's not a
+high-end database. We always wanted to scale into - oh, sixty-four gigabytes,
+that was one of our stupidities, that sixty-four gigabytes [per table] will be
+enough for a long time.<p>
+<b>Franco Putzolu:</b> I thought it was infinity at that time.<p>
+<b>Roger Miller:</b> Yes, you can't believe how many folks are really ticked at
+us for the sixty-four gigabyte limit. Every hard limit in the product,
+everything that's built around one byte, is wrong. Everything that's limited by
+two bytes is a problem, and most of the three, four, and even some six and
+eight-byte sizes. We've tried to remove limits when we could, where it wasn't
+five thousand lines of code. Everything about name length was wrong. Eighteen
+is a terrible number. Especially for VARCHARs. We learned these things and
+haven't been able to change them in a number of cases. And yet we've been very
+successful.<p>
+<b>???:</b> When DB2 for MVS came out, it wasn't billed as a transaction system
+either, right? It was a Decision Support System?<p>
+<b>Roger Miller:</b> Well, we had to be careful, because that's really right
+what Franco was asking about: dueling databases. We had to be real careful. We
+weren't solid. We weren't ready to take on IMS. In the best sort of situation,
+if somebody says, "What's the path length; I'm worried about costs." The answer
+is 2X, roughly.<p>
+<b>Franco Putzolu:</b> So when did the situation change? When was DB2<A NAME="Index344"></A>
+beginning to be accepted as something good for OLTP<a name="fnB62"
+href="#fn62">[66]</a>?<p>
+<b>Roger Miller:</b> Release 2 was really when a lot of that came in, because
+Release 2 we made that two factor drop down into the one and a half range, and
+for low-volume transactions that turned out to be pretty acceptable. Because we
+delivered some flexibility: the ability to recompile instead of having people
+recode is a big difference. And so folks would be going through a project on
+IMS and discover, "Gee, I need to put in a couple of extra indexes. Oh, well,
+if I put in a couple of extra indexes, I can't use them really well; I have to
+recode to go down the path." That's not a very acceptable choice.<p>
+<b>Mike Blasgen:</b> I used to give this talk, five years before.<p>
+<b>Roger Miller:</b> It's funny, I was just looking through my DB2 materials,
+and the Version 1 General Information manual, and as I was watching the foils
+and saying, "That looks like a pretty faithful rendition; it's missing Don and
+his beard." But a lot of this material has not changed for two decades.<p>
+<b>Bruce Lindsay:</b> I think you're being a little bit self-serving or
+conservative to say that DB2 wasn't posed as a transaction-processing product
+because it didn't have the performance, because there were plenty of other
+people out there making pretty good money with worse performance. It's because
+IBM protects weak products; protects its own products. Admit it: IBM will not
+attack its own products, even when they're weak and there's better technology
+and they have it. Ask Mike about RISC. Ask everybody in here about
+relational.<p>
+<b>Roger Miller:</b> But there's a little of each. It's called, "Would I rather
+take it out of my left pocket and put it in my right, for ..."<p>
+<b>Bruce Lindsay:</b> No, there's a saying that expresses this very well about
+trying to protect weak products: "If your children are going to be eaten, the
+best thing is to eat them yourself."<p>
+<b>Josephine Cheng:</b> Bruce, that may be true in the past, but I think things
+have been changing. If you look at the investment that IBM has made on the new
+products like DB2 Client/Server, it is quite substantial.<p>
+<b>Bruce Lindsay:</b> It hasn't changed.<p>
+<b>Pat Selinger:</b> We're getting kind of far afield here.<p>
+<b>Mike Blasgen:</b> Frank King for example was hard over that you take System
+R as is. That was non-negotiable. Then he went away. So he became a non-factor
+in this. But he still played a role in certain policies, like you're saying he
+gave a talk in 1980, which was after he was gone, I think. One of the issues I
+was working on, even though I was in Washington, even though I had some job
+that had nothing to do with database, was that everybody had concluded that we
+would always have to support DL/1; we would always have to support the old
+programs. If you look in the Pratt &amp; Whitney report, it says, "Number one
+objective is we have to have full support for IMS<A NAME="Index345"></A>
+data and IMS programs." Now, when did that go away? Just because nobody could
+do it?<p>
+<b>Roger Miller:</b> Pretty much literally. Right, because we started coding to
+try to make it happen. And essentially, it came down to a couple of things.
+Performance: the closer you get to performance, the worse it looks. And the
+brain killer was you can never tell except during running of the yearly close
+that there are some things in there that you can't support, because supporting
+exactly one hundred per cent with complete fidelity to DL/1 was not possible.
+We got pretty close, but pretty close is never close enough.<p>
+<b>Mike Blasgen:</b> Even Frank King's<A NAME="Index346"></A>
+position when he worked for Bob Evans was that we would have to do it.<p>
+<b>Franco Putzolu:</b> Oh, yes. That was a given.<p>
+<b>Mike Blasgen:</b> And yet what happened was we were saved by the fact that
+we couldn't. If we could've, we would've.<p>
+<b>C. Mohan:</b> I was told that the second release of DB2 was to have been
+DL/1 support, but it never happened.<p>
+<b>Roger Miller:</b> Exactly. We had the spec, we had the running code, we kept
+going, and we said, "Can we ship a product that is this way?" From IBM we just
+said, "Here's the product; we can ship it, but will customers accept it?" We
+tried it on a couple of customers, and "Heck, no!" was the kindest they said.
+It was nice to have customers who were honest with us.<p>
+<b>Franco Putzolu:</b> Was it performance, was it page-locking, was it
+functionality?<p>
+<b>Roger Miller:</b> Performance was a negative, but the primary issue was the
+inability to tell if the conversion would work. Remember, this is building the
+calls at runtime, and we had three or four per cent of the calls which were not
+going to work. There isn't any code inspector that could determine when they
+were using a function that would fail. So until you can get to one hundred per
+cent, it's not acceptable. Some of the Brand X vendors can get away with a
+little less than we can, but the real killer was: you could never tell when it
+was safe to convert.<p>
+<b>Franco Putzolu:</b> When did it die?<p>
+<b>Roger Miller:</b> Release 2, essentially. Because we had Release 2 of DB2,
+which was a 1986 GA. We switched over in about 1984 or 1985 to say we can't do
+DL/1, so let's go pedal to the metal. Let's support relational, and do what
+relational DBMS needs to make those customers successful.<p>
+<b>Don Slutz:</b> I'm not sure when it was, maybe Don [Chamberlin] can help,
+but Frank King had Bob Taylor and myself go off for a couple of months and look
+at supporting DL/1 calls - I think 1978 or 1979; do you know? I was working for
+you; did you know?<p>
+<b>Roger Miller:</b> The team that essentially built it for us were: Sid Kornelis<A NAME="Index347"></A>,
+who came from IMS. Sid knew IMS backwards, forwards, left, and right.<p>
+<b>Jim Gray:</b> It had fifty thousand test cases ...<p>
+<b>Roger Miller:</b> Yes, we had <i>the</i> IMS regression test bucket.<p>
+<b>Jim Gray:</b> ... fifty thousand, which was a number that boggles the
+mind.<p>
+<b>Roger Miller:</b> We had Lloyd Harper<A NAME="Index348"></A>,
+who had the long history of many, many products that never shipped. We had Bob
+Engles<A NAME="Index349"></A>,
+doing the part working for Homer<A NAME="Index350"></A>
+[Leonard], and Homer was right in line with Bob Evans<A NAME="Index351"></A>,
+down saying, "Well, gee, this product is only a toy until it supports DL/1."
+They were going to get it to ship until we came to the realization that it
+didn't matter if we did or not; we couldn't sell it if it did.<p>
+<b>Mike Blasgen:</b> And none of the good guys won, right?<i> [laughter]</i><p>
+<b>Jim Gray:</b> I think Oracle.<i> [laughter]</i><p>
+<b>???:</b> No, he meant Tandem.<i> [laughter]</i><p>
+<b>Mike Blasgen:</b> Oh, SQL, this is an SQL review. SQL won.<p>
+<b>Josephine Cheng:<A NAME="Index352"></A></b>
+Well, I was really fortunate. Once I graduated from school, I joined IBM, and I
+worked in the project Eagle. At that time there were walls and doors that kept
+everyone out. You know, in Santa Teresa<A NAME="Index353"></A>,
+we have towers that are all connected. They specifically put in doors to
+separate all the connections to other buildings - you needed a special badge to
+get in. So I joined the project, and Franco was working diligently; Irv was on
+an assignment to STL also working very diligently. Occasionally I saw Jim
+[Gray] and also occasionally I heard loud voices shouting, and I knew it was
+Andy [Heller]. <p>
+I worked on the Buffer Manager for about two years, and then I transferred to
+John Nauman's department. Let me share a couple of experiences I had on our
+productization of Research code.<p>
+<b>Mike Blasgen:</b> You're supposed to be kind.<p>
+<b>Josephine Cheng:</b> Yes. Maybe next time I won't be invited.<i>
+[laughter]</i> I always have to have many system R papers all over my desk to
+help me understand the code. For instance, there's the part that talks about
+PTREE<A NAME="Index354"></A>
+nodes. The Parse Tree node has fields called P1, P2, P3, P4, P5. And so in
+order to know the meaning, you have to go and look at the reference: P1 has
+different meanings for different node types. If this is a column node, P1 must
+mean "pointer to the table node" and P2 means "pointer to the descriptor." I
+ended up having little pieces of paper hanging all over my office.<p>
+In one of the modules - I don't know who wrote that - it was about a semantic
+routine that checks on type compatibility. Franco wrote that?  It had this
+interesting algorithm for checking type compatibility. You take "modulo" four
+and compare the result with the generic type to see if they are the same. You
+wondered, "Why modulo four?" It turned out that modulo four gives you four bits
+to use. I thought the designer must have thought that four bits was enough to
+cover any foreseeable type. If you have numeric types (two to the power four),
+you can have sixteen different numeric types; should be enough, right?
+Unfortunately, we have NULL and non-NULL, so that takes up two. Later on, we
+added Kanji support, which reserved double-byte NULL and double-byte non-NULL.
+So each numeric type took up four codes. Then we had INTEGER and SMALL INTEGER,
+which took up eight codes. When we productized the code, we had to add DECIMAL
+and FLOATING POINT. That took up all 16 codes. Unfortunately, once we got the
+code out the door, customers asked for short FLOAT instead of long FLOAT to
+save disk space, and some asked for 16-byte FLOAT and 31-byte DECIMAL for more
+precision. So much for modulo four!<p>
+As I mentioned before, I always admire all the System R people. I think they're
+great inventors, not only on algorithms and doing all the great work, but they
+are also very good in creativity, in inventing things, such as words like
+"Search Argument" making it into an adjective: <i>sargable</i><a name="fnB63"
+href="#fn63">[67]</a> So when I talk to a customer, I always say, "This is a
+sargable predicate<A NAME="Index355"></A>."
+They look at me and say, "What?"<p>
+<b>Jim Gray:</b> Everybody has sargable predicates now: Sybase<A NAME="Index356"></A>
+and Oracle<A NAME="Index357"></A>
+...<p>
+<b>Josephine Cheng:</b> Yes, and customers diligently look up the meaning in
+the dictionary. So the people who write the manuals - our ID<a name="fnB64"
+href="#fn64">[68]</a> folks - they didn't like that. And they named it Type 1
+predicate: that means it can be processed by the Data manager; Type 2
+predicate: by RDS - I don't like that; I really want to call them sargable
+predicate.<p>
+Anyway, I had lots of fun looking at System R code and productizing it. As a
+matter of fact, when we finished our first driver, we felt such relief - if we
+had not taken the System R code, I don't think we would have made our DB2
+Release 1.<p>
+<b>Bob Yost:</b> What were your instructions? Were you told to take basically
+the RDS, because you had another Data Manager? It wasn't going to be the one
+from System R, but you were taking the top half of the System R technology as
+sort of a blue-print. Were you inspired by it, or were you to look at the code
+and try to translate it? Now when they went to Endicott, they just said, "Take
+the code. Just translate it; don't even think about it." But you must have had
+different instructions.<p>
+<b>Josephine Cheng:</b> Well our instructions were to make it work.<i>
+[laughter]</i> The first thing that we did was to try to understand it, so I
+think I contacted every single person in the room: Mario, Pat, Don - trying to
+decipher and understand what it's trying to do. For our first release, we would
+translate all that code so it would work with our system code: the storage
+manager, and trace, accounting - you know, all the productization work. We
+tried also to add some features to the Release 1, but not really that many -
+only those that we needed for commercial use. So we added floating point, and
+decimal. At the time, I took Optimizer; Jerry Baker<A NAME="Index358"></A>
+took ASLGEN; and Nick Nomm<A NAME="Index359"></A>
+took ODEGEN. Back then machine time was more expensive than human salary, so we
+went to work on Saturdays and Sundays. The three of us were occupying the whole
+floor on Saturdays and Sundays. We did all the RDS work and Jerry had the idea
+that we should go and support symmetric view. It means when you select
+something from a view, you should get a failure code if you try to insert out
+of the scope of the view. So we also added the symmetric view function to
+Release 1. So the goal of Release 1 was essentially trying to make it work, add
+very minimum function, and get it out of the door as soon as possible.<p>
+<b>John Nauman:</b> It was a lot of the same stuff that was going on at
+Endicott; that is, there was a translation from PL/1 to PL/S; we had to do
+that.<p>
+<b>Josephine Cheng:</b> That was already done by Endicott.<p>
+<b>John Nauman:</b> So we had to do that, but that was done by Endicott, so we
+could take that. The amount of additional work was relatively small, except in
+the precompiler area, where we did, I think, quite a bit of things.<p>
+<b>Roger Miller:</b> Where we had to refit and refit and refit because we
+learned what the System R code needed. I built the PTREE many times.<p>
+<b>Josephine Cheng:</b> Anyway, that was a really fun experience.<p>
+<b>C. Mohan:</b> Did you watch the tapes in the process of doing this work?<p>
+<b>Josephine Cheng:</b> We did. We also had everybody from the RDS group come
+to STL and give us tutorials, and we videotaped those, too. The folk at Almaden
+have been very cooperative. Any questions that we asked, we always got the
+answer back, and anything that we needed help on, we always got immediately.<p>
+<b>John Nauman:</b> There was a lot of concern, I know, when we made the
+decision to go with the RDS stuff, that the System R people wouldn't be there,
+and that was one of the things that worried Don and me a lot in addition to the
+underlying MVS stuff, and that was never the case. I agree with what Josephine
+said: if we had gone off and just started from scratch to do our own thing, it
+may or may not have gotten out. The final part may or may not have gotten out
+in the same time frame, but it certainly would have taken a lot longer to get
+the prototype up, and approval for what we were doing. So it helped a lot, I
+think, in that area.
+<p>
+<a name="fn61" href="#fnB61">[65]</a> Roger Miller notes: "HOP is the System R
+flavor of High Performance Optimizer, as I remember it."<p>
+<a name="fn62" href="#fnB62">[66]</a> OLTP stands for Online Transaction
+Processing.<p>
+<a name="fn63" href="#fnB63">[67]</a> The RSS supported a simple search
+capability: you could specify a "search argument" (SARG) of a simple comparison
+in canonical form (e.g., salary greater than constant) and the RSS would
+perform the search along a specified path. This offered performance advantage.
+To use this the higher level software had to recognize when SARGs could be
+used. If the SQL statement itself contained a predicate that could fit the SARG
+model, then the predicate was called <i>sargable</i>.<p>
+<a name="fn64" href="#fnB64">[68]</a> ID stands for Information Developer.
+
+<p>
+<P><hr size=4>
+<A HREF="sqlr95-VS_QUERY.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="sqlr95-System-3.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="sqlr95-IBM.html"><IMG SRC="images/upg.gif" ALT="Up " border=0></A>
+ <A HREF="sqlr95.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="sqlr95-Contents.html"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+ <A HREF="sqlr95-Index.html"><IMG SRC="images/indexg.gif" ALT="Index" border=0></A>
+</body></html>

@@ -1,0 +1,22 @@
+
+                         AVAILABLE ELECTRONICALLY              
+
+
+"Formal Parametric Polymorphism"
+Martin Abadi, Luca Cardelli, Pierre-Louis Curien
+July 15, 1993.  43 pages
+
+A polymorphic function is parametric if its behavior does not depend on
+the type at which it is instantiated. Starting with Reynolds's work, the study
+of parametricity is typically semantic. In this paper, we develop a syntactic
+approach to parametricity, and a formal system that embodies this approach,
+called system R . Girard's system F deals with terms and types; R is an
+extension of F that deals also with relations between types. 
+
+In R, it is possible to derive theorems about functions from their types, or 
+"theorems for free", as Wadler calls them. An easy "theorem for free" asserts
+that the type All(X)X->Bool contains only constant functions; this is not 
+provable in F. There are many harder and more substantial examples. 
+Various metatheorems can also be obtained, such as a syntactic version of
+Reynolds's abstraction theorem.
+

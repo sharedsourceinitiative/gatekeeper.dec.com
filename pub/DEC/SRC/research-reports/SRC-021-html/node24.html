@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Address Spaces</TITLE>
+<META NAME="description" CONTENT="Address Spaces">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node25.html">
+<LINK REL="previous" HREF="node23.html">
+<LINK REL="up" HREF="node22.html">
+<LINK REL="next" HREF="node25.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html487"
+ HREF="node25.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html483"
+ HREF="node22.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html477"
+ HREF="node23.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html485"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html486"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html488"
+ HREF="node25.html">Threads</A>
+<B> Up:</B> <A NAME="tex2html484"
+ HREF="node22.html">Concepts and Facilities</A>
+<B> Previous:</B> <A NAME="tex2html478"
+ HREF="node23.html">Processes</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04022000000000000000">
+Address Spaces</A>
+</H2>
+<P><A NAME="505">&#160;</A>
+An address space is a partial mapping from addresses to updatable storage
+locations.  Every process has an address space; it holds the program
+object code, global variables, local variables, and dynamically allocated
+(heap) variables.
+<P><A NAME="506">&#160;</A>
+Programmers using languages such as Modula-2+ and Tinylisp are mostly
+concerned with higher-level abstractions of storage allocation (e.g.,
+NEW).  However, knowledge of some of the lower-level details may make it
+easier to design and debug reliable, efficient programs.
+<P><A NAME="507">&#160;</A>
+<A NAME="508">&#160;</A>
+The domain of an address space is a set of 32-bit quantities called
+addresses and the range is a set of 8-bit storage locations.  The mapping
+from addresses to storage locations is partial: an address is said to be
+unmapped if it is not in the domain.  If address i is unmapped in an
+address space, then so are the addresses j, j+1, ..., j+P-1, where j = (i
+DIV P) * P.  The constant P is called the page size, and is always a power
+of two not less than 512.  (The exact value for P is a system tuning
+parameter.)  Addresses j, j+1, ..., j+P-1, where j is an integral multiple
+of P, are said to belong to the same page.
+<P><A NAME="509">&#160;</A>
+Not all storage locations in an address space may actually be updatable by
+the program running in that address space.  Individual pages within the
+address space can be specified as unwritable.
+<P><A NAME="510">&#160;</A>
+If a program makes a reference to an address that is unmapped or
+unwritable, a hardware trap occurs that normally leads to the termination
+of the process.  The Modula-2+ typechecking rules are intended to make it
+impossible for a SAFE module to pass such an improper address as a VAR or
+VAR IN parameter to a procedure in the OS interface.  However, if an OS
+procedure is supplied an unmapped address or an unwritable address for a
+result parameter, it simulates the appropriate hardware trap in its
+caller.
+<P><A NAME="511">&#160;</A>
+When a Modula-2+ program runs on Taos, the first page of its address space
+(i.e., the one containing addresses 0 through P-1) is unmapped, to help
+detect attempts to dereference NIL REFs and pointers.  Following this page
+comes the program's object code, followed by its global variables,
+followed by dynamically allocated storage.  Starting at a point near the
+middle of the 32-bit address range and growing towards smaller addresses
+are the stacks of the threads living in the address space.  Each stack has
+the same maximum length, and on Taos is terminated with an unmapped page
+to help detect stack overflow. Between the last of the
+dynamically allocated storage and the stacks is a sequence of unmapped
+pages.
+<P><A NAME="512">&#160;</A>
+The top half of the 32-bit address range is reserved for operating system
+code; most of it appears unmapped to a user process.  However, on Taos
+there are a set of RPC buffers in this range that are mapped as writable
+pages in every address space.  If a buggy program stores into these
+buffers, bad things can happen to all processes running on the machine.
+<P><A NAME="513">&#160;</A>
+<A NAME="514">&#160;</A>
+For more information on addressing and virtual memory management, consult
+the VAX Architecture Handbook and the VM interface.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html487"
+ HREF="node25.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html483"
+ HREF="node22.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html477"
+ HREF="node23.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html485"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html486"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html488"
+ HREF="node25.html">Threads</A>
+<B> Up:</B> <A NAME="tex2html484"
+ HREF="node22.html">Concepts and Facilities</A>
+<B> Previous:</B> <A NAME="tex2html478"
+ HREF="node23.html">Processes</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

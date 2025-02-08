@@ -1,0 +1,38 @@
+                      CRL Technical Report 90/14
+     Reconstructing and Visualizing Models of Neuronal Dendrites
+
+              Ingrid Carlbom*    Demetri Terzopoulos**
+                        Kristen M. Harris***
+                        December 28, 1990
+
+
+Neuroscientists have studied the relationship between nerve cell morphology 
+and function for over a century. To pursue these studies, they need accurate 
+three-dimensional models of nerve cells that facilitate detailed anatomical 
+measurement and the identification of internal structures. Although serial 
+transmission electron microscopy has been a source of such models since the 
+mid 1960s, model reconstruction and analysis remain very time consuming.
+We have developed a new approach to reconstructing and visualizing 3D nerve 
+cell models from serial microscopy.  An interactive system exploits recent 
+computer graphics and computer vision techniques to significantly reduce the 
+time required to build such models. The key ingredients of the system are a 
+digital ``blink comparator'' for section registration, ``snakes,'' or active 
+deformable contours, for semi-automated cell segmentation, and voxel-based 
+techniques for 3D reconstruction and visualization of complex cell volumes 
+with internal structures.
+
+
+Keywords: scientific visualization, 3D reconstruction, image registration, 
+image segmentation, contour tracking, snakes, volume rendering, dendrites, 
+dendritic spines
+
+This document contains color images, and therefore it is available
+only as hardcopy.  To order a copy, send your name and a postal address
+to
+	Internet:	 	techreports-management@crl.dec.com
+	Digital EASYnet:	crl::techreports-management
+	UUCP:			decwrl!deccrl!techreports-management
+
+*DEC Cambridge Research Lab
+**University of Toronto
+***Children's Hospital

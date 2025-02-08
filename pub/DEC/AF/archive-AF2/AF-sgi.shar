@@ -1,0 +1,2208 @@
+#! /bin/sh
+# This is a shell archive.  Remove anything before this line, then unpack
+# it by saving it into a file and typing "sh file".  To overwrite existing
+# files, type "sh file -c".  You can also feed this as standard input via
+# unshar, or by typing "sh <file", e.g..  If this archive is complete, you
+# will see the following message at the end:
+#		"End of archive 1 (of 1)."
+# Contents:  AF/server/Asgi.man AF/server/dda/sgi
+#   AF/server/dda/sgi/Imakefile AF/server/dda/sgi/Makefile
+#   AF/server/dda/sgi/dda.c AF/server/dda/sgi/event.c
+#   AF/server/dda/sgi/sgi.c AF/server/dda/sgi/sgi.h MANIFEST PATCHES
+#   README.sgi
+# Wrapped by guido@roos.cwi.nl on Fri Mar  5 15:07:14 1993
+PATH=/bin:/usr/bin:/usr/ucb ; export PATH
+if test -f 'AF/server/Asgi.man' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'AF/server/Asgi.man'\"
+else
+echo shar: Extracting \"'AF/server/Asgi.man'\" \(4655 characters\)
+sed "s/^X//" >'AF/server/Asgi.man' <<'END_OF_FILE'
+X.TH Asgi 1 "Release 2"  "AudioFile Version 2"
+X.SH NAME
+X\fIAsgi\fP - a network-transparent audio server for SGI Indigo workstations
+X.SH SYNOPSIS
+XThe AudioFile audio server
+Xis a network transparent  system developed at DEC/CRL.
+XThe audio server described in this manual page supports
+Xthe SGI Indigo audio hardware and software.
+X.SH DESCRIPTION
+X\fIAsgi\fP is an AudioFile server with device dependent support for
+XSGI Indigo and Indigo2 workstations.
+X.SH STARTING UP
+XAsgi [:\fIdeviceNumber\fP] [\fIoptions\fP] &
+X.SH OPTIONS
+X.TP
+X.B \-help
+XUse the help switch to determine device independent arguments.
+X.TP
+X.BI "\-rate " sampling-rate
+XSpecify the sampling rate.  Valid sampling rates are all rates
+Xsupported by the SGI Indigo audio hardware: 8000, 11025,
+X16000, 22050, 32000, 44100 and 48000 samples/sec.  The default is
+X8000.  The sampling rate is used both for recording and for playback,
+Xand should not be changed using the apanel utility (in fact the server
+Xresets it when it detects it is changed).
+X.SH "AUDIO DEVICES"
+XThis server supports three devices, which provide different types of
+Xacces to a single audio device: device 0 accepts mono U-LAW samples,
+Xdevice 1 accepts mono 16-bit linear samples, device 1 accepts stereo
+X16-bit samples.  (Don't confuse these devices with the
+X\fIdeviceNumber\fP in the connection name explained below.)
+X.PP
+XThe hardware has a choice of three input sources: input 0 is the line
+Xinput jack, input 1 is the microphone, input 2 is the digital input.
+XExactly one of these is selected at any time.
+X.SH "CONNECTION NAME"
+XFrom the user's prospective, every AF server has 
+Xan \fIaudio connection\fP of the form:
+X.PP
+X.ce 1
+X\fIhostname:deviceNumber\fP
+X.PP
+XThis information is used by the application to determine how it should
+Xconnect to the server.
+X.TP 8
+X.I hostname
+XThe \fIhostname\fP specifies the name of the machine to which the 
+Xaudio device is physically connected.  If omitted, the local machine
+Xis used and the fastest available protocol is chosen (e.g. UNIX
+Xsockets or shared memory).
+X.TP 8
+X.I deviceNumber
+XThe \fIdeviceNumber\fP is used to identify
+Xthe audio server's port on \fIhostname\fP.
+XFor example, to simulataneously run two audio servers on a given host,
+Xyou might select \fI0\fP or \fI1\fP for \fIdeviceNumber\fP.
+X.PP
+XIf the connection name to an audio server is not specified, 
+Xthen the environment variables \fIAUDIOFILE\fP or \fIDISPLAY\fP 
+Xwill be used.
+X.SH "ACCESS CONTROL"
+XThe sample server provides two types of access control: an authorization
+Xprotocol which provides a list of ``magic cookies'' clients can send to
+Xrequest access, and a list of hosts from which connections are always
+Xaccepted.  
+X.SH BUGS
+XAt high sampling rates the server uses too much CPU when sounds are
+Xrecorded and played.
+X.PP
+XIf you encounter a \fBrepeatable\fP bug in the SGI dependent code,
+Xplease submit a problem report to \fIguido@cwi.nl\fP and include the
+Xsource code if possible.
+X.SH "SEE ALSO"
+XAudioFile(1), Aaxp(1), Amaxine(1), Alofi(1), Ajv(1), Asparc(1),
+Xaplay(1), arecord(1), apass(1), aset(1), abrowse(1), afft(1),
+Xahost(1), aphone(1), aprop(1), ahs(1), axset(1), xpow(1), afxctl(1),
+Xaname2num(1), alsatomes(1), aevents(1), abob(1)
+X.PP
+XSee also apanel(1) and the Digital Audio and MIDI Programming Guide by
+XSilicon Graphics.
+X.SH COPYRIGHT
+XSee the COPYRIGHTS file.
+X.PP
+XCopyright 1991-1993, Digital Equipment Corporation and
+Xthe Massachusetts Institute of Technology.
+X.PP
+XSGI device dependent code:
+X.PP
+XCopyright 1993 by Stichting Mathematisch Centrum, Amsterdam, The Netherlands.
+X.PP
+X.ce 1
+XAll Rights Reserved
+X.PP
+XPermission to use, copy, modify, and distribute this software and its 
+Xdocumentation for any purpose and without fee is hereby granted, 
+Xprovided that the above copyright notice appear in all copies and that
+Xboth that copyright notice and this permission notice appear in 
+Xsupporting documentation, and that the names of Stichting Mathematisch
+XCentrum or CWI not be used in advertising or publicity pertaining to
+Xdistribution of the software without specific, written prior permission.
+X.PP
+XSTICHTING MATHEMATISCH CENTRUM DISCLAIMS ALL WARRANTIES WITH REGARD TO
+XTHIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+XFITNESS, IN NO EVENT SHALL STICHTING MATHEMATISCH CENTRUM BE LIABLE
+XFOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+XWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+XACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+XOF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+X.SH AUTHORS
+XDEC Cambridge Research Lab (device-independent code)
+X.br
+XGuido van Rossum, CWI, Amsterdam (SGI device-dependent code)
+END_OF_FILE
+if test 4655 -ne `wc -c <'AF/server/Asgi.man'`; then
+    echo shar: \"'AF/server/Asgi.man'\" unpacked with wrong size!
+fi
+# end of 'AF/server/Asgi.man'
+fi
+if test ! -d 'AF/server/dda/sgi' ; then
+    echo shar: Creating directory \"'AF/server/dda/sgi'\"
+    mkdir 'AF/server/dda/sgi'
+fi
+if test -f 'AF/server/dda/sgi/Imakefile' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'AF/server/dda/sgi/Imakefile'\"
+else
+echo shar: Extracting \"'AF/server/dda/sgi/Imakefile'\" \(426 characters\)
+sed "s/^X//" >'AF/server/dda/sgi/Imakefile' <<'END_OF_FILE'
+X#include <Server.tmpl>
+X
+XCDEBUGFLAGS= -g
+XSRCS =  dda.c event.c sgi.c
+XOBJS =  dda.o event.o sgi.o
+X
+X   INCLUDES = -I../mi -I../../../include -I../../include -I$(INCLUDESRC)
+X   LINTLIBS = ../../os/4.2bsd/llib-los.ln ../mi/llib-lmi.ln
+X
+XNormalLibraryObjectRule()
+XNormalLibraryTarget(sgi,$(OBJS))
+XLintLibraryTarget(sgi,$(SRCS))
+X
+XNormalLintTarget($(SRCS))
+X
+X#if HasSaberC
+Xsaber_src:
+X	/**/#load $(CFLAGS) $(SRCS)
+X#endif
+X
+XDependTarget()
+END_OF_FILE
+if test 426 -ne `wc -c <'AF/server/dda/sgi/Imakefile'`; then
+    echo shar: \"'AF/server/dda/sgi/Imakefile'\" unpacked with wrong size!
+fi
+# end of 'AF/server/dda/sgi/Imakefile'
+fi
+if test -f 'AF/server/dda/sgi/Makefile' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'AF/server/dda/sgi/Makefile'\"
+else
+echo shar: Extracting \"'AF/server/dda/sgi/Makefile'\" \(9075 characters\)
+sed "s/^X//" >'AF/server/dda/sgi/Makefile' <<'END_OF_FILE'
+X# Makefile generated by imake - do not edit!
+X# $XConsortium: imake.c,v 1.65 91/07/25 17:50:17 rws Exp $
+X#
+X# The cpp used on this machine replaces all newlines and multiple tabs and
+X# spaces in a macro expansion with a single space.  Imake tries to compensate
+X# for this, but is not always successful.
+X#
+X
+X###########################################################################
+X# Makefile generated from "Imake.tmpl" and <Imakefile>
+X# $RCS: Imake.tmpl,v 1.77 89/12/18 17:01:37 jim Exp $
+X#
+X# Platform-specific parameters may be set in the appropriate .cf
+X# configuration files.  Site-wide parameters may be set in the file
+X# site.def.  Full rebuilds are recommended if any parameters are changed.
+X#
+X# If your C preprocessor doesn't define any unique symbols, you'll need
+X# to set BOOTSTRAPCFLAGS when rebuilding imake (usually when doing
+X# "make Makefile", "make Makefiles", or "make World").
+X#
+X# If you absolutely can't get imake to work, you'll need to set the
+X# variables at the top of each Makefile as well as the dependencies at the
+X# bottom (makedepend will do this automatically).
+X#
+X
+X###########################################################################
+X# platform-specific configuration parameters - edit sgi.cf to change
+X
+X###########################################################################
+X# site-specific configuration parameters - edit site.def to change
+X
+X            SHELL = 	/bin/sh
+X
+X              TOP = ../../../.
+X      CURRENT_DIR = ./server/dda/sgi
+X
+X               AR = ar scq
+X  BOOTSTRAPCFLAGS =
+X               CC = cc
+X
+X         COMPRESS = CompressCmd
+X              CPP = /lib/cpp $(STD_CPP_DEFINES)
+X    PREPROCESSCMD = cc -E $(STD_CPP_DEFINES)
+X          INSTALL = $(SCRIPTSRC)/bsdinst.sh
+X               LD = ld
+X             LINT = lint
+X      LINTLIBFLAG = -o
+X         LINTOPTS = -ax
+X               LN = ln -s
+X             MAKE = make
+X               MV = mv
+X               CP = cp
+X           RANLIB = /bin/true
+X  RANLIBINSTFLAGS =
+X               RM = rm -f
+X     STD_INCLUDES =
+X  STD_CPP_DEFINES = -DSYSV
+X      STD_DEFINES = -DSYSV
+X EXTRA_LOAD_FLAGS =
+X  EXTRA_LIBRARIES = -laudio -lsun -lmalloc -lc_s
+X             TAGS = ctags
+X
+X    PROTO_DEFINES =  -DNARROWPROTO
+X
+X     INSTPGMFLAGS =
+X
+X     INSTBINFLAGS = -m 0755
+X     INSTUIDFLAGS = -m 4755
+X     INSTLIBFLAGS = -m 0664
+X     INSTINCFLAGS = -m 0444
+X     INSTMANFLAGS = -m 0444
+X     INSTDATFLAGS = -m 0444
+X    INSTKMEMFLAGS = -m 2755 -g sys
+X
+X          DESTDIR =
+X
+X     TOP_INCLUDES = -I$(TOP)
+X
+X      CDEBUGFLAGS = -O
+X        CCOPTIONS = -prototypes -float -acpp -D__STDC__ -D__EXTENSIONS__  -Wf,-XNp9000,-XNd8000,-XNh2000
+X      COMPATFLAGS =
+X
+X      ALLINCLUDES = $(STD_INCLUDES) $(TOP_INCLUDES) $(INCLUDES) $(EXTRA_INCLUDES)
+X       ALLDEFINES = $(ALLINCLUDES) $(STD_DEFINES) $(PROTO_DEFINES) $(DEFINES) $(COMPATFLAGS)
+X           CFLAGS = $(CDEBUGFLAGS) $(CCOPTIONS) $(ALLDEFINES)
+X        LINTFLAGS = $(LINTOPTS) -DLINT $(ALLDEFINES)
+X           LDLIBS = $(SYS_LIBRARIES) $(EXTRA_LIBRARIES)
+X        LDOPTIONS = $(CDEBUGFLAGS) $(CCOPTIONS)
+X   LDCOMBINEFLAGS = -r
+X
+X        MACROFILE = sgi.cf
+X           RM_CMD = $(RM) *.CKP *.ln *.BAK *.bak *.o core errs ,* *~ *.a .emacs_* tags TAGS make.log MakeOut
+X
+X    IMAKE_DEFINES =
+X
+X         IRULESRC = $(CONFIGSRC)
+X        IMAKE_CMD = $(NEWTOP)$(IMAKE) -I$(NEWTOP)$(IRULESRC) $(IMAKE_DEFINES)
+X
+X     ICONFIGFILES = $(IRULESRC)/Imake.tmpl $(IRULESRC)/Imake.rules \
+X			$(IRULESRC)/Project.tmpl $(IRULESRC)/site.def \
+X			$(IRULESRC)/$(MACROFILE) $(EXTRA_ICONFIGFILES)
+X
+X###########################################################################
+X# AudioFile Build Parameters
+X
+X###########################################################################
+X# AudioFile make variables; this need to be coordinated with rules
+X
+X          PATHSEP = /
+X        USRLIBDIR = $(DESTDIR)/crl/audio/lib.mips/
+X           BINDIR =  $(DESTDIR)/crl/audio/bin.mips/
+X          INCROOT = $(DESTDIR)/crl/audio/include
+X     BUILDINCROOT = $(TOP)
+X      BUILDINCDIR = $(BUILDINCROOT)/audio
+X      BUILDINCTOP = ..
+X           INCDIR = $(INCROOT)/AF
+X           ADMDIR = $(DESTDIR)/usr/adm
+X           LIBDIR = $(USRLIBDIR)/AF
+X        CONFIGDIR = $(LIBDIR)/config
+X       LINTLIBDIR = $(USRLIBDIR)/lint
+X
+X          MANPATH = $(DESTDIR)$(DESTDIR)/crl/audio/man/
+X    MANSOURCEPATH = $(MANPATH)/man
+X        MANSUFFIX = 1
+X     LIBMANSUFFIX = 3
+X           MANDIR = $(MANSOURCEPATH)1
+X        LIBMANDIR = $(MANSOURCEPATH)3
+X    SOAUDIOLIBREV = 0.0
+X
+X            IMAKE = $(IMAKESRC)/imake
+X           DEPEND = $(DEPENDSRC)/makedepend
+X        MKDIRHIER = 	/bin/sh $(SCRIPTSRC)/mkdirhier.sh
+X
+X        CONFIGSRC = $(TOP)/config
+X        CLIENTSRC = $(TOP)/clients
+X          DEMOSRC = $(TOP)/demos
+X           LIBSRC = $(TOP)/lib
+X       INCLUDESRC = $(TOP)/AF
+X        SERVERSRC = $(TOP)/server
+X          UTILSRC = $(TOP)/util
+X        SCRIPTSRC = $(UTILSRC)/scripts
+X       EXAMPLESRC = $(TOP)/examples
+X       CONTRIBSRC = $(TOP)/contrib
+X           DOCSRC = $(TOP)/doc
+X        DEPENDSRC = $(UTILSRC)/makedepend
+X         IMAKESRC = $(CONFIGSRC)
+X         AFLIBSRC = $(LIBSRC)/AF
+X     AFUTILLIBSRC = $(LIBSRC)/AFUtil
+X
+X        UIDLIBDIR = $(USRLIBDIR)/uid
+X        MOTIFBASE = /usr/lib/DXM
+X           UILSRC = $(MOTIFBASE)/clients/uil
+X              UIL = $(UILSRC)/uil
+X
+X     LINTAUDIOLIB =  $(AFLIBSRC)/llib-lAF.ln
+X            AFLIB =  -L$(AFLIBSRC) -lAF
+X         DEPAFLIB =  $(AFLIBSRC)/libAF.a
+X        AFUTILLIB =  -L$(AFUTILLIBSRC) -lAFUtil
+X     DEPAFUTILLIB =  $(AFUTILLIBSRC)/libAFUtil.a
+X
+X         DEPLIBS = $(LOCAL_LIBRARIES)
+X         DEPLIBS1 = $(DEPLIBS)
+X         DEPLIBS2 = $(DEPLIBS)
+X         DEPLIBS3 = $(DEPLIBS)
+X
+X###########################################################################
+X# Imake rules for building libraries, programs, scripts, and data files
+X# rules:  $XConsortium: Imake.rules,v 1.67 89/12/18 17:14:15 jim Exp $
+X
+X###########################################################################
+X# start of Imakefile
+X
+X# $XConsortium: Server.tmpl,v 1.3 89/10/20 11:14:52 jim Exp $
+X
+X         CC = cc
+X  CCOPTIONS = -prototypes -float -acpp -D__STDC__ -D__EXTENSIONS__  -Wf,-XNp9000,-XNd8000,-XNh2000
+XSTD_DEFINES = -DSYSV
+XCDEBUGFLAGS = -O
+XEXT_DEFINES =
+X
+XCDEBUGFLAGS= -O
+XSRCS =  dda.c event.c sgi.c
+XOBJS =  dda.o event.o sgi.o
+X
+X   INCLUDES = -I../mi -I../../../include -I../../include -I$(INCLUDESRC)
+X   LINTLIBS = ../../os/4.2bsd/llib-los.ln ../mi/llib-lmi.ln
+X
+X.c.o:
+X	$(RM) $@
+X	$(CC) -c $(CFLAGS) $*.c
+X
+Xall:: libsgi.a
+X
+Xlibsgi.a: $(OBJS)
+X	$(RM) $@
+X	$(AR) $@ $(OBJS)
+X	$(RANLIB) $@
+X
+Xlintlib:: llib-lsgi.ln
+X
+Xllib-lsgi.ln: $(SRCS)
+X	$(RM) $@
+X	$(LINT) $(LINTLIBFLAG)sgi $(LINTFLAGS) $(SRCS)
+X
+Xlint:
+X	$(LINT) $(LINTFLAGS) $(SRCS) $(LINTLIBS)
+Xlint1:
+X	$(LINT) $(LINTFLAGS) $(FILE) $(LINTLIBS)
+X
+Xdepend:: $(DEPEND)
+X
+X$(DEPEND):
+X	@echo "checking $@ over in $(DEPENDSRC) first..."; \
+X	cd $(DEPENDSRC); $(MAKE); \
+X	echo "okay, continuing in $(CURRENT_DIR)"
+X
+Xdepend::
+X	$(DEPEND) -s "# DO NOT DELETE" -- $(ALLDEFINES) -- $(SRCS)
+X
+X###########################################################################
+X# common rules for all Makefiles - do not edit
+X
+Xemptyrule::
+X
+Xclean::
+X	$(RM_CMD) "#"*
+X
+XMakefile:: $(IMAKE)
+X
+X$(IMAKE):
+X	@(cd $(IMAKESRC); if [ -f Makefile ]; then \
+X	echo "checking $@ in $(IMAKESRC) first..."; $(MAKE) all; else \
+X	echo "bootstrapping $@ from Makefile.ini in $(IMAKESRC) first..."; \
+X	$(MAKE) -f Makefile.ini BOOTSTRAPCFLAGS=$(BOOTSTRAPCFLAGS); fi; \
+X	echo "okay, continuing in $(CURRENT_DIR)")
+X
+XMakefile::
+X	-@if [ -f Makefile ]; then \
+X		echo "	$(RM) Makefile.bak; $(MV) Makefile Makefile.bak"; \
+X		$(RM) Makefile.bak; $(MV) Makefile Makefile.bak; \
+X	else exit 0; fi
+X	$(IMAKE_CMD) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT_DIR)
+X
+Xtags::
+X	$(TAGS) -w *.[ch]
+X	$(TAGS) -xw *.[ch] > TAGS
+X
+X###########################################################################
+X# empty rules for directories that do not have SUBDIRS - do not edit
+X
+Xinstall::
+X	@echo "install in $(CURRENT_DIR) done"
+X
+Xinstall.man::
+X	@echo "install.man in $(CURRENT_DIR) done"
+X
+XMakefiles::
+X
+Xincludes::
+X
+X###########################################################################
+X# dependencies generated by makedepend
+X
+X# DO NOT DELETE
+X
+Xdda.o: /usr/include/stdlib.h /usr/include/string.h
+Xdda.o: ../../.././server/include/os.h ../../.././server/include/misc.h
+Xdda.o: ../../../include/audio.h ../../.././server/include/os.h
+Xdda.o: ../../.././server/include/audiodev.h
+Xdda.o: ../../.././server/include/property.h
+Xdda.o: ../../.././server/include/propertyst.h sgi.h
+Xsgi.o: ../../../include/AFUtils.h ../../../include/audio.h
+Xsgi.o: ../../.././server/include/os.h ../../.././server/include/misc.h
+Xsgi.o: ../../.././server/include/os.h ../../.././server/include/dia.h
+Xsgi.o: ../../.././server/include/misc.h ../../.././server/include/task.h
+Xsgi.o: /usr/include/sys/time.h /usr/include/sys/time.h
+Xsgi.o: /usr/include/sys/types.h ../../.././server/include/audiodev.h
+Xsgi.o: ../../.././server/include/property.h
+Xsgi.o: ../../.././server/include/propertyst.h ../../.././server/include/ac.h
+Xsgi.o: ../../.././server/include/dia.h ../../.././server/include/audiodev.h
+Xsgi.o: ../../.././server/include/acstruct.h /usr/include/math.h
+Xsgi.o: /usr/include/audio.h
+END_OF_FILE
+if test 9075 -ne `wc -c <'AF/server/dda/sgi/Makefile'`; then
+    echo shar: \"'AF/server/dda/sgi/Makefile'\" unpacked with wrong size!
+fi
+# end of 'AF/server/dda/sgi/Makefile'
+fi
+if test -f 'AF/server/dda/sgi/dda.c' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'AF/server/dda/sgi/dda.c'\"
+else
+echo shar: Extracting \"'AF/server/dda/sgi/dda.c'\" \(3609 characters\)
+sed "s/^X//" >'AF/server/dda/sgi/dda.c' <<'END_OF_FILE'
+X/***********************************************************
+XCopyright 1993 by Stichting Mathematisch Centrum, Amsterdam, The Netherlands.
+X
+X                        All Rights Reserved
+X
+XPermission to use, copy, modify, and distribute this software and its 
+Xdocumentation for any purpose and without fee is hereby granted, 
+Xprovided that the above copyright notice appear in all copies and that
+Xboth that copyright notice and this permission notice appear in 
+Xsupporting documentation, and that the names of Stichting Mathematisch
+XCentrum or CWI not be used in advertising or publicity pertaining to
+Xdistribution of the software without specific, written prior permission.
+X
+XSTICHTING MATHEMATISCH CENTRUM DISCLAIMS ALL WARRANTIES WITH REGARD TO
+XTHIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+XFITNESS, IN NO EVENT SHALL STICHTING MATHEMATISCH CENTRUM BE LIABLE
+XFOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+XWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+XACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+XOF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+X******************************************************************/
+X
+X/* SGI Indigo device dependent audio server */
+X
+X/* All public entry points in this file are referenced from the dia code */
+X
+X/* Initial design:
+X   - use the same sampling rate for play and record
+X   - fix the sampling rate with a command line switch
+X   - use different device numbers for different sample formats
+X*/
+X
+X#include <stdlib.h>
+X#include <string.h>
+X
+X#include <server/include/os.h>
+X#include <server/include/audiodev.h>
+X
+X#include "sgi.h"
+X
+X/*ARGSUSED*/
+Xvoid
+XInitDevices(junk, argc, argv)
+X	char *junk;
+X	int argc;
+X	char **argv;
+X{
+X	AudioDevicePtr aDev, aDev0;
+X
+X	/* Device 0 is the U-LAW variant */
+X	if ((aDev = MakeDevice()) == NULL)
+X		FatalError("InitDevices: MakeDevice failed\n");
+X	if (!sgiDevInit(aDev))
+X		FatalError("InitDevices: sgiDevInit failed\n");
+X	aDev->playBufType = MU255;
+X	aDev->playNchannels = 1;
+X	aDev->recBufType = MU255;
+X	aDev->recNchannels = 1;
+X
+X	aDev0 = aDev; /* Save device 0 to clone it */
+X
+X	/* Device 1 is the mono LIN16 variant */
+X	if ((aDev = MakeDevice()) == NULL)
+X		FatalError("InitDevices: MakeDevice failed\n");
+X	*aDev = *aDev0;
+X	aDev->playBufType = LIN16;
+X	aDev->playNchannels = 1;
+X	aDev->recBufType = LIN16;
+X	aDev->recNchannels = 1;
+X
+X	/* Device 2 is the stereo LIN16 variant */
+X	if ((aDev = MakeDevice()) == NULL)
+X		FatalError("InitDevices: MakeDevice failed\n");
+X	*aDev = *aDev0;
+X	aDev->playBufType = LIN16;
+X	aDev->playNchannels = 2;
+X	aDev->recBufType = LIN16;
+X	aDev->recNchannels = 2;
+X
+X	/* XXX Should have two more for separate left and right as well */
+X}
+X
+Xvoid
+XAbortDDA()
+X{
+X}
+X
+Xvoid
+XddaGiveUp()
+X{
+X}
+X
+Xint
+XddaProcessArgument (argc, argv, iarg)
+X	int argc;
+X	char *argv[];
+X	int iarg;
+X{
+X	if (iarg+1 < argc && strcmp(argv[iarg], "-rate") == 0) {
+X		int rate = atoi(argv[iarg+1]);
+X		int i;
+X		/* Check whether it's a valid sampling rate */
+X		for (i = sgi_n_validrates; --i >= 0; ) {
+X			if (rate == sgi_validrates[i])
+X				break;
+X		}
+X		if (i < 0) {
+X			UseMsg();
+X			exit(1);
+X		}
+X		sgi_rate = rate;
+X		return 2; /* Have processed this argument and the next */
+X	}
+X	else {
+X		return 0; /* Haven't processed this argument */
+X	}
+X}
+X
+Xvoid
+XddaUseMsg()
+X{
+X	int i;
+X	ErrorF("Asgi Dependent Usage:\n");
+X	ErrorF("-rate number           input sampling rate; ");
+X	ErrorF("valid sampling rates are:\n");
+X	ErrorF("                      ");
+X	for (i = 0; i < sgi_n_validrates; i++)
+X		ErrorF(" %d", sgi_validrates[i]);
+X	ErrorF(";\n");
+X	ErrorF("                       default: 8000\n");
+X}
+END_OF_FILE
+if test 3609 -ne `wc -c <'AF/server/dda/sgi/dda.c'`; then
+    echo shar: \"'AF/server/dda/sgi/dda.c'\" unpacked with wrong size!
+fi
+# end of 'AF/server/dda/sgi/dda.c'
+fi
+if test -f 'AF/server/dda/sgi/event.c' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'AF/server/dda/sgi/event.c'\"
+else
+echo shar: Extracting \"'AF/server/dda/sgi/event.c'\" \(1322 characters\)
+sed "s/^X//" >'AF/server/dda/sgi/event.c' <<'END_OF_FILE'
+X/***********************************************************
+XCopyright 1993 by Stichting Mathematisch Centrum, Amsterdam, The Netherlands.
+X
+X                        All Rights Reserved
+X
+XPermission to use, copy, modify, and distribute this software and its 
+Xdocumentation for any purpose and without fee is hereby granted, 
+Xprovided that the above copyright notice appear in all copies and that
+Xboth that copyright notice and this permission notice appear in 
+Xsupporting documentation, and that the names of Stichting Mathematisch
+XCentrum or CWI not be used in advertising or publicity pertaining to
+Xdistribution of the software without specific, written prior permission.
+X
+XSTICHTING MATHEMATISCH CENTRUM DISCLAIMS ALL WARRANTIES WITH REGARD TO
+XTHIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+XFITNESS, IN NO EVENT SHALL STICHTING MATHEMATISCH CENTRUM BE LIABLE
+XFOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+XWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+XACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+XOF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+X******************************************************************/
+X
+X/* Currently the SGI Indigo interface doesn't generate any events */
+X
+Xvoid
+XProcessInputEvents()
+X{
+X}
+END_OF_FILE
+if test 1322 -ne `wc -c <'AF/server/dda/sgi/event.c'`; then
+    echo shar: \"'AF/server/dda/sgi/event.c'\" unpacked with wrong size!
+fi
+# end of 'AF/server/dda/sgi/event.c'
+fi
+if test -f 'AF/server/dda/sgi/sgi.c' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'AF/server/dda/sgi/sgi.c'\"
+else
+echo shar: Extracting \"'AF/server/dda/sgi/sgi.c'\" \(24502 characters\)
+sed "s/^X//" >'AF/server/dda/sgi/sgi.c' <<'END_OF_FILE'
+X/***********************************************************
+XCopyright 1993 by Stichting Mathematisch Centrum, Amsterdam, The Netherlands.
+X
+X                        All Rights Reserved
+X
+XPermission to use, copy, modify, and distribute this software and its 
+Xdocumentation for any purpose and without fee is hereby granted, 
+Xprovided that the above copyright notice appear in all copies and that
+Xboth that copyright notice and this permission notice appear in 
+Xsupporting documentation, and that the names of Stichting Mathematisch
+XCentrum or CWI not be used in advertising or publicity pertaining to
+Xdistribution of the software without specific, written prior permission.
+X
+XSTICHTING MATHEMATISCH CENTRUM DISCLAIMS ALL WARRANTIES WITH REGARD TO
+XTHIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+XFITNESS, IN NO EVENT SHALL STICHTING MATHEMATISCH CENTRUM BE LIABLE
+XFOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+XWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+XACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+XOF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+X******************************************************************/
+X
+X/* SGI Indigo interface, called from dda.c (or through pointers) */
+X
+X
+X#include <AFUtils.h>
+X#include <server/include/os.h>
+X#include <server/include/dia.h>
+X#include <server/include/misc.h>
+X#include <server/include/task.h>
+X#include <server/include/audiodev.h>
+X#include <server/include/acstruct.h>
+X
+X#undef fabs /* Disable definition of fabs from <server/misc.h> */
+X#include <math.h>
+X
+X/* SGI's Audio Library interface (avoid name conflict with AF's <audio.h>) */
+X#include "/usr/include/audio.h"
+X
+X
+X/* Sampling rate, set by -rate option */
+Xint sgi_rate = 8000;
+X
+X
+X/* Supported sampling rates, used by -rate option parsing */
+Xint sgi_validrates[] = {
+X	8000, 11025, 16000, 22050, 32000, 44100, 48000,
+X};
+Xint sgi_n_validrates = sizeof sgi_validrates / sizeof sgi_validrates[0];
+X
+X
+X/* dB <--> multiplication factor conversions */
+X#define DB2FACT(dB) (exp((dB)*(M_LN10/20.0)))
+X#define FACT2DB(fact) (log(value)*(20.0/M_LN10))
+X
+X
+X/* Clip a value within bounds (don't use in if or else branch!) */
+X#define	LIMIT(low, val, high) \
+X	  if (val < (low)) val = (low); \
+X	  else \
+X	  if ((val) > (high)) val = (high);
+X
+X
+X/* Forward declared internal functions */
+Xstatic void sgiChangeAC();
+Xstatic void sgiCopyAC();
+Xstatic ABool sgiCreateAC();
+Xstatic void sgiDestroyAC();
+Xstatic pointer sgiInitPrivate();
+Xstatic void sgiSetRate();
+Xstatic void sgiUpdateInit();
+Xstatic void sgiUpdateTask();
+Xstatic void sgiUpdate();
+Xstatic void sgiChangeOutput();
+Xstatic void sgiChangeInput();
+Xstatic void sgiChangePassThrough();
+Xstatic int sgiQueryOutputGain();
+Xstatic int  sgiSelectOutputGain();
+Xstatic int sgiQueryInputGain();
+Xstatic int  sgiSelectInputGain();
+Xstatic int sgiRecord();
+Xstatic int sgiPlay();
+Xstatic int sgiRecordRecent();
+Xstatic ATime sgiGetTime();
+X
+X
+X/* Initialize a device */
+Xint
+XsgiDevInit(aDev)
+X	AudioDevicePtr aDev;
+X{
+X	static pointer private = NULL;
+X
+X	if (private == NULL) {
+X		private = sgiInitPrivate(sgi_rate);
+X		if (private == NULL)
+X			return FALSE;
+X	}
+X
+X	aDev->type = HIFI_DEVICE;	/* I am a hifi audio device.	*/
+X
+X	aDev->devPtr = NULL;
+X	aDev->privPtr = private;
+X
+X	aDev->time0 = 0;		/* The beginning of time, 	*/
+X	aDev->oldDevTime = 0;		/* the first time.		*/
+X	aDev->dsptime = 0;
+X
+X	aDev->BlockHandler = (IntProc) NoopDDA;	/* NYI.			*/
+X	aDev->WakeupHandler = (IntProc) NoopDDA; /* NYI.		*/
+X	aDev->DevCtl = (IntProc)NoopDDA;	/* NYI.			*/
+X	aDev->ReadMessage = (IntProc)NoopDDA;	/* NYI.			*/
+X	aDev->WriteMessage = (IntProc)NoopDDA;	/* NYI.			*/
+X	aDev->PokeDSP = (IntProc)NoopDDA;	/* NYI.			*/
+X
+X	aDev->Dial = (IntProc)NoopDDA;		/* Default. 		*/
+X	aDev->HookSwitch = (IntProc)NoopDDA;	/* Default.		*/
+X	aDev->TLICraftHookSwitchEvent = (IntProc)NoopDDA; /* Default.	*/
+X	aDev->LoopCurrentState = (IntProc)NoopDDA;	/* Default.	*/
+X	aDev->HookSwitchState = (IntProc)NoopDDA;	/* Default.	*/
+X	aDev->PokeTLI = (IntProc)NoopDDA;	/* Default.		*/
+X	aDev->TelephoneCtl = (IntProc)NoopDDA;	/* Default.		*/
+X
+X	aDev->ChangeOutput = sgiChangeOutput;
+X	aDev->ChangeInput = sgiChangeInput;
+X	aDev->ChangePassThrough = sgiChangePassThrough;
+X	aDev->QueryOutputGain = sgiQueryOutputGain;
+X	aDev->QueryInputGain = sgiQueryInputGain;
+X	aDev->SelectOutputGain = sgiSelectOutputGain;
+X	aDev->SelectInputGain = sgiSelectInputGain;
+X
+X	aDev->CreateAC = sgiCreateAC;		/* 			*/
+X	aDev->GetTime = sgiGetTime;		/* Gets device time.	*/
+X	aDev->PlayHandler = sgiPlay; 		/* The play handler.	*/
+X	aDev->RecordHandler = sgiRecord;	/* The record handler.	*/
+X	aDev->RecordRecentHandler = sgiRecordRecent;
+X
+X	/* Describe the play hardware */
+X	aDev->numberOfOutputs = 1;
+X	aDev->playSampleFreq = sgi_rate;
+X	aDev->playBufType = LIN16;
+X	aDev->playNchannels = 2;
+X	aDev->playNSamplesBuf = 0;
+X
+X	/* Describe the record hardware */
+X	aDev->numberOfInputs = 3;
+X	aDev->recSampleFreq = sgi_rate;
+X	aDev->recBufType = LIN16;
+X	aDev->recNchannels = 2;
+X	aDev->recNSamplesBuf = 0;
+X
+X	aDev->playBuf = NULL;
+X	aDev->recBuf = NULL;
+X
+X	return TRUE;
+X}
+X
+X
+X/* Here's how it works (for playing, anyway).
+X
+X   The model that the server presents to the client is an infinite
+X   buffer of samples, indexed by clock value.  On each clock tick the
+X   clock is incremented by one and the corresponding sample is sent to
+X   the output device.  Initially, the entire buffer is filled with
+X   silence.  The Play command, given a clock value and a number of
+X   samples, simply mixes the samples into the buffer, starting at the
+X   sample indexed by the given clock value.  (Obviously, if this
+X   affects samples that have already been sent to the output device
+X   this has no audible effect.)
+X
+X   Every implementation has to cope with a buffer of finite size.  This
+X   is done by using the buffer as a "window" on time which moves as
+X   the clocks advances.  Attempting to play samples far in the future
+X   will hold the samples in another buffer until the window has
+X   reached the desired time.  Attempting to play samples in the past
+X   results in throwing the samples away.  (Clock values are also
+X   represented as 32-bit numbers, making it impossible to distinguish
+X   clock values that are multiple of 2**32 ticks apart; this is solved
+X   by interpreting clock values as closest to the current time.)
+X
+X   The SGI audio hardware interface has a configurable queue.  Once
+X   sample values have been placed into this queue, they cannot be
+X   modified.  The SGI also supports multiple queues which allow
+X   hardware mixing, but there is no way to control the relative times
+X   at which values are mixed, so we don't use this facility (anyway
+X   there is a too restrictive limit to the number of channels that
+X   can be mixed in this way).  Instead, we use a single hardware queue
+X   which we configure to be as short as we dare.  An "update task"
+X   is executed at frequent intervals and fills the hardware queue with
+X   the next set of samples from the server buffer (which is used as
+X   a circular queue).  The space in the server buffer thus freed is
+X   filled with silence so it is ready for mixing in new samples.
+X
+X   The implementation doesn't use any of the buffers, timers,
+X   pointers and counters in the AudioDevice structure, instead all
+X   administration is kept in its own private structure.  The function
+X   sgiUpdateTime(aDev) must be called to update the time0 field from
+X   the private structure (for sgiGetTime).
+X
+X   To complicate matters, the current time as presented to the client
+X   includes the samples that have already been transferred to the
+X   hardware queue (to approximate "real time" as closely as possible).
+X   This means that samples played in the very near future cannot be
+X   mixed in (since the corresponding slots from the idealized buffer
+X   have already been transferred to the hardware buffer).  For most
+X   clients this will mean at most that a tiny fraction of sound at the
+X   beginning will not be made heard -- this is a possibility anyway
+X   because of network delays.
+X
+X   For recording things go rather similar, except the data movement
+X   direction is reversed, and the server's buffer holds the last so
+X   many samples *preceding* the current time.  Requesting recorded
+X   samples from far in the past will return silence because the
+X   server's circular buffer has lost the data.  (While this may seem
+X   asymmetric, it is not: both recording and playback must be done in
+X   a timely fashion.)
+X
+X   There is a complication in the interface: the model of a device
+X   has a single clock for recording and playback, while our
+X   implementation in fact has different clocks.  Under normal
+X   circumstances these will run at the same speed, but once queues
+X   start under- or overflowing they may drift apart.  We compensate
+X   for this drift by comparing the two clocks and dropping or
+X   inserting samples when the difference becomes too large.
+X*/
+X
+X/* Tunable parameters */
+X#define MSQUEUE 100		/* Amount of hardware queue to allocate */
+X#define MSDELAY 20		/* Delay between two updates */
+X#define MSTOLERANCE 25		/* Maximum drift between record/play */
+X#define PLAYLENGTH (1024*256)	/* Play buffer length */
+X#define RECLENGTH PLAYLENGTH	/* Record buffer length */
+X
+X/* Number of channels (2 == stereo == left+right) */
+X#define NCH 2			/* Don't change! Hardcoded at many places */
+X
+X/* Private structure */
+Xstruct private {
+X	long dev;		/* For ALgetparams/ALsetparams */
+X	int playQsize;		/* AL queue sizes */
+X	int recQsize;
+X	int playRate;		/* Sampling rates */
+X	int recRate;
+X	ALport playPort;	/* Audio Library ports */
+X	ALport recPort;
+X	short *playBuf;		/* Buffers */
+X	short *recBuf;
+X	int playLength;		/* Length buffers, in samples */
+X	int recLength;
+X	int playIndex;		/* Current index into buffers */
+X	int recIndex;
+X	int playCycles;		/* Incremented each time index wraps */
+X	int recCycles;
+X};
+X
+X/* Get private struct from aDev struct */
+X#define PRIV(aDev) ((struct private *)(aDev->privPtr))
+X
+X/* Get device number from aDev struct */
+X#define DEV(aDev) (PRIV(aDev)->dev)
+X
+X/* Get the play and record times from private struct */
+X#define PLAYTIME(p) (p->playIndex - ALgetfilled(p->playPort) + \
+X		     p->playCycles * p->playLength)
+X#define RECTIME(p) (p->recIndex + ALgetfilled(p->recPort) + \
+X		    p->recCycles * p->recLength)
+X
+X
+X/* Initialize private structure (call only once!) */
+X
+Xstatic pointer
+XsgiInitPrivate(rate)
+X{
+X	struct private *p;
+X	ALconfig c;
+X	long qsize;
+X
+X	/* XXX This function doesn't clean up if it fails */
+X
+X	if ((p = (struct private *) AFalloc(sizeof(struct private))) == NULL)
+X		return NULL;
+X
+X	p->dev = AL_DEFAULT_DEVICE;
+X	p->playRate = rate;
+X	p->recRate = rate;
+X
+X	p->playLength = PLAYLENGTH;
+X	p->recLength = RECLENGTH;
+X	p->playBuf = (short *) AFalloc(sizeof(short) * NCH * p->playLength);
+X	p->recBuf = (short *) AFalloc(sizeof(short) * NCH * p->recLength);
+X	if (p->playBuf == NULL || p->recBuf == NULL)
+X		return NULL;
+X	p->playIndex = 0;
+X	p->recIndex = 0;
+X	p->playCycles = 0;
+X	p->recCycles = 0;
+X	memset(p->playBuf, 0, p->playLength*NCH*sizeof(short));
+X	memset(p->recBuf, 0, p->recLength*NCH*sizeof(short));
+X
+X	sgiSetRate(p);
+X
+X	if ((c = ALnewconfig()) == NULL)
+X		return NULL;
+X	ALsetwidth(c, AL_SAMPLE_16);
+X	ALsetchannels(c, AL_STEREO);
+X	qsize = rate*NCH*MSQUEUE/1000;
+X	if (qsize < 1024)
+X		qsize = 1024; /* Minimal queue size */
+X	ALsetqueuesize(c, qsize);
+X	p->playQsize = p->recQsize = qsize;
+X	p->playPort = ALopenport("AudioFile play", "w", c);
+X	p->recPort = ALopenport("AudioFile record", "r", c);
+X	ALfreeconfig(c);
+X	if (p->playPort == NULL || p->recPort == NULL)
+X		return NULL;
+X
+X	sgiUpdateInit(p); /* Start the update task */
+X
+X	return (pointer)p;
+X}
+X
+Xstatic void
+XsgiSetRate(p)
+X	struct private *p;
+X{
+X
+X	long params[4];
+X	params[0] = AL_OUTPUT_RATE;
+X	params[1] = p->playRate;
+X	params[2] = AL_INPUT_RATE;
+X	params[3] = p->recRate;
+X	ALsetparams(p->dev, params, 4);
+X}
+X
+X
+X/* Update task management */
+X
+Xstatic void
+XsgiUpdateInit(p)
+X	struct private *p;
+X{
+X	TaskPtr	newTask;
+X	sgiUpdate(p);
+X	newTask = NewTask();
+X	newTask->p = (pointer)p;
+X	AddTask(sgiUpdateTask, newTask, MSDELAY);
+X}
+X
+Xstatic void
+XsgiUpdateTask(oldTask)
+X	TaskPtr oldTask;
+X{
+X	TaskPtr	newTask;
+X	sgiUpdate((struct private *)oldTask->p);
+X	newTask = NewTask();
+X	newTask->p = oldTask->p;
+X	AddTask(sgiUpdateTask, newTask, MSDELAY);
+X}
+X
+Xstatic void
+XsgiUpdate(p)
+X	struct private *p;
+X{
+X	int avail;
+X	ATime playtime = PLAYTIME(p);
+X	ATime rectime = RECTIME(p);
+X	int diff = playtime - rectime;
+X
+X	/* Need to correct clock differences? */
+X	if (diff >= MSTOLERANCE * sgi_rate / 1000 ||
+X	    -diff >= MSTOLERANCE * sgi_rate / 1000) {
+X		if (p->playCycles)
+X			printf("sgiUpdate: resynchronize: "
+X			       "playtime %u, rectime %u, diff %d, tol. %d\n",
+X			       playtime, rectime, diff,
+X			       MSTOLERANCE * sgi_rate / 1000);
+X
+X		sgiSetRate(p);
+X
+X		if (diff > 0) {
+X			/* Player has run ahead of recorder, insert some
+X			   silence in record buffer */
+X			if (p->playCycles)
+X				printf("sgiUpdate: "
+X				       "silence fill %d rec samples\n",
+X				       diff);
+X			while (--diff >= 0) {
+X				p->recBuf[p->recIndex*NCH] = 0;
+X				p->recBuf[p->recIndex*NCH+1] = 0;
+X				if (++p->recIndex == p->recLength) {
+X					p->recIndex = 0;
+X					p->recCycles++;
+X				}
+X			}
+X		}
+X		else {
+X			diff = -diff;
+X			/* Recorder has run ahead of player, insert some
+X			   silence in play buffer */
+X			if (p->playCycles)
+X				printf("sgiUpdate: "
+X				       "silence fill %d play samples\n",
+X				       diff);
+X			while (--diff >= 0) {
+X				p->playBuf[p->playIndex*NCH] = 0;
+X				p->playBuf[p->playIndex*NCH+1] = 0;
+X				if (++p->playIndex == p->playLength) {
+X					p->playIndex = 0;
+X					p->playCycles++;
+X				}
+X			}
+X		}
+X	}
+X
+X	/* Update play port */
+X	avail = ALgetfillable(p->playPort) / NCH;
+X	while (avail > 0) {
+X		if (p->playCycles > 0 && ALgetfilled(p->playPort) == 0)
+X			printf("sgiUpdate: play late at %d:%d\n",
+X			       p->playCycles, p->playIndex);
+X		if (p->playIndex+avail > p->playLength)
+X			avail = p->playLength - p->playIndex;
+X		ALwritesamps(p->playPort,
+X			     p->playBuf+p->playIndex*NCH, avail*NCH);
+X		memset(p->playBuf+p->playIndex*NCH, 0,avail*sizeof(short)*NCH);
+X		p->playIndex += avail;
+X		avail = 0;
+X		if (p->playIndex == p->playLength) {
+X			p->playCycles++;
+X			p->playIndex = 0;
+X			avail = ALgetfillable(p->playPort) / NCH;
+X		}
+X	}
+X
+X	/* Update record port */
+X	avail = ALgetfilled(p->recPort) / NCH;
+X	while (avail > 0) {
+X		if (p->recCycles > 0 && ALgetfillable(p->recPort) == 0)
+X			printf("sgiUpdate: rec late at %d:%d\n",
+X			       p->recCycles, p->recIndex);
+X		if (p->recIndex+avail > p->recLength)
+X			avail = p->recLength - p->recIndex;
+X		ALreadsamps(p->recPort,
+X			    p->recBuf+p->recIndex*NCH, avail*NCH);
+X		p->recIndex += avail;
+X		avail = 0;
+X		if (p->recIndex == p->recLength) {
+X			p->recCycles++;
+X			p->recIndex = 0;
+X			avail = ALgetfilled(p->recPort) / NCH;
+X		}
+X	}
+X}
+X
+X
+X/* Copy the private time to the pseudo device */
+X
+Xstatic void
+XsgiUpdateTime(aDev)
+X	AudioDevicePtr aDev;
+X{
+X	struct private *p = (struct private *)aDev->privPtr;
+X	ATime playtime = PLAYTIME(p);
+X	ATime rectime = RECTIME(p);
+X	int diff = playtime - rectime;
+X	if (diff < -2500 || diff > 2500) {
+X		printf("sgiUpdateTime: " /* string literal concatenation */
+X		       "big time diff: playtime %u, rectime %u, diff %d\n",
+X		       playtime, rectime, diff);
+X	}
+X	if (playtime >= rectime)
+X		aDev->time0 = playtime;
+X	else
+X		aDev->time0 = rectime;
+X}
+X
+X
+X/* Connection management */
+X
+Xstatic void
+XsgiChangeInput(aDev, onoff, nmask, omaskp, amaskp)
+X	AudioDevicePtr aDev;
+X	int onoff;
+X	int nmask, *omaskp, *amaskp;
+X{
+X	int cmask;
+X	int i;
+X	long params[2];
+X	params[0] = AL_INPUT_SOURCE;
+X	ALgetparams(DEV(aDev), params, 2);
+X	cmask = 1<<params[1];
+X	*omaskp = cmask;
+X	/* Can only select exactly one input device */
+X	if (onoff) {
+X		for (i = 0; i < 3; i++) {
+X			if (nmask & (1<<i))
+X				params[1] = i;
+X		}
+X		ALsetparams(DEV(aDev), params, 2);
+X		cmask = 1<<params[1];
+X	}
+X	*amaskp = cmask;
+X}
+X
+Xstatic void
+XsgiChangeOutput(aDev, onoff, nmask, omaskp, amaskp)
+X	AudioDevicePtr aDev;
+X	int onoff;
+X	int nmask, *omaskp, *amaskp;
+X{
+X	/* Only one output */
+X	*omaskp = *amaskp = 1;
+X}
+X
+Xstatic void
+XsgiChangePassThrough(aDev, onoff, nmask, omaskp, amaskp)
+X	AudioDevicePtr aDev;
+X	int onoff;
+X	int nmask, *omaskp, *amaskp;
+X{
+X	/* Not supported */
+X	*omaskp = *amaskp = 0;
+X}
+X
+X
+X/* Input gain management */
+X
+X#define	MININPUTGAIN	(-70)
+X#define	MAXINPUTGAIN	15
+X
+Xstatic int
+XsgiQueryInputGain(aDev, minp, maxp)
+X	AudioDevicePtr aDev;
+X	int *minp, *maxp;
+X{
+X	int value, gdB;
+X	long params[4];
+X	params[0] = AL_LEFT_INPUT_ATTEN;
+X	params[2] = AL_RIGHT_INPUT_ATTEN;
+X	ALgetparams(DEV(aDev), params, 4);
+X	value = (params[1] + params[3]) / 2; /* average of two channels */
+X	gdB = 15 - value*3/8;
+X	LIMIT(MININPUTGAIN, gdB, MAXINPUTGAIN);
+X	if(minp != NULL)
+X		*minp = MININPUTGAIN;
+X	if(maxp != NULL)
+X		*maxp = MAXINPUTGAIN;
+X	return gdB;
+X}
+X
+Xstatic int
+XsgiSelectInputGain(aDev, gdB)
+X	AudioDevicePtr aDev;
+X	int gdB;
+X{
+X	int value;
+X	long params[4];
+X	if (gdB <= MININPUTGAIN)
+X		value = 255;
+X	else
+X		value = (15 - gdB)*8/3;
+X	LIMIT(0, value, 255);
+X	params[0] = AL_LEFT_INPUT_ATTEN;
+X	params[1] = value;
+X	params[2] = AL_RIGHT_INPUT_ATTEN;
+X	params[3] = value;
+X	ALsetparams(DEV(aDev), params, 4);
+X	return sgiQueryInputGain(aDev, (int *)NULL, (int *)NULL);
+X}
+X
+X
+X/* Output gain management */
+X
+X#define	MINOUTPUTGAIN	(-24)
+X#define	MAXOUTPUTGAIN	24
+X
+Xstatic int
+XsgiQueryOutputGain(aDev, minp, maxp)
+X	AudioDevicePtr aDev;
+X	int *minp, *maxp;
+X{
+X	int value, gdB;
+X	long params[4];
+X	params[0] = AL_LEFT_SPEAKER_GAIN;
+X	params[2] = AL_RIGHT_SPEAKER_GAIN;
+X	ALgetparams(DEV(aDev), params, 4);
+X	value = (params[1] + params[3])/2;
+X	if (value == 0)
+X		gdB = MINOUTPUTGAIN;
+X	else
+X		gdB = (int)(FACT2DB(value) + 0.5) + MINOUTPUTGAIN;
+X	LIMIT(MINOUTPUTGAIN, gdB, MAXOUTPUTGAIN);
+X	if(minp != NULL)
+X		*minp = MINOUTPUTGAIN;
+X	if(maxp != NULL)
+X		*maxp = MAXOUTPUTGAIN;
+X	return gdB;
+X}
+X
+Xstatic int
+XsgiSelectOutputGain(aDev, gdB)
+X	AudioDevicePtr aDev;
+X	int gdB;
+X{
+X	int value;
+X	long params[4];
+X	LIMIT(MINOUTPUTGAIN, gdB, MAXOUTPUTGAIN);
+X	value = (int)(DB2FACT(gdB - MINOUTPUTGAIN) + 0.5);
+X	LIMIT(0, value, 255);
+X	params[0] = AL_LEFT_SPEAKER_GAIN;
+X	params[1] = value;
+X	params[2] = AL_RIGHT_SPEAKER_GAIN;
+X	params[3] = value;
+X	ALsetparams(DEV(aDev), params, 4);
+X	return sgiQueryOutputGain(aDev, (int *)NULL, (int *)NULL);
+X}
+X
+X
+X/* Audio Context management */
+X
+Xstatic ABool
+XsgiCreateAC(pAC)
+X	ACPtr pAC;
+X{
+X	if((pAC->funcs = (ACFuncs *)AFalloc(sizeof(ACFuncs)))==NULL){
+X		return FALSE;
+X	}
+X	if((pAC->ops = (ACOps *)AFalloc(sizeof(ACOps)))==NULL){
+X		xfree(pAC->funcs);
+X		return FALSE;
+X	}
+X
+X	pAC->funcs->ValidateAC = (VoidProc)NoopDDA;
+X	pAC->funcs->ChangeAC = sgiChangeAC;
+X	pAC->funcs->CopyAC = sgiCopyAC;
+X	pAC->funcs->DestroyAC = sgiDestroyAC;
+X
+X	pAC->ops->ConvertPlay = sgiPlay;
+X	pAC->ops->ConvertRec = sgiRecord;
+X	pAC->ops->ConvertRecRecent = sgiRecordRecent;
+X	pAC->ops->PlayGain = (IntProc)NoopDDA;
+X	pAC->ops->RecordGain = (IntProc)NoopDDA;
+X
+X	return TRUE;
+X}
+X
+Xstatic void
+XsgiChangeAC(ptr, pAC, mask)
+Xvoid *ptr;
+XACPtr pAC;
+Xint mask;
+X{
+X}
+X
+Xstatic void
+XsgiCopyAC(ptr, spAC, mask, dpAC)
+Xvoid *ptr;
+XACPtr spAC;
+Xint mask;
+XACPtr dpAC;
+X{
+X	*(dpAC->funcs) = *(spAC->funcs);
+X	*(dpAC->ops) = *(spAC->ops);
+X}
+X
+Xstatic void
+XsgiDestroyAC(pAC)
+XACPtr pAC;
+X{
+X	xfree(pAC->funcs);
+X	xfree(pAC->ops);
+X}
+X
+X
+X/* Real time management */
+X
+Xstatic ATime
+XsgiGetTime(aDev)
+X	AudioDevicePtr aDev;
+X{
+X	sgiUpdateTime(aDev);
+X	return aDev->time0;
+X}
+X
+X
+X/* Playing samples */
+X
+X/* Forward */
+Xstatic void mix(short *, int, int, short *, int, int, float);
+Xstatic void mixulaw(short *, int, int, unsigned char *, int, float);
+X
+Xstatic int
+XsgiPlay(ptime, pbuf, plen, ac)
+X	ATime ptime;
+X	unsigned char *pbuf;
+X	int plen;
+X	ACPtr ac;
+X{
+X	AudioDevicePtr aDev = ac->aDev;
+X	int nch = aDev->playNchannels;
+X	int ssize = (aDev->playBufType == MU255) ? nch : 2*nch;
+X	struct private *p = PRIV(aDev);
+X	ATime time0 = p->playIndex + p->playLength * p->playCycles;
+X	int future = ptime - time0;
+X	int throw;
+X	float gainf;
+X	if (future < 0) {
+X		if (future <= -plen)
+X			return plen; /* Throw away all samples */
+X		/* Throw away initial samples */
+X		throw = -future;
+X		future = 0;
+X		plen -= throw;
+X		pbuf += throw*ssize;
+X	}
+X	else
+X		throw = 0;
+X	if (future >= p->playLength)
+X		return 0; /* Can't play any samples now */
+X	if (future + plen > p->playLength)
+X		plen = p->playLength - future; /* Hold some samples */
+X	if (ac->playGain != 0)
+X		gainf = DB2FACT(ac->playGain);
+X	else
+X		gainf = 1.0;
+X	switch (aDev->playBufType) {
+X	case LIN16:
+X		mix(p->playBuf, p->playIndex+future, p->playLength,
+X		    (short *)pbuf, plen, nch, gainf);
+X		break;
+X	case MU255:
+X		if (nch != 1)
+X			printf("sgiPlay: bad U-LAW Nchannels\n");
+X		else
+X			mixulaw(p->playBuf, p->playIndex+future, p->playLength,
+X				pbuf, plen, gainf);
+X		break;
+X	default:
+X		printf("sgiPlay: bad data format\n");
+X		break;
+X	}
+X	return plen + throw;
+X}
+X
+X/* XXX These are too slow -- apass at 48000 stereo takes 50% of R4000 CPU! */
+X
+Xstatic void
+Xmix(register short *dst,
+X    int at,
+X    int size,
+X    register short *src,
+X    register int count,
+X    int nch,
+X    register float gainf)
+X{
+X	at %= size;
+X	if (count > size-at) {
+X		mix(dst, at, size, src, size-at, nch, gainf);
+X		src += (size-at)*nch;
+X		count -= size-at;
+X		at = 0;
+X	}
+X	dst += at*NCH;
+X	switch (nch) {
+X	case 1:
+X		while (--count >= 0) {
+X			*dst++ += *src * gainf;
+X			*dst++ += *src * gainf;
+X			src++;
+X		}
+X		break;
+X	case 2:
+X		while (--count >= 0) {
+X			*dst++ += *src++ * gainf;
+X			*dst++ += *src++ * gainf;
+X		}
+X		break;
+X	default:
+X		printf("mix: bad nch (%d)\n", nch);
+X		break;
+X	}
+X}
+X
+Xstatic void
+Xmixulaw(register short *dst,
+X	int at,
+X	int size,
+X	register unsigned char *src,
+X	register int count,
+X	register float gainf)
+X{
+X	at %= size;
+X	if (count > size-at) {
+X		mixulaw(dst, at, size, src, size-at, gainf);
+X		src += (size-at);
+X		count -= size-at;
+X		at = 0;
+X	}
+X	dst += at*NCH;
+X	while (--count >= 0) {
+X		register value = AF_cvt_u2s[*src++];
+X		*dst++ += value * gainf;
+X		*dst++ += value * gainf;
+X	}
+X}
+X
+X
+X/* Recording samples */
+X
+X/* Forward */
+Xstatic void get(short *, int, int, short *, int, int, float);
+Xstatic void getulaw(short *, int, int, unsigned char *, int, float);
+X
+Xstatic int
+XsgiRecord(rtime, rbuf, rlen, ac)
+X	ATime rtime;
+X	unsigned char *rbuf;
+X	int rlen;
+X	ACPtr ac;
+X{
+X	AudioDevicePtr aDev = ac->aDev;
+X	int nch = aDev->recNchannels;
+X	int ssize = (aDev->recBufType == MU255) ? nch : 2*nch;
+X	struct private *p = PRIV(aDev);
+X	ATime time0 = p->recIndex + p->recLength * p->recCycles;
+X	int past = rtime - (time0 - p->recLength);
+X	int lost;
+X	float gainf;
+X	if (rtime >= time0)
+X		return 0; /* All in the future */
+X	if (past < 0) { /* Lost some samples */
+X		lost = -past;
+X		if (lost > rlen)
+X			lost = rlen;
+X		switch (aDev->recBufType) {
+X		default:
+X			printf("Don't know how to silence fill, assume 0\n");
+X			/* Fall through */
+X		case LIN16:
+X			memset(rbuf, 0, lost*ssize);
+X			break;
+X		case MU255:
+X			memset(rbuf, 0xff, lost*ssize); /* U-LAW silence */
+X			break;
+X		}
+X		if (lost >= rlen)
+X			return rlen;
+X		rbuf += lost*ssize;
+X		rlen -= lost;
+X	}
+X	else
+X		lost = 0;
+X	if (past + rlen > p->recLength)
+X		rlen = p->recLength - past;
+X	if (ac->recordGain != 0)
+X		gainf = DB2FACT(ac->recordGain);
+X	else
+X		gainf = 1.0;
+X	switch (aDev->recBufType) {
+X	case LIN16:
+X		get(p->recBuf, p->recIndex + past, p->recLength,
+X			(short *)rbuf, rlen, nch, gainf);
+X		break;
+X	case MU255:
+X		getulaw(p->recBuf, p->recIndex + past, p->recLength,
+X			rbuf, rlen, gainf);
+X		break;
+X	default:
+X		printf("sgiRecord: bad data format\n");
+X		break;
+X	}
+X	return rlen + lost;
+X}
+X
+Xstatic void
+Xget(short *src,
+X    int at,
+X    int size,
+X    short *dst,
+X    int count,
+X    int nch,
+X    float gainf)
+X{
+X	at %= size;
+X	if (count > size-at) {
+X		get(src, at, size, dst, size-at, nch, gainf);
+X		dst += (size-at)*nch;
+X		count -= size-at;
+X		at = 0;
+X	}
+X	src += at*NCH;
+X	switch (nch) {
+X	case 1:
+X		gainf *= 0.5;
+X		while (--count >= 0) {
+X			register int value;
+X			value = *src++;
+X			*dst++ = (value + *src++) * gainf;
+X		}
+X		break;
+X	case 2:
+X		while (--count >= 0) {
+X			*dst++ = *src++ * gainf;
+X			*dst++ = *src++ * gainf;
+X		}
+X		break;
+X	default:
+X		printf("get: bad nch (%d)\n", nch);
+X		break;
+X	}
+X}
+X
+Xstatic void
+Xgetulaw(short *src,
+X	int at,
+X	int size,
+X	unsigned char *dst,
+X	int count,
+X	float gainf)
+X{
+X	at %= size;
+X	if (count > size-at) {
+X		getulaw(src, at, size, dst, size-at, gainf);
+X		dst += size-at;
+X		count -= size-at;
+X		at = 0;
+X	}
+X	src += at*NCH;
+X	gainf /= 8; /* Average 2ch and scale down to 14 bits */
+X	while (--count >= 0) {
+X		register int value;
+X		value = *src++;
+X		value += *src++;
+X		value *= gainf;
+X		LIMIT(-8192, value, 8191);
+X		*dst++ = AF_comp_u[value & 0x3fff];
+X	}
+X}
+X
+Xstatic int
+XsgiRecordRecent(rtime, dp, rlen, ac)
+X	ATime rtime;
+X	unsigned char *dp;
+X	int rlen;
+X	ACPtr ac;
+X{
+X	/* XXX This isn't used at all?!?! */
+X}
+END_OF_FILE
+if test 24502 -ne `wc -c <'AF/server/dda/sgi/sgi.c'`; then
+    echo shar: \"'AF/server/dda/sgi/sgi.c'\" unpacked with wrong size!
+fi
+# end of 'AF/server/dda/sgi/sgi.c'
+fi
+if test -f 'AF/server/dda/sgi/sgi.h' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'AF/server/dda/sgi/sgi.h'\"
+else
+echo shar: Extracting \"'AF/server/dda/sgi/sgi.h'\" \(1468 characters\)
+sed "s/^X//" >'AF/server/dda/sgi/sgi.h' <<'END_OF_FILE'
+X/***********************************************************
+XCopyright 1993 by Stichting Mathematisch Centrum, Amsterdam, The Netherlands.
+X
+X                        All Rights Reserved
+X
+XPermission to use, copy, modify, and distribute this software and its 
+Xdocumentation for any purpose and without fee is hereby granted, 
+Xprovided that the above copyright notice appear in all copies and that
+Xboth that copyright notice and this permission notice appear in 
+Xsupporting documentation, and that the names of Stichting Mathematisch
+XCentrum or CWI not be used in advertising or publicity pertaining to
+Xdistribution of the software without specific, written prior permission.
+X
+XSTICHTING MATHEMATISCH CENTRUM DISCLAIMS ALL WARRANTIES WITH REGARD TO
+XTHIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+XFITNESS, IN NO EVENT SHALL STICHTING MATHEMATISCH CENTRUM BE LIABLE
+XFOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+XWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+XACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+XOF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+X******************************************************************/
+X
+X/* SGI Indigo interface, exported names */
+X
+X#ifndef	SGI_H
+X#define	SGI_H
+X
+X/* Read/write */
+Xextern int sgi_rate;
+X
+X/* Read-only */
+Xextern int sgi_validrates[];
+Xextern int sgi_n_validrates;
+X
+Xextern int sgiDevInit(AudioDevicePtr);
+X
+X#endif /* SGI_H */
+END_OF_FILE
+if test 1468 -ne `wc -c <'AF/server/dda/sgi/sgi.h'`; then
+    echo shar: \"'AF/server/dda/sgi/sgi.h'\" unpacked with wrong size!
+fi
+# end of 'AF/server/dda/sgi/sgi.h'
+fi
+if test -f 'MANIFEST' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'MANIFEST'\"
+else
+echo shar: Extracting \"'MANIFEST'\" \(574 characters\)
+sed "s/^X//" >'MANIFEST' <<'END_OF_FILE'
+X   File Name		Archive #	Description
+X-----------------------------------------------------------
+X AF/server/Asgi.man         1	SGI specific server manual page
+X AF/server/dda/sgi          1	Directory for SGI specific server code
+X AF/server/dda/sgi/Imakefile  1	
+X AF/server/dda/sgi/Makefile  1	
+X AF/server/dda/sgi/dda.c    1	
+X AF/server/dda/sgi/event.c  1	
+X AF/server/dda/sgi/sgi.c    1	
+X AF/server/dda/sgi/sgi.h    1	
+X MANIFEST                   1	This shipping list
+X PATCHES                    1	Patches for other parts of the tree
+X README.sgi                 1	Instructions
+END_OF_FILE
+if test 574 -ne `wc -c <'MANIFEST'`; then
+    echo shar: \"'MANIFEST'\" unpacked with wrong size!
+fi
+# end of 'MANIFEST'
+fi
+if test -f 'PATCHES' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'PATCHES'\"
+else
+echo shar: Extracting \"'PATCHES'\" \(11659 characters\)
+sed "s/^X//" >'PATCHES' <<'END_OF_FILE'
+X*** orig/AF/lib/AF/AFlib.h	Fri Feb 12 20:31:13 1993
+X--- AF/lib/AF/AFlib.h	Wed Feb 24 01:20:51 1993
+X***************
+X*** 55,62 ****
+X--- 55,64 ----
+X  
+X  #ifndef __cplusplus				/* DBW: added this */
+X  #ifdef mips
+X+ #ifndef sgi
+X  #define const
+X  #endif
+X+ #endif
+X  #endif						/* DBW: added this */
+X  
+X  #ifdef	sparc
+X***************
+X*** 412,418 ****
+X  
+X  AFAudioConn *AFOpenAudioConn(
+X  #if NeedFunctionPrototypes
+X! 			   const char * /*server*/
+X  #endif
+X  			   );
+X  
+X--- 414,420 ----
+X  
+X  AFAudioConn *AFOpenAudioConn(
+X  #if NeedFunctionPrototypes
+X! 			   /*const*/ char * /*server*/
+X  #endif
+X  			   );
+X  
+X*** orig/AF/lib/AFUtil/AFDialPhone.c	Thu Feb 11 18:04:14 1993
+X--- AF/lib/AFUtil/AFDialPhone.c	Wed Feb 24 01:26:00 1993
+X***************
+X*** 69,75 ****
+X  static struct tonedata
+X  { 
+X    char *name;
+X!   float f1, db1, f2, db2, onms, offms
+X    } standardtones[] =
+X  {
+X  /*
+X--- 69,75 ----
+X  static struct tonedata
+X  { 
+X    char *name;
+X!   float f1, db1, f2, db2, onms, offms;
+X    } standardtones[] =
+X  {
+X  /*
+X***************
+X*** 99,105 ****
+X--- 99,107 ----
+X  };
+X  
+X  #if	NeedFunctionPrototypes
+X+ #ifndef sgi
+X  extern char *malloc(unsigned size);
+X+ #endif
+X  #else
+X  extern char *malloc();
+X  #endif
+X*** orig/AF/clients/arecord/arecord.c	Fri Mar  5 13:38:32 1993
+X--- AF/clients/arecord/arecord.c	Wed Mar  3 23:03:57 1993
+X***************
+X*** 42,48 ****
+X  #include <ctype.h>
+X  #include <AF/AFlib.h>
+X  #include <sys/file.h>
+X! #include <sys/limits.h>
+X  #include <math.h>
+X  
+X  #define BUFSIZE  2048			/* buffer size, in samples */
+X--- 42,48 ----
+X  #include <ctype.h>
+X  #include <AF/AFlib.h>
+X  #include <sys/file.h>
+X! #include <limits.h>
+X  #include <math.h>
+X  
+X  #define BUFSIZE  2048			/* buffer size, in samples */
+X*** orig/AF/clients/aset/aset.c	Tue Feb  9 16:16:34 1993
+X--- AF/clients/aset/aset.c	Wed Feb 24 15:02:45 1993
+X***************
+X*** 98,107 ****
+X    Show a mask state with '*' and '-'
+X  */
+X  #if NeedFunctionPrototypes
+X! char *mask(int mask, int len)
+X  #else
+X! char *mask(mask, len)
+X! int mask;
+X  int len;
+X  #endif
+X  {
+X--- 98,107 ----
+X    Show a mask state with '*' and '-'
+X  */
+X  #if NeedFunctionPrototypes
+X! char *mask(int msk, int len)
+X  #else
+X! char *mask(msk, len)
+X! int msk;
+X  int len;
+X  #endif
+X  {
+X***************
+X*** 111,118 ****
+X  	p = m;
+X  	*p++ = '(';
+X  	while(len--) {
+X! 		*p++ = (mask & 1) ? '*' : '-';
+X! 		mask >>= 1;
+X  	}
+X  	*p++ = ')';
+X  	*p++ = '\0';
+X--- 111,118 ----
+X  	p = m;
+X  	*p++ = '(';
+X  	while(len--) {
+X! 		*p++ = (msk & 1) ? '*' : '-';
+X! 		msk >>= 1;
+X  	}
+X  	*p++ = ')';
+X  	*p++ = '\0';
+X*** orig/AF/config/sgi.cf	Mon Feb  8 21:51:41 1993
+X--- AF/config/sgi.cf	Thu Mar  4 17:23:14 1993
+X***************
+X*** 2,7 ****
+X--- 2,9 ----
+X  #define OSMajorVersion		4
+X  #define OSMinorVersion		0
+X  
+X+ #define SgiArchitecture
+X+ 
+X  #define SystemV			YES
+X  #define HasPutenv		YES
+X  #define ExecableScripts		YES
+X***************
+X*** 12,17 ****
+X--- 14,21 ----
+X  #define ExpandManNames          YES
+X  /* At SGI, in 3.2 we have TCP/IP sockets only, 3.3 has unix domain also ! */
+X  #define HasSockets		YES
+X+ #define ConnectionFlags -DTCPCONN -DUNIXCON
+X+ #define AsgiServer Asgi
+X  
+X  #if OSMajorVersion > 3 || (OSMajorVersion == 3 && OSMinorVersion > 2)
+X  #define NeedVarargsPrototypes	YES
+X***************
+X*** 20,26 ****
+X  #endif
+X  
+X  /* Extra libraries provide : yp, sysV malloc & shared libc */
+X! #define ExtraLibraries -lsun -lmalloc -lc_s
+X  
+X  /* #include <sgiLib.rules> */
+X  
+X--- 24,30 ----
+X  #endif
+X  
+X  /* Extra libraries provide : yp, sysV malloc & shared libc */
+X! #define ExtraLibraries -laudio -lsun -lmalloc -lc_s
+X  
+X  /* #include <sgiLib.rules> */
+X  
+X*** orig/AF/lib/AFUtil/AFDialPhone.c	Thu Feb 11 18:04:14 1993
+X--- AF/lib/AFUtil/AFDialPhone.c	Wed Feb 24 01:26:00 1993
+X***************
+X*** 69,75 ****
+X  static struct tonedata
+X  { 
+X    char *name;
+X!   float f1, db1, f2, db2, onms, offms
+X    } standardtones[] =
+X  {
+X  /*
+X--- 69,75 ----
+X  static struct tonedata
+X  { 
+X    char *name;
+X!   float f1, db1, f2, db2, onms, offms;
+X    } standardtones[] =
+X  {
+X  /*
+X***************
+X*** 99,105 ****
+X--- 99,107 ----
+X  };
+X  
+X  #if	NeedFunctionPrototypes
+X+ #ifndef sgi
+X  extern char *malloc(unsigned size);
+X+ #endif
+X  #else
+X  extern char *malloc();
+X  #endif
+X*** orig/AF/server/Imakefile	Mon Feb  8 17:02:17 1993
+X--- AF/server/Imakefile	Fri Mar  5 12:43:54 1993
+X***************
+X*** 77,82 ****
+X--- 77,88 ----
+X  #define AsparcServer /* as nothing */
+X  #endif
+X  
+X+ #ifdef AsgiServer
+X+ #define dosgiServer
+X+ #else
+X+ #define AsgiServer /* as nothing */
+X+ #endif
+X+ 
+X  /*****************************************************************************
+X   *                                                                           *
+X   * Now add A<what>Server to the ALL line; do NOT split across lines or you   *
+X***************
+X*** 84,91 ****
+X   *                                                                           *
+X  /*****************************************************************************
+X   */
+X! ALL = AlofiServer AmaxineServer AlsServer AaxpServer AjvServer AsparcServer
+X! ALLPOSSIBLE = Alofi Amaxine Als Aaxp Ajv Asparc
+X  
+X  all: $(ALL)
+X  
+X--- 90,97 ----
+X   *                                                                           *
+X  /*****************************************************************************
+X   */
+X! ALL = AlofiServer AmaxineServer AlsServer AaxpServer AjvServer AsparcServer AsgiServer
+X! ALLPOSSIBLE = Alofi Amaxine Als Aaxp Ajv Asparc Asgi
+X  
+X  all: $(ALL)
+X  
+X***************
+X*** 190,195 ****
+X--- 196,217 ----
+X  ServerTarget(Asparc,$(SPARCDIRS),$(SPARCOBJS),$(SPARCLIBS),$(SYSLIBS))
+X  #endif /* dosparcServer */
+X  
+X+ #ifdef dosgiServer
+X+ /**/#
+X+ /**/# sgi server
+X+ /**/#
+X+ #define need_dia
+X+ #define need_dda_mi
+X+ #define need_dda_sgi
+X+ #define need_os_42bsd
+X+ SGIDIRS = dia dda/mi dda/sgi os/4.2bsd
+X+ SGIOBJS = 
+X+ SGILIBS = $(DIA) $(BSD) dda/sgi/libsgi.a $(MI) 
+X+ AsgiDIRS = $(SGIDIRS)
+X+ 
+X+ ServerTarget(Asgi,$(SGIDIRS),$(SGIOBJS),$(SGILIBS),$(SYSLIBS))
+X+ #endif /* dosgiServer */
+X+ 
+X  /*****************************************************************************
+X   *                                                                           *
+X   *			Do not modify rest of Imakefile                      *
+X***************
+X*** 250,255 ****
+X--- 272,283 ----
+X  #define dir_dda_sparc /**/
+X  #endif
+X  
+X+ #ifdef need_dda_sgi
+X+ #define dir_dda_sgi dda/sgi
+X+ #else
+X+ #define dir_dda_sgi /**/
+X+ #endif
+X+ 
+X  OURDIA = dir_dia
+X  OURDDA = dir_dda_mi
+X  OUROS = dir_os_42bsd
+X***************
+X*** 259,268 ****
+X  AXPDDA = dir_dda_axp
+X  LSDDA = dir_dda_ls
+X  SPARCDDA = dir_dda_sparc
+X  
+X! SUBDIRS = $(OURDIA) $(OURDDA) $(OUROS) $(DECDDA) $(MAXINEDDA) $(AXPDDA) $(LSDDA) $(JVDDA) $(SPARCDDA)
+X  
+X!      ALLDDADIRS = dda/mi dda/lofi dda/maxine dda/axp dda/ls dda/jv dda/sparc
+X        ALLOSDIRS = os/4.2bsd
+X       ALLSUBDIRS = dia $(ALLDDADIRS) $(ALLOSDIRS)
+X  
+X--- 287,297 ----
+X  AXPDDA = dir_dda_axp
+X  LSDDA = dir_dda_ls
+X  SPARCDDA = dir_dda_sparc
+X+ SGIDDA = dir_dda_sgi
+X  
+X! SUBDIRS = $(OURDIA) $(OURDDA) $(OUROS) $(DECDDA) $(MAXINEDDA) $(AXPDDA) $(LSDDA) $(JVDDA) $(SPARCDDA) $(SGIDDA)
+X  
+X!      ALLDDADIRS = dda/mi dda/lofi dda/maxine dda/axp dda/ls dda/jv dda/sparc dda/sgi
+X        ALLOSDIRS = os/4.2bsd
+X       ALLSUBDIRS = dia $(ALLDDADIRS) $(ALLOSDIRS)
+X  
+X***************
+X*** 295,301 ****
+X  InstallManPage(Alofi,$(MANDIR))
+X  
+X  InstallManPage(Aaxp,$(MANDIR))
+X! InstallManPageAliases(Aaxp,$(MANDIR), Amaxine Asparc)
+X  
+X  install::
+X  	@echo "************************************************************"
+X--- 324,332 ----
+X  InstallManPage(Alofi,$(MANDIR))
+X  
+X  InstallManPage(Aaxp,$(MANDIR))
+X! InstallManPageAliases(Aaxp,$(MANDIR), Amaxine Asparc Asgi)
+X! 
+X! InstallManPage(Asgi,$(MANDIR))
+X  
+X  install::
+X  	@echo "************************************************************"
+X*** orig/AF/server/dia/dispatch.c	Fri Mar  5 13:38:26 1993
+X--- AF/server/dia/dispatch.c	Wed Mar  3 23:03:53 1993
+X***************
+X*** 776,782 ****
+X      REQUEST_SIZE_MATCH(aEnableInputReq);
+X      VERIFY_AC(pAC, stuff->ac, client);
+X      aDev = pAC->aDev;
+X!     if ( stuff->mask & ~((1 << aDev->numberOfOutputs) - 1)) 
+X      	return ABadValue;
+X      (void) (*aDev->ChangeInput)
+X  	(aDev, 1, stuff->mask, &reply.oldState, &reply.newState);
+X--- 776,782 ----
+X      REQUEST_SIZE_MATCH(aEnableInputReq);
+X      VERIFY_AC(pAC, stuff->ac, client);
+X      aDev = pAC->aDev;
+X!     if ( stuff->mask & ~((1 << aDev->numberOfInputs) - 1)) 
+X      	return ABadValue;
+X      (void) (*aDev->ChangeInput)
+X  	(aDev, 1, stuff->mask, &reply.oldState, &reply.newState);
+X***************
+X*** 854,860 ****
+X      VERIFY_AC(pAC, stuff->ac, client);
+X  
+X      aDev = pAC->aDev;
+X!     if ( stuff->mask & ~((1 << aDev->numberOfOutputs) - 1)) 
+X      	return ABadValue;
+X      (void) (*aDev->ChangeInput)
+X  	(aDev, 0, stuff->mask, &reply.oldState, &reply.newState);
+X--- 854,860 ----
+X      VERIFY_AC(pAC, stuff->ac, client);
+X  
+X      aDev = pAC->aDev;
+X!     if ( stuff->mask & ~((1 << aDev->numberOfInputs) - 1)) 
+X      	return ABadValue;
+X      (void) (*aDev->ChangeInput)
+X  	(aDev, 0, stuff->mask, &reply.oldState, &reply.newState);
+X*** orig/AF/server/os/4.2bsd/connection.c	Fri Mar  5 13:38:35 1993
+X--- AF/server/os/4.2bsd/connection.c	Wed Mar  3 23:03:58 1993
+X***************
+X*** 156,163 ****
+X  int ConnectionTranslation[MAXSOCKS];
+X  extern ClientPtr NextAvailableClient();
+X  
+X! extern int AutoResetServer();
+X! extern int GiveUp();
+X  extern AID CheckAuthorization();
+X  static void CloseDownFileDescriptor(), ErrorConnMax();
+X  extern void FreeOsBuffers(), ResetOsBuffers();
+X--- 156,168 ----
+X  int ConnectionTranslation[MAXSOCKS];
+X  extern ClientPtr NextAvailableClient();
+X  
+X! #ifdef SYSV
+X! #define SIGTYPE void
+X! #else
+X! #define SIGTYPE int
+X! #endif
+X! extern SIGTYPE AutoResetServer();
+X! extern SIGTYPE GiveUp();
+X  extern AID CheckAuthorization();
+X  static void CloseDownFileDescriptor(), ErrorConnMax();
+X  extern void FreeOsBuffers(), ResetOsBuffers();
+X*** orig/AF/server/os/4.2bsd/utils.c	Mon Feb 15 17:51:35 1993
+X--- AF/server/os/4.2bsd/utils.c	Mon Mar  1 10:49:10 1993
+X***************
+X*** 91,96 ****
+X--- 91,101 ----
+X  
+X  /* Force connections to close on SIGHUP from init */
+X  
+X+ #ifdef SYSV
+X+ void
+X+ #else
+X+ int
+X+ #endif
+X  AutoResetServer ()
+X  {
+X      dispatchException |= DE_RESET;
+X*** orig/AF/util/makedepend/main.c	Mon Feb  8 19:03:35 1993
+X--- AF/util/makedepend/main.c	Wed Feb 24 01:06:56 1993
+X***************
+X*** 5,10 ****
+X--- 5,13 ----
+X  #ifdef hpux
+X  #define sigvec sigvector
+X  #endif /* hpux */
+X+ #ifdef sgi
+X+ #define NO_SIGVEC
+X+ #endif
+X  
+X  #include <signal.h>
+X  
+X***************
+X*** 65,71 ****
+X  	fatal ("got signal %d\n", sig);
+X  }
+X  
+X! #ifndef USG
+X  struct sigvec sig_vec = {
+X  	catch,
+X  	 (1<<(SIGINT -1))
+X--- 68,74 ----
+X  	fatal ("got signal %d\n", sig);
+X  }
+X  
+X! #ifndef NO_SIGVEC
+X  struct sigvec sig_vec = {
+X  	catch,
+X  	 (1<<(SIGINT -1))
+X***************
+X*** 78,84 ****
+X  	|(1<<(SIGSYS-1)),
+X  	0
+X  };
+X! #endif /* USG */
+X  
+X  main(argc, argv)
+X  	int	argc;
+X--- 81,87 ----
+X  	|(1<<(SIGSYS-1)),
+X  	0
+X  };
+X! #endif /* NO_SIGVEC */
+X  
+X  main(argc, argv)
+X  	int	argc;
+X***************
+X*** 206,212 ****
+X  	/*
+X  	 * catch signals.
+X  	 */
+X! #ifdef USG
+X  /*  should really reset SIGINT to SIG_IGN if it was.  */
+X  	signal (SIGHUP, catch);
+X  	signal (SIGINT, catch);
+X--- 209,215 ----
+X  	/*
+X  	 * catch signals.
+X  	 */
+X! #ifdef NO_SIGVEC
+X  /*  should really reset SIGINT to SIG_IGN if it was.  */
+X  	signal (SIGHUP, catch);
+X  	signal (SIGINT, catch);
+X***************
+X*** 453,457 ****
+X  warning(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9)
+X  {
+X  	fprintf(stderr, "%s:  ", ProgramName);
+X! 	fprintf(stderr, x0,x1,x2,x3,x4,x5,x6,x7,x8,x9);
+X  }
+X--- 456,460 ----
+X  warning(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9)
+X  {
+X  	fprintf(stderr, "%s:  ", ProgramName);
+X! 	fprintf(stderr, (char *)x0,x1,x2,x3,x4,x5,x6,x7,x8,x9);
+X  }
+END_OF_FILE
+if test 11659 -ne `wc -c <'PATCHES'`; then
+    echo shar: \"'PATCHES'\" unpacked with wrong size!
+fi
+# end of 'PATCHES'
+fi
+if test -f 'README.sgi' -a "${1}" != "-c" ; then 
+  echo shar: Will not clobber existing file \"'README.sgi'\"
+else
+echo shar: Extracting \"'README.sgi'\" \(733 characters\)
+sed "s/^X//" >'README.sgi' <<'END_OF_FILE'
+XThis kit adds an SGI port to AudioFile release 2 patchlevel 9.
+X
+XAF2R2 is on crl.dec.com in pub/DEC/AF; make sure to apply patches
+X1-9 first!  (patches 1-3 are reversed).
+X
+XFirst apply the patches from file PATCHES; these fix some small
+Xportability problems in the library, clients and device-independent
+Xserver code and update the sgi.cf file and the server Imakefile.
+X
+XThen create a subdirectory AF/server/dda/sgi and extract the remaining
+Xfiles from the kit (the kit may alrady have done this).
+X
+XNow follow the normal build instructions.  In particular, "make" in
+Xthe server subdirectory should build the SGI server, Asgi.
+X
+XNote the copyrights on the SGI specific code.
+X
+X--Guido van Rossum, CWI, Amsterdam <Guido.van.Rossum@cwi.nl>
+END_OF_FILE
+if test 733 -ne `wc -c <'README.sgi'`; then
+    echo shar: \"'README.sgi'\" unpacked with wrong size!
+fi
+# end of 'README.sgi'
+fi
+echo shar: End of archive 1 \(of 1\).
+cp /dev/null ark1isdone
+MISSING=""
+for I in 1 ; do
+    if test ! -f ark${I}isdone ; then
+	MISSING="${MISSING} ${I}"
+    fi
+done
+if test "${MISSING}" = "" ; then
+    echo You have the archive.
+    rm -f ark[1-9]isdone
+else
+    echo You still need to unpack the following archives:
+    echo "        " ${MISSING}
+fi
+##  End of shell archive.
+exit 0

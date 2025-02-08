@@ -1,0 +1,15 @@
+"Prudent Engineering Practice for Cryptographic Protocols"
+Martin Abadi and Roger Needham
+June 1, 1994. 25 pages.
+
+We present principles for designing cryptographic protocols.
+The principles are neither necessary nor sufficient for
+correctness.  They are however helpful, in that adherence to them
+would have prevented a number of published errors.
+
+Our principles are informal guidelines; they complement formal methods,
+but do not assume them. In order to demonstrate the actual applicability
+of these guidelines, we discuss some instructive examples from the
+literature.
+
+

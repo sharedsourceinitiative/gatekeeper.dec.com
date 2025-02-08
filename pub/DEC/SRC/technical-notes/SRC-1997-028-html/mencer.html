@@ -1,0 +1,95 @@
+<html>
+<head><title>A High speed Interface from PCI to FireWire</title></head>
+<body>
+<center>
+<h1><b>A High speed Interface from PCI to FireWire</b></h1><br>
+<h2><A HREF="http://umunhum.stanford.edu/~oskar">Oskar Mencer,</a> 
+Stanford University</h2>
+</center>
+
+
+<H2>About Me</H2>
+
+I'm a third year PhD student at the Department of Electrical Engineering in 
+Stanford. I'm working with Mike Flynn and Martin Morf in the Computer 
+Architecture and Arithmetic Group. Currently I am working with the PCI 
+Pamette on various aspects of adaptive computing.
+
+Before joining Stanford, I earned an undergraduate degree at the Technion - 
+the Israel Institute of Technology.
+I chose SRC for my internship because I think that SRC is one of the most 
+interresting places for research in computer systems. <P>
+
+
+<h2>Summary of the Project at SRC</h2>
+
+We designed a high-speed interface between PCI and the Link Layer of
+the IEEE 1394 FireWire chipset from Texas Instruments. Our environment
+allows us to exercise all the various features of the FireLink chipset
+from Texas Instruments. Highlights of the design are: PCI write bursts
+from CPU to PCI, DMA back to host memory, and flexible buffers to deal
+with variable latency Link Layer chips. The interface is implemented on
+the PCI Pamette FPGA board.<P>
+
+
+<h2>FireWire: the Interconnect for Multimedia and more</h2> 
+
+FireWire, IEEE standard 1394, is a serial interconnect developed by
+Apple and Texas Instruments. The standard regulates the physical and link layer. The
+primary target applications are Audio Video and today's SCSI
+connections. The highlights are: 200 Mbits/s of physical bandwidth,
+user-friendly hot plugging, low cost and it's a non-proprietary environment. Didier
+Roncin developed a FireWire daughter board for the DEC PCI Pamette,
+called FireLink, consisting of two FireWire Channels and one  Xilinx XC4010E
+for control. Strict compliance with the FireWire standard and flexible
+FPGA technology make this board a useful platform for exploring FireWire.<P>
+
+
+<h2>The FireLink Library</h2>
+
+The software interface to FireLink is also designed with performance as
+the main target. Therefore we chose the C programming language and
+macros for communication with the FireLink hardware, similar to ANL
+macros. The library implements a message passing
+ abstraction on to the FireWire. <P>
+
+
+<h2>Performance</h2>
+
+Performance is analyzed for three parts of the FireWire network. 
+"Send", the time to write a burst-block of a specific size into the transmit
+FIFO, has a maximal bandwidth of 70 Mbits/s for block sizes of 240
+quadpackets. ReadAck, or the time for the link layer to send all the
+data from the transmit FIFOs to the destination and receive an
+acknowledgement from the other side, translates into a bandwidth of 140
+Mbits/s. (According to the documentation from Texas Instruments, the
+physical layer transmits data at 200 Mbits/s.) Recv, or the time to
+move the data from the receive FIFO at the link layer chips to main
+memory, results in a bandwidth of  110 Mbits/s. This is achieved by DMA
+bursts from the PCI Pamette board to main memory. <P>
+
+
+<h2>Future Work</h2>
+
+One possible extension to this project is to create clusters of
+machines, examine the performance and compare with other competing
+interconnection technologies. In addition, a software interface to
+Memory Channel technology would integrate all the Memory Channel
+applications with FireWire.
+A more esoteric project would be to think of the FireLink hardware as a
+distributed system of custom computing machines (Pamette's). The
+objective could be to speed up computation intensive parallel
+applications by accelerating each node with custom FPGA designs.<P>
+
+
+<h2>What I learned from my internship</h2>
+
+I strongly improved my FPGA design skills. As a side project I also 
+implemented a Java interface which talked to the PCI Pamette through an 
+HTTP link and a dedicated Tcl Webserver. In conclusion, DEC SRC has met
+all my expectations and more.<P>
+
+
+</BODY>
+</HTML>
+

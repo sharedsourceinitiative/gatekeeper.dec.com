@@ -1,0 +1,9 @@
+Scott Lipcon reports:
+
+I have set up a nightly RPM build - its not well tested.  Its a 3 stage 
+process via cron (at midnight my user updates via cvs, at 12:30 root 
+builds the RPM, and at 1am my user scp's the result to my ftp site).  
+Please let me know if you have any trouble.  At 1am eastern each night, 
+the daily snapshot will appear at ftp.acm.jhu.edu, in /pub/slipcon, as 
+exmh-2.2_yyyymmdd.noarch.rpm.  I will delete old ones manually for the 
+time being, so make sure you are grabbing the latest.

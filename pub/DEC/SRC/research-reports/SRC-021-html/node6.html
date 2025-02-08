@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Topaz Overview</TITLE>
+<META NAME="description" CONTENT="Topaz Overview">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node7.html">
+<LINK REL="previous" HREF="node5.html">
+<LINK REL="up" HREF="node4.html">
+<LINK REL="next" HREF="node7.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html183"
+ HREF="node7.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html179"
+ HREF="node4.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html173"
+ HREF="node5.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html181"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html182"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html184"
+ HREF="node7.html">Guidelines for Multithreaded Interfaces</A>
+<B> Up:</B> <A NAME="tex2html180"
+ HREF="node4.html">Evolving the UNIX System</A>
+<B> Previous:</B> <A NAME="tex2html174"
+ HREF="node5.html">Introduction</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H1><A NAME="SECTION02020000000000000000">
+Topaz Overview</A>
+</H1>
+<A NAME="sec-topazoverview">&#160;</A>
+<A NAME="131">&#160;</A>
+<A NAME="132">&#160;</A>
+One way of viewing Topaz is as a hybrid of Berkeley's 4.2BSD UNIX
+[<A
+ HREF="node19.html#joy:4.2sysman">7</A>,<A
+ HREF="node19.html#quarterman:berkeleyunix">12</A>] and Xerox's Cedar
+[<A
+ HREF="node19.html#swinehart:cedar">16</A>].  Topaz borrows the 4.2BSD file system and
+large-grain process structure, populates these processes (address spaces)
+with Cedar-like threads, and interconnects them with Cedar-like remote
+procedure call.  Topaz allows single-threaded programs using the standard
+4.2BSD system interface and multithreaded programs using a new Topaz
+operating system interface to run on the same machine, to share files, to
+send each other signals, and to run each other as processes.
+<P>
+A Topaz address space has most of the same state components as a UNIX
+process has, such as virtual memory, a set of open files, a user id, and
+signal-handling information, but is considered as more ``heavyweight''
+than a UNIX process.  Like a Cedar programmer, a Topaz programmer can use
+threads for fine-grained cooperation within a single address space.
+Unlike a Cedar programmer, a Topaz programmer can also use multiple
+address spaces to separate programs of different degrees of
+trustworthiness.
+<P><A NAME="135">&#160;</A>
+<A NAME="136">&#160;</A>
+<A NAME="137">&#160;</A>
+<A NAME="138">&#160;</A>
+Multiple threads address a problem different from the one addressed by the
+shared memory segments provided by some versions of UNIX, such as System V
+[<A
+ HREF="node19.html#att:systemvid">2</A>].  While shared segments are useful in allowing
+separately developed application programs to have access to a common data
+structure, as for example a database buffer pool, multiple threads are
+intended to be a ``lightweight'' control structure for use within a single
+program.  Modeling threads as separate UNIX processes would place
+undesirable restrictions on sharing open files and pointer-containing data
+structures among threads.  Creating the dozens or even hundreds of threads
+used by some Topaz applications would be slow and extravagant of kernel
+resources even if most of the virtual memory resources could be shared.
+<P><A NAME="140">&#160;</A>
+<A NAME="141">&#160;</A>
+The semantics of Topaz threads assumes as many processors as threads; the
+implementation assigns threads to actual processors.  Threads sharing
+variables must therefore explicitly synchronize.  The synchronization
+primitives provided (mutexes, conditions, and semaphores) are derived from
+Hoare's monitors [<A
+ HREF="node19.html#hoare:monitors">6</A>], following the modifications of
+Mesa [<A
+ HREF="node19.html#lampson:mesaprocess">10</A>]; the details are described by Birrell et
+al. [<A
+ HREF="node19.html#birrell:synch">4</A>].
+<P><A NAME="145">&#160;</A>
+<A NAME="146">&#160;</A>
+<A NAME="147">&#160;</A>
+Support for multiprocessors in UNIX has evolved over a number of years.
+Early multiprocessor implementations of UNIX allowed concurrent execution
+of single-threaded processes but didn't support multiple threads.  Many of
+these implementations serialized execution within the system kernel; Bach
+and Buroff [<A
+ HREF="node19.html#bach:multiprocessorunix">3</A>] describe one of the first
+implementations to allow concurrency within the kernel.  Several current
+systems, such as Apollo's Concurrent Programming Support
+[<A
+ HREF="node19.html#apollo:cpsreference">1</A>] and Sun's ``lightweight process'' (lwp)
+facility [<A
+ HREF="node19.html#kepecs:sunlwp">8</A>], support multiple threads within a UNIX
+process, but can't assign more than one thread within an address space to
+a processor at any one time.  Like the Firefly implementation of Topaz,
+C-MU's Mach [<A
+ HREF="node19.html#rashid:threads">13</A>] supports concurrent execution of threads
+within an address space on a multiprocessor.  The approach taken by
+Apollo, Sun, and Mach in adding threads to UNIX is to minimize the impact
+on the rest of the system interface, to make it easier to add the use of
+multiple threads to large existing programs.  In contrast, the approach
+taken in Topaz is to integrate the use of threads with all the other
+programming facilities.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html183"
+ HREF="node7.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html179"
+ HREF="node4.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html173"
+ HREF="node5.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html181"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html182"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html184"
+ HREF="node7.html">Guidelines for Multithreaded Interfaces</A>
+<B> Up:</B> <A NAME="tex2html180"
+ HREF="node4.html">Evolving the UNIX System</A>
+<B> Previous:</B> <A NAME="tex2html174"
+ HREF="node5.html">Introduction</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

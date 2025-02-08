@@ -1,0 +1,31 @@
+"Partial Replication in the Vesta Software Repository"
+Timothy Mann
+Report #172, August 17, 2001.
+
+The Vesta repository is a special-purpose replicated file system,
+developed as part of the Vesta software configuration management
+system.  One of the major goals of Vesta is to make all software
+builds reproducible.  To this end, the repository provides an
+append-only name space; new names can be inserted, but once a
+name exists, its meaning cannot change.  More concretely, all
+files and some designated directories are immutable, while the remaining
+directories are appendable, allowing new names to be defined but not
+allowing existing names to be redefined.
+
+The data stored in a repository can be replicated, to support
+distributed software development.  The append-only nature of the
+repository greatly simplifies the problem of maintaining consistency
+among replicas.  Conceptually, all files and directories stored in all
+Vesta repositories are named in one single, global name space.  Each
+repository stores some subtree of the complete name space.
+Replication is present when the subtrees stored by two different
+repositories overlap; that is, some of the same names and data occur
+in both.  We call this concept partial replication, because
+each repository can choose to replicate all, part, or none of the data
+stored in any other repository.
+
+In this paper we outline the main features of the repository,
+give a definition for the consistency of partial replicas, describe
+how our replication tools maintain consistency, and briefly relate our
+experience in using the system for distributed software development
+between groups on opposite coasts of the United States.

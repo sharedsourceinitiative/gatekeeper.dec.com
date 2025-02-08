@@ -1,0 +1,34 @@
+			  CRL Technical Report 93/12
+				       
+		    Contention in Shared Memory Algorithms
+				       	       
+			 Cynthia Dwork, Maurice Herlihy, 
+			       and Orli Waarts
+				       
+			        August 6, 1993
+				       
+
+
+Most complexity measures for concurrent algorithms for asynchronous 
+shared-memory architectures focus on process steps and memory consumption.
+In practice, however, performance of multiprocessor algorithms is heavily 
+influenced by contention, the extent to which processes access the same 
+location at the same time.  Nevertheless, even though contention is 
+one of the principal considerations affecting the performance of real 
+algorithms on real multiprocessors, there are no formal tools for 
+analyzing the contention of asynchronous shared-memory algorithms.
+ 
+This paper introduces the first formal complexity model for contention
+in multiprocessors.  We focus on the standard multiprocessor architecture
+in which n asynchronous processes communicate by applying read, write,
+and read-modify-write operations to a shared memory.  We use our model
+to derive two kinds of results: (1) lower bounds on contention for well
+known basic problems such as agreement and mutual exclusion, and (2)
+trade-offs between latency (maximal number of accesses to shared variables
+performed by a single process in executing the algorithm) and contention
+for these algorithms. Furthermore, we give the first formal performance
+analysis of counting networks, a class of concurrent data structures
+implementing shared counters. Experiments indicate that certain counting
+networks outperform conventional single-variable counters at high levels
+of contention.  Our analysis provides the first formal explanation for
+this phenomenon.

@@ -1,0 +1,99 @@
+This is a short bibliography of X books published by O'Reilly &
+Associates.  It is intended to supplement Ken Lee's X bibliography,
+which does not list authors or ISBN numbers for these books.  Since I
+write for O'Reilly & Associates, I have not attempted to review the
+books here, but have just given short descriptions of the books,
+sometimes copying text from the back cover.
+
+	David Flanagan
+
+---------------------------------------------------------------------------
+Nye, Adrian, Editor,   Volume 0:  X Protocol Reference Manual, Third
+    Edition, O'Reilly & Associates, 1992.  ISBN: 1-56592-008-2 
+    Contains a conceptual introduction to the X protocol, a reformatted
+    version of the X Consortium X protocol specification, and appendices
+    containing the ICCCM conventions, the XLFD conventions, and various
+    quick reference aids.  The third edition covers X11R4 and X11R5
+
+Nye, Adrian, Volume One: Xlib Programming Manual, Third Edition, 
+    O'Reilly & Associates, 1992.  ISBN 1-56592-002-3.  A programmer's
+    guide to Xlib, with chapters on all the major features.  The third
+    edition covers X11R4 and the new features of X11R5
+
+Nye, Adrian, Editor, Volume Two: Xlib Reference Manual, Third Edition,
+    O'Reilly & Associates, 1992.  ISBN 1-56592-006-6.  Contains reference
+    pages, derived from the MIT specification, for all Xlib functions.
+    The third edition covers X11R4 and X11R5, including all the new
+    internationalization and Xcms functions.
+
+Quercia, Valerie and O'Reilly, Tim, Volume Three: X Window System User's
+    Guide, O'Reilly & Associates 1990, ISBN: 0-937175-14-5.  
+    Orients the new user to window system concepts an provides detailed
+    tutorials for many client programs, including the xterm terminal
+    emulator and window managers.  Later chapters explain how to
+    customize the X environment.
+
+Quercia, Valerie and O'Reilly, Tim, Volume Three: X Window System User's
+    Guide, Motif Edition, O'Reilly & Associates 1991, ISBN: 0-937175-61-7.
+    This edition of the book covers the same material, but places special
+    emphasis on the Motif Window Manager, mwm.
+      
+Nye, Adrian and O'Reilly, Tim, Volume Four: X Toolkit Intrinsics 
+    Programming Manual, O'Reilly & Associates, 1990, ISBN: 0-937175-56-0.  
+    A programmer's guide to the X Toolkit, with chapters on and examples 
+    of all the major features.  The examples use the Athena widget set.
+
+Nye, Adrian and O'Reilly, Tim, Volume Four: X Toolkit Intrinsics 
+    Programming Manual, Motif Edition, O'Reilly & Associates, 1992, 
+    ISBN: 1-56592-013-9.
+    A programmer's guide to the X Toolkit with emphasis on the Motif
+    widget set.  This second edition covers X11R5 and Motif 1.2.
+
+Flanagan, David, Editor, Volume Five:  X Toolkit Intrinsics Reference Manual, 
+    Third Edition, O'Reilly & Associates, 1992, ISBN: 1-56592-007-4.  
+    This volume contains reference pages for all X Toolkit functions and the 
+    Xaw widget library.  The third edition covers X11R4 and X11R5, and has 
+    been substantially revised and improved from previous editions.
+
+Heller, Dan, Volume Six: Motif Programming Manual, O'Reilly & Associates, 1991,
+    ISBN: 0-937175-70-6
+    This volume is a complete programmer's guide for the Motif widget
+    set, and contains quick reference information for all Motif widgets
+    and functions.
+
+Heller, Dan, Volume Seven: XView Programming Manual, Third Edition,
+    O'Reilly & Associates, 1991, ISBN: 0-937175-87-0.  
+    A programmer's guide to the XView Version 3 OPEN LOOK toolkit.
+
+Heller, Dan, Volume Seven: XView Reference Manual, O'Reilly & Associates, 1991 
+    ISBN: 0-937175-88-9
+    A complete referece manual to XView 3 attributes, functions, and macros.
+
+Mui, Linda and Pearce, Eric, Volume Eight: X Window System Administrator's 
+    Guide, O'Reilly & Associates, 1992, ISBN: 0-937175-83-8,  
+    ISBN: 1-56592-052-X (with CD-ROM)  
+    A book for X system administrators, covering XDM, security, font 
+    management, X terminals, building X, etc.  Available with a CD-ROM
+    containing the complete X source code.
+
+Cutler, Ellie, Gilly Daniel, and O'Reilly, Tim, The X Window System in a 
+    Nutshell, Second Edition O'Reilly & Associates, 1992, ISBN: 1-56592-017-1
+    A quick reference guide to Xlib functions datatypes and events, Xt 
+    functions and datatypes, and the standard X clients.  The second
+    edition is expanded and covers X11R4 and X11R5.
+
+Flanagan, David, Programmer's Supplement for R5 of the X Window System, 
+    O'Reilly & Associates, 1991, ISBN: 0-937175-86-2
+    An programmer's guide to all the new features in X11R5, with reference
+    pages for the new functions.
+
+Gaskins, Tom, PHIGS Programming Manual:  3D Programming in X, O'Reilly & 
+    Associates 1992, ISBN: 0-937175-85-4, ISBN: 0-937175-92-7 (hardcover).  
+    A complete guide, covering concepts and programming to PHIGS and PHIGS 
+    PLUS, with emphasis on the PEX implementation.
+
+Kosko, Linda, Editor, PHIGS Reference Manual: 3D Programming in X, O'Reilly & 
+    Associates, 1992, ISBN: 0-937175-91-9
+    Reference pages for all PHIGS functions, derived and edited from the
+    MIT release.
+

@@ -1,0 +1,38 @@
+<TITLE>Compaq Systems Research Center: Note 2001-003</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/SRC/pics/cpq-logo.gif" ALT="Compaq">
+ SRC Technical Note 2001-003</H1>
+<h1>
+"Thread-Modular Verification For Shared-Memory Programs"</h1>
+<hr>
+<h2>
+Cormac Flanagan, Stephen N. Freund, Shaz Qadeer</h2>
+<p>
+Note #2001-003, November 19, 2001.
+<p>
+
+Ensuring the reliability of multithreaded software systems is
+difficult due to the interaction between threads.  This paper
+describes the design and implementation of a static checker for such
+systems. To avoid considering all possible thread interleavings, the
+checker uses assume-guarantee reasoning, and relies on the programmer
+to specify an environment assumption that constrains the
+interaction between threads.  Using this environment assumption, the
+checker reduces the verification of the original multithreaded program
+to the verification of several sequential programs, one for each
+thread.  These sequential programs are subsequently analyzed using
+extended static checking techniques (based on verification conditions
+and automatic theorem proving).  Experience indicates that the checker
+is capable of handling a range of synchronization disciplines.  In
+addition, the required environment assumptions are simple and
+intuitive for common synchronization idioms.
+
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-2001-003.ps.Z">PostScript compressed with UNIX compress</A></B> -- 328 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-2001-003.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 288 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-2001-003.ps.zip">PostScript compressed with ZIP</A></B> -- 280 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-2001-003.ps">PostScript</A></B> -- 624 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-2001-003.pdf">Portable Document Format (PDF)</A></B> -- 248 Kbytes<BR>
+</UL></P>

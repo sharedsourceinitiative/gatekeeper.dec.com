@@ -1,0 +1,23 @@
+"The Second Annual Video Review of Computational Geometry"
+Edited by Marc H. Brown and John Hershberger
+May 4, 1993.  34 pages.
+
+Computational geometry concepts are often easiest to understand visually, 
+in terms of the geometric objects they manipulate. Indeed, most papers in 
+the field rely on diagrams to communicate the intuition behind their
+results. However, static figures are not always adequate.
+
+The accompanying videotape showcases advances in the use of algorithm 
+animation, visualization, and interactive computing in the study of
+computational geometry. This report contains brief descriptions of 
+all the segments of the videotape. The eight segments in the video cover 
+a wide range of geometric concepts and software systems. The segments have 
+been prepared by researchers at eight different institutions.
+
+A videotape (101b) accompanies report 101a:
+
+"The Second Annual Video Review of Computational Geometry"
+Edited by Marc H. Brown and John Hershberger
+Time: 57:53
+
+

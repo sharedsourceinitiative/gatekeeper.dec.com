@@ -1,0 +1,23 @@
+
+		      CRL Technical Report 93/10
+				   
+	 X Through the Firewall, and Other Application Relays
+				   
+			  G. Winfield Treese
+			     Alec Wolman
+				   
+			      3 May 1993
+
+Organizations often impose an administrative security policy when they
+connect to other organizations on a public network such as the
+Internet.  Many applications have their own notions of security, or
+they simply rely on the security of the underlying protocols.  Using
+the X Window System as a case study, we describe some techniques for
+building application-specific ``relays'' that allow the use of
+applications across organizational boundaries.  In particular, we
+focus on analyzing administrative and application-specific security
+policies to construct solutions that satisfy the security requirements
+while providing the necessary functions of the applications.
+
+This is a preprint of a paper to appear in the Proceedings of the USENIX
+Summer Conference, June, 1993.

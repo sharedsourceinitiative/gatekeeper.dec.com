@@ -1,0 +1,33 @@
+<TITLE>Digital Systems Research Center: Note 1998-009</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Technical Note 1998-009</H1>
+<H1>Improved Low-Density Parity-Check Codes Using Irregular Graphs and Belief Propagation</H1>
+<HR>
+<H2>Michael Luby, Michael Mitzenmacher, Amin Shokrollahi, Dan Spielman</H2>
+Note #1998-009, April 15, 1998.
+<P>
+We construct new families of error-correcting codes based on
+Gallager's low-density parity-check codes, which we call irregular 
+codes. When decoded using belief propagation, our codes can correct 
+more errors than previously known low-density parity-check codes.
+For example, for rate 1/4 codes on 16,000 bits over a binary symmetric 
+channel, previous low-density parity-check codes can correct up to 
+approximately 16% errors, while our codes can correct over 17%. Our 
+improved performance comes from using codes based on irregular
+random bipartite graphs. Previously studied low-density parity-check 
+codes have been derived from regular bipartite graphs. We report 
+experimental results for our irregular codes on both binary symmetric 
+channels and Gaussian channels. In some cases our results come very 
+close to reported results for turbo codes, suggesting that, with 
+improvements, irregular codes may be able to match turbo code 
+performance.
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-009.ps.Z">PostScript compressed with UNIX compress</A></B> -- 168 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-009.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 152 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-009.ps.zip">PostScript compressed with ZIP</A></B> -- 152 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-009.ps">PostScript</A></B> -- 288 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-009.pdf">Portable Document Format (PDF)</A></B> -- 50 Kbytes<BR>
+</UL></P>

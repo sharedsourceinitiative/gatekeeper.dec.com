@@ -1,0 +1,84 @@
+                        --==> X-Tuner 1.2 <==--
+                             by Mike Tinnes
+                     (tinnes@kitten.ndscs.nodak.edu)
+
+              The Xwindows interface for the RadioReveal card!  
+
+------------------------------------------------------------------------------
+
+This program was compiled using the following:
+
+  ELF Linux (kernel version 2.0.7)
+  gcc 2.7.2
+  Xforms 0.81
+  
+
+Installation instructions: 
+
+-> Be sure the Xforms libraries (preferrably the most recent version) are 
+   installed on your system before going on.
+
+   The entire XForms distribution is accessible via:
+
+   http://bragg.phys.uwm.edu/xforms OR http://www.uwm.edu/~zhao
+                                                                  
+The binaries are included in the distribution and should work with most Linux
+ELF systems.  However, if you have trouble running Xtuner, the source is
+included along with it.
+
+To unpack:
+
+  tar xvfz Xtuner-1.2.tar.gz 
+
+To compile:
+  
+  cd xtuner-1.2/
+
+  *The makefile must be modified to suit your OS as follows..
+  
+    - for Linux: cp Makefile.Linux Makefile
+
+    - for FreeBSD: cp Makefile.BSD Makefile
+
+  make xtuner
+
+To run:
+
+  xtuner <option> &
+
+  Where <option> can be one of the following:
+ 
+  -0x20 or -0x30 according to the port your card is on. Default port is 0x30.
+
+  Xtuner MUST be run as ROOT!  Noone else!
+
+  Also, the icon "xtuner.xpm" will have to be installed manually,
+  according to which menuing system you're using under X.
+  
+  note: The file .radiorc is used for presets and is placed in /root. This
+        file should not be modified or moved.
+
+-----------------------------------------------------------------------------
+
+DISCLAIMER:
+
+I assume no responsibility for any damage this program does to your computer
+or hardware.  If something burns up, it wasn't my fault (really!).
+
+COPYING:
+
+This program is being distributed under the GNU Public License. 
+
+-----------------------------------------------------------------------------
+
+Thanks for using Xtuner!
+
+If you have any questions/comments, or if you thought this program
+ROCKED send email to:
+
+tinnes@plains.nodak.edu
+
+(flames > /dev/null)
+
+-----------------------------------------------------------------------------
+dp

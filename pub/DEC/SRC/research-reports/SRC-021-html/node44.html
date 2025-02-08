@@ -1,0 +1,247 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Manipulating Open-File State</TITLE>
+<META NAME="description" CONTENT="Manipulating Open-File State">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node45.html">
+<LINK REL="previous" HREF="node43.html">
+<LINK REL="up" HREF="node39.html">
+<LINK REL="next" HREF="node45.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html735"
+ HREF="node45.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html731"
+ HREF="node39.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html725"
+ HREF="node43.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html733"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html734"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html736"
+ HREF="node45.html">Manipulating File Attributes</A>
+<B> Up:</B> <A NAME="tex2html732"
+ HREF="node39.html">The OS Interface: Files</A>
+<B> Previous:</B> <A NAME="tex2html726"
+ HREF="node43.html">Manipulating File Handles</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04045000000000000000">
+Manipulating Open-File State</A>
+</H2>
+<P>
+Each procedure in this subsection examines or modifies state maintained in
+an open-file object (see page <A HREF="node27.html#SantaCruz"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).  Recall that separate
+calls to Open always produce separate open-file objects, but different
+file handles may share (i.e., refer to) the same open-file object.
+Sharing results from using the Dup procedure (within a single process) or
+from using the SetDescriptor and GetDescriptor procedures (across two or
+more processes); see Section <A HREF="node43.html#Alviso">4.4</A>, page <A HREF="node43.html#Alviso"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.
+<P><A NAME="2086">&#160;</A>
+<A NAME="2087">&#160;</A>
+<PRE>
+TYPE
+  SeekCmd = (SeekSet, SeekIncr, SeekExtend);
+
+PROCEDURE Seek(
+    f: File;
+    value: INTEGER;
+    whence: SeekCmd := SeekSet)
+    : CARDINAL
+  RAISES {Error};
+  (* UnseekableObjectEC, InvalidArgumentEC, RemoteFileEC *)
+</PRE>
+<P><A NAME="1049">&#160;</A>
+Seek sets the file pointer contained in the open-file object referred to
+by f, and returns the new value of the file pointer.  The new value is
+determined in one of three ways: by specifying an absolute position
+(SeekSet, the default), by adding a signed offset to the current value
+(SeekIncr), or by adding a signed offset to the current end of file
+(SeekExtend).  Seek raises InvalidArgumentEC if the new pointer (as
+specified by value and whence) would be negative.  Seek never changes the
+length of the file, although a subsequent Write (or Copy) will lengthen
+the file if the Seek moved the file pointer past the end of file.
+<P>
+Consider using FRead and FWrite (see page <A HREF="node42.html#SanMartin"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A> and
+following) instead of Seek, especially if it would be useful to allow
+multiple threads to share the same file handle (recall that advisory locks
+are held by open-file objects).
+<P>
+Seek does nothing (and returns 0) if f is a device; it raises
+UnseekableObjectEC if f refers to a pipe.
+<P><A NAME="1051">&#160;</A>
+<A NAME="SanGregorio">&#160;</A><A NAME="2088">&#160;</A>
+<A NAME="2089">&#160;</A>
+<A NAME="2090">&#160;</A>
+<PRE>
+TYPE
+  LockArg = (Unlocked, SharedLock, ExclusiveLock);
+
+PROCEDURE GetLock(f: File): LockArg RAISES {Error};
+  (* BadFileEC, InvalidObjectEC, RemoteFileEC *)
+
+PROCEDURE SetLock(
+    f: File;
+    lock: LockArg;
+    noBlock: BOOLEAN := FALSE)
+  RAISES {Error, Alerted};
+  (* BadFileEC, InvalidObjectEC, WouldBlockEC, RemoteFileEC *)
+</PRE>
+<P>
+GetLock returns the current setting, and SetLock changes the setting, of
+the advisory lock held by the open-file object referred to by f.  The file
+should be a regular file.  If it is a pipe or socket, GetLock and SetLock
+raises InvalidObjectEC.
+<P>
+SetLock attempts to obtain the specified advisory lock for the open-file
+object referred to by f.  If there is no conflict for the lock, SetLock
+succeeds and returns immediately.  The action SetLock takes when the
+requested lock conflicts with a lock already held by a different open-file
+object for the same file depends on the value of the noBlock parameter.
+If it is FALSE, SetLock blocks until the conflict goes away; if it is
+TRUE, SetLock raises WouldBlockEC.  SetLock is alertable while blocked.
+<P><A NAME="1056">&#160;</A>
+SetLock can be used to change an existing lock from a SharedLock to an
+ExclusiveLock, or vice versa.  In such a case, SetLock does not first
+release the existing lock.  (This is in contrast to the Ultrix flock
+kernel call.) Downgrading an ExclusiveLock to a SharedLock always succeeds
+immediately.  Upgrading a SharedLock to an ExclusiveLock blocks as long as
+any other open-file object for the same file holds a SharedLock.
+<P>
+Advisory locks are intended to be used by cooperating processes.  They are
+called advisory because they do not affect non-cooperating processes.
+Thus it only makes sense to use an advisory lock on a file when it is
+known that all programs that read or write the file also use an advisory
+lock on it.
+<P>
+It is not a good idea to set an advisory lock on a device, as the lock is
+obtained on the file used to open the device (for example /dev/magtape)
+rather than on the instance of the device itself (for example the device
+with a certain major and minor device type).  Tty devices are
+conventionally `locked' by changing the owner of the device.
+<P><A NAME="BonnyDoon">&#160;</A><A NAME="2091">&#160;</A>
+<A NAME="2092">&#160;</A>
+<A NAME="2093">&#160;</A>
+<A NAME="2094">&#160;</A>
+<A NAME="2095">&#160;</A>
+<PRE>
+TYPE
+  SettableHandleMode = BITS 16 FOR SET OF [fAppend .. fAsync];
+
+PROCEDURE SetFlags(f: File; flags: SettableHandleMode)
+  RAISES {Error}; (* BadFileEC *)
+</PRE>
+<P>
+SetFlags sets several of the flags in the open-file object referred to by
+the file handle f.  The meaning of the flags is as follows:
+<P><DL>
+<DT><STRONG>fAppend:</STRONG>
+<DD>Force all writes to regular files to the end of the file;
+fAppend is ignored for other types of files.
+<A NAME="2096">&#160;</A>
+<P>    <DT><STRONG>fNoDelay:</STRONG>
+<DD>Put pipes, devices, and sockets into a state such that
+    reads or writes through the Ultrix kernel-call interface return an
+    error (EWOULDBLOCK) instead of blocking.  This does not affect OS
+    procedures (i.e., Read, Write, Copy, Wait).  It is only present in the
+    OS interface for use by processes sharing file descriptors with Ultrix
+    processes via the SetDescriptor procedure (see page
+    <A HREF="node51.html#Piedmont"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).
+<A NAME="1066">&#160;</A>
+<A NAME="1067">&#160;</A>
+<A NAME="1068">&#160;</A>
+<A NAME="1069">&#160;</A>
+<A NAME="2097">&#160;</A>
+<P>    <DT><STRONG>fAsync:</STRONG>
+<DD>Cause a signal (SigIO) to be sent to the process group
+    associated with the device when I/O is possible.  SigIO cannot be
+    handled by a client of OS; the fAsync flag is provided only for use by
+    processes sharing file descriptors via the SetDescriptor procedure
+    (see page <A HREF="node51.html#Piedmont"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).
+<A NAME="2098">&#160;</A>
+<A NAME="2099">&#160;</A>
+<A NAME="1074">&#160;</A>
+<A NAME="1075">&#160;</A>
+</DL>
+<P><A NAME="2100">&#160;</A>
+<A NAME="2101">&#160;</A>
+<A NAME="2102">&#160;</A>
+<A NAME="2103">&#160;</A>
+<A NAME="2104">&#160;</A>
+<A NAME="2105">&#160;</A>
+<A NAME="2106">&#160;</A>
+<PRE>
+TYPE
+  HandleMode = BITS 16 FOR SET OF [fRead .. fAsync];
+
+PROCEDURE GetFlags(f: File): HandleMode
+  RAISES {Error}; (* BadFileEC *)
+</PRE>
+<P>
+GetFlags returns the flags associated with the open-file object referred
+to by f. These are all the flags settable with SetFlags and with Open.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html735"
+ HREF="node45.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html731"
+ HREF="node39.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html725"
+ HREF="node43.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html733"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html734"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html736"
+ HREF="node45.html">Manipulating File Attributes</A>
+<B> Up:</B> <A NAME="tex2html732"
+ HREF="node39.html">The OS Interface: Files</A>
+<B> Previous:</B> <A NAME="tex2html726"
+ HREF="node43.html">Manipulating File Handles</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

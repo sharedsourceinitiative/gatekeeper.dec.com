@@ -1,0 +1,36 @@
+xa-1.2beta
+==========
+
+xa is an animation package written using the XView library. Its main
+feature is a panel interface for convenient access to animation,
+display, and colormap functions. On a typical high-end workstation a
+display rate of 50 frames/sec or better can be achieved with 400x400
+8-bit images.
+
+The source code is in xa-1.2beta/xa-1.2beta.tar.gz.  Binaries can be
+found in xa-1.2beta/xa-1.2beta-???.tar.gz, where "???" indicates the
+architecture (e.g. "dec" for DEC Alpha, "sgi" for Silicon Graphics
+machines (IRIX 4.x), "sun" for Sun Sparcs running SunOS4.1.x, and
+"sol" for Sun Sparcs running Solaris 2.x (may not be available)).  The
+binary archives contain man pages and other miscellaneous helpful
+files from the source distribution.
+
+Note to compile from the source code you will need the XView 3.x
+libraries and include files.  XView is available from the X11R5/X11R6
+distribution, the OpenWindows distribution on Suns (typically in
+/usr/openwin), or from:
+
+   ftp://ftp.x.org/contrib/libraries/
+
+DEC Alpha and SGI ports of the XView sources are available from:
+
+   ftp://ftp.sdsc.edu/pub/ccms/xview/
+
+Enjoy!
+
+__     __ ___  ---------------------------------------------------
+___   __  ____ | Derek C. Richardson | Tel:  (416) 978-6879/8494 |
+____ __   ___  | CITA, McLennan Labs | Fax:  (416) 978-3921      |
+___   __  _ __ | U of T, Toronto, ON | Home: (416) 351-1972      |
+__     __ _  _ | CANADA M5S 3H8      | richards@cita.utoronto.ca |
+               --http://www.cita.utoronto.ca/~richards/home.html--

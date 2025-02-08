@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Other Process State</TITLE>
+<META NAME="description" CONTENT="Other Process State">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node17.html">
+<LINK REL="previous" HREF="node15.html">
+<LINK REL="up" HREF="node11.html">
+<LINK REL="next" HREF="node17.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html310"
+ HREF="node17.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html306"
+ HREF="node11.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html300"
+ HREF="node15.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html308"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html309"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html311"
+ HREF="node17.html">Summary</A>
+<B> Up:</B> <A NAME="tex2html307"
+ HREF="node11.html">Topaz Operating System Interface</A>
+<B> Previous:</B> <A NAME="tex2html301"
+ HREF="node15.html">Process Creation</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION02045000000000000000">
+Other Process State</A>
+</H2>
+<P>
+The preceding subsections describe how Topaz treats many of the mutable
+state components of a UNIX process.  For completeness, here is how the
+remaining components are treated.
+<P><DL>
+<DT><STRONG>User identity.</STRONG>
+<DD>Constant/parameterized.  Each process has a user
+identity associated with it.  Super-user programs, usually servers, acting
+    on behalf of many users may pass an additional parameter on each call
+    giving the user identity on whose behalf they are acting.
+    <A NAME="358">&#160;</A>
+    <A NAME="359">&#160;</A>
+<P>    <DT><STRONG>UMask.</STRONG>
+<DD>Client-synchronized.  (The umask is used to set the access
+    control bits when a file is created.)
+    <A NAME="360">&#160;</A>
+<P>    <DT><STRONG>Process Group.</STRONG>
+<DD>Constant.
+    <A NAME="361">&#160;</A>
+    <DT><STRONG>Control Terminal.</STRONG>
+<DD>Constant.
+<P>    <DT><STRONG>Priority.</STRONG>
+<DD>Thread-dependent.
+    <A NAME="362">&#160;</A>
+</DL>
+<BR><HR>
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

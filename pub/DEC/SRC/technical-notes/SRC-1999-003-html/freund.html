@@ -1,0 +1,252 @@
+<html>
+<head><title>
+Type-based Race Detection for Java
+</title> 
+</head>
+<body>
+<center> <h1> <b>
+Type-based Race Detection for Java
+</b> </h1> <br>
+<h2>Stephen Freund, Stanford University</h2>
+</center>
+
+
+ 
+The summer project described here consisted of joint work with Cormac Flanagan, 
+my host at SRC.<P>
+
+<h2>Introduction</h2>
+
+A race may occur in a concurrent program when two threads access a 
+shared memory location at the same time.  This situation often 
+causes unintended behavior ranging from memory corruption to execution 
+failure.  Since the effect of a race depends upon the interleaving of 
+program execution, races may be difficult to locate and fix, even 
+after their effects have been observed.<P>
+
+To avoid race conditions, programmers often adopt a 
+programming discipline in which shared resources are guarded by 
+locks.  Before accessing any shared structure, the necessary lock 
+must be acquired.  This discipline ensures that no two threads ever 
+access the same resource at the same time.  Using locks 
+in this fashion shifts the problem of preventing races to one of enforcing 
+the locking discipline. <P> 
+
+This project summary describes a static analysis 
+technique that supports this locking discipline in concurrent Java 
+programs. The analysis technique, which is presented in the form 
+of the static type system, was designed so that it has the following 
+desirable features: <P>
+
+<ol>
+<li>a sound formal foundation
+<li>low programmer overhead
+<li>the ability to check a reasonable set of programming idioms
+</ol>
+
+The following section describes an extension to the Java type system 
+that captures locking information; the third section describes a prototype 
+implementation, and the fourth section summarizes our experiences with it.<P>
+
+<h2>Type System and Annotation Language</h2>
+
+The project's starting point was to work from a race-free type system for 
+a concurrent object calculus [Flanagan and Abadi 1999]
+[<a href="#object">2</a>]. The most  
+important features associated with the adaptation of this type system to Java 
+are presented in the following examples.  To preserve compatibility 
+with the standard Java compilers, the additional type information 
+used in our analysis is written in special comments in the code, 
+similar to those of <i>escjava</i> [Leino et al. 1999]
+[<a href="#checking">4</a>].  
+These annotations 
+are comments that begin with the character '#'. The following class 
+is a monitored counter:<P>
+
+<pre>
+
+class Counter {
+    private int c = 0 /*# guarded_by this */;
+    private void set(int x) /*# requires this */ {
+	c = x;
+    }
+    public  void increment() {
+	synchronized(this) {
+	    set(c+1);
+	}
+    }
+}
+
+</pre>
+
+The <i>guarded_by</i> annotation on the field <i>c</i> indicates which lock must 
+be held to access that field, and the <i>requires</i> clause on the set 
+method indicates which lock (or locks) must be held prior to invoking 
+that method.  To typecheck a program, a conservative approximation 
+of the set of locks held at each program point is determined, and 
+the checker then verifies whether the constraints expressed in the 
+annotations are satisfied on each field access and method invocation. <P> 
+
+As part of this verification process, the analysis needs to determine 
+whether a specific lock is in the lock set. The set membership test 
+requires some notion of equality between lock names, but since our 
+analysis cannot rely on run-time values, we approximate run-time value 
+equivalence with syntactic equality. <P>
+
+Another common programming idiom is to create unsynchronized 
+classes and require the client to provide the necessary synchronization.  
+This type of class may be expressed in our type system using classes 
+parameterized by lock names.  The following code example shows how to 
+write a counter monitored by a lock in the client code:<P>
+
+<pre>
+
+class Counter/*# {ghost Object o} */ {
+    private int value = 0  /*# guarded_by o */;
+    private void set(int x) /*# requires o */ {
+        value = x;
+    }
+    public void increment() /*# requires o */ {
+        set(value+1);
+    }
+}
+
+Object mutex = new Object();
+Counter/*#{mutex}*/ c = new Counter/*#{mutex}*/();
+
+</pre>
+
+It is often the case that a significant fraction of a concurrent 
+program does not use synchronization at all. To avoid the need to 
+require locks on objects that are not shared between threads, we 
+introduce the notion of a <i>thread_local</i> class into the type system. 
+A <i>thread_local</i> class is a class whose instances are never shared 
+between threads, indicated with the annotation <i>thread_local</i> on the 
+class declaration.  This type of class requires no synchronization 
+on field accesses, and a class may be thread local only if:<P>
+
+<ol>
+
+<li>no instances of the class are stored in fields of a shared class
+<li>the class is not a subclass of <i>java.lang.Thread</i>
+
+</ol>
+
+The first requirement is checked with a simple escape analysis.  
+For technical reasons, programs using <i>thread_local</i> classes are 
+assumed to have additional run-time checks on down casts.  One 
+final feature added to the type system is an escape mechanism to 
+circumvent the analysis when it is too restrictive.  As usual, it 
+is the programmer's responsibility to ensure the validity of each 
+use of these escapes.<P>
+
+<h2>Implementation</h2>
+
+<i>Rccjava</i>, a prototype type checker, was implemented as an 
+extension to an existing Java front-end.  The main additions to 
+the standard Java type checker were the algorithm to compute lock 
+sets, the notion of syntactic equality, and classes parameterized by 
+lock names.  Several annotation inference techniques were also 
+incorporated into the implementation in order to reduce the number of 
+annotations required for large programs.  These inference
+techniques include analysis to 
+determine whether an unannotated class is <i>thread_local</i> or <i>thread_shared</i>, 
+and also include the assumption that unannotated fields of shared classes are 
+guarded by the lock of the self object.<P>
+
+<h2>Experimental Results</h2>
+
+The prototype implementation was used to check race conditions in 
+a number of programs.  Four representative examples are:<P>
+
+<ol>
+<li>the <i>java.util.Hashtable</i> class
+<li>the <i>java.util.Vector</i> class
+<li>Ambit, an implementation of mobile agents [<a href="#mobile">1</a>]
+<li>WebL, an interpreter for WebL programs [<a href="#webl">3</a>]
+</ol>
+
+The following chart summarizes the number of annotations required 
+by <i>rccjava</i>:<P>
+
+<pre>
+
+Program          Size (lines)   Number of annotations   User time (hours)	
+
+Hashtable              434                46                    1	
+Vector                 440                15                  0.5	
+Ambit	               4,500              37                    3	
+WebL	              20,000             421                   16	
+
+</pre>
+
+The large number of annotations in Hashtable may be attributed to the 
+use of type parameters which require an annotation on each reference 
+to a parameterized type name.  The two larger examples required 
+approximately 20 annotations per thousand lines of code.  One race 
+was found in the Vector class, and several races were found in the 
+WebL code.<P>
+
+<h2>Conclusions and Further Work</h2>
+
+The initial experiments with <i>rccjava</i> indicate that it is a useful 
+tool for detecting races.  While more difficult to use than dynamic 
+tools like Eraser [Savage et al. 1997]
+[<a href="#eraser">5</a>], it is not subject to the same 
+coverage problems as those tools.  In addition, the annotation overhead 
+is lower than some other static analysis techniques, such as using <i>escjava</i>.  
+However, that tool captures a much broader range of program properties 
+and has not been tuned specifically to race detection.<P>
+
+The most important direction for future work is to reduce the annotation 
+requirements.  We are currently exploring better annotation inference 
+algorithms and the possibility of using feedback from dynamic tools 
+to help infer annotations.  There are also additional features to implement, 
+such as reader-writer locks and parameterized methods.<P>
+
+<h2>References</h2>
+
+<a name="mobile">[1]</a>
+Luca Cardelli, Mobile ambient synchronization.  
+Technical Note 1997-013, Digital Systems Research Center, 
+Palo Alto, CA, July 1997.
+<P>
+
+<a name="object">[2]</a>
+Cormac Flanagan and Martin Abadi.  
+Object Types against Races.  Proceedings of CONCUR 99, 
+August, 1999. 
+<P>
+
+<a name="webl">[3]</a>
+Thomas Kistler and Johannes Marais.  
+WebL - a programming language for the Web.  In Computer Networks 
+and ISDN Systems, Volume 30, pages 259-270. Elsevier, April 1998. 
+Also appeared as SRC Technical Note 1997-029.
+<P>
+
+<a name="checking">[4]</a>
+K. Rustan M. Leino, James B. Saxe, 
+and Raymie Stata.  Checking Java programs via guarded commands. 
+Technical Note 1999-002, Compaq Systems Research Center, Palo Alto, 
+CA, May 1999.  Also appeared in Formal Techniques for Java Programs, 
+workshop proceedings. Bart Jacobs, Gary T. Leavens, Peter Muller, 
+and Arnd Poetzsch-Heffter, editors. Technical Report 251, 
+Fernuniversitat Hagen, 1999.
+<P>
+
+<a name="eraser">[5]</a>
+Stefan Savage, Michael Burrows, Greg Nelson, 
+Patrick Sobalvarro, and Thomas E. Anderson.  Eraser: A dynamic data 
+race detector for multi-threaded programs.  ACM Transactions on 
+Computer Systems (TOCS), 15(4):391-411, November 1997.  
+Also appeared in Proceedings of the Sixteenth ACM Symposium on 
+Operating System Principles, October 5-8, 1997, St. Malo, France, 
+Operating System Review 31(5), ACM Press, 1997, ISBN 0-89791-916-5, 
+pp 27-37.
+<P>
+
+</body>
+</html>
+
+

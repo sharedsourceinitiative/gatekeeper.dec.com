@@ -1,0 +1,91 @@
+<html>
+<head><title>SPHINX: Site-specific Processors for Html INformation eXtraction</title></head>
+<body>
+<center>
+<h1><b>SPHINX: Site-specific Processors for Html INformation eXtraction</b></h1><br>
+<h2>Robert C. Miller, Carnegie Mellon University</h2>
+</center>
+
+
+<h2>Introduction</h2>
+
+I'm a second-year CS PhD student at Carnegie Mellon University, I work
+with Brad Myers on programming-by-demonstration and the Amulet user
+interface toolkit.  My recent research at CMU has involved animations
+in Amulet, and applying programming-by-demonstration to the World Wide
+Web.  I developed a demonstrational system that infers, from a single
+demonstration, how to construct a "composite Web page" by extracting
+pieces from other Web pages and combining them.<P>
+
+I chose SRC for my internship this summer over Xerox PARC and FXPAL
+(both of which made me offers) mainly because I've talked to other
+grad students who had very positive summer experiences at SRC, and the
+SRC project was most closely aligned with my interests.  SRC also
+responded to my internship application very quickly -- less than two
+days after I submitted it -- which is a compliment to their
+organization and preparation.<P>
+
+
+<H2Problem</h2>
+
+Crawlers, also called robots or spiders, are programs that traverse
+and process the World Wide Web automatically.  Examples of crawling
+applications include indexing, link-checking, meta-services (like
+meta-search engines), and site downloading.  It turns out that
+crawlers are difficult to write for several reasons: (1) a lack of
+good library support, so even simple crawlers take work; (2)
+multithreading is required for good performance; and (3) writing
+site-specific crawlers (like meta-searchers) takes much
+trial-and-error to figure out which links to crawl and how to parse
+pages, and then the Web site's format changes and the work must be
+thrown away.<P>
+
+My host for this work was Krishna Bharat.<P>
+
+<h2>Solution</h2>
+
+We built a system called SPHINX (Site-specific Processors for Html
+INformation eXtraction).  SPHINX is a user interface and Java class
+library that supports developing and running crawlers from a user's
+Web browser.  For users, the SPHINX user interface offers a number of
+advantages.  One advantage is that common crawling operations can be specified
+interactively, such as saving, printing, or extracting data from
+multiple Web pages, which makes simple crawlers simple to write. 
+Another is that the pages and links explored by the crawler can be displayed in several
+visualizations, including a graph view and an outline view.  For Java
+programmers writing custom crawlers, the SPHINX library provides
+multithreaded crawling, HTML parsing, pattern matching, and Web
+visualization, along with the ability to configure and run the custom
+crawler in the SPHINX user interface.<P>
+
+
+
+
+<h2>Observations and Future Work</h2>
+
+
+The SPHINX user interface runs as a Java applet hosted by a Web
+browser.  This decision to run SPHINX inside a Web browser, as a
+privileged Java applet, turned out to be an effective strategy.  As a
+consequence, SPHINX crawlers are portable, require no special
+configuration to access the Web, and see the Web exactly as the user
+sees it. In particular, when a SPHINX crawler requests a page, it
+uses the same cache, authentication, proxy, cookies, and user-agent as
+the user, ensuring that it gets the same response back from the server
+that the user would.<P>
+
+For future work, it would be interesting to scale the SPHINX
+architecture to Web-wide crawlers, such as search engine indexing or
+Web archiving, which retrieve and process millions of pages.  Such
+crawlers typically run on a farm of workstations, raising interesting
+issues such as how to divide the crawling workload fairly and how much
+information must be shared by cooperating crawlers.  Also, the
+platform-independence and safety of Java imply that SPHINX crawlers
+could be moved around the network easily, to access the Web at the
+most convenient point.  Exploring the architecture and security
+policies of server-side crawlers would be an interesting direction for
+future work.<P>
+
+</BODY>
+</HTML>
+

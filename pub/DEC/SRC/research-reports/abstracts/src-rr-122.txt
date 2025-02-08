@@ -1,0 +1,13 @@
+
+"Obliq: A Language with Distributed Scope"
+Luca Cardelli
+June 3, 1994.  64 pages
+
+Obliq is a lexically-scoped untyped interpreted language that
+supports distributed object-oriented computation. An Obliq computation
+may involve multiple threads of control within an address space,
+multiple address spaces on a machine, heterogeneous machines over a
+local network, and multiple networks over the Internet. Obliq objects
+have state and are local to a site. Obliq computations can roam over the
+network, while maintaining network connections.
+

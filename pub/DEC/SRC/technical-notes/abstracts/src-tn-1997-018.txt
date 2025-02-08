@@ -1,0 +1,13 @@
+"The 1995 SQL Reunion: People, Projects, and Politics"
+Edited by Paul McJones
+Note #1997-018. August 20, 1997.
+
+A reunion of people who worked on System R and its derivatives, 
+including SQL/DS, DB2, and R*, was held at Asilomar on May 29, 
+1995. This is an edited transcript of the day's discussions, 
+incorporating changes provided by the speakers. It provides an 
+informal but first-hand account of the birth of SQL, the history 
+of System R, and the origins of a number of other relational 
+systems inside and outside IBM.
+
+

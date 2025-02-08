@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Communication</TITLE>
+<META NAME="description" CONTENT="Communication">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node81.html">
+<LINK REL="previous" HREF="node79.html">
+<LINK REL="up" HREF="node74.html">
+<LINK REL="next" HREF="node81.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html1189"
+ HREF="node81.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html1185"
+ HREF="node74.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html1179"
+ HREF="node79.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html1187"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html1188"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1190"
+ HREF="node81.html">Resource Allocation and Accounting</A>
+<B> Up:</B> <A NAME="tex2html1186"
+ HREF="node74.html">Running Ultrix Applications on</A>
+<B> Previous:</B> <A NAME="tex2html1180"
+ HREF="node79.html">Files</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04096000000000000000">
+Communication</A>
+</H2>
+<P><A NAME="1768">&#160;</A>
+Taos does not currently emulate Ultrix sockets.  This is an expedient
+rather than fundamental omission: adding sockets (the basic machinery,
+together with one more actual network interfaces) would not present any
+unusual difficulty and would add useful functionality (e.g., convenient
+access to VMS machines via DECnet).  In the mean time, Taos includes a
+fairly comprehensive RPC implementation together with facilities that use
+it (including remote debugging, file access, display access, and login).
+<P><A NAME="1769">&#160;</A>
+<A NAME="1770">&#160;</A>
+<A NAME="1771">&#160;</A>
+<A NAME="1772">&#160;</A>
+<A NAME="1773">&#160;</A>
+<A NAME="1774">&#160;</A>
+<A NAME="1775">&#160;</A>
+<A NAME="1776">&#160;</A>
+<A NAME="1777">&#160;</A>
+<A NAME="1778">&#160;</A>
+<A NAME="1779">&#160;</A>
+<A NAME="1780">&#160;</A>
+<A NAME="1781">&#160;</A>
+<A NAME="1782">&#160;</A>
+<A NAME="1783">&#160;</A>
+<A NAME="1784">&#160;</A>
+<A NAME="1785">&#160;</A>
+On Taos, the following socket-related kernel calls always raise SIGSYS:
+accept, bind, connect, getpeername, getsockname, getsockopt, listen, recv,
+recvfrom, recvmsg, send, sendmsg, sendto, setsockopt, shutdown, socket,
+and socketpair.
+<P><A NAME="1786">&#160;</A>
+<A NAME="1787">&#160;</A>
+Taos implements the gethostname kernel call by calling NSUtil.GetMyHost.
+It implements the sethostname kernel call by always returning EPERM.
+<P><A NAME="1788">&#160;</A>
+<A NAME="1789">&#160;</A>
+<A NAME="1790">&#160;</A>
+<A NAME="1791">&#160;</A>
+<A NAME="1792">&#160;</A>
+<A NAME="1793">&#160;</A>
+<A NAME="1794">&#160;</A>
+<A NAME="1795">&#160;</A>
+<A NAME="1796">&#160;</A>
+<A NAME="1797">&#160;</A>
+<A NAME="1798">&#160;</A>
+<A NAME="1799">&#160;</A>
+<A NAME="1800">&#160;</A>
+<A NAME="1801">&#160;</A>
+Ultrix commands that use sockets won't work on Taos.  Alternatives for the
+most common are available: monarch for rlogin, msh for rsh, and cp or the
+more efficient copy for rcp.  There is no direct analogue for rdist, but
+several programs provide similar functionality.  The copy command
+maintains time stamps and subdirectory structure. The updatefs command
+maintains consistency between the `GF' file system and a local Firefly
+file system. The `package tools' (getpackage, shippackage, etc.)
+facilitate sharing `project' subdirectories among a set of developers.
+(See also vget(1), vlink(1), and vship(1).)
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1189"
+ HREF="node81.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html1185"
+ HREF="node74.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html1179"
+ HREF="node79.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html1187"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html1188"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1190"
+ HREF="node81.html">Resource Allocation and Accounting</A>
+<B> Up:</B> <A NAME="tex2html1186"
+ HREF="node74.html">Running Ultrix Applications on</A>
+<B> Previous:</B> <A NAME="tex2html1180"
+ HREF="node79.html">Files</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

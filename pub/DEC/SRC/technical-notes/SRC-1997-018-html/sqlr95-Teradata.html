@@ -1,0 +1,118 @@
+<HTML><HEAD>
+<!-- This document was created from RTF source by rtftohtml version $Revision: 3.6 $ -->
+<TITLE>The 1995 SQL Reunion: People, Projects, and Politics - Teradata; Ingres family: Relational Technology, Britton-Lee, Sybase, Microsoft</TITLE></HEAD>
+<BODY BACKGROUND="" BGCOLOR="#FFFFFF" TEXT=#000000>
+<A HREF="sqlr95-Intergal.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="sqlr95-Informix.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="sqlr95-And.html"><IMG SRC="images/upg.gif" ALT="Up " border=0></A>
+ <A HREF="sqlr95.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="sqlr95-Contents.html"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+ <A HREF="sqlr95-Index.html"><IMG SRC="images/indexg.gif" ALT="Index" border=0></A>
+<hr size=4>
+<H2>
+Teradata; Ingres family: Relational Technology, Britton-Lee, Sybase, Microsoft</H2>
+<b>Jim Gray:</b> So, let's see. Teradata<A NAME="Index447"></A>.
+So here's just some background. There was a guy by the name of Phil Neches<A NAME="Index448"></A>
+at UCLA, and he said, "We ought to do parallelism on commodity hardware." He
+fell in with some people at a startup, and they started this company, and I
+guess in about 1984 shipped the first parallel SQL engine. It's very similar to
+the Tandem story: it's a sort of one-trick pony. It doesn't have referential
+integrity; it doesn't have all the fanciness. You give it SQL; it gives you
+back the answers, very fast, and presumably cheaply, because it's running on
+Intel processors and on commodity disks. Teradata got bought by NCR<A NAME="Index449"></A>;
+NCR got bought by AT&amp;T<A NAME="Index450"></A>;
+and AT&amp;T last I heard ...<p>
+Along those lines, there was this whole other development, which was the INGRES<A NAME="Index451"></A>
+project at U.C. Berkeley<A NAME="Index452"></A>.
+The INGRES project had a language called QUEL<A NAME="Index453"></A>.
+They started a company that implemented QUEL. QUEL fought SQL tooth-and-nail,
+and explained how QUEL was better than SQL in many different ways, and in fact
+it is better at doing aggregates. There are lots of areas where QUEL is better.
+Some people at Ingres now feel that the reason that they were less than
+successful is because they fought SQL rather than embraced it, so this gave
+Oracle a chance to differentiate themselves. The fact is that ...<p>
+<b>Mike Blasgen:</b> Just as a point of time: I had a conversation on the phone
+with Stonebraker<A NAME="Index454"></A>
+while I was living in Washington, and I left Washington in June of 1983. So
+it's obviously prior to that. I said, "I think Oracle is going to do well." He
+said, "Why is that?" I said, "Because they are one of the few who support SQL
+besides IBM." He said, "Well that status won't last more than a few weeks.
+Everybody's on that; that's done." So by, I would say, the end of 1982 or the
+beginning of 1983, they were far over that; they had made that decision. I
+don't know when they shipped their first code.<p>
+<b>Tom Price:</b> Although the first code they shipped was SQL on top of QUEL<A NAME="Index455"></A>
+...<p>
+<b>Mike Blasgen:</b> It was see-QUEL.<i> [laughter]</i> That's right.<p>
+<b>Tom Price:</b> Which made me nervous about buying it.<p>
+<b>Jim Gray:</b> And so there was that thread. And spun off from the INGRES<A NAME="Index456"></A>
+project was a Britton-Lee<A NAME="Index457"></A>
+group. And the Britton-Lee group included Paula Hawthorn<A NAME="Index458"></A>
+and Bob Epstein<A NAME="Index459"></A>
+and Mike Ubell<A NAME="Index460"></A>
+and probably a lot of other people. And they built a database machine<a
+name="fnB77" href="#fn77">[81]</a>. In that era, there was this whole notion
+that you could really do much better by building a special-purpose piece of
+hardware and a special-purpose operating system and then a database system.
+Build up from the bare metal and it's going to run a lot faster. I think Roger
+mentioned that that was part of the Esvel concept as well. Louise Madrid<A NAME="Index461"></A>
+was another ...<p>
+<b>Roger Bamford:</b> I think we really believed you could get the revenue for
+it; I don't think we really believed that it was cheaper to build; it was just
+easier to sell.<p>
+<b>Jim Gray:</b> And the performance would be better. I think that was one of
+the arguments, that you couldn't get good performance on general-purpose; the
+special-purpose would beat ...<p>
+<b>Don Slutz:</b> Lot of special hardware.<p>
+<b>Jim Gray:</b> They had an accelerator, which was their hook ... The
+Britton-Lee<A NAME="Index462"></A>
+guys in turn spun off Sybase, and Sybase<A NAME="Index463"></A>
+came out. The key thing about Sybase as far as I can tell was they ran on UNIX<A NAME="Index464"></A>;
+they didn't use any of the UNIX services except a single process. They used raw
+disks; they took a single process and multithreaded it, and ran SQL inside of
+that, or actually ran DB-Library<A NAME="Index465"></A>.
+They were not very SQL enthusiast or compliant. They had the QUEL<A NAME="Index466"></A>
+tradition; they were from INGRES<A NAME="Index467"></A>.
+So the key thing that allowed them to be successful is they had great
+performance. You would send one request in; it would work all inside of this
+process; no operating system dispatches, no operating system I/Os, just raw
+disk I/Os. So they were like a factor of three better than everybody else in
+terms of performance. They managed to establish themselves as the
+client/server, open, database thing.<p>
+<b>Tom Price:</b> They did a deal with Microsoft<A NAME="Index468"></A>.<p>
+<b>Jim Gray:</b> And Microsoft took their code and sold it on OS/2<A NAME="Index469"></A>.
+The reason for that was that about 1986, IBM was trying to take over the PC
+market, and they had their own operating system - OS/2 - they had their own
+hardware. Microsoft said that they had to somehow protect themselves against
+something called OS/2 Extended Edition. There was going to be this thing called
+OS/2, which was basic OS/2, and then Extended Edition, which was going to cost
+hardly anything more, was going to have a database system in it, and compilers,
+and query - QBE was going to be built into it, and all sorts of stuff. So
+Microsoft felt they had to have something like that. So they went to Sybase<A NAME="Index470"></A>
+and said, "We'll get our SQL engine from the Sybase guys, and that will be our
+Microsoft Extended Edition." And Microsoft remarketed Sybase in the OS/2 world.
+The relations between Microsoft and Sybase were not warm or cordial. When it
+came time to port Sybase to NT, Sybase let Microsoft do the job. And then there
+was a divorce at some point, similar to the IBM divorce about OS/2, that IBM
+would do OS/2, and Microsoft would go its own way. There was a similar divorce
+vis-&agrave;-vis Microsoft, where Microsoft now owns the Sybase code, so the
+Microsoft SQL Server now is going its own way, and they've made it more
+SQL-compliant, and they're adding GUIs to it, and so on. It's now a major force
+in this whole database world. And the thing that's driving everybody crazy I
+believe in the database world is, this thing is very cheap. It's, order, five
+thousand dollars for a server, as opposed to a hundred thousand dollars for a
+server. This server is capable of doing hundreds of transactions a second.
+Scary. Pat, did I ... ?
+<p>
+<a name="fn77" href="#fnB77">[81]</a> R. Epstein and P. Hawthorn. "Design
+Decisions for the Intelligent Data Base Machine" <i>Proc. National Computer
+Conference</i>, Anaheim, California (May 1980).
+
+<p>
+<P><hr size=4>
+<A HREF="sqlr95-Intergal.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="sqlr95-Informix.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="sqlr95-And.html"><IMG SRC="images/upg.gif" ALT="Up " border=0></A>
+ <A HREF="sqlr95.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="sqlr95-Contents.html"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+ <A HREF="sqlr95-Index.html"><IMG SRC="images/indexg.gif" ALT="Index" border=0></A>
+</body></html>

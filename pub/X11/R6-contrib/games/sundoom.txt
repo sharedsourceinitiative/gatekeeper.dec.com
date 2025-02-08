@@ -1,0 +1,6 @@
+
+This is DOOM for Solaris v2.4 on the Sparc architecture.  You should
+must also get doom1.wad.gz if you're new to DOOM.  If you already
+have a v1.7a wad file (doom.wad, doom1.wad, or doom2.wad), then
+you may use it, as long as you skip the demos.
+

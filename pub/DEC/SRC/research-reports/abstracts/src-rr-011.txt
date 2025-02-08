@@ -1,0 +1,16 @@
+
+				AVAILABLE ELECTRONICALLY
+
+    "Control Predicates Are Better Than Dummy Variables For Reasoning About 
+        Program Control."
+    Leslie Lamport.
+    May 5, 1986.  19 pages.
+
+Author's Abstract
+
+    When explicit control predicates rather than dummy variables are
+    used, the Owicki-Gries method for proving safety properties of
+    concurrent programs can be strengthened, making it easier to
+    construct the required program annotations.
+
+

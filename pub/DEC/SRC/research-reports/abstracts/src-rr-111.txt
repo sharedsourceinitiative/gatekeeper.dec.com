@@ -1,0 +1,22 @@
+
+		AVAILABLE ELECTRONICALLY
+
+"The Echo Distributed File System"
+Andrew D. Birrell, Andy Hisgen, Chuck Jerian, Timothy Mann, and Garret Swart
+September 10, 1993.  22 pages
+
+Echo is an ambitious distributed file system. It was designed around a
+truly global name space. It uses a coherent caching algorithm. It is
+fault tolerant. And it is real--it was the primary file system for a
+large group of researchers. Its novel aspects include an extensible
+"junction" mechanism for global naming; extensive write-behind with
+ordering semantics that allow applications to maintain invariants
+without resorting to synchronous writes; and fault tolerance mechanisms
+that are highly configurable and that tolerate network partitions. It
+was designed with the intention that its performance could be as good
+as a local file system, while supporting large numbers of clients per
+server. Its reliability was designed to be higher than other
+distributed file systems, and higher than centralized systems. It was
+designed to work well in arbitrarily large networks.
+
+

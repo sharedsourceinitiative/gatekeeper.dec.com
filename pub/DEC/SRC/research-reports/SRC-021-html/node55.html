@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Manipulating the State of Existing Processes</TITLE>
+<META NAME="description" CONTENT="Manipulating the State of Existing Processes">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node56.html">
+<LINK REL="previous" HREF="node54.html">
+<LINK REL="up" HREF="node54.html">
+<LINK REL="next" HREF="node56.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html874"
+ HREF="node56.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html870"
+ HREF="node54.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html864"
+ HREF="node54.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html872"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html873"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html875"
+ HREF="node56.html">Manipulating User Specifications</A>
+<B> Up:</B> <A NAME="tex2html871"
+ HREF="node54.html">The OSFriends Interface</A>
+<B> Previous:</B> <A NAME="tex2html865"
+ HREF="node54.html">The OSFriends Interface</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04061000000000000000">
+Manipulating the State of Existing Processes</A>
+</H2>
+ <A NAME="LaHonda">&#160;</A>
+<P><A NAME="2234">&#160;</A>
+<PRE>
+PROCEDURE SetMyWD(
+    dir: Dir;
+    path: PathName := NIL;
+    euser: User := NIL)
+  RAISES {Error}; (* PathES *)
+</PRE>
+<P><A NAME="1533">&#160;</A>
+SetMyWD changes the working directory of the calling process.  Since this
+affects every thread in the process that calls OS with a NIL directory
+handle, it should be used with caution;  OS.OpenDir is recommended
+instead.  Use SetMyWD only in main programs and try not to write packages
+that depend on it being set to something special before being called.
+Using the working directory will make it difficult to make your package
+multithreaded.
+<P><A NAME="2235">&#160;</A>
+<PRE>
+PROCEDURE SetMyUMask(umask: AccessMode) RAISES {};
+</PRE>
+<P><A NAME="1535">&#160;</A>
+SetMyUMask sets the umask of the calling process.  The admonition against
+using SetMyWD applies also to SetMyUMask.
+<P><A NAME="Sunnyvale">&#160;</A><A NAME="2236">&#160;</A>
+<PRE>
+PROCEDURE SetMyUser(
+    effective: User;
+    real: User := NIL;
+    pswd: Text.T := NIL)
+  RAISES {Error};
+  (* InvalidArgumentEC, InvalidCredentialsEC, NotSuperUserEC *)
+</PRE>
+<P><A NAME="1538">&#160;</A>
+<A NAME="1539">&#160;</A>
+<A NAME="1540">&#160;</A>
+<A NAME="1541">&#160;</A>
+SetMyUser sets the real and effective user name and password of the
+calling process, as OS.SetUser does for a process template; see page
+<A HREF="node51.html#SantaClara"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A> for details.  Once again, the admonition against using
+SetMyWD applies.  Instead, use the euser parameter accepted by each
+procedure that does access checking.
+<P><A NAME="2237">&#160;</A>
+<PRE>
+PROCEDURE GetPriority(pid: PID): ThreadFriends.Priority
+  RAISES {Error};
+</PRE>
+<P><A NAME="1544">&#160;</A>
+<A NAME="1545">&#160;</A>
+<A NAME="1546">&#160;</A>
+<A NAME="1547">&#160;</A>
+GetPriority returns the priority associated with the specified process.
+It returns the priority of the calling process if pid is equal to NullPID.
+For an Ultrix process this is the priority of its only thread. For a Topaz
+process this is the priority of the first thread in its address space when
+it was first started.
+<P>
+Ultrix note: Ultrix priorities less than zero maps to
+ThreadFriends.ForegroundPriority, Ultrix priority zero maps to
+ThreadFriends.NormalPriority, and Ultrix priorities greater than zero map
+to ThreadFriends.BackgroundPriority.
+<P><A NAME="2238">&#160;</A>
+<A NAME="2239">&#160;</A>
+<A NAME="2240">&#160;</A>
+<PRE>
+PROCEDURE SetPriorityPID(
+    pid: PID;
+    priority: ThreadFriends.Priority)
+  RAISES {Error};
+
+PROCEDURE SetPriorityPGRP(
+    pgrp: PGRP;
+    priority: ThreadFriends.Priority)
+  RAISES {Error};
+
+PROCEDURE SetPriorityUser(
+    user: Text.T;
+    priority: ThreadFriends.Priority)
+  RAISES {Error};
+</PRE>
+<P><A NAME="1551">&#160;</A>
+These procedures set the priority of the process with a specified process
+identifier (SetPriorityPID), of all the processes in a specified process
+group (SetPriorityPGRP), or of all the processes with a specified
+effective user name.  They raise BadPIDEC if no process was found.
+<P>
+When the priority of a process is changed this way, the priority of every
+thread in the process is set to the specified value.  Note that doing this
+to a Topaz process with carefully assigned individual thread priorities is
+usually inadvisable.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html874"
+ HREF="node56.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html870"
+ HREF="node54.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html864"
+ HREF="node54.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html872"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html873"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html875"
+ HREF="node56.html">Manipulating User Specifications</A>
+<B> Up:</B> <A NAME="tex2html871"
+ HREF="node54.html">The OSFriends Interface</A>
+<B> Previous:</B> <A NAME="tex2html865"
+ HREF="node54.html">The OSFriends Interface</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

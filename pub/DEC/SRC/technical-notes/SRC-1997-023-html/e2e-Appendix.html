@@ -1,0 +1,169 @@
+<HTML><HEAD>
+<!-- This document was created from RTF source by rtftohtml version 3.8 -->
+<TITLE>              Each to Each Programmer Reference Manual - Appendix A: Categories</TITLE></HEAD>
+<BODY BACKGROUND="" BGCOLOR="#FFFFFF" TEXT="#000000">
+<A HREF="e2e-Sample.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="e2e-Appendix-2.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="e2e.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="e2e.html#Contents"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+<hr size=4>
+<H1>
+Appendix A: Categories</H1>
+The APIs described so far provide recommendations based solely on the
+(subjective) votes of items recorded by persons. This appendix describes
+additions to that functionality, extending the recommendation mechanism to use
+demographic information known about the persons and/or descriptive information
+known about the items. <p>
+The approach we've taken is to define "categories", to allow persons to be
+associated with categories of demographic information, and to allow items to be
+associated with categories of descriptive information. Here are examples of
+possible demographic categories:
+
+<pre>
+
+    age_0_20
+    age_21_35
+    age_36_54
+    age_55_up
+    job_doctor
+    job_lawyer
+    job_teacher
+    zip_9xxxx
+</pre>
+And
+here are examples of item description categories for a travel information
+application:
+
+<pre>
+
+    restaurant_French
+    restaurant_Chinese
+    music_blues
+    music_classical
+    recreation_bicycling
+</pre>
+<i>Note</i>:
+We do not allow a person to explicitly rate a whole category, e.g., it is not
+possible to say "I like Chinese restaurants in general." Instead, such
+information is inferred. We also do not allow the specification of structural
+relationships between categories, such as "Chinese restaurants are a kind of
+Asian restaurant".<p>
+Here are the API additions to eetypes.h:
+
+<pre>
+
+    class ee_category {                   // an opaque uid for a category
+    public:
+        int uid;
+        ee_category(int uu = 0): uid(uu) {};
+    };
+    inline int operator==(const ee_category&amp; x, const ee_category&amp; xx)
+    { return x.uid == xx.uid; }
+    
+    const ee_category ee_category_null(0); // unused "null" value
+</pre>
+For
+each category, there is a model (just as with persons and items).  The schema
+for nonvolatile storage needs to be extended with a <tt>Categories</tt> table
+to hold the category models:
+
+<pre>
+
+    ee_category category;                // unique key
+    ee_model model;
+</pre>
+<p>
+There must also be a mechanism (tables or procedures) to map information about
+persons and items to categories.<p>
+Here are the additions to eepredict.h:<p>
+(a) Add two member functions:
+
+<pre>
+
+    void reset_person_category(
+        const ee_person x, const ee_category c, const float w);
+    /* Assert c as a category for person x with weight w; remove any
+       such assertion if w==0. This call should follow any change in
+       the nonvolatile database; it resets any cache the predictor may
+       have kept. */
+    void reset_item_category(
+        const ee_item y, const ee_category c, const float w);
+    /* Assert c as a category for item y with weight w; remove any such
+       assertion if w is 0. This call should follow any change in the
+       nonvolatile database; it resets any cache the predictor may have
+       kept. */
+</pre>
+
+(b) Add two pure virtual functions (to be implemented by the application
+programmer):
+
+<pre>
+
+    virtual void get_person_categories(
+        const ee_person x,
+        void (*setcategory)(
+            const ee_person x, const ee_category c, const float w, void* a),
+        void* arg) = 0;
+    /* Retrieve all categories (and weights) for person x from nonvolatile
+       storage, calling (*setcategory)(x, category, weight, arg) for each. */
+    virtual void get_person_category_model(
+        const ee_category c,
+        ee_model&amp; m) = 0;
+    /* Retrieve category c's model from nonvolatile storage, and return
+       it in m; if there is no model, return the null model. */
+</pre>
+<p>
+Finally, here are the additions to eesolve.h:<p>
+(a) Add four member functions to class <tt>ee_solve</tt>:
+
+<pre>
+
+    void set_category_model(const ee_category c, const ee_model&amp; m);
+    /* Set the model for category c to be m. Before initialization, a
+       model is treated as null. */
+        
+    void set_person_in_category(
+        const ee_person x, const ee_category c, const float w);
+    /* Assert that x is a member of c with weight w; a zero weight
+       clears an assertion. */
+    void set_item_in_category(
+        const ee_item y, const ee_category c, const float w);
+    /* Assert that y is a member of c with weight w; a zero weight
+       clears an assertion. */
+    void get_category_model(const ee_category c, ee_model&amp; m);
+    /* Set m to category c's model. */
+</pre>
+(b)
+Add a new class:
+
+<pre>
+
+    class category_iterator {
+    public:
+        category_iterator(ee_solve&amp; s); // constructor
+        ~category_iterator();           // destructor
+        ee_category get_next();         // iterate over categories
+    private:
+        // Disable the copy constructor and assignment operator:
+        category_iterator(const category_iterator&amp; rhs);
+        category_iterator&amp; operator=(const category_iterator&amp; rhs);
+        ee_solve_category_iterator_impl *impl; // instance data
+    };
+    friend class category_iterator;
+    /* A category_iterator is used to discover all the categories known
+       to the solver.  A category is known to the solver if one or more
+       persons or items have been registered in that category via
+       set_person_in_category or set_item_in_category and not deleted
+       via restart, or if a model for that category has been registered
+       via set_category_model and not deleted via restart.
+       Each call to get_next returns another category not previously
+       returned since the iterator was constructed, or ee_category_null
+       if none remain.  The result of interleaving calls to get_next
+       with calls to set_*_in_category or set_category_model is undefined. */<a name="_Toc400263157"></a><a name="_Ref400263954"></a>
+</pre>
+<P><hr size=4>
+<A HREF="e2e-Sample.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="e2e-Appendix-2.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="e2e.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="e2e.html#Contents"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+</body></html>

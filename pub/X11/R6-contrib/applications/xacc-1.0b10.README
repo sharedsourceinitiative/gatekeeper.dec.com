@@ -1,0 +1,170 @@
+X-Accountant
+------------
+
+xacc is a program to keep track of your finances.  It is similar in
+concept to Quicken(TM).  Although xacc still lacks the advanced
+features of quicken, it does have the basic functionality.  Some
+of the features of xacc are:
+
+  - Multiple Accounts
+  - Each account keeps a running balance and
+    a reconciled balance, so you can keep track
+    of the checks that have clear your account.
+  - A simple interface.  If you can use the
+    register in the back of your checkbook,
+    you can use xacc.
+  - QuickFill... if you begin typing a description
+    in the description fields, and it matches an
+    previous transaction, hitting <TAB> will copy
+    the previous transaction.  Handy if you have
+    similar transactions on a regular basis.
+    (such as depositing your paycheck every week :)
+  - Stock/Mutual Fund Portfolios.  Track stocks
+    individually (one per account) or in portfolio
+    of accounts (a group of accounts that can be 
+    displayed together).  
+  - Quicken File Import. Import Quicken Version 3.0 
+    QIF files.
+
+Advanced Features
+-----------------
+X-Accountant offers some features not usually found
+in simpler accounting programs.
+  - Sub-accounts: A master account can have a hierarchy
+    of detail accounts underneath it.  This allows similar
+    account types (e.g. Cash, Bank, Stock) to be grouped 
+    into one master account (e.g. Assets).
+  - Double Entry: 
+    Every transaction can appear in two
+    accounts; one account is debited and the other is 
+    credited with exactly the same amount.  With 
+    double-entry, a transaction edited in one window 
+    will be automatically updated in all other windows 
+    showing that transaction, and in both of the 
+    accounts.
+  - Income/Expense Account Types (Categories).   
+    When used properly 
+    with the double-entry feature, these can be used 
+    to create both Balance Sheet and Profits &amp; Losses
+    reports.  For example, savings account interest,
+    stock dividends, or paychecks can be marked as 
+    both a deposit in a bank account, and as income in 
+    an Income account type, using the double-entry 
+    (transfer) feature.  Similarly, credit card charges
+    can be noted in the credit card account, as well 
+    as in a corresponding expense account.
+  - General Ledger: Multiple accounts can be displayed 
+    in one register window at the same time.  This can
+    ease the trouble of tracking down typing/entry errors.
+    It also provides a convenient way of viewing a
+    portfolio of many stocks, by showing all transactions
+    in that portfolio.
+
+Home Page:
+----------
+http://www3.hmc.edu/~rclark/xacc/
+
+
+Running:
+--------
+The binary-only distribution includes two files: 'xacc' and
+'xacc-static'. The former requires a Motif shared library;
+the latter has Motif statically linked in.  If you have Motif,
+then just run xacc.  If you do not have Motif, then copy 
+'xacc-static' to 'xacc'.
+
+Access to the on-line help documentation requires the that
+the environment variable XACC_HELP be set to the 'Docs'
+directory.  For example, for csh/tcsh, 
+
+% setenv XACC_HELP /usr/local/share/xacc/Docs
+
+or, for bash/bsh/ksh/sh
+
+% set XACC_HELP=/usr/local/share/xacc/Docs
+% export XACC_HELP
+
+You can then start xacc at the command-line, with
+"xacc" or "xacc <filename>", where <filename> is an
+xacc account file.  Sample accounts can be found in 
+"data" subdirectory.  *.dat files are xacc accounts that can 
+opened with the "Open File" menu entry.  *.qif files are
+Quicken Import Format files that can be opened with the 
+"Import QIF" menu entry.
+
+
+Building & Installing:
+----------------------
+These steps does not apply to binary distributions; only to
+source distributions.
+
+Normally, to build and install xacc, all you have to do is:
+
+  # ./configure
+  # make depend
+  # make
+  # make install
+
+You can also build xacc in a seperate directory, which is
+useful if you are compiling for several platforms from a
+single copy of the source tree:
+
+  # mkdir BUILD
+  # mkdir BUILD/debug
+  # cd BUILD/debug
+  # ../../configure --enable-debug
+  # make depend
+  # make
+  # make install
+
+sorry, no "make install" yet.
+
+
+
+Status:
+-------
+As of version 0.9t:
+
+---------------
+Bare-bones general ledger capabilities added.
+Working Features:
+-- accounts can have sub-accounts
+-- Income and Expense account types added.
+-- General Ledger windows for sub-accounts
+
+---------------
+Bare-bones Mutual Fund and Stock Portfolio handling
+is implemented. 
+Working Features:
+-- transfers between bank account & fund work correctly
+-- save to disk, restore from disk.
+-- Type of transaction (Buy, Cap Gain, Dividend Reinvest, etc.) now 
+   supported for portfolio/mutual fund accounts.  This field can be set 
+   and cleared, but is not currently used anywhere.  It will become 
+   useful when reports and graphs are generated.
+
+---------------
+An beta-level double-entry system has been created.
+"Double-entry" is a form of accounting where all transactions
+show up in two accounts (for example, a transfer from
+a credit card(Diners Club) to a cash account(Entertainment Expense)
+will show up in both accounts.  Modifying/deleting a transaction 
+in one account window automatically modifies/deletes it in the 
+other too.  
+
+The system does not force the use of double-entry: in fact,
+double entries are made ONLY when the "transfer" menu item is 
+used.
+
+A future extension to force the use of double-entry for an account
+is planned, as well as the ability to make transfers directly
+from the register(ledger) window.  However, this function will
+be tricky, since it requires hacks on the Xbae widget used to
+display the register.
+
+-------------
+The "reports" menu item is unimplemented.
+-------------
+
+That's all folks!
+

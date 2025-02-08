@@ -1,0 +1,18 @@
+-------------------------------------------------------------------------------
+SPIDER11.ZIP                      Double deck solitaire card game
+                                  Authors: David Lemke (lemke@ncd.com)
+                                           Heather Rose (SUN)
+                                           Donald R. Woods (SUN)
+VAX   AXP                         Languages: VAX C (VAX), DEC C (AXP)
+                                  Needs DECUS X11R4 
+-------------------------------------------------------------------------------
+
+OpenVMS port of Spider.
+-----------------------
+
+You need to define SPIDER_DIR logical name, which points to a directory
+containing all DOC.* files.
+
+Enjoy,
+
+Patrick Moreau, Sept 1994

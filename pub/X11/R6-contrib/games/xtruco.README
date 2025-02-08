@@ -1,0 +1,16 @@
+Begin2
+Title        = Xtruco for linux
+Version      = 1
+Desc1        = Version of famous game of cards named Truco, for X11.
+Author       = By Marcos Martins Duma
+AuthorEmail  = pmmd@iris.ufscar.br
+File1        = xtruco.tar.gz
+FileSize1    = 43k
+Required1    = Linux with XFree86 version 1.2 or higher.  Tested on 2.0.
+CopyPolicy1  = GNUish (free software)
+Keywords     = Game, Cards, X11
+Comment1     = 
+Entered      = October 21, 1996
+EnteredBy    = Marcos Martins Duma
+End
+

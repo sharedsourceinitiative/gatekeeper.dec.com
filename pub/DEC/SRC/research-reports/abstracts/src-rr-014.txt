@@ -1,0 +1,18 @@
+
+
+    "An O(n^2) Shortest Path Algorithm for a Non-Rotating Convex Body."
+    John Hershberger and Leonidas J. Guibas.
+    November 27, 1986.  33 pages.
+
+Authors' Abstract
+
+    We investigate the problem of moving a convex body in the plane
+    from one location to another while avoiding a given collection
+    of polygonal obstacles. The method we propose is applicable when
+    the convex body is not allowed to rotate. If  n  denotes the total
+    size of all polygonal obstacles, the method yields an O(n^2)
+    algorithm for finding a shortest path from the initial to the
+    final location. In solving this problem, we develop some new tools
+    in computational geometry that may be of independent interest.
+
+

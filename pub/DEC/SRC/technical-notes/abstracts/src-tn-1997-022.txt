@@ -1,0 +1,12 @@
+"Short-Length Menger Theorems"
+Monika Rauch Henzinger, Jon Kleinberg, Satish Rao
+Note #1997-022, November 24, 1997
+
+We give short and simple proofs of the following two theorems
+by Galil and Yu. Let s and t be two vertices in an n-node graph G.
+(1) There exist k edge-disjoint s-t paths of total length
+O(n k^{1/2). (2) If we additionally assume that the minimum degree of 
+G is at least k, then there exist k edge-disjoint s-t paths, each of 
+length O(n/k).
+
+

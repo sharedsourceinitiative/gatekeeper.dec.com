@@ -1,0 +1,28 @@
+
+    "Experience with the Firefly Multiprocessor Workstation."
+    Susan Owicki.
+    September 15, 1989.
+
+Author's Abstract
+
+    Commercial multiprocessors are used successfully for a range of
+    applications, including intensive numeric computations,
+    time-sharing, and shared servers.  The value of multiprocessing
+    in a single-user workstation is not so obvious, especially in an
+    environment where numeric problems do not dominate.  The Digital
+    Equipment Corporation Systems Research Center has had several years
+    of experience using the five-processor Firefly workstation in such
+    an environment.  This report is an initial assessment of how much
+    is gained from multiprocessing on the Firefly.
+
+    Reported here are measurements of speedup and utilization for a
+    variety of programs.  They illustrate four sources of concurrency:
+    between independent tasks, within a server, between client and
+    server, and within an application.  The nature of the parallelism
+    in each example is explored, as well as the factors, if any, that
+    constrain multiprocessing.  The examples cover a wide range of
+    multiprocessing, with speedups on a five-processor machine varying
+    from slightly over 1 to nearly 6. Most uses derive most of their
+    speedup from two or three processors, but there are important
+    applications that can effectively use five or more.
+

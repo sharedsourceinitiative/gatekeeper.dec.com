@@ -1,0 +1,391 @@
+\documentstyle[12pt]{article}
+\pagestyle{empty}
+\setlength{\topmargin}{-0.5in}
+\setlength{\leftmargin}{0.0in}
+\setlength{\evensidemargin}{0.0in}
+\setlength{\oddsidemargin}{0.0in}
+\setlength{\textwidth}{6.375in}
+\setlength{\textheight}{9.0in}
+\setlength{\parskip}{7pt}
+
+\widowpenalty=10000
+\clubpenalty=10000
+
+\begin{document}
+\begin{center}
+{\large \bf Errata List for}\\
+{\large {\em MODULA-3} \bf by Samuel P.\ Harbison}\\
+{\bf Last Modified:  \today}
+\end{center}
+
+\noindent
+Modula-3 is the latest in the family of Pascal-like programming
+languages.  It was jointly developed by DEC and Olivetti, and
+runs on many machines.
+Several features led us to adopt Modula-3 as a teaching vehicle
+in several courses.
+First, the Pascal-equivalent subset is easy to pick up.
+Second, explicit data abstraction makes learning data structure
+subjects much more meaningful.
+Third, its features make it an excellent object of study in
+programming language courses.
+Fourth, separation of specification from implementation, object
+orientation, and type inheritance make it a useful tool in software
+engineering.
+Fifth, threads and exceptions make it a good language for learning
+concepts in operating systems.
+Finally, it's free, so we can make it widely available, and you can obtain your
+own copy to do with as you please (more or less).
+
+\noindent
+Currently, Sam Harbison's book, {\em MODULA-3}, is the standard tutorial and
+reference for learning and using the language.
+While we like this book a lot, there are many errors of various kinds
+in the text.  So this document provides all the fixes we know about to
+make the book a reliable tutorial and reference.
+
+\noindent
+The best approach is to systematically write in all the changes now,
+even before you've learned the contents of the sections.  (The change
+75:10 will require you to tuck in a new page, or format the change and
+tape it in.)  You'll be using this book to learn Modula-3
+incrementally in several courses, so the effort will be worthwhile.
+
+\noindent
+Here are the errata in sequential order.
+Each entry has the form Page:Line:Change.
+Negative line numbers are counts from the bottom of the indicated page.
+This is based on changes required in the first
+printing; if you have a later printing, some of these errors may have
+been corrected.  However, see 5:11 for an example of ``re-bugging.''
+\begin{description}
+\item[1:-4:] Change ``it easy'' to ``it is easy''.
+
+\item[3:-6:] Change ``{\sf MODULE Main}'' to
+``{\sf MODULE Hello1 EXPORTS Main}''.
+
+\item[3:-1:] Change ``{\sf END Main}'' to ``{\sf END Hello1}''.
+
+\item[5:11:] The sentence should read, ``Therefore, the characters
+{\sf MODULEHello1}
+would be considered a single identifier rather than the reserved 
+word {\sf MODULE} followed by the identifier {\sf Hello1}.''  This was correct 
+in the first printing, but ``{\sf MODULEHello1}''
+may appear as ``{\sf MODULE Hello1}''
+in the second printing.
+
+\item[5:-5:] Change ``{\sf MODULE Main}''
+to ``{\sf MODULE Hello1 EXPORTS Main}''.
+
+\item[5:-4:] Change ``{\sf END Main}'' to ``{\sf END Hello1}''.
+
+\item[8:7:] Change ``{\sf Hello, World!}'' to
+``{\sf Hello, World!}\verb+\+{\sf n}''.
+
+\item[8: :] Swap positions of Example 1-4 and Figure 1-3.
+
+\item[9:20:] Change ``{\sf Expr END}'' to ``{\sf Expr}''.
+
+\item[10:-4:] Rewrite last paragraph; mention left-associativity.
+Ask your instructor.
+
+\item[13:3:] After this line add the line ``{\sf Wr.Flush(Stdio.stdout);}''.
+
+\item[20:3:] Change ``{\sf Threethousand}'' to ``{\sf 3thousand}''.
+
+\item[20:-5:] Mention that loop variable {\sf i} is declared as {\sf READONLY}
+in {\sf FOR} statement.
+
+\item[20: :] Swap positions of Box and Example 2-5.
+
+\item[23:-12:] Change ``{\sf i}'' to ``{\sf k}''.
+
+\item[31: :] In 2.7.4, change ``{\sf Fib}'' to ``{\sf Fac}'' three times.
+
+\item[32:1:] Add space before ``By''.
+
+\item[32:2:] Change ``{\sf Fib}'' to ``{\sf Fac}''.
+
+\item[32:6:] Change ``{\sf n := n}'' to ``{\sf n := BITSIZE(n)}''.
+
+\item[32:7:] Add ``because the result type of {\sf BITSIZE} is always
+{\sf CARDINAL}.''
+
+\item[32:17:] Change ``is the type'' to ``is always the type''.
+
+\item[33:8] Wrong typeface.
+
+\item[33:15:] Change ``{\sf b:=c}'' to ``{\sf b:INTEGER:=c}''.
+
+\item[33:16:] Change ``{\sf c:=b}'' to ``{\sf c:INTEGER:=b}''.
+
+\item[33:-5:] Add missing ``{\sf )}'' at end of declaration.
+
+\item[33:-4:] Add missing ``{\sf )}'' at end of declaration.
+
+\item[35:1:] Change ``fifteen'' to ``eighteen''.
+
+\item[38:-17:] Change ``{\sf a,pos}'' to ``{\sf a, pos}''.
+
+\item[40:11:] Change ``{\sf Color are assignable}'' to
+``{\sf Color is assignable}''.
+
+\item[40:-10:] Change ``Some the'' to ``Some of the''.
+
+\item[43:5:] The box ``{\sf Variations on Procedure Calls}''
+makes an inaccurate statement about Modula-2. Modula-2 requires ``()''
+in function calls but not in proper procedure calls.
+
+\item[43:-4:] Change ``{\sf assignable to N}'' to ``{\sf assignable to n}''.
+
+\item[47:-1:] In box, change ``{\sf Expr END}'' to ``{\sf Expr}''.
+
+\item[49:8:] ``Solution'' should be boldface.
+
+\item[50:1:] In box, keywords {\sf TO} and {\sf DO} should not be boldface.
+
+\item[57:8:] Change ``of record {\sf r}'' to ``of record {\sf r}
+and {\sf r} is not {\sf READONLY}''.
+
+\item[57:-9:] Rephrase as: ``Which of the three versions is more readable?''
+
+\item[57:-5:] Change ``page 49'' to ``page 50''.
+
+\item[64:-10:]  {\sf -8 MOD 3} is 1, not -1.
+
+\item[64:-4:] {\sf x MOD 2} is 1 if {\sf x} is odd; it cannot be -1.
+
+\item[67:19:] Change ``{\sf volume : [0..10]}'' to ``{\sf volume: [0..10]}''.
+Squeeze out blank.
+
+\item[70:6:] In the first line in the box, change ``{\sf NTERFACE}''
+to ``{\sf INTERFACE}''.
+
+\item[72:7:] In box, change ``{\sf VALUE}'' to ``{\sf VAL}''.
+
+\item[74:-3:] Add: ``and has type {\sf T}'' to example of {\sf FIRST} and
+{\sf LAST}.
+
+\item[74:-1:] Add: ``The type of {\sf FIRST} and {\sf LAST} is the
+base type of {\sf T}.  The type of {\sf NUMBER} is {\sf CARDINAL}.''
+
+\item[75:10:] The solution presented in Example 4-14 doesn't 
+work when {\sf VolumeLevel} is an enumeration or an integer subrange. 
+The problem is that the value of {\sf NewVolume} may lie outside the range 
+of {\sf VolumeLevel} and therefore cause a run-time error. Here is the new 
+example and a revised following paragraph:
+
+\noindent
+{\bf Example 4-14}
+
+\noindent
+Rewrite procedure {\sf ChangeVolume} in Example 4-8 on page 67 assuming
+{\sf VolumeLevel} is defined as the enumeration type {\sf Off, Soft, Medium,
+Loud, Ear\_splitting}.
+
+\noindent
+{\bf Solution}  You cannot compute the tentative value of {\sf NewVolume} as\\
+{\sf VAL(ORD(volume)+n, VolumeLevel)}\\
+without getting a checked run-time
+error if {\sf n} is too large or too small. This makes the procedure
+somewhat more cumbersome. Here is one possibility, in which the
+range testing is hidden in the functions {\sf MIN} and {\sf MAX}:
+{\sf
+\begin{tabbing}
+X\=XX\=XX\=XX\=XX\=XX\=XX\= \kill
+\> PROCEDURE ChangeVolume(n: INTEGER) =\\
+\> \> BEGIN\\
+\> \> \> WITH\\ 
+\> \> \> \> biggest  = ORD(LAST(VolumeLevel)),\\
+\> \> \> \> smallest = ORD(FIRST(VolumeLevel)),\\
+\> \> \> \> proposed = ORD(volume) + n\\
+\> \> \> DO\\
+\> \> \> \> volume := VAL(MAX(MIN(biggest,proposed),smallest),VolumeLevel);\\
+\> \> \> END;\\
+\> \> END ChangeVolume;
+\end{tabbing}
+}
+
+\noindent
+Now suppose that {\sf v} has the subrange type {\sf [T.A..T.B]}. For 
+the assignment {\sf v := e} to be legal, the type of {\sf e} must either
+be {\sf T} or else it must be a subrange of {\sf T} that includes at least
+one value in {\sf T.A..T.B}. That is, the types of {\sf v} and {\sf e}
+must share at least one value. Even if the assignment is legal, it is a 
+checked run-time error if the actual value of {\sf e} is not in {\sf T.A..T.B}.
+
+\item[84:7:] In box, change ``{\sf NTERFACE}'' to ``{\sf INTERFACE}''.
+
+\item[90:6:] Change ``{\sf Ans}'' to ``{\sf answer}''.
+
+\item[90:14:] Change ``character in {\sf t}'' to ``character in {\sf str}''.
+
+\item[90:-10:] Change ``3.  If {\sf t}'' to ``3.  If {\sf str}''.
+
+\item[111:6:] Change ``{\sf Point}, the'' to ``{\sf Point} (page 107), the''.
+
+\item[111:-6:] Change ``{\sf SET OF t}'' to ``{\sf SET OF T}''.
+
+\item[112:-5:] Change ``{\sf CARDINALITY}'' to ``{\sf Cardinality}''.
+
+\item[112:-2:] Identifiers in italics should be in the program typeface.
+
+\item[113:3:] Change ``:='' to ``=''.
+
+\item[124:6:] Change ``{\sf Sum}'' to ``{\sf Add}''.
+
+\item[126:12:] {\sf p} and {\sf q} are in the wrong typeface.
+
+\item[127:-2:] Change ``could passed'' to ``could be passed''.
+
+\item[129:1:] Remove ``[A]''.
+
+\item[129:-10:] Change ``the procedure'' to ``{\sf ForAllElements}''.
+
+\item[129:-3:] Add ``(or {\sf LAST(CARDINAL)}
+if the array is empty)'' before ``:''.
+
+\item[134:-18:] Change ``out.If'' to ``out. If''.
+
+\item[136:1:] In the box, the keyword {\sf ELSE} should not be boldface.
+
+\item[141:18:] Change ``in procedure {\sf Forever}'' to ``in the procedure''.
+
+\item[141:-14:] Change ``{\sf ELSE} $=>$'' to ``{\sf ELSE}''.
+
+\item[141:-9:] Change ``Chapter 12 (Threads)'' to ``Chapter 12''.
+
+\item[141:-1:] Change ``exception'' to ``exceptions''.
+
+\item[142:4:] Change ``{\sf Divsr}'' to ``{\sf divisor}''.
+
+\item[146:9:] In the caption for Figure 8-1, change ``{\sf ServerImpl}''
+to ``{\sf Server}''.
+
+\item[153:13:] Change ``{\sf MODULE SetUnion}'' to ``{\sf MODULE SetModule}''.
+
+\item[153:16:] Add ``{\sf BEGIN} $\ldots$'' before this line.  Change
+``{\sf END SetUnion}'' to ``{\sf END SetModule}''.
+
+\item[153:-16:] Change ``{\sf END P}'' to ``{\sf END Empty}''.
+
+\item[155:-2:] The last sentence should read: ``Ordinary clients will 
+import only {\sf Basic}, while trusted clients will import both {\sf Basic}
+and {\sf Friendly} (Figure 8-5).''
+
+\item[168:1:] In box, keyword {\sf END} should not be boldface.
+
+\item[169:28:] Insert line ``{\sf BEGIN IntegerElement}'' before this line.
+
+\item[176:-13:] Change ``{\sf P}'' to ``{\sf p}'' (five times) in Ex. 10-1 and 
+following text.
+
+\item[177:-3:] Change ``{\sf beta := beta;}'' to ``{\sf beta := alpha;}''.
+
+\item[178:13:] Change ``188'' to ``191''.
+
+\item[178:-1:] Add {\sf NEW}
+to the list of built-in functions for reference types.
+
+\item[180:19:] Add a semicolon after ``{\sf theta := Math.Pi / 2.0}''.
+
+\item[181:-3:] Change ``number of names'' to number of games''.
+
+\item[184:6:] Should read ``The type {\sf REF T} is a subtype of
+{\sf REFANY} $\ldots$''.
+
+\item[191:-19:] Change ``{\sf IMPORTS Rational}'' to ``{\sf IMPORT Rational}''.
+
+\item[195:-7:] Change ``fill with gas'' to ``add gas''.
+
+\item[196:-11:] Change ``type as opaque'' to ``type is opaque''.
+
+\item[198:-17:] Change ``{\sf END SetBirthDate}'' to ``{\sf END New}''.
+
+\item[199:-3:] Change ``{\sf B} and {\sf E} are'' to ``{\sf D} and {\sf E} are''.
+
+\item[201:7:] Change ``Figure 11-2'' to ``Figure 11-4''.
+
+\item[202:-16:] Change ``{\sf bigPoint}'' to ``{\sf BigPoint}''.
+
+\item[210:-19:] Change ``page 196'' to ``page 197''.
+
+\item[211:20:] Change ``variable {\sf a}'' to ``variable {\sf square}''.
+
+\item[212:-4:] Since {\sf T$_{\sf L}$=T$_{\sf R}$}
+implies {\sf T$_{\sf L}<:{\sf T}_{\sf R}$},
+the first entry in the third row of 
+the table is understood to mean {\sf T$_{\sf L}<:{\sf T}_{\sf R}$} and
+{\sf T$_{\sf L}$} \# {\sf T$_{\sf R}$}. The table layout 
+already suggests this interpretation.
+
+\item[214: :] Add ``{\sf RETURN self;}''
+to {\sf InitPosition} and {\sf InitRectangle}.
+
+\item[214:-19:] Editorial changes to paragraph ``The {\sf Rectangle.init}
+method...''.
+
+\item[215:4:] Change the second ``{\sf ArticleCitation}'' to ``{\sf
+ArticleTitle}''.
+
+\item[218: :] Add ``{\sf RETURN self;}'' to {\sf InitPosition}
+and {\sf InitRectangle}.
+
+\item[219: :] Add ``{\sf RETURN self;}'' to {\sf InitCircle}.
+
+\item[219:-8:] Editorial changes to the last paragraph.
+
+\item[221:4:] Delete ``{\sf:= NIL}'' from this line.
+
+\item[222:3:] Insert ``{\sf Wr.Flush(Stdio.stdout);}'' after this line.
+
+\item[222:-5:] Change ``{\sf METHODS}'' to ``{\sf OVERRIDES}''.
+
+\item[226:-7:] Change ``Child'' to ``{\sf Child}''.
+
+\item[227:8:] Mention that untraced things are discussed in 13.2 on p.\ 258.
+
+\item[227:-6:] Change ``name'' to ``{\sf name}''.
+
+\item[234: :] Change ``94681'' to ``94861'' (four times).
+
+\item[244:24:] Insert ``{\sf RETURN Self;}'' before ``{\sf END Init;}''.
+
+\item[271:12:] Change ``{\sf ELSEIF}'' to {\sf ELSIF}''.
+
+\item[280:12:] In box,
+change ``{\sf UnGetChar(rd: T; c: CHAR)}'' to ``{\sf UnGetChar(rd: T)}''.
+
+\item[285:6:] In box,
+insert line ``{\sf PROCEDURE Bool(b: BOOL): Text.T;}'' after this line.
+
+\item[296:-7:] Change ``{\sf =QualID}'' to ``{\sf = QualID}''.
+
+\item[299:3:] Change ``e. semantic'' to ``e. lexical or semantic''.
+
+\item[299:5:] The answer to D.1.5(c) is 11, not 3.
+
+\item[300:6:] Change ``{\sf Recs}'' to ``{\sf recs}''.
+
+\item[300:8:] Change ``{\sf a := y}'' to ``{\sf b := y}''.
+
+\item[300:-16:] Change all ``{\sf A}'' and ``{\sf B}''
+to ``{\sf a}'' and ``{\sf b}'' in answer to exercise 9.
+
+\item[300:-11:] Delete procedure heading; the solution is a block statement.
+
+\item[305: :] Correct typeface of leading entry in letter groups as necessary.
+
+\item[305: :] Add ``Alerted (Thread)'' to the index (cite p.\ 250)
+
+\item[311:4:] Change ``Subtypes (see Types)'' to ``Subtypes (see Type)''.
+\end{description}
+
+\noindent
+If you find more errors, please email the change to 
+rro@cs.colostate.edu, or tell your instructor.
+We'll let you know when new versions of this document are available.
+Periodically, this is also announced in the comp.lang.modula3
+newsgroup.
+
+\end{document}

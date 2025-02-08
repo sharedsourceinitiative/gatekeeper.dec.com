@@ -1,0 +1,71 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.73 [en] (WinNT; U) [Netscape]">
+   <title>Deutscher</title>
+</head>
+<body>
+
+<center>
+<h1>
+<font face="Times New Roman,Times"><font size=+1>Towards the Vantage Project:<br>
+Camera calibration and structure recovery from a single image</font></font></h1></center>
+
+<center><table BORDER=0 COLS=1 WIDTH="75%" HEIGHT="1%" >
+<tr>
+<td>
+<center><b>Jonathan Deutscher&nbsp;</b>
+<br><b>Oxford University</b></center>
+</td>
+</tr>
+</table></center>
+
+<br>&nbsp;
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 WIDTH="75%" HEIGHT="1%" >
+<tr>
+<td>The Vantage Project proposes to deploy many cameras around SRC and
+to track people as they move from the field of view of one camera to another.
+It should be possible to use this information to analyse the movements
+of people and identify individuals.
+<p>This tracking (in particular the hand-off between cameras as a person
+moves between their fields of view) will be easier if we can make inferences
+about the real location of a person in the world based on that person's
+position in a camera's image plane. It would also be helpful to know the
+3D structure of the scene to guide the tracking and enforce the constraint
+that the person is walking on the floor, not up the wall.&nbsp;
+<p>The problem can be divided into three areas:&nbsp;
+<p><b>Camera Calibration</b>
+<br>A video camera can be approximated as a projection from the 3D world
+onto a 2D image plane, and a calibrated camera is one for which that projection
+matrix is known. Current methods for automatic calibration and structure
+recovery require stereo images, hand-registration of features or the observation
+of known objects. We used a method that uses the Manhattan assumption (that
+most of the lines in a scene are aligned along three perpendicular axes)
+to automatically recover the camera calibration from a single image.&nbsp;
+<p><b>Image Segmentation&nbsp;</b>
+<br>Once the camera has been calibrated we want to segment the pixels in
+the image into different regions that correspond to some kind of structure
+in the world. Using our Manhattan assumption we can assume that most of
+the surfaces in the scene are planar and that they are separated by extended
+lines in one of the three primary directions. Once the camera is calibrated
+we can detect these extented lines in the image and use them to define
+an initial set of regions. We then reduce this set by merging the most
+similar neighbouring regions until a minimum region difference is reached.&nbsp;
+<p><b>Structure Recovery&nbsp;</b>
+<br>Once the image has been segmented we assume that each segment represents
+a planar surface in the world. We begin by heuristically identifying the
+floor region and assuming that the camera has been installed roughly upright
+we can compute the orientation of this floor region. We then compute the
+world coordinates of every pixel in the floor segment by performing simple
+line plane intersections. Using these world coordinates we can discern
+the boundaries of the floor which should assist greatly in tracking people
+for the Vantage Project.
+<br>&nbsp;</td>
+</tr>
+</table></center>
+
+<br>&nbsp;
+<br>&nbsp;
+</body>
+</html>

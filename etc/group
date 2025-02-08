@@ -1,0 +1,4 @@
+system:*:0:root
+daemon:*:1:daemon
+ftp:*:11:ftp
+ftpwrite:*:12:

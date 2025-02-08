@@ -1,0 +1,116 @@
+Welcome to Zipper Alpha 1!
+
+Get the MOST CURRENT version from my website:
+	http://users.vnet.net/ashman/zipper
+
+
+Intro and Errata.
+
+This software is COPYRIGHT 1997 Ashley R. Bowers.  It is not Public Domain,
+but you can use it freely, and give it away, as long as you preserve the
+entire archive as is AND you do not distribute any changes that you might
+make.
+
+Zipper is a IRC client written primarily in TCL/TK and with a little help
+from "C" every now and then.  Zipper was started by me as project to help
+me learn TCL/Tk and also because i wanted an IRC client for X-windows that
+worked the way I wanted it too.  It is not intended to compete with the
+existing clients, but rather as an alternative.
+
+
+Zipper currently is still missing a bit of functionality as far
+as recognizing IRC server messages.  There are also still quite a few
+bugs present.  Remember, this is ALPHA software.  There are NO warranties
+either expressed or implied!  
+
+
+At the current time it is relatively stable and i have used it on a 
+regular basis to connect to EFNet servers.  It still crashes once in 
+a while but those time are becoming less and less.
+
+
+
+Anyone that would like to tackle some of the bugs that you may encounter,
+feel free to do so, but please email me with the fix so that it can be 
+incorporated into the distribution.  Full credit for working fixes and
+useful additions that are added to the archive will be given.
+
+
+Installation
+
+Installing Zipper! is a simple matter.  You need 2 files.  The "install" shell
+script and the zipper*.tgz file.  Running "install <directory>" where
+<directory> is where you want to install zipper, will take care of almost 
+everthing for you!  The only other thing you need to do is add Zipper!'s
+directory to your path.  Please note that for some reason Zipper! does
+not want to fully recognize the new path, unless you log off and then
+log on.
+
+
+Zipper!
+
+Ok, you are probably asking by now what Zipper! stands for.  Well to 
+answer that question in one word: Nothing.  I needed a name, a cute 
+catchy name, and Zipper! stuck in my head.  It seems like that are
+ton of other IRC clients that want to be cute and have "irc" somewhere
+in there name.  Well not so here!!  :)
+
+Zipper uses a simple point click and type interface.  It functions in a 
+similar fashion the windows clients mIRC and Pirch.  Currently only single
+server connections are supported, although it is possible to clone
+multiple client processes.
+
+Zipper has working notify, ignore, dcc chat, dcc send and 
+receive, and a variety of useful irc commands (see customrc for currently
+supported commands).  The standard ircII slash ("/") command syntax is/will
+be supported.
+
+
+Coming soon 
+
+BETTER HELP :)  
+I will be adding more server message support and more IRCII commands.  
+Server event handling
+better alias support with multiple irc commands per line
+support for executing custom TCL scripts outside of the main program. (in progress)
+
+
+
+Installation
+
+
+To install Zipper! untar the archive into an empty directory, then type
+"install".  You will now be prompted for the directory in which zipper is
+to permanently reside.  Once you hit enter, the files will be installed
+into the appropriate directory.  If you later decide to move the files, then
+you will need to reinstall zipper, or manually edit the paths in the files.
+Once the files are copied, the Zipper! resource files will be installed into
+your home directory.  They are installed in a hidden subdirectory, but are 
+needed in order for Zipper! to be used by multiple people.
+
+Now just be sure Zipper! is in your path, and type the command "zipper".  If
+all goes well, the main Zipper! window should appear.
+
+
+Current Features
+
+Please see the file FEATURES for this information.
+
+
+
+End Stuff
+
+
+Well, i know this program is not as good as it could be and has a number
+of annoying problems which will hopefully be fixed.  But use it and enjoy
+it if you can, and let me know if you like it, or what might make it better,
+or if there is just something you really don't like about it.
+
+I want honest criticism, both good and bad, but please don't flame the program.
+Send those to alt.flame, or /dev/null.
+
+
+Thanks a Bunch!
+
+Ash Bowers
+wolfie@vnet.net

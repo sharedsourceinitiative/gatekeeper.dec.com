@@ -1,0 +1,36 @@
+					
+
+		AVAILABLE ELECTRONICALLY
+
+"Experiences with Software Specification and Verification Using LP, the
+Larch Proof Assistant"
+Manfred Broy
+November 12, 1992.  69 pages
+
+
+Author's abstract: 
+
+We sketch a method for deduction-oriented software and system development
+The method incorporates formal machine-supported specification and 
+verification as activities in software and systems development. We
+describe experiences in applying this method. These experiences have
+been gained by using the LP, the Larch proof assistant, as a tool for 
+a number of small and medium size case studies for the formal development 
+of software and systems. LP is used for the verification of the
+development steps. These case studies include
+
+	* quicksort
+	* the majority vote problem
+	* code generation by a compiler and its correctness
+	* an interactive queue and its refinement into a network
+
+The developments range over levels of requirement specifications, designs 
+and abstract implementations. The main issues are questions of a
+development method and how to make good use of a formal tool like LP in
+a goal-directed  way within the development. We further discuss of the 
+value of advanced specification techniques, most of which are deliberately 
+not supported by LP and its notation, and their significance in development.
+Furthermore, we discuss issues of enhancement of a support system like
+LP and the value and the practicability of using formal techniques such 
+as specification and verification in the development process in practice.
+

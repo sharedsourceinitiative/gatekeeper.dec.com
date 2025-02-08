@@ -1,0 +1,23 @@
+Efficient and Flexible Value Sampling
+
+Mike Burrows, Ulfar Erlingson, Shun-Tak A. Leung, Mark T. Vandevoorde,
+Carl A.  Waldspurger, Kevin Walker, William E. Weihl
+
+August 30, 2000
+
+
+This paper presents novel sampling-based techniques for collecting
+statistical profiles of register contents, data values, and other
+information associated with instructions, such as memory latencies.
+Values of interest are sampled in response to periodic interrupts.
+The resulting value profiles can be analyzed by programmers and
+optimizers to improve the performance of production uniprocessor and
+multiprocessor systems.
+
+Our value sampling system extends the DCPI continuous profiling
+infrastructure, and inherits many of its desirable properties: our value
+profiler has low overhead (approximately 10\% slowdown); it profiles all the
+code in the system, including the operating system kernel; and it operates
+transparently, without requiring any modifications to the profiled
+code.
+

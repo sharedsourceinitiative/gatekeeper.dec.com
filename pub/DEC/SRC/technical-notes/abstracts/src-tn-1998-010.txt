@@ -1,0 +1,21 @@
+"Scheduling Multicasts on Unit-Capacity Trees and Meshes"
+Monika Rauch Henzinger and Stefano Leonardi
+Note #1998-010, May 8, 1998.
+
+This paper studies the multicast routing and admission control problem
+on unit-capacity tree and mesh topologies in the throughput-model.
+The problem is a generalization of the edge-disjoint paths problem and
+is NP-hard both on trees and meshes.
+
+We study both the offline and the online version of the problem: In
+the offline setting, we give the first constant-factor approximation
+algorithm for trees, and an O((log log n)^2)-factor approximation
+algorithm for meshes.
+
+In the online setting, we give the first polylogarithmic competitive
+online algorithm for tree and mesh topologies.  No
+polylogarithmic-competitive algorithm is possible on general network
+topologies and there exists a polylogarithmic lower bound on the
+competitive ratio of any online algorithm on tree topologies.  We
+prove the same lower bound for meshes.
+

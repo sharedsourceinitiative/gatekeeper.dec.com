@@ -1,0 +1,26 @@
+   AF3R1.tar.Z
+	AF3 Release 1 kit.  		Tues May 3 1994
+ 
+   AF2R2-other.tar
+        hifi sound snippets.  Useful if you have a DECaudio or other 
+        16/44.1/48 KHz sampling device.
+ 
+   README-V3
+	Readme file for the AF3 kit.
+
+   RELNOTES.*
+	Release notes for the AF3 kit.
+
+   COPYRIGHTS
+	Copyright statement for AF3 kit.
+
+   AF3R1-patches.tar.Z
+	Patches to the AF3 Release 1 kit (when/if they exist).
+        (see the file ./patchlevel.h to see your current installed 
+	patch revision, and then install only the patches later than
+	that revision.)
+
+   af-mail-archive
+        archive of af mailing list.  
+ 
+ Also, grab the release notes and readme file.

@@ -1,0 +1,25 @@
+"The Virtual Book"
+David Chaiken, Mark Hayter, Jay Kistler, Dave Redell
+Report #157, November 11, 1998
+55 pages.
+
+The Virtual Book Project explored the use of a prototype electronic reading 
+appliance to replace paper as the medium for reading and browsing a wide 
+variety of material. The research hypothesis was that the relevant 
+technologies for high-resolution flat panel displays and the associated 
+storage, processing and communication components were reaching thresholds 
+that enabled them to compete successfully with paper for sustained reading. 
+Our research strategy was to build and deploy a dozen prototype units, 
+gaining hands-on experience with the issues involved in their use.
+
+Our experience with the Lectrice prototype shows that reading appliances 
+are indeed crossing the threshold to practicality, but that a number of 
+challenges remain to make these devices fully competitive with some of 
+the more subtle advantages of paper. At the same time, the inherent 
+advantages of electronic media make the long-term prospects for reading 
+appliances very compelling.
+
+This report describes Lectrice, summarizes the lessons learned about both 
+software and hardware, and poses some of the questions that need to be 
+addressed for the promise of reading appliances to be fully realized.
+

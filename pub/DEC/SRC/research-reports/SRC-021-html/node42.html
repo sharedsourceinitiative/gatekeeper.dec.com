@@ -1,0 +1,396 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Performing Input/Output</TITLE>
+<META NAME="description" CONTENT="Performing Input/Output">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node43.html">
+<LINK REL="previous" HREF="node41.html">
+<LINK REL="up" HREF="node39.html">
+<LINK REL="next" HREF="node43.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html711"
+ HREF="node43.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html707"
+ HREF="node39.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html701"
+ HREF="node41.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html709"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html710"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html712"
+ HREF="node43.html">Manipulating File Handles</A>
+<B> Up:</B> <A NAME="tex2html708"
+ HREF="node39.html">The OS Interface: Files</A>
+<B> Previous:</B> <A NAME="tex2html702"
+ HREF="node41.html">Opening Files</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04043000000000000000">
+Performing Input/Output</A>
+</H2>
+<P>
+This subsection describes the procedures for reading, writing, and
+copying files, as well as some miscellaneous procedures for scheduling
+input/output.
+<P>
+The Taos implementation of these procedures uses enough threads to achieve
+the maximum throughput; there is no need for the client to use concurrent
+calls for greater throughput.
+<P><A NAME="SanLeandro">&#160;</A><A NAME="2056">&#160;</A>
+<PRE>
+PROCEDURE Read(
+    f: File;
+    VAR (* OUT *) buf: ARRAY OF System.Byte;
+    start: CARDINAL := 0;
+    length: CARDINAL := LAST(CARDINAL))
+    : CARDINAL
+  RAISES {Error, Alerted};
+  (* BadFileEC, OperationConflictEC, NotTtyOwnerReadEC,
+     FileFailureES *)
+</PRE>
+<P><A NAME="2057">&#160;</A>
+Let sub be the subarray buf[start FOR length].  For some nonnegative
+integer n, Read transfers bytes from the specified file to the subarray
+sub[0 FOR n] and returns the value n.  It raises OperationConflictEC if
+the open-file object referred to by f was not opened with the fRead flag.
+<P><A NAME="961">&#160;</A>
+When Read is used on a regular file, the transfer starts at the file
+position indicated by the file pointer in the open-file object, and
+continues until the end of sub or the end of the file is reached,
+whichever comes first;  the file pointer is advanced by the amount read.
+Thus a return value less then the length of sub indicates the end of the
+file was reached.
+<P><A NAME="962">&#160;</A>
+When Read is used on a pipe or unstructured device, the transfer starts at
+the current position.  If one or more characters are available, the
+transfer begins immediately; it continues until the end of sub or the end
+of the available characters is reached, whichever comes first.  If no
+characters are currently available, but end of file has not been reached,
+Read blocks until one or more characters become available; this is the
+only time Read is alertable.  Thus a return value of zero indicates the
+end of the file was reached.  (The read-end of a pipe is at end of file
+when there are no longer outstanding file handles for the write-end and
+all the buffered data has been exhausted.)
+<P><A NAME="963">&#160;</A>
+<A NAME="964">&#160;</A>
+<A NAME="2058">&#160;</A>
+<A NAME="966">&#160;</A>
+If Read is used on the control terminal and the calling process is not in
+the distinguished process group of that device, Read sends a SigTTIn
+signal to the process group of the caller and blocks the calling thread
+(assuming the calling process is not an orphan and is not ignoring
+SigTTIn; otherwise Read raises NotTtyOwnerReadEC).  See Section
+<A HREF="node33.html#Alamo">2.11</A>, page <A HREF="node33.html#Alamo"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>, for more details.
+<P><A NAME="SanMartin">&#160;</A><A NAME="2059">&#160;</A>
+<PRE>
+PROCEDURE FRead(
+    f: File;
+    position: CARDINAL;
+    VAR (* OUT *) buf: ARRAY OF System.Byte;
+    start: CARDINAL := 0;
+    length: CARDINAL := LAST(CARDINAL))
+    : CARDINAL
+  RAISES {Error};
+  (* BadFileEC, UnseekableObjectEC, OperationConflictEC,
+     NotTtyOwnerReadEC, FailureES *)
+</PRE>
+<P><A NAME="2060">&#160;</A>
+Let sub be the subarray buf[start FOR length].  For some nonnegative
+integer n, FRead transfers bytes from the specified file to the subarray
+sub[0 FOR n] and returns the value n.  It raises UnseekableObjectEC if
+applied to anything other than a regular file, or OperationConflictEC if
+the open-file object referred to by f was not opened with the fRead flag.
+<P><A NAME="972">&#160;</A>
+The transfer starts at the specified position, and continues until the end
+of sub or the end of the file is reached, whichever comes first.  A return
+value less than the length of sub indicates the end of the file was
+reached.  FRead does not examine or modify the file pointer in the
+open-file object.
+<P>
+Ultrix note: FRead will fail in non-obvious ways when used on a file whose
+open-file object is shared with another process.  For more details, see
+Appendix <A HREF="node73.html#Watsonville">C.9</A>, page <A HREF="node73.html#Watsonville"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.
+<P><A NAME="Sausalito">&#160;</A><A NAME="2061">&#160;</A>
+<PRE>
+PROCEDURE Write(
+    f: File;
+    VAR IN buf: ARRAY OF System.Byte;
+    start: CARDINAL := 0;
+    length: CARDINAL := LAST(CARDINAL))
+  RAISES {Error, Alerted};
+  (* BadFileEC, OperationConflictEC, NotTtyOwnerWriteEC,
+     NotEnoughRoomEC, PipeHasNoReaderEC, FailureES *)
+</PRE>
+<P><A NAME="2062">&#160;</A>
+Let sub be the subarray buf[start FOR length].  Write transfers all of sub
+to the specified file.  It raises OperationConflictEC if the open-file
+object referred to by f was not opened with the fWrite flag.
+<P><A NAME="2063">&#160;</A>
+<A NAME="979">&#160;</A>
+When Write is used on a regular file, the transfer normally starts at the
+position indicated by the file pointer in the open-file object.  However,
+if the fAppend flag is set in the open-file object, the transfer starts at
+the current end of file.  Write always sets the file pointer to the
+position after the last byte transferred.  It automatically extends the
+length of a regular file with bytes containing zero if the starting
+position is past the end of the file.
+<P><A NAME="980">&#160;</A>
+When Write is used on a pipe or unstructured device, the transfer starts
+at the current position.  If the pipe or device is currently incapable of
+accepting the full amount requested, Write repeatedly writes as much as
+possible and blocks until more buffer space is available; this is the only
+time Write is Alertable.
+<P><A NAME="981">&#160;</A>
+<A NAME="982">&#160;</A>
+<A NAME="983">&#160;</A>
+If Write is used on a pipe whose reading end is closed, an error occurs.
+This error is reported in one of two ways, depending on the setting of the
+SigPipe signal state (see the SetMySignalState procedure, page
+<A HREF="node50.html#Saratoga"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.)  If the setting is SignalIgnore, Write raises
+PipeHasNoReaderEC; otherwise the call to Write never returns, and the
+process is sent a SigPipe signal, which by default causes the process to
+terminate.  (Rather than trying to handle SigPipe, a process should be
+programmed to catch PipeHasNoReaderEC.)
+<P><A NAME="985">&#160;</A>
+<A NAME="986">&#160;</A>
+<A NAME="2064">&#160;</A>
+<A NAME="988">&#160;</A>
+If Write is used on the control terminal and the calling process is not in
+the distinguished process group of that device, Write sends a SigTTOu
+signal to the process group of the caller and blocks the calling thread
+(assuming the calling process is not an orphan and is not ignoring
+SigTTOu; otherwise Write raises NotTtyOwnerWriteEC).  See Section
+<A HREF="node33.html#Alamo">2.11</A>, page <A HREF="node33.html#Alamo"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>, for more details.
+<P><A NAME="2065">&#160;</A>
+<PRE>
+PROCEDURE FWrite(
+    f: File;
+    position: CARDINAL;
+    VAR IN buf: ARRAY OF System.Byte;
+    start: CARDINAL := 0;
+    length: CARDINAL := LAST(CARDINAL))
+  RAISES {Error};
+  (* BadFileEC, UnseekableObjectEC, OperationConflictEC,
+     NotTtyOwnerWriteEC, NotEnoughRoomEC, FailureES *)
+</PRE>
+<P><A NAME="2066">&#160;</A>
+Let sub be the subarray buf[start FOR length].  FWrite transfers all of
+sub to the file.  It raises UnseekableObjectEC if applied to anything
+other than a regular file. It raises OperationConflictEC if the open-file
+object referred to by f was not opened with the fWrite flag.
+<P><A NAME="2067">&#160;</A>
+<A NAME="994">&#160;</A>
+The transfer starts at the specified position in the file, except that if
+position equals LAST(CARDINAL), FWrite appends to the current end of the
+file.  FWrite automatically extends the length of a regular file with
+bytes containing zero if the specified position is past the end of the
+file.  FWrite ignores the setting of the fAppend flag in the open-file
+object, and neither examines nor modifies the file pointer in the
+open-file object.
+<P>
+Ultrix note: FWrite, like FRead, will fail in non-obvious ways when used
+on a file whose open-file object is shared with another process.  For more
+details, see Appendix <A HREF="node73.html#Watsonville">C.9</A>, page <A HREF="node73.html#Watsonville"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.
+<P><A NAME="2068">&#160;</A>
+<PRE>
+PROCEDURE Copy(
+    source, destination: File;
+    length: CARDINAL := LAST(CARDINAL))
+    : CARDINAL
+  RAISES {Error, Alerted};
+  (* BadFileEC, OperationConflictEC, NotTtyOwnerReadEC,
+     NotTtyOwnerWriteEC, NotEnoughRoomEC, PipeHasNoReaderEC,
+     FailureES *)
+</PRE>
+<P><A NAME="2069">&#160;</A>
+<PRE>
+PROCEDURE FCopy(
+    source, destination: File;
+    sourcePosition, destinationPosition: CARDINAL;
+    length: CARDINAL := LAST(CARDINAL))
+    : CARDINAL
+  RAISES {Error};
+  (* BadFileEC, InvalidObjectEC, OperationConflictEC,
+     NotEnoughRoomEC, FailureES *)
+</PRE>
+<P><A NAME="2070">&#160;</A>
+<A NAME="2071">&#160;</A>
+Copy and FCopy copy a range of bytes from a source file to a destination
+file and return the number of bytes actually transferred.  They raise
+InvalidArgumentEC if the source and destination refer to the same
+open-file object; they raise OperationConflictEC if the source was not
+opened with the fRead flag or the destination was not opened with the
+fWrite flag.
+<P><A NAME="2072">&#160;</A>
+<A NAME="1002">&#160;</A>
+<A NAME="1003">&#160;</A>
+Copy can be used with any combination of files (regular, device, pipe,
+etc.).  When the source is a regular file, Copy starts the transfer at the
+position indicated by the file pointer in the open-file object, and
+advances that file pointer by the amount transferred.  When the
+destination is a regular file, Copy normally starts the transfer at the
+position indicated by the file pointer in the open-file object.  However,
+if the fAppend flag is set in the open-file object, the transfer starts at
+the current end of file.  Copy always advances the file pointer in a
+destination regular file by the amount transferred.  It automatically
+extends the length of a destination regular file with bytes containing
+zero if the starting position is past the end of the file.
+<P>
+When the source or destination is a pipe or unstructured device, the
+transfer starts at the current position and is alertable if Copy is
+blocked waiting either for bytes from the source or for space in the
+destination.  In any case, the transfer continues for the specified length
+or until the end of the source file is reached, whichever comes first.
+<P><A NAME="2073">&#160;</A>
+<A NAME="1005">&#160;</A>
+FCopy raises UnseekableObjectEC unless the source and destination are
+regular files.  The transfer starts at the specified positions in the
+source and destination, except that if destinationPosition equals
+LAST(CARDINAL), the transfer begins at the end of the destination file.
+FCopy ignores the fAppend flag and the the file pointer in the destination
+open-file object. FCopy automatically extends the length of the
+destination file with bytes containing zero if the starting position is
+past the end of the file.
+<P><A NAME="2074">&#160;</A>
+<PRE>
+PROCEDURE EnsureWritten(f: File) RAISES {Error};
+  (* BadFileEC, FileFailureES *)
+</PRE>
+<P><A NAME="1007">&#160;</A>
+EnsureWritten makes sure that all changes to the data and attributes of
+the file performed before EnsureWritten was called are flushed to the
+disk.  EnsureWritten doesn't return until the flushing is complete.
+<P>
+To avoid the need for most programs to call EnsureWritten, the system
+contains a daemon that regularly flushes all changes to file data and
+attributes.
+<P><A NAME="1008">&#160;</A>
+Taos note: The file flushing daemon runs every 60 seconds; it does not
+flush changes to file access times.
+<P>
+Ultrix note: For a file residing on an Ultrix system, it is not possible
+to guarantee that the changes will be reflected to disk before
+EnsureWritten returns.  The file flushing daemon runs every 30 seconds.
+<P><PRE>
+PROCEDURE FinishWrites() RAISES {Error}; (* OBSOLETE *)
+</PRE>
+<P>[Because of a change made to the semantics of EnsureWritten and
+OSFriends.EnsureAllWritten, FinishWrites is obsolete and will be removed
+from the interface when it is next recompiled.]
+<P><A NAME="2075">&#160;</A>
+<A NAME="2076">&#160;</A>
+<A NAME="2077">&#160;</A>
+<PRE>
+TYPE
+  Direction = (Input, Output);
+  Band = (InBand, OutOfBand);
+
+PROCEDURE CharsAvail(
+    f: File;
+    direction: Direction := Input;
+    band: Band := InBand)
+    : CARDINAL
+  RAISES {Error};
+  (* BadFileEC, OperationConflictEC,
+     IOErrorEC, PvOfflineEC, RemoteFileEC *)
+</PRE>
+<P><A NAME="1012">&#160;</A>
+<A NAME="1013">&#160;</A>
+CharsAvail returns the number of characters available for transferring in
+the specified direction.  If the file is a pipe or a socket, this is the
+number of available characters in the buffer that can be read or written.
+If the file is a device, the underlying device is queried to determine the
+most characters it can handle without blocking in the specified direction.
+If the file is a regular file, the direction is Input, and the file
+pointer in the open-file object is positioned before the end of file, the
+result is the difference between the end-of-file position and the file
+pointer.  Otherwise the result is LAST(CARDINAL).
+<P>
+If band is not equal to InBand, zero is returned.  (OutOfBand is for
+future implementation of sockets.)
+<P>
+OperationConflictEC is raised if direction equals Input and the file is
+not open for reading or if direction equal Output and the file is not open
+for writing.
+<P><A NAME="2078">&#160;</A>
+<PRE>
+PROCEDURE Wait(
+    f: File;
+    direction: Direction := Input;
+    band: Band := InBand)
+  RAISES {Error, Alerted};
+  (* BadFileEC, OperationConflictEC,
+     IOErrorEC, PvOfflineEC, RemoteFileEC *)
+</PRE>
+<P>
+Wait blocks until a call to CharsAvail with the same parameters would
+return a nonzero value.  Wait raises OperationConflictEC under the same
+conditions as does CharsAvail.  If band equals OutOfBand, CharsAvail would
+return 0, so Wait blocks forever.  Note that if f refers to a regular
+file, Wait always returns immediately.  Wait is alertable.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html711"
+ HREF="node43.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html707"
+ HREF="node39.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html701"
+ HREF="node41.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html709"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html710"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html712"
+ HREF="node43.html">Manipulating File Handles</A>
+<B> Up:</B> <A NAME="tex2html708"
+ HREF="node39.html">The OS Interface: Files</A>
+<B> Previous:</B> <A NAME="tex2html702"
+ HREF="node41.html">Opening Files</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

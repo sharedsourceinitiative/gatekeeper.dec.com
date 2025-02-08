@@ -1,0 +1,76 @@
+The archive files named hayashi* are example programs in the
+books written by Hideyuki Hayashi.
+
+There are following READMEs for English and Japanese languages:
+
+    hayashi.README:     written in English.
+    hayashi.README.euc: written in Japanese in Japanese EUC encoding.
+    hayashi.README.sj:  written in Japanese in Shift JIS (MS Kanji) encoding.
+
+
+hayashi0.tar.Z: This archive contains the example programs from
+                chapter 12 - 15 in the following book:
+
+    "X-Window Ver. 11 Programming -- Second edition"
+     Nikkan Kogyo Shinbun (Daily Industrial Paper), 1993
+     ISBN 4-526-03399-5
+    (This book is written in Japanese.)
+
+
+hayashi1*.tar.Z: These archives contain the example programs from:
+
+    "X Window OSF/Motif Toolkit Programming (I)
+       - Programming Basics, Resource and Event -"
+     Nikkan Kogyo Shinbun (Daily Industrial Paper), 1994
+     ISBN 4-526-03601-3
+    (This book is written in Japanese.)
+
+    Following archives are provided for English and Japanese languages:
+
+        hayashi1.eng.tar.Z: The comments are written in English.
+        hayashi1.euc.tar.Z: The comments are written in Japanese
+                            in Japanese EUC encoding.
+        hayashi1.sj.tar.Z:  The comments are written in Japanese
+                            in Shift JIS (MS Kanji) encoding.
+
+
+hayashi2*.tar.Z: These archives contain the example programs from:
+
+    "X Window OSF/Motif Toolkit Programming (II)
+       - Graphics, Custom Resource, Japanese, Communications -"
+     Nikkan Kogyo Shinbun (Daily Industrial Paper), 1995
+    (This book is written in Japanese.)
+
+    Following archives are provided for English and Japanese languages:
+
+        hayashi2.eng.tar.Z: The comments are written in English.
+        hayashi2.euc.tar.Z: The comments are written in Japanese
+                            in Japanese EUC encoding.
+        hayashi2.sj.tar.Z:  The comments are written in Japanese
+                            in Shift JIS (MS Kanji) encoding.
+
+
+To unpack the archive, do the following manner:
+(Note: the file name may be truncated to 14 characters,
+depending on your system.)
+
+    $ uncompress < hayashi0.tar.Z | tar -xvf -
+
+
+To compile the example programs, you may have to modify
+CFLAGS and LDFLAGS in each Makefile.  And you may have to
+modify the locale name sub-directories under app-defaults.
+
+
+Copyright 1993, 1994, 1995 Hideyuki Hayashi
+
+Permission to use, copy, modify, and distribute the examples for
+any purpose except publication and without fee is hereby granted,
+provided that the above copyright notice appear in all copies.
+The example programs are provided without guarantee, warrantee
+or support expressed or implied.
+
+
+Hideyuki Hayashi
+Jun. 1995
+

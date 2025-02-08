@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Virtual Memory</TITLE>
+<META NAME="description" CONTENT="Virtual Memory">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node77.html">
+<LINK REL="previous" HREF="node75.html">
+<LINK REL="up" HREF="node74.html">
+<LINK REL="next" HREF="node77.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html1141"
+ HREF="node77.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html1137"
+ HREF="node74.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html1131"
+ HREF="node75.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html1139"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html1140"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1142"
+ HREF="node77.html">Debugging and Profiling</A>
+<B> Up:</B> <A NAME="tex2html1138"
+ HREF="node74.html">Running Ultrix Applications on</A>
+<B> Previous:</B> <A NAME="tex2html1132"
+ HREF="node75.html">Scheduling</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04092000000000000000">
+Virtual Memory</A>
+</H2>
+<P><A NAME="1711">&#160;</A>
+<A NAME="1712">&#160;</A>
+As with processor scheduling,  most Taos virtual memory management is
+performed by the Nub.  The Nub virtual memory manager does not currently
+provide facilities for sharing read-only program text segments or for
+demand loading.
+<P><A NAME="1713">&#160;</A>
+<A NAME="1714">&#160;</A>
+<A NAME="1715">&#160;</A>
+<P>
+The virtual memory page size implemented by the Nub is considered to be a
+tuning parameter, and may end up larger than the 1024 bytes used by
+Ultrix.  This difference is visible to a program that uses the brk/sbrk
+kernel call, since this kernel call rounds up the break (the end of the
+data segment) to a multiple of the Nub-defined virtual page size.  On the
+other hand, the getpagesize kernel call always returns 1024.  (The Ultrix
+1.1 version of the ld command won't work if getpagesize returns a
+different value.)
+<P><A NAME="1716">&#160;</A>
+Franz Lisp executes the vadvise kernel call even though no such kernel
+call is documented in Ultrix 1.1 or 2.0.  Therefore Taos implements
+vadvise as a no-op.  (There is a comment `72 is old: vadvise' in
+/usr/include/syscall.h.)
+<P><A NAME="1717">&#160;</A>
+Taos does not limit the number or total length of arguments and
+environment strings passed via the execve kernel call.
+<P><A NAME="1718">&#160;</A>
+If virtual memory backing store runs out, Taos may fail in different ways
+than Ultrix.  This is because a process can cause Taos to allocate an
+unbounded amount of virtual memory (within the Taos address space); when
+backing store runs out, a Taos thread holding global locks may be blocked.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1141"
+ HREF="node77.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html1137"
+ HREF="node74.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html1131"
+ HREF="node75.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html1139"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html1140"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1142"
+ HREF="node77.html">Debugging and Profiling</A>
+<B> Up:</B> <A NAME="tex2html1138"
+ HREF="node74.html">Running Ultrix Applications on</A>
+<B> Previous:</B> <A NAME="tex2html1132"
+ HREF="node75.html">Scheduling</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

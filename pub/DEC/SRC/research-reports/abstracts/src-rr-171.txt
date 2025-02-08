@@ -1,0 +1,5 @@
+"Denali: A Goal-directed Superoptimizer"
+Rajeev Joshi, Greg Nelson and Keith Randall
+Report #171, August 9, 2001.<p>
+
+This paper provides a very preliminary report on a research project that is just getting under way that aims to construct a code generator that uses an automatic theorem-prover to produce very high-quality (in fact, nearly mathematically optimal) machine code for modern architectures. The code generator is not intended for use in an ordinary compiler, but is intended to be used for inner loops and critical subroutines in those cases where peak performance is required, no available compiler generates adequately efficient code, and where current engineering practice is to use hand-coded machine language. The paper describes the design of the superoptimizer, and presents some encouraging preliminary results.

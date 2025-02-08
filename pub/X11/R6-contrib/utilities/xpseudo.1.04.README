@@ -1,0 +1,150 @@
+This is a compendeum of README's based on all versions thus
+far.  
+
+This part is for xpseudo.1.04.tar.Z
+
+The only change in this part is that I made sure that
+if you crash your X-term, or just shut it off, this
+program does not create a zombie process by having the
+parent do a mandatory wait, even though the killpg()
+should have taken care of this problem.  At any
+rate, I have not had a zombie created by this since I
+changed around the signal catching...a bit.
+
+This part is for xpseudo.1.03.tar.Z
+
+The only major change here is that while trying to port
+this to the alpha, I realized that I was not handling
+both BIG and little Endian; therefore, I could not even
+accept a connection, much less port.  Therefore, I have
+modified this to handle both Endian's.  Effectively, no
+changes have been made to the part which handles 
+byte-order 66; however the part handling 102 is NEW!
+Therefore, if you have a problem with the handling of 
+order 102, you have been warned!  I don't think there
+will be, though, as byte ordering typically would either
+make this :
+	1) not work at all
+	or
+	2) work 100% right.
+Since it is working....I will assume that it is all right.
+
+Soon there will be a release for the alpha.
+
+I still need someone to fix the mouse controls!
+
+good luck..
+
+P.S. - Several people have had problems compiling.....
+I think their problem has been that they have not modified
+the CHEEZY makefile in order to point to the correct
+location of libX11.a, etc.......be sure to change this.
+-NICK
+
+
+
+This is the README for xpseudoroot-1.01
+
+The major changes:
+	1 - the only change in this package differing it from
+		previous version is that I changed the SIGIO
+		handler to use aiowrite() calls, as opposed to
+		write() calls, so that if a client software 
+		locked the display, and a packet other than that
+		processes' packet got into the aioread queue in
+		front of that processes' packet, it wouldn't block.
+	2- This version should be full-proof in that respect;
+		also, this version should handle being killed 
+		approproately, unlike a few un-numbered early
+		releases.
+8/16/93 - NICK
+
+Hi!  The following should be included:
+PseudoRoot.h - came with the original xpseudoroot with X11V3
+pseudoroot.c -  "    " ...
+SetPRoot.c   -  "    " ...
+XWintoDisplay.c - my socket server set up to fake out the world!
+Makefile     - a really cheezy, simple makefile
+README       - this file
+
+This package will create a window on your current display, or whichever
+one you specify, and will then set up a socket system to pump info
+into that window.  To the rest of the system, this window may be
+referred to as host:displaynum.0 or :displaynum.0 where displaynum
+is an integer between 0 and 255, unless all the possible sockets of
+the appropriate type are taken.  The difference between the naming
+conventions is as follows:
+
+host:displaynum.0 is implemented with INET sockets (TCP/IP port), and
+are addressable by software on any system which can display to a
+different display.
+
+:displaynum.0 is implemented with UNIX sockets (files in
+/tmp/.X11-unix), and are addressable ONLY by software available on the
+same machine as the machine on which this is running.
+
+For this reason host:displaynum.0 is the default, and the UNIX socket
+implementation can be invoked by giving a -u option on the command line.
+
+the command line HAS to be something of this nature:
+
+xpseudoroot -... -... -... 1 -... -... -f command &
+
+the number 1 can be interchanged with any number <=255, which is the
+start number which will be used when this package tries to open a
+socket.....i.e. - if you specify 1, it will try to open the display as
+either host:1.0, or :1.0 , and if that fails, then it will try to open
+the display as host:2.0, or :2.0, and so forth, until it has checked the
+first 255 possibilities.  255 Was an arbitrary cutoff for me, and can be
+changed in the source pseudoroot.c if you would like.
+
+For background:  xpseudoroot was freely distributed with X11V3, but it
+relied on the naming convention that XOpenDisplay would return the
+Display structure with the Window ID of host:display.screen.window in
+the root-window field of the display structure, if so requested.  In
+version 4 and 5 of X11, this feature was removed from XOpenDisplay;
+therefore, in order to make xpseudoroot work, I had to fake it.
+
+Other information...This program appears as 600x400+0+0 by default.  I
+suggest that if you change this (via -geometry), that you at least move
+the window to XxY+0+0, so the the 0,0 of the REAL root aligns with 0,0
+of the pseudoroot, otherwise there are problems, which you will see.
+This is because I don't know how to adjust the mouse relationship
+between the window manager signals on the REAL root, and the reception
+of those signals by the window manager of the pseudo root.  By the way,
+the pseudoroot comes up without anything(unless you specify -f) running
+in it.  I suggest you call it something like the following:
+xpseudoroot -display displayname 1 -f xterm -e telnet &
+
+This way, you may run xpseudoroot in one account, but there will be a
+telnet window in it which can be connected by the end user to his/her
+own account, and then they can run the window manager of choice.  We do
+this and it works quite nicely, unless the owner of the window kills the
+REAL root window manager.:)
+
+The last thing, and this relates to the origin problem, we are running
+olwm, and it appends a 23 point menu bar at the top, and 3 point at the
+side.  While the three point isn't a problem, the 24 pt. is... it
+offsets the mouse signal by 3,24 pt (x,y) each time, and this can make
+menuing difficult.  The best solution we have found to this problem is:
+1) run something like twm which doesn't append a menu bar
+2) move the window so that the menu bar is off the screen, and the
+	origins more or less line up.
+
+Good luck, and if you make any mods, or know of any way to improve this,
+please let me know, and maybe even mail me a tar.Z version(which was
+tarred so that the files untar into their own directory).  Also remember
+that while this works for us, there may be(and probably are) bugs.  If
+you find them and fix them, please mail me.  (even if you just find
+them....):-)
+
+To reach me:
+
+Nicholas Jenkins
+Wright State University
+njenkins@discover.wright.edu
+njenkins@desire.wright.edu
+njenkins@WSU.bitnet
+
+P.S. - for the newest releases, check export.lcs.mit.edu in /contrib
+

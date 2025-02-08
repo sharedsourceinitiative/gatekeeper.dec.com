@@ -1,0 +1,24 @@
+
+    "The Power of Temporal Proofs."
+    Martin  Abadi.
+    August 15, 1988.  57 pages.
+
+Author's Abstract
+
+    Some methods for reasoning about concurrent programs and hardware
+    devices have been based on proof systems for temporal logic.
+    Unfortunately, all effective proof systems for temporal logic
+    are incomplete for the standard semantics, in the sense that some
+    formulas hold in every intended model but cannot be proved.  We
+    evaluate and compare the power of several proof systems for temporal
+    logic.  Specifically, we relate temporal systems to classical
+    systems with explicit time parameters.
+
+    A typical temporal system turns out to be incomplete in a strong
+    sense;  we exhibit a short, valid formula it fails to prove.  We
+    suggest the addition of new rules to define auxiliary predicates.
+    With these rules, we obtain nonstandard  soundness and completeness
+    results. In particular, one of the simple temporal systems we
+    describe is as powerful as Peano Arithmetic.
+
+

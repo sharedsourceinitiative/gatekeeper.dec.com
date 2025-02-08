@@ -1,0 +1,22 @@
+
+    "Implementing Exceptions in C."
+    Eric S. Roberts.
+    March 21, 1989.  13 pages.
+
+Author's Abstract
+
+    Traditionally, C programmers have used specially designated return 
+    codes to indicate exception conditions arising during program 
+    execution. More modern languages offer alternative mechanisms 
+    that integrate exception handling into the control structure. 
+    This approach has several advantages over the use of return codes: 
+    it increases the likelihood that programming errors will be 
+    detected, makes it easier to structure the specification of an 
+    abstraction, and improves the readability of the implementation 
+    by providing better syntactic separation between handling of 
+    conventional and exceptional cases. This paper describes a set 
+    of language extensions to support exception handling in C, and 
+    a preprocessor-based implementation of those extensions that 
+    demonstrates both the feasibility and the portability of this 
+    approach.
+

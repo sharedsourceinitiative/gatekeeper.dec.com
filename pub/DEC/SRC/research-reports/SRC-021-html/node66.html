@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Scheduling</TITLE>
+<META NAME="description" CONTENT="Scheduling">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node67.html">
+<LINK REL="previous" HREF="node65.html">
+<LINK REL="up" HREF="node64.html">
+<LINK REL="next" HREF="node67.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html1013"
+ HREF="node67.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html1009"
+ HREF="node64.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html1003"
+ HREF="node65.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html1011"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html1012"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1014"
+ HREF="node67.html">Virtual Memory</A>
+<B> Up:</B> <A NAME="tex2html1010"
+ HREF="node64.html">Running Topaz Applications on</A>
+<B> Previous:</B> <A NAME="tex2html1004"
+ HREF="node65.html">C Library</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04082000000000000000">
+Scheduling</A>
+</H2>
+<P><A NAME="1675">&#160;</A>
+On Taos, thread scheduling is done at the lowest level of the system (in
+the Nub)  However, on Ultrix scheduling is done at two levels.  The Ultrix
+kernel schedules processes as single-threaded entities, while the Ultrix
+Topaz library multiplexes a single-threaded Ultrix process to provide a
+multithreaded Topaz process.
+<P>
+The Ultrix implementation of Topaz implements nearly the full range of
+functions in the Thread, ThreadFriends, ThreadFriends1, ThreadsPort,
+TPFriends, and TPSpecial interfaces.  The main omissions are the
+procedures dealing with other address spaces and the `Directed' procedures
+(intended for use by debugging facilities).
+<P>
+The main observable differences in the Ultrix implementation are:
+<P><UL>
+<LI> <A NAME="1677">&#160;</A>
+Thread priorities are observed, but there is no time-slicing between
+threads at the same priority within a process.  (Of course, the Ultrix
+kernel continues to perform time-slicing between separate Ultrix
+processes.)
+<LI> In some cases when a thread performs I/O on a device or socket there will
+be scheduling anomalies.  A write to a terminal can block all the threads
+in a process if the output buffer for the terminal is full (this does not
+hold for the master side of a pseudo terminal).  A read or write of a
+socket or device that doesn't support asynchronous mode (SigIO) may wait
+for up to .5 second of CPU time to be used by lower-priority compute-bound
+threads in the process.
+<LI> Per-thread CPU time (as reported by TPSpecial.GetCPUTime) is not normally
+recorded.  However, linking the object file
+/proj/ultrix/lib/enable<TT>&#95;</TT>times.o into an Ultrix Topaz application causes
+per-thread CPU times to be recorded (at the cost of slowing down context
+switches by a factor of two).  The CPU times so recorded include time
+spent in the Ultrix kernel on behalf of the thread as well as overhead for
+thread switching and signal handling.
+</UL><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1013"
+ HREF="node67.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html1009"
+ HREF="node64.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html1003"
+ HREF="node65.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html1011"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html1012"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1014"
+ HREF="node67.html">Virtual Memory</A>
+<B> Up:</B> <A NAME="tex2html1010"
+ HREF="node64.html">Running Topaz Applications on</A>
+<B> Previous:</B> <A NAME="tex2html1004"
+ HREF="node65.html">C Library</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,173 @@
+     Olmotd is a  mechanism for system administrators  to  display
+     important messages to their users. Olmotd is set up so that if
+     you use the  -newonly option, the  program will only open  up
+     if  there is a new message.  You can of course run it with no
+     options, and get the message  regardless of  whether  or  not
+     you  have  seen  it  before.  Here at  Project MOSAIC, we run 
+     olmotd -newonly  when  everyone logs in  so that  they will be
+     sure to see and read these important messages.
+ 
+     To mark that you have seen the MOTD (Message Of The Day), 
+     you must  press  the  acknowledge button.  Because  of this,
+     the user takes responsibility for reading this message and 
+     acting  accordingly. Only using the acknowledge button time-
+     stamps the file in the user's account (.olmotdrc).  So until
+     you  acknowledge  the MOTD, you will see it at every login.
+     
+     Read the file help.txt for more information.
+
+OPTIONS:
+     -newonly
+          This option causes Olmotd to open only if you  have  not
+          acknowledged  the  current  Message of the  Day,  if the
+          Message of the Day file doesn't exist, or if the Message
+          of  the  Day  file  has  zero  length. This is the usual 
+          method of starting Olmotd.
+
+     -update
+          This option specifies the time (in minutes) that Olmotd
+          should  wait  before  checking  for a  new  Message  of
+          the Day.
+
+Changes since Version 1.3
+
+	* Modified newonly option to also check for the Message of
+	  the Day (MOTD) file to be empty. If MOTD is empty (Zero 
+	  bytes long) and newonly is specified then Olmotd exits.
+	  
+	* Added the update option so that if the user is logged in
+	  for an extended time, Olmotd will regularily check to see
+	  if the MOTD file has been updated. If so, Olmotd will open
+	  for the user to see the new MOTD. 	  
+	  (Thanks to gao@summit.novell.com for this suggestion.)
+	  (There is a minor problem with this, in that if Olmotd is
+	  actually open during the update and the MOTD has been
+	  modified, then Olmotd closes itself instead of remaining
+	  open. This shouldn't be a big problem since most users will
+	  close the app after reading the message. Hopefully, I will 
+	  find a work around for this.)
+
+	* Added a script mv_motd to the distribution which preappends
+	  the current MOTD to the MOTD.history file. This is to help
+	  in moving of old MOTDs into the history file in a reasonable
+	  order. Thanks to David Koontz (formerly dak@uncc.edu) for
+	  this one. 
+	
+	* Removed a second attempt to open the user's OLMOTD_FILE if
+	  one wasn't found/created when trying to mark the acknowledgment
+	  of the MOTD. Once was enough :)
+	
+	* Corrected the apps-default file entries to Olmotd* instead
+	  of Xmotd*. (We had used the previous version here as xmotd,
+	  but that name is already being used by another program.)
+	  Sorry about that, that was my first release of the program.
+
+TIMESTAMPING
+
+When the user uses the acknowledge button to acknowledge that they
+read the current Message of the day, a timestamp file (.olmotdrc,
+by default) in the user's home-directory. This is compared to that
+of the current MOTD when Olmotd is run with the -newonly option, and
+if the time of the MOTD file is later than the time on the .olmotdrc
+file, then olmotd will display the file. Otherwise it will exit.
+Similarily if the MOTD file is not present, and the -newonly option
+is used, then Olmotd will again exit. This is useful if the last
+MOTD was about an event whose time has past, and you do not want
+users seeing (and having to acknowledge) it needlessly.
+
+FILES:
+     /afs/uncc.edu/coe/public/MOTD       motd directory
+     <olmotd dir>/MOTD                   MOTD file
+     <olmotd dir>/MOTD.history           History file
+     $HOME/.olmotdrc                     user's olmotd timestamp file
+     /afs/uncc.edu/coe/unix/sunos5/app-defaults/Olmotd  app
+     defaults file
+
+Default RESOURCES:
+     Olmotd*geometry:               +0+0 (top left corner)
+     Olmotd*background:             gray
+     Olmotd*inputFocusColor:        gray75
+     Olmotd*text.background:        white
+     Olmotd*text.inputFocusColor:   black
+     Olmotd*newonly:                FALSE
+     Olmotd*update:		    30
+     Olmotd*font:		    *-fixed-medium-r-*-*-14-*-*-
+
+KNOWN BUGS:
+     If Olmotd is open during the update, and it  discovers  that
+     the  MOTD  has been modified since the last update it closes
+     itself instead of remaining open.
+
+SEND BUGS/REQUESTS TO:
+     Stuart Blackburn(sdblackb@uncc.edu)
+
+INSTALLATION:
+
+	Installing Olmotd should be a very simple process if you
+are running a Sun operating system. I developed it on Solaris 2.3,
+but I am fairly certain that it will run on SunOS 4.1.X. If you wish
+to use it on other platforms that have the OpenLook Toolkit, feel
+free. If you port olmotd to another platform and would like to share
+with others, I will gladly add these to the distribution with proper
+acknowledgements.
+	Prior to making Olmotd, you should go into the olmotd.h file
+and set the names that you want for the various files that olmotd 
+uses. You will find these listed just below the include section.
+If you really want to do this right, you should change the referances
+to these files in the help.txt and man files so that your users will
+also know their paths and names. Besides this you need to chose the
+appropriate #define for TIME_STRUCT. If you are using Solaris, you
+won't have to change this at all, but for SunOS 4.1.X you will have
+to uncomment it's #define.
+
+That is the only required setup necessary. The Makefile shouldn't
+require any changes as long as you have the environment variable
+OPENWINHOME set to your system Openwin directory. If not you need
+to set OWHOME in the Makefile accordingly. At this point all you
+should have to do is type make.
+
+	I would really like to hear from anyone who chooses to use
+this for their network. Particularly if you had to modify it for
+any reason.
+
+MANIFEST
+
+This distribution should contain the following files:
+
+        README                  (this file)
+        Changes			(Listing of the changes between versions)
+        mv_motd			(a script to move MOTDs into the history file)
+        Makefile                
+        Olmotd                  (app-defaults)
+        olmotd.man              ([nt]roff man-page)
+        olmotd.icon		(app icon file)
+        olmotd_mask.icon        (app icon mask file)
+        olmotd.c, procs.c       (source-code)
+        olmotd.h 	        (header code, including user-defined files)
+
+FORCING the running of olmotd during X-Windows sessions:
+	The following code can be placed in a system script that
+users run prior to going into openwin. For instance the system's login
+script or cshrc script.
+
+# Put the program olmotd in the users .openwin-init file if it's not there 
+# Making everyone on run olmotd.
+if ( -w $home/.openwin-init ) then
+	/bin/grep "^toolwait olmotd" $home/.openwin-init > /dev/null 
+	if ($status != 0) then
+		/bin/echo "toolwait olmotd -newonly" >> $home/.openwin-init
+	endif
+endif
+
+============================================================================
+(c) Copyright 1995 (as olmotd), 1994 by Stuart Blackburn (sdblackb@uncc.edu)
+ 
+Permission to use, copy, hack, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies and
+that both that copyright notice and this permission notice appear in
+supporting documentation.
+
+This application is presented as is without ANY implied or written warranty.
+
+===========================================================================

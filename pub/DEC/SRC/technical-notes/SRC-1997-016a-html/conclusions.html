@@ -1,0 +1,102 @@
+<HTML>
+<HEAD>
+<TITLE>
+8.  Conclusions - Continuous Profiling: Where Have All the Cycles Gone?
+</TITLE>
+</HEAD>
+
+<BODY>
+
+<H1>
+<CENTER>
+<A HREF="index.html">Continuous Profiling: Where Have All the Cycles Gone?</A>
+<P>
+8.  Conclusions
+</CENTER>
+</H1>
+
+<P>
+The DIGITAL Continuous Profiling Infrastructure transparently collects
+complete, detailed profiles of entire systems.  Its low overhead
+(typically 1-3%) makes it practical for continuous profiling of
+production systems.  A suite of powerful profile analysis tools
+reveals useful performance metrics at various levels of abstraction,
+and identifies the possible reasons for all processor stalls.
+</P>
+
+<P>
+Our system demonstrates that it is possible to collect profile
+samples at a high rate and with low overhead.  High-rate sampling
+reduces the amount of time a user must gather profiles before using
+analysis tools.  This is especially important when using tools that
+require samples at the granularity of individual instructions rather
+than just basic blocks or procedures.  Low overhead is important
+because it reduces the amount of time required to gather samples and
+improves the accuracy of the samples by minimizing the perturbation of
+the profiled code.
+</P>
+
+<P>
+To collect data at a high rate and with low overhead,
+performance-counter interrupt handling was carefully designed to
+minimize cache misses and avoid costly synchronization.  Each
+processor maintains a hash table that aggregates samples associated
+with the same PID, PC, and EVENT.  Because of workload locality,
+this aggregation typically reduces the cost of storing and processing
+each sample by an order of magnitude.  Samples are associated with
+executable images and stored in on-disk profiles.
+</P>
+
+<P>
+To describe performance at the instruction-level, our analysis tools
+introduce novel algorithms to address two issues: how long each
+instruction stalls, and the reasons for each stall.  To determine
+stall latencies, an average CPI is computed for each instruction,
+using estimated execution frequencies.  Accurate frequency estimates
+are recovered from profile data by a set of heuristics that use a
+detailed model of the processor pipeline and the constraints imposed
+by program control-flow graphs to correlate sample counts for
+different instructions.  The processor-pipeline model explains static
+stalls; dynamic stalls are explained using a ``guilty until proven
+innocent'' approach that reports each possible cause not eliminated
+through careful analysis.
+</P>
+
+<P>
+Our profiling system is freely available via the Web at
+<A HREF="http://www.research.digital.com/SRC/dcpi/">http://www.research.digital.com/SRC/dcpi/</A>.
+Dozens of users have already successfully used our system to optimize
+a wide range of production software, including databases, compilers,
+graphics accelerators, and operating systems.  In many cases, detailed
+instruction-level information was essential for pinpointing and fixing
+performance problems, and continuous profiling over long periods was
+necessary for obtaining a representative profile.
+</P>
+<HR>
+
+<BLOCKQUOTE>
+<A HREF="index.html"> Beginning of paper </A> <BR>
+<A HREF="abstract.html">Abstract</A> <BR>
+<A HREF="introduction.html">1. Introduction</A> <BR>
+<A HREF="related.html">2. Related Work</A> <BR>
+<A HREF="examples.html">3. Data Analysis Examples</A> <BR>
+<A HREF="collection.html">4. Data Collection System</A> <BR>
+<A HREF="collection-performance.html">5. Profiling Performance</A> <BR>
+<A HREF="analysis.html">6. Data Analysis Overview</A> <BR>
+<A HREF="future.html">7. Future Directions</A> <BR>
+8. Conclusions <BR>
+<A HREF="acks.html">Acknowledgements</A> <BR>
+<A HREF="references.html">References</A>
+</BLOCKQUOTE>
+
+<HR>
+
+To appear in the ACM Transactions on Computer Systems.
+This paper is a slightly revised version of a paper that will also appear
+in the 16th ACM Symposium
+on Operating Systems Principles, October 5-8, 1997, St. Malo, France.
+Copyright 1997 by ACM, Inc. All rights reserved. Republished
+by permission.
+
+</BODY>
+</HTML>

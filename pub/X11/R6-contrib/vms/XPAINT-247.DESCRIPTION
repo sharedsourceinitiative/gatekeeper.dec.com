@@ -1,0 +1,10 @@
+-------------------------------------------------------------------------------
+XPAINT-247.ZIP                    Paint program under X WINDOW  v 2.4.7
+                                  Author: David Koblas, koblas@netcom.com
+                                  Maintainer: Torsten Martinsen,
+                                              bullestock@dk-online.dk
+VAX                               Language: DEC C
+AXP                               Language: DEC C
+                                  Object libraries (JPEG, XAW3D, TIFF, PNG,
+                                  ZLIB, XMU & XPM) provided for VAX & AXP
+-------------------------------------------------------------------------------

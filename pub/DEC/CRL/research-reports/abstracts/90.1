@@ -1,0 +1,24 @@
+		      CRL Technical Report 90/1
+		 Speculative Computation in Multilisp
+			   Randy B. Osborne
+			      March 1990
+
+We demonstrate by experiments that performing computations in parallel
+before their results are known to be required can yield performance
+improvements over conventional approaches to parallel computing.  We
+call such eager computation of expressions speculative computation, as
+opposed to conventional mandatory computation that is used in almost
+all contemporary parallel programming languages and systems.  The two
+major requirements for speculative computation are: 1) a means to
+control computation to favor the most promising computations and 2) a
+means to abort computation and reclaim computation resources.
+
+We discuss these requirements in the parallel symbolic language
+Multilisp and present a sponsor model for speculative computation in
+Multilisp which handles control and reclamation of computation in a
+single, elegant framework.  We describe an implementation of this
+sponsor model and present performance results for several applications
+of speculative computation.  The results demonstrate that our support
+for speculative computation adds expressive and computational power to
+Multilisp, with observed performance improvement as great as 26 times
+over conventional approaches to parallel computation.

@@ -1,0 +1,78 @@
+Copyright (C) 1994, Klaus Preschern.
+All rights reserved.
+See the file COPYRIGHT.KP for a full description.
+
+This is the file README.1st for the EX32 system Version 1.01.
+
+
+1) What is the EX32 system ?
+============================
+
+EX32 ("A 32-bit Extension of DOS") is a environment for the developement
+and execution of 32-bit applications with DOS.
+
+EX32 is a collection of DOS programs (drivers + kernel). It provides
+services for applications executed in protected mode. It does process
+management, virtual memory management, interprocess communication
+via pipes and it offers a file system with 32 character filenames.
+
+EX32 runs on MS-DOS 5.00, 6.00 and 6.02. You need a i386/i387 (coprocessor
+required) or upward (i486, Pentium). EX32 supports DOS XMS memory (but not
+EMS, VCPI or DPMI). No support for the i286. You should have at least 4 MB
+memory (8 MB or more recommended). The whole package occupies unzipped and
+untared approximately 44 MB of disk space.
+
+EX32 comes with GNU C++ (version 2.4.5), SRC Modula-3 (version 3.1,
+including threads), two C libraries, a graphics library for VGA and a
+number of commands (i.e. ls, cp, rm, mkdir, make, ...).
+
+Note:	This is a system for experienced programmers! They should be
+	familiar with Unix and DOS.
+
+
+2) Installation
+===============
+
+This package is organized as follows:
+
+a) Disk distribution (5 1.44 MB disks named disk1 ... disk5) or
+b) ftp  distribution (5 directories named disk1 ... disk5)
+
+For installation there is a DOS command file named "Ainstall.bat" on disk1
+(in directory disk1). The ftp distribution should contain a copy of this file
+named "install.bat" and the README.1st (this file) in the directory containing
+the disk[1-5] directories.
+
+To install with the *disk* distribution put disk1 in your disk drive and copy
+the installation program to the hard disk: "COPY A:Ainstall.bat C:install.bat".
+Run it from your hard disk (type: "install") and follow the instructions.
+Note: The installation program will not work, if you run it from the floppy
+because you have to change disks!
+
+To install with the *ftp* distribution copy the disk[1-5] directories into
+a directory named "\ex32dist" on your hard disk. Change into this directory
+and type "install" or "disk1\Ainstall".
+
+
+3) Contents of the Distribution
+===============================
+
+After installation you should have the following directories:
+
+\ex32\bin		executeables (i.e. GNU C++ compiler)
+\ex32\commands		sources of commands
+\ex32\cplusinc		include directory for C++
+\ex32\debug		sources of a simple debugger
+\ex32\dev		directory for devices
+\ex32\drivers		directory for drivers and driver files
+\ex32\doc		documentation of the system (read "EX32.DOC")
+\ex32\dos		DOS tools (i.e. for environment setup)
+\ex32\glibc-1.06	GNU C library sources and include files
+\ex32\include		PC library include files
+\ex32\lib		directory for libraries, font files, etc.
+\ex32\libsrc		PC library sources
+\ex32\test		some test programs for Modula-3 and C
+\ex32\tmp		directory for temporary files
+\ex32\usr		user programs (i.e. Modula-3 compiler and packages)
+
+End of README.1st

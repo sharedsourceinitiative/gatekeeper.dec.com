@@ -1,0 +1,99 @@
+Introduction
+------------
+
+This version has been built on, and had some testing with :
+
+ o Solaris 2.5.1, 2.6, 2.7 and SunOS 4.1.3 with
+    - Sparc Compilers SC4 and SC4.2,
+    - gcc/g++ 2.8.1,
+    - Centerline c and cfront/C++ compilers.
+ 
+ o FreeBSD 2.2.6 and 3.2-stable with
+    - gcc 2.7.2.1
+    - gcc version gcc-2.95 19990608 (prerelease)
+    - f77 (f2c calling gcc 2.7.2.1)
+    - GNU F77 version gcc-2.95 19990608 (prerelease)
+
+ o FreeBSD 4.0-current with
+    - egcs 1.1.2 release
+    - gcc version gcc-2.95 19990608 (prerelease)
+    - f77 (f2c calling gcc 2.7.2.1)
+    - GNU F77 version gcc-2.95 19990608 (prerelease)
+
+ o Linux ELF 2.0.35 (Red Hat 5.2)
+    - gcc 2.7.2.3
+    - egcs 1.0.3 release
+
+See the file README for build instructions.
+
+The URL for the ups web site is:
+
+           http://www.concerto.demon.co.uk/UPS/
+
+It is maintained by Ian Edwards (ian@concerto.demon.co.uk).
+It includes a FAQ, html man pages, site listings where ups
+can be found, supported architectures, a history of changes
+between versions, and other information.
+
+A "ups -v" now produces:
+
+	ups version 3.34 (build date: Fri Aug 27 13:52:52 PDT 1999)
+
+Changes between 3.34 and 3.33
+-----------------------------
+
+o  Rod Armstrong <rod@san-jose.tt.slb.com> provided fixes for
+     -  debugging core files under Solaris 2.6 and 2.7. For Solaris,
+        from limited testing, debugging target and cores is summarized below:
+
+	UPS Built     Can debug targets from        Can debug cores from
+        on Solaris    2.5    2.6    2.7             2.5    2.6    2.7 
+
+        2.5           yes    no     no              yes    no     no
+        2.6           yes    yes    no              no     yes    no
+        2.7           yes    yes    yes             no     yes    yes
+
+    -  files created with a custom preprocessor inherit the 
+       dereference semantics of the language of the output files:
+       e.g. if "file.c-custom" is processed to "file.c", then the
+       C semantics of "->" and "." will be used when clicking on 
+       variables.
+    -  Globals should show their correct type instead of sometimes
+       showing "int assumed". The bug was introduced in 3.33.
+    -  The "Stop" button once again terminates a long symbol table search. 
+       The bug was introduced in 3.33.1.
+
+o  Russ Browne <russ@amc.com> provided fixes for
+    -  breakpoints in static constructors
+    -  compiler identification
+    -  changes to g++ 2.8.1 symbol table
+    -  using UPS on purify'd executables
+    -  locating X application resources file
+    -  display of 'register' storage class variables
+    -  latest version of GNU C++ name demangler
+    -  A Dump Memory item which can be used to show the contents of a 
+       section of memory in bytes, shorts, longs and ascii. 
+
+o  Ian Edwards <ian@concerto.demon.co.uk> provided
+    -  building UPS through a 'configure' script
+    -  changes for FreeBSD 3.x (a.out and ELF)
+    -  fixes for Fortran on FreeBSD and Linux (test programs provided
+       by Michele Ferlauto <ferlauto@athena.polito.it>.
+
+o  Laszlo Ladanyi <ladanyi@watson.ibm.com> provided fixes for
+    -  building under debian Linux 2.0 (kernel 2.0.35)
+    -  building on Linux with glibc 2.1
+    -  ELF symbol table processing on Linux
+    -  compilation warnings
+
+o  Dibyendu Majumdar <dibyendu@mazumdar.demon.co.uk> provided
+    -  lots of work on the standalone C interpreter included in the
+       UPS source code, documentation on it, tests etc.  See the file
+       interpreter/docs/Interpreter.txt for full details.
+
+o  Will Renkel <rinky@lucky22.chi.il.us> provided the information
+   about building UPS on a Linux 'a.out' system (on the web site)
+
+Rod Armstrong
+rod@san-jose.tt.slb.com
+27 Aug 1999

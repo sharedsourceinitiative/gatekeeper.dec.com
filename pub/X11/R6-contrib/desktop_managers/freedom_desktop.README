@@ -1,0 +1,53 @@
+                       [Take Control of your Desktop!]
+
+ [Freedom Software]presents Freedom Desktop Lite !
+
+* What is Freedom Desktop Lite ?
+
+     Freedom Desktop Lite is a public version of Freedom Desktop availablefor
+     personal use only. Before downloading Freedom Desktop Lite, please review the
+     copyright information.
+
+* What is Freedom Desktop ?
+     Freedom Desktop for Motif is an easy-to-use yet powerful desktop
+     manager/GUI integrated to the Unix environment. Freedom is very
+     similar in look and feel to the popular Microsoft windows and Apple
+     interfaces. It also combines ease of use and advanced features to help
+     users interact with Unix quickly and efficiently. Freedom Desktop
+     releases users from the complexities of Unix giving them more
+     Freedom to get things done!
+
+* Desktop applications
+
+* Contributing to the Freedom Desktop Lite environment
+
+* Downloading Freedom Desktop Lite
+
+     Freedom Desktop Lite is available from fsw.com. Before downloading the
+     software,
+     review the copyright information. In order to download the software
+     from fsw.com (192.231.221.120), follow the procedure:
+
+     ftp fsw.com
+     anonymous
+     freedom@
+     binary
+     cd pub/fdlite
+     get freedomlite.tar.Z
+     exit
+
+     Choose the appropriate version for your architecture. For instance:
+          freedomlite.tar.Z (Freedom Desktop Lite 1.0 - sources)
+          freedomlite4alpha.tar.Z (Freedom Desktop Lite 1.0 for Alpha -
+     sources)
+          freedom4sunos.tar.Z (Freedom Desktop Lite 1.5 for SunOS -
+     binaries)
+
+* Installation procedure
+
+     For installation instructions please check the README file(s) contained
+     in the software distribution.
+
+----------------------------------------------------------------------------
+
+Please email comments and suggestions to support@freedom.lm.com

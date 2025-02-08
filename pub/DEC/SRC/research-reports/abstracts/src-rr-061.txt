@@ -1,0 +1,39 @@
+
+"In Memoriam: J.C.R. Licklider  1915-1990"
+
+August 7, 1990
+
+In the 1960s, J.C.R. Licklider published his ideas about the future role 
+of multiaccess interactive computing. He looked beyond the existing 
+limitations of punched cards and paper tape to a time when computers would 
+interact in real time with the human user. By performing numerous routine 
+tasks on demand, computers could contribute to a person's ability to 
+formulate new insights and decisions. He saw man-computer interaction 
+as enhancing both the quality and efficiency of human problem solving. 
+ 
+Articulating his vision was an important contribution in challenging people 
+to examine the implications of an emerging technology. But through his 
+work for the Advanced Research Projects Agency (ARPA), he was also able 
+to give his vision reality. The projects sponsored by his program provided 
+the research direction for computer science in this country for many 
+subsequent years.  Furthermore, his program was the first to provide 
+the significant public funding necessary to guarantee the financial 
+stability on which long-term research depended. 
+
+Perhaps his most important influence, however, was in the area of computer 
+science education. Prior to his work at ARPA, there were no departments 
+in US universities offering a PhD in computer science. His program sponsored 
+research at four of the first universities to offer graduate computer 
+science degrees. These departments in turn provided role models for other 
+departments that followed.
+
+J.C.R. Licklider thus played a central role in initiating and sustaining 
+computer science research and education in this country. To commemorate 
+his important contributions, we reprint here two of his papers, "Man-Computer 
+Symbiosis" and "The Computer as a Communication Device."  In recognition of 
+the debt owed to him by the whole computer science profession, and by every 
+user of interactive computing, we dedicate this report in his memory.
+
+
+
+

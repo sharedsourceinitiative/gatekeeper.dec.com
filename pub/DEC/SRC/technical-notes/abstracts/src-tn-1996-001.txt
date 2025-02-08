@@ -1,0 +1,8 @@
+"Refinement in State-Based Formalisms"
+Leslie Lamport
+Note #1996-001, December 18, 1996. 7 pages.
+
+A note explaining what refinement and dummy variables are all about. 
+It also sneaks in an introduction to TLA. 
+
+

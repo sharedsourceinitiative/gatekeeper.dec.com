@@ -1,0 +1,13 @@
+10 January 1994
+
+Shar file cge_cutils.shar contains the sample implementation of the 
+Common Graphics Environment for PEX 5.1 version 2 color utilities.
+
+These files are not fully tested, but are placed here so that partners
+may inspect the code and provide feedback.  
+
+Feedback from others is also welcomed.
+
+Bob Jewett
+raj@fc.hp.com
+Hewlett-Packard Company

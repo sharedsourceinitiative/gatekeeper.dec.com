@@ -1,0 +1,28 @@
+
+31 May 1994
+ 
+File cge_ptorus.tar.Z contains the ptorus example from the
+Common Graphics Environment (CGE) Portability Guide.
+
+Use the Makefile in the directory to create two 
+executables, ptorus and ptorus_with_texture.  
+Both display a torus.  The difference is that
+ptorus_with_texture is created by compiling
+model.c with a compile flag to include the
+texture map logic.
+ 
+These files are	not fully tested, but are placed here 
+as an example of CGE usage.                                        
+ 
+This tar file was created with:
+ 
+  tar -cvFf-  *		> cge_ptorus.tar
+  compress -v cge_ptorus.tar
+ 
+so to recover the files, use:
+ 
+  uncompress < cge_ptorus.tar.Z | tar -xvpf-
+ 
+Frances	LeVangia
+flevangia@vnet.ibm.com
+IBM Corporation

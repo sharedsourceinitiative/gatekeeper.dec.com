@@ -1,0 +1,34 @@
+<HTML><HEAD><TITLE>
+Digital Systems Research Center: Report 124</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Research Report 124</H1>
+<H1>A Block-sorting Lossless Data Compression Algorithm</H1>
+<HR>
+<H2>M. Burrows and D. J. Wheeler</H2>
+<b>May 10, 1994</b><BR><i> 18 pages</i>
+<P>
+We describe a block-sorting, lossless data compression algorithm, and
+our implementation of that algorithm.  We compare the performance of
+our implementation with widely available data compressors running on
+the same hardware.
+<P>
+The algorithm works by applying a reversible transformation to a
+block of input text.  The transformation does not itself compress
+the data, but reorders it to make it easy to compress with simple
+algorithms such as move-to-front coding.
+<P>
+Our algorithm achieves speed comparable to algorithms based on the
+techniques of Lempel and Ziv, but obtains compression close to the best
+statistical modelling techniques.  The size of the input block must be
+large (a few kilobytes) to achieve good compression.
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-124.ps.Z">PostScript compressed with UNIX compress</A></B> -- 75 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-124.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 61 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-124.ps.zip">PostScript compressed with ZIP</A></B> -- 61 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-124.ps">PostScript</A></B> -- 144 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-124.pdf">Portable Document Format (PDF)</A></B> -- 106 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

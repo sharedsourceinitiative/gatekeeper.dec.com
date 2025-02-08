@@ -1,0 +1,49 @@
+<HTML><HEAD><TITLE>
+Digital Systems Research Center: Report 65</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Research Report 65</H1>
+<H1>An Axiomatization of Lamport's Temporal Logic of Actions</H1>
+<HR>
+<H2>Martin Abadi</H2>
+October 12, 1990. Revised March 4, 1993
+18 pages 
+<P>
+Lamport recently invented a temporal logic of actions suitable for 
+expressing concurrent programs and for reasoning about their 
+computations. In this logic, actions have syntactic representations, 
+which can be combined and analyzed. The basic construct for relating 
+actions and computations is [ ]; a computation satisfies the formula 
+[A] if either the computation has halted or the first action in the 
+computation is an A action. In addition, the language includes the
+temporal operators "always" and "eventually", and thus it is easy 
+to write both safety and liveness formulas. 
+<P>
+However, the temporal logic of actions is not very expressive in some 
+respects (just expressive enough). One cannot define the "next" and 
+the "until" operators of many previous temporal logics. This is 
+actually a feature, in that formulas with "until" are too often 
+incomprehensible, and "next" violates the important principle of 
+invariance under stuttering. 
+<P>
+A proof system for the logic of actions might be obtained by translating 
+into previous, richer formalisms. In this translation we forfeit the logic 
+and its advantages. A new suit of rules for temporal reasoning with actions 
+is therefore wanted. A complete axiomatization can provide some guidance in
+choosing and understanding the rules used in practice, and in particular 
+the laws for reasoning about programs. 
+<P>
+In this paper, we study a proof system for a propositional logic, PTLA. 
+After an informal introduction, we define the syntax and semantics of PTLA
+precisely, and then present our proof system and prove its completeness. 
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-065.ps.Z">PostScript compressed with UNIX compress</A></B> -- 67 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-065.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 51 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-065.ps.zip">PostScript compressed with ZIP</A></B> -- 51 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-065.ps">PostScript</A></B> -- 168 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-065.pdf">Portable Document Format (PDF)</A></B> -- 184 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

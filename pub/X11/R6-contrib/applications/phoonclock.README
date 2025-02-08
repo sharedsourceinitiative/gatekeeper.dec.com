@@ -1,0 +1,26 @@
+
+This is PhoonClock 1.0.
+
+PhoonClock is a merge of the programs oclock and xmoon.
+It was hacked together in haste. No effort was made to
+clean up the code, once it was working.
+
+Basically, all I did was display the current phase of the
+moon centered on the face of the clock. If the window is
+resized the moon is re-centered. If the size is smaller
+than the size of the moon, the moon is clipped. Note that
+the visible part of the moon is approximately 48x48.
+
+Also, the icon for PhoonClock is the current phase of the
+moon without the clock.
+
+i.e. phoonclock -moon
+
+If you find any problems with the code, please let me know.
+
+___________________________________________________________________
+
+Kurt Kanaskie				Lucent Technologies (formerly AT&T)
+kurt_kanaskie@lucent.com		Enterprise Computing Group
+(610) 712-3096				Allentown PA
+

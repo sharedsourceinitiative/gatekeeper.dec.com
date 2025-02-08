@@ -1,0 +1,390 @@
+README.txt
+
+3D Pong v.0.3
+
+by Bill Kendrick
+kendrick@zippy.sonoma.edu
+
+New Breed Software
+http://zippy.sonoma.edu/kendrick/nbs/
+
+January, 1998
+
+
+WHAT IS 3D PONG?
+
+  3D Pong is an X-Window game for 1 or 2 players.  It's a 3D game based
+  on the first arcade game, "Pong."  Like "Pong," it's a game played with
+  a ball and paddles.  The object is to hit the ball and get it in the
+  other player's goal.  Use your paddle to deflect the ball and keep it
+  from getting in your goal.
+
+  3D Pong has three game modes:
+
+    1. Two player - requires two X servers
+    2. One player - against a computer player
+    3. Handball - one player against gravity
+
+
+INSTALLING
+
+  To install 3D Pong, edit the "makefile" as needed.  Predefined variables
+  are declared for:
+
+    CC   - Your C Compiler.  "gcc" is recommended.
+    XLIB - The location and name of your X window library.
+
+  From a telnet session, simply type "make".  The "3dpong" executable should
+  be created.
+
+  Some #define's are available in the "3dpong.c" source code if you really
+  wish to tweak with the game.  For details, see the DEFINES section below.
+
+
+RUNNING THE GAME
+
+  To run the game, type "3dpong" followed by the following, depending on the
+  game mode:
+
+  Two player game:
+
+    player 1's server
+    player 2's server
+
+    Example:  3dpong $DISPLAY server.domain.com:0.0
+              3dpong server.domain.com:0.0 machine.domain.com:0.0
+
+  One player game:
+
+    player's server
+    the word "computer"
+
+    Example:  3dpong $DISPLAY computer
+              3dpong machine.domain.com:0.0 computer
+
+  Handball game:
+
+    player's server
+
+    Example:  3dpong $DISPLAY
+              3dpong server.domain.com:0.0
+
+
+  You can also specify the "gravity" to be used in the game.  In the
+  one- and two-player ping-pong games, this defines gravity towards the
+  "floor" of the game.  (The floor is marked with a divider in the middle
+  between the two players's sides.)  You CAN have negative gravity (where
+  the ball flies towards the ceiling)!
+
+  In the handball game, gravity is defined towards your goal/paddle.
+  The minimum gravity is 0.1; negative gravity is not allowed.  If you
+  enter a negative gravity, it's absolute value will be taken.  If the
+  gravity is less than 0.1, 0.1 will be used.
+
+  To specify gravity, append "-gravity value" or "-g value" to the
+  command line.
+
+    Example:  3dpong $DISPLAY -gravity 0.5
+              3dpong server.domain.com:0.0 machine.domain.com:0.0 -g 0.5
+
+  To play a game with a net (not available in "handball" mode), append
+  "-net value" or "-n value" to the command line.  The net appears in the
+  middle of the game arena, where the marker normally is.  If the ball hits
+  the net, it bounces back with full force.  You can specify a net height up
+  to 0.75 (one third the height of the game arena).  Values under 0.0 get
+  taken as their absolute value.  Values over 0.75 are taken as 0.75.
+
+  The "-net" switch must appear after the "-gravity" switch, if you used one.
+
+    Example:  3dpong $DISPLAY -computer -net 0.5
+              3dpong $DISPLAY other.domain.com:0.0 -gravity 0.2 -n 0.75
+
+  To play a game with sound, append "-sound" or "-s" to the command
+  line.  (It must appear after the "-net" switch, if you used one.)
+
+    Example:  3dpong $DISPLAY -sound
+              3dpong $DISPLAY computer -g 0.5 -sound
+
+  The sound will be played on the machine on which the game is
+  executing.  (The program simply sends ".au" audio files to the
+  "/dev/audio" device.  The sounds were "stolen" from the game
+  "xboing"; thanks guy(s)!)
+
+  To control the paddle in the game without holding the mouse button down,
+  add "-noclick1" for player one, and "-noclick2" for player two.
+  They must be after any of the previously mentioned options, and player
+  one's "-noclick1", if any, should come first.
+
+  Two extremely simple scripts have been created to start a one-player
+  3dpong session:
+
+    ./go       - Play against the computer on your default $DISPLAY with
+                 a 0.5-high net
+    ./handball - Play handball on your default $DISPLAY
+
+
+  So, in summary, you have the following switches available to you, in this
+  order:
+
+    3dpong server1 [server2 | -computer] [-gravity value]
+           [-net value] [-sound] [-nockick1] [-noclick2]
+
+
+ON THE SCREEN:
+
+  The game is viewed in 3D.  Depending on your viewing mode, you see the
+  game from a different angle.  (See "3D PONG CONTROLS" below.)
+
+  One- And Two-Player Ping Pong Mode:
+
+    * There is a white divider line in the middle of the court to show
+      you where the "floor" is.
+    * Player one's paddle is a red square.  Player two's is blue.
+    * Score is displayed at the upper left.  Player one's score is red.
+      Player two's score is blue.
+
+  Handball Mode:
+
+    * Your paddle is a red square.
+    * Score and high score are displayed at the upper left.
+
+  Both Modes:
+
+    * The ball is a green diamond shape.
+    * Dark green markers appear on two walls of the court, showing you
+      relative positions of the ball.
+
+
+3D PONG CONTROLS:
+
+  Moving the paddle:
+
+    Left-Click in your window and drag (holding the left mouse button,
+    unless you've specified "noclick" mode; see above) to move the paddle
+    around.
+
+  Serving:
+
+    In a one- or two-player ping-pong game, when it's your turn to serve,
+    or to start a game in handball mode:
+
+    * Position your paddle where you wish the ball to start
+    * Right-Click to launch the ball
+
+  Changing views:
+
+    Press the [V] key to change your viewing perspective.  There are six
+    modes it cycles through:
+
+      1. Normal   - First person perspective from behind your paddle.
+      2. Bleacher - From the side of the game.  (Your paddle on the left.)
+      3. Above    - From above the game.  (Your paddle on the top.)
+      4. FreeView - Choose any angle. (Use Middle-Click and drag to change
+                    angles.  Careful not to get confused!)
+      5. Follow the Ball - The perspective moves and zooms depending on the
+                           position of the ball.
+      6. From the Paddle - The perspective is similar to "Normal" mode,
+                           but keeps your paddle in the center.
+
+    Press the [3] keyto toggle 3D glasses (red/blue) mode.
+    When using 3D glasses, you must use red/blue glasses with the red
+    lense on your left eye.  For best 3D results, get very close to the
+    screen.  (Careful of health risks though!!!)  Your milage may vary.
+
+  Changing controls:
+
+    To toggle whether your paddle is controlled while mouse button one
+    is down (normal) or not ("-noclick..."), press [C].
+
+  So, in summary, you have the following keyboard controls:
+
+    [V] - Change view
+    [3] - Toggle 3D glasses mode
+    [C] - Toggle "noclick" mode
+    [Q] - Quit
+
+
+GAME RULES:
+
+  One and two-player ping-pong games:
+
+    * The game is played until the player(s) decide to quit.
+    * The ball moves faster and faster until someone scores, at which point
+      it slows down again.
+    * Score is accumulated during the game when the ball goes past a
+      player's paddle and into their goal.
+    * When a player scores (the ball goes into their opponent's goal),
+      they get to serve.
+
+  Handball game:
+
+    * Multiple games are played until the player decides to quit.
+    * Score is accumulated during the game when the ball bounces off the
+      player's paddle.
+    * The score is zeroed and the game starts over when
+      the ball goes past the player's paddle and into their goal.
+    * A high score is kept for the session.
+
+
+DEFINES:
+
+  The following "#define"s are available in the "3dpong.c" file.
+  Change these and recompile with the "make" command to put them
+  into effect.
+
+  * DOUBLE_BUFFER
+    - Set to "True" to use a "double buffer" or "backbuffer."  This
+      uses a pixmap to redraw the window, and then copies the pixmap all
+      at once into the window.  This prevents flicker.
+    - Set to "False" to turn this feature off.  The game may run slowly
+      with the double buffer on, or it may fail completely if your
+      X Window Manager doesn't have enough RAM for the buffer.
+    Default is False.
+
+  * WIDTH
+  * HEIGHT
+    The width and height (in pixels) of the game window.
+    Default is 580 pixels by 580 pixels.
+  
+  * X_WIDTH
+  * Y_HEIGHT
+  * Z_DEPTH
+    The width, height and depth (in "units") of the 3D game arena.
+    Default is 100 units wide x 100 high x 150 deep.
+
+  * PADDLE_WIDTH
+  * PADDLE_HEIGHT
+    The width and height (in "units") of the players' paddles.
+    Default is 25 units wide by 25 high.
+
+  * BALL_SIZE
+    The size of the ball (in "units").
+    Default is 15 units.
+
+  * ASPECT
+    The "aspect" value which alters how the 3D positions are converted into
+    two dimensions.
+    Default is 200.
+
+  * GLASS_OFFSET
+    The offset (in "units") of the 3D glasses.  In a sense, this is how
+    far apart your eyes are.
+    Default is 3 units.
+
+  * FRAMERATE
+    The number of microseconds between frames.  The lower the number, the
+    faster the game will play and the faster the windows will refresh.
+    Be careful adjusting this!!!
+    Default is 100,000 microseconds.
+
+  * SHIMMER_TIME
+    How many frames the "X" stays on a paddle when the ball hits it.
+    Default is 5 frames.
+
+  * DEBRIS_TIME
+    How many frames (approximately) the "debris" last.  (They are the bits
+    of colored lines that appear when the ball hits a paddle.)
+    Default is 50 frames.
+
+  * DEBRIS_MIN
+  * DEBRIS_MAX
+    The minimum and maximum number of debris lines to create when the ball
+    hits a paddle.  A random number between these two values will be
+    picked.
+    Default is between 5 and 10 lines.
+
+  * DEBRIS_SPEED
+    How fast debris lines move.
+    Default is 2.
+
+  * COMPUTER_SPEED
+    How fast the computer moves in its sorry attempt to catch the ball.
+    Default is 5 units per frame.
+
+  * BALL_SPEED
+    The maximum speed that the ball moves.
+    Default is 15 units per frame.
+
+  * ANGLE_DIVIDE
+    A value used to scale down the angle that the ball goes when it hits
+    the paddle.  The bigger the paddle, the higher this number should be
+    to compensate.  A low number (ie, 1) causes the ball to move at high
+    angles off of the paddle.  A high number (ie, 10) causes the ball to
+    move mostly forward off of th epaddle.
+    Default is 3.
+
+
+CREDITS:
+
+  * 3D Pong was written by Bill Kendrick, (c) New Breed Software 1997, 1998.
+  * Original 3D source code based on a Linear Algebra project by
+    Bill Kendrick, 1997.
+  * "Pong" is (c) Atari, now a division of JTS.
+  * Thanks to:
+    Brian Jerskey, my Linear Algebra professor
+    Brian Mordecai, a Lin.Alg. friend who helped a little with the 3D
+    James O'Connor, a Lin.Alg. friend who gave me a pair of 3D glasses
+      (which I promptly lost, but fortunately AFTER coding the 3D glasses mode)
+    Geoff Kruth (kruth@zippy.sonoma.edu), a friend with a Linux box to play on.
+    Scott Flattman (mrman@europa.com), for the "makefile" XLIB tweaks.
+    The folks who made Unix, Linux, Mac-X, FVWM, etc.!
+    And everyone who plays 3D Pong! :)
+
+
+CHANGES
+
+  * Version 0.3 - January 26, 1997
+    "ftime()" function calls changed to "gettimeofday()" function calls
+      (for portability)
+    A "DOUBLE_BUFFER" constant has been definied.  If set to "True",
+      double-buffering (backbuffering) will be used.  (As in v.0.2)
+      BUT, this sometimes breaks the program ("Can't create Pixmap" error
+      and abort), so you can set it to "False" to turn double-buffering off.
+      (As in v.0.0 and v.0.1)  There may be some flicker, though, but at
+      least it will run.
+    Better documentation.
+
+  * Version 0.2 - December 15, 1997
+    Tested under RedHat Linux.
+    Added simple /dev/audio sound support.  (Sounds from "xboing.")
+    Added clickless mouse control for the paddles.
+    Made the default (#define'd) window size bigger.
+    The sparks were turned into actual 3D lines (looks 1000x better!)
+    A net was added.
+    The game now uses a backbuffer. (I may turn this into an option, as
+      it seems to go a tad slower.)
+    A few tweaks here and there.
+    Red/blue mode has the colors reversed (someone told me red is usually
+      on the left, not the right).
+
+  * Version 0.1 - December 11, 1997
+    Added "free view", "follow the ball" and "follow the paddle" mode.
+    Added ball angle control using the paddle.
+    Added "sparks" (or "debris") when the ball hits walls/etc.
+
+  * Version 0.0 - December 10, 1997
+    First release
+
+
+CONTACT ME!
+
+  Please tell me what you think of 3D Pong!
+  Or send some money or a postcard to encourage me to release more and
+  more and more for X!
+
+  New Breed Software
+  c/o Bill Kendrick
+  7673 Melody Drive
+  Rohnert Park, CA 94928 USA
+
+  kendrick@zippy.sonoma.edu
+  http://zippy.sonoma.edu/kendrick/nbs/
+
+  1-707-795-1234 ext. 2
+  1-707-795-5678 FAX
+
+  3D Pong's website is at:
+  http://zippy.sonoma.edu/kendrick/nbs/unix/x/3dpong/
+
+  Check out my other X-Window software at:
+  http://zippy.sonoma.edu/kendrick/nbs/unix/x/

@@ -1,0 +1,54 @@
+<html><head><title>Petal: Distributed Virtual Disks</title></head>
+<body bgcolor="#ffffff">
+
+<center><h2>Petal: Distributed Virtual Disks</h2></center>
+
+<center>Edward K. Lee</center><br>
+<center>Chandramohan A. Thekkath</center><p>
+
+<center>Systems Research Center</center><br>
+<center>Digital Equipment Corporation</center><p>
+
+<center><h3>Abstract</h3></center>
+
+High-performance scalable interconnects allow us to build large-scale
+computing systems consisting of hundreds of computing nodes.  The practical
+deployment and use of such systems is often limited by our ability to
+manage them.  This problem is particularly severe for large-scale storage
+systems, because they must reliably store and manage vast amounts of
+information over long periods of time.  We believe that such systems
+must be designed from the ground up to be highly available, incrementally
+expandable in both capacity and performance, and support mechanisms for
+automating the configuration and management of the system.<p>
+
+Petal is a distributed storage system consisting of a collection of
+network-connected storage servers that cooperatively implement a single
+logical storage system.  The system allows clients to create, access and
+delete virtual disks of almost arbitrary size on demand.  Each virtual disk
+can be accessed as if it were a locally attached disk from a single or multiple
+cooperating machines using the standard UNIX character and block device
+interfaces.  Data stored on virtual disks are automatically distributed
+and replicated across multiple storage servers and disks to improve
+performance and availability.  The system automatically tolerates and
+recovers from all single component failures, communication failures, and can
+be regionally distributed to survive site failures.  Instantaneous
+copies of virtual disks, called snapshots, can be created in under a second
+and simplifies the task of making consistent backups.  Recent snapshots
+can be kept online to allow users to retrieve accidentally deleted files
+without help from a system administrator.  Additional servers and disks can
+be added incrementally, online, without disturbing users of the storage system;
+data is automatically redistributed in the background to take advantage
+of the additional capacity and performance of the new components.  This
+talk will describe the motivation, design, and performance of Petal.
+
+<hr>
+
+<b>Download talk as:</b>
+<ul>
+<a href=petal-asplos96.ppt>Powerpoint</a> -- 304 Kbytes
+<a href=petal-asplos96.pdf>PDF</a> -- 176 Kbytes
+<a href=petal-asplos96.ps>PostScript</a> -- 616 Kbytes
+</ul>
+
+</body>
+</html>

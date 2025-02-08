@@ -1,0 +1,20 @@
+                  CRL Technical Report 91/9
+              Media Recovery with Time-Split B-trees
+                 David Lomet and Betty Salzberg*
+                      October 16, 1991
+
+Modern database systems provide media recovery by taking periodic backups and
+applying a transaction log to the backup to bring the data up-to-date.
+A multi-versioned database is one that retains and provides access to historical
+versions of data.  This paper shows how a history database, supported by
+the Time-Split B-tree, can be used to also provide the backup function of
+media recovery.  Thus, the same versions used for database history are used
+for database backup.  The cost of taking a backup is  comparable to the cost
+of a good differential backup method, where only changed data is backed up.
+The  media recovery cost, especially when the media failure is only partial,
+e.g. a single disk page, will usually be lower.
+
+Keywords: media recovery, multiversioned data, access methods
+ 
+*College of Computer Science, Northeastern  University, Boston MA.
+This work was partially supported by NSF grant IRI-88-15707 and IRI-91-02821.

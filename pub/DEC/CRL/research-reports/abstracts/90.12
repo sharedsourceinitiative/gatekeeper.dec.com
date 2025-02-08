@@ -1,0 +1,23 @@
+
+			CRL Technical Report 90/12
+	     Real-Time Octree Generation from Rotating Objects
+			     Richard Szeliski
+			    December 21, 1990
+
+The construction of a three-dimensional object model from a set of images
+taken from different viewpoints is an important problem in computer vision.
+One of the simplest ways to do this is to use the silhouettes of the object
+(the binary classification of images into object and background) to can
+construct a bounding volume for the object.  To efficiently represent this
+volume, we use an octree, which represents the object as a tree of
+recursively subdivided cubes.  We develop a new algorithm for computing the
+octree bounding volume from multiple silhouettes, and apply it to an object
+rotating on a turntable in front of a stationary camera.  The algorithm
+performs a limited amount of processing for each viewpoint, and
+incrementally builds the volumetric model.  The resulting algorithm
+requires less total computation than previous algorithms, runs in
+real-time, and builds a model whose resolution improves over time.
+
+Keywords: computer vision, 3-D model construction, image sequence (motion)
+analysis, volumetric models, octrees, silhouettes, computer aided design,
+computer graphics animation.

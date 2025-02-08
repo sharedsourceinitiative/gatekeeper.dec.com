@@ -1,0 +1,29 @@
+
+				AVAILABLE ELECTRONICALLY
+
+"Extensible Records in a Pure Calculus of Subtyping"
+Luca Cardelli
+January 3, 1992.  56 pages
+
+Author's abstract
+
+Extensible records were introduced by Mitchell Wand while studying
+type inference in a polymorphic l-calculus with record types.  This
+paper describes a calculus with extensible records, F<:r, that can
+be translated into a simpler calculus, F<:, lacking any record
+primitives.  Given independent axiomatizations of F<:r and F<: (the
+former being an extension of the latter) we show that the translation
+preserves typing, subtyping, and equality.
+
+F<:r can then be used as an expressive calculus of extensible records,
+either directly or to give meaning to yet other languages.  We show
+that F<:r can express many of the standard benchmark examples that
+appear in the literature.
+
+Like other record calculi that have been proposed, F<:r has a rather
+complex set of rules but, unlike those other calculi, its rules are
+justified by a translation to a very simple calculus.  We argue that
+thinking in terms of translations may help in simplifying and organizing
+the various record calculi that have been proposed, as well as in
+generating new ones.
+

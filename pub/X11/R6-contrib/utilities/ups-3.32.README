@@ -1,0 +1,263 @@
+Updated releases of UPS
+-----------------------
+This version has only been compiled and tested on Solaris 2.5, 
+Solaris 2.6 and SunOS 4.1.3, with the Sparc Compilers SC4 and 
+SC4.2, gcc/g++ 2.7.2, and the Centerline c and cfront/C++
+compilers. Should also build for Linux ELF 2.0.31 (Red Hat 5.0).
+
+See the file README for build instructions.
+
+The URL for the ups web site is:
+
+           http://www.concerto.demon.co.uk/UPS/
+
+It is maintained by Ian Edwards (ian@concerto.demon.co.uk).
+It includes a FAQ, html man pages, site listings where ups
+can be found, supported architectures, a history of changes
+between versions, and other information.
+
+Mark Russell has decided to let the contrib release become the "official"
+release, as he is unlikely to be able to work on ups in future. Consequently,
+I've dropped the `RGA' suffix in this version.
+
+A "ups -v" now produces:
+
+	ups version 3.32 (build date: Thu Jun 18 12:00:27 PDT 1998)
+
+
+Unpacking the distribution
+--------------------------
+You should have a compressed tar file called ups-3.32.tar.gz Change 
+directory to a disk with a six or more megabytes of free space and say:
+ 
+        gzip -dc ups-3.32.tar | tar xfp -
+ 
+This will create a directory tree called ups-3.32. Change directory into it.
+
+See the file README for build instructions.
+
+Changes between 3.32 and 3.31-RGA 
+-------------------------------------
+   I've updated UPS with some nice enhancements contributed by Russ Browne
+   (russ@amc.com) as listed below. I added a useful "Jump to here" feature,
+   and fixes for true color visuals, and additional colors for menus and text.
+
+o  Double-click and left-shift-click do the same thing whereever possible,
+   except where indicated below where this was not possible.
+
+o  Added X Resources to control the multi-click timeout value.
+
+o  In the upper (display) window, arranged that a double click or 
+   left-shift-click selects the same accelerator for each object type.
+
+o  Enhanced the above accelerators as follows:
+
+      For a variable or expression:
+        If the variable is a struct or struct*, expand or collapse it
+        as before,
+
+        If the variable is a pointer to some other type, and not fully
+        dereferenced, increase the level of dereferencing.
+
+        If the variable is of integer type, or a fully dereferenced pointer
+        to an integer type, toggle the format between unsigned hex and
+        signed decimal.
+
+        This results in shift-clicking on an expression doing something
+        useful most of the time.
+
+      For a breakpoint object:
+        Added an X resource to control the preferred accelerator.  Choices
+        are to remove the breakpoint, as ups currently does, or to 
+        toggle the active/inative state of the breakpoint. The default 
+        action is to toggle the breakpoint state, rather than to delete 
+        the breakpoint.
+  
+      For the breakpoint header object
+        Added an X resource to control the preferred accelerator.  Choices
+        are to add a new breakpoint as ups currently does, or to toggle
+        the global enable/disable state. The default is to toggle
+        the global state.
+
+o  A disabled breakpoint is displayed grayed out in the source window.
+
+o  When breakpoints are globally disabled, the active/inactive
+   states of breakpoints are grayed out in the objects window to give
+   visual indication of the global state, and all breakpoints are
+   displayed grayed out in the source window.
+
+o  Double clicking on a breakpoint in the source window
+   selects the same accelerator as double clicking or shift-clicking on
+   the breakpoint object in the display window.
+   Shift clicking in the source window adds an expression, as before, and
+   does NOT select an accelerator.
+
+o  Added X resources to control the default behavior of the source window
+   pop-up menu.  The options are:
+  
+       Remember the last selected option as the default, as ups currently
+       does.
+  
+       Make any of "add breakpoint", "execute to here", or "edit file" the
+       default.
+
+       In addition, make any of the above an alternate default selected by a
+       shift-right-mouse-button click.
+  
+       Cause a selection with shift-right-mouse-button to change the default
+       option in addition to selecting an option, as ups currently does
+       with with a plain right-mouse-button selection.
+  
+o  When the call editor option is used, and the editor is vi, display the
+   file name in the xterm title bar.
+  
+o  Added the following typing line "shortcuts":
+
+   %g name
+
+           Displays the global variable or function name, skipping the
+           sometimes expensive attempt to display name as a local variable.
+
+   %b function
+
+           Adds a breakpoint at function, same as clicking on the
+           breakpoints header, selecting "add breakpoint", and typing
+           the name.
+  
+   %l file
+           Lists file, if file is one of the files in the source file list,
+           the same as expanding the list and clicking on the file name.
+           One types only the final component of the file name.
+
+   /pattern or ?pattern
+
+           Begins a forward or backward search for pattern in the source
+           window, as in vi.  The search may be continued in the same
+           direction by hitting return, or in either direction by using
+           the search pulldown menu.
+
+o  Corrected a bug where attempting to edit the value of a byte or short
+   sized parameter fails.
+
+o  Added a command line option to force ups to pass the full name of the
+   target executable as argv[0] for the process, rather than truncating
+   it to the final component only.  This is useful for debugging programs
+   that use the path to themselves to locate resource files, or when
+   the program is purified and wants to process itself on startup.
+
+o  Updates and corrections to the man pages and on-line help.
+
+
+   The following contributed by Rod Armstrong:
+
+o  Fixed a makefile problem on Linux that caused "make" to try and
+   build a bogus target after having made the ups binary.
+
+o  Custom menus now support meta keys using `@' to denote a meta
+   key. This allows editing of text using entities of words.
+
+o  Added a "Jump to here" option in the source window menu.
+   This causes the target execution to jump to the current line
+   without executing any intervening code. Use this with caution as it
+   is possible to jump to a bad context where the data is bad or where there
+   is no valid call stack. The safest usage is to jump over lines
+   within a function. It can also be used to jump back within a function.
+
+o  Fixed color problems with true color displays. Ups should no longer 
+   emit warnings about bad parameters for X protocols. As a corollary of
+   this, I added the ability to use extra colors for all menus, and text
+   in the display window. 
+
+o  The old problem that caused ups to switch to monochrome when other color 
+   intensive applications such as netscape were present is gone. If ups 
+   cannot allocate private color cells with adjacent planes, it switches to
+   using publically allocated colors. Ups required cells with adjacent planes 
+   in order to do logic operations such a reversing colors and shading. It
+   now uses colors for the same effect if it can't obtain such cells.
+
+o  New X resources allow you to color menus and text. (If you don't 
+   want the new colors, set WantMenuColors and WantExtendedTextColors to "no".)
+
+      WantMenuColors
+	   If set to `yes', ups will use foreground and background
+	   menu colors as listed below. If not set to `yes', such
+	   settings are ignored, and the Foreground and Background
+	   resources are used.
+
+      MenuForeground, MenuBackground
+	   The default colors for text and background in all
+	   buttons and menus. Sub menus inherit the colors of their
+	   parents unless specifically overwritten.
+
+      DisabledTextColor
+	   The color for text that is disabled, such as the
+	   `start' caption after starting the target, or globally
+	   disabled breakpoints.
+
+      LastButtonTextColor
+	   The text color of a busy button pressed (such as `cont'
+	   while the target is executing) or the parent menu item
+	   of a sub menu.
+
+      SourceMenuForeground, SourceMenuBackground
+	   The text and background colors of the pop up menu for
+	   the source window.
+
+      CustomMenuForeground, CustomMenuBackground
+	   The text and background colors of the custom pop up
+	   menu for editing text strings.
+
+      FileBoxMenuForeground, FileBoxMenuBackground
+	   The text and background colors of the pop up menu for
+	   the file name and line number box that is directly
+	   above the source window.
+
+      <text caption>Foreground, <text caption>Background
+	   The text and background colors for a menu item with a
+	   specific text caption: for example "Add breakpointForeground". 
+	   Note that imbedded spaces are allowed.
+
+      WantExtendedTextColors
+	   If set to `yes', ups will use the colors for the text
+	   items in the display window as listed below. If not set
+	   to `yes', such settings are ignored.
+
+      SignalTextColor
+	   The text color of the signals listed under the `Signal'
+	   header.
+
+      EnvironmentTextColor
+	   The text color of environment strings listed under the
+          `Environment' header.
+ 
+     SourceFileTextColor
+          The text color of the file names listed under the
+          `Source files' header.
+ 
+     FunctionTextColor
+          The text color of the function names in the stack under
+          the `Functions' header.
+ 
+     BreakpointTextColor
+          The text color of active breakpoints listed under the
+          `Breakpoints' header. Inactive breakpoints are in the
+          main foreground color, as is the text of breakpoint
+          code in the source window.
+
+o  The distribution includes a sample apps-defaults file (Ups) that 
+   illustrates the use of such resources. It could be installed as
+   /usr/lib/X11/app-defaults/Ups. 
+
+o  Fixed a bug that broke the "Rescan Init File" option and automatic
+   rescan of the init file on a reattach. Also fixed unnecessary reloading
+   of shared libraries on a reattach.
+
+o  Added a workaround for a symbol table bug seen with the patched
+   Centerline compiler on Solaris. Ups now emits a message of the form
+   "unmatched N_BINCL symbol in <library> (<file>)" and continues rather 
+   than exiting as before.
+
+Rod Armstrong
+rod@san-jose.ate.slb.com
+18 June 1998
+

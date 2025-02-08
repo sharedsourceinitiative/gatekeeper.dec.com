@@ -1,0 +1,631 @@
+		*************************************************
+		* 	The ATOM ADK web site is		*
+		*						*
+		*	http://www.tru64unix.compaq.com/atom	*
+		*						*
+		*************************************************
+
+
+                      Atom V2.80 Release Notes
+                      ========================
+
+A few problems have been fixed and some new support added since the 
+Atom 2.59 ADK:
+
+    Modifications to Atom:
+
+     1. Additional debugging support has been added.  You can now do 
+	symbolic debugging for both the application and the analysis 
+	routines at the same time.  This support is available using
+	one of the following options. 
+
+	  -gap  Produces the instrumented program with debugging 
+		information.  This enables debugging of analysis and 
+		application routines.  The prefix "_APP_" is attached 
+		to all variable and procedure names in the application.  
+		The default -A0 option (not -A1) is recommended when 
+		-gap is used.
+
+	  -gpa  Produces the instrumented program with debugging 
+		information.  This enables debugging of analysis and 
+		application routines.  The prefix "_ANA_" is attached 
+		to all variable and procedure names in the analysis 
+		object.  The default -A0 option (not -A1) is recommended 
+		when -gpa is used.
+
+
+     2.  New APIs
+
+	Four new InstInfoType will be added to GetInstInfo()'s current values. 
+
+     	InstContext   	InstContext describes the procedures context at the 
+			specified instruction.  It will return one of the 
+			following values.
+
+        	IN_CONTEXT	This instruction resides in the routine's 
+				context. This means that this instruction 
+				stands in the part of the routine that is 
+				current for exception handling purposes. 
+				Stack space has been allocated, and registers 
+				were saved on the stack.
+
+         	NON_CONTEXT     This instruction does not reside in the 
+				routine's context. No stack space has been 
+				allocated. 
+
+         	NON_CONTEXT_STACK  This instruction does not reside in the 
+				routine's context, but stack space has been 
+				allocated. 
+
+         	CONTEXT_UNKNOWN This context information is unavailable or
+				invalid. 
+
+	InstFramePtrValid	InstFramePtrValid returns a non-zero value 
+				if the register that is being used as the 
+				frame pointer is pointing to the procedure's 
+				frame. 
+
+     	InstStackPtrValid	InstStackPtrValid returns a non-zero value 
+				if the register that is being used as the 
+				stack pointer is pointing to the procedure's 
+				frame. 
+
+	InstRaRegValid		InstRaRegValid returns a non-zero value if 
+				the register that is being used to save the 
+				return address contains the return address. 
+				(This is used for procedures without stack 
+				frames.) 
+
+
+	One new ProcInfoType was added to GetProcInfo()'s current values. 
+
+	ProcExceptionFrame	ProcExceptionFrame returns a non-zero value 
+				of the procedure includes a hardware exception
+				context.
+
+
+	One new ProgInfoType was added to GetProgInfo()'s current values.
+
+	ProgNumInstObjects      Returns the number of objects that the user 
+				requested instrumentation upon.
+
+
+	GetObjInfo()'s ObjModifyHint was given a new object type.  Valid 
+	ObjModifyHints are OBJ_READONLY, OBJ_WRITEABLE, and OBJ_AUTOMATIC.
+	
+		OBJ_AUTOMATIC 	Indicates that the user did not request that 
+				the object be instrumented, but it was 
+				instrumented internally by Atom to support a 
+				requested service, such as -pthread or -fork.
+
+
+     3. Library Search Path
+
+	The current working directory was added to the end of the library 
+	search path.  Local libraries will be found if a user forgets to add 
+	the "-L." to the Atom command line.
+
+
+     4. Incremental Instrumentation
+
+	One of the major complaints against Atom has always been the amount 
+	of time that it takes to instrument an application.  When instrument-
+	ation is done on the shared libraries associated with the application,
+	the instrumentation time can be considerable. Each time that a mod-
+	ification is made to the application, not only the application is 
+	re-instrumented, but all of the shared libraries are re-instrumented 
+	as well. 
+
+	Incremental instrumentation is a method of instrumenting a shared 
+	library with a tool once, and then using this previously instrumented 
+	shared library when re-instrumenting that application with the same 
+	tool and same options. 
+
+	To use incremental instrumentation, use '-Xii' on the Atom command 
+	line.  This feature is currently undocumented.  
+
+		% atom hw -tool pixie -all -Xii
+
+	Tool writers:  An Atom tool must be "object clean" before it can be 
+	used with incremental instrumentation.  This means that object 
+	information should not be passed to an analysis routine in a program
+	level action.  Rather, it should be passed as an object level action.
+
+	As an example, if a tool was building an array of information about
+	all of the objects, it should not build one large array, and pass
+	it to the analysis routine as a ProgramBefore action.  To be object
+	clean, it would create an array of information for each object, and
+	pass it to the analysis routine as an ObjBefore action.
+
+
+
+    5. Tracelock
+
+	For V5.0x OS only, Atom will use pthread_tracelock() as the default
+	routine for disabling pthread cancellation.  V4.0x versions will 
+	continue to use pthread_setcancelstate().
+
+
+    6. Bug Fixes
+
+	A bug was fixed that preventing instrumentation points from being 
+	inserted in a limit number of cases.
+
+	A bug was fixed that caused an instrumented library to point to 
+	itself if there was a link to the library in the current working
+	directory, and the actual library had the same name. 
+
+
+    7. Documentation Error
+
+	The GetProcInfo(p, ProcId) man page incorrectly states the Proc ID 
+	is unique across all shared libraries.  This is untrue.  The Proc ID
+	is unique only within an object.
+
+
+    8. Additional Information
+
+	Occasionally, a compiler optimization may create a procedure that is
+	too complex for Atom to replace with the ReplaceProcedure() routine.
+	If this occurs, an error will be reported.  Instrumentation will 
+	continue.
+
+	atom: Error: Unable to replace procedure with call to 'my_malloc'.
+              Procedure does not adhere to calling standard.
+
+	To work around this problem, add "-Wca, O0" (without the quotes) to 
+	the atom command line.
+
+
+Atom is now divided into three kits.  The ATM400 kit can be installed on 
+Tru64 UNIX V4.0x.  The ATM500 kit can be installed on Tru64 Unix 5.0x.
+THE ATM510 kit can be installed on Tru64 Unix 5.1.  Choose the kit that is 
+right for your system.
+
+-----------------------------------------------------------------------
+
+Copyright  2000 Compaq Computer Corporation
+
+COMPAQ Registered in U.S. Patent and Trademark Office.
+
+Confidential computer software. Valid license from Compaq required for
+possession, use or copying. Consistent with FAR 12.211 and 12.212,
+Commercial Computer Software, Computer Software Documentation, and
+Technical Data for Commercial Items are licensed to the U.S. Government
+under vendor's standard commercial license.
+
+Compaq shall not be liable for technical or editorial errors or omissions 
+contained herein.  The information in this document is subject to change 
+without notice.
+
+The information in this publication is subject to change without notice 
+and is provided "AS IS" WITHOUT WARRANTY OF ANY KIND. THE ENTIRE RISK 
+ARISING OUT OF THE USE OF THIS INFORMATION REMAINS WITH RECIPIENT. 
+IN NO EVENT SHALL COMPAQ BE LIABLE FOR ANY DIRECT, CONSEQUENTIAL, 
+INCIDENTAL, SPECIAL, PUNITIVE OR OTHER DAMAGES WHATSOEVER (INCLUDING 
+WITHOUT LIMITATION, DAMAGES FOR LOSS OF BUSINESS PROFITS, BUSINESS 
+INTERRUPTION OR LOSS OF BUSINESS INFORMATION), EVEN IF COMPAQ HAS 
+BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.  THE FOREGOING SHALL 
+APPLY REGARDLESS OF THE NEGLIGENCE OR OTHER FAULT OF EITHER PARTY AND 
+REGARDLESS OF WHETHER SUCH LIABILITY SOUNDS IN CONTRACT, NEGLIGENCE, 
+TORT, OR ANY OTHER THEORY OF LEGAL LIABILITY, AND NOTWITHSTANDING 
+ANY FAILURE OF ESSENTIAL PURPOSE OF ANY LIMITED REMEDY.
+
+The limited warranties for Compaq products are exclusively set forth 
+in the documentation accompanying such products. Nothing herein should 
+be construed as constituting a further or additional warranty.
+
+-----------------------------------------------------------------------
+
+
+Kit Availability
+================
+
+There are three Atom kits, each consists of a single, tar'ed setld package.  
+You only need one of these kits, depending on what version of the operating 
+system you have.  Use the ATM400 kit for installation on Tru64 UNIX V4.0x.
+Use the ATM500 kit for installation on Tru64 UNIX V5.0.   Use the ATM510 kit 
+for installation on Tru64 UNIX 5.1.
+
+
+You can obtain these kits from one of three locations.  The Atom ADK can be 
+downloaded from: 
+
+		http://www.tru64unix.compaq.com/atom 
+
+You must fill out a registration form to download from this site, but there
+is no cost.  There is also additional information available.
+
+
+All Compaq employees should have anonymous ftp access to this location in 
+Nashua, NH (USA):
+
+	system:  	alpha.zk3.dec.com
+
+	directory:	/usr/ftp/pub/prof/tools/atom
+
+	files:     	README    	- These release notes
+			ADK_NOTES	- A compilation of previous changes
+			ATM400.tar	- Atom kit for Unix v4.0x
+			ATM500.tar	- Atom kit for Unix v5.0x
+			ATM510.tar	- Atom kit for Unix v5.1
+
+
+You may copy the kit from this location with this command:
+
+	% ftp alpha.zk3.dec.com
+	Name: anonymous
+	Password: <your email address>
+
+	ftp> cd pub/prof/tools/atom
+	ftp> bin
+	ftp> get ATM400.tar
+
+
+Everyone (including non-Compaq people) should have anonymous ftp access
+to this location in Palo Alto, CA (USA):
+
+	system:  	gatekeeper.pa.dec.com
+
+	directory:	/pub/DEC/WRL/lueck
+
+	files:     	README    	- These release notes
+			ADK_NOTES	- A compilation of previous changes
+			ATM400.tar	- Atom kit for Unix v4.0x
+			ATM500.tar	- Atom kit for Unix v5.0x
+			ATM510.tar	- Atom kit for Unix v5.1
+
+You may copy the kit from this location with this command:
+
+	% ftp gatekeeper.pa.dec.com
+	Name: anonymous
+	Password: <your email address>
+
+	ftp> cd pub/DEC/WRL/lueck
+	ftp> bin
+	ftp> get ATM400.tar
+
+For security reasons, read permission has been turned *off* in the
+directory containing these files.  You can still copy the files, but you
+will not be able to list the contents of the directory.
+
+
+Installation Instructions
+=========================
+
+This Atom kit can be installed on the following revisions of the
+Tru64 UNIX operating system:
+
+	V4.0D	(PTmin)
+	V4.0E	(PTEV6)
+	V4.0F	(PTFC)
+	V4.0G	(PTwild)
+	V5.0	(Steel)
+	V5.0A	(Zinc)
+	V5.1	(Zulu BL9 or later)
+
+Note, installation on Tru64 UNIX V4.0x requires the ATM400 kit.  Installation 
+on Tru64 UNIX 5.0x requires the ATM500 kit.  Installation on Tru64 UNIX V5.1
+requires the ATM510 kit.
+
+
+
+Installing on Tru64 UNIX V4.0x
+--------------------------------
+
+Before installing this kit, make sure you remove any previous versions
+of Atom:
+
+	% su
+	# setld -d ATMBASE400
+
+If this command returns an error, don't worry.  That simply means you
+don't have an old version of the Atom kit installed, no harm has been
+done.
+
+    NOTE: Do *not* delete the OSFATMBASE or OSFATMBIN subsets.  These
+	subsets are unrelated to Atom.
+
+    Note:  If you are deleting the old kit, but _not_ installing a new 
+	Atom ADK, you may need to set up symbolic links for the new drivers.  
+	Execute the following commands:
+	ln -s /usr/lib/cmplrs/cc/hiprof /usr/bin/hiprof
+	ln -s /usr/lib/cmplrs/cc/pixie /usr/bin/pixie
+	ln -s /usr/lib/cmplrs/cc/third /usr/bin/third
+
+	This is only necessary if you are _not_ installing a new kit.
+
+	
+You are now ready to install the new kit.  First, copy the kit as
+described above.  Then unpack the kit into a temporary directory on your
+system:
+
+	% cd <temp directory>
+	% tar xf ATM400.tar
+
+Now, become root and install the kit.  Because the installation may
+replace some system files, you should not install this kit on a system
+with other users loged on.
+
+	% su
+	# setld -l .
+
+This displays a menu of possible subsets to install.  There is only one
+subset to choose.  Your operating system already has all the necessary
+support for Atom.
+
+	ATMBASE400	- The base Atom functionality.  You must install
+	           	  this subset.
+
+After you install the Atom kit, you may delete the temporary directory
+where you unpacked the kit:
+
+	% rm -rf <temp directory>
+
+There is no need to reboot the system after installing this subset.
+
+You may also wish to run the installation verification programs.
+However, make sure you have a fair amount of /tmp space.  If not, set
+the TMPDIR environment variable to point to a larger partition (for
+example, /usr/tmp).
+
+        % su
+        # setld -v ATMBASE400
+
+The verification program passes if it prints the following line:
+
+        Confidence test suite passed.
+
+
+Uninstalling from Tru64 UNIX V4.0
+-----------------------------------
+
+Should you want to remove the ATM400 kit from a Tru64 UNIX V4.0 system
+and revert to the original version of Atom, you can follow this
+procedure:
+
+	% su
+	# setld -d ATMBASE400
+
+
+
+
+Installing on Tru64 UNIX V5.0x
+-------------------------------
+
+Before installing this kit, make sure you remove any previous versions
+of Atom:
+
+	% su
+	# setld -d ATMBASE500
+
+If this command returns an error, don't worry.  That simply means you
+don't have an old version of the Atom kit installed, no harm has been
+done.
+
+    NOTE: Do *not* delete the OSFATMBASE or OSFATMBIN subsets.  These
+	subsets are unrelated to Atom.
+
+    Note:  If you are deleting the old kit, but _not_ installing a new 
+	Atom ADK, you may need to set up symbolic links for the new drivers.  
+	Execute the following commands:
+	ln -s /usr/lib/cmplrs/cc/hiprof /usr/bin/hiprof
+	ln -s /usr/lib/cmplrs/cc/pixie /usr/bin/pixie
+	ln -s /usr/lib/cmplrs/cc/third /usr/bin/third
+
+	This is only necessary if you are _not_ installing a new kit.
+
+
+You are now ready to install the new kit.  First, copy the kit as
+described above.  Then unpack the kit into a temporary directory on your
+system:
+
+	% cd <temp directory>
+	% tar xf ATM500.tar
+
+Now, become root and install the kit.  Because the installation may
+replace some system files, you should not install this kit on a system
+with other users logged on.
+
+	% su
+	# setld -l .
+
+This displays a menu of possible subsets to install.  There is only one
+subset to choose.  Your operating system already has all the necessary
+support for Atom.
+
+	ATMBASE500	- The base Atom functionality.  You must install
+	           	  this subset.
+
+After you install the Atom kit, you may delete the temporary directory
+where you unpacked the kit:
+
+	% rm -rf <temp directory>
+
+There is no need to reboot the system after installing this subset.
+
+You may also wish to run the installation verification programs.
+However, make sure you have a fair amount of /tmp space.  If not, set
+the TMPDIR environment variable to point to a larger partition (for
+example, /usr/tmp).
+
+        % su
+        # setld -v ATMBASE500
+
+The verification program passes if it prints the following line:
+
+        Confidence test suite passed.
+
+
+Uninstalling from Tru64 UNIX V5.0x
+-----------------------------------
+
+Should you want to remove the ATM500 kit from a Tru64 UNIX system
+and revert to the original version of Atom, you can follow this
+procedure:
+
+	% su
+	# setld -d ATMBASE500
+
+
+
+Installing on Tru64 UNIX V5.1
+-------------------------------
+
+Before installing this kit, make sure you remove any previous versions
+of Atom:
+
+	% su
+	# setld -d ATMBASE510
+
+If this command returns an error, don't worry.  That simply means you
+don't have an old version of the Atom kit installed, no harm has been
+done.
+
+    NOTE: Do *not* delete the OSFATMBASE or OSFATMBIN subsets.  These
+	subsets are unrelated to Atom.
+
+    Note:  If you are deleting the old kit, but _not_ installing a new 
+	Atom ADK, you may need to set up symbolic links for the new drivers.  
+	Execute the following commands:
+	ln -s /usr/lib/cmplrs/cc/hiprof /usr/bin/hiprof
+	ln -s /usr/lib/cmplrs/cc/pixie /usr/bin/pixie
+	ln -s /usr/lib/cmplrs/cc/third /usr/bin/third
+
+	This is only necessary if you are _not_ installing a new kit.
+
+
+You are now ready to install the new kit.  First, copy the kit as
+described above.  Then unpack the kit into a temporary directory on your
+system:
+
+	% cd <temp directory>
+	% tar xf ATM510.tar
+
+Now, become root and install the kit.  Because the installation may
+replace some system files, you should not install this kit on a system
+with other users logged on.
+
+	% su
+	# setld -l .
+
+This displays a menu of possible subsets to install.  There is only one
+subset to choose.  Your operating system already has all the necessary
+support for Atom.
+
+	ATMBASE510	- The base Atom functionality.  You must install
+	           	  this subset.
+
+After you install the Atom kit, you may delete the temporary directory
+where you unpacked the kit:
+
+	% rm -rf <temp directory>
+
+There is no need to reboot the system after installing this subset.
+
+You may also wish to run the installation verification programs.
+However, make sure you have a fair amount of /tmp space.  If not, set
+the TMPDIR environment variable to point to a larger partition (for
+example, /usr/tmp).
+
+        % su
+        # setld -v ATMBASE510
+
+The verification program passes if it prints the following line:
+
+        Confidence test suite passed.
+
+
+Uninstalling from Tru64 UNIX V5.1
+-----------------------------------
+
+Should you want to remove the ATM510 kit from a Tru64 UNIX system
+and revert to the original version of Atom, you can follow this
+procedure:
+
+	% su
+	# setld -d ATMBASE510
+
+
+
+Documentation
+=============
+
+The following manpages should be available on your system:
+
+	atom(1)
+	prof_intro(1)
+	hiprof(1)
+	pixie(1)
+	third(1)
+	hiprof(5)
+	pixie(5)
+	third(5)
+	atom_application_instrumentation(5)
+	atom_application_navigation(5)
+	atom_application_query(5)
+	atom_application_resolvers(5)
+	atom_instrumentation_routines(5)
+	atom_object_management(5)
+	atom_description_file(5)
+	Xlate(5)
+	AnalHeapBase(5)
+	Thread(5)
+
+    NOTE: To view the pixie(5) manpage, type
+
+		% man 5 pixie
+
+
+
+
+Kernel Support
+==============
+
+This version of Atom allows you to instrument the Tru64 UNIX kernel.
+For more information about this, please contact Alan Eustace at WRL:
+
+	Alan Eustace
+	eustace@pa.dec.com
+	DTN 543-3312
+	(415) 617-3312
+
+
+Reporting Bugs
+==============
+
+If you find a bug in Atom, please send a description of your problem to 
+atom@zk3.dec.com.
+
+Please include the following information in any bug report:
+
+	* The version of Atom, which is obtained with this command:
+
+		% atom -version
+
+	* The version of the operating system, which is obtained with
+	  this command:
+
+		% uname -a
+
+	* A list of those Atom subsets that are installed, which is
+	  obtained with this command:
+
+		% /usr/sbin/setld -i | grep '^ATM'
+
+	* A description of the problem including the exact command line
+	  you passed to Atom.
+
+	* If the problem is with a tool you wrote, either include the
+	  sources for the tool's instrumentation and analysis code or
+	  provide a pointer to the sources.  If you are using one of the
+	  prepackaged tools in the Atom kit, you need not provide this
+	  information.
+
+	* I normally need the binary image of the application to which
+	  you applied Atom.  If possible, save a copy and provide a
+	  pointer to the application.
+
+
+
+

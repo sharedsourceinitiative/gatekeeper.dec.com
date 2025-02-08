@@ -1,0 +1,26 @@
+<TITLE>Digital Systems Research Center: Note 1997-027</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Technical Note 1997-027</H1>
+<H1>A Simple, Intuitive Hypermedia Synchronization Model and its Realization in the Browser/Java Environment</H1>
+<HR>
+<H2>Jin Yu</H2>
+<b>Note #1997-027, October 27, 1997</b><BR><i>12 pages</i>
+<P>
+This paper presents a simple and intuitive hypermedia synchronization
+model -- the Media Relation Graph (MRG), and an alternative
+implementation of the Hypermedia Presentation and Authoring System
+(HPAS), which is the testbed for MRG. Our model combines the power of
+both interval-based and point-based synchronization mechanisms. The
+new implementation exploits many rich features of commercial web
+browsers and reuses existing browser components, such as plugins and
+Java applets.  (An overview of HPAS and its original Unix/C
+implementation can be found <a href="src-tn-1997-003.html">here</a>.)
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-027.ps.Z">PostScript compressed with UNIX compress</A></B> -- 264 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-027.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 216 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-027.ps.zip">PostScript compressed with ZIP</A></B> -- 216 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-027.ps">PostScript</A></B> -- 624 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-027.pdf">Portable Document Format (PDF)</A></B> -- 176 Kbytes<BR>
+</UL></P>

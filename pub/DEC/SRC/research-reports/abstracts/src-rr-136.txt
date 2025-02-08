@@ -1,0 +1,21 @@
+"A Functional Specification of the Alpha AXP Shared Memory Model"
+Manfred Broy
+April 3, 1995. 34 pages.
+
+We give a functional specification of the Alpha AXP architecture 
+with special emphasis on the Alpha Shared Memory Model.
+We keep the specification as abstract as possible and modular 
+in the sense that we provide an independent description of the 
+processors and the memory. We show how to handle a number of 
+critical aspects of the Alpha architecture within the functional 
+model, such as the specification of basic assumptions
+about the behavior of the processors and the exclusion of 
+causal loops.We use the model for specifying the notion of 
+lookahead and shortcut optimization for the behaviors of the 
+processors. This allows us to define the concept of correct 
+processor behavior by using the conservative sequential behavior 
+as a reference. Finally, we extend the model to the constructs for 
+synchronization in the Alpha architecture and include the 
+instructions "read locked" as well as "store conditional".
+
+

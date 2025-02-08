@@ -1,0 +1,17 @@
+"Averaging on a quotient of a sphere"
+Lyle Ramshaw
+Note #2002-003, February 28, 2002. 
+
+
+In work at SRC on calibrating cameras automatically, the problem arose of computing "averages" or "centers of gravity" in the quotient space S^3/H, where S^3 denotes the 3-sphere (sitting in 4-space) and H is a certain subgroup of S^3 of size 48.  So the points of the 3-sphere are being identified into cosets, each of size 48.  This note considers two easier related problems: computing averages either
+
+      - in S^n, the n-sphere itself, with no identification
+        going on, or
+
+      - in the space S^n/{+1,-1}, the n-sphere in which each 
+        point is identified with its antipode, forming a coset 
+        of size 2.
+
+These easier problems have fairly satisfactory solutions. But those solutions don't seem to extend to handle cosets of size greater than 2.
+
+

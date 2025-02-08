@@ -1,0 +1,100 @@
+<HTML><HEAD><TITLE>vaya</TITLE>
+<META content="text/html; charset=iso-8859-1" http-equiv=Content-Type>
+<BODY>&nbsp; 
+<CENTER>
+<TABLE border=0 cellPadding=0 cellSpacing=0 cols=1 height="1%" width="75%">
+  <TBODY>
+  <TR>
+    <TD>
+      <CENTER>
+      <H1><FONT size=+2>Summer Internship at SRC</FONT></H1></CENTER>
+      <CENTER><B><FONT size=+1>Shailesh Vaya</FONT></B> <BR><B><FONT 
+      size=+1>UCLA</FONT></B></CENTER></TD></TR></TBODY></TABLE></CENTER><BR>&nbsp; 
+<CENTER>
+<TABLE border=0 cellPadding=0 cellSpacing=0 cols=1 height="1%" width="75%">
+  <TBODY>
+  <TR>
+    <TD><BR><B><FONT size=+1>1 Introduction</FONT></B> 
+      <P>I am between the first and second year of&nbsp; my Masters leading to a 
+      PhD program at UCLA. The area of my research interest is Cryptography. 
+      <P>An interesting part of my Summer Internship at SRC was that my host 
+      gave me the flexibility to define a project/problem for myself to work on. 
+      This gave me a lot of time to talk to the researchers at SRC for the first 
+      few weeks. I spent the 2-3 weeks studying the problem of designing an 
+      Uncensorable Bulletin Board with Mark Lillibridge and prototyping a spam 
+      resistant mailing system with Mark Manasse (my host). However, we didn't 
+      implement either of these ideas. 
+      <P>I had the opportunity to work on two independent problems during the 
+      rest of the summer which I summarize in the next two sections. <BR>&nbsp; 
+      <P><B><FONT size=+1>2 On Existence of Incompressible functions</FONT></B> 
+      <P>Dwork, Lotspeich, Naor ([2]) proposed a scheme for protecting Digital 
+      content from illegal distribution using a novel concept of "Digital 
+      Signets: Self Enforcing Protection of Digital Information". The main idea 
+      of the scheme was to make the decryption key to some encrypted digital 
+      information as large as the actual data, itself. A user is given a signet 
+      which is associated with his credit card number and using the pair the 
+      user can compute a decryption key to the encrypted digital data available 
+      publicly. Thus, a cheating user has two options: either part with his 
+      credit card number, or transmit a decryption key as large as the data 
+      itself! This claim, however, is not proved. 
+      <P>Dwork et. al. conjectured that the security of their scheme is based on 
+      the incompressiblity of the function:
+      <P><CENTER><IMG height=15 src="vaya.gif" width=150></CENTER> 
+      <P>An incompressible function can be defined as follows. Consider two 
+      communicating parties. One party knows a short x and wants to communicate 
+      to another party the long value of &#402;(<I>x</I>) without revealing <I>x</I>. 
+      Roughly speaking, &#402; is incompressible if no feasible computable short 
+      message from the sender to the receiver simultaneously achieves both goals 
+      of enabling the receiver to compute &#402;(<I>x</I>), and hiding <I>x</I>. The 
+      principal open problem suggested by [2] was to prove the 
+      existence/inexistence of incompressible functions based on standard 
+      cryptographic assumptions. 
+      <P>Working with Cynthia, I proved that Diffie-Hellman series is 
+      incompressible, under the Decisional Diffie-Hellman assumption. The main 
+      idea behind the proof is that if there exists polynomial time computable 
+      algorithm A for compressing the value of the series and polynomial time 
+      algorithm A' for retrieving the value of the series using this compressed 
+      value then there exists a polynomial time algorithm that can distinguish 
+      between a Diffie-Hellman Triplet and a triplet selected uniformly from the 
+      set of triplets in group Gp. The heart of the proof involved generating 
+      randomized Diffie-Hellman Series (or any series) using the ideas of Naor 
+      &amp; Reingold, [1] from a Diffie-Hellman triplet (or a random triplet). 
+      <P>Although we made some progress it still remains an open problem to 
+      prove that the Signet Scheme is secure if the Diffie-Hellman series is 
+      incompressible. Another is to design an incompressible function that 
+      doesn't require a large publicly known data. A working manuscript of the 
+      proof may be available upon request from the authors (i.e., Cynthia &amp; 
+      myself). <BR>&nbsp; 
+      <P><B><FONT size=+1>3 Resilient Deniable Authentication</FONT></B> 
+      <P>I kept myself busy attending a workshop on Algorithmic Number Theory 
+      and CRYPTO-2000 for a couple of weeks and then we sought for a new problem 
+      to work on. In a joint work with Cynthia and Moni Naor (at Stanford) we 
+      studied Deniable Authentication protocols under Intrusive Adversaries. The 
+      motivation behind this work can be found while trying to construct a 
+      protocol for "Stock Brokering Without Trust" or "Private Retrieval of 
+      Medical Database". 
+      <P>The resiliency of an authentication protocol is defined with respect to 
+      the VIEW of an adversary. For example, an adversary having the read access 
+      to the communication channel between the prover and the verifier is more 
+      powerful and has a larger VIEW compared to an adversary who would just 
+      believe a verifier based on the Transcript that the verifier gives to the 
+      prover. We classify that an adversary could be: 
+      <BLOCKQUOTE>1. Online/Offline: An adversary is called Online if it 
+        concurrently interacts with the verifier while he gets some message 
+        <B><I>m</I></B> authenticated from the prover. If the adversary behaves 
+        in an "assign &amp; collect" fashion he is called an Offline Adversary. 
+        <P>2. Eavesdropping: An adversary is called eavesdropping if it has the 
+        read access to the communication line between the prover and the 
+        verifier. 
+        <P>3. Coercing: An adversary is called Coercing if it can suggest the 
+        verifier to send some message <B><I>m</I></B> or use some string of 
+        random bits for composing the message etc. We proved a number of 
+        possiblity/impossiblity results regarding the existence of 
+        authentication protocols under various combinations of adversaries as 
+        listed above. A working mansucript of the results is under preparation 
+        (vis-a-vis 09/18/00).</P></BLOCKQUOTE>
+      <P><B><FONT size=+1>4 References</FONT></B> 
+      <P><I>[1] M. Naor, O. Reingold Number Theoritic Construction of 
+      Pseudorandom Generators, FOCS'97.</I> 
+      <P><I>[2] Digital Signets: Self Enforcing Protection of Digital 
+      Information, STOC'96.</I></P></TD></TR></TBODY></TABLE></CENTER></BODY></HTML>

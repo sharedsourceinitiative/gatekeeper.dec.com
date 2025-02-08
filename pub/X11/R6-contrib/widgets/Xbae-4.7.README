@@ -1,0 +1,323 @@
+# 
+# $Date: 1999/07/27 09:17:29 $
+# $Id: README,v 1.33 1999/07/27 09:17:29 lister Exp $
+
+Xbae Library version 4.7
+--------------------------
+
+See the INSTALL file for installation procedure.
+
+Comments, questions, bugs & postcards can be directed to Andrew Lister
+(lister@syd.net.au).
+
+Postcards will earn you a spot in the manual page.  Email me for the
+address to which to send it.
+
+For those of you not already on the mailing list and would like to subscribe,
+send mail to
+
+        xbae-subscribe@lists.frogdream.com
+
+You should also visit the web page at:
+
+	http://www.xbae.syd.net.au
+
+Documentation
+-------------
+
+Documentation is provided in the doc/ subdirectory.  Please read the
+Xbae-FAQ before contacting the maintainer or mailing list unless you
+are willing to receive some nasty (or no) replies!  I will be ignoring
+any questions that are in the FAQ so if you don't receive a reply within
+a few days, you'll know where to look.
+
+The online manual pages (src/XbaeMatrix.man, src/XbaeCaption.man and
+src/XbaeInput.man) are also provided in PostScript format in
+doc/matrix.ps, doc/caption.ps and doc/input.ps which I urge you to
+print out and keep handy as most questions can be answered from these.
+
+The online XbaeMatrix(3) man page suffers from a very large table,
+spread over a few pages which causes problems with most versions of
+nroff, groff, etc.  If this is the case for you, you will need to use
+the PostScript version for the resource table.  If you can help out in
+formatting the table so it works in the online manual page, please
+contact me.
+
+
+What the widgets do:
+--------------------
+
+XbaeMatrix:
+
+XbaeMatrix is a Motif widget which presents an editable array of
+string data to the user in a scrollable table similar to a
+spreadsheet. The rows and columns of the Matrix may optionally be
+labeled. Also, a number of "fixed" and "trailing fixed" rows or
+columns may be specified - these behave similarly to the labels. While
+XbaeMatrix looks and acts like a grid oF XmText widgets, it
+actually contains only one XmText.  This means that XbaeMatrix
+widgets with hundreds or thousands of rows have much less overhead
+than they would if they used an XmText for each cell. XbaeMatrix
+has callbacks for doing field validation and customizing traversal. It
+allows cells to be assigned independent colors.  It allows rows,
+columns and regions of cells to be selected or highlighted.  The
+matrix can be dynamically grown or shrunk by adding and deleting rows
+and columns at any position.  The widget has many resources to allow
+individual customisation and can be made to look and behave like an
+extended list widget with added functionality.  Pixmaps (both colour
+xpm and standard bitmaps) can be displayed in individual cells with
+the callbacks available in the widget.
+   
+
+XbaeCaption:
+
+XbaeCaption is a simple Motif manager widget used to associate an
+XmLabel (caption) with it's single child. The label may be either an
+XmString or Pixmap and can be displayed in any one of twelve positions
+around the perimeter of the child. XbaeCaption's geometry management
+technique is to simply "shrink wrap" it's child and display the
+caption alongside it.  By using XbaeCaption with an XmFrame child,
+groups of related widgets can be labeled similarly to the IBM CUA
+"Group Box", but with more flexibility.  XbaeCaption is also useful
+for associating labels with individual XmText widgets.
+
+
+XbaeInput
+
+XbaeInput is a subclassed from the XmText widget and allows keystrokes
+to be validated as well as the final string.  It is very handy for
+restricting user input.
+
+
+
+Changes in 4.7
+----------------
+
+* Swapped out the XmTextField widget to use the XmText widget to enable
+  multi line rows and the like - thanks to Mark Gibson (magibso@uswest.com)
+  for his methods in achieving this goal.
+
+* Added a patch from Philip Aston (philipa@parallax.co.uk) that
+  reportedly speeds up things by 300% when using pixmaps.  Acheivable
+  by specifying the width, height and depth of a pixmap to an
+  XbaeMatrixDrawCellCallbackStruct.
+
+* Another patch from Philip provided correct behaviour when setting
+  the XmNsensitive resource on ancestors of the matrix widget.
+
+* "Ceklosky" (b1dqza9@is200005.bell-atl.com) reported a memory leak
+  when the widget was destroyed.  This came about from highlighted-
+  cells not being freed.
+
+* Donato Petrino (dp@rtsffm.com) provided an efficient way of detecting
+  if partially displayed rows were visible
+
+* He also supplied a patch that corrected the placement of the text
+  widget if the user first clicked on an editable fixed row.
+
+* Scott Harrington (scotth@ibl.bm) figured out that xbaeComputeSize()
+  should not add space for scrollbars if the displayPolicy is set to
+  XmDISPLAY_NONE.  He also provided a patch.
+
+* Made a small change to a conditional in Matrix.c that prevents
+  an erroneous warning message being displayed.  Thanks to Curt
+  Malouin (cmalouin@ford.com) for that one.
+
+* Merged two patches from Jay Schmidgall (Jay.Schmidgall@Sungardss.com)
+  one fixed a slight error in the drawing of scrollbar heights/widths
+  while the other fixed some casting problems under Solaris [they
+  must be getting stricter on this ANSI C thing!]
+
+* Brian McAllister (brian@hotrats.mit.edu) provided a fix for compilation
+  of Xbae on Dec Alphas
+
+* Jay Schmidgall continued work on the widget, providing:
+
+o Corrected some bugs with row/column shadow drawing and clearing
+o Corrected some bugs related to not having row/column labels
+o Changed the way shadows are drawn to be the correct way,
+  i.e., mine. That is, XmSHADOW_OUT results in an outset shadow.
+  Note: this may have implications for Motif 1.1 compatibility,
+  since type isn't passed along to _XmDrawShadow()
+(ED: Since 1.1 is no longer supported, this isn't an issue!)
+o Changed the grid type enumeration to be more explicit
+o Made the unneeded grid types deprecated, which will result
+  in runtime warning messages
+o Added grid types XmGRID_ROW_LINE and XmGRID_COLUMN_LINE
+  (this was suprisingly simple :)
+o Modified the matrix resource declaration to come into line
+  with grid/shadow changes
+o Modified the choice example program to reflect these changes
+o Modified the man page to reflect these changes
+
+*** NOTE ************************************************************
+  The new types for gridType are:
+  enum
+  {
+      XmGRID_NONE             = 0x00,
+      XmGRID_CELL_LINE        = 0x02,
+      XmGRID_CELL_SHADOW      = 0x03,
+      XmGRID_ROW_LINE         = 0x04,
+      XmGRID_ROW_SHADOW       = 0x05,
+      XmGRID_COLUMN_LINE      = 0x08,
+      XmGRID_COLUMN_SHADOW    = 0x09,
+
+      /* Deprecated types. Use will cause
+       * a run-time warning to be issued. */
+      XmGRID_LINE             = 0x20,
+      XmGRID_SHADOW_IN        = 0x40,
+      XmGRID_SHADOW_OUT       = 0x80
+  };
+
+  If any of the bottom three values, a runtime warning will be output.
+  You simply need to tweak the resources in your app to avoid it.
+
+*********************************************************************
+
+* Added a patch supplied by Martin Helmling (mh@octogon.de) that
+  correctly manages the insensitive pixmap when creating for multiple
+  screens.  Patches were also sent in by Dimitri Castiglioni and
+  Donato Petrino.
+
+* Added the doc/XbaeMatrix.man.html file as part of the official release
+
+* Jay Schmidgall sent in another patch!  This time he:
+
+o got irritated by how the matrix did column shadows/lines.
+  In particular, there could be a little gap between the last
+  non-fixed row and the first trailing fixed row, and that gap
+  looked bad because the column shadow just ended there. So,
+  I modified the shadow & highlight code so that gap got filled
+  in. Looks much better now.
+o Fixed the column resize shadow so it draws all the way to the
+  bottom of the matrix, plus handles the gap like the above.
+o Added a new resource, XmNtrailingAttachedBottom. (If you can
+  come up with a better name, feel free :). This resource makes
+  the matrix keep the trailing fixed rows on the bottom. It only
+  has effect when XmNfill is true and there are trailing fixed
+  rows. It's probably easier to understand visually.
+o I put the equivalent AttachedRight in the matrix's resources,
+  but I didn't feel up to doing the code for it :).
+o Added a bunch of macros.
+o Added the resource to the man page (yay!)
+o Mucked around some more with the choice program to add the
+  attachedBottom resource, and let you change the selection mode.
+  I did this mostly because choice is the test bed for changes I
+  make, and I needed to test the highlighting. Also let you do
+  Arm mode, which looks neat in the grid shadow modes.
+
+* Philip Aston sent in yet another patch that remedied an array
+  bounds read as reported by Purify.
+
+* A segmentation fault occurred if the user pressed <ESC> when no
+  cells had been defined.  Diligently spotted and patch provided
+  by Noel Yap (nyap@garban.com)
+
+* Removed an unnecessary reference to XmNeditVerifyCallback in
+  Matrix.h that Noel found as well.
+
+* Added fix from Jon Sibala (jon_sibala@hotmail.com) where zero 
+  rows was causing a crash in xbaeDrawCell.
+
+* David North reported a bug in the charWidth macro on OpenVMS.
+  A cast to unsigned char of the passed character was required.
+
+* Marty Leisner (leisner@sdsp.mc.xerox.com) advised that the runtest
+  script required '.' to be in your path.  Added an explicit ./ to
+  all commands run from the script
+
+* Cleaned up a few potential problems with compilation
+
+* Removed the xqCellWidget from the release. The subclassed widget
+  started causing problems when using Motif 2.1 probably due to
+  incompatibilities between the XmText and XmTextField widgets
+  The change may also fix problems reported by the guys back at
+  Bellcore, running under Motif 2.1
+
+* There are some new public functions:- XbaeMatrixSetRowLabel and,
+  funnily enough, XbaeMatrixSetColumnLabel and their Get equivalents
+  are now documented in the man page.
+
+* Just as some sort of benchmark, Callum and myself loaded up a
+  historical database comprising of somewhere around 780,000 rows and
+  3 columns.  Using the drawCellCallback, XbaeMatrix handled display
+  of the data as if there were 100 rows.  If anyone has tried creating
+  a bigger table, please let me know the results!  (That applies to
+  tables created with commercial widgets too)
+
+* The building of shared libraries is now the default behaviour in
+  the Imakefile.  If anybody has trouble running the demos due
+  to the shared library not being picked up, please let me know
+  so we can work out a fix.
+
+* The HTML man page is probably a bit behind as I prefer methods
+  from yesteryear.  Updates are always appreciated!
+
+* Removed a strdup call and added __EMX__ to the preprocessor directives
+  for not having bcopy.  Patch sent in by Evgeny Stambulchik
+  (fnevgeny@plasma-gate.weizmann.ac.il)
+
+* Two fixes from Mark Crowther (markc@parallax.co.uk) that better
+  controlled scrolling with the pointer outside the clip and prevented
+  the scrollbar warnings when columns were deleted.
+
+* Noel Yap (nyap@garban.com) pointed out a small error in the draw
+  example where the columns for pixmaps was incorrect
+
+* Added the XEvent structure to all callbacks
+
+* New widget!  XbaeInput allows a 'pattern' to be specified to restrict
+  input to certain characters.  Read the new man page to find out
+  more.
+
+* Added some extra parameters to the XbaeMatrixEnterCellCallbackStruct -
+  namely, position, pattern, auto_fill, convert_case, and
+  overwrite_mode for use with the XbaeInput widget.
+  Also, the params and num_params are passed through to the
+  enterCellCB too.
+
+* New resource - XmNcalcCursorPosition that allows the pointer to
+  specify the insert position when clicked on a cell to be edited
+  rather than at the end (default is False so behaviour is unchanged)
+
+* Nick Banyard (nbanyard@micromuse.com) provided the ability to
+  allow multibyte characters to be displayed with the addition of an
+  XFontSet.  There is a new example program also, named multibyte
+  that *should* display multibyte characters but some work may be
+  needed there.
+
+* Mark Hatch (mhatch@ics.com) provided me a free copy of Integrated
+  Computer Solutions (http://www.ics.com) Builder Xcessory for both
+  Solaris and Linux so the integration and compatibility between the
+  two can be maintained.  If you're looking for an excellent GUI builder,
+  I'd recommend checking this one out!
+
+* Added a matrix creation convenience routine - XbaeCreateMatrix for
+  smoother integration into Builder Xcessory
+
+* Added a caption creation convenience routine - XbaeCreateCaption for
+  smoother integration into Builder Xcessory
+
+* Added an input creation convenience routine - XbaeCreateInput for
+  smoother integration into Builder Xcessory
+
+* Evgeny Stambulchik (fnevgeny@plasma-gate.weizmann.ac.il) supplied the
+  GNU autoconf tools needed to compile the widget via ./configure as so
+  many people feel the urge to do nowadays.  However, I have no intention
+  of supporting it so you'd better have a friend who can & will.
+
+* Callum Gibson (callum.gibson@aus.deuba.com) wrote a couple of new
+  public functions to refresh entire rows or columns efficiently.
+  They are called XbaeMatrixRefreshRow() and XbaeMatrixRefreshColumn().
+
+* The XbaeMatrixAnyCallbackStruct was created to allow the reason, 
+  event, row and column members to be aligned and facilitate the use
+  of one callback struct in multiple callbacks.
+
+* Fixed a bug with wrong fg/bg colours when editing a cell with
+  reverse select enabled and using a draw cell callback which set
+  foreground or background. (Everyone does that don't they?)
+
+* Added a new action that allows the matrix to be scrolled up and
+  down using the PgUp/PgDn keys when the text field is mapped.  It
+  is installed by default.

@@ -1,0 +1,210 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>More Taos-only File-System Operations</TITLE>
+<META NAME="description" CONTENT="More Taos-only File-System Operations">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="previous" HREF="node59.html">
+<LINK REL="up" HREF="node54.html">
+<LINK REL="next" HREF="node61.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html932"
+ HREF="node61.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html928"
+ HREF="node54.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html924"
+ HREF="node59.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html930"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html931"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html933"
+ HREF="node61.html">Error Code Summary</A>
+<B> Up:</B> <A NAME="tex2html929"
+ HREF="node54.html">The OSFriends Interface</A>
+<B> Previous:</B> <A NAME="tex2html925"
+ HREF="node59.html">Manipulating Logical Volumes</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04066000000000000000">
+More Taos-only File-System Operations</A>
+</H2>
+ <A NAME="Lafayette">&#160;</A>
+The procedures in this section do not have Ultrix implementations.
+<P><A NAME="2262">&#160;</A>
+<PRE>
+PROCEDURE StartRFS(
+    dir: Dir;
+    path: PathName;
+    instance: Text.T := NIL)
+  RAISES {Error};(* NotSuperUserEC, ... *)
+</PRE>
+<P><A NAME="1630">&#160;</A>
+StartRFS exports an instance of the RFS interface with the specified
+instance name so that the files on the caller's machine can be used from
+other machines. If instance is NIL, the machine name is used.  The path
+name specifies a log file, which StartRFS opens for appending.  StartRFS
+raises NotSuperUserEC unless the caller is the super-user.
+<P><A NAME="2263">&#160;</A>
+<PRE>
+PROCEDURE SetRootDir(dir: Dir; path: PathName) RAISES {Error};
+</PRE>
+<P><A NAME="1632">&#160;</A>
+SetRootDir sets the root of the local file system to the directory with
+the specified path name.  For this to work properly, the directory must be
+the root of some file system, possibly remote. This changes the value of
+root for all local file accesses in the system, but not for an RFS server
+running on this machine.  A remote path name with an explicit <TT>&#60;</TT>machine<TT>&#62;</TT>
+part--such as #srcf34/--can be used to change the root back to the local
+system.  SetRootDir raises NotSuperUserEC unless the caller is the
+super-user.
+<P><A NAME="1635">&#160;</A>
+<A NAME="1636">&#160;</A>
+<A NAME="1637">&#160;</A>
+<PRE>
+PROCEDURE GetConfigurationParameter(name: Text.T): Text.T
+  RAISES {Error}; (* LookUpEC *)
+
+PROCEDURE SetConfigurationParameter(
+    name: Text.T;
+    value: Text.T)
+  RAISES {Error}; (* LookUpEC, NotSuperUserEC, InvalidArgumentEC *)
+
+PROCEDURE NextConfigurationParameter(name: Text.T): Text.T
+  RAISES {}; (* LookUpEC *)
+</PRE>
+<P><A NAME="1638">&#160;</A>
+These procedures get, set, and enumerate operating-system configuration
+parameters.  If the value of a particular parameter is not printable, it
+consists of the characters `!!Pickle!!' prefixed to a pickle (see the
+Pickle interface).  All three procedures raise LookUpEC to report that
+there is no parameter with the specified name.  SetConfigurationParameter
+raises NotSuperUserEC unless it is called by the super-user, and raises
+InvalidArgumentEC if the the parameter is read-only or the specified value
+has the wrong type for that parameter.  Pass NIL to
+NextConfigurationParameter to begin an enumeration; a NIL result indicates
+the end.  The names, types, and meaning of the configuration parameters
+are implementation-dependent and subject to change with little notice; the
+currently defined parameters are:
+<P>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1">
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>&nbsp;</TD>
+<TD ALIGN="LEFT" NOWRAP>&nbsp;</TD>
+<TD ALIGN="LEFT" NOWRAP><EM>Read-</EM></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP><EM>Name</EM></TD>
+<TD ALIGN="LEFT" NOWRAP><EM>Type</EM></TD>
+<TD ALIGN="LEFT" NOWRAP><EM>only?</EM></TD>
+<TD ALIGN="LEFT"><EM>Description</EM></TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>OpenFiles</TD>
+<TD ALIGN="LEFT" NOWRAP>CARDINAL</TD>
+<TD ALIGN="LEFT" NOWRAP>No</TD>
+<TD ALIGN="LEFT">Number of open files to keep in memory even after they have been closed</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>InfoRecords</TD>
+<TD ALIGN="LEFT" NOWRAP>CARDINAL</TD>
+<TD ALIGN="LEFT" NOWRAP>No</TD>
+<TD ALIGN="LEFT">Number of info records kept for unopened files</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>RemoteDirPrefix</TD>
+<TD ALIGN="LEFT" NOWRAP>Text.T</TD>
+<TD ALIGN="LEFT" NOWRAP>No</TD>
+<TD ALIGN="LEFT">String to use as the prefix to the instance name to find the directory
+to be used as the parent of a remote root</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>CacheEntries</TD>
+<TD ALIGN="LEFT" NOWRAP>CARDINAL</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT">Number of LocalFile read-cache entries</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>EntryBlocks</TD>
+<TD ALIGN="LEFT" NOWRAP>CARDINAL</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT">Number of 512-byte blocks per cache entry</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>ReadEntryLimit</TD>
+<TD ALIGN="LEFT" NOWRAP>CARDINAL</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT">Maximum number of entries for reads that go through the cache</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>WriteEntryLimit</TD>
+<TD ALIGN="LEFT" NOWRAP>CARDINAL</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT">Maximum number of cache entries to update for a write</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>WriteBlocks</TD>
+<TD ALIGN="LEFT" NOWRAP>CARDINAL</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT">Number of blocks in the write buffer</TD>
+</TR>
+<TR VALIGN="TOP"><TD ALIGN="LEFT" NOWRAP>WriteDescs</TD>
+<TD ALIGN="LEFT" NOWRAP>CARDINAL</TD>
+<TD ALIGN="LEFT" NOWRAP>Yes</TD>
+<TD ALIGN="LEFT">Number of elements in the write descriptor queue</TD>
+</TR>
+</TABLE></DIV>
+<P><PRE>
+END OSFriends.
+</PRE>
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html932"
+ HREF="node61.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html928"
+ HREF="node54.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html924"
+ HREF="node59.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html930"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html931"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html933"
+ HREF="node61.html">Error Code Summary</A>
+<B> Up:</B> <A NAME="tex2html929"
+ HREF="node54.html">The OSFriends Interface</A>
+<B> Previous:</B> <A NAME="tex2html925"
+ HREF="node59.html">Manipulating Logical Volumes</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

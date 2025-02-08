@@ -1,0 +1,86 @@
+<HTML>
+<HEAD>
+<TITLE>
+7.  Future Directions - Continuous Profiling: Where Have All the Cycles Gone?
+</TITLE>
+</HEAD>
+
+<BODY>
+
+<H1>
+<CENTER>
+<A HREF="sosp97.html">Continuous Profiling: Where Have All the Cycles Gone?</A>
+<P>
+7.  Future Directions
+</CENTER>
+</H1>
+
+<P>
+There are a number of interesting opportunities for future research.
+We plan to focus primarily on new profile-driven optimizations that
+can exploit the fine-grained information supplied by our analysis tools.
+Work is already underway to drive existing compile-time, link-time,
+and binary-rewriting optimizations using profile data, and to
+integrate optimizers and our profiling system into a single
+"continuous optimization" system that runs in the background
+improving the performance of key programs.
+</P>
+
+<P>
+We also plan to further optimize and extend our existing
+infrastructure.  We are currently investigating hardware and software
+mechanisms to capture more information with each sample, such as
+referenced memory addresses, register values, and branch directions.
+We have already prototyped two general software extensions:
+instruction interpretation and double sampling.
+</P>
+
+<P>
+Interpretation involves decoding the instruction associated with the
+sampled PC, and determining if useful information should be extracted
+and recorded.  For example, each conditional branch can be interpreted
+to determine whether or not the branch will be taken, yielding "edge
+samples" that should prove valuable for analysis and optimization.
+Double sampling is an alternate technique that can be used to obtain
+edge samples.  During selected performance counter interrupts, a
+second interrupt is setup to occur immediately after returning from
+the first, providing two PC values along an execution path. Careful
+coding can ensure that the second PC is the very next one to be
+executed, directly providing edge samples; two or more samples could
+also be used to form longer execution path profiles.
+</P>
+
+<P>
+We are also developing a graphical user interface to improve
+usability, as well as tools for interactively visualizing and
+exploring profile data.  Finally, we are working with hardware
+designers to develop sampling support for the next generation of Alpha
+processors, which uses an out-of-order execution model that presents a
+number of challenges.
+</P>
+<HR>
+
+<BLOCKQUOTE>
+<A HREF="sosp97.html"> Beginning of paper </A> <BR>
+<A HREF="abstract.html">Abstract</A> <BR>
+<A HREF="introduction.html">1. Introduction</A> <BR>
+<A HREF="related.html">2. Related Work</A> <BR>
+<A HREF="examples.html">3. Data Analysis Examples</A> <BR>
+<A HREF="collection.html">4. Data Collection System</A> <BR>
+<A HREF="collection-performance.html">5. Profiling Performance</A> <BR>
+<A HREF="analysis.html">6. Data Analysis Overview</A> <BR>
+7. Future Directions <BR>
+<A HREF="conclusions.html">8. Conclusions</A> <BR>
+<A HREF="acks.html">Acknowledgements</A> <BR>
+<A HREF="references.html">References</A>
+</BLOCKQUOTE>
+
+<HR>
+
+This paper was published in the Proceedings of the 16th ACM Symposium
+on Operating Systems Principles, October, 1997. Copyright 1997 by the
+Assocation for Computing Machinery. All rights reserved. Republished
+by permission.
+
+</BODY>
+</HTML>

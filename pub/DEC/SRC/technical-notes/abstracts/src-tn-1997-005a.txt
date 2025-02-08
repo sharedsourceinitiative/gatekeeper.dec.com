@@ -1,0 +1,16 @@
+"The Vesta-2 Software Description Language"
+Allan Heydon, Jim Horning, Roy Levin, Timothy Mann, Yuan Yu
+Note #1997-005a. June 24, 1997. <a href="http://gatekeeper.dec.com/pub/DEC/SRC/technical-notes/SRC-1997-005a-changes.html">Revised</a> January 9, 1998.
+
+Vesta-2 is a software configuration management system. Developers use
+Vesta-2 to build and manage potentially large scale software. The
+instructions for building a software artifact are written in the
+Vesta-2 software description language (SDL). Evaluating a Vesta-2 SDL
+program causes the artifact to be constructed.
+  
+This note describes the syntax and semantics of the Vesta-2 SDL. It is
+a reference manual for use by Vesta-2 users. The language is
+functional, uses lexical scoping, and is dynamically typed. It
+includes a single primitive function for invoking external tools like
+compilers and linkers as function calls.
+

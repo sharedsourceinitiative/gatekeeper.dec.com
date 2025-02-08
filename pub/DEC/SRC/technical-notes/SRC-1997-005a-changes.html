@@ -1,0 +1,48 @@
+<HTML>
+<HEAD>
+<TITLE>Changes included in SRC Technical Note 1997-005a</TITLE>
+</HEAD>
+<BODY BGCOLOR="#ffffff" VLINK="#006633">
+<H2>Changes included in SRC Technical Note 1997-005a</H2>
+
+<P>The following list reflects the complete set of changes made to SRC
+Technical Note
+<A HREF="ftp://ftp.digital.com/pub/DEC/SRC/technical-notes/SRC-1997-005.html"
+>1997-005</A> to produce the revised note
+<A HREF="ftp://ftp.digital.com/pub/DEC/SRC/technical-notes/SRC-1997-005a.html"
+>1997-005a</A>.</P>
+
+<UL>
+<LI>
+An extra <CODE>fp_contents</CODE> argument has been added to the
+<CODE>_run_tool</CODE> primitive. This argument allows the caller to
+specify that the fingerprints of derived files should be computed from
+the <I>contents</I> of the files. By default, a unique fingerprint is
+chosen non-deterministically for each newly-created derived file.
+<P>
+<LI>
+The way in which deleted files are handled in <CODE>_run_tool</CODE>
+results has been changed. Deleted files are no longer removed from the
+resulting binding, but are instead bound to the value <I>false</I>.
+<P>
+<LI>
+New <CODE>_sub</CODE> functions have been defined on lists and
+bindings. For consistency, the <CODE>_subtext</CODE> primitive
+has been renamed <CODE>_sub</CODE>. Also, <CODE>_sub</CODE> has been
+added to the list of reserved identifiers, and <CODE>_subtext</CODE>
+has been removed from that list.
+<P>
+<LI>
+The name <CODE>_map</CODE> has been added to the list of reserved
+identifiers.
+<P>
+<LI>
+A mistake in the grammar has been fixed: a hexadecimal Integer is
+allowed to contain any number of hex digits, not at most two as in the
+original grammar.
+<P>
+<LI>
+Several minor typos have been corrected.
+</UL>
+</BODY>
+</HTML>

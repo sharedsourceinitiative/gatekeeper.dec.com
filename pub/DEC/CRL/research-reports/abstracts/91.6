@@ -1,0 +1,27 @@
+			   CRL Technical Report 91/6
+		  Impossibility Results for Asynchronous PRAM
+				Maurice Herlihy
+				  3 June 1991
+
+In the asynchronous PRAM model, processes communicate by atomically reading and
+writing shared memory locations.  This paper investigates the extent to which
+asynchronous PRAM permits long-lived, highly concurrent data structures.  An
+implementation of a concurrent object is {\em non-blocking} if some operation
+will always complete in a finite number of steps, it is {\em wait-free} if
+every operation will complete in a finite number of steps, and it is {\em
+k-bounded wait-free}, for some $k > 0$, if every operation will complete within
+$k$ steps.  It is known that asynchronous PRAM cannot be used to construct a
+non-blocking implementation of any object that solves two-process consensus, a
+class of objects that includes many common data types.  It is natural to ask
+whether the converse holds: does asynchronous PRAM permit non-blocking
+implementations of any object that does not solve consensus?  This papers shows
+that the answer is {\em no}.  There is a strict infinite hierarchy among
+objects that do not solve consensus: there exist objects (1) without
+non-blocking implementations, (2) with implementations that are non-blocking
+but not wait-free, (3) with implementations that are wait-free but not bounded
+wait-free, and (4) with implementations that are $K$-bounded wait-free but not
+$k$-bounded wait-free for all $k > 0$ and some $K > k$.
+
+This paper will appear in the Third Annual ACM Symposium on Parallel Algorithms
+and Architectures, July 21-24, 1991, Hilton Head, South Carolina.
+

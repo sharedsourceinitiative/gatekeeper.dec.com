@@ -1,0 +1,148 @@
+README of M3PC-Klagenfurt (Modula-3 port for the PC done in Klagenfurt)
+=======================================================================
+
+
+Contents
+
+   1, What is M3PC-Klagenfurt?
+   2, Short History
+   3, What's new ?
+   4, Hard- and Software Requirements
+   5, Necessary Files for Installation
+   6, Installation
+   7, Any comments
+
+
+
+1. What is M3PC-Klagenfurt ?
+----------------------------
+
+   M3PC-Klagenfurt  (previously called M3PC)  is  a  port  of  the  Modula-3
+   compiler release 2.09 to the MSDOS-PC
+
+   It translates Modula-3 source into C soure. Therefore you have to install
+   the GNU C-compiler DJGPP as well,  which is distributed, too (see 4). You
+   may of course  use a newer  release of the  GNU C-compiler  or additional
+   compatible libraries.
+
+
+2, Short history
+----------------
+
+   Modula-3  was  first  ported  to the  PC  by Klaus Preschern,  under  the
+   direction of  Prof.Laszlo Boeszoermenyi  at the University of Klagenfurt.
+   It is permanently  in use  at our  CS courses  in Klagenfurt.  It will be
+   continuously enhanced,  with the goal to come to  an integrated, student-
+   friendly  environment.  Contributions  have been done  by  Carsten Weich,
+   Johann Jerney, Miklos Szabo, Karl-Heinz Eder and Laszlo Boeszoermenyi.
+
+   Klaus  Preschern,  after  leaving  the  University  of  Klagenfurt,  has
+   developed  an alternative Modula-3 PC system,  called EX32.  This system
+   provides an own memory management  and good UNIX-compatibility features.
+   It supports version 3.x Modula-3 compilers. To our knowledge, it has not
+   been tested as extensively as M3PC-Klagenfurt had. Please do not confuse
+   the two systems!
+
+
+3, What's new ?
+----------------
+
+   The new M3PC release supports the following (new) features:
+
+          * library to access DOS files and directories
+          * threads
+          * pickles
+          * a shell
+            (incl. automatic compilation and UNIX like long filenames)
+
+
+   (a) Library to access DOS Files and Directories:
+       We  offer our  (so called "local")  library  "/m3/lib/libm3loc".  It
+   provides among others modules for easy handling of I/O and files, simple
+   enough  to be  comprehensible  for beginners.  It  provides "simple I/O"
+   (SIO.i3)  for a simple acces to readers and writers,  and "simple files"
+   (SF.i3) to connect files with readers and writers.
+
+   A detailed description is given in the comments of the interfaces in the
+   directory   "/m3/local/include".   This   version   accesses   DOS-files
+   significantly faster than the first version of M3PC.  Especially linking
+   large Modula-3 programs  is much faster now.   (On a  50 MHz 80486  with
+   16 MByte  of RAM  we  measured  a turn-around time  of 2 minutes  for  a
+   5 module, 500 lines program.  If you want to compile only one module you
+   will have to wait about one minute.)
+
+
+   (b) Threads:
+       M3-threads are now supported,  nevertheless, without preemption.  In
+   programs  not  containing  condition  synchronization  you may  schedule
+   explicitly by using the Yield function.
+
+
+   (c) Pickles:
+       Pickles are now fully available.
+
+
+   Threads and Pickles  are described both  in detail in Greg Nelsons book
+   "Systems Programming with Modula-3".  Please  refer  it  for  a  better
+   understanding.
+
+
+   (d) New Release of M3Shell:
+       The new release of the shell "m3shell"  supports some  new features
+   for tracing programs, etc.  For a detailed descriptions of all features
+   please refer to the  LaTex or PostScript  documents in  "/m3/doc".  The
+   shell also supports  UNIX like long filenames  and the  "make" command,
+   which substitues the lack of the  m3make or m3build, respectively.  The
+   shell translates the long filenames you type in into DOS-filenames.  It
+   has  a  UNIX-lookalike  "ls"-command.  There are commands  to teach the
+   system  new  long  filenames.  You can savely  move  such  files around
+   through DOS-directories.
+
+
+4, Hard- and Software Requirements
+----------------------------------
+
+   (a) Hardware:
+       You will need a PC:
+           *  80486 or 80386 with floatingpoint-coprocessor,
+           *  at least 4 but preferable 8 MByte of RAM,
+           *  20 MByte disk space free at least.
+
+   (b) Software:
+           * DOS 5.00 or higher
+
+
+5, Necessary Files for Installation
+-----------------------------------
+
+   The necessary  files  are  available  at  "gatekeeper.dec.com"  in  the
+   directory "/pub/DEC/Modula-3/contrib/m3pc":
+
+              TAR      EXE        39,353 11-07-94  10:11a
+              INSTALL  TXT         5,325 11-10-94   4:57p
+              M3       TAR     6,799,360 11-07-94   4:26p
+              DJGPP    TAR     6,809,600 11-07-94  11:33a
+              M3SRC    TAR     6,871,040 11-07-94  11:36a
+              README               5,331 11-10-94   5:40p
+
+
+6, Installation
+---------------
+
+   Please read the file "INSTALL.TXT".
+
+
+6, Any comments
+---------------
+
+   Comments should be  given  in  the  newsgroup  "comp.language.modula3".
+   Refer to M3PC-Klagenfurt.
+
+
+
+Enjoy
+
+     L.Boeszoermenyi, C.Weich, K.-H.Eder
+     University of Klagenfurt / AUSTRIA
+     November, the 10th 1994
+

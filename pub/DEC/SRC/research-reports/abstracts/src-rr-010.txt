@@ -1,0 +1,24 @@
+
+ 		AVAILABLE ELECTRONICALLY
+			
+
+    "A Polymorphic lambda-calculus with Type:Type."
+    Luca Cardelli.
+    May 1, 1986.  27 pages.
+
+Author's Abstract
+
+    Type theory has been used in organizing and clarifying programming
+    language features. As such features become more complex we will
+    need more advanced and powerful type systems like Martin-Loef's
+    intuitionistic theory of types.
+
+    This paper investigates the use of such powerful type systems
+    from a programming language perspective.  To satisfy language
+    design needs, these type systems must be extended so that their
+    ordinary semantic theories are no longer applicable.  A semantics
+    is developed that justifies the extensions of Martin-Loef's type
+    system with recursion and the Type:Type property.
+
+
+

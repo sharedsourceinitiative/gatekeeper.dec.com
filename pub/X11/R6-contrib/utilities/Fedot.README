@@ -1,0 +1,111 @@
+/*
+ * *Fedot* Copyright 1997  Mike Fedotov, fedotov@tlsoft.ru
+ *
+ * Permission to use, copy, modify, and distribute, this software and its
+ * documentation for any purpose is hereby granted without fee, provided that
+ * the above copyright notice appear in all copies and that both that
+ * copyright notice and this permission notice appear in supporting
+ * documentation, and that the name of the copyright holders be used in
+ * advertising or publicity pertaining to distribution of the software with
+ * specific, written prior permission, and that no fee is charged for further
+ * distribution of this software, or any modifications thereof.  The copyright
+ * holder make no representations about the suitability of this software for
+ * any purpose.  It is provided "as is" without express or implied warranty.
+ *
+ * THE COPYRIGHT HOLDER DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+ * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
+ * EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+ * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+ * DATA, PROFITS, QPA OR GPA, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE 
+ * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+ * PERFORMANCE OF THIS SOFTWARE.
+ */
+
+0) What is Fedot ?
+Fedot is simple , writed on Tcl/Tk, file manipulation tool.
+It is similar to GIT ( Gnu Interactive Tool ) or Midnight Commander.
+It is not so powerful as they, but realize, i hope, all main necessary
+operations.
+Using Fedot you can copy, move, delete file in very simple way.
+You can run executable file only by pressing <Return> key. 
+You can associate extension of file with some action ( run specific
+command ). 
+Why is "Fedot"? Fedot is an old Russain name, which is not often used in 
+our time.
+
+1) What do you need to use Fedot.
+
+You need packages Tcl/Tk installed on you machine.
+You need Tcl/Tk shell like tclshell or wish.
+
+2) Installation
+
+You need the folowing files:
+
+Fedot.tcl  - main tcl script  
+Fedot.help - help information ( very brief ) 
+Fedot.conf - Configuration file
+Fedot.menu - Menu file ( You may define commands which can be executed
+	     by choosing menu item )
+Fedot.ext  - Extension association file.
+Fedot.rscr - File used for running scripts from Fedot. ( If scripts opens
+	     terminal and direct output to it, then after ending work of 
+	     scripts terminal immediately end work too ( And you can't see
+	     results produced by script).  Fedot.rscr file prevents it 
+	     ( It simply wait for pressing <Return> key).
+	     
+Before you install Fedot, you should modify some files and
+you should set some variable:
+
+Fedot.conf      - Set you favourite editor, terminal, fonts, path to 
+                  Fedot files, initial directories. 
+Fedot.tcl       - Set path to you Tcl/Tk shell ( tclshell or wish )
+		  ( This is the first line of file. Warning: this path 
+		  on some system can't be longer that 32 symbols)
+
+Variables TIX_LIBRARY ( or TCL_LIBRARY or TK_LIBRARY - it depends on your
+Tcl shell ) should be setted to directory with Tcl/Tk libraries. You may try 
+set all these variables. You also should set FEDOT_PATH variable to 
+directory, where placed Fedot files. ( This variable is uses to find file 
+Fedot.conf. If in this file you may define another path to Fedot files. 
+Fedot will use last definition. ) 
+
+3) As the Tcl/Tk is interpreted language you may run Fedot:
+	/path_to_wish/wish /path_to_fedot/Fedot.tcl
+( in the case if your Tcl/Tk shell is "wish" ) and see how it work.
+( I hope - without problem - :) - )
+
+4) Additions.
+I use Fedot under HP-UX and don't port it to any other platforms,
+on which Tcl/Tk package is present, but hope that it will not be 
+a problem to use Fedot on other platforms.
+When you editing Fedot.conf, Fedot.menu and Fedot.ext file
+don't forget about following: beetween option, colon and command 
+empty spaces is not allowed.
+
+User Menu: No problems with X11 programs, but if you shall use Menu for 
+running scripts or terminal-oriented program some difficulties is possible.
+The problem is the following - If scripts opens terminal and direct output
+to it, then after ending work of scripts terminal immediately end work 
+too. ( And you can't see results produced by script). Therefore you may use
+Fedot.rscr file to prevents ending work terminal. In other word you may 
+specify: 
+<Menu Item>:<Terminal_name> -e <Path to Fedot>/Fedot.rscr <Name of script>
+( instead simply:<Menu Item>:<Term_name> -e <Name of command or script>).
+
+ 
+I write Fedot not as a serious work but as a testing example for studing
+Tcl/Tk. Therefore it may seem not so user-friendly or powerful as
+other tools. But I think that it is a compromise beetween simplicity and 
+functionality. 
+
+May be somtimes you will see Tcl dialog boxes with something like that 
+"Error in Tcl script". Don't worry, press "Ok". I had not  intention to 
+avoid all possibilities of appearing these messages. But they are NOT an 
+error. They are not destructive. ( Of course, it is possible to avoid these
+messages. But it is a  big work which improve only interface but not 
+functionality ).
+
+
+
+

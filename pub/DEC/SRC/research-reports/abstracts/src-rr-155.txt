@@ -1,0 +1,23 @@
+"A Comparison of Two Distributed Disk Systems"
+Edward K. Lee, Chandramohan A. Thekkath, Chris Whitaker, Jim Hogg
+Report #155, April 30, 1998. 20 pages.
+
+As the storage needs of computer applications and users become more
+sophisticated and increase beyond what can easily be satisfied by a 
+few disk array controllers, aggregating and managing the many disparate 
+components of the storage system become severe problems.
+Distributed disk systems, which manage collections of disks shared by or
+partitioned across multiple nodes, may offer a solution to this 
+problem by automating the management of these storage resources.
+Such systems can automatically tolerate and recover from component failures,
+gracefully scale in capacity and performance as components are added,
+allow the storage distributed across multiple nodes to be managed as
+a single system, and provide useful management abstractions such as
+{\em virtual disks} and {\em snapshots}.
+
+This paper describes the different architectural and design alternatives
+embodied in Snappy Disk and Petal, two distributed disk systems that have
+similar external features but have radically different internal structures,
+and studies the effect of these differences on the systems'
+performance, availability, and manageability.
+

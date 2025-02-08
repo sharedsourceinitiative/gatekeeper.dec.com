@@ -1,0 +1,143 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.73 [en] (WinNT; U) [Netscape]">
+   <title>homan</title>
+</head>
+<body>
+&nbsp;
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" HEIGHT="1%" >
+<tr>
+<td>
+<center>
+<h1>
+<font size=+1><b>Mining the </b>Web for Site Structure</font></h1></center>
+
+<center><b>Chris Homan</b>
+<br><b>Rochester University</b>
+<p><b>September 1, 2000</b></center>
+</td>
+</tr>
+</table></center>
+
+<br>&nbsp;
+<br>&nbsp;
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" HEIGHT="1%" >
+<tr>
+<td>
+<br><b>1 Overview</b>
+<p>Our goal was to discover interesting structural properties on the Web,
+using a Connectivity Server 2 database built from a Mercator crawl. We
+were particularly interested in using structure to group Webpages into
+Websites. Such groupings are crucial to the following applications:
+<br>&nbsp;
+<blockquote>• Link-based authority measures (for determining which links
+are biased).
+<p>• Spam&nbsp; detection.
+<p>• Measuring the size of the web.</blockquote>
+
+<p><br>Many factors make this problem hard. First, there is no well-defined
+definition of “Website.” Clearly, the hostname of&nbsp; a URL is not good
+enough, as many organizations have more than one, and others, like Geocities,
+contain pages from many independent authors. Websites like universities
+have departmental sites that are nested inside the university-wide site.
+There are also some very exceptional organizations like FujiXerox that
+overlap with two otherwise distinct organizations (in this case Fuji and
+Xerox). Another problem is that many distinct types of organizations exist
+on the Web. No simply defined organizing principle necessarily applies
+to all of them.
+<p>In light of this complex but potentially very rewarding problem, our
+approach was experimental: we wrote code to measure various properties
+of the Web graph, hoping that they would reveal some as yet unseen structure.
+Since hostname seems to at least partially correspond to the notion of
+Website, many of our measures focused on grouping by hostname. Since we
+believe that every Website has a homepage, some of our measures were intended
+to reveal homepages. The actual properties we measured included:
+<br>&nbsp;
+<blockquote>• the number of local and remote links per host
+<p>• the number of strongly connected components per host (to support the
+hypothesis that multisite hosts like Geocities have a large number of strongly
+connected components),</blockquote>
+
+<blockquote>• the size of the link neighborhood of each page (to support
+the hypothesis that homepages have large neighborhoods)
+<p>• The number of links per host relative to the size of the host.</blockquote>
+
+<p><br>From these measurements, we made several interesting observations.
+The observations include:
+<br>&nbsp;
+<blockquote>• Even though in total there are more inlinks than outlinks
+on the Web, most hosts have more outlinks than inlinks. This means that
+hosts with fewer pages tend to have more outlinks than inlinks, and that
+hosts with a very large number of pages tend to have more inlinks than
+outlinks.&nbsp;</blockquote>
+
+<blockquote>• Exceptions to the above observation include www.geocities.com,
+which has a large number of pages but more outlinks than inlinks. The simplest
+explanation for this is that it hosts many distinct authors who each control
+relatively few pages. Since these authors are independent of each other,
+there is little reason for them to link within www.geocities.com.&nbsp;&nbsp;</blockquote>
+
+<blockquote>• A surprising number of hosts are nearly cliques (i.e. almost
+every possible link exists).&nbsp;</blockquote>
+
+<blockquote>• A surprising number of hosts have about as many links as
+pages.&nbsp;</blockquote>
+
+<blockquote>• Regarding the distribution of local strongly connected components,
+for hosts of every size, there were a large number of connected components
+that were close to the exact size of the host, a large number of very small
+strongly connected components, but very few intermediate-sized connected
+components. A possible explanation is that many hosts really do consist
+of a single strongly connected component, but the crawl simply didn’t connect
+them. The small components would then be residuals of an incomplete crawl.
+One way to test this hypothesis would be to pick some example hosts, try
+crawling them completely, and match the resulting graphs against the components
+found in the original crawl.</blockquote>
+
+<p><br>In the next phase of our research, we compared several methods for
+grouping hosts by combinations of name and connectivity features (this
+was the subject of my intern talk). In particular, name-based grouping
+had been used by previous applications, although its accuracy was not well-known.
+Our belief was that adding connectivity features would increase the accuracy
+of name-based techniques. We ran four experiments:
+<br>&nbsp;
+<blockquote>• grouping by the “significant part ”of the hostname,
+<p>• grouping by the A, B, and C sections of the IP address,
+<p>• grouping by both hostname and IP address, and
+<p>• grouping by any two of hostname,IP address, or Conn, where Conn&nbsp;
+<br>&nbsp;&nbsp; is a measure of the relative connectivity between two
+hosts.</blockquote>
+
+<p><br>Based on a sampling of the groupings produced, each metric found
+about the same number of true groupings, but the number of false positives
+varied greatly from metric to metric. In general, over all samples, the
+IP-alone grouping produced far more false than true positives. This was
+surprising as IP is a popular way to group hosts. The&nbsp; “any 2 ”grouping
+was generally robust, but on occasion yielded a catastrophic number of
+false positives. The experiment should be repeated with much larger samples.
+<br>&nbsp;
+<p><b>2 Conclusion</b>
+<p>Our experimental approach was necessarily broad and unfocused, but we
+see ways in which future research in this area can be more structured,
+based on what we have learned. We believe it is worthwhile to first consider
+a standard for evaluating the structure we discover. We mention three such
+standards.
+<p>Application-based structure. There are many motivating applications
+for this research. One way to measure the effectiveness of a grouping technique
+is to measure the performance of test applications that depend on some
+sort of accurate grouping, such as spam detection or authority. The downside
+of this approach is that it is not necessarily any easier to evaluate the
+performance of the test applications.
+<p>Example-based structure. Choose several specific example sites and try
+to determine what structural properties distinguish them. Proceed by running
+experiments to determine if these properties generalize to similar sites
+or if new types of example sites should be introduced.&nbsp;
+<br>&nbsp;
+<br>&nbsp;</td>
+</tr>
+</table></center>
+
+</body>
+</html>

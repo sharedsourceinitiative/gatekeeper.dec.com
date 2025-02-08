@@ -1,0 +1,52 @@
+<HTML><HEAD><TITLE>
+Digital Systems Research Center: Report 68</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Research Report 68</H1>
+<P>
+<H1>Trestle Reference Manual</H1>
+<HR>
+<H2>Mark S. Manasse and Greg Nelson</H2>
+<b>December, 1991</b><BR><i> 168 pages</i>
+<P>
+This is a reference manual for Trestle, a Modula-3 toolkit for 
+the X window system.  Trestle is a collection of interfaces 
+structured around a central abstract type: a ``virtual bitmap 
+terminal'' or VBT, which represents a share of the workstation's 
+screen, keyboard, and mouse---a thing comparable to the viewers, 
+windows, or widgets of other systems.  
+<P>
+Trestle is included in SRC Modula-3 version 2.0, which is 
+available via public ftp.  
+<P>
+Trestle includes a fairly standard set of interactors, including 
+menus, buttons, ``container'' classes that provide overlapping 
+or tiled subwindows, and ``leaf'' windows that display text or 
+other data.  This reference manual also specifies the interfaces 
+that allow you to create your own window classes.  Knowledge 
+of X is not required.
+<P>
+A Trestle window is an object whose behavior is determined by its
+methods.  For example, a window's response to a mouse click is 
+determined by calling its mouse method. This is fast becoming the 
+standard architecture for toolkits, but Trestle carries it further than 
+most.  For example, you can change the way a Trestle window paints 
+by overriding its paint method; this is useful for sophisticated 
+effects like groupware.
+<P>
+Trestle provides a novel strategy for writing applications that are 
+independent of the type of display screen they are running on.  
+For example, it is easy to write a Trestle application that can be 
+moved back and forth between a color display and a monochrome 
+display where the application will look good on both.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-068.ps.Z">PostScript compressed with UNIX compress</A></B> -- 776 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-068.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 568 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-068.ps.zip">PostScript compressed with ZIP</A></B> -- 568 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-068.ps">PostScript</A></B> -- 2576 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-068.pdf">Portable Document Format (PDF)</A></B> -- 696 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

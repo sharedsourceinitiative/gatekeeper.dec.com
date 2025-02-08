@@ -1,0 +1,180 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.77 [en] (X11; U; Linux 2.4.2-2 i686) [Netscape]">
+</head>
+<body>
+&nbsp;
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" HEIGHT="1%" >
+<tr>
+<td>
+<center><b><font size=+1>Combining Thread-Modular and Procedure-Modular
+Verification</font></b></center>
+</td>
+</tr>
+</table></center>
+
+<br>&nbsp;
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" >
+<tr>
+<td>
+<center><b>Sanjit A. Seshia</b>
+<br><b>Carnegie Mellon University</b></center>
+</td>
+</tr>
+</table></center>
+
+<br>&nbsp;
+<br>&nbsp;
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="70%" HEIGHT="1%" >
+<caption>
+<center>
+	  <p>This report describes work done this summer with Shaz Qadeer, my host 
+		at SRC.</p>
+	  <p>&nbsp; </p>
+	</center>
+</caption>
+
+<tr>
+<td><b>1. Introduction</b>
+<p>Multithreaded software systems are susceptible to a wide range of errors.
+Many of these errors are synchronization errors arising from data races,
+i.e., when two threads access or update the same memory location at the
+same time. To avoid this, programmers place restrictions on when shared
+locations can be read or written. The most common way of avoiding data
+races is to associate locks with shared data. However, in practice there
+can be many different kinds of locking disciplines, and sometimes, correct
+access may be guaranteed by other techniques, such as temporal separation
+of accesses. In addition, it is often desirable to check invariants on
+shared data.&nbsp;
+<p>Many techniques have been devised for checking multithreaded programs
+for simple locking disciplines. However, more complicated ways of avoiding
+data races cannot be easily handled. Thread-modular verification(TMV) <a href="#tmv">[2]</a>
+addresses this problem. TMV is a technique for verifying synchronization
+properties of multithreaded programs without procedures. It works by analyzing
+one thread at a time, using assumptions on other threads in the environment.
+Techniques and tools for verifying sequential programs, such as ESC/Java<a href="#esc">[1]</a>,
+can then be leveraged.&nbsp;
+<p>To make TMV useful, one needs to add to it the ability to reason about
+procedures in a modular manner. Procedure-modular verification is a technique
+for verifying sequential programs with procedures, one procedure at a time,
+by using precondition/postcondition specifications at call sites. The goal
+of our work, then, is to combine the above methods to achieve modular verification
+of multithreaded programs with procedures. We realized that precondition/postcondition
+specifications for procedures do not suffice for modular verification in
+the presence of multiple threads. To overcome this problem, we propose
+a new procedure specification that overcomes some of the problems with
+precondition/postcondition specifications.&nbsp;
+<p><b>2. Insufficiency of pre/post conditions</b>
+<p>Consider a concurrent program with a single shared variable x. This program uses
+a readers-writer (shared-exclusive) lock rwl to mediate access to x. Suppose
+that we want x to obey the invariant that it is always positive when no thread holds
+rwl in write mode. A fragment of Java code for this program is shown below with
+ESC/Java style annotations(the "run" method is executed by the thread that
+is being analyzed):&nbsp;
+<pre>
+&nbsp;&nbsp; int x;
+&nbsp;&nbsp; ReadersWriterLock rwl;
+&nbsp;&nbsp; /*@ global_invariant !rwl.hasWriter ==> (x > 0) */
+
+&nbsp;&nbsp; void run() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rwl.beginRead();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; x++;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assert(x > 1);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rwl.endRead();
+&nbsp;&nbsp; }
+
+</pre>
+One can convince oneself that the assert enclosed within the beginRead()
+and endRead() combination should pass. However, we are unable to show
+this using just pre and post conditions of beginRead(). The pre/post
+condition specification of beginRead() is shown below:&nbsp;
+<pre>&nbsp;&nbsp; /*@ ensures isReader[currentThread] &amp;&amp; !hasWriter */
+&nbsp;&nbsp; void beginRead() {
+&nbsp;&nbsp;&nbsp;&nbsp; /* body */
+&nbsp;&nbsp; }</pre>
+Notice that we cannot state anything stronger about the post-condition.
+In particular, we would like to strengthen the post-condition with "x>0",
+but we cannot because x is only in scope in the client code for the readers-writer
+lock and not in the code for the lock itself. In fact, different clients
+might need different, possibly contradictory, ways of strengthening the
+post-conditions.&nbsp;
+<p><b>3. Atomic specifications of procedures</b>
+<p>The fundamental problem described in the previous section (with using
+pre and post conditions) is that the specification we need is one which
+captures the atomic transition within beginRead() from the point when there
+is no writer to the point where the thread executing beginRead() atomically
+gets the read lock. We call this more precise specification as a "atomic
+specification" (also called a "performs" specification in our implementation).&nbsp;
+<pre>&nbsp;&nbsp; /*@ performs (isReader[currentThread])&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { \old(!hasWriter) &amp;&amp; isReader[currentThread] } */
+&nbsp;&nbsp; void beginRead() {
+&nbsp;&nbsp;&nbsp;&nbsp; /* body */
+&nbsp;&nbsp; }</pre>
+The meaning of a "performs (v) {P}" specification is that atomically, on
+some transition in the procedure whose pre-state is governed by P, the
+thread executing the procedure changes the value of v according to P. The
+thread executing the procedure leaves v unchanged at all other points.&nbsp;
+<p>Given the "performs" specification of beginRead(), we can now use it
+at the call site to reason that the assert passes. To see this, notice
+that in the pre-state of the atomic action, !hasWriter is true. In addition,
+the invariant holds at this point. These two facts imply that x > 0. The
+predicate x > 0 continues to be true until the end of beginRead() and hence
+we can conclude that the assert passes.&nbsp;
+<p>The performs specification must also be checked on the method implementation.
+We do this using a monitoring state machine.&nbsp;
+<p><b>4. Implementation</b>
+<p>We have extended ESC/Java to do thread-modular verification and to reason
+about procedures with atomic specifications. The major changes we made
+to ESC/Java were in generating and placing code that models actions by
+the environment (constrained by TMV assumptions), code to check for TMV
+guarantees, and code to check for "performs" specifications. We took an
+atomic block of statements executed by a thread to be one in which only
+one read or write to a word-sized shared data location occurs. We model
+actions by other threads as occuring between atomic blocks; these actions
+can modify shared state only in a way that is consistent with environment
+assumptions of the thread being analyzed.&nbsp;
+<p><b>5. Experimental Results</b>
+<p>We ran the modified version of ESC/Java on several examples. The largest
+example was the part of the Mercator Web crawler <a href="#mercator">[3]</a>
+that deals with readers-writer locks. This code comprises about 1500 lines
+of Java source code, and we checked it for violations of constraints on
+writing shared data, and for a few data invariants. We did not find any
+bugs in Mercator, but we did find a known bug in java.util.Vector.&nbsp;
+<p>We also studied the annotation overhead in using TMV. We took the rather
+non-modular, but low-annotation-overhead, approach of inlining all non-public
+methods, and checking specifications only of interfaces (viz. public methods
+and fields). Even with the blow-up in the size of methods from inlining,
+ESC/Java and Simplify scaled well: for example, checks for all but two
+methods in Mercator took less than 10 minutes.&nbsp;
+<p><b>6. Conclusions and Future Work</b>
+<p>Our initial experiments indicate that thread-modular verification extended
+with atomic specifications for procedures is a useful technique to check
+general synchronization properties and data invariants. The tool we built
+for Java has scaled well to work on real programs. Annotations tend to
+concentrate at the interfaces; if there is much interface reuse then the
+cost of adding annotations at the interface can be amortized over several
+uses.&nbsp;
+<p>There are many avenues for future work. We are currently working on
+safe optimizations to reduce the checking code and the number of places
+we have to insert checks; some of these have already been implemented.
+Reducing the annotation burden by infering "boilerplate" annotations (such
+as those for simple locks) can be added; more complicated annotation inference
+remains a challenge. Finally, exploring richer method specifications provides
+many avenues for further work.&nbsp;
+<p><b>References</b>
+<p><a NAME="esc"></a>[1] David Detlefs, K. Rustan M. Leino, Greg Nelson
+and James Saxe. Extended Static Checking. Research Report 159, Compaq Systems
+Research Center, Palo Alto, CA, December 1998.
+<p><a NAME="tmv"></a>[2] Cormac Flanagan, Steve Freund and Shaz Qadeer.
+Thread-Modular Verification. Submitted to POPL 2001.
+<p><a NAME="mercator"></a>[3] Allan Heydon and Marc Najork. Mercator: A
+Scalable, Extensible Web Crawler. World Wide Web conference, December 1999.
+<br>&nbsp;
+<p>&nbsp;</td>
+</tr>
+</table></center>
+
+</body>
+</html>

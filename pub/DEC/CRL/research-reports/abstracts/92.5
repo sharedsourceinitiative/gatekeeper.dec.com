@@ -1,0 +1,24 @@
+			   CRL Technical Report 92/5
+			     Time-Lapse Snapshots
+	Cynthia Dwork, Maurice Herlihy, Serge Plotkin, and Orli Waarts
+				  19 May 1992
+
+A snapshot scan algorithm takes an ``instantaneous'' picture of a region of
+shared memory that may be updated by concurrent processes.  Many complex and
+difficult shared memory algorithms can be greatly simplified by structuring
+them around the snapshot scan abstraction.  Unfortunately, the substantial
+decrease in conceptual complexity is sometimes counterbalanced by an increase
+in computational complexity.
+
+In this paper, we introduce the notion of a weak snapshot scan, a slightly
+weaker primitive that has a more efficient implementation.  We propose the
+following methodology for using this abstraction: First, design and verify an
+algorithm using the more powerful snapshot scan, and second, replace the more
+powerful but less efficient snapshot with the weaker but more efficient
+snapshot, and show that the weaker abstraction nevertheless suffices to ensure
+the correctness of the enclosing algorithm.  We give two examples of algorithms
+whose performance can be enhanced while retaining a simple modular structure:
+randomized consensus and bounded concurrent timestamping.  The resulting
+randomized consensus protocol is the fastest known protocol that uses only
+bounded values, and the timestamping protocol is as fast as the best known
+timestamping protocol, but conceptually simpler.

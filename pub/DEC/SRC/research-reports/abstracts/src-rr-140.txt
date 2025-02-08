@@ -1,0 +1,13 @@
+"Zippers: A Focus+Context Display of Web Pages"
+Marc H. Brown and William E. Weihl
+Report #140, May 22, 1996. 8 pages.
+
+This report describes zippers, an application of
+outline-processor technology to the display of Web pages. Zippers
+allow users to expand and contract selected sections of a document,
+thereby displaying simultaneously the contents of individual sections
+of a document as well as its overall structure. Zippers can be 
+implemented either directly in a Web browser or by a proxy (and 
+consequently used by any off-the-shelf Web browser); in either case, 
+no changes to HTML source files are required.
+

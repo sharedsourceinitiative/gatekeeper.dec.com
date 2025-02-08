@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Running Ultrix Applications on Taos</TITLE>
+<META NAME="description" CONTENT="Running Ultrix Applications on Taos">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node85.html">
+<LINK REL="previous" HREF="node64.html">
+<LINK REL="up" HREF="node20.html">
+<LINK REL="next" HREF="node75.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html1107"
+ HREF="node75.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html1103"
+ HREF="node20.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html1097"
+ HREF="node73.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html1105"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html1106"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1108"
+ HREF="node75.html">Scheduling</A>
+<B> Up:</B> <A NAME="tex2html1104"
+ HREF="node20.html">The Topaz Operating System</A>
+<B> Previous:</B> <A NAME="tex2html1098"
+ HREF="node73.html">The OS Interface</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H1><A NAME="SECTION04090000000000000000">
+Running Ultrix Applications on Taos</A>
+</H1>
+ <A NAME="BenLomond">&#160;</A>
+<A NAME="1702">&#160;</A>
+<A NAME="1703">&#160;</A>
+In addition to implementing the OS interface, Taos emulates an
+approximation to a subset of the Ultrix 1.1 kernel-call interface.  The
+emulation is at the level of kernel-call traps, so existing Ultrix a.out
+files can be run without being recompiled or relinked.  This appendix
+describes the omissions and (known) inaccuracies in the emulation.
+<P>
+The reasons for the omissions can be classified as fundamental or
+expedient.  The fundamental omissions are those deemed infeasible to
+implement given the underlying structure of Topaz and Taos on which the
+Ultrix emulation rests.  An example is the file /dev/kmem.  The expedient
+omissions are those deemed unimportant compared to other projects
+competing for the developers' time.  An example is sockets.
+<P>
+The reasons for the inaccuracies can be classified as bugs or features.
+The bugs are the usual problems of incomplete specification and imperfect
+implementation.  There are no known examples.  The features stem from the
+same causes as the fundamental omissions: conflict with underlying
+structure.  An example is the substitution of user names and the user
+database (maintained using the Interim Name Service) for user identifiers and
+/etc/passwd.
+<P>
+During the design of the Taos Ultrix emulator, we attempted to justify
+each omission and variance by appealing either to the existence of
+alternate facilities in the Topaz environment or to the intended usage
+(i.e., supporting workstations and servers in an R&amp;D environment).
+Experience so far has been positive.
+<P>
+Taos uses several techniques to minimize the inconvenience of features it
+does not fully implement.  Some kernel calls raise the signal SIGSYS, some
+return an error, and some are no-ops, as specified in the following
+subsections.
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS">&#160;</A>
+<UL>
+<LI><A NAME="tex2html1109"
+ HREF="node75.html#SECTION04091000000000000000">
+Scheduling</A>
+<LI><A NAME="tex2html1110"
+ HREF="node76.html#SECTION04092000000000000000">
+Virtual Memory</A>
+<LI><A NAME="tex2html1111"
+ HREF="node77.html#SECTION04093000000000000000">
+Debugging and Profiling</A>
+<LI><A NAME="tex2html1112"
+ HREF="node78.html#SECTION04094000000000000000">
+Security</A>
+<LI><A NAME="tex2html1113"
+ HREF="node79.html#SECTION04095000000000000000">
+Files</A>
+<LI><A NAME="tex2html1114"
+ HREF="node80.html#SECTION04096000000000000000">
+Communication</A>
+<LI><A NAME="tex2html1115"
+ HREF="node81.html#SECTION04097000000000000000">
+Resource Allocation and Accounting</A>
+<LI><A NAME="tex2html1116"
+ HREF="node82.html#SECTION04098000000000000000">
+System Operation</A>
+<LI><A NAME="tex2html1117"
+ HREF="node83.html#SECTION04099000000000000000">
+Taos-only Kernel Calls</A>
+<LI><A NAME="tex2html1118"
+ HREF="node84.html#SECTION040910000000000000000">
+Taos Devices</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1107"
+ HREF="node75.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html1103"
+ HREF="node20.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html1097"
+ HREF="node73.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html1105"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html1106"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1108"
+ HREF="node75.html">Scheduling</A>
+<B> Up:</B> <A NAME="tex2html1104"
+ HREF="node20.html">The Topaz Operating System</A>
+<B> Previous:</B> <A NAME="tex2html1098"
+ HREF="node73.html">The OS Interface</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

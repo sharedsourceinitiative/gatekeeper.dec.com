@@ -1,0 +1,681 @@
+
+# This is a shell archive.  Remove anything before this line,
+# then unpack it by saving it in a file and typing "sh file".
+#
+# Wrapped by Bob Jewett <raj@bordeaux> on Wed Jan 12 11:47:45 1994
+#
+# This archive contains:
+#	lp_example.c		simple_windows.c	
+#	utiltest.c		
+#
+
+LANG=""; export LANG
+PATH=/bin:/usr/bin:$PATH; export PATH
+
+echo x - lp_example.c
+cat >lp_example.c <<'@EOF'
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
+
+#include <X11/X.h>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/Xatom.h>
+#include <X11/PEX5/PEXlib.h>
+
+#include "PEXUtExt.h"
+#include "PEXUtCmap.h"
+#include "PEXUtCmapint.h"
+
+#define NUM_X_INTERVALS 16
+#define NUM_Y_INTERVALS 16
+#define NUM_X_POINTS    (NUM_X_INTERVALS+1)
+#define NUM_Y_POINTS    (NUM_Y_INTERVALS+1)
+
+main()
+{
+
+    Display                     *display;
+    XID                         renderer;
+    PEXExtensionInfo            *ext_info;
+
+    XVisualInfo                 vis_info_return;
+    XStandardColormap           cmap_info_return;
+    PEXColorApproxEntry         capx_info_return;
+    int                         select_criteria_return;
+    unsigned int                unmet_criteria_return;
+    Atom                        std_prop_atom_return;
+
+    double                      x,dx,y,dy;
+
+    int                         i,j;
+    int                         window;
+    int                         screen_num;
+
+    char                        c;
+
+    Window                      window_return;
+    XColor                      background_color_return;
+    Colormap                    colormap_id_return;
+    PEXUtWindowSpecification    window_info;
+
+    PEXColor                    color;
+    PEXCoord2D                  vertices[5];
+
+
+    char *criteria_string[] = {
+        "PEXUtAllocFailure",
+        "PEXUtPEXFailure",
+        "PEXUtXFailure",
+        "PEXUtCriteriaFailure",
+        "PEXUtSuccess",
+        "PEXUtQualifiedSuccess",
+        "PEXUtAlternativeSuccess"
+    };
+
+    char *unmet_criteria_string[] = {
+        "PEXUtDepth",
+        "PEXUtMinColors",
+        "PEXUtMinRed",
+        "PEXUtMinGreen",
+        "PEXUtMinBlue",
+        "PEXUtVisualClass",
+        "PEXUtLayer",
+        "PEXUtStandardColormapProperty",
+        "PEXUtDynamicVisual",
+        "PEXUtColorApproxType"
+    };
+
+    int num_criteria = 2;
+    PEXUtVisualCriteria criteria[2] = 
+    {
+        {
+            PEXUtMinColors,                     /* hard criteria mask       */
+            PEXUtLayer,                         /* soft criteria mask       */
+            98,                                 /* depth                    */
+            257,                                /* min colors               */
+            0,                                  /* min red                  */
+            0,                                  /* min green                */
+            0,                                  /* min blue                 */
+            0,                                  /* visual class             */
+            PEXUtImage,                         /* layer                    */
+            0,                                  /* standard colormap        */
+            0,                                  /* dynamic visual           */
+            0,                                  /* double buffering         */
+            0                                   /* color approximation type */
+        },
+        {
+            PEXUtMinColors,                     /* hard criteria mask       */
+            PEXUtStandardColormapProperty   |
+                PEXUtLayer                  |
+                PEXUtDBCapability,              /* soft criteria mask       */
+            48,                                 /* depth                    */
+            32,                                 /* min colors               */
+            8,                                  /* min red                  */
+            8,                                  /* min green                */
+            8,                                  /* min blue                 */
+            PseudoColor,                        /* visual class             */
+            PEXUtImage,                         /* layer                    */
+            True,                               /* standard colormap        */
+            0,                                  /* dynamic visual           */
+            PEXUtDBPEX,                         /* double buffering         */
+            0                                   /* color approximation      */
+        }
+    };
+
+
+    /*
+        Initialize X and PEX, and create a window and a Renderer.
+    */
+
+    if (NULL == (display = XOpenDisplay (NULL))) {
+
+        fprintf (stderr, "PROCESS ERROR:  XOpenDisplay failed on %s\n", 
+                    getenv("DISPLAY"));
+        exit (1);
+    }
+
+    if (PEXInitialize (display, &ext_info, 0, NULL))
+    {
+        fprintf (stderr, "PROCESS ERROR:  PEXInitialize failed on %s\n", 
+                    getenv("DISPLAY"));
+        exit (1);
+    }
+
+
+    screen_num = DefaultScreen (display);
+
+    window_info.attr_mask           = 0;
+    window_info.title               = "Test window";
+    window_info.size_hints.x        = 10;
+    window_info.parent              = RootWindow(display,0);
+    window_info.size_hints.x        = 10;
+    window_info.size_hints.y        = 10;
+    window_info.size_hints.width    = 400;
+    window_info.size_hints.height   = 400;
+    window_info.border_width        = 3;
+
+    window = PEXUtMakeWindowAndColormap (
+                        display,
+                        screen_num,
+                        num_criteria, 
+                        &criteria[0], 
+                        &window_info,
+                        &window_return,
+                        &vis_info_return,
+                        &cmap_info_return,
+                        &capx_info_return,
+                        &select_criteria_return, 
+                        &unmet_criteria_return,
+                        &std_prop_atom_return,
+                        &background_color_return,
+                        &colormap_id_return
+                        );
+
+    if (unmet_criteria_return) 
+    {
+        printf ("%s\nSelected criteria number %d\n   (%#010x):\n",
+                criteria_string[window+4],
+                select_criteria_return,unmet_criteria_return); 
+        j=0;
+        while (unmet_criteria_return)
+        {
+            if (unmet_criteria_return & 0x1)
+            {
+                printf ("\t%s\n",unmet_criteria_string[j]); 
+            }
+            unmet_criteria_return = unmet_criteria_return >> 1;
+            j++;
+        }
+    }
+    else 
+    {
+        printf ("%s\nSelected criteria number %d\n",
+                criteria_string[window+4],select_criteria_return);
+    }
+
+    if ((window != PEXUtSuccess) && (window != PEXUtQualifiedSuccess))
+    {   /* could not create the specified window */
+        printf ("\nNo window created\n");
+        exit (0);
+    }
+
+
+    renderer = PEXCreateRenderer ( display, window_return, 0, NULL);
+
+    if (renderer == None) 
+    {
+        fprintf (stderr, "ERROR:  Failed to create Renderer\n");
+        exit (-1);
+    }
+
+    PEXBeginRendering (display, window_return, renderer);
+
+    PEXSetInteriorStyle (display, renderer,PEXOCRender, PEXInteriorStyleSolid);
+
+    dx = 1.0/NUM_X_INTERVALS;
+    dy = 1.0/NUM_Y_INTERVALS;
+
+    /*
+        Display the green/blue side of the RGB color cube
+    */
+
+    for (j=0, y=0.0; j<NUM_Y_POINTS; j++, y+=dy)
+    {
+        for (i=0, x=0.0; i<NUM_X_POINTS; i++, x+=dx)
+        {
+            vertices[0].x = x;
+            vertices[0].y = y;
+            vertices[1].x = x+dx;
+            vertices[1].y = y;
+            vertices[2].x = x+dx;
+            vertices[2].y = y+dy;
+            vertices[3].x = x;
+            vertices[3].y = y+dy;
+            vertices[4].x = x;
+            vertices[4].y = y;
+
+            color.rgb.red = 0;
+            color.rgb.green = x;
+            color.rgb.blue = y;
+
+            PEXSetSurfaceColor (
+                    display, 
+                    renderer,
+                    PEXOCRender,
+                    PEXColorTypeRGB, 
+                    &color); 
+
+            PEXFillArea2D (
+                    display, 
+                    renderer,
+                    PEXOCRender, 
+                    PEXShapeConvex, 
+                    True, 
+                    5,
+                    vertices);
+        }
+    }
+
+    PEXEndRendering (display, renderer, True);
+
+    printf ("Press return to exit\n");
+    c = getchar();
+
+    XCloseDisplay (display);
+}
+@EOF
+
+chmod 664 lp_example.c
+
+echo x - simple_windows.c
+cat >simple_windows.c <<'@EOF'
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
+
+#include <X11/X.h>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/Xatom.h>
+#include <X11/PEX5/PEXlib.h>
+
+#include "PEXUtExt.h"
+#include "PEXUtCmap.h"
+#include "PEXUtCmapint.h"
+
+main(argc, argv)
+int argc;
+char **argv;
+{
+
+    Display                     *display;
+    PEXExtensionInfo            *ext_info;
+
+    PEXColorApproxEntry         capx_info_return;
+    XColor                      background_color_return;
+    Colormap                    colormap_id_return;
+
+    int                         window;
+    int                         screen_num;
+
+    char                        c;
+
+    Window                       window_return, child_window_return;
+
+
+    /*
+        Initialize X and PEX, and create a window and a Renderer.
+    */
+
+    if (NULL == (display = XOpenDisplay (NULL))) {
+
+        fprintf (stderr, "PROCESS ERROR:  XOpenDisplay failed on %s\n", 
+                    getenv("DISPLAY"));
+        exit (1);
+    }
+
+    if (PEXInitialize (display, &ext_info, 0, NULL))
+    {
+        fprintf (stderr, "PROCESS ERROR:  PEXInitialize failed on %s\n", 
+                    getenv("DISPLAY"));
+        exit (1);
+    }
+
+    screen_num = DefaultScreen (display);
+
+    window = PEXUtSimpleWindowAndColormap (
+                        display,
+                        RootWindow (display,screen_num),
+                        10,10,
+                        300,300,
+                        20,
+                        "black",
+                        "white",
+                        &window_return,
+                        &capx_info_return,
+                        &background_color_return,
+                        &colormap_id_return
+                        );
+
+    window = PEXUtSimpleWindowAndColormap (
+                        display,
+                        RootWindow (display,screen_num),
+                        50,400,
+                        600,400,
+                        20,
+                        "red",
+                        "cyan",
+                        &window_return,
+                        &capx_info_return,
+                        &background_color_return,
+                        &colormap_id_return
+                        );
+
+    /* create two windows in the just created window */
+    window = PEXUtSimpleWindowAndColormap (
+                        display,
+                        window_return,
+                        10,10,
+                        100,100,
+                        2,
+                        "magenta",
+                        "black",
+                        &child_window_return,
+                        &capx_info_return,
+                        &background_color_return,
+                        &colormap_id_return
+                        );
+
+    window = PEXUtSimpleWindowAndColormap (
+                        display,
+                        window_return,
+                        200,200,
+                        300,100,
+                        2,
+                        "blue",
+                        "white",
+                        &child_window_return,
+                        &capx_info_return,
+                        &background_color_return,
+                        &colormap_id_return
+                        );
+
+    printf ("Press return to exit\n");
+    c = getchar();
+
+    XCloseDisplay (display);
+}
+@EOF
+
+chmod 664 simple_windows.c
+
+echo x - utiltest.c
+cat >utiltest.c <<'@EOF'
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
+
+#include <X11/X.h>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/Xatom.h>
+#include <X11/PEX5/PEXlib.h>
+
+#include "PEXUtExt.h"
+#include "PEXUtCmap.h"
+#include "PEXUtCmapint.h"
+
+#define NUM_X_INTERVALS 16
+#define NUM_Y_INTERVALS 16
+#define NUM_X_POINTS    (NUM_X_INTERVALS+1)
+#define NUM_Y_POINTS    (NUM_Y_INTERVALS+1)
+
+main(argc, argv)
+int argc;
+char **argv;
+{
+
+    Display                     *display;
+    XID                         renderer;
+    PEXExtensionInfo            *ext_info;
+
+    XVisualInfo                 vis_info_return;
+    XStandardColormap           cmap_info_return;
+    PEXColorApproxEntry         capx_info_return;
+    int                         select_criteria_return;
+    unsigned int                unmet_criteria_return;
+    Atom                        std_prop_atom_return;
+
+    double                      x,dx,y,dy;
+
+    int                         window;
+    int                         screen_num;
+    int                         i,j;
+    int                         index;
+
+    char                        background_color_name[80];
+    char                        border_color_name[80];
+    char                        c;
+
+    Window                      parent, window_return;
+    XColor                      background_color_return;
+    Colormap                    colormap_id_return;
+    PEXUtWindowSpecification    window_info;
+
+    PEXColor                    color;
+    PEXCoord2D                  vertices[5];
+
+    PEXRendererAttributes       attrs;
+
+
+    char *criteria_string[] = {
+        "PEXUtAllocFailure",
+        "PEXUtPEXFailure",
+        "PEXUtXFailure",
+        "PEXUtCriteriaFailure",
+        "PEXUtSuccess",
+        "PEXUtQualifiedSuccess",
+        "PEXUtAlternativeSuccess"
+    };
+
+    char *unmet_criteria_string[] = {
+        "PEXUtDepth",
+        "PEXUtMinColors",
+        "PEXUtMinRed",
+        "PEXUtMinGreen",
+        "PEXUtMinBlue",
+        "PEXUtVisualClass",
+        "PEXUtLayer",
+        "PEXUtStandardColormapProperty",
+        "PEXUtDynamicVisual",
+        "PEXUtColorApproxType"
+    };
+
+    int num_criteria = 2;
+    PEXUtVisualCriteria criteria[] = 
+    {
+        {   /* set everything */
+            PEXUtMinColors,                     /* hard criteria mask       */
+            PEXUtStandardColormapProperty   |
+                PEXUtMinRed                 |
+                PEXUtMinGreen               |
+                PEXUtMinBlue                |
+                PEXUtDepth                  |
+                PEXUtLayer                  |
+                PEXUtVisualClass            |
+                PEXUtDynamicVisual          |
+                PEXUtColorApproxType        |
+                PEXUtDBCapability,              /* soft criteria mask       */
+            98,                                 /* depth                    */
+            257,                                /* min colors               */
+            1,                                  /* min red                  */
+            1,                                  /* min green                */
+            1,                                  /* min blue                 */
+            TrueColor,                          /* visual class             */
+            PEXUtImage,                         /* layer                    */
+            True,                               /* standard colormap        */
+            True,                               /* dynamic visual           */
+            PEXUtDBPEX,                         /* double buffering         */
+            PEXColorSpace                       /* color approximation type */
+        },
+        {
+            PEXUtMinColors,                     /* hard criteria mask       */
+            PEXUtStandardColormapProperty   |
+                PEXUtLayer                  |
+                PEXUtDBCapability,              /* soft criteria mask       */
+            48,                                 /* depth                    */
+            32,                                 /* min colors               */
+            8,                                  /* min red                  */
+            8,                                  /* min green                */
+            8,                                  /* min blue                 */
+            PseudoColor,                        /* visual class             */
+            PEXUtImage,                         /* layer                    */
+            True,                               /* standard colormap        */
+            0,                                  /* dynamic visual           */
+            PEXUtDBPEX,                         /* double buffering         */
+            0                                   /* color approximation      */
+        }
+    };
+
+
+    /*
+        Initialize X and PEX, and create a window and a Renderer.
+    */
+
+    if (NULL == (display = XOpenDisplay (NULL))) {
+
+        fprintf (stderr, "PROCESS ERROR:  XOpenDisplay failed on %s\n", 
+                    getenv("DISPLAY"));
+        exit (1);
+    }
+
+    if (PEXInitialize (display, &ext_info, 0, NULL))
+    {
+        fprintf (stderr, "PROCESS ERROR:  PEXInitialize failed on %s\n", 
+                    getenv("DISPLAY"));
+        exit (1);
+    }
+
+
+    screen_num = DefaultScreen (display);
+
+    window_info.attr_mask           = 0;
+    window_info.title               = "Test window";
+    window_info.size_hints.x        = 10;
+    window_info.parent              = RootWindow(display,0);
+    window_info.size_hints.x        = 10;
+    window_info.size_hints.y        = 10;
+    window_info.size_hints.width    = 400;
+    window_info.size_hints.height   = 400;
+    window_info.border_width        = 3;
+
+    window = PEXUtMakeWindowAndColormap (
+                        display,
+                        screen_num,
+                        num_criteria, 
+                        &criteria[0], 
+                        &window_info,
+                        &window_return,
+                        &vis_info_return,
+                        &cmap_info_return,
+                        &capx_info_return,
+                        &select_criteria_return, 
+                        &unmet_criteria_return,
+                        &std_prop_atom_return,
+                        &background_color_return,
+                        &colormap_id_return
+                        );
+
+    if (unmet_criteria_return) 
+    {
+        printf ("%s\nSelected criteria number %d\n   (%#010x):\n",
+                criteria_string[window+4],
+                select_criteria_return,unmet_criteria_return); 
+        j=0;
+        while (unmet_criteria_return)
+        {
+            if (unmet_criteria_return & 0x1)
+            {
+                printf ("\t%s\n",unmet_criteria_string[j]); 
+            }
+            unmet_criteria_return = unmet_criteria_return >> 1;
+            j++;
+        }
+    }
+    else 
+    {
+        printf ("%s\nSelected criteria number %d\n",
+                criteria_string[window+4],select_criteria_return);
+    }
+
+    if ((window != PEXUtSuccess) && (window != PEXUtQualifiedSuccess))
+    {   /* could not create the specified window */
+        printf ("\nNo window created\n");
+        exit (0);
+    }
+
+    {
+    PEXColorApproxEntry         capx_info, alt_capx_info;
+
+    capx_info.type = 1;
+    capx_info.model = 1;
+    capx_info.base_pixel = 0;
+    PEXUtCheckColorApproximation (
+                    display,
+                    &capx_info,
+                    &vis_info_return,
+                    &alt_capx_info
+                    );
+    }
+
+
+    renderer = PEXCreateRenderer ( display, window_return, 0, NULL);
+
+    if (renderer == None) 
+    {
+        fprintf (stderr, "ERROR:  Failed to create Renderer\n");
+        exit (1);
+    }
+
+    PEXBeginRendering (display, window_return, renderer);
+
+    PEXSetInteriorStyle (display, renderer,PEXOCRender, PEXInteriorStyleSolid);
+
+    dx = 1.0/NUM_X_INTERVALS;
+    dy = 1.0/NUM_Y_INTERVALS;
+
+    /*
+        Display the green/blue side of the RGB color cube
+    */
+
+    for (j=0, y=0.0; j<NUM_Y_POINTS; j++, y+=dy)
+    {
+        for (i=0, x=0.0; i<NUM_X_POINTS; i++, x+=dx)
+        {
+            vertices[0].x = x;
+            vertices[0].y = y;
+            vertices[1].x = x+dx;
+            vertices[1].y = y;
+            vertices[2].x = x+dx;
+            vertices[2].y = y+dy;
+            vertices[3].x = x;
+            vertices[3].y = y+dy;
+            vertices[4].x = x;
+            vertices[4].y = y;
+
+            color.rgb.red = 0;
+            color.rgb.green = x;
+            color.rgb.blue = y;
+
+            PEXSetSurfaceColor (
+                    display, 
+                    renderer,
+                    PEXOCRender,
+                    PEXColorTypeRGB, 
+                    &color); 
+
+            PEXFillArea2D (
+                    display, 
+                    renderer,
+                    PEXOCRender, 
+                    PEXShapeConvex, 
+                    True, 
+                    5,
+                    vertices);
+        }
+    }
+
+    PEXEndRendering (display, renderer, True);
+
+    printf ("Press return to exit\n");
+    c = getchar();
+
+    XCloseDisplay (display);
+}
+@EOF
+
+chmod 664 utiltest.c
+
+exit 0

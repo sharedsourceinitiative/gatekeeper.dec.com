@@ -1,0 +1,31 @@
+		      Technical Report CRL 91/1
+		Typechecking Polymorphism in Emerald
+		Andrew P. Black and Norman Hutchinson*
+			    December 1990
+
+Abstract:
+
+Emerald is a statically typed object-oriented language that was
+originally intended for programming distributed subsystems and
+applications.  It is important that such systems be dynamically
+extensible, i.e., that it be possible to introduce new kinds of
+entities into the system without re-compiling or re-linking the whole
+system.  This led us to devise a type system based on the notion of type
+"conformity" rather than type equality.  We also felt that polymorphism
+was a necessary feature of a modern programming language: programmers
+should be able to define generic abstractions like homogeneous sets,
+lists and files into which objects of arbitrary type can be placed.
+The combination of object-orientation, type-checking based on
+conformity and polymorphism gave rise to some interesting problems when
+designing Emerald's type system.  This paper describes the Emerald's
+type-checking mechanism and the notion of types and parameterization on
+which it is based.
+
+Keywords: 
+
+object-oriented programming, static type checking, polymorphism, 
+matching, F-bounded polymorphism, subtyping, conformity, extensibility, 
+distributed programming.
+
+ * Norman Hutchinson was with the University of Arizona when this work was
+performed, and is now with the University of British Columbia.

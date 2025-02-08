@@ -1,0 +1,16 @@
+
+		 AVAILABLE ELECTRONICALLY
+
+"Dynamic Typing in Polymorphic Languages"
+Martin Abadi, Luca Cardelli, Benjamin Pierce, Didier Remy
+January 26, 1994.  22 pages.
+
+There are situations in programming where some dynamic typing
+is needed, even in the presence of advanced static type systems.
+We investigate the interplay of dynamic types with other advanced type
+constructions, discussing their integration into languages with
+explicit polymorphism (in the style of system F), implicit polymorphism 
+(in the style of ML), abstract data types, and subtyping.
+
+
+

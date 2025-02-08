@@ -1,0 +1,11 @@
+"ESC/Java Quick Reference"
+
+Silvija Seres, June 1999, Revised by K. Rustan M. Leino and James B Saxe
+
+
+
+Note #2000-004, October 12, 2000. 
+
+Abstract
+This document is intended to be a non-detailed, trimmed-down version of the ESC/Java User's Manual, for people who would like to get an overview of the annotation language supported by the Compaq Extended Static Checker for Java (ESC/Java) without getting immersed in all its technical intricacies. 
+For more detailed information, please refer to the ESC/Java User's Manual. For information about the invocation of the ESC/Java checker, please see the escjava(1) man page included with the ESC/Java download available from http://research.compaq.com/SRC/esc/. 

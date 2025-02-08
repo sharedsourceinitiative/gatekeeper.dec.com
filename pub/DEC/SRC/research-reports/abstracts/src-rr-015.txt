@@ -1,0 +1,19 @@
+
+				AVAILABLE ELECTRONICALLY
+
+    "A Simple Approach to Specifying Concurrent Systems."
+    Leslie Lamport.
+    December 25, 1986.  38 pages.
+
+Author's Abstract
+ 
+    In the transition axiom method, safety properties of a concurrent
+    system can be specified by programs; liveness properties are
+    specified by assertions in a simple temporal logic.  The method
+    is described with some simple examples, and its logical foundation
+    is informally explored through a careful examination of what it
+    means to implement a specification.  Language issues and other
+    practical details are largely ignored.
+
+
+

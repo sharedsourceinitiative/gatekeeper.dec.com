@@ -1,0 +1,11 @@
+"Substitution: Syntactic versus Semantic"
+Leslie Lamport
+Note #1998-004, March 11, 1998
+
+A formalism with quantifiers permits two kinds of substitution:
+syntactic substitution that allows the capture of bound variables and
+semantic substitution that does not.  When quantification is explicit,
+all substitution can be made semantic.  When quantification is
+implicit, as in some formalisms used to reason about programs, both
+types of substitution are needed.
+

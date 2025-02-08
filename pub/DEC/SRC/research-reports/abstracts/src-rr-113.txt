@@ -1,0 +1,15 @@
+
+		 AVAILABLE ELECTRONICALLY
+
+"Some Useful Modula-3 Interfaces"
+Jim Horning, Bill Kalsow, Paul McJones, Greg Nelson
+December 25, 1993.  103 pages
+
+This manual describes a collection of interfaces defining abstractions
+that SRC's programmers have found useful over a number of years of
+experience with Modula-3 and its precursors.  We hope the interfaces
+will be useful as a "starter kit" of abstractions, and as a model
+for designing and specifying abstractions in Modula-3.
+
+
+

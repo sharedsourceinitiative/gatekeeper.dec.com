@@ -1,0 +1,26 @@
+"The Third Annual Video Review of Computational Geometry"
+Marc H. Brown and John Hershberger
+December 30, 1994. 34 pages.
+
+Computational geometry concepts are often easiest to understand visually, 
+in terms of the geometric objects they manipulate.  Indeed, most 
+papers in the field rely on diagrams to communicate the intuition 
+behind their results. However, static figures are not always adequate. 
+
+This report has an accompanying videotape, report 133b:
+
+"The Third Annual Video Review of Computational Geometry"
+Edited by Marc H. Brown and John Hershberger
+Time: 54 minutes
+
+The videotape showcases advances in the use of algorithm 
+animation, visualization, and interactive computing in the study 
+of computational geometry.  The report contains brief descriptions 
+of all the segments of the videotape. 
+
+Report 133a is the third annual Video Review of Computational Geometry 
+to be published as a SRC Research Report. The '92 Video Review is 
+SRC Research Report 87, and the '93 Video Review is SRC Research Report 101.
+Future editions will be published by the ACM, as part 
+of the proceedings of the annual ACM Symposium on Computational Geometry. 
+

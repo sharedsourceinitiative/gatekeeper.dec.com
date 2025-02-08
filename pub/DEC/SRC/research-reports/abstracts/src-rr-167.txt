@@ -1,0 +1,25 @@
+"A Practical Approach for Recovery of Evicted Variables"
+Caroline Tice and Susan L. Graham
+Report #167, November 30, 2000,
+
+The residency problem arises in the context of debugging optimized code: a user
+may ask to see the value of a variable that is currently in scope, but whose value
+has been overwritten (evicted) and is therefore not available. This creates a difficult
+situation for the debugger. On the one hand, allowing users to examine the state
+of programs as they execute is the raison d’ˆ etre for having debuggers. On the
+other hand, the debugger cannot return a value if the value is not in the computer.
+Because the residency problem is very common in optimized code, it is critical
+that any debugger for optimized code have some mechanism for dealing with it
+appropriately.
+There are two parts to this problem: detecting that the variable has been evicted
+and is no longer resident; and responding appropriately to the user’s request for
+its value. Although residency determination has been studied before, recovery of
+evicted values apparently has not. In this paper we present Limited Eviction Re-covery,
+a simple, practical solution for the residency problem. In this solution the
+compiler informs the debugger of those locations in the binary where source vari-ables
+are evicted, and the debugger makes copies of the values of the variables
+before they are overwritten and lost. In order to avoid incurring too much cost,
+the debugger only preserves the values of the variables most likely to be of inter-est
+to the user. In addition to explaining our algorithm, this paper describes our
+implementation of Limited Eviction Recovery, presents measurements taken of the
+resulting system, and discusses some implications thereof.

@@ -1,0 +1,11 @@
+Note to the archive maintainer,
+
+This is a patch for Dclock in the R6 contrib.  It fixes a bug where the
+clock's date does not redraw properly at midnight.  I also made a few
+changes to get rid of some compiler warnings.  This should probably go
+in R6contrib-fixes.
+
+thanks,
+
+Andrew Skalski
+askalski@buffalo.edu

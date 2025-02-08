@@ -1,0 +1,306 @@
+
+README
+
+MultiWM
+Release 2 (Broken)
+July 22nd 1997
+
+
+
+NAME
+	multiwm - an interactive bash-script to choose best window manager
+	and window manager configuration before starting X
+
+SYNOPSIS
+	multiwm [8|15|16|24|36|-w|-c]
+
+DESCRIPTION
+	NOTE: Before you try this script, you must make backups of files
+	that will be removed by this script (see those rm commands at the
+	beginning of script).
+
+	Multiwm-script that you can download from Internet, is just an example
+	to be modified to correspond to whatever current systems and
+	especially window managers are available and to the user's own	
+	personal (perverted?) tastes. The script itself is so well
+	commented, that it should not be very hard to modify it for your
+	system. Sys admins are strongly ancouraged to modify this script, 
+	when window managers are added, upgraded and/or removed. They can
+	also add this script or pieces of this script to system wide xinit
+	and/or startx scripts if they can. But if your sys admins are some
+	kind of BOFH's that are not co-operative with user, he/she can
+	use this script from his/her home directory.
+
+	When multiwm is started, it asks if the user wants to use
+	default window manager or not. Answer must be entered as letters
+	y, n or q (Case is not important). If answer is q, script quits. 
+	If answer is y or user just press <return>, default window
+	manager and window manager configuration is chosen. If answer is
+	n, user is asked to choose one window manager and in some cases
+	configuration type from a list. Answer must be entered as number
+	found on list. 
+
+	After user have chosen window manager and its configuration 
+	multiwm removes some configuration-files used by X from the user's
+	home directory and copies right configuration files from users
+	directory called .multiwm and its subdirectories to users home
+	directory and creates a symbolic link from .Xclients to .xsession.
+	If the user did not include 8, 16, 24 or 36 after the multiwm
+	command, he will be prompted to choose correct display state (8,
+	16, 24 or 36 bytes per pixel). And then X is started via the
+	startx-script (except in case of OLVWM via openwin-script).
+
+OPTIONS
+	8 
+		Use 8 bits per pixel
+
+	15
+		Use 15 bits per pixel
+
+	16
+		Use 16 bits per pixel
+
+	24
+		Use 24 bits per pixel
+
+	36
+		Use 36 bits per pixel
+
+	-w
+		Show warnings (you can pipe it with your favourite pager)
+ 
+	-c
+		Show GNU GPL (you can pipe it with your favourite pager)
+
+
+	NOTE: Display modes 24 and 32 bits per pixel are not available in
+	all systems.
+
+SYSTEM REQUIREMENTS
+	You need some Unix-like operating system with X Window System.
+	This script works fine almost out-of-the-box with Red hat Linux
+	with XFree86 on an Intel 80x86 PC, but I'd like to know, how this
+	work with other Linux distributions (like Debian and Slackware)
+	and other Unixes (like FreeBSD, IRIX, Solaris etc.) and X-servers
+	(like MetroX and Accelerated X). Script uses a script called
+	startx which uses a script called xinitrc and and a stream editor
+	called sed. You also must have a shell called bash installed, of
+	course.
+
+FILES AND INSTALLATION
+	Uncompress a file multiwm-2.1.1.tar.gz to your home directory.
+	(tar -zxvf multiwm-2.1.1.tar.gz). Go to the directory called
+	~/.multiwm and move files in a way that after all you have
+	directories and files something like this:
+
+	~/bin/multiwm - the script itself. Modify it to correspond to your
+		system and its available windows managers and
+		configurations and your personal (perverted?) tastes. That
+		directory must be in your path.
+
+	~/.multiwm/ - a directory for different configuration files. It have
+		following subdirectories
+
+		xbase/ - contains a .Xdefaults file used by most window
+			managers and their configurations, except OLVWM, 
+			FVWM with look and feel of 4DWM of IRIX of SGI. If
+			you already have some .Xdefaults-file that works
+			well with most window managers used, you can put
+			it here.
+
+		3dwm, 9wm, afterstep, amiwm, enlightenment, fvwm, fvwm2,
+			fvwm2TNL, fvwm95-2, fvwm95-2TNL, mlvwm,	twm etc. -
+			subdirectories containing a proper .Xclients 
+			and/or .xinitrc for chosen window manager and its 
+			configuration. .*wm*rc, and in some cases also
+			some .*wm*rc-file and/or .XDefaults. It is
+			possible, that you must edit those .Xclients
+			-files to make it work. In some systems it may be
+			possible that you must rename that .Xclients-file
+			to .xinitrc. If you have some entries for window
+			manager(s) you do not have in your system, it's
+			not very dangerous. Just dont use those entries,
+			if you do not bother comment or remove them away.
+
+	/usr/doc/multiwm-R2/
+		If you are a sys admin, you can create this directory
+		and put files called README (this file), ANNOUNCEMENT, 
+		DOWNLOAD, COPYING, Copying.paper, GNU, INTERVIEW,
+		LINUX-GNU, LPF and WHY-FREE there.
+
+SEE ALSO
+	- man pages and other documentations for window managers and X 
+	- DOWNLOAD to find information about Internet-sites with window
+	  managers and information about them and X.
+	- You can freely spread ANNOUNCEMENT-file to tell other peole
+	  about MultiWM. Please, no spamming.
+	- COPYING to read GNU GPL
+	- Copying.paper, GNU, INTERVIEW, LINUX-GNU, LPF and WHY-FREE to
+	  read other interesting GNU stuff.
+
+BUGS AND LIMITATIONS
+	There should not be any bugs. Practically every user must modify this
+	script to fit his/her own system and personal (perverted?) tastes,
+	and that is not a feature, it's a limitation. If you find some
+	bugs or have some ideas to improve this script, send them via
+	E-mail to Juhapekka Tolvanen (juhtolv@cc.jyu.fi). 
+
+FUTURE 
+	Maybe some new releases, bug fixes etc. but always remember, that
+	Juhapekka Tolvanen thinks it's more imporant to get a life, gf and
+	study attainments. :-) 
+
+	It would be nice, if somebody could create a Debian and RPM
+	packages of this.
+
+	maybe I should create man- and info-files.
+
+	I think, we should make all configurations to work seamlessly both
+	interactively and via command line switches, not just display
+	modes like in this version but also choosing of window manager
+	configuration and maybe even display and other commandline
+	switches you can put after command startx: If some important
+	command line switch is left away, user would be promted to choose
+	it.
+
+	It would be a good idea to keep commandline switches POSIXly 
+	correct.
+
+	Maybe it would be a good idea to integrate this script with xdm.
+
+	A port to be used with XFree86 for OS/2 ?
+
+
+AUTHORS
+	Juhapekka Tolvanen (juhtolv@silmu.cc.jyu.fi)
+		(http://www.cc.jyu.fi/~juhtolv)
+		Ideas, most testing, documentation, publicity issues,
+		distributing and some bash coding. Nerdish and geekish
+		student of sociology. User of Red Hat Linux, Sun Solaris,
+		IBM OS/2 and Caldera OpenDOS. 
+
+	Mika Jorma Saaristo (mjsaaris@cc.jyu.fi)
+		(http://www.cc.jyu.fi/~mjsaaris/)
+		Most of the bash-coding and some testing. Student of
+		mathematics. Real geek, nerd, hacker and computer guru.
+		User of Minix, Linux, Sun Solaris etc.
+
+
+HISTORY
+	Version numbering and naming convention will be like this:
+	Release X (some kewl nickname). File naming follows guidelines of
+	ftp://sunsite.unc.edu/ 
+
+	Release 2 (Broken) released in July 22nd 1997. This is not 
+	actually broken. I'll tell you in documentation of next release, 
+	where that name is derived from. These changes were made:
+		- Some new window manager entries added
+		- Configuration files of Enlightenment are now for
+		  version Thebes 1 DR10. 
+		- More careful documentation
+		- More GNU propaganda added.
+		- 4dwm is now called 3dwm, because original creator of
+		  that configuration calls it so. 4dwm is a window manager
+		  used by an operating system called IRIX used by Silicon
+		  Graphics computers. It is actually enhanced MWM. 3dwm is
+		  actually the FVWM configured to look and feel like 4dwm.
+		- Display states 24 and 36 bpp are now enabled by default.
+		- Manual to cope with debates about MultiWM included.
+		- file naming convention follows guidelines of
+		  sunsite.unc.edu
+		- This time Mika Jorma Saaristo was not available for
+		  development of this script. That is the reason, why this
+		  script is not as good as it could be.
+		- Homepage for MultiWM created:
+		  http://www.cc.jyu.fi/~juhtolv/multiwm/
+
+	Release 1 (Debut) released in April 10th 1997. Name of this
+	release was derived from an album of Björk (That letter between j 
+	and r is o with dots. If it looks like v in your screen, it means
+	that you are using an ancient character set called ASCII, so you
+	must get a life and ISO-LATIN-1 or maybe even Unicode or
+	ISO-10646). Development environments included following hardware
+	and software:
+		Juhapekka Tolvanen:
+		- An Intel Pentium 133 MHz w/ 48 Megs Memory
+		- Red Hat Linux 4.1 with Kernel 2.0.29
+		- XFree86 3.2 for S3 ViRGE and ViRGE VX
+		- bash 1.14.7-1
+		- FVWM95-2.0.42a-6 (The Next Level does not work with later,
+		  I think)
+
+		Mika Jorma Saaristo:
+		- An Intel Pentium 150 MHz w/ 32 Megs Memory
+		- Red Hat Linux 4.1 with Kernel 2.0.27
+		- XFree86 3.2 for S3
+		- FVWM95-2.0.42a-6 (The Next Level does not work with later,
+		  I think)
+
+
+UPDATES AND AVAILABILITY
+	Latest version should be available from www-pages of
+	Juhapekka Tolvanen:
+
+	http://www.cc.jyu.fi/~juhtolv/multiwm/
+
+	See the file DOWNLOAD to find some information about how to obtain
+	multiwm, different window managers and their configuration files
+	and other X-related stuff.
+
+
+DEBATES ABOUT MULTIWM (ESPECIALLY IN NEWSGROUPS).
+	I'd appreciate it if any MultiWM users wouldn't endorse MultiWM in
+	a computing war. If you can't stay out altogether, please follow
+	the following tactic:
+
+	1. If you feel like participating in a debate about MultiWM in
+	newsgroups, eat some fresh vegetables instead, for example a fruit
+	called sharon.
+
+	2. If you still want to participate to debate, eat some other
+	vegetables, for example some slices of rutabaga.
+
+	3. Repeat steps 1 and 2 as many times as needed. In this time you
+	can eat some other kind of vegetables, for example carrots or
+	oranges.
+
+	4. If you still don't feel satisfied and really really have to say
+	something, buy and some more vegetables (for example cabbage) and
+	post a message that says "MultiWM is fun because I can eat so much
+	healthy vegetables!!!"
+
+	5. If you still want to continue, you know what to do with a
+	vegetable number five.	
+
+	6. You shouldn't start a debate just for vegetables. If you can't
+	find any debate about MultiWM, you are still allowed to eat
+	vegetables as much as you want. It's OK to eat vegetables at every
+	occasion. Vegetables are healthy! Vegetables keep your body slim!
+	Vegetables are cheap! Eat more vegetables and you'll feel good!
+	You might want to avoid eating some vegetables, that are noisy,
+	when eaten (like carrots or apples) at occasion where you are
+	expected be silent, like in church or court proceedings.
+
+	7. If you have eaten enough vegetables, you are allowed to use
+	an alternative tactic: subliminal messages. Write some harmless
+	innocent sentences, but phrase it so that the first seven words
+	begin with m. u, l, t, i, w and M. For example: "My ultimate
+	lover, this is weird music!". That's not quite as fun as eating
+	vegetables, of course.
+
+
+LICENCING
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+

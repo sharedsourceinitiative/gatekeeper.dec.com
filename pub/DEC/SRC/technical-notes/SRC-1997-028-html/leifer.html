@@ -1,0 +1,83 @@
+<html>
+<head><title>Generating Juno-2 Figures as Java Bytecodes</title></head>
+<body>
+<center>
+<h1><b>Generating Juno-2 Figures as Java Bytecodes</b></h1><br>
+<h2>James Leifer, Cambridge University</h2>
+</center>
+
+
+I am two years into my Ph.D. at the Cambridge University Computing
+Lab (in the UK) where I work with Robin Milner on process algebras
+(pi-calculus and action calculi). My work is funded by the
+U.S. National Science Foundation and the British Goverment.  I did an
+undergraduate degree at Oxford ("the Other Place" as they say at
+Cambridge) where I worked under Bernard Sufrin and C. A. R Hoare.
+Despite all that, I'm a New Yorker (or at least can pretend to be
+one).<P>
+
+I decided to apply for a SRC internship because of SRC's reputation
+for combining systems and theory work, which suited my interests
+exactly.  From Cambridge, I discussed possible projects with Greg
+Nelson and we agreed to do work involving some "honest programming"
+- - -- something that I had not done very much of while pursuing my
+Ph.D.<P>
+
+The goal of the "honest programming'' was to extend
+<A HREF="http://www.research.digital.com/SRC/juno-2/">Juno</A> ---a
+dual-view graphics editor built by Greg Nelson and Allan Heydon at
+SRC--- to allow it to emit Java applets that render Juno graphics on
+the Web.  Juno has a
+<A
+HREF="http://gatekeeper.dec.com/pub/DEC/SRC/technical-notes/abstracts/sr
+c-tn-1997-009.html">programming language</A>
+based on Dijkstra's guarded commands (extended with geometrical
+constraint solving) and its approach to graphics and animation is to
+create a program that renders the graphics as a side effect of
+execution. Internally, Juno compiles programs to a bytecode and runs
+them on a VM.<P>
+
+This summer I built a compiler that translates a Juno program into
+a Java class file, and I constructed a library of Java classes that
+provides run-time support.  The compiler translates modules to
+classes, global variables and constants to fields, and procedures to
+methods. The compiler handles almost all Juno constructions, including
+modules and imports, global variables and constants, procedures,
+functions, predicates, control structures, and expressions.  The
+run-time system provides mathematics and PostScript drawing support.
+Both the compiler and run-time system do not yet handle closures and
+constraint solving, nor do the graphics libraries do double-buffering,
+which is necessary for flicker-free animation, but static graphics are
+working well.<P>
+
+There were several differences between Juno and Java which
+influenced the design of the translator.<P>  
+<OL>
+<LI>Juno programs are
+dynamically typed ---values range over numbers, strings, pairs,
+etc., and this was mirrored in Java by creating a class JV (for
+"Juno value") and subclasses of JV corresponding to Juno's value
+types. <P>
+<LI>Juno's procedures can return multiple out-parameters but
+Java's methods cannot.  In our implementation a method returns a
+reference to an array containing the out-parameters. <P>
+<LI>In Juno certain expressions are not strict, that is, they are defined 
+even when subexpressions are not. 
+</ol><P>
+
+This doesn't fit well with Java's notion of
+exceptions, because when a Java exception is thrown, the entire stack
+is deleted, not just the items placed on the stack in the surrounding
+try-catch block.  We got around this by creating a global bit that is
+set as certain parts of an expression are evaluated and tested so as to 
+obtain the correct semantics.<P>
+
+This project was the largest engineering artifact I have ever
+constructed and I learned much from working with Greg and Allan on how
+to structure a complicated system and how to test it.  I also had many
+lively talks with others in the lab who gave me good advice and
+discussed with me their research interests.  And, of course, I
+thoroughly enjoyed the California weather and food!<P>
+
+</body>
+</html>

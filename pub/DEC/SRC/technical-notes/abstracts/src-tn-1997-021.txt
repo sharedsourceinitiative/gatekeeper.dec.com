@@ -1,0 +1,18 @@
+"Certificates and Fast Algorithms for Biconnectivity in Fully-Dynamic Graphs"
+Monika Rauch Henzinger and Hans La Poutre
+Note #1997-021. September 30, 1997.
+
+In this paper, we present sparse certificates for
+biconnectivity together with algorithms for updating these
+certificates.  We thus obtain fully-dynamic algorithms for
+biconnectivity in graphs that run in O(sqrt n log n log (m/n))
+amortized time per operation, where m is the number of edges and n is
+the number of nodes in the graph.  This improves upon the results in
+the paper "Improved Data Structures for Fully Dynamic Biconnectivity" 
+(M. H. Rauch, Proc. 26th Annual Symposium on Theory of Computing) in 
+which algorithms were presented running in O(sqrt m log
+n) amortized time, and solves the open problem to find certificates to
+speed up biconnectivity, as stated in "Sparsification - A technique for 
+speeding up dynamic graph algorithms," (D. Eppstein et al. Proc. 33nd
+Annual Symp. on Foundations of Computer Science}, 1992).
+

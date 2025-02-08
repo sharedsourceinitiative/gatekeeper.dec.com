@@ -1,0 +1,621 @@
+<!-- This file generated automatically by mtex2html(1) -->
+<HTML>
+<HEAD>
+<TITLE>dcpicalc</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#ffffff" VLINK="#006633">
+<H2>dcpicalc(1)</H2>
+
+<H3>NAME</H3>
+<BLOCKQUOTE>
+dcpicalc - Calculate cycles-per-instruction of procedures
+</BLOCKQUOTE>
+
+<H3>SYNOPSIS</H3>
+<BLOCKQUOTE>
+<P>
+
+<B>dcpicalc</B> [&lt;options&gt;] -procedures <I>procedure-name-list</I> -- <I>image-file</I><P>
+
+<B>dcpicalc</B> [&lt;options&gt;] <I>procedure-name</I> <I>image-file</I>
+</BLOCKQUOTE>
+
+<H3>DESCRIPTION</H3>
+<BLOCKQUOTE>
+<P>
+
+Dcpicalc generates the control flow graph of the specified procedure(s) in
+the specified image file.  Using profiles collected by
+<A HREF="dcpid.html">dcpid(1)</A> and stored in the specified profile files,
+dcpicalc augments the graph with estimated execution counts of basic
+blocks, cycles-per-instruction for instructions, possible explanations for
+stalls, and other useful information.  The resulting flow graph is printed
+to standard output.<P>
+
+The output can be converted to postscript by <A HREF="dcpi2ps">dcpi2ps(1)</A>.
+In the postscript output, "larger" basic blocks are generally "more
+important."  Specifically, for each basic block, the font size indicates
+the block's execution count, the physical space occupied by the block
+on paper indicates the amount of time spent in that block, and the number
+of lines indicates the average number of cycles required to execute it.<P>
+
+The first command syntax allows you to specify multiple procedures.
+dcpicalc concatenates the outputs for the individual procedures, starting
+each with a line of the form
+<PRE>
+; PROC procedure-name
+</PRE>
+
+Analyzing multiple procedures at a time is typically much more efficient
+than invoking the command once per procedure, although dcpicalc reports
+exactly the same information in both cases.  The <I>-procedures</I> option
+can be mixed with the other options.  The list of procedures  is terminated
+by "--" or another option.  The second command syntax can name only one
+procedure.
+</BLOCKQUOTE>
+
+<H3>FLAGS</H3>
+<BLOCKQUOTE>
+<DL>
+
+<DT>-help<DD> Print information about options.<P>
+
+<DT>-print_opcode<DD> Output the machine code, in hex, for each instruction.<P>
+
+<DT>-cutoff <I>n</I><DD> Omit basic blocks taking less than <I>n</I>% of the time
+spent in the procedure.  The instructions of these basic blocks are not
+printed.  When the output is piped through <TT>dcpi2ps</TT>, these basic blocks
+appear as tiny boxes with only block names.  Note that <I>n</I> is a floating
+point number between 0 and 100 (inclusive).  The default value is 0: no
+blocks are omitted.<P>
+
+<DT>-procedures <I>procedure-name-list</I><DD> Analyze the specified procedures.
+The list is terminated by "--" or another option.<P>
+
+<DT>-version<DD>  Print program version information.
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>EXECUTION COUNT AND STALL ANALYSIS FLAGS</H3>
+<BLOCKQUOTE>
+<P>
+
+The following options can be used to control the heuristics for estimating
+execution counts and identifying the causes of stalls.<P>
+
+<DL>
+<DT>-conf_low<DD>  Generate low, medium, and high confidence data.<P>
+
+<DT>-conf_med<DD>  Generate medium and high confidence data. (default)<P>
+
+<DT>-conf_high<DD> Generate only high confidence data.<P>
+
+<DT>-cross_procedure [optimistic | pessimistic | selective]<DD> Choose what
+assumption to make when a procedure call boundary is encountered while
+looking for reasons to explain dynamic stalls.  A procedure call boundary
+is either a call made by the procedure being analyzed or the beginning or
+end of that procedure.  With <I>pessimistic</I>, assume that
+whatever happens outside the analyzed procedure can cause a dynamic stall
+inside it.  With <I>optimistic</I>, assume that it cannot.  With
+<I>selective</I>, the assumption is based on standard procedure call
+convention.  (The default is <I>optimistic</I>.)<P>
+
+<DT>-do_gp<DD> Use a (non-linear time) constraint solver to exploit global
+flow constraints when estimating execution counts.  The 
+estimates may still violate flow constraints.<P>
+
+<DT>-tab foo.tab<DD> Get execution counts from output of
+<A HREF="dcpix.html">dcpix(1)</A> instead of making estimates, which may be
+inaccurate.  Requires a .xct file.<P>
+
+<DT>-xct foo.xct<DD> Get execution counts from output of
+<A HREF="dcpix.html">dcpix(1)</A> instead of making estimates, which may be
+inaccurate.  Requires a .tab file.<P>
+
+<DT>-xct_factor num<DD> Scales counts from .xct files by num.  Useful when
+you run a program once under <A HREF="dcpix.html">dcpix(1)</A> but multiple (num)
+times under <A HREF="dcpid.html">dcpid(1)</A> to get more samples.  Used in
+conjuction with -tab and -xct.<P>
+
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>PROFILE FILE FLAGS</H3>
+<BLOCKQUOTE>
+<P>
+
+By default, this command automatically finds all of the relevant
+profile files.  The following options can be used to guide the search
+for the profile files.<P>
+
+<DL>
+<DT>-db &lt;directory name&gt;<DD>
+Search for profile files in the specified profile database directory.
+The directory name should be the same name as the one specified when
+<TT>dcpid</TT> was started.  I.e., the named directory should contain a
+set of epochs.  If this option is not specified, the directory name is
+obtained from the <TT>DCPIDB</TT> environment variable.  If neither this
+option, nor the <TT>DCPIDB</TT> environment variable are set, the name of
+the directory used by the last invocation of <TT>dcpid</TT> on this
+machine is used.  If none of these methods succeed in finding the
+appropriate directory, and no explicit set of profile files is
+provided via the <TT>-profiles</TT> option, then the command fails.<P>
+
+<DT>-epoch latest<DD>
+Search for profile files in the latest epoch.  This is the default.<P>
+
+<DT>-epoch latest-k<DD>
+Search for profile files in the "k+1"th oldest epoch.  For example,
+search in the third last epoch if "-epoch latest-2" is specified.<P>
+
+<DT>-epoch all<DD>
+Search for profile files in all epochs.<P>
+
+<DT>-epoch &lt;name&gt;<DD>
+Search for profile files in the named epoch.  The epoch name should be
+the name of a subdirectory corresponding to a single epoch within the
+profile database directory.  Epoch subdirectory names usually take
+the form <TT>YYMMDDHHMM</TT> (year-month-day-hours-minutes).  For example,
+an epoch started on December 4, 1996 at 23:34 is named <TT>9612042334</TT>.
+If an epoch is given a symbolic name by creating a symbol link to
+the actual epoch directory, then the symbolic name can also be used
+as an argument to the <TT>-epoch</TT> option.<P>
+
+<DT>-events all<DD>
+Search for profile files corresponding to all event types such as
+cycles, icache misses, branch mispredictions, etc.  This is the default.<P>
+
+<DT>-events type(+type)*<DD>
+Search for profiles files for the specified event types.  For example,
+search for cycles, icache misses, and data cache misses when the
+option <TT>-events cycles+imiss+dmiss</TT> is specified.<P>
+
+<DT>-events all(-type)*<DD>
+Search for profile files for all event types except for the specified
+types.  For example, search for all event types except for branch
+mispredictions when the option <TT>-events all-branchmp</TT> is specified.<P>
+
+<DT>-label &lt;label&gt;<DD>
+Search for profile files with the specified label (see <TT>dcpilabel</TT>).
+If no labels are specified on the command line, profile file labels
+are ignored entirely.  If any labels are specified on the command line
+(this option can be repeated several times), only profile files that
+have one of the specified labels are used.<P>
+
+<DT>-profiles &lt;file names...&gt; --<DD>
+Use just the profile files named by the specified file names.  The
+list of profile file names can be terminated either via <TT>--</TT>, or by
+the end of the option list.  The command prints an error message and
+fails if the <TT>-profiles</TT> option is used in conjunction with any of
+the earlier automatic profile finding options.  (Use either the
+automatic profile lookup mechanism, or explicitly name the profile
+file with the <TT>-profile</TT> option, but not both.)
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>INTERPRETING OUTPUT</H3>
+<BLOCKQUOTE>
+<P>
+
+Dcpicalc provides information at the instruction, basic block, and
+procedure level.  Dcpicalc is sometimes unable to estimate the
+cycle-to-sample ratio for a block.  Such blocks are excluded from all
+summary information except the instruction count.  Dcpicalc makes no
+attempt to identify stalls (static or dynamic) in such blocks.  Therefore,
+most of the following discussion pertains only to blocks with known
+cycle-to-sample ratios.<P>
+
+Apart from the instruction, block, and procedure level information
+described below, the output also contains lines that encode the procedure's
+control flow graph for use by other analysis tools (notably <TT>dcpi2ps</TT>,
+which prints the graph in postscript).  These lines start with "B" and "A"
+in the first column.  They are not intended for users.<P>
+
+<B>Instruction Level Information</B><P>
+
+At the instruction level, dcpicalc inserts "bubbles" into the instruction
+listings to identify points where the processor stalls because it is unable
+to issue an instruction.  Bubbles are inserted <I>before</I> the stalled
+instruction.  Here is an example.
+<PRE>
+ 588584  318:2e4c0000 ldq_u    a2, 0(s3)          1558  1
+ 588588  318:a79d2d70 ldq      at, 11632(gp)    191855  0  1.5cy
+   a
+   a
+ 58858c  318:4a4c00d2 extbl    a2, s3, a2       164109  2  1.5cy   8584
+   s
+     d
+     d
+     d
+     d
+     d
+     d
+ 588590  318:43920412 addq     at, a2, a2       428395  1  4.0cy   8588
+   b
+     ?
+     ?
+ 588594  318:2c320000 ldq_u    t0, 0(a2)        227783  1  2.0cy   8590
+   s
+ 588598  318:22520001 lda      a2, 1(a2)        121068  1  1.0cy  
+   b
+     d
+     d
+     d
+     d
+ 58859c  318:48320f41 extqh    t0, a2, t0       336123  1  3.0cy   8598 8594
+   s
+ 5885a0  318:48271781 sra      t0, 0x38, t0     123408  1  1.0cy  
+   b
+ 5885a4  318:41810402 addq     s3, t0, t1       127442  1  1.0cy   85a0
+   s
+ 5885a8  318:2c620000 ldq_u    t2, 0(t1)        123021  1  1.0cy  
+ 5885ac  318:47ff041f bis      zero, zero, zero      0  0  nop
+   a
+   a
+     d
+     d
+     d
+     d
+     d
+     d
+     d
+     d
+ 5885b0  318:486200c4 extbl    t2, t1, t3       658189  2 6.0cy   85a8
+ 5885b4  318:47ff0403 bis      zero, zero, t2        0  0
+ 5885b8  318:48807630 zapnot   t3, 0x3, a0      122504  1 1.0cy
+ 5885bc  318:47ff041f bis      zero, zero, zero      0  0 nop
+     i
+ 5885c0  318:421fd9b1 cmplt    a0, 0xfe, a1     155841  1 1.5cy  
+ 5885c4  318:e6200002 beq      a1, 0x1205885d0       0  0 
+</PRE>
+
+Each line of assembly code shows, from left to right,
+<UL>
+<LI> the instruction's address (hexadecimal),
+<LI> the source line number (decimal),
+<LI> the instruction's 32-bit machine code in hexadecimal (if -print_opcode)
+<LI> the instruction in mnemonics
+<LI> the number of PC samples falling at this instruction address (decimal)
+<LI> the minimum number cycles the instruction is predicted to spend at the
+head of the issue queue (actual schedule may vary)
+<LI> (optionally) the average number of cycles spent at this
+instruction address
+<LI> (optionally) the other instructions that may have caused this
+instruction to stall (see details below).
+</UL>
+<P>
+
+Each line in the listing represents a half-cycle, which makes it easy to
+see whether instructions are being dual-issued.  To avoid excessively long
+listings, however, dcpicalc represents a very long stall with a large but
+limited number of bubbles.  The actual number of stall cycles is shown as a
+number along with the bubbles.<P>
+
+Stall cycles are either static or dynamic.  Static stall cycles are those
+that the processor would suffer even if there were no dynamic stalls (e.g.,
+if all memory loads hit in the D-cache and all conditional branches are
+predicted correctly).  The rest are dynamic.  The bubbles for the static
+and dynamic stall cycles are shown in different columns.<P>
+
+In the static column (the leftmost column), bubbles have the following meanings:<P>
+
+<UL>
+
+<LI> s refers to stall cycles resulting from static resource conflicts
+among the instructions within the same "window" (consisting of two
+instructions for Alpha 21064 and four for 21164) that the processor
+considers for issue in any given cycle.<P>
+
+<LI> a/b/c refer to stall cycles caused by register dependencies on
+previous instructions involving, respectively, Ra/Rb/Rc of the stalled
+instruction.<P>
+
+<LI> f refers to stall cycles caused by competition for the function units
+and other internal resources in the processor.<P>
+
+</UL>
+<P>
+
+In the dynamic column(s), there may be multiple possible explanations for
+the same stall cycles; sometimes there may be none.  Each explanation is
+represented by a column of bubbles.  In some cases, dcpicalc can compute
+the maximum number of stall cycles that a particular reason can account
+for.  If this is less than the number of stall cycles, the column for that
+reason may not extend all the way down to the stalled instruction.<P>
+
+The bubbles have the meanings below.
+<UL>
+<LI> d - D-cache miss
+<LI> D - DTB miss
+<LI> I - I-cache or ITB miss
+<LI> i - I-cache miss (but not ITB miss)
+<LI> w - write buffer overflow
+<LI> y - synchronization of memory operations (using memory barriers)
+<LI> p - branch misprediction
+<LI> f - busy function unit
+<LI> o - other (currently TRAPB, EXCB, or load-after-store replay trap)
+<LI> ? - unexplained
+</UL>
+<P>
+
+Several points are worth mentioning here.  First, notice that there is no
+symbol for ITB miss alone because an I-cache miss is possible whenever an
+ITB miss is possible.  Second, "other" means miscellaneous other reasons
+that typically account for only a tiny percentage of stalls.  Currently it
+includes stalls at TRAPB or EXCB instructions, which are not issued until
+all previous instructions are guaranteed to complete without traps or both
+traps and exceptions, respectively.  Third, the symbol "f" may appear in
+both the static and dynamic columns because competition for function units
+may explain both static and dynamic stalls.  For example, the stall caused
+by a floating-point division may be partly static, because part of it can
+be predicted by scheduling the instructions, and partly dynamic, because
+part of it is data dependent.  An "f" in the dynamic column typically means
+a busy integer multiply or floating-point divide unit.<P>
+
+For each stalled instruction, dcpicalc also lists instructions that may
+have caused the stalls.  This list appears at the end of the line showing
+the stalled instruction.  A four-digit hexadecimal address indicates an
+instruction in the same basic block as the stalled instruction; a full
+block name with a four-digit hexadecimal address indicates an instruction
+in another basic block; a full block name without an address indicates that
+the instruction potentially causing the stall is <I>assumed</I> to be in
+another procedure, which can be a callee or the caller of the current
+procedure.  Note that the lists of instructions and explanations are not
+always exhaustive, in part because longer stalls may hide shorter ones.<P>
+
+If an instruction is a nop, dcpicalc will indicate it by appending "nop" to
+the line showing the instruction.<P>
+
+<B>Block Level Information</B><P>
+
+At the beginning of a block, dcpicalc displays summary information for the
+block.  For example,
+<PRE>
+ *** One cycle = 714428 samples
+ *** Executed 4.83 times/invocation
+ *** Best-case 8/9 =  0.89CPI, Actual 22/9 =   2.44CPI
+ *** (36% execution without dynamic stalls)
+</PRE>
+
+The first line is the cycle-to-sample ratio for block -- this is dcpicalc's
+estimate of how many PC samples in the profiling data correspond to one
+cycle.  The next line is the average number of times the block is executed
+relative to the number of times the entry and/or exit blocks are executed.
+The third line displays the best-case and actual cycles per instruction (CPI) for
+the block.  The best-case scenario includes all stalls statically predictable
+from the instruction stream (e.g., an Alpha 21164 cannot dual-issue consecutive store
+instructions) but assumes that there are no dynamic stalls (e.g., all load
+instructions hit in the D-cache).  The last line above displays the best-case
+cycles per instruction as a percentage of the actual.<P>
+
+<B>Procedure Level Information</B><P>
+
+At the procedure level, dcpicalc displays summary information in the entry
+block.  This information includes the number of instructions in the
+procedure, averages of the best-case and actual cycles per instruction
+(computed from the per-block values weighted by block execution
+counts), and a sorted list of blocks accounting for 90% of the stalls
+in the procedure.<P>
+
+Moreover, dcpicalc summarizes how the cycles are spent.  Here is a sample
+summary followed by line-by-line explanations.
+<PRE>
+
+  Line  1    I-cache (not ITB)   3.5% to  7.4%
+  Line  2     ITB/I-cache miss   3.7% to  3.7%
+  Line  3         D-cache miss  25.2% to 27.2%
+  Line  4             DTB miss   0.0% to  1.7%
+  Line  5         Write buffer   0.0% to  0.0%
+  Line  6      Synchronization   0.0% to  0.0%
+
+  Line  7    Branch mispredict   0.7% to  2.6%
+  Line  8            IMUL busy   0.0% to  0.0%
+  Line  9            FDIV busy   0.0% to  0.0%
+  Line 10                Other   0.0% to  0.0%
+
+  Line 11    Unexplained stall   1.9% to  1.9%
+  Line 12     Unexplained gain  -0.8% to -0.8%
+            ----------------------------------------
+  Line 13     Subtotal dynamic                 38.4%
+    
+  Line 14             Slotting       6.4%
+  Line 15        Ra dependency      10.0%
+  Line 16        Rb dependency       2.9%
+  Line 17        Rc dependency       0.0%
+  Line 18        FU dependency       1.9%
+            ----------------------------------------
+  Line 19      Subtotal static                 21.2%
+
+            ----------------------------------------
+  Line 20          Total stall                 59.6%
+    
+  Line 21               Useful      39.4%
+  Line 22                 Nops       1.2%
+            ----------------------------------------
+  Line 23            Execution                 40.6%
+    
+  Line 24   Net sampling error                 -0.2%
+            ----------------------------------------
+  Line 25        Total tallied                100.0%
+  Line 26   (114504716, 88.8% of all samples)
+
+</PRE>
+
+<DL>
+
+<DT>Lines 1 to 13<P>
+
+<DD>show all dynamic stall cycles.  See previous discussion of instruction
+level information for the meanings of these categories.  Unexplained stall
+(line 10) represents stall cycles for which dcpicalc cannot offer any
+plausible explanation.  Unexplained gain (line 11) occurs when instructions
+take fewer cycles than even the ideal assumption.  For example, since we
+take dual-issue as the ideal case, if in fact three instructions are issued
+(two to the integer pipelines and one to a floating point pipeline), half a
+cycle would be attributed to "unexplained gain."  For the difference
+between "I-cache (not ITB)" and "ITB/I-cache miss," please see the earlier
+discussion on the corresponding bubbles `i' and `I'.<P>
+
+Dcpicalc shows a range of stall cycles (as a percentage of total cycles
+tallied) that could have been caused by each reason listed.  Some of the
+ranges may be wide if major stalls can be explained by more than one
+reason.  Generally, the accuracy of the analysis can be improved using
+profiles for non-cycles events.  Currently, dcpicalc takes advantage of
+imiss, itbmiss, and dtbmiss profiles if they are specified on the command
+line.  Although the contributions of individual stall reasons are reported
+as ranges, the subtotal for all dynamic stalls is not.  It represents the
+cycles attributed to any one or more of the reasons.  Therefore, it does
+not depend on how stall cycles are apportioned among alternative reasons
+for the same stall.<P>
+
+<DT>Lines 14 to 19<P>
+
+<DD>show the static stall cycles.  These are stall cycles that the processor
+would suffer even if there were no dynamic stalls.  For example, this
+assumes that a load from memory takes only two cycles, which corresponds to
+a D-cache hit.  Additional stall cycles due to a cache miss are considered
+dynamic.  If an instruction is stalled for multiple reasons, the static
+stall cycles are attributed to the last reason preventing instruction
+issue.  Thus, shorter stalls are hidden by longer ones.<P>
+
+<DL>
+
+<DT>Slotting (line 14)<DD> refers to stall cycles resulting from static
+resource conflicts among the instructions within the same "window" that the
+processor considers for issue in any given cycle.<P>
+
+<DT>Ra/Rb/Rc dependencies (lines 15-17)<DD> refer to stall cycles caused by
+register dependencies on previous instructions involving, respectively,
+Ra/Rb/Rc of the <I>stalled</I> instruction.<P>
+
+<DT>FU dependency (line 18)<DD> refers to stall cycles caused by competition
+for function units and other internal resources in the processor.<P>
+
+</DL>
+<P>
+
+<DT>Line 21-23<P>
+
+<DD>are the numbers of cycles spent on executing instructions.  Line 23
+includes all instructions; line 22 includes nops; line 21 includes "useful"
+instructions (i.e., instructions other than nops).  Each of them is simply
+half the number of executed instructions (of the respective type) since we
+assume dual-issue to be the ideal case.  This percentage may exceed 100%
+One reason is the Alpha 21164 may issue floating point instructions in
+addition to two integer instructions per cycle.  Since dcpicalc assumes
+dual issue to be the ideal case (corresponding to 100% execution), the
+extra instructions would cause this percentage to exceed 100%.  Another
+possible explanation is discrepancies due to sampling error in rarely
+executed code.<P>
+
+Note that the time spent on "nops" is not necessarily wasted.  These
+operations are often inserted deliberately by the compiler's instruction
+scheduler to improve instruction execution by the processor's pipeline.  If
+they were removed, fewer instructions would be executed, but it may not
+take less time.<P>
+
+<DT>Line 24<P>
+
+<DD>is the net discrepancy due to sampling error and inaccuracy in execution
+count estimates.  This can give some indication of how noisy the
+sample data are, but since it is net discrepancy, two discrepancies of
+opposite signs may cancel out each other, giving a small error term.
+However, significant discrepancies are attributed to unexplained stall and
+gain (lines 11 and 12); they do not cancel out.<P>
+
+<DT>Line 25<P>
+
+<DD>is simply the sum of the subtotals.  It should always be 100%.  If not,
+report a bug!<P>
+
+<DT>Line 26<P>
+
+<DD>shows the total number of samples tallied for this summary, and its ratio
+to the number of all samples for this procedure.  We tally only the samples
+falling in basic blocks whose execution counts have been determined by
+dcpicalc.  All previous percentages in the summary are computed relative to
+the number of tallied samples.<P>
+
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>TYPICAL USAGE</H3>
+<BLOCKQUOTE>
+<P>
+
+Typically, <TT>dcpicalc</TT>, <TT>dcpisource</TT>, and <TT>dcpi2ps</TT> are used together as follows:
+<PRE>
+dcpicalc -db db idle_thread /vmunix | \
+dcpisource -f /src/kernel/kern/sched_prim.c | \
+dcpi2ps -o idle_thread.ps 
+</PRE>
+
+It is also possible to read the ascii output of dcpicalc directly.
+</BLOCKQUOTE>
+
+<H3>SEE ALSO</H3>
+<BLOCKQUOTE>
+<P>
+
+<A HREF="dcpi.html">dcpi(1)</A>,
+<A HREF="dcpiflow.html">dcpiflow(1)</A>,
+<A HREF="dcpiprof.html">dcpiprof(1)</A>,
+<A HREF="dcpilist.html">dcpilist(1)</A>,
+<A HREF="dcpidis.html">dcpidis(1)</A>,
+<A HREF="dcpiscan.html">dcpiscan(1)</A>,
+<A HREF="dcpiepoch.html">dcpiepoch(1)</A>,
+<A HREF="dcpiflush.html">dcpiflush(1)</A>,
+<A HREF="dcpilabel.html">dcpilabel(1)</A>,
+<A HREF="dcpi2ps.html">dcpi2ps(1)</A>,
+<A HREF="dcpicat.html">dcpicat(1)</A>,
+<A HREF="dcpiquit.html">dcpiquit(1)</A>,
+<A HREF="dcpidiff.html">dcpidiff(1)</A>,
+<A HREF="dcpitopstalls.html">dcpitopstalls(1)</A>,
+<A HREF="dcpiwhatcg.html">dcpiwhatcg(1)</A>,
+<A HREF="dcpictl.html">dcpictl(1)</A>,
+<A HREF="dcpisource.html">dcpisource(1)</A>,
+<A HREF="dcpicc.html">dcpicc(1)</A>,
+<A HREF="dcpiversion.html">dcpiversion(1)</A>,
+<A HREF="dcpiuninstall.html">dcpiuninstall(1)</A>,
+<A HREF="dcpi2pix.html">dcpi2pix(1)</A>,
+<A HREF="dcpikdiff.html">dcpikdiff(1)</A>,
+<A HREF="dcpix.html">dcpix(1)</A>,
+<A HREF="dcpisumxct.html">dcpisumxct(1)</A>,
+<A HREF="dcpistats.html">dcpistats(1)</A>,
+<A HREF="dcpid.html">dcpid(1)</A>,
+<A HREF="dcpiformat.html">dcpiformat(4)</A>,
+<A HREF="dcpiloader.html">dcpiloader(5)</A><P>
+
+For more information, see the 
+<A HREF="../home.html">DIGITAL Continuous
+Profiling Infrastructure project home page
+(http://www.research.digital.com/SRC/dcpi/ from outside DIGITAL)</A>.
+</BLOCKQUOTE>
+
+<H3>COPYRIGHT</H3>
+<BLOCKQUOTE>
+<P>
+
+<a href="http://www.digital.com/info/tm.html">
+Copyright 1996-97, Digital Equipment Corporation.
+</a>
+</BLOCKQUOTE>
+
+<H3>AUTHORS</H3>
+<BLOCKQUOTE>
+Shun-Tak Leung, Dick Sites, Mark Vandevoorde
+</BLOCKQUOTE>
+
+This page was generated automatically by
+<A HREF="http://www.research.digital.com/SRC/mtex/">mtex software</A>.
+</BODY>
+</HTML>

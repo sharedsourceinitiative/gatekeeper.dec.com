@@ -1,0 +1,288 @@
+//test
+#!/usr/bin/wish -f
+
+set gen 0
+
+
+wm title . "Genetic Algorithms in Pattern Classification"
+
+frame .mBar -relief raised -bd 2
+pack .mBar -side top -fill x
+frame .middle
+pack .middle
+scrollbar .middle.s -relief flat -command ".middle.t yview"
+pack .middle.s -side right -fill y
+text .middle.t -relief raised -bd 2 -yscrollcommand ".middle.s set" -setgrid true
+.middle.t tag configure bold 
+pack .middle.t -side left -fill both -expand 1
+frame .bottom
+pack .bottom -fill x
+
+menubutton .mBar.file -text File -underline 0 -menu .mBar.file.m
+menubutton .mBar.edit -text Edit -underline 0 -menu .mBar.edit.m
+menubutton .mBar.run -text Run -underline 0 -menu .mBar.run.m
+menubutton .mBar.pars -text Parameters -underline 0 -menu .mBar.pars.m
+menubutton .mBar.help -text Help -underline 0 -menu .mBar.help.m
+pack .mBar.file .mBar.edit .mBar.run .mBar.pars .mBar.help -side left
+
+menu .mBar.file.m
+.mBar.file.m add command -label "Select Data File" -command sdf
+.mBar.file.m add separator
+.mBar.file.m add command -label "Read Result File" -command rrf
+.mBar.file.m add separator
+.mBar.file.m add command -label "Quit" -command exit
+
+menu .mBar.edit.m
+.mBar.edit.m add command -label "Open" -command "exec emacs"
+
+menu .mBar.run.m
+.mBar.run.m add command -label "Classifier-GA" -command cga
+.mBar.run.m add separator
+.mBar.run.m add command -label "Plot Results" -command pr
+
+menu .mBar.pars.m 
+.mBar.pars.m add command -label "Fitness Model Parameters" -command fmp
+.mBar.pars.m add separator
+.mBar.pars.m add command -label "Genetic Algorithms Parameters" -command gap
+
+menu .mBar.help.m
+.mBar.help.m add command -label "About" -command about
+.mBar.help.m add command -label "Help" -command rhelp
+
+tk_menuBar .mBar .mBar.file .mBar.edit .mBar.run .mBar.pars .mBar.help
+
+frame .bottom.1
+pack .bottom.1 -side left
+
+label .bottom.1.label1 -text "Result File: "
+label .bottom.1.label2 -text "Generation"
+entry .bottom.1.entry -width 5 -relief sunken -bd 2 -textvariable gen
+button .bottom.1.plus -text "+" 
+button .bottom.1.minus -text "-"
+pack .bottom.1.label1 .bottom.1.label2 .bottom.1.entry .bottom.1.plus .bottom.1.minus -side left -fill x
+
+procedure cga {
+	exec test_popu
+	exec srg
+}
+
+// srg
+#!/usr/bin/wish -f
+
+set maxA 20.0
+set maxB 100.0
+
+canvas .c -width 20c -height 20c
+
+pack .c
+
+.c create line 2.0c 1.0c 2.0c 8.0c 11.0c 8.0c 
+
+set f [open "ga.log" r]
+
+gets $f line
+gets $f line
+
+set v1 [lindex $line 0]
+set v2 [lindex $line 1]
+
+set a [expr 9.0*($v1/$maxA)+2.0]
+set b [expr 7.0*(1.0-$v2/$maxB)+1.0]
+
+gets $f line
+
+set v1 [lindex $line 0]
+set v2 [lindex $line 1]
+
+set c [expr 9.0*($v1/$maxA)+2.0]
+set d [expr 7.0*(1.0-$v2/$maxB)+1.0]
+
+gets $f line
+
+set v1 [lindex $line 0]
+set v2 [lindex $line 1]
+
+set e [expr 9.0*($v1/$maxA)+2.0]
+set f [expr 7.0*(1.0-$v2/$maxB)+1.0]
+
+.c create line ${a}c ${b}c ${c}c ${d}c ${e}c ${f}c
+
+
+// sdf
+
+proc fileselect {{why "File Selection"} {default {}} } {
+	global fileselect
+
+	catch {destroy .fileselect}
+
+	set t [toplevel .fileselect -bd 4]
+
+	message $t.msg -aspect 1000 -text $why
+	pack $t.msg -side top -fill x
+
+	set fileselect(dirEnt) [entry $t.dir -width 15 -relief flat -state disabled]
+	pack $t.dir -side top -fill x
+
+	frame $t.top
+	label $t.top.1 -text "File Name:" -padx 0
+	set e [entry $t.top.path -relief sunken -textvariable fileselect(path)]
+	pack $t.top -side top -fill x
+	pack $t.top.1 -side left
+	pack $t.top.path -side right -fill x -expand true
+	set fileselect(pathEnt) $e
+
+	bind $e <Return> fileselectOK
+	bind $e <Control-c> fileselectCancel
+	bind $e <space> fileselectComplete
+	focus $e
+
+	listbox $t.list -yscrollcommand [list $t.scroll set]
+	scrollbar $t.scroll -command [list $t.list yview]
+
+	bind %t.list <Button-1> {fileselectClick %y}
+	bind $t.list <Double-Button-1> {fileselectClick %y; fileselectOK}
+
+	bind $e <Tab> "focus $t.list ; $t.list select set 0"
+	bind $t.list <Return> fileselectTake
+	bind $t.list <Space> {fileselectTake ; break}
+	bind $t.list <Tab> "focus $e"
+
+	frame $t.buttons -bd 10
+	frame $t.buttons.ok -bd 2 -relief sunken 
+	button $t.buttons.ok.b -text OK -command fileselectOK
+	button $t.buttons.cancel -text Cancel -command fileselectCancel
+
+	pack $t.list -side left -fill both -expand true
+	pack $t.scroll -side left -fill y
+	pack $t.buttons -side left -fill both
+	pack $t.buttons.ok $t.buttons.cancel -side top -padx 10 -pady 5
+	pack $t.buttons.ok.b -padx 4 -pady 4
+	
+	if {[string length $default] == 0} {
+		set fileselect(path) {}
+		set dir [pwd]
+	} else {
+		set fileselect(path) [file tail $default]
+		set dir [file dirname $default]
+	}
+	set fileselect(dir) {}
+	set fileselect(done) 0
+
+	tkwait visibility .fileselect.list
+	fileselectList $dir
+
+	tkwait variable fileselect(done)
+	destroy .fileselect
+	return $fileselect(path)
+
+}
+
+proc :
+	
+
+// project
+
+#!/usr/bin/wish -f
+
+set gen 0
+
+
+wm title . "Genetic Algorithms in Pattern Classification"
+
+frame .mBar -relief raised -bd 2
+pack .mBar -side top -fill x
+frame .middle
+pack .middle
+scrollbar .middle.s -relief flat -command ".middle.t yview"
+pack .middle.s -side right -fill y
+text .middle.t -relief raised -bd 2 -yscrollcommand ".middle.s set" -setgrid true
+.middle.t tag configure bold 
+pack .middle.t -side left -fill both -expand 1
+frame .bottom
+pack .bottom -fill x
+
+menubutton .mBar.file -text File -underline 0 -menu .mBar.file.m
+menubutton .mBar.edit -text Edit -underline 0 -menu .mBar.edit.m
+menubutton .mBar.run -text Run -underline 0 -menu .mBar.run.m
+menubutton .mBar.pars -text Parameters -underline 0 -menu .mBar.pars.m
+menubutton .mBar.help -text Help -underline 0 -menu .mBar.help.m
+pack .mBar.file .mBar.edit .mBar.run .mBar.pars .mBar.help -side left
+
+menu .mBar.file.m
+.mBar.file.m add command -label "Select Data File" -command sdf
+.mBar.file.m add separator
+.mBar.file.m add command -label "Read Result File" -command rrf
+.mBar.file.m add separator
+.mBar.file.m add command -label "Quit" -command exit
+
+menu .mBar.edit.m
+.mBar.edit.m add command -label "Open" -command "exec emacs"
+
+menu .mBar.run.m
+.mBar.run.m add command -label "Classifier-GA" -command cga
+.mBar.run.m add separator
+.mBar.run.m add command -label "Plot Results" -command pr
+
+menu .mBar.pars.m 
+.mBar.pars.m add command -label "Fitness Model Parameters" -command fmp
+.mBar.pars.m add separator
+.mBar.pars.m add command -label "Genetic Algorithms Parameters" -command gap
+
+menu .mBar.help.m
+.mBar.help.m add command -label "About" -command about
+.mBar.help.m add command -label "Help" -command rhelp
+
+tk_menuBar .mBar .mBar.file .mBar.edit .mBar.run .mBar.pars .mBar.help
+
+frame .bottom.1
+pack .bottom.1 -side left
+
+label .bottom.1.label1 -text "Result File: "
+label .bottom.1.label2 -text "Generation"
+entry .bottom.1.entry -width 5 -relief sunken -bd 2 -textvariable gen
+button .bottom.1.plus -text "+" 
+button .bottom.1.minus -text "-"
+pack .bottom.1.label1 .bottom.1.label2 .bottom.1.entry .bottom.1.plus .bottom.1.minus -side left -fill x
+
+procedure cga {
+	exec test_popu
+	exec srg
+}
+
+//ga.log
+Generation      Best fitness    Average fitness
+0               98.7962                 95.8853
+1               98.7962                 96.5206
+2               98.9315                 96.8976
+3               98.9315                 97.4248
+4               98.9315                 97.9334
+5               98.9315                 98.6266
+6               99.4972                 99.0446
+7               99.4972                 99.1578
+8               99.4972                 99.3275
+9               99.4972                 99.4972
+10              99.4972                 99.4972
+11              99.4972                 99.4972
+12              99.4972                 99.4972
+13              99.4972                 99.4972
+14              99.4972                 99.4972
+15              99.4972                 99.4972
+16              99.4972                 99.4972
+17              99.4972                 99.4972
+18              99.4972                 99.4972
+19              99.4972                 99.4972
+20              99.4972                 99.4972
+
+// ga.ini
+
+[MODEL1]
+object= 50
+generation= 100
+crossover= 3
+mutation= 0
+population= 50
+delete=0 
+fitness= 1
+
+[END]
+

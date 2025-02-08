@@ -1,0 +1,363 @@
+<HTML>
+<HEAD>
+<TITLE>
+3. Data Analysis Examples - Continuous Profiling: Where Have All the Cycles Gone?
+</TITLE>
+</HEAD>
+
+<BODY>
+
+<H1>
+<CENTER>
+<A HREF="index.html">Continuous Profiling: Where Have All the Cycles Gone?</A>
+<P>
+3. Data Analysis Examples
+</CENTER>
+</H1>
+
+<P>
+To illustrate the range of information our system can provide, this section
+provides several examples of its use.  Our system
+has been used to analyze and improve the performance of a wide range of
+complex commercial applications, including graphics systems, databases,
+industry benchmark suites, and compilers.  For example, our tools
+pinpointed a performance problem in a commercial database system; fixing
+the problem reduced the response time of a particular SQL query from 180 to
+14 hours.  In another example, our tools' fine-grained instruction-level
+analyses identified opportunities to improve optimized code produced by
+DIGITAL's compiler, speeding up the mgrid SPECfp95 benchmark by 15%.
+</P>
+
+<P>
+Our system includes a large suite of tools to analyze profiles
+at different levels of detail.  In this section, we present several
+examples of the following tools:
+<UL>
+<LI>
+<B>dcpiprof</B>: Display the number of samples per procedure (or per image).
+</LI>
+
+<LI>
+<B>dcpicalc</B>: Calculate the cycles-per-instruction and basic block
+	execution frequencies of a procedure, and show possible causes for 
+        stalls (see <A HREF="analysis.html">Section 6</A>).
+</LI>
+
+<LI>
+<B>dcpistats</B>: Analyze the variations in profile data from many runs.
+</LI>
+</UL>
+Other tools annotate source and assembly code with sample counts, highlight
+the differences in two separate profiles for the same program, summarize
+where time is spent in an entire program (the percentage of cycles
+spent waiting for data-cache misses, etc.; see
+<A HREF="#fig4">Figure 4</A>
+for an example of this kind of summary for a single procedure),
+translate
+profile data into pixie format, and produce formatted Postscript output
+of annotated control-flow graphs.
+</P>
+
+<H2>3.1. Procedure-Level Bottlenecks</H2>
+
+<P>
+Dcpiprof provides a high-level view of the performance of a workload.
+It reads the profile data gathered by the system and displays a listing
+of the number of
+samples per procedure, sorted by decreasing number of samples.  (It
+can also list the samples by image, rather than by procedure.)
+Figure 1 shows the first few lines of the
+output of dcpiprof for a run of <CODE>x11perf</CODE>,
+an X11 drawing benchmark.  For
+example, the <CODE>ffb8ZeroPolyArc</CODE> routine accounts for 33.87% of the
+cycles for this workload.  Notice that this profile includes code in
+the kernel (<CODE>/vmunix</CODE>) as well as code in shared libraries.
+The figure
+also has columns for the cumulative percent of cycle samples consumed by
+the procedure and all those preceding it in the listing, as well as
+information about the total number and fraction of instruction cache miss
+samples that occurred in each procedure.
+</P>
+
+<HR>
+<PRE>
+Total samples for event type cycles = 6095201, imiss = 1117002
+
+The counts given below are the number of samples for each listed event type.
+==============================================================================================
+ cycles       %    cum%   imiss       % procedure              image
+2064143  33.87%  33.87%   43443   3.89% ffb8ZeroPolyArc        /usr/shlib/X11/lib_dec_ffb_ev5.so
+ 517464   8.49%  42.35%   86621   7.75% ReadRequestFromClient  /usr/shlib/X11/libos.so
+ 305072   5.01%  47.36%   18108   1.62% miCreateETandAET       /usr/shlib/X11/libmi.so
+ 271158   4.45%  51.81%   26479   2.37% miZeroArcSetup         /usr/shlib/X11/libmi.so
+ 245450   4.03%  55.84%   11954   1.07% bcopy                  /vmunix
+ 209835   3.44%  59.28%   12063   1.08% Dispatch               /usr/shlib/X11/libdix.so
+ 186413   3.06%  62.34%   36170   3.24% ffb8FillPolygon        /usr/shlib/X11/lib_dec_ffb_ev5.so
+ 170723   2.80%  65.14%   20243   1.81% in_checksum            /vmunix
+ 161326   2.65%  67.78%    4891   0.44% miInsertEdgeInET       /usr/shlib/X11/libmi.so
+ 133768   2.19%  69.98%    1546   0.14% miX1Y1X2Y2InRegion     /usr/shlib/X11/libmi.so
+</PRE>
+<CENTER>
+<B>Figure 1:  The key procedures from an x11perf run.</B>
+</CENTER>
+<HR>
+
+<H2>3.2. Instruction-Level Bottlenecks</H2>
+
+<P>
+Dcpicalc provides a detailed view of the time spent on each
+instruction in a procedure.  Figure 2
+illustrates the output of dcpicalc for the key basic block in a
+McCalpin-like copy benchmark<A HREF="references.html#McC95">[McC95]</A>,
+running on an AlphaStation 500 5/333.
+The copy benchmark runs the following loop where <CODE>n</CODE> = 2000000 and
+the array elements are 64-bit integers:
+<PRE>
+  for (i = 0; i < n; i++)
+    c[i] = a[i];
+</PRE>
+The compiler has unrolled the loop four times, resulting in four loads
+and stores per iteration.    The generated code shown in
+Figure 2 drives the memory system at full
+speed.
+</P>
+
+<A NAME="mccalpin">
+<HR>
+<PRE>
+*** Best-case 8/13 =   0.62CPI
+*** Actual  140/13 =  10.77CPI
+
+<B>Addr   Instruction       Samples   CPI  Culprit</B>
+    pD   <I>p = branch mispredict</I>
+    pD   <I>D = DTB miss</I>
+009810 ldq    t4, 0(t1)     3126   2.0cy
+009814 addq   t0, 0x4, t0      0   <I>(dual issue)</I>
+009818 ldq    t5, 8(t1)     1636   1.0cy
+00981c ldq    t6, 16(t1)     390   0.5cy
+009820 ldq    a0, 24(t1)    1482   1.0cy
+009824 lda    t1, 32(t1)       0   <I>(dual issue)</I>
+    dwD  <I>d = D-cache miss</I>
+    dwD  ... 18.0cy
+    dwD  <I>w = write-buffer overflow</I>
+009828 stq    t4, 0(t2)    27766  18.0cy 9810
+00982c cmpult t0, v0, t4       0   <I>(dual issue)</I>
+009830 stq    t5, 8(t2)     1493   1.0cy
+  s      <I>s = slotting hazard</I>
+    dwD
+    dwD ... 114.5cy
+    dwD
+009834 stq    t6, 16(t2)  174727 114.5cy 981c
+  s
+009838 stq    a0, 24(t2)    1548   1.0cy  
+00983c lda    t2, 32(t2)       0   <I>(dual issue)</I>
+009840 bne    t4, 0x009810  1586   1.0cy
+</PRE>
+<CENTER>
+<B>Figure 2:  Analysis of Copy Loop.</B>
+</CENTER>
+<HR>
+</A>
+
+<P>
+At the beginning of the basic block, dcpicalc shows summary
+information for the block.  The first two lines display the best-case
+and actual cycles per instruction (CPI) for the block. The best-case
+scenario includes all stalls statically predictable from the
+instruction stream but assumes that there are no dynamic stalls
+(<I>e.g.</I>, all load instructions hit in the D-cache).  For the copy
+benchmark, we see that the actual CPI is quite high at 10.77, whereas
+the best theoretical CPI (if no dynamic stalls occurred) is only 0.62.
+This shows that dynamic stalls are the significant performance problem
+for this basic block.
+</P>
+
+<P>
+Dcpicalc also lists the instructions in the basic block, annotated
+with information about the stall cycles (and program source code, if
+the image contains line number information). Above each assembly
+instruction that stalls, dcpicalc inserts <I>bubbles</I> to show the 
+duration and possible cause of the stall.  
+Each line of assembly code shows, from
+left to right, the instruction's address, the instruction, the number
+of PC samples at this instruction, the average number of cycles this
+instruction spent at the head of the issue queue (stalled or not),
+and the addresses of
+other instructions that may have caused this instruction to stall.
+Note that Alpha load and load-address instructions write their first
+operand; 3-register operators write their third
+operand.
+</P>
+
+<P>
+Each line in the listing represents a half-cycle, so it is easy
+to see if instructions are being dual-issued.  In the figure, we
+see that there are two large stalls, one for 18.0 cycles at
+instruction 009828, and another for 114.5 cycles at instruction
+009834.  The letters <CODE>dwD</CODE> before the stalled
+<CODE>stq</CODE>
+instruction at 009828 indicate three possible reasons: 
+a D-cache miss incurred by the <CODE>ldq</CODE> at 009810 (which provides the
+data needed by the <CODE>stq</CODE>), a write-buffer overflow, or a
+data TLB (DTB)
+miss.  The <CODE>stq</CODE> instruction at 009834 is also stalled for the same
+three possible reasons.
+The lines labeled <CODE>s</CODE> indicate static stalls due
+to slotting hazards; in this
+case they are caused by the 21164 not being able to dual-issue
+adjacent <CODE>stq</CODE> instructions.  Dcpicalc identifies these reasons by
+analyzing the instructions and the time-biased program counter samples, 
+without monitoring other events like cache misses.
+</P>
+
+<P>
+As expected, the listing shows that as the copy loop streams through the
+data the performance bottleneck is mostly due to memory latency.  Also, the
+six-entry write buffer on the 21164 is not able to retire the writes fast
+enough to keep up with the computation.  DTB miss is perhaps not a real
+problem since the loop walks through each page and may incur DTB misses
+only when crossing a page boundary.  It would have been ruled out if
+samples for DTB miss events had been collected.  Since they are not in this
+particular experiment (they are not collected by default), dcpicalc lists
+DTB miss as a possibility because it is designed to assume the worst unless
+the data indicate otherwise.
+<A HREF="analysis.html#culprits">Section 6.3</A> discusses this
+further.
+</P>
+
+<H2>3.3. Analyzing Variance Across Program Executions</H2>
+
+<P>
+Several benchmarks that we used to analyze the performance of the data
+collection system showed a noticeable variance in running times across
+different runs.  We used our tools to examine one of these benchmarks,
+wave5 from the sequential SPECfp95 workload, in more detail.
+</P>
+
+<P>
+We ran wave5 on an AlphaStation 500 5/333 and observed running times
+that varied by as much as 11%.  We ran dcpistats on 8 sets of
+sample files to isolate the procedures that had the greatest variance;
+dcpistats reads multiple sets of sample files and computes statistics
+comparing the profile data in the different sets.  The output of
+dcpistats for wave5 is shown in Figure 3.
+</P>
+
+<HR>
+<PRE>
+Number of samples of type cycles
+set 1 = 860301   set 2 = 862645   set 3 = 871952   set 4 = 870780            TOTAL      7144601
+set 5 = 942929   set 6 = 893154   set 7 = 890969   set 8 = 951871     
+
+Statistics calculated using the sample counts for each procedure from 8 different sample set(s)
+=============================================================================================
+  range%        sum     sum%     N       mean    std-dev        min        max     procedure  
+  11.32%  441040.00    6.17%     8   55130.00   21168.70   38155.00   88075.00     smooth_  
+   1.44%   72385.00    1.01%     8    9048.12     368.74    8578.00    9622.00     fftb_    
+   1.39%   71129.00    1.00%     8    8891.12     327.68    8467.00    9453.00     fftf_    
+   0.94% 4242079.00   59.37%     8  530259.87   14097.11  515253.00  555180.00     parmvr_  
+   0.68%  378622.00    5.30%     8   47327.75    1032.09   46206.00   48786.00     putb_    
+   0.65%  410929.00    5.75%     8   51366.13    1161.61   50420.00   53110.00     vslv1p_  
+</PRE>
+<CENTER>
+<B>Figure 3:  Statistics across eight runs of the SPECfp benchmark wave5.</B>
+</CENTER>
+<HR>
+
+<P>
+The figure shows the procedures in the wave5 program, sorted by the
+normalized range, <I>i.e.</I>, the difference between the maximum and
+minimum sample counts for that procedure, divided by the sum of the
+samples.  We see that the procedure <CODE>smooth</CODE> had a much larger
+range than any of the other procedures.
+</P>
+
+<P>
+Next, we ran dcpicalc on
+<CODE>smooth</CODE> for each profile, obtaining a summary of the fraction of
+cycles consumed by each type of dynamic and static stall within the
+procedure.  The summary for the fastest run (the profile with
+the fewest samples) is shown in 4.  The summary
+for the slowest run (not shown) shows that the percentages of stall cycles
+attributed to D-cache miss, DTB miss, and write buffer overflow increase
+dramatically to 44.8-44.9%, 14.0-33.9%, and 0.0-18.3% respectively.  The
+increase is probably in part due to differences in the virtual-to-physical
+page mapping across the different runs---if different data items are
+located on pages that map to the same location in the physically-addressed
+board cache (the L3 cache on the 21164), the number of conflict misses will
+increase.
+</P>
+
+<A NAME="fig4">
+<HR>
+<PRE>
+ *** Best-case 14686/36016 =   0.41CPI,
+ *** Actual 35171/36016 =   0.98CPI
+ *** 
+ ***  I-cache (not ITB)   0.0% to  0.3%
+ ***   ITB/I-cache miss   0.0% to  0.0%
+ ***       D-cache miss  27.9% to 27.9%
+ ***           DTB miss   9.2% to 18.3%
+ ***       Write buffer   0.0% to  6.3%
+ ***    Synchronization   0.0% to  0.0%
+ *** 
+ ***  Branch mispredict   0.0% to  2.6%
+ ***          IMUL busy   0.0% to  0.0%
+ ***          FDIV busy   0.0% to  0.0%
+ ***              Other   0.0% to  0.0%
+ *** 
+ ***  Unexplained stall   2.3% to  2.3%
+ ***   Unexplained gain  -4.3% to -4.3%
+ *** ----------------------------------------
+ ***   Subtotal dynamic                 44.1%
+ *** 
+ ***           Slotting       1.8%
+ ***      Ra dependency       2.0%
+ ***      Rb dependency       1.0%
+ ***      Rc dependency       0.0%
+ ***      FU dependency       0.0%
+ *** ----------------------------------------
+ ***    Subtotal static                  4.8%
+ *** ----------------------------------------
+ ***        Total stall                 48.9%
+ ***          Execution                 51.2%
+ *** Net sampling error                 -0.1%
+ *** ----------------------------------------
+ ***      Total tallied                100.0%
+ *** (35171, 93.1% of all samples)
+</PRE>
+
+<CENTER>
+<B>Figure 4:  Summary of how cycles are spent in the procedure
+<CODE>smooth</CODE>
+for the fast run of the SPECfp95 benchmark wave5.</B>
+</CENTER>
+<HR>
+</A>
+
+<BLOCKQUOTE>
+<A HREF="index.html"> Beginning of paper </A> <BR>
+<A HREF="abstract.html">Abstract</A> <BR>
+<A HREF="introduction.html">1. Introduction</A> <BR>
+<A HREF="related.html">2. Related Work</A> <BR>
+3. Data Analysis Examples <BR>
+<A HREF="collection.html">4. Data Collection System</A> <BR>
+<A HREF="collection-performance.html">5. Profiling Performance</A> <BR>
+<A HREF="analysis.html">6. Data Analysis Overview</A> <BR>
+<A HREF="future.html">7. Future Directions</A> <BR>
+<A HREF="conclusions.html">8. Conclusions</A> <BR>
+<A HREF="acks.html">Acknowledgements</A> <BR>
+<A HREF="references.html">References</A>
+</BLOCKQUOTE>
+
+<HR>
+
+To appear in the ACM Transactions on Computer Systems.
+This paper is a slightly revised version of a paper that will also appear
+in the 16th ACM Symposium
+on Operating Systems Principles, October 5-8, 1997, St. Malo, France.
+Copyright 1997 by ACM, Inc. All rights reserved. Republished
+by permission.
+
+</BODY>
+</HTML>

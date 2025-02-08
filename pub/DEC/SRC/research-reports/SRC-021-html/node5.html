@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Introduction</TITLE>
+<META NAME="description" CONTENT="Introduction">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node6.html">
+<LINK REL="previous" HREF="node4.html">
+<LINK REL="up" HREF="node4.html">
+<LINK REL="next" HREF="node6.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html171"
+ HREF="node6.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html167"
+ HREF="node4.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html161"
+ HREF="node4.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html169"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html170"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html172"
+ HREF="node6.html">Topaz Overview</A>
+<B> Up:</B> <A NAME="tex2html168"
+ HREF="node4.html">Evolving the UNIX System</A>
+<B> Previous:</B> <A NAME="tex2html162"
+ HREF="node4.html">Evolving the UNIX System</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H1><A NAME="SECTION02010000000000000000">
+Introduction</A>
+</H1>
+<P><A NAME="120">&#160;</A>
+Most existing general-purpose operating systems provide rich collections
+of tools and applications, but lack the support for fine-grain concurrency
+that would ease the construction of applications dealing with asynchrony
+and allow the exploitation of multiprocessors.  Multiple threads (program
+counters sharing an address space) provide such support, but at the cost
+of placing additional constraints on the design of operating system
+interfaces.  In this paper we present several guidelines that we used to
+design the multithreaded operating system interface of the Topaz system
+built at DEC's Systems Research Center.  We show how we used these
+guidelines to evolve the Topaz interface from the 4.2BSD UNIX
+[<A
+ HREF="node19.html#joy:4.2sysman">7</A>,<A
+ HREF="node19.html#quarterman:berkeleyunix">12</A>] system interface.  We believe
+the guidelines will be useful for adding multithreading to other operating
+systems.
+<P><A NAME="122">&#160;</A>
+<A NAME="123">&#160;</A>
+One implementation of Topaz runs as the native operating system on SRC's
+Firefly multiprocessor [<A
+ HREF="node19.html#thacker:firefly">18</A>] and allows concurrent
+execution on separate processors of multiple threads within the same
+address space.  A second implementation of Topaz is layered on 4.2BSD
+UNIX; it uses multiprogramming techniques to create multiple threads
+within a single UNIX process.  Both implementations make it convenient to
+compose single-threaded UNIX programs and multithreaded programs using the
+standard UNIX process composition mechanisms.
+<P>
+Topaz is an extension of the architecture of an existing system rather
+than an entirely new design because of the dual role it plays at SRC.
+Topaz serves both as the base for research into distributed systems and
+multiprocessing and also as the support for SRC's current computing needs
+(mainly document preparation, electronic mail, and software development).
+When experimental software can be put into everyday use on the same system
+that runs existing tools and applications, it is easier to get relevant
+feedback on that software.
+<P>
+There were several reasons for choosing UNIX in particular as an
+architectural starting point.  The machine-independence of UNIX left the
+way open for future work at SRC on processor design.  UNIX also offered a
+large set of tools and composition mechanisms, and a framework for
+exchanging ideas about software throughout the research community.
+<P>
+Section <A HREF="node6.html#sec-topazoverview">2</A> gives a brief overview of Topaz, to set
+the stage for the rest of the paper.  Sections <A HREF="node7.html#sec-guidelines">3</A> and
+<A HREF="node11.html#sec-osinterface">4</A> constitute the heart of the paper: our guidelines
+for multithreaded interfaces and our use of those guidelines in designing
+the Topaz operating system interface.  Section <A HREF="node18.html#sec-conclusions">5</A> draws
+some conclusions about the approach taken in Topaz.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html171"
+ HREF="node6.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html167"
+ HREF="node4.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html161"
+ HREF="node4.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html169"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html170"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html172"
+ HREF="node6.html">Topaz Overview</A>
+<B> Up:</B> <A NAME="tex2html168"
+ HREF="node4.html">Evolving the UNIX System</A>
+<B> Previous:</B> <A NAME="tex2html162"
+ HREF="node4.html">Evolving the UNIX System</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,23 @@
+
+			AVAILABLE ELECTRONICALLY
+
+"Report on the Larch Shared Language: Version 2.3"
+John V. Guttag, James J. Horning, Andres Modet
+ April 14, 1990.  43 pages
+
+Authors' abstract
+The Larch family of languages is used to specify program interfaces in a
+two-tiered definitional style.  Each Larch specification has components written
+in two languages: one that is designed for a specific programming language
+and another that is independent of any programming language.  The former are
+the Larch interface languages, and the latter is the Larch Shared
+Language (LSL).  Version 2.3 of LSL is similar to previous versions, but
+contains a number of refinements based on experience writing specifications
+and developing tools to support the specification process.  This report
+contains an informal introduction and a self-contained language definition.
+
+
+This report supersedes Pieces II and III of Larch in Five Easy
+Pieces, SRC Report 5, by J. Guttag, J. Horning, and J. Wing.
+
+

@@ -1,0 +1,29 @@
+This contains the various distributions of SpecTcl 1.1.
+SpecTcl is a graphical user interface (GUI) builder that helps you
+construct cross platform applications written in Tcl.  This is the
+last release of SpecTcl that we will make.  The product is no longer
+supported.  However, we have changed the license to make SpecTcl 
+free.  Others may pick up the product and provide support if they
+so desire.
+
+The following files are available:
+
+SpecTcl1.1.tar.Z	- UNIX distribution
+SpecTcl1.1.tar.gz
+
+spectcl1.1.sea.hqx	- Mac distribution
+
+SpecTcl1.1.exe		- Windows distribution
+
+SpecTclGd.ps		- Documentation in postscript & PDF form
+SpecTclGd.pdf
+
+We hope you find this software useful or at least a source of good ideas.
+
+The SpecTcl team:
+
+Ray Johnson - Project Manager
+Ioi Lam
+Allan Pratt
+Special Thanks to: Steve Uhler & Ken Corey
+

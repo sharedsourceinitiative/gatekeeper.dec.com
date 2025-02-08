@@ -1,0 +1,25 @@
+The game of Awele is a popular african game, also known as "Sungo"
+or "Ubao". It is made of a wooden board with 12 holes containing
+some kind of stones. The aim is to capture as many stones as 
+possible. There exist varieties of rules. I implemented the one
+I know, which is one of the most popular (in Ivory Coast at least).
+
+This code has been tested on DEC 5000, DEC Alpha and Sparc stations.
+It seems fine with Linux also.
+It is a Tcl/Tk script, with some routines written in C. See the INSTALL
+file for instructions.
+
+Requirements:
+	- Unix
+	- X11, color display (8 or 24 bits)
+	- Tcl version 7.4 / Tk version 4.0
+	- ANSI-C compiler
+
+Also available at:
+	http:///www-rocq.inria.fr/air/ftp/Jean-Paul/
+
+Send comments, suggestions, claims to:
+	jean-paul.berroir@inria.fr
+
+Thanks
+Jean-Paul

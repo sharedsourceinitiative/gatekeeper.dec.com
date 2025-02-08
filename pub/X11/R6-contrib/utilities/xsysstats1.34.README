@@ -1,0 +1,112 @@
+XSysStats README:
+
+DESCRIPTION:
+
+XSysStats is a system information display tool similar to perfmeter.  It
+displays its information in the form of a strip chart.  It can also display
+information about remote hosts, as perfmeter can do.
+
+XSysStats can display any number of graphs at one time in the same window.
+Information being displayed in the window need not be all of the same host.
+For example, you could have it display the percentage of cpu being utilized
+of half a dozen (or more) different hosts.  Also, splitting the window
+into smaller windows is now supported (similar to what the perfmeter
+in OW 3 allows)
+
+The only system this has been tested on is a Sun 3/60 running SunOs 4.1.1,
+x11R5 and X11R6.  I have gotten reports of it running on Sparc systems, also
+Solaris 2.3, and a patch for NetBSD has also been put in.  It should also
+compile on AIX systems.  For other systems, some porting may be required for
+it to work.  XSysStats uses the 'rstat' function to get information.  This
+probably does not exist on all machines, and the structure it uses may vary
+between different machines.  See the PORTING file for more information on
+how to port to different systems.
+
+XSysStats requirs an ANSI compiler.  Gcc works fine, and Sun's acc also work
+(but may result in warnings at compile time.)  For further information about
+ANSI compile support, look below in the NOTES section.  Running some of the
+programs that convert function declarations from ANSI to non ANSI may let it
+compile on non ANSI systems, but I do not guarentee that this will work.
+
+There are some things that perfmeter (Openwindows 2 version) is able to do
+that XSysStats can not do.  Perfmeter in its iconic form displays a meter
+with hands. XSysStats only displays information while in its open state.
+Also, perfmeter allows the user to change what information it displays, or
+how frequently it updates it.  Once XSysStats has been run, what it displays
+is locked into place.
+
+XSysStats does have the advantage that the only X library it uses is the
+base X11 library.  This means the resident size is smaller than perfmeter (a
+lot of space can be saved if you run several perfmeters, as these could then
+be combined into one XSysStats window) XSysStats in general consumes less
+CPU time than perfmeter does (an XSysStats program displaying four graphs
+about one machine takes less than half the time a perfmeter took displaying
+just one graph.)  However, for reasons I have not figured out, it seems to
+consume more CPU time than perfmeter if reporting on remote hosts.  Even
+with this increased cost, it only accounted for about 1.5% of the cpu time on
+my sun 3/60.
+
+Changes from 1.33 to 1.34:
+
+    Fixed bug in window allocation (-split option).  Was using values before
+        they were set - this may fix some core dumps.
+
+    Added -border command line option that lets the user set the spacing
+        between the different graphs and the window edge.
+
+    Host names are now copied into programs only data array.  Previously,
+        it just pointed to the location that the shell/invocating program
+        provided them in.
+
+Changes from 1.32 to 1.33:
+
+    Patches put in so that it should now compile without modification on
+	Free BSD systems.
+
+    Fixed bug that could cause it to core dump when sync_scales was called -
+	program was accessing beyond the end of the graphs array.
+
+Changes from 1.31 to 1.32:
+
+    Bug fixed in -split mode - the array of windows was not be created
+	properly.  This created numerous bugs that were not easily
+	reproducible.
+
+    Changed calls of index to strchr.
+
+    If MAXHOSTNAMELEN is not defined, then set it to 64.
+
+Changes from 1.30 to 1.31
+    Fixed a fatal bug that caused core dumps.  Starting xsysstats
+        in split window mode with now geometry specified caused an
+        arithemetic except, and then a core dump.
+
+Changes from 1.20 to 1.30
+    splitting of the window now supported.  -split and -window arguments
+	added to handle this properly.
+    ANSI C is now truly required.  At one time, support for non ANSI
+	compilers was trivial, and I recieved a patch to do this.  Now, it
+	is a little more difficult, and I find that the code becomes a bit
+	harder to read with all the #ifdef __STDC__ and so on to support the
+	differences in function headers.  As far as I know, there is nothing
+	preventing the running of any of the ANSI -> K&R converter programs
+	out there, but I do not guarentee that this will work.
+    Command line parsing redone.  Global options (like -foreground) should
+	be handled better.  Also, -type graph@host now supported.
+
+
+LICENSE:
+
+XSysStats is Copyright (C) 1993, 1994 by Mark Wedel (master@rahul.net).
+
+XSysStats can be redistributed provided it is done free of charge.
+XSysStats can also be modified, but original credit must be given to
+Mark Wedel.
+
+XSysStats is provided as is.  I take no responsibility for damage
+or problems caused by the use of XSysStats.
+
+------------------------------------------------------------------------------
+Mark Wedel
+master@rahul.net
+February 24, 1995

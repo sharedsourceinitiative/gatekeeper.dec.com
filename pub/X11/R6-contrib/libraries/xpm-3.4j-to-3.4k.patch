@@ -1,0 +1,1681 @@
+Go into the XPM v3.4j source directory, 
+and pipe this file into "patch -p"
+You may want to clean the directory afterwards by a:
+find . \( -name \*.orig -o -size 0 \) -exec rm {} \;
+
+diff -c -r ./CHANGES /tmp/xpm-3.4k/CHANGES
+*** ./CHANGES	Thu Mar 19 20:53:48 1998
+--- /tmp/xpm-3.4k/CHANGES	Thu Mar 19 20:53:46 1998
+***************
+*** 29,34 ****
+--- 29,48 ----
+  * 									   *
+  \**************************************************************************/
+  
++ 3.4k    (98/03/18)
++ 
++     ENHANCEMENTS:
++ 	- A new program called cxpm is provided to check on XPM files and help
++ 	  figuring out where the file might be invalid.
++         - The FAQ and README are now in HTML.
++ 
++     BUGS CORRECTED:
++         - A bug in writing pixmaps out on an 32 bit depth visual and MSBFirst
++ 	  machine.
++ 		- patch from Uwe Langenkamp <Uwe.Langenkamp@t-online.de>
++         - A severe bug in parsing the pixels section when an unknown character
++ 	  is encountered.
++ 
+  3.4j	(96/12/31)
+  
+      ENHANCEMENTS:
+***************
+*** 47,53 ****
+  	  reduction goes from 4 to 7% depending on the system)
+  
+      BUGS CORRECTED:
+! 	- fix severe bug (introduced in 3.4i as part of the sprintf
+  	  optimization) in code writing XPM extensions to a buffer
+  	  XpmCreateBufferFromImage/Pixmap.
+  	- The XpmAttributes definition in xpm.h was declaring nalloc_colors to
+--- 61,67 ----
+  	  reduction goes from 4 to 7% depending on the system)
+  
+      BUGS CORRECTED:
+! 	- A severe bug (introduced in 3.4i as part of the sprintf
+  	  optimization) in code writing XPM extensions to a buffer
+  	  XpmCreateBufferFromImage/Pixmap.
+  	- The XpmAttributes definition in xpm.h was declaring nalloc_colors to
+Only in .: FAQ
+Only in /tmp/xpm-3.4k: FAQ.html
+diff -c -r ./FILES /tmp/xpm-3.4k/FILES
+*** ./FILES	Thu Mar 19 20:53:48 1998
+--- /tmp/xpm-3.4k/FILES	Thu Mar 19 20:53:46 1998
+***************
+*** 1,10 ****
+  CHANGES
+  COPYRIGHT
+! FAQ
+  FILES
+  Imakefile
+  Makefile.noX
+! README
+  README.AMIGA
+  README.MSW
+  namecvt
+--- 1,10 ----
+  CHANGES
+  COPYRIGHT
+! FAQ.html
+  FILES
+  Imakefile
+  Makefile.noX
+! README.html
+  README.AMIGA
+  README.MSW
+  namecvt
+***************
+*** 61,63 ****
+--- 61,68 ----
+  sxpm/plaid_mask.xpm
+  sxpm/sxpm.c
+  sxpm/sxpm.man
++ cxpm
++ cxpm/Imakefile
++ cxpm/Makefile.noX
++ cxpm/cxpm.c
++ cxpm/cxpm.man
+diff -c -r ./Imakefile /tmp/xpm-3.4k/Imakefile
+*** ./Imakefile	Thu Mar 19 20:53:48 1998
+--- /tmp/xpm-3.4k/Imakefile	Thu Mar 19 20:53:46 1998
+***************
+*** 68,74 ****
+  #define IHaveSubdirs
+  #define PassCDebugFlags "CDEBUGFLAGS=$(CDEBUGFLAGS)" "DEFINES=$(DEFINES)"
+  
+!      SUBDIRS = lib sxpm
+  
+  MakeSubdirs($(SUBDIRS))
+  DependSubdirs($(SUBDIRS))
+--- 68,74 ----
+  #define IHaveSubdirs
+  #define PassCDebugFlags "CDEBUGFLAGS=$(CDEBUGFLAGS)" "DEFINES=$(DEFINES)"
+  
+!      SUBDIRS = lib sxpm cxpm
+  
+  MakeSubdirs($(SUBDIRS))
+  DependSubdirs($(SUBDIRS))
+diff -c -r ./Makefile.noX /tmp/xpm-3.4k/Makefile.noX
+*** ./Makefile.noX	Thu Mar 19 20:53:48 1998
+--- /tmp/xpm-3.4k/Makefile.noX	Thu Mar 19 20:53:46 1998
+***************
+*** 27,33 ****
+  # XPM Makefile - Arnaud LE HORS
+  #
+  
+! SUBDIRS= lib sxpm
+  
+  MAKE=make
+  MFLAGS=-f Makefile.noX
+--- 27,36 ----
+  # XPM Makefile - Arnaud LE HORS
+  #
+  
+! # NOTE: if the build fails on your system using this Makefile, you need to check
+! # and possibly edit each of the Makefile in the subdirs lib, sxpm, and cxpm.
+! 
+! SUBDIRS= lib sxpm cxpm
+  
+  MAKE=make
+  MFLAGS=-f Makefile.noX
+Only in .: README
+Only in /tmp/xpm-3.4k: README.html
+Only in /tmp/xpm-3.4k: cxpm
+diff -c -r ./lib/Makefile.noX /tmp/xpm-3.4k/lib/Makefile.noX
+*** ./lib/Makefile.noX	Thu Mar 19 20:53:48 1998
+--- /tmp/xpm-3.4k/lib/Makefile.noX	Thu Mar 19 20:53:46 1998
+***************
+*** 27,32 ****
+--- 27,44 ----
+  # XPM Makefile - Arnaud LE HORS
+  #
+  
++ # if your system doesn't provide strcasecmp add -DNEED_STRCASECMP
++ # if your system doesn't provide strdup add -DNEED_STRDUP
++ # if your system doesn't provide pipe add -DNO_ZPIPE
++ # if on your system sprintf doesn't return the number of bytes transmitted
++ # add -DVOID_SPRINTF
++ DEFINES =
++ 
++ # where the library will be installed
++ DESTLIBDIR=/usr/local/lib/X11
++ # where the include file (pxm.h) will be installed
++ DESTINCLUDEDIR=/usr/local/include/X11
++ 
+  CC = cc
+  AR = ar r
+  RANLIB = ranlib
+***************
+*** 38,52 ****
+  
+  CDEBUGFLAGS= -O
+  
+- # if your system doesn't provide strcasecmp add -DNEED_STRCASECMP
+- # if your system doesn't provide strdup add -DNEED_STRDUP
+- # if your system doesn't provide pipe remove -DZPIPE
+- DEFINES = -DZPIPE
+- 
+- DESTBINDIR=/usr/bin/X11
+- DESTLIBDIR=/usr/lib/X11
+- DESTINCLUDEDIR=/usr/include/X11
+- 
+  OBJS= data.o create.o misc.o rgb.o scan.o parse.o hashtab.o \
+        WrFFrP.o RdFToP.o CrPFrDat.o CrDatFrP.o \
+        WrFFrI.o RdFToI.o CrIFrDat.o CrDatFrI.o \
+--- 50,55 ----
+***************
+*** 54,60 ****
+        RdFToDat.o WrFFrDat.o \
+        Attrib.o CrIFrP.o CrPFrI.o Image.o Info.o RdFToBuf.o WrFFrBuf.o
+  
+! CFLAGS= $(CDEBUGFLAGS) $(DEFINES)
+  
+  all: ../X11/xpm.h libXpm.a
+  
+--- 57,63 ----
+        RdFToDat.o WrFFrDat.o \
+        Attrib.o CrIFrP.o CrPFrI.o Image.o Info.o RdFToBuf.o WrFFrBuf.o
+  
+! CFLAGS= $(CDEBUGFLAGS) $(DEFINES) $(INCLUDES)
+  
+  all: ../X11/xpm.h libXpm.a
+  
+diff -c -r ./lib/RdFToI.c /tmp/xpm-3.4k/lib/RdFToI.c
+*** ./lib/RdFToI.c	Thu Mar 19 20:53:48 1998
+--- /tmp/xpm-3.4k/lib/RdFToI.c	Thu Mar 19 20:53:46 1998
+***************
+*** 47,52 ****
+--- 47,53 ----
+  LFUNC(OpenReadFile, int, (char *filename, xpmData *mdata));
+  LFUNC(xpmDataClose, void, (xpmData *mdata));
+  
++ #ifndef CXPMPROG
+  int
+  XpmReadFileToImage(display, filename,
+  		   image_return, shapeimage_return, attributes)
+***************
+*** 116,121 ****
+--- 117,123 ----
+  
+      return (ErrorStatus);
+  }
++ #endif /* CXPMPROG */
+  
+  /*
+   * open the given file to be read as an xpmData which is returned.
+***************
+*** 192,197 ****
+--- 194,203 ----
+  #endif
+      }
+      mdata->CommentLength = 0;
++ #ifdef CXPMPROG
++     mdata->lineNum = 0;
++     mdata->charNum = 0;
++ #endif
+      return (XpmSuccess);
+  }
+  
+diff -c -r ./lib/XpmI.h /tmp/xpm-3.4k/lib/XpmI.h
+*** ./lib/XpmI.h	Thu Mar 19 20:53:48 1998
+--- /tmp/xpm-3.4k/lib/XpmI.h	Thu Mar 19 20:53:47 1998
+***************
+*** 127,132 ****
+--- 127,136 ----
+      char Comment[XPMMAXCMTLEN];
+      char *Bcmt, *Ecmt, Bos, Eos;
+      int format;			/* 1 if XPM1, 0 otherwise */
++ #ifdef CXPMPROG
++     int lineNum;
++     int charNum;
++ #endif
+  }      xpmData;
+  
+  #define XPMARRAY 0
+diff -c -r ./lib/create.c /tmp/xpm-3.4k/lib/create.c
+*** ./lib/create.c	Thu Mar 19 20:53:48 1998
+--- /tmp/xpm-3.4k/lib/create.c	Thu Mar 19 20:53:47 1998
+***************
+*** 2386,2392 ****
+  		    int cc1 = xpmGetC(data);
+  		    if (cc1 > 0 && cc1 < 256) {
+  			int cc2 = xpmGetC(data);
+! 			if (cc2 > 0 && cc2 < 256 && cidx[cc1][cc2] != 0) {
+  #ifndef FOR_MSW
+  			    XPutPixel(image, x, y,
+  				      image_pixels[cidx[cc1][cc2] - 1]);
+--- 2386,2393 ----
+  		    int cc1 = xpmGetC(data);
+  		    if (cc1 > 0 && cc1 < 256) {
+  			int cc2 = xpmGetC(data);
+! 			if (cc2 > 0 && cc2 < 256 &&
+! 			    cidx[cc1] && cidx[cc1][cc2] != 0) {
+  #ifndef FOR_MSW
+  			    XPutPixel(image, x, y,
+  				      image_pixels[cidx[cc1][cc2] - 1]);
+diff -c -r ./lib/data.c /tmp/xpm-3.4k/lib/data.c
+*** ./lib/data.c	Thu Mar 19 20:53:48 1998
+--- /tmp/xpm-3.4k/lib/data.c	Thu Mar 19 20:53:47 1998
+***************
+*** 32,66 ****
+  *  Developed by Arnaud Le Hors                                                *
+  \*****************************************************************************/
+  
+  /* Official version number */
+! static char *RCS_Version = "$XpmVersion: 3.4j $";
+  
+  /* Internal version number */
+! static char *RCS_Id = "$Id: xpm.shar,v 3.68 1996/12/31 13:57:01 lehors Exp $";
+  
+  #include "XpmI.h"
+  #include <ctype.h>
+  
+! 
+! LFUNC(ParseComment, int, (xpmData * mdata));
+  
+  static int
+! ParseComment(mdata)
+!     xpmData *mdata;
+  {
+!     if (mdata->type == XPMBUFFER) {
+  	register char c;
+  	register unsigned int n = 0;
+  	unsigned int notend;
+  	char *s, *s2;
+  
+! 	s = mdata->Comment;
+! 	*s = mdata->Bcmt[0];
+  
+  	/* skip the string beginning comment */
+! 	s2 = mdata->Bcmt;
+  	do {
+! 	    c = *mdata->cptr++;
+  	    *++s = c;
+  	    n++;
+  	    s2++;
+--- 32,70 ----
+  *  Developed by Arnaud Le Hors                                                *
+  \*****************************************************************************/
+  
++ #ifndef CXPMPROG
+  /* Official version number */
+! static char *RCS_Version = "$XpmVersion: 3.4k $";
+  
+  /* Internal version number */
+! static char *RCS_Id = "$Id: xpm.shar,v 3.71 1998/03/19 19:47:14 lehors Exp $";
+  
+  #include "XpmI.h"
++ #endif
+  #include <ctype.h>
+  
+! #ifndef CXPMPROG
+! #define Getc(data, file) getc(file)
+! #define Ungetc(data, c, file) ungetc(c, file)
+! #endif
+  
+  static int
+! ParseComment(data)
+!     xpmData *data;
+  {
+!     if (data->type == XPMBUFFER) {
+  	register char c;
+  	register unsigned int n = 0;
+  	unsigned int notend;
+  	char *s, *s2;
+  
+! 	s = data->Comment;
+! 	*s = data->Bcmt[0];
+  
+  	/* skip the string beginning comment */
+! 	s2 = data->Bcmt;
+  	do {
+! 	    c = *data->cptr++;
+  	    *++s = c;
+  	    n++;
+  	    s2++;
+***************
+*** 68,97 ****
+  
+  	if (*s2 != '\0') {
+  	    /* this wasn't the beginning of a comment */
+! 	    mdata->cptr -= n;
+  	    return 0;
+  	}
+  	/* store comment */
+! 	mdata->Comment[0] = *s;
+! 	s = mdata->Comment;
+  	notend = 1;
+  	n = 0;
+  	while (notend) {
+! 	    s2 = mdata->Ecmt;
+  	    while (*s != *s2 && c) {
+! 		c = *mdata->cptr++;
+  		if (n == XPMMAXCMTLEN - 1)  { /* forget it */
+! 		    s = mdata->Comment;
+  		    n = 0;
+  		}
+  		*++s = c;
+  		n++;
+  	    }
+! 	    mdata->CommentLength = n;
+  	    do {
+! 		c = *mdata->cptr++;
+  		if (n == XPMMAXCMTLEN - 1)  { /* forget it */
+! 		    s = mdata->Comment;
+  		    n = 0;
+  		}
+  		*++s = c;
+--- 72,101 ----
+  
+  	if (*s2 != '\0') {
+  	    /* this wasn't the beginning of a comment */
+! 	    data->cptr -= n;
+  	    return 0;
+  	}
+  	/* store comment */
+! 	data->Comment[0] = *s;
+! 	s = data->Comment;
+  	notend = 1;
+  	n = 0;
+  	while (notend) {
+! 	    s2 = data->Ecmt;
+  	    while (*s != *s2 && c) {
+! 		c = *data->cptr++;
+  		if (n == XPMMAXCMTLEN - 1)  { /* forget it */
+! 		    s = data->Comment;
+  		    n = 0;
+  		}
+  		*++s = c;
+  		n++;
+  	    }
+! 	    data->CommentLength = n;
+  	    do {
+! 		c = *data->cptr++;
+  		if (n == XPMMAXCMTLEN - 1)  { /* forget it */
+! 		    s = data->Comment;
+  		    n = 0;
+  		}
+  		*++s = c;
+***************
+*** 101,124 ****
+  	    if (*s2 == '\0') {
+  		/* this is the end of the comment */
+  		notend = 0;
+! 		mdata->cptr--;
+  	    }
+  	}
+  	return 0;
+      } else {
+! 	FILE *file = mdata->stream.file;
+  	register int c;
+  	register unsigned int n = 0, a;
+  	unsigned int notend;
+  	char *s, *s2;
+  
+! 	s = mdata->Comment;
+! 	*s = mdata->Bcmt[0];
+  
+  	/* skip the string beginning comment */
+! 	s2 = mdata->Bcmt;
+  	do {
+! 	    c = getc(file);
+  	    *++s = c;
+  	    n++;
+  	    s2++;
+--- 105,128 ----
+  	    if (*s2 == '\0') {
+  		/* this is the end of the comment */
+  		notend = 0;
+! 		data->cptr--;
+  	    }
+  	}
+  	return 0;
+      } else {
+! 	FILE *file = data->stream.file;
+  	register int c;
+  	register unsigned int n = 0, a;
+  	unsigned int notend;
+  	char *s, *s2;
+  
+! 	s = data->Comment;
+! 	*s = data->Bcmt[0];
+  
+  	/* skip the string beginning comment */
+! 	s2 = data->Bcmt;
+  	do {
+! 	    c = Getc(data, file);
+  	    *++s = c;
+  	    n++;
+  	    s2++;
+***************
+*** 128,157 ****
+  	    /* this wasn't the beginning of a comment */
+  	    /* put characters back in the order that we got them */
+  	    for (a = n; a > 0; a--, s--)
+! 		ungetc(*s, file);
+  	    return 0;
+  	}
+  	/* store comment */
+! 	mdata->Comment[0] = *s;
+! 	s = mdata->Comment;
+  	notend = 1;
+  	n = 0;
+  	while (notend) {
+! 	    s2 = mdata->Ecmt;
+  	    while (*s != *s2 && c != EOF) {
+! 		c = getc(file);
+  		if (n == XPMMAXCMTLEN - 1)  { /* forget it */
+! 		    s = mdata->Comment;
+  		    n = 0;
+  		}
+  		*++s = c;
+  		n++;
+  	    }
+! 	    mdata->CommentLength = n;
+  	    do {
+! 		c = getc(file);
+  		if (n == XPMMAXCMTLEN - 1)  { /* forget it */
+! 		    s = mdata->Comment;
+  		    n = 0;
+  		}
+  		*++s = c;
+--- 132,161 ----
+  	    /* this wasn't the beginning of a comment */
+  	    /* put characters back in the order that we got them */
+  	    for (a = n; a > 0; a--, s--)
+! 		Ungetc(data, *s, file);
+  	    return 0;
+  	}
+  	/* store comment */
+! 	data->Comment[0] = *s;
+! 	s = data->Comment;
+  	notend = 1;
+  	n = 0;
+  	while (notend) {
+! 	    s2 = data->Ecmt;
+  	    while (*s != *s2 && c != EOF) {
+! 		c = Getc(data, file);
+  		if (n == XPMMAXCMTLEN - 1)  { /* forget it */
+! 		    s = data->Comment;
+  		    n = 0;
+  		}
+  		*++s = c;
+  		n++;
+  	    }
+! 	    data->CommentLength = n;
+  	    do {
+! 		c = Getc(data, file);
+  		if (n == XPMMAXCMTLEN - 1)  { /* forget it */
+! 		    s = data->Comment;
+  		    n = 0;
+  		}
+  		*++s = c;
+***************
+*** 161,167 ****
+  	    if (*s2 == '\0') {
+  		/* this is the end of the comment */
+  		notend = 0;
+! 		ungetc(*s, file);
+  	    }
+  	}
+  	return 0;
+--- 165,171 ----
+  	    if (*s2 == '\0') {
+  		/* this is the end of the comment */
+  		notend = 0;
+! 		Ungetc(data, *s, file);
+  	    }
+  	}
+  	return 0;
+***************
+*** 172,223 ****
+   * skip to the end of the current string and the beginning of the next one
+   */
+  int
+! xpmNextString(mdata)
+!     xpmData *mdata;
+  {
+!     if (!mdata->type)
+! 	mdata->cptr = (mdata->stream.data)[++mdata->line];
+!     else if (mdata->type == XPMBUFFER) {
+  	register char c;
+  
+  	/* get to the end of the current string */
+! 	if (mdata->Eos)
+! 	    while ((c = *mdata->cptr++) && c != mdata->Eos);
+  
+  	/*
+  	 * then get to the beginning of the next string looking for possible
+  	 * comment
+  	 */
+! 	if (mdata->Bos) {
+! 	    while ((c = *mdata->cptr++) && c != mdata->Bos)
+! 		if (mdata->Bcmt && c == mdata->Bcmt[0])
+! 		    ParseComment(mdata);
+! 	} else if (mdata->Bcmt) {	/* XPM2 natural */
+! 	    while ((c = *mdata->cptr++) == mdata->Bcmt[0])
+! 		ParseComment(mdata);
+! 	    mdata->cptr--;
+  	}
+      } else {
+  	register int c;
+! 	FILE *file = mdata->stream.file;
+  
+  	/* get to the end of the current string */
+! 	if (mdata->Eos)
+! 	    while ((c = getc(file)) != mdata->Eos && c != EOF);
+  
+  	/*
+  	 * then get to the beginning of the next string looking for possible
+  	 * comment
+  	 */
+! 	if (mdata->Bos) {
+! 	    while ((c = getc(file)) != mdata->Bos && c != EOF)
+! 		if (mdata->Bcmt && c == mdata->Bcmt[0])
+! 		    ParseComment(mdata);
+! 
+! 	} else if (mdata->Bcmt) {	/* XPM2 natural */
+! 	    while ((c = getc(file)) == mdata->Bcmt[0])
+! 		ParseComment(mdata);
+! 	    ungetc(c, file);
+  	}
+      }
+      return 0;
+--- 176,227 ----
+   * skip to the end of the current string and the beginning of the next one
+   */
+  int
+! xpmNextString(data)
+!     xpmData *data;
+  {
+!     if (!data->type)
+! 	data->cptr = (data->stream.data)[++data->line];
+!     else if (data->type == XPMBUFFER) {
+  	register char c;
+  
+  	/* get to the end of the current string */
+! 	if (data->Eos)
+! 	    while ((c = *data->cptr++) && c != data->Eos);
+  
+  	/*
+  	 * then get to the beginning of the next string looking for possible
+  	 * comment
+  	 */
+! 	if (data->Bos) {
+! 	    while ((c = *data->cptr++) && c != data->Bos)
+! 		if (data->Bcmt && c == data->Bcmt[0])
+! 		    ParseComment(data);
+! 	} else if (data->Bcmt) {	/* XPM2 natural */
+! 	    while ((c = *data->cptr++) == data->Bcmt[0])
+! 		ParseComment(data);
+! 	    data->cptr--;
+  	}
+      } else {
+  	register int c;
+! 	FILE *file = data->stream.file;
+  
+  	/* get to the end of the current string */
+! 	if (data->Eos)
+! 	    while ((c = Getc(data, file)) != data->Eos && c != EOF);
+  
+  	/*
+  	 * then get to the beginning of the next string looking for possible
+  	 * comment
+  	 */
+! 	if (data->Bos) {
+! 	    while ((c = Getc(data, file)) != data->Bos && c != EOF)
+! 		if (data->Bcmt && c == data->Bcmt[0])
+! 		    ParseComment(data);
+! 
+! 	} else if (data->Bcmt) {	/* XPM2 natural */
+! 	    while ((c = Getc(data, file)) == data->Bcmt[0])
+! 		ParseComment(data);
+! 	    Ungetc(data, c, file);
+  	}
+      }
+      return 0;
+***************
+*** 225,287 ****
+  
+  
+  /*
+-  * skip whitespace and compute the following unsigned int,
+-  * returns 1 if one is found and 0 if not
+-  */
+- int
+- xpmNextUI(mdata, ui_return)
+-     xpmData *mdata;
+-     unsigned int *ui_return;
+- {
+-     char buf[BUFSIZ];
+-     int l;
+- 
+-     l = xpmNextWord(mdata, buf, BUFSIZ);
+-     return xpmatoui(buf, l, ui_return);
+- }
+- 
+- /*
+   * skip whitespace and return the following word
+   */
+  unsigned int
+! xpmNextWord(mdata, buf, buflen)
+!     xpmData *mdata;
+      char *buf;
+      unsigned int buflen;
+  {
+      register unsigned int n = 0;
+      int c;
+  
+!     if (!mdata->type || mdata->type == XPMBUFFER) {
+! 	while (isspace(c = *mdata->cptr) && c != mdata->Eos)
+! 	    mdata->cptr++;
+  	do {
+! 	    c = *mdata->cptr++;
+  	    *buf++ = c;
+  	    n++;
+! 	} while (!isspace(c) && c != mdata->Eos && n < buflen);
+  	n--;
+! 	mdata->cptr--;
+      } else {
+! 	FILE *file = mdata->stream.file;
+  
+! 	while ((c = getc(file)) != EOF && isspace(c) && c != mdata->Eos);
+! 	while (!isspace(c) && c != mdata->Eos && c != EOF && n < buflen) {
+  	    *buf++ = c;
+  	    n++;
+! 	    c = getc(file);
+  	}
+! 	ungetc(c, file);
+      }
+      return (n);
+  }
+  
+  /*
+   * return end of string - WARNING: malloc!
+   */
+  int
+! xpmGetString(mdata, sptr, l)
+!     xpmData *mdata;
+      char **sptr;
+      unsigned int *l;
+  {
+--- 229,291 ----
+  
+  
+  /*
+   * skip whitespace and return the following word
+   */
+  unsigned int
+! xpmNextWord(data, buf, buflen)
+!     xpmData *data;
+      char *buf;
+      unsigned int buflen;
+  {
+      register unsigned int n = 0;
+      int c;
+  
+!     if (!data->type || data->type == XPMBUFFER) {
+! 	while (isspace(c = *data->cptr) && c != data->Eos)
+! 	    data->cptr++;
+  	do {
+! 	    c = *data->cptr++;
+  	    *buf++ = c;
+  	    n++;
+! 	} while (!isspace(c) && c != data->Eos && n < buflen);
+  	n--;
+! 	data->cptr--;
+      } else {
+! 	FILE *file = data->stream.file;
+  
+! 	while ((c = Getc(data, file)) != EOF && isspace(c) && c != data->Eos);
+! 	while (!isspace(c) && c != data->Eos && c != EOF && n < buflen) {
+  	    *buf++ = c;
+  	    n++;
+! 	    c = Getc(data, file);
+  	}
+! 	Ungetc(data, c, file);
+      }
+      return (n);
+  }
+  
+  /*
++  * skip whitespace and compute the following unsigned int,
++  * returns 1 if one is found and 0 if not
++  */
++ int
++ xpmNextUI(data, ui_return)
++     xpmData *data;
++     unsigned int *ui_return;
++ {
++     char buf[BUFSIZ];
++     int l;
++ 
++     l = xpmNextWord(data, buf, BUFSIZ);
++     return xpmatoui(buf, l, ui_return);
++ }
++ 
++ /*
+   * return end of string - WARNING: malloc!
+   */
+  int
+! xpmGetString(data, sptr, l)
+!     xpmData *data;
+      char **sptr;
+      unsigned int *l;
+  {
+***************
+*** 289,317 ****
+      int c;
+      char *p = NULL, *q, buf[BUFSIZ];
+  
+!     if (!mdata->type || mdata->type == XPMBUFFER) {
+! 	if (mdata->cptr) {
+! 	    char *start = mdata->cptr;
+! 	    while ((c = *mdata->cptr) && c != mdata->Eos)
+! 		mdata->cptr++;
+! 	    n = mdata->cptr - start + 1;
+  	    p = (char *) XpmMalloc(n);
+  	    if (!p)
+  		return (XpmNoMemory);
+  	    strncpy(p, start, n);
+! 	    if (mdata->type)		/* XPMBUFFER */
+  		p[n - 1] = '\0';
+  	}
+      } else {
+! 	FILE *file = mdata->stream.file;
+  
+! 	if ((c = getc(file)) == EOF)
+  	    return (XpmFileInvalid);
+  
+  	i = 0;
+  	q = buf;
+  	p = (char *) XpmMalloc(1);
+! 	while (c != mdata->Eos && c != EOF) {
+  	    if (i == BUFSIZ) {
+  		/* get to the end of the buffer */
+  		/* malloc needed memory */
+--- 293,321 ----
+      int c;
+      char *p = NULL, *q, buf[BUFSIZ];
+  
+!     if (!data->type || data->type == XPMBUFFER) {
+! 	if (data->cptr) {
+! 	    char *start = data->cptr;
+! 	    while ((c = *data->cptr) && c != data->Eos)
+! 		data->cptr++;
+! 	    n = data->cptr - start + 1;
+  	    p = (char *) XpmMalloc(n);
+  	    if (!p)
+  		return (XpmNoMemory);
+  	    strncpy(p, start, n);
+! 	    if (data->type)		/* XPMBUFFER */
+  		p[n - 1] = '\0';
+  	}
+      } else {
+! 	FILE *file = data->stream.file;
+  
+! 	if ((c = Getc(data, file)) == EOF)
+  	    return (XpmFileInvalid);
+  
+  	i = 0;
+  	q = buf;
+  	p = (char *) XpmMalloc(1);
+! 	while (c != data->Eos && c != EOF) {
+  	    if (i == BUFSIZ) {
+  		/* get to the end of the buffer */
+  		/* malloc needed memory */
+***************
+*** 330,336 ****
+  	    }
+  	    *q++ = c;
+  	    i++;
+! 	    c = getc(file);
+  	}
+  	if (c == EOF) {
+  	    XpmFree(p);
+--- 334,340 ----
+  	    }
+  	    *q++ = c;
+  	    i++;
+! 	    c = Getc(data, file);
+  	}
+  	if (c == EOF) {
+  	    XpmFree(p);
+***************
+*** 353,359 ****
+  	    *p = '\0';
+  	    n = 1;
+  	}
+! 	ungetc(c, file);
+      }
+      *sptr = p;
+      *l = n;
+--- 357,363 ----
+  	    *p = '\0';
+  	    n = 1;
+  	}
+! 	Ungetc(data, c, file);
+      }
+      *sptr = p;
+      *l = n;
+***************
+*** 364,380 ****
+   * get the current comment line
+   */
+  int
+! xpmGetCmt(mdata, cmt)
+!     xpmData *mdata;
+      char **cmt;
+  {
+!     if (!mdata->type)
+  	*cmt = NULL;
+!     else if (mdata->CommentLength) {
+! 	*cmt = (char *) XpmMalloc(mdata->CommentLength + 1);
+! 	strncpy(*cmt, mdata->Comment, mdata->CommentLength);
+! 	(*cmt)[mdata->CommentLength] = '\0';
+! 	mdata->CommentLength = 0;
+      } else
+  	*cmt = NULL;
+      return 0;
+--- 368,384 ----
+   * get the current comment line
+   */
+  int
+! xpmGetCmt(data, cmt)
+!     xpmData *data;
+      char **cmt;
+  {
+!     if (!data->type)
+  	*cmt = NULL;
+!     else if (data->CommentLength) {
+! 	*cmt = (char *) XpmMalloc(data->CommentLength + 1);
+! 	strncpy(*cmt, data->Comment, data->CommentLength);
+! 	(*cmt)[data->CommentLength] = '\0';
+! 	data->CommentLength = 0;
+      } else
+  	*cmt = NULL;
+      return 0;
+***************
+*** 396,417 ****
+   * parse xpm header
+   */
+  int
+! xpmParseHeader(mdata)
+!     xpmData *mdata;
+  {
+      char buf[BUFSIZ];
+      int l, n = 0;
+  
+!     if (mdata->type) {
+! 	mdata->Bos = '\0';
+! 	mdata->Eos = '\n';
+! 	mdata->Bcmt = mdata->Ecmt = NULL;
+! 	l = xpmNextWord(mdata, buf, BUFSIZ);
+  	if (l == 7 && !strncmp("#define", buf, 7)) {
+  	    /* this maybe an XPM 1 file */
+  	    char *ptr;
+  
+! 	    l = xpmNextWord(mdata, buf, BUFSIZ);
+  	    if (!l)
+  		return (XpmFileInvalid);
+  	    buf[l] = '\0';
+--- 400,421 ----
+   * parse xpm header
+   */
+  int
+! xpmParseHeader(data)
+!     xpmData *data;
+  {
+      char buf[BUFSIZ];
+      int l, n = 0;
+  
+!     if (data->type) {
+! 	data->Bos = '\0';
+! 	data->Eos = '\n';
+! 	data->Bcmt = data->Ecmt = NULL;
+! 	l = xpmNextWord(data, buf, BUFSIZ);
+  	if (l == 7 && !strncmp("#define", buf, 7)) {
+  	    /* this maybe an XPM 1 file */
+  	    char *ptr;
+  
+! 	    l = xpmNextWord(data, buf, BUFSIZ);
+  	    if (!l)
+  		return (XpmFileInvalid);
+  	    buf[l] = '\0';
+***************
+*** 419,425 ****
+  	    if (!ptr || strncmp("_format", ptr, l - (ptr - buf)))
+  		return XpmFileInvalid;
+  	    /* this is definitely an XPM 1 file */
+! 	    mdata->format = 1;
+  	    n = 1;			/* handle XPM1 as mainly XPM2 C */
+  	} else {
+  
+--- 423,429 ----
+  	    if (!ptr || strncmp("_format", ptr, l - (ptr - buf)))
+  		return XpmFileInvalid;
+  	    /* this is definitely an XPM 1 file */
+! 	    data->format = 1;
+  	    n = 1;			/* handle XPM1 as mainly XPM2 C */
+  	} else {
+  
+***************
+*** 427,440 ****
+  	     * skip the first word, get the second one, and see if this is
+  	     * XPM 2 or 3
+  	     */
+! 	    l = xpmNextWord(mdata, buf, BUFSIZ);
+  	    if ((l == 3 && !strncmp("XPM", buf, 3)) ||
+  		(l == 4 && !strncmp("XPM2", buf, 4))) {
+  		if (l == 3)
+  		    n = 1;		/* handle XPM as XPM2 C */
+  		else {
+  		    /* get the type key word */
+! 		    l = xpmNextWord(mdata, buf, BUFSIZ);
+  
+  		    /*
+  		     * get infos about this type
+--- 431,444 ----
+  	     * skip the first word, get the second one, and see if this is
+  	     * XPM 2 or 3
+  	     */
+! 	    l = xpmNextWord(data, buf, BUFSIZ);
+  	    if ((l == 3 && !strncmp("XPM", buf, 3)) ||
+  		(l == 4 && !strncmp("XPM2", buf, 4))) {
+  		if (l == 3)
+  		    n = 1;		/* handle XPM as XPM2 C */
+  		else {
+  		    /* get the type key word */
+! 		    l = xpmNextWord(data, buf, BUFSIZ);
+  
+  		    /*
+  		     * get infos about this type
+***************
+*** 443,471 ****
+  			   && strncmp(xpmDataTypes[n].type, buf, l))
+  			n++;
+  		}
+! 		mdata->format = 0;
+  	    } else
+  		/* nope this is not an XPM file */
+  		return XpmFileInvalid;
+  	}
+  	if (xpmDataTypes[n].type) {
+  	    if (n == 0) {		/* natural type */
+! 		mdata->Bcmt = xpmDataTypes[n].Bcmt;
+! 		mdata->Ecmt = xpmDataTypes[n].Ecmt;
+! 		xpmNextString(mdata);	/* skip the end of the headerline */
+! 		mdata->Bos = xpmDataTypes[n].Bos;
+! 		mdata->Eos = xpmDataTypes[n].Eos;
+  	    } else {
+! 		mdata->Bcmt = xpmDataTypes[n].Bcmt;
+! 		mdata->Ecmt = xpmDataTypes[n].Ecmt;
+! 		if (!mdata->format) {	/* XPM 2 or 3 */
+! 		    mdata->Bos = xpmDataTypes[n].Bos;
+! 		    mdata->Eos = '\0';
+  		    /* get to the beginning of the first string */
+! 		    xpmNextString(mdata);
+! 		    mdata->Eos = xpmDataTypes[n].Eos;
+  		} else			/* XPM 1 skip end of line */
+! 		    xpmNextString(mdata);
+  	    }
+  	} else
+  	    /* we don't know about that type of XPM file... */
+--- 447,475 ----
+  			   && strncmp(xpmDataTypes[n].type, buf, l))
+  			n++;
+  		}
+! 		data->format = 0;
+  	    } else
+  		/* nope this is not an XPM file */
+  		return XpmFileInvalid;
+  	}
+  	if (xpmDataTypes[n].type) {
+  	    if (n == 0) {		/* natural type */
+! 		data->Bcmt = xpmDataTypes[n].Bcmt;
+! 		data->Ecmt = xpmDataTypes[n].Ecmt;
+! 		xpmNextString(data);	/* skip the end of the headerline */
+! 		data->Bos = xpmDataTypes[n].Bos;
+! 		data->Eos = xpmDataTypes[n].Eos;
+  	    } else {
+! 		data->Bcmt = xpmDataTypes[n].Bcmt;
+! 		data->Ecmt = xpmDataTypes[n].Ecmt;
+! 		if (!data->format) {	/* XPM 2 or 3 */
+! 		    data->Bos = xpmDataTypes[n].Bos;
+! 		    data->Eos = '\0';
+  		    /* get to the beginning of the first string */
+! 		    xpmNextString(data);
+! 		    data->Eos = xpmDataTypes[n].Eos;
+  		} else			/* XPM 1 skip end of line */
+! 		    xpmNextString(data);
+  	    }
+  	} else
+  	    /* we don't know about that type of XPM file... */
+diff -c -r ./lib/descrip.mms /tmp/xpm-3.4k/lib/descrip.mms
+*** ./lib/descrip.mms	Thu Mar 19 20:53:48 1998
+--- /tmp/xpm-3.4k/lib/descrip.mms	Thu Mar 19 20:53:47 1998
+***************
+*** 1,4 ****
+- $!---------------descrip.mms for xpmlib----------------------------------------
+  cc_defs = /define=(NEED_STRCASECMP,NEED_STRDUP,NO_ZPIPE)
+  c_deb = 
+  
+--- 1,3 ----
+diff -c -r ./lib/parse.c /tmp/xpm-3.4k/lib/parse.c
+*** ./lib/parse.c	Thu Mar 19 20:53:48 1998
+--- /tmp/xpm-3.4k/lib/parse.c	Thu Mar 19 20:53:47 1998
+***************
+*** 54,214 ****
+      "c",				/* key #5: color visual */
+  };
+  
+- 
+- /* function call in case of error */
+- #undef RETURN
+- #define RETURN(status) \
+- { \
+-       goto error; \
+- }
+- 
+- /*
+-  * This function parses an Xpm file or data and store the found informations
+-  * in an an XpmImage structure which is returned.
+-  */
+- int
+- xpmParseData(data, image, info)
+-     xpmData *data;
+-     XpmImage *image;
+-     XpmInfo *info;
+- {
+-     /* variables to return */
+-     unsigned int width, height, ncolors, cpp;
+-     unsigned int x_hotspot, y_hotspot, hotspot = 0, extensions = 0;
+-     XpmColor *colorTable = NULL;
+-     unsigned int *pixelindex = NULL;
+-     char *hints_cmt = NULL;
+-     char *colors_cmt = NULL;
+-     char *pixels_cmt = NULL;
+- 
+-     unsigned int cmts;
+-     int ErrorStatus;
+-     xpmHashTable hashtable;
+- 
+-     cmts = info && (info->valuemask & XpmReturnComments);
+- 
+-     /*
+-      * parse the header
+-      */
+-     ErrorStatus = xpmParseHeader(data);
+-     if (ErrorStatus != XpmSuccess)
+- 	return (ErrorStatus);
+- 
+-     /*
+-      * read values
+-      */
+-     ErrorStatus = xpmParseValues(data, &width, &height, &ncolors, &cpp,
+- 				 &x_hotspot, &y_hotspot, &hotspot,
+- 				 &extensions);
+-     if (ErrorStatus != XpmSuccess)
+- 	return (ErrorStatus);
+- 
+-     /*
+-      * store the hints comment line
+-      */
+-     if (cmts)
+- 	xpmGetCmt(data, &hints_cmt);
+- 
+-     /*
+-      * init the hastable
+-      */
+-     if (USE_HASHTABLE) {
+- 	ErrorStatus = xpmHashTableInit(&hashtable);
+- 	if (ErrorStatus != XpmSuccess)
+- 	    return (ErrorStatus);
+-     }
+- 
+-     /*
+-      * read colors
+-      */
+-     ErrorStatus = xpmParseColors(data, ncolors, cpp, &colorTable, &hashtable);
+-     if (ErrorStatus != XpmSuccess) {
+- 	if (USE_HASHTABLE)
+- 	    xpmHashTableFree(&hashtable);
+- 	RETURN(ErrorStatus);
+-     }
+- 
+-     /*
+-      * store the colors comment line
+-      */
+-     if (cmts)
+- 	xpmGetCmt(data, &colors_cmt);
+- 
+-     /*
+-      * read pixels and index them on color number
+-      */
+-     ErrorStatus = ParsePixels(data, width, height, ncolors, cpp, colorTable,
+- 			      &hashtable, &pixelindex);
+- 
+-     /*
+-      * free the hastable
+-      */
+-     if (USE_HASHTABLE)
+- 	xpmHashTableFree(&hashtable);
+- 
+-     if (ErrorStatus != XpmSuccess)
+- 	RETURN(ErrorStatus);
+- 
+-     /*
+-      * store the pixels comment line
+-      */
+-     if (cmts)
+- 	xpmGetCmt(data, &pixels_cmt);
+- 
+-     /*
+-      * parse extensions
+-      */
+-     if (info && (info->valuemask & XpmReturnExtensions))
+- 	if (extensions) {
+- 	    ErrorStatus = xpmParseExtensions(data, &info->extensions,
+- 					     &info->nextensions);
+- 	    if (ErrorStatus != XpmSuccess)
+- 		RETURN(ErrorStatus);
+- 	} else {
+- 	    info->extensions = NULL;
+- 	    info->nextensions = 0;
+- 	}
+- 
+-     /*
+-      * store found informations in the XpmImage structure
+-      */
+-     image->width = width;
+-     image->height = height;
+-     image->cpp = cpp;
+-     image->ncolors = ncolors;
+-     image->colorTable = colorTable;
+-     image->data = pixelindex;
+- 
+-     if (info) {
+- 	if (cmts) {
+- 	    info->hints_cmt = hints_cmt;
+- 	    info->colors_cmt = colors_cmt;
+- 	    info->pixels_cmt = pixels_cmt;
+- 	}
+- 	if (hotspot) {
+- 	    info->x_hotspot = x_hotspot;
+- 	    info->y_hotspot = y_hotspot;
+- 	    info->valuemask |= XpmHotspot;
+- 	}
+-     }
+-     return (XpmSuccess);
+- 
+- /* exit point in case of error, free only locally allocated variables */
+- error:
+-     if (colorTable)
+- 	xpmFreeColorTable(colorTable, ncolors);
+-     if (pixelindex)
+- 	XpmFree(pixelindex);
+-     if (hints_cmt)
+- 	XpmFree(hints_cmt);
+-     if (colors_cmt)
+- 	XpmFree(colors_cmt);
+-     if (pixels_cmt)
+- 	XpmFree(pixels_cmt);
+- 
+-     return(ErrorStatus);
+- }
+- 
+  int
+  xpmParseValues(data, width, height, ncolors, cpp,
+  	    x_hotspot, y_hotspot, hotspot, extensions)
+--- 54,59 ----
+***************
+*** 569,575 ****
+  		    int cc1 = xpmGetC(data);
+  		    if (cc1 > 0 && cc1 < 256) {
+  			int cc2 = xpmGetC(data);
+! 			if (cc2 > 0 && cc2 < 256 && cidx[cc1][cc2] != 0)
+  			    *iptr = cidx[cc1][cc2] - 1;
+  			else {
+  			    FREE_CIDX;
+--- 414,421 ----
+  		    int cc1 = xpmGetC(data);
+  		    if (cc1 > 0 && cc1 < 256) {
+  			int cc2 = xpmGetC(data);
+! 			if (cc2 > 0 && cc2 < 256 &&
+! 			    cidx[cc1] && cidx[cc1][cc2] != 0)
+  			    *iptr = cidx[cc1][cc2] - 1;
+  			else {
+  			    FREE_CIDX;
+***************
+*** 741,744 ****
+--- 587,745 ----
+      *nextensions = num;
+      *extensions = exts;
+      return (XpmSuccess);
++ }
++ 
++ 
++ /* function call in case of error */
++ #undef RETURN
++ #define RETURN(status) \
++ { \
++       goto error; \
++ }
++ 
++ /*
++  * This function parses an Xpm file or data and store the found informations
++  * in an an XpmImage structure which is returned.
++  */
++ int
++ xpmParseData(data, image, info)
++     xpmData *data;
++     XpmImage *image;
++     XpmInfo *info;
++ {
++     /* variables to return */
++     unsigned int width, height, ncolors, cpp;
++     unsigned int x_hotspot, y_hotspot, hotspot = 0, extensions = 0;
++     XpmColor *colorTable = NULL;
++     unsigned int *pixelindex = NULL;
++     char *hints_cmt = NULL;
++     char *colors_cmt = NULL;
++     char *pixels_cmt = NULL;
++ 
++     unsigned int cmts;
++     int ErrorStatus;
++     xpmHashTable hashtable;
++ 
++     cmts = info && (info->valuemask & XpmReturnComments);
++ 
++     /*
++      * parse the header
++      */
++     ErrorStatus = xpmParseHeader(data);
++     if (ErrorStatus != XpmSuccess)
++ 	return (ErrorStatus);
++ 
++     /*
++      * read values
++      */
++     ErrorStatus = xpmParseValues(data, &width, &height, &ncolors, &cpp,
++ 				 &x_hotspot, &y_hotspot, &hotspot,
++ 				 &extensions);
++     if (ErrorStatus != XpmSuccess)
++ 	return (ErrorStatus);
++ 
++     /*
++      * store the hints comment line
++      */
++     if (cmts)
++ 	xpmGetCmt(data, &hints_cmt);
++ 
++     /*
++      * init the hastable
++      */
++     if (USE_HASHTABLE) {
++ 	ErrorStatus = xpmHashTableInit(&hashtable);
++ 	if (ErrorStatus != XpmSuccess)
++ 	    return (ErrorStatus);
++     }
++ 
++     /*
++      * read colors
++      */
++     ErrorStatus = xpmParseColors(data, ncolors, cpp, &colorTable, &hashtable);
++     if (ErrorStatus != XpmSuccess) {
++ 	if (USE_HASHTABLE)
++ 	    xpmHashTableFree(&hashtable);
++ 	RETURN(ErrorStatus);
++     }
++ 
++     /*
++      * store the colors comment line
++      */
++     if (cmts)
++ 	xpmGetCmt(data, &colors_cmt);
++ 
++     /*
++      * read pixels and index them on color number
++      */
++     ErrorStatus = ParsePixels(data, width, height, ncolors, cpp, colorTable,
++ 			      &hashtable, &pixelindex);
++ 
++     /*
++      * free the hastable
++      */
++     if (USE_HASHTABLE)
++ 	xpmHashTableFree(&hashtable);
++ 
++     if (ErrorStatus != XpmSuccess)
++ 	RETURN(ErrorStatus);
++ 
++     /*
++      * store the pixels comment line
++      */
++     if (cmts)
++ 	xpmGetCmt(data, &pixels_cmt);
++ 
++     /*
++      * parse extensions
++      */
++     if (info && (info->valuemask & XpmReturnExtensions))
++ 	if (extensions) {
++ 	    ErrorStatus = xpmParseExtensions(data, &info->extensions,
++ 					     &info->nextensions);
++ 	    if (ErrorStatus != XpmSuccess)
++ 		RETURN(ErrorStatus);
++ 	} else {
++ 	    info->extensions = NULL;
++ 	    info->nextensions = 0;
++ 	}
++ 
++     /*
++      * store found informations in the XpmImage structure
++      */
++     image->width = width;
++     image->height = height;
++     image->cpp = cpp;
++     image->ncolors = ncolors;
++     image->colorTable = colorTable;
++     image->data = pixelindex;
++ 
++     if (info) {
++ 	if (cmts) {
++ 	    info->hints_cmt = hints_cmt;
++ 	    info->colors_cmt = colors_cmt;
++ 	    info->pixels_cmt = pixels_cmt;
++ 	}
++ 	if (hotspot) {
++ 	    info->x_hotspot = x_hotspot;
++ 	    info->y_hotspot = y_hotspot;
++ 	    info->valuemask |= XpmHotspot;
++ 	}
++     }
++     return (XpmSuccess);
++ 
++ /* exit point in case of error, free only locally allocated variables */
++ error:
++     if (colorTable)
++ 	xpmFreeColorTable(colorTable, ncolors);
++     if (pixelindex)
++ 	XpmFree(pixelindex);
++     if (hints_cmt)
++ 	XpmFree(hints_cmt);
++     if (colors_cmt)
++ 	XpmFree(colors_cmt);
++     if (pixels_cmt)
++ 	XpmFree(pixels_cmt);
++ 
++     return(ErrorStatus);
+  }
+diff -c -r ./lib/scan.c /tmp/xpm-3.4k/lib/scan.c
+*** ./lib/scan.c	Thu Mar 19 20:53:48 1998
+--- /tmp/xpm-3.4k/lib/scan.c	Thu Mar 19 20:53:47 1998
+***************
+*** 734,740 ****
+  		pixel = ((unsigned long) addr[0] << 24 |
+  			 (unsigned long) addr[1] << 16 |
+  			 (unsigned long) addr[2] << 8 |
+! 			 addr[4]);
+  		if (depth != 32)
+  		    pixel &= lbt;
+  		if (storePixel(pixel, pmap, iptr))
+--- 734,740 ----
+  		pixel = ((unsigned long) addr[0] << 24 |
+  			 (unsigned long) addr[1] << 16 |
+  			 (unsigned long) addr[2] << 8 |
+! 			 addr[3]);
+  		if (depth != 32)
+  		    pixel &= lbt;
+  		if (storePixel(pixel, pmap, iptr))
+diff -c -r ./lib/xpm.h /tmp/xpm-3.4k/lib/xpm.h
+*** ./lib/xpm.h	Thu Mar 19 20:53:48 1998
+--- /tmp/xpm-3.4k/lib/xpm.h	Thu Mar 19 20:53:47 1998
+***************
+*** 59,65 ****
+   */
+  #define XpmFormat 3
+  #define XpmVersion 4
+! #define XpmRevision 10
+  #define XpmIncludeVersion ((XpmFormat * 100 + XpmVersion) * 100 + XpmRevision)
+  
+  #ifndef XPM_NUMBERS
+--- 59,65 ----
+   */
+  #define XpmFormat 3
+  #define XpmVersion 4
+! #define XpmRevision 11
+  #define XpmIncludeVersion ((XpmFormat * 100 + XpmVersion) * 100 + XpmRevision)
+  
+  #ifndef XPM_NUMBERS
+***************
+*** 451,456 ****
+--- 451,460 ----
+      FUNC(XpmCreateBufferFromXpmImage, int, (char **buffer_return,
+  					    XpmImage *image,
+  					    XpmInfo *info));
++ 
++     FUNC(XpmGetParseError, int, (char *filename,
++ 				 int *linenum_return,
++ 				 int *charnum_return));
+  
+      FUNC(XpmFree, void, (void *ptr));
+  
+diff -c -r ./sxpm/Makefile.noX /tmp/xpm-3.4k/sxpm/Makefile.noX
+*** ./sxpm/Makefile.noX	Thu Mar 19 20:53:48 1998
+--- /tmp/xpm-3.4k/sxpm/Makefile.noX	Thu Mar 19 20:53:47 1998
+***************
+*** 27,32 ****
+--- 27,43 ----
+  # XPM Makefile - Arnaud LE HORS
+  #
+  
++ # where the program will be installed
++ DESTBINDIR=/usr/local/bin/X11
++ # where the man page will be installed
++ MANDIR=/usr/local/man/manl
++ 
++ # where the X11 libs are
++ XLIBDIRS= -L/usr/X11/lib
++ 
++ LIBDIRS= -L../lib
++ LIBS= -lXpm -lXext -lXt -lX11
++ 
+  CC = cc
+  RM = rm -f
+  # on sysV, define this as cp.
+***************
+*** 34,45 ****
+  
+  CDEBUGFLAGS= -O
+  
+- DESTBINDIR=/usr/local/bin/X11
+- MANDIR=/usr/man/manl
+- 
+  INCLUDES= -I..
+- LIBDIRS= -L../lib
+- LIBS= -lXpm -lXext -lXt -lX11
+  
+  OBJS= sxpm.o
+  
+--- 45,51 ----
+***************
+*** 51,57 ****
+  	$(RM) *.o sxpm
+  
+  sxpm: sxpm.o
+! 	$(CC) $(CFLAGS) sxpm.o $(LIBDIRS) $(LIBS) -o sxpm
+  
+  install:
+  	$(INSTALL) -m 0755 sxpm $(DESTBINDIR)
+--- 57,63 ----
+  	$(RM) *.o sxpm
+  
+  sxpm: sxpm.o
+! 	$(CC) $(CFLAGS) sxpm.o $(LIBDIRS) $(XLIBDIRS) $(LIBS) -o sxpm
+  
+  install:
+  	$(INSTALL) -m 0755 sxpm $(DESTBINDIR)
+diff -c -r ./sxpm/sxpm.c /tmp/xpm-3.4k/sxpm/sxpm.c
+*** ./sxpm/sxpm.c	Thu Mar 19 20:53:48 1998
+--- /tmp/xpm-3.4k/sxpm/sxpm.c	Thu Mar 19 20:53:47 1998
+***************
+*** 555,620 ****
+  Usage()
+  {
+      fprintf(stderr, "\nUsage:  %s [options...]\n", command[0]);
+!     fprintf(stderr, "Where options are:\n\n");
+!     fprintf(stderr,
+! 	    "[-d host:display]            Display to connect to.\n");
+!     fprintf(stderr,
+! 	    "[-g geom]                    Geometry of window.\n");
+!     fprintf(stderr,
+! 	    "[-hints]                     Set ResizeInc for window.\n");
+!     fprintf(stderr,
+! 	    "[-icon filename]             Set pixmap for iconWindow.\n");
+!     fprintf(stderr,
+! 	    "[-plaid]                     Read the included plaid pixmap.\n");
+!     fprintf(stderr,
+! 	    "[filename]                   Read from file 'filename', and from \
+! standard\n");
+!     fprintf(stderr,
+! 	    "                             input if 'filename' is '-'.\n");
+!     fprintf(stderr,
+! 	    "[-o filename]                Write to file 'filename', and to \
+! standard\n");
+!     fprintf(stderr,
+! 	    "                             output if 'filename' is '-'.\n");
+!     fprintf(stderr,
+! 	    "[-pcmap]                     Use a private colormap.\n");
+!     fprintf(stderr,
+! 	    "[-closecolors]               Try to use `close' colors.\n");
+!     fprintf(stderr,
+! 	    "[-nod]                       Don't display in window.\n");
+!     fprintf(stderr,
+! 	    "[-nom]                       Don't use clip mask if any.\n");
+!     fprintf(stderr,
+! 	    "[-mono]                      Use the colors specified for a \
+! monochrome visual.\n");
+!     fprintf(stderr,
+! 	    "[-grey4]                     Use the colors specified for a 4 \
+! greyscale visual.\n");
+!     fprintf(stderr,
+! 	    "[-grey]                      Use the colors specified for a \
+! greyscale visual.\n");
+!     fprintf(stderr,
+! 	    "[-color]                     Use the colors specified for a color\
+!  visual.\n");
+!     fprintf(stderr,
+! 	    "[-sc symbol color]           Override color defaults.\n");
+!     fprintf(stderr,
+! 	    "[-sp symbol pixel]           Override color defaults.\n");
+!     fprintf(stderr,
+! 	    "[-cp color pixel]            Override color defaults.\n");
+!     fprintf(stderr,
+! 	    "[-rgb filename]              Search color names in the \
+! rgb text file 'filename'.\n");
+!     fprintf(stderr,
+! 	    "[-v]                         Verbose - print out extensions.\n");
+!     fprintf(stderr,
+! 	    "[-version]                   Print out program's version \
+! number\n");
+!     fprintf(stderr,
+! 	    "                             and library's version number \
+! if different.\n");
+!     fprintf(stderr,
+! 	    "if no input is specified sxpm reads from standard input.\n\n");
+      exit(0);
+  }
+  
+--- 555,588 ----
+  Usage()
+  {
+      fprintf(stderr, "\nUsage:  %s [options...]\n", command[0]);
+!     fprintf(stderr, "Where options are:\n\
+! \n\
+! [-d host:display]            Display to connect to.\n\
+! [-g geom]                    Geometry of window.\n\
+! [-hints]                     Set ResizeInc for window.\n\
+! [-icon filename]             Set pixmap for iconWindow.\n\
+! [-plaid]                     Read the included plaid pixmap.\n\
+! [filename]                   Read from file 'filename', and from standard\n\
+!                              input if 'filename' is '-'.\n\
+! [-o filename]                Write to file 'filename', and to standard\n\
+!                              output if 'filename' is '-'.\n\
+! [-pcmap]                     Use a private colormap.\n\
+! [-closecolors]               Try to use `close' colors.\n\
+! [-nod]                       Don't display in window.\n\
+! [-nom]                       Don't use clip mask if any.\n\
+! [-mono]                      Use the colors specified for a monochrome visual.\n\
+! [-grey4]                     Use the colors specified for a 4 greyscale visual.\n\
+! [-grey]                      Use the colors specified for a greyscale visual.\n\
+! [-color]                     Use the colors specified for a color visual.\n\
+! [-sc symbol color]           Override color defaults.\n\
+! [-sp symbol pixel]           Override color defaults.\n\
+! [-cp color pixel]            Override color defaults.\n\
+! [-rgb filename]              Search color names in the rgb text file 'filename'.\n\
+! [-v]                         Verbose - print out extensions.\n\
+! [-version]                   Print out program's version number\n\
+!                              and library's version number if different.\n\
+! if no input is specified sxpm reads from standard input.\n\
+! \n");
+      exit(0);
+  }
+  
+***************
+*** 648,657 ****
+      }
+  
+      if (warning)
+! 	printf("%s Xpm Warning: %s.\n", tag, warning);
+  
+      if (error) {
+! 	printf("%s Xpm Error: %s.\n", tag, error);
+  	Punt(1);
+      }
+  }
+--- 616,625 ----
+      }
+  
+      if (warning)
+! 	fprintf(stderr, "%s Xpm Warning: %s.\n", tag, warning);
+  
+      if (error) {
+! 	fprintf(stderr, "%s Xpm Error: %s.\n", tag, error);
+  	Punt(1);
+      }
+  }
+diff -c -r ./sxpm/sxpm.man /tmp/xpm-3.4k/sxpm/sxpm.man
+*** ./sxpm/sxpm.man	Thu Mar 19 20:53:49 1998
+--- /tmp/xpm-3.4k/sxpm/sxpm.man	Thu Mar 19 20:53:47 1998
+***************
+*** 47,55 ****
+  [\|\fB-v\fR\|] 
+  .SH DESCRIPTION
+  .PP
+! The \fIsxpm\fP program can be used to view any XPM (version 2 or 3) file and/or
+! to convert a file from XPM1 and XPM2 to XPM version 3. If \fIsxpm\fP is run
+! with any dummy option specified, the usage is displayed. If no geometry is
+  specified, the show window will have the size of the read pixmap. Pressing the
+  key Q in the window will quit the program.
+  .SH OPTIONS
+--- 47,55 ----
+  [\|\fB-v\fR\|] 
+  .SH DESCRIPTION
+  .PP
+! The \fIsxpm\fP program can be used to view any XPM (version 1, 2, or 3) file
+! and/or to convert a file from XPM1 or XPM2 to XPM version 3. If \fIsxpm\fP is
+! run with any dummy option specified, the usage is displayed. If no geometry is
+  specified, the show window will have the size of the read pixmap. Pressing the
+  key Q in the window will quit the program.
+  .SH OPTIONS

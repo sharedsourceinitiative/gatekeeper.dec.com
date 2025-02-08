@@ -1,0 +1,20 @@
+
+                   CRL Technical Report 92/4
+           How the Rdb/VMS Data Sharing System Became Fast
+       David Lomet, Rick Anderson*, T. K. Rengarajan*, and Peter Spiro*
+                            May 29, 1992
+
+Recent versions of Rdb/VMS have shown dramatic performance increases compared
+with earlier versions.  Performance enhancements have culminated in an 80%
+improvement between Rdb/VMS V3.0 and Rdb/VMS V4.1 when executing on the same
+hardware.  This has vaulted Rdb/VMS to an industry leadership position in
+$/TPS and to a very competitive position in peak TPS.  While code paths have
+been shortened, the primary means of achieving this performance gain has been
+through reducing I/O accesses and distributed locks.  This paper
+outlines how this was done.
+
+Keywords: database performance, locking, buffering, recovery, commit processing
+
+Copyright: Digital Equipment Corporation  
+
+* Digital Equipment Corporation, Database Systems Group, Nashua, NH

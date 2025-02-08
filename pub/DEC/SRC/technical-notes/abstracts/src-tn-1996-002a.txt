@@ -1,0 +1,7 @@
+"The Module Structure of TLA+"
+Leslie Lamport
+Note #1996-002, September 12, 1996. Corrected January 5, 1998. 15 pages.
+
+An html document that informally describes the revised syntax and
+semantics for the module structure of TLA+. This is a preliminary draft;
+comments are welcome. 

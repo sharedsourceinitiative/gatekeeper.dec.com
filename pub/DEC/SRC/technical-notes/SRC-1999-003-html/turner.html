@@ -1,0 +1,69 @@
+<html>
+<head><title>
+Directional Array Microphone
+</title> 
+</head>
+<body>
+<center> <h1> <b>
+Directional Array Microphone
+</b> </h1> <br>
+<h2>Richard Turner, University of Belfast</h2>
+</center>
+
+
+
+I am working towards a PhD at The Queen's University of Belfast and 
+collaborated with Stefan Ludwig and Bob McNamara on a board called the 
+Directional Array Microphone (DAM). <P>
+
+Bob McNamara was looking into microphone arrays and thought they were 
+interesting things to investigate. So a piece of general-purpose data 
+capture and delivery hardware was designed and built. This summer I wrote
+the firmware of the FPGA, implemented some tools to interact 
+with the DAM board, and did some fun DSP stuff with the microphone array. <P>
+
+The DAM board is made up of eight Analog to Digital Converters and a connector 
+for daughter boards. There can be a maximum combination of 40 inputs and/or 
+outputs per DAM board (where the daughter boards supply the extra inputs 
+and outputs). If 40 microphones are not sufficient for the task, multiple boards can be 
+synchronized to build larger systems and two Ethernet physical layer chips 
+are supplied to do this. The board has an EPROM for configuration data 
+for the FPGA (firmware). The firmware is used to combine the different 
+parts of the board and daughter boards together.<P>
+
+I spent most of the summer working on the firmware. It generates the control 
+signals for the ADs while the data returned from the ADs is assembled 
+together into packets. As there is no Ethernet controller on the board, 
+the firmware has to place the protocol information at either end of the 
+packet and send it to the Ethernet link. It also receives packets which 
+can be used for the reprogramming of the EPROM. The DAM uses one of the 
+100 Mbps Ethernet links to transport data to and from a PC while the software 
+on the PC is used for digital signal processing.<P>
+
+What interesting things, then, can be accomplished using an array of microphones? 
+Two areas, in particular, appeared worthy of research: high-quality 
+speech acquisition and the location of sound sources.<P>
+
+Speech recognition software requires high-quality speech with low background 
+noise and little change in the quality of the signal. A straighforward solution 
+would be to use a head microphone. As the microphone is close to the source 
+of sound, the signal from the microphone will mostly contain the required 
+speech with little background noise. However, if we place the microphone 
+a more convenient location further away, more background noise will be 
+introduced into the signal. Now, if we use more 
+than one microphone, "beamforming" can be performed. What this means 
+is that we adjust the gain of sound depending on the direction of arrival. 
+So in the direction of the sound we want to capture, we can have a large gain, while 
+we opt for a low gain from the rest of the arrival directions. As a result, 
+we implemented a simple delay & sum beamformer.<P>
+
+The other task we accomplished with the microphone array was to track the sound 
+source. Once we calculate the time difference of the sound arrivals between two 
+microphones, we can work out the direction of the 
+sound through triangulation measurements. This information is then fed back into the 
+beamformer. To demonstrate this, we wired up the microphones in SRC's forum 
+and showed how the system figured out the position of the speaker.<P>
+
+</body>
+</html>
+

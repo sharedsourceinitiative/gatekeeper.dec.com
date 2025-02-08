@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Scheduling</TITLE>
+<META NAME="description" CONTENT="Scheduling">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node76.html">
+<LINK REL="previous" HREF="node74.html">
+<LINK REL="up" HREF="node74.html">
+<LINK REL="next" HREF="node76.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html1129"
+ HREF="node76.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html1125"
+ HREF="node74.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html1119"
+ HREF="node74.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html1127"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html1128"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1130"
+ HREF="node76.html">Virtual Memory</A>
+<B> Up:</B> <A NAME="tex2html1126"
+ HREF="node74.html">Running Ultrix Applications on</A>
+<B> Previous:</B> <A NAME="tex2html1120"
+ HREF="node74.html">Running Ultrix Applications on</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04091000000000000000">
+Scheduling</A>
+</H2>
+<P><A NAME="1705">&#160;</A>
+<A NAME="1706">&#160;</A>
+<A NAME="1707">&#160;</A>
+The component of Taos responsible for processor scheduling is called the
+Nub.  The Nub assigns threads to processors via a preemptive priority
+scheme with time-slicing and optional constraints on which processors can
+run which threads.  There are three priority levels (normal, foreground,
+and background) available to user programs.  There is no automatic
+adjustment of priorities.
+<P><A NAME="1708">&#160;</A>
+The getpriority kernel call maps from Topaz to Ultrix priorities as
+follows: background becomes +10, normal becomes 0, and foreground becomes
+-10.  If getpriority is applied to a process containing several threads,
+it returns the highest priority (lowest numerical value) of any thread.
+<P><A NAME="1709">&#160;</A>
+The setpriority kernel call maps from Ultrix to Topaz priorities as
+follows: positive values become background, 0 becomes normal, and negative
+values become foreground.  If setpriority is applied to a process
+containing several threads, it sets the priority of each of them to the
+same value.  This is usually not a good idea.
+<P>
+Neither getpriority nor setpriority ever returns EACCES.
+<P>
+<BR><HR>
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

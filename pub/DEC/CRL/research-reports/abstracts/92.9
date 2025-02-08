@@ -1,0 +1,25 @@
+                      CRL Technical Report 92/9
+
+                       Private Lock Management
+                           David B. Lomet
+
+                         November 23, 1992
+
+For a data sharing database system, substantial coordination cost is incurred
+to cope with the global (distributed) locking needed by these systems.  Lock 
+covering is a way to permit component systems to perform private (local) 
+locking.  Two forms of covering locks are discussed, together with intention  
+locks, needed to prevent covering violations.  Intention locks give permission 
+for lower level locking to be used, but require that this locking be global.
+The protocol between local lock manager and its principals is defined to
+permit information needed for local locking to be conveyed.  Principals are 
+notified when lock demotion may change local locks to global ones.  New lock 
+modes are defined that provide exclusion without being covering locks.  These 
+locks facilitate database cache management and private logical locking, 
+permitting exclusion with high concurrency, and providing improved concurrency 
+vs overhead trade-offs. 
+
+Keywords: concurrency control, locking, covering, private locking,
+multi-granularity locks, multi-level transactions, database cache management
+
+

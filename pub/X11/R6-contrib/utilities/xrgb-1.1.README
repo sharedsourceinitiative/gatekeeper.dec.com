@@ -1,0 +1,70 @@
+Welcome to xrgb! We wrote this program because we couldn't get
+xcolor to compile on our sun machine, and we wanted to learn
+how the X-Windows System worked.
+
+If you download this software and compile it, please drop
+us a line to let us know how you like it, along with any
+suggestions for improvements.
+
+Neil Enns            Roger Moar
+ennsnr@BrandonU.CA   moar@austin.BrandonU.ca
+
+Features:
+---------
+
+	- scrolled list of system colours.
+	- ability to create your own colors, and then find the
+      closest match in the system rgb.txt file.
+
+Requirements:
+-------------
+
+	- C++ compiler
+	- Athena Widgets
+	- X-Windows (duh :)
+
+At the moment, xrgb works best with monitors that can display 32K+
+colors. If you use less than this (256 for example), you will run
+into problems with not having enough colors available. We are
+working on a way to get around this, but it probably won't
+be ready till the next version.
+
+Compiling xrgb:
+---------------
+
+(xrgb is known to successfully compile under Solaris 2.3... we havn't
+been able to try it on any other operating systems. If you get it
+compiled, please mail us with what you had to change so we can
+incorporate the changes into future versions of this program)
+
+An Imakefile is provided for your compiling convenience. If you
+have xmkmf installed, use the following commands to compile xrgb:
+
+	xmkmf
+	make
+
+Once xrgb is compiled successfully, you should move the XRgb resource
+file to your applications resource directory. Another option is to
+use xrdb to load the xrgb resource file. To do this, type:
+
+	xrdb XRgb
+
+If you have problems compiling, you can try mailing us but we probably
+won't be much help. There is only one UN*X machine on campus, so we
+couldn't try porting it to different operating systems...
+
+Running xrgb:
+-------------
+
+To run xrgb, simply type xrgb. Xrgb expects to find a file named rgb.txt in the
+current working directory. You can specify a different rgb file with the -f flag
+on the command line. The rgb file from our machine is included with this 
+distribution. The rgb.txt file for your system can be found in the X11 library
+as a file called rgb.txt.
+
+Copyright:
+----------
+
+This software is provided under the terms of the GNU General
+Software License agreement. Xrgb is provided with no warranty.
+Please see the file COPYING-2.0 for more details.

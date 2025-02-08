@@ -1,0 +1,70 @@
+Version 1.2.7 of the Xarm C++ Motif library has just been released.
+
+This version adds many missing widget methods and includes
+automatic detection and use of CDE.  The CDE ComboBox widget
+is used in place of the Motif 2.0 ComboBox widget on those
+systems that have CDE but not Motif 2.0.  Future versions of
+Xarm will add support for the other CDE enhancement widgets
+including the SpinBox and the DtEditor.
+
+The Xarm Home Page is at http://soback.kornet.nm.kr/~glgay/
+
+Xarm was also uploaded to ftp://sunsite.unc.edu/incoming/Linux/
+                      and ftp://ftp.x.org/contrib
+
+At SunSITE, it should end up in ftp://sunsite.unc.edu/pub/Linux/libs/X/c++libs/
+
+=====================================================
+
+What is Xarm?
+
+The Xarm library is a C++ wrapper of the Motif library and the Xmext library.
+This is intended as a tool to help individuals that program with Motif & C++.
+An attempt was made to follow the inheritance structure of the Motif widget
+set. The latest version of the library can be obtained from:
+Features:
+---------
+
+- GNU configure (autoconf) script for easy installation.
+- Optional old Configure script for easy installation via imake.
+- Imake support for C++
+- Support for Motif 1.2.x and Motif 2.0.x
+- Support for the Common Desktop Environment (CDE)
+- Build support for X11R5 and X11R6
+- Pixmap support via resource files.
+- Member function callbacks.
+
+Requirements:
+-------------
+X11R5 or greater
+Motif 1.2.x or greater
+gcc 2.7.2 or greater
+GNU make
+
+*Note* LessTif can be used but is not yet complete.
+
+This release has been tested on the following:
+
+Linux 2.0.18, Motif 2.0 (ELF)
+Linux 2.0.29, Motif 2.0 (ELF)
+Linux 2.0.29, Xi Graphics CDE
+AIX 3.2.5, Motif 1.2.4
+SunOS 4.1.3, Motif 1.2.4
+SunOS 4.1.4, Motif 1.2.4
+Solaris 2.5, CDE Motif
+
+However, this release should work on any Unix flavor with Motif 1.2+.
+Past releases have also been reported to work on:
+
+UnixWare
+HP Unix
+
+For LEGAL information see the COPYING file.
+
+Bug reports can be sent to glgay@soback.kornet.nm.kr (Gerald L. Gay).
+Bug reports MUST include a *SMALL* example that reproduces the problem or a
+description of the problem. Patches are always welcome.
+
+Enjoy!
+
+

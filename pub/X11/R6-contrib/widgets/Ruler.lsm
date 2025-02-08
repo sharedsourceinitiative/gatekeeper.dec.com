@@ -1,0 +1,17 @@
+
+Begin3
+Title:		Ruler -- ruler widget for drawing canvases.
+Version:	1.0
+Entered-date:	$Date: 1999/09/01 15:32:00 $
+Description:	Ruler draws a conventional-looking ruler plus an
+		index mark to indicate a value.  User may grab
+		the ruler and use it as a scrollbar.
+Keywords:	X11 Xt Intrinsics Ruler Scroll
+Author:		Edward A. Falk <falk@falconer.vip.best.com>
+Maintained-by:	Edward A. Falk <falk@falconer.vip.best.com>
+Primary-site:	www.best.com/~falconer/Widgets/#ruler
+Alternate-site: 
+Original-site:	
+Platforms:	Linux, Unix.
+Copying-policy: GPL
+End

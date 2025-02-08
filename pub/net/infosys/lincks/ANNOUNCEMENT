@@ -1,0 +1,177 @@
+	       Announcing Release 2.2 Patch level 1 of
+    	LINCKS - a multi-user object-centred database system
+
+What is LINCKS?
+
+	LINCKS is a research database system developed at the
+	University of Linkoping in a project to explore the area of
+	intelligent information systems.  We are releasing it on the
+	net in the hope that we will (1) spark some interest in the
+	work we've done, (2) obtain some users and (3) thus some
+	feedback which will help us to focus our continued research in
+	this area.  Finally, we also hope that our system might prove
+	useful for others in their work/research and might lead to
+	fruitful research contacts.
+
+	LINCKS is an object-centred multi-user database system
+	developed for complex information system applications where
+	editing and browsing of information in the database is of
+	paramount importance.  The focus is on sharing of small
+	information chunks which combine to make up complex information
+	objects used by different users for different purposes. The
+	information chunks are semi-structured in that they contain one
+	part which is well-structured to facilitate addition of A.I.
+	processing within the system, and one part which is
+	unstructured and suitable for management by the user.
+
+Some of LINCKS interesting features are:
+
+	* Multiple users - LINCKS is a multiuser database system.
+
+	* A hypertext-ish X-windows based user interface to the database.
+
+	* Composite objects - although all objects are built up of
+	  small pieces, the user interface presents these as single
+	  `composite objects', allowing editing over the entire
+	  composite object using an Emacs-like editor.
+
+	* Database history - the LINCKS system maintains information
+	  regarding the history of objects and actions within the
+	  system.  Object history is maintained at both the single
+	  chunk and composite object level. Past versions of objects
+	  can be accessed and reactivated.
+
+	* Alternative views - LINCKS allows a user or application
+	  developer to interactively define alternative views on the
+	  underlying database objects. This is particularly useful in
+	  applications where the same information is to be used for
+	  different purposes or by people in differing roles which
+	  require a different composition and display.
+
+	* Information sharing - LINCKS provides an easy way for users
+	  to share database objects or for one user to share
+	  information across all of her/his accessible objects.  This is
+	  done by linking objects into composition objects.  Thereby,
+	  any changes to that object by one user will result in updates
+	  to all compositions which have that object as an component.
+
+	* Parallel Editing Notification - As LINCKS is a multi-user
+	  system and allows information sharing, this leads to possible
+	  conflicts.  Consequently, the LINCKS system maintains a list
+	  of objects being edited and issues warnings when parallel
+	  editing occurs.
+
+	* Tutorial - The system contains a simple interactive tutorial
+	  to illustrate the basic ideas and capabilities of the system.
+
+Availability
+
+	If you are interested in trying out the LINCKS Version 2.2
+	system, it is available by anonymous ftp on ftp.ida.liu.se
+	(130.236.30.131) in the directory pub/lincks/lincks-2.2.1.tar.gz
+	(or pub/lincks/lincks-2.2.1.tar.Z for those without GNU unzip).
+	This machine is in Sweden.  If it doesn't allow you in the first
+	time, wait a few seconds and try again.
+
+	Note that ftp.ida.liu.se allows very few anonymous (10) ftp logins 
+        at one time, so we have made LINCKS available on the following
+	ftp sites:
+
+        ftp.sunet.se:pub/unix/databases/object-oriented/lincks/lincks-2.2.1.tar.gz
+        ftp.uu.net:pub/database/lincks/lincks-2.2.1.tar.gz
+        gatekeeper.dec.com:/pub/net/infosys/lincks/lincks-2.2.1.tar.gz
+       
+	To retrieve it, do the following:
+	> ftp ftp.ida.liu.se 
+	(log in using anonymous as the username and your 
+	 mail address as the password) 
+	> bin 
+	> cd pub/lincks 
+	> get README "|more" 
+	> get lincks-2.2.1.tar.gz 
+	> bye
+
+	Alternatively, you can pick up the User's Manual in
+	PostScript(TM) format (xlincks_manual.ps.gz or
+	xlincks_manual.ps.Z) if you want to have a look at the
+	Interface user manual.  NOTE!  This file is also included in
+	the tar file, so you needn't get both.
+
+	After retrieving the LINCKS tar file, you can unpack it by:
+
+	> cd some-directory 
+	> gunzip lincks-2.2.1.tar.gz 
+	> tar xvf lincks-2.2.1.tar 
+	> cd lincks-2.2.1
+
+	Thereafter, read the README file and the COPYING file, the
+	latter of which explains the terms under which you can use
+	LINCKS.  LINCKS Version 2.2 is available under the terms of 
+	the GNU General Public License version 2.
+
+What you need to run it
+
+	You must have some reasonable sort of UNIX (TM) and X11R5 or
+	something based on it.  X11R4 support doesn't really exist,
+	although the interface will run.  We hope to fix the X11R4
+	support soon, but don't count on it.  Now that X11R6 is out,
+	we'll try to get LINCKS available on R6 as soon as possible.
+
+	- Sun 4's, running SunOS 4.1.[1-3], and X11R5.  This is the
+	  development platform.
+
+	The rest of these have been tested only minimally and not
+	necessarily by us.
+
+	- Sun 4's, running SunOS 5.2 (Solaris), and Solaris' 
+	  OpenWindows (based on R5).
+	- Sun 3's, running SunOS 4.1.1 and X11R4.
+	- DECstations running ultrix and X11R5
+	- IBM RS6000's running AIX and X11R5
+	- Sequent Symmetry running DYNIX and X11R4
+	- Linux 0.99.12 Kernel with X386 1.3 on a 486 box.  There's no
+	  reason why it shouldn't work on later versions as well.
+	- HP's running HP-UX and X11R5.
+	- SGI IRIX
+	- SCO Unix
+	- PC (386 box) running SVR4.2
+	- SONY NEWS NWS-3860 (MIPS R3000 CPU) NEWS-OS 4.2R
+	- 4.3 Reno BSD
+	- DEC OSF/1 (1.3A) Alpha
+	- DEC OSF/1 MIPS
+
+	If you have any of these platforms or any other reasonable kind
+	of UNIX, we hope you will be able to get the system running.
+
+
+Where we can be reached
+
+	We (the developers) can be reached by sending mail to
+	lincks@ida.liu.se.  If you have bug reports, please send them
+	to lincks-bugs@ida.liu.se.  Additionally there is a lincks
+	mailing list (lincks-users@ida.liu.se) for interested parties,
+	which you can join by sending mail to
+	lincks-users-request@ida.liu.se.
+
+
+COPYRIGHT
+
+    Linkoping Intelligent Communication of Knowledge System (LINCKS)
+            Copyright (C) 1993, 1994 Lin Padgham, Ralph Ronnquist.
+          Department of Computer and Information Sciences (IDA)
+                University of Linkoping, Sweden
+                    581 83 Linkoping, Sweden
+
+    These programs are free software; you can redistribute them and/or modify
+    them under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    These programs are distributed in the hope that they will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+

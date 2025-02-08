@@ -1,0 +1,28 @@
+<TITLE>Compaq Systems Research Center: Note 2000-003</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/SRC/pics/cpq-logo.gif" ALT="Compaq">
+ SRC Technical Note 2000-003</H1>
+<H1>Houdini, an Annotation Assistant for ESC/Java</H1>
+<HR>
+<H2>Cormac Flanagan and K. Rustan M. Leino</H2>
+Note #2000-003, December 31, 2000. 
+
+A static program checker that performs modular checking can check
+one program module for errors without needing to analyze the entire
+program. Modular checking requires that each module be accompa-nied
+by annotations that specify the module. To help reduce the cost of
+writing specifications, this paper presents Houdini, an annotation as-sistant
+for the modular checker ESC/Java. To infer suitable ESC/Java
+annotations for a given program, Houdini generates a large number of
+candidate annotations and uses ESC/Java to verify or refute each of
+these annotations. The paper describes the design, implementation,
+and preliminary evaluation of Houdini.
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-2000-003.ps.Z">PostScript compressed with UNIX compress</A></B> -- 176 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-2000-003.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 120 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-2000-003.ps.zip">PostScript compressed with ZIP</A></B> -- 104 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-2000-003.ps">PostScript</A></B> -- 752 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-2000-003.pdf">Portable Document Format (PDF)</A></B> -- 96 Kbytes<BR>
+</UL></P>

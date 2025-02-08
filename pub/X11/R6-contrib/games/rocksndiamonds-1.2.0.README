@@ -1,0 +1,36 @@
+Begin3
+Title:		Rocks'n'Diamonds
+Version:	1.2_0
+Entered-date:	07Dec98
+Description:	Arcade style game for color X11 with stereo sounds.
+		A game like "Boulderdash" (C=64) or "Emerald Mine" (Amiga).
+		Included are many levels known from the games "Boulderdash",
+		"Emerald Mine", "Sokoban" and "xbd" and a lot of new levels
+		designed by other players.
+		Joystick support for Linux, FreeBSD and DOS/Windows.
+		Sound server takes advantage of some features of VoxWare(tm),
+		but works on plain /dev/audio, too.
+		Comes with full source code.
+		Most important changes since last release version 0.9b:
+		- local multiplayer mode
+		- network multiplayer mode
+		- soft scrolling with 50 frames/s
+		- clear separation of system-wide game data from user data
+		  (making life much easier for distribution maintainers)
+		- Xpm library no longer needed (using fast new PCX loader)
+		- finally released under the GNU General Public License
+Keywords:	game x11 boulderdash emeraldmine sokoban color stereo sound
+Author:		aeglos@valinor.owl.de (Holger Schemel)
+Maintained-by:	aeglos@valinor.owl.de (Holger Schemel)
+Primary-site:   www.artsoft.org
+		1140964 rocksndiamonds-1.2.0.tar.gz (Unix)
+		2346242 rocks120.zip (DOS/Windows)
+Alternate-site: artsoft.linuxgames.org
+		1140964 rocksndiamonds-1.2.0.tar.gz (Unix)
+		2346242 rocks120.zip (DOS/Windows)
+Platforms:	Should run on any Unix system with color X11, DOS and Windows.
+		Expected/known to work on Linux, HP-UX, SUN, NetBSD, FreeBSD,
+		AIX, IRIX, DOS, Windows95 (compiles in Linux DOSEMU).
+		Linux ELF/libc5 binary included.
+Copying-policy:	GNU General Public License
+End

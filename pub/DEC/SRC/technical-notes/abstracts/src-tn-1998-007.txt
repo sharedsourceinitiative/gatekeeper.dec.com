@@ -1,0 +1,10 @@
+"Two Facets of Authentication"
+Martin Abadi
+Note #1998-007, March 18, 1998.
+
+Authentication can serve both for assigning responsibility and for
+giving credit. Some authentication protocols are adequate for one
+purpose but not the other. This paper explains the distinction between
+responsibility and credit, through several examples, and discusses the
+role of this distinction in the design and analysis of protocols.
+

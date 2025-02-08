@@ -1,0 +1,503 @@
+<TITLE>DeckScape: An Experimental Web Browser </TITLE>
+
+<H1> DeckScape: An Experimental Web Browser </H1>
+
+<ADDRESS> 
+<A HREF="http://www.research.digital.com/people/mhb"> 
+Marc H. Brown</A>,
+DEC Systems Research Center,
+130 Lytton Ave.,
+Palo Alto, CA 94301
+</ADDRESS>
+<CODE> 
+mhb@src.dec.com,
+http://www.research.digital.com/people/mhb
+</CODE>
+
+<P>
+
+<ADDRESS>
+<A HREF="http://www.cs.princeton.edu/~ras/">
+Robert A. Shillner</A>, 
+Department of Computer Science,
+Princeton University, 
+Princeton, NJ 08544 
+</ADDRESS>
+<CODE> 
+ras@cs.princeton.edu,
+http://www.cs.princeton.edu/~ras/
+</CODE>
+
+<P>
+
+<DL>
+<DT> <B>Abstract:</B>
+<DD>
+This paper describes DeckScape, an experimental
+World-Wide Web browser based on a "deck" metaphor.  A
+deck consists of a collection of Web pages, and
+multiple decks can exist on the screen at once.  As
+the user traverses links, new pages appear on top of
+the current deck.  Retrievals are done using a
+background thread, so all visible pages in any deck
+are active at all times.  Users can move and copy
+pages between decks, and decks can be used as a
+general-purpose way to organize material, such as
+hotlists, query results, and breadth-first expansions.
+<P>
+
+<DT> <B>Keywords:</B>
+<DD> 
+WWW, Web, World-Wide Web, Browsers, Internet, Mosaic, Netscape.
+</DL>
+
+
+<H2>Overview</H2>
+
+Mosaic <A HREF=#REF-mosaic>[1]</A> and the various
+Web browsers it has inspired <A HREF=#REF-faq>[5]</A>
+<A HREF=#REF-browsers>[6]</A>, use a depth-first
+navigational model.  At any point in time, the user
+is "at" a particular node on the Web, having arrived
+there by following a path of nodes from some root.
+The user can choose to leave the current node either
+by following an outgoing link or by going back to the
+previous node in the path from the root.  After going
+back, the user can also choose to go forward to the
+next node on the most recent path from the root.
+
+<P> Most Mosaic-inspired browsers support other navigation
+methods in addition to these primitives; for instance, the
+user can jump to different URLs using the "Hotlist" and
+"Open URL" dialogs.  Most browsers also offer multiple open
+windows, each with its own depth-first visitation stack.
+However, with the exception of Netscape <A
+HREF=#REF-netscape>[4]</A> and InternetWorks <A
+HREF=#REF-internetworks>[3]</A>, the browsers are
+single-threaded, so while one window is downloading a page,
+all of the windows owned by the browser become inactive.
+
+<P> We have developed DeckScape, an experimental browser for
+exploring new methods of navigating and organizing pages on
+the Web.  DeckScape centers on the metaphor of a
+<EM>deck</EM>: a collection of Web pages, of which only one
+is visible at a time.  When the user clicks a link on a
+page, a new Web page appears on top of the deck, obscuring
+the page that was previously visible.  The user can leaf
+through a deck's pages one at a time, jump to the top or
+bottom of a deck, or move to any particular page by
+choosing its name from a list of the deck's current
+contents.  The browser itself consists of multiple decks,
+all in a single top-level window.  Users can move, resize or
+iconify decks, move or copy pages between decks, start new
+decks, delete decks or pages, and so on.  The contents of
+decks persist between invocations of DeckScape.
+
+<P> The key benefit of the deck abstraction is that it
+provides a way to organize material.  For example, a user
+can keep the home pages of all of his or her colleagues
+together in a deck named "Colleagues," or keep several
+Mosaic-style hotlists, each in its own deck.  DeckScape
+further uses decks to return the results of certain
+operations, such as "expand all the links on this page."
+
+<P> DeckScape is also multi-threaded. In particular,
+fetching a new page occurs in the background, in a separate
+thread.  Thus, unlike single-threaded browsers, traversing a
+slow link or downloading a large file does not freeze the
+entire application.  All decks remain active and ready for
+browsing, and multiple links can be traversed concurrently.
+
+<P> (Of course, one could start up multiple instances of a
+single-threaded browser. This would have the advantage that,
+when traversing a slow link or downloading a large file, the
+other instances would remain active. However, multiple
+instances have the drawback of increasing the amount of
+computer resources consumed. Also, multiple instances are
+completely independent of each other, so it is not 
+possibile to share the information among instances.)
+
+
+<H2>A Tour of DeckScape</H2>
+
+
+<H3>Deck Basics</H3>
+
+When DeckScape is first run, the user sees a window
+containing a menu bar and a large open area.  This window
+forms the <EM>workspace</EM> in which the user positions
+decks and pages.
+
+<P> Choosing "New Deck" from the File menu produces a new
+deck with a default name, containing a single document: the
+user's home page.  Clicking links adds more pages to the
+deck.  Buttons let the user shuffle through the deck's
+contents or go to the top or bottom of the deck.  The user
+can create more decks and use them to follow different
+links. This behavior is similar to that of a traditional
+browser: creating windows, clicking links and moving forward
+and back. 
+
+<P> Here we see DeckScape with a single deck. The deck,
+named "WWW'95", has six pages in it. The user is looking at
+the second page in the deck, whose URL is
+<TT>http://www.igd.fhg.de/www/www95/program.html</TT>:
+<BR><CENTER>
+<A HREF="SRC-135a-fig1.gif"><IMG SRC="SRC-135a-fig1-thumbnail.gif"></A>
+</CENTER>
+
+<P> DeckScape retains all pages until the user explicitly
+discards them, while a traditional browser retains only
+those pages on the path from the root to the current page.
+For example, if a user starts at page A, then traverses some
+pages (including B) and ends at C, both DeckScape and a
+conventional browser keep copies of all the pages from A to
+C.  However, if the user then backs up to B and chooses a
+new link, a traditional browser discards all of the pages
+after B up to and including C. On the other hand, DeckScape
+keeps all of those pages and inserts the new page into the
+deck just after B.
+
+<P> This design allows users to quickly switch back and
+forth between two or more pages which do not lie on one
+convenient path from the root, but rather lie on different
+branches of a tree.  Traditional browsers would have to
+download and parse each page on each traversal, while
+DeckScape allows the user to flip quickly through the deck's
+contents without refetching any pages. (DeckScape has a
+"Reload" command to refetch a page, rather than use the
+page from its internal cache.)
+
+<P> Once a deck has been built up, a user can modify the
+contents of a deck in several ways.  Clicking a document's
+"D" button deletes the document from its deck.  Dragging a
+document from one deck to another moves the document between
+decks.  Holding down an appropriate modifier key while
+dragging copies the document.  Clicking a deck's "Merge"
+button and dragging to another deck merges two decks by
+adding all of the pages from the first deck into the second
+one, immediately after the second deck's current page.
+
+
+<H3>"Away" Pages</H3>
+
+DeckScape also offers the ability to temporarily remove a
+page from its home deck.  To pull a page away from a deck,
+the user drags the page into the workspace background; the
+page then appears in a window separate from its home deck.
+The page is still a member of the deck, but it is
+<EM>away</EM> from the deck rather than <EM>in</EM> it.
+Later, the user can issue the deck's "Gather Up" command to
+bring the "away" pages back to the deck, or he or she can
+drag the pages back to the home deck (or a different deck)
+manually.
+
+<P> The ability to pull a page away from its deck allows the
+user to simultaneously view two or more pages from the same
+deck.  It is often useful to have certain pages, such as
+glossaries or reference pages, visible for an extended
+period, even while following another chain of links.
+DeckScape allows users to drag such pages off to the side
+and continue following links on the main body of the deck,
+leaving the "special" pages easily accessible.
+
+<P> In the following screen dump, we see three decks, "Ongoing
+SRC Research Projects," "Nifty home pages," and "Palo Alto
+stuff." The narrow window in the lower-left is showing an
+"away" page from the "Palo Alto stuff" deck: 
+<BR><CENTER>
+<A HREF="SRC-135a-fig2.gif"><IMG SRC="SRC-135a-fig2-thumbnail.gif"></A>
+</CENTER>
+
+<P> When the user follows a link on an "away" page, the
+resulting new page appears on the main body of the deck.
+This behavior is useful when one page, such as a table of
+contents, has many links in which the user is interested.
+Ordinarily, clicking a link on such a page would cause a new
+page to cover up the table of contents, so that the user
+must dig through the deck each time he or she wishes to
+follow a new link from the table of contents.  However, if
+the user were to pull the table of contents away from the
+deck, then the page would always be handy for following new
+links: the resulting pages appear on the deck and do not
+cover up the table of contents.
+
+<P> Similarly, the user could click many links on an "away"
+page in rapid succession, causing many new documents to
+appear on the deck.  Since DeckScape is multi-threaded, the
+user need not wait for one download to complete before
+clicking another link.  The user can browse through the
+resulting new documents immediately, even before all of the
+downloads have completed.  No traditional browser can
+support this type of Web exploration because in a
+traditional browser clicking a link always makes a new
+document cover up the page containing the link.
+
+<P> Browsing in this manner is particularly effective when
+combined with a deck's "Make Link Index" command.  This
+command finds all of the links on each page in a deck, then
+adds to the deck a new page containing all of the links in
+alphabetical order.  The new page provides an index of all
+the links accessible from any page in the deck.  The user
+can then drag the index page away from the deck and click a
+series of links, browsing through the resulting documents as
+they appear on the main body of the deck.
+
+<P> Another use for "away" pages is for creating new decks.
+If a user wants to start a new deck from a particular page,
+he or she can drag the page away from its home deck, then
+issue the page's "Make New Deck" command.  A new deck
+appears, containing the page.
+
+
+<H3>Organizing Information with Decks</H3>
+
+Decks can be used to organize information found in the Web.
+Since decks' contents are automatically saved and restored
+when the DeckScape application exits and restarts, users can
+use decks to help find pages that they have visited before.
+For instance, if a user frequently visits a particular Web
+server, he or she can set up a deck to contain pages from
+that site, and use the deck to access the site, rather than
+follow a series of links from a home page.
+
+<P> Another use of decks is to organize hotlists. DeckScape
+has a special hotlist deck, and each document has a "copy to
+hotlist" button. When a user comes across an interesting
+page, he or she can click the "H" button to copy the page
+into the hotlist deck.  Users can also use ordinary decks as
+hotlists by manually copying interesting documents into
+them; thus, each user can have many hotlists, organized by
+whatever criteria are appropriate.  
+
+<P> In the following screen dump, the hotlist deck is in the
+lower center. The hotlist is like any other deck, except
+that it cannot be renamed or deleted by the user.  The "Goto
+Page..." dialog allows the user to select and jump to any
+document in a deck, either by its title or by its index.
+<BR><CENTER>
+<A HREF="SRC-135a-fig3.gif"><IMG SRC="SRC-135a-fig3-thumbnail.gif"></A>
+</CENTER>
+
+
+<H3>Acquiring Information with Decks</H3>
+
+DeckScape also uses decks to return the results of certain
+operations.  For example, issuing a page's "Expand One
+Level" command causes DeckScape to traverse each link on the
+page and place the resulting documents in a new deck.  The
+link traversals all occur in the background, so the user
+retains control of the application and can even begin
+browsing pages and traversing links in the new deck before
+all of the pages have been fetched.  
+
+<P> In the following screen dump, the
+deck entitled "Expanding 82 links" is the created by issuing
+the "Expand One Level" command in the "Deck 12" deck, while it 
+is displaying the home page for the Systems
+Research Center. It is common to issue the "Expand One
+Level" command on the home page of Web sites in order to
+create a new deck that contains the pages most relevant to
+the home page. These pages can then be rapidly traversed
+with a single button.  When the screen dump was taken, 79 of
+the 82 links had been retrieved, and the user was looking at
+the 24th page in the deck.
+<BR><CENTER>
+<A HREF="SRC-135a-fig4.gif"><IMG SRC="SRC-135a-fig4-thumbnail.gif"></A>
+</CENTER>
+
+<P> Global search is another operation which returns its
+results in a deck.  After the user enters the text to be
+found, DeckScape searches through all the pages in each
+deck.  It copies the pages that contain hits and makes a new
+deck containing the copied pages. 
+
+<P> In the following screen dump, the deck labeled "Search
+Results" contains a copy of each page from any deck matching
+the string "animation."
+<BR><CENTER>
+<A HREF="SRC-135a-fig5.gif"><IMG SRC="SRC-135a-fig5-thumbnail.gif"></A>
+</CENTER>
+
+
+<H2>Implementation</H2>
+
+DeckScape is implemented in Modula-3 <A
+HREF=#REF-modula3>[2]</A> and consists of about 3500
+lines of code. The system makes extensive use of
+Modula-3's standard libraries, including the threads
+package, user interface toolkit, and persistent data
+structures facility.
+
+<P> DeckScape's primary components are object classes
+that correspond to portions of the visual interface;
+these visual classes have names ending in "VBT". The
+VBT classes, along with other non-visual classes,
+constitute a hierarchy of abstractions which make it
+possible to easily integrate the browser's
+functionality into other Modula-3 applications.
+
+<P> The remainder of this section describes the
+modules comprising the implementation.
+
+<UL>
+
+<LI>A <TT>WorkspaceVBT</TT> is the main application window;
+only one is ever created and it is installed in a top-level
+window in the user's desktop.  A <TT>WorkspaceVBT</TT>
+provides the global menu bar and the space where the user
+positions decks and documents.  The <TT>WorkspaceVBT</TT>
+maintains lists of all of the decks and "away" documents.
+
+<P><LI>A <TT>WSObjectVBT</TT> is an abstract class whose
+subtypes are objects that can appear in the workspace,
+namely decks and "away" documents.  No objects of type
+<TT>WSObjectVBT</TT> are ever created; <TT>WSObjectVBT</TT>
+exists so that operations that are common to both decks and
+"away" documents (such as iconify, raise and lower) can be
+defined.
+
+<P><LI>A <TT>DeckVBT</TT> (a subclass of <TT>WSObject</TT>)
+is a deck: it contains the deck's title bar, browsing
+controls, sizing, iconifying and dragging widgets, and a
+menu of miscellaneous commands, as well as space for
+displaying a document.
+
+<P><LI>An <TT>AwayVBT</TT> (a subclass of
+<TT>WSObject</TT>) represents a document away from its deck:
+it contains a title bar for repositioning the "away"
+document, sizing, iconifying and dragging widgets, and a
+menu of miscellaneous commands, as well as a space for
+displaying a document.
+
+<P><LI>A <TT>DocVBT</TT> displays a Web page. It
+contains the buttons to delete itself or copy itself
+to the hotlist, as well as the draggable banner used
+to move the document between decks or "away" from its
+home deck. The <TT>DocVBT</TT> also contains space
+for the document's contents, displayed by a
+<TT>URLVBT</TT>.
+
+<P><LI>A <TT>URLVBT</TT> is an abstract class for
+displaying data fetched from a URL. At present, only
+two subtypes are defined: one to display plain text
+(called a <TT>PlainVBT</TT>) and one to display HTML
+(called an <TT>HTMLVBT</TT>).
+
+<P><LI>A <TT>PlainVBT</TT> displays a plain text document.
+
+<P><LI>An <TT>HTMLVBT</TT> displays the contents of
+an HTML page.  It allows the user to scroll through
+the page and traverse links by clicking.
+<TT>HTMLVBT</TT> is still in the very early prototype
+stage; it does not support multiple fonts, sizes and
+styles, nor does it support inline images and forms.
+
+<P><LI>An <TT>HTML</TT> object is an abstract syntax tree
+for an HTML document.  <TT>HTML</TT> objects are produced by
+the <TT>Parser</TT> module and used by <TT>HTMLVBT</TT>
+objects.
+
+<P><LI>The <TT>Web</TT> module fetches a document from a
+given URL.
+
+<P><LI>The <TT>Parser</TT> and <TT>Lexer</TT> modules
+produce <TT>HTML</TT> syntax trees from HTML source text
+retrieved by <TT>Web</TT>.
+
+</UL>
+
+
+<H2>Conclusions</H2>
+
+This paper has described DeckScape, an experimental
+Web browser. Decks provide a flexible way to organize
+Web pages, in many of the same ways that modern
+folder-based mail readers (e.g., <TT>xmh</TT> for
+Unix) improve on previous generation tty-oriented
+mail programs (e.g., <TT>/usr/ucb/mail</TT> for
+Unix).  However, DeckScape is lacking essential
+Web-browsing features such as inlined images, forms,
+multiple fonts, and external viewers. Some of these
+deficiencies will be easy to address, but others will
+take quite a bit of effort. Because of these
+deficiencies, DeckScape is not in daily use, even for
+the authors.
+
+<P> We do not claim that DeckScape is <EM>the</EM>
+correct way to browse the Web and organize pages in
+the Web.  Discovering and quantifying the strengths
+and weaknesses of decks are challenges for the
+future. We hope that the ideas introduced in this
+paper will help to advance the standard for
+navigational and organizational capabilities of Web
+browsers.
+
+
+<H2>Acknowledgments</H2>
+
+Bill Weihl and Paul McJones helped
+improve the clarity of this paper. Lucille Glassman
+implemented the <TT>Web</TT> module.  Steve Feiner
+provided a wealth of ideas for improving the system,
+most of which are still on our "todo" list
+unfortunately.
+
+<P> A two-page summary of the DeckScape system will
+appear in the Conference Companion proceedings of the
+<A
+HREF="http://www.acm.org/sigchi/chi95/homepage.html">1995
+Conference on Human Factors in Computing Systems
+(CHI'95)</A>, sponsored by <A
+HREF="http://www.acm.org/">ACM</A>/<A
+HREF="http://www.acm.org/sigchi/">SIGCHI</A>.
+
+
+<H2>References</H2>
+
+<DL>
+
+<DT> <A NAME="REF-mosaic">[1]
+About NCSA Mosaic for the X Window System.<BR>
+<KBD><A HREF=
+"http://www.ncsa.uiuc.edu/SDG/Software/Mosaic/Docs/help-about.html">
+http://www.ncsa.uiuc.edu/SDG/Software/Mosaic/Docs/help-about.html</A></KBD>
+
+
+<P>
+<DT> <A NAME="REF-modula3">[2]
+Modula-3 home page.<BR>
+<KBD><A HREF=
+"http://www.research.digital.com/SRC/modula-3/html/home.html">
+http://www.research.digital.com/SRC/modula-3/html/home.html</A></KBD>
+
+<P>
+<DT> <A NAME="REF-internetworks">[3]
+Welcome to BookLink.<BR>
+<KBD><A HREF=
+"http://www.booklink.com/">
+http://www.booklink.com/</A></KBD>
+
+<P>
+<DT> <A NAME="REF-netscape">[4]
+Welcome to Netscape!<BR>
+<KBD><A HREF=
+"http://home.mcom.com/home/welcome.html">
+http://home.mcom.com/home/welcome.html</A></KBD>
+
+<P>
+<DT> <A NAME="REF-faq">[5]
+World Wide Web Frequently Asked Questions.<BR>
+<KBD><A HREF=
+"http://sunsite.unc.edu/boutell/faq/www_faq.html">
+http://sunsite.unc.edu/boutell/faq/www_faq.html</A></KBD>
+
+<P>
+<DT> <A NAME="REF-browsers">[6]
+W3 Clients.<BR>
+<KBD><A HREF=
+"http://info.cern.ch/hypertext/WWW/Clients.html">
+http://info.cern.ch/hypertext/WWW/Clients.html</A></KBD>
+
+</DL>
+

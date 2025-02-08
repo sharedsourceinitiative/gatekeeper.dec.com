@@ -1,0 +1,21 @@
+			   CRL Technical Report 92/6
+	 Low Contention Load Balancing on Large-Scale Multiprocessors
+		Maurice Herlihy, Beng-Hong Lim, and Nir Shavit
+				  19 May 1992
+				       
+Dynamic load balancing can have a dramatic effect on the performance of
+parallel programs.  A good load balancing algorithm should allow high levels of
+concurrency without high levels of memory contention.  In this paper, we
+investigate the performance of basic techniques for dynamic load balancing on
+large-scale multiprocessors.  We consider concurrent data structures based on:
+(1) spin locks with exponential backoff, (2) ``queue'' locks, (3) software
+combining trees, and (4) counting networks.  We run a series of simple
+benchmarks on a simulated 64-processor Alewife machine, a distributed-memory
+multiprocessor currently under development at MIT.  The machine supports the
+shared-memory programming model.  Although the two locking techniques are known
+to perform well on small-scale, bus-based multiprocessors, we found that they
+are severely affected by contention as concurrency increases.  Both counting
+networks and combining trees substantially outperform the locking methods.
+Finally, although combining trees have the same scaling behavior, they are more
+susceptible to variations in the inter-arrival times of increment requests
+because they hold locks for long durations.

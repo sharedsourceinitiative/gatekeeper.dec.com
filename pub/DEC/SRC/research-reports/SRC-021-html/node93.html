@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>UID</TITLE>
+<META NAME="description" CONTENT="UID">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="previous" HREF="node92.html">
+<LINK REL="up" HREF="node85.html">
+<LINK REL="next" HREF="node94.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html1349"
+ HREF="node94.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html1345"
+ HREF="node85.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html1341"
+ HREF="node92.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html1347"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html1348"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1350"
+ HREF="node94.html">Acknowledgments</A>
+<B> Up:</B> <A NAME="tex2html1346"
+ HREF="node85.html">Topaz Interfaces Imported by</A>
+<B> Previous:</B> <A NAME="tex2html1342"
+ HREF="node92.html">Time</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION040108000000000000000">
+UID</A>
+</H2>
+<P>
+The UID interface contains types and procedures for generating unique
+identifiers.
+<P><A NAME="1900">&#160;</A>
+<A NAME="1901">&#160;</A>
+<PRE>
+TYPE
+  Counter = CARDINAL;
+  Constant = ARRAY [0..5] OF NubTypes.Byte;
+</PRE>
+<P>
+Each call of the procedure GetCounter returns a value of type Counter that
+is guaranteed to be different than the values returned by all previous
+calls to GetCounter on the same machine.  The procedure GetConstant
+returns a value of type Constant that is guaranteed to be different than
+the value returned by calls to GetConstant on any other machine.  Thus the
+concatenation of a Counter and a Constant is unique across all machines
+over all time.
+<P>
+<BR><HR>
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

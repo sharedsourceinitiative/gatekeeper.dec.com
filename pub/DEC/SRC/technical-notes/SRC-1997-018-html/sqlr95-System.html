@@ -1,0 +1,1101 @@
+<HTML><HEAD>
+<!-- This document was created from RTF source by rtftohtml version $Revision: 3.6 $ -->
+<TITLE>The 1995 SQL Reunion: People, Projects, and Politics - System R</TITLE></HEAD>
+<BODY BACKGROUND="" BGCOLOR="#FFFFFF" TEXT=#000000>
+<A HREF="sqlr95-Prehisto.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="sqlr95-Spreadin.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="sqlr95-The.html"><IMG SRC="images/upg.gif" ALT="Up " border=0></A>
+ <A HREF="sqlr95.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="sqlr95-Contents.html"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+ <A HREF="sqlr95-Index.html"><IMG SRC="images/indexg.gif" ALT="Index" border=0></A>
+<hr size=4>
+<H2>
+System R</H2>
+<b>Mike Blasgen:</b> So now we've reached the ancillary stuff, the peripheral
+stuff, and now we have the kickoff of System R, which Don has already
+introduced with this task force and all this stuff that happened, and which I
+didn't know. I originally thought that this twentieth anniversary should be the
+twentieth anniversary of some particular event that occurred on some day. The
+day I was going to pick was the day that the project got named System R. It was
+full-fledged by then; then this chart that I had up here existed. Once there
+was a System R, all these names fell out: RDS, RSS. Actually, historically it
+may have been the other way: it may have been these names that lead to this
+name. That I believe was at the end of 1974; almost Christmas of 1974. Does
+somebody remember a better date than that? Irv, I know you were involved. I
+remember you and Frank were walking down the hall, talking about the name.<p>
+<b>Irv Traiger:</b> Leonard had ordered all of us to pick a name for this
+project. We just sort of shrugged off, "It's not important." He said, "It's
+important in terms of recognition to have a name." We would make attempts at
+coming up with a name over weeks. One was Rufus<A NAME="Index90"></A>,
+which was Franco's dog.<p>
+<b>Franco Putzolu:</b> Rufus would have been a better name. It stands for
+Relational User Friendly Universal System.<p>
+<b>Mike Blasgen:</b> It would have been a better name.<p>
+<b>C. Mohan:</b> Later we actually had a project named Rufus. Kurt Shoens'<A NAME="Index91"></A><a
+name="fnB21" href="#fn21">[23]</a> ...<p>
+<b>Irv Traiger:</b> It was really hard.<p>
+<b>Mike Blasgen:</b> So it was named roughly at the end of 1974?<p>
+<b>Irv Traiger:</b> Don't remember.<p>
+<b>Tom Price:</b> Was that the time that Leonard made you guys all work on
+Christmas Eve? I heard a story once that he wouldn't let anybody off on
+Christmas Eve?<p>
+<b>Irv Traiger:</b> I think that was back in Yorktown.<p>
+<b>Don Chamberlin:</b> That was in Yorktown; yeah, I remember that.<i>
+[laughter]</i> This was the Friday before Christmas and the lab had some kind
+of a party with cookies and Santa Claus and music and everything down in the
+cafeteria and Leonard wanted to have some kind of technical meeting right
+through the whole thing. Leonard expected a lot of his people, but he also
+treated them well.<p>
+<b>Mike Blasgen:</b> Leonard<A NAME="Index92"></A>
+was quite a character: a lot of fire and brimstone and vim and vigor and all
+those pairs of words. I remember probably in 1975 we went off to the beach at
+Pajaro Dunes<A NAME="Index93"></A>
+and Leonard stood up and said, "OK, what are all the bad things that are going
+on in the department? What are all the bad things I'm doing?" And he made
+everybody say them. Everybody complained. And he wrote down this list of
+complaints. He didn't say anything. He just wrote down complaints. And then he
+said, "OK, shut up," and he talked for two hours without a break telling us,
+basically, everything we were complaining about was not correct.<i>
+[laughter]</i><p>
+Management by consensus: I have decided; you concede.<i> [laughter]</i> It was
+so amazing; it was completely oblivious to him that he was doing this. It
+worked; it worked very well for him. In case you don't know, he's the Chief
+Operating Officer of Cadence. Cadence's number one customer is IBM. They sell
+electronic design tools for laying out circuits on chips.<p>
+By the way, this System R thing of course makes me put this [cartoon] up. I
+don't know when this picture was drawn; this is my favorite chart. This is a
+rabbit and a beaver talking, and behind them you can see Hoover Dam<A NAME="Index94"></A>.
+The beaver is saying to the rabbit, "I didn't actually build it, but it was
+based on my idea."<i> [laughter]</i> So this little beaver is System R, because
+I don't think there is much code of System R left around; a little bit in
+SQL/DS I guess.<p>
+<b>C. Mohan:</b> Quite a bit, actually, especially the RSS.<p>
+<b>Mike Blasgen:</b> All right, the index component is still alive.<i>
+[laughter]</i> That's what I<A NAME="Index95"></A>
+wrote, and the index component is still in the product, SQL/DS.<p>
+<b>C. Mohan:</b> All the shadow-paging stuff is there.<p>
+<b>Mike Blasgen:</b> Oh, the shadow page's still there? That's Raymond Lorie's<A NAME="Index96"></A>
+stuff.<p>
+<b>C. Mohan:</b> Record management, all that stuff's still there.<p>
+<b>Bruce Lindsay:</b> Storage pool.<p>
+<b>Brad Wade:</b> Like to know if anybody can still understand it.<p>
+<b>Pat Selinger:</b> Mohan still reads it.<p>
+<b>Mike Blasgen:</b> You don't have to understand it; it just has to produce
+revenue and profit. It's a successful product today.<p>
+<b>???:</b> It supports a lot of us.<p>
+<b>Mike Blasgen:</b> Right. So ...<p>
+<b>Brad Wade:</b> Before we leave naming, there was also the RDS and the RSS
+names. Of course Don was manager of the RDS before it was called RDS; Irv was
+manager of the RSS before it was called RSS. And they were carpooling and they
+came in one day and said, "OK, here are your names: Don and Irv<A NAME="Index97"></A>,
+Data Organized Naturally, and I forget what Irv was for: Intermediate or
+Interactive Relational ...<p>
+<b>Mike Blasgen:</b> Intermediate Retrieval Vehicle? How about that? Sounds
+good. No, there was the Peterlee Relational Test Vehicle, so V was already
+established as an acceptable term in Relational terminology. So it's just a
+question of putting the Vehicle in there somewhere.<p>
+So how about what sort of happened with System R. Irv and Don were the managers
+of the project. Why don't one of you volunteer to take us through the System R
+history?<p>
+<b>Don Chamberlin:</b> I think it's going to need both of us to do this. I'll
+give it a start.<p>
+This shouldn't be a monologue; please stand up and help me out here. As Irv
+said, there was a long period after Frank arrived in California when we had a
+lot of meetings and a lot of discussions and task forces and tried to organize
+an approach to take to this business. Interestingly enough, Ted Codd<A NAME="Index98"></A>
+didn't participate in that as much as you might expect. He got off into natural
+language processing and wrote a very large APL program called Rendezvous<a
+name="fnB22" href="#fn22">[24]</a><sup>, </sup><a name="fnB23"
+href="#fn23">[25]</a><A NAME="Index99"></A>.
+He really didn't get involved in the nuts and bolts of System R very much. I
+think he may have wanted to maintain a certain distance from it in case we
+didn't get it right. Which I think he would probably say we didn't.<p>
+<b>Mike Blasgen:</b> Oh, he has said that, many times.<p>
+<b>Don Chamberlin:</b> What came out of this was we got organized into two
+groups, a higher-level group which ultimately was called the RDS<A NAME="Index100"></A><A NAME="Index101"></A><a
+name="fnB24" href="#fn24">[26]</a><A NAME="Index102"></A>
+and which was interested mainly in language issues, and a lower-level group
+called the Research Storage System<A NAME="Index103"></A><A NAME="Index104"></A>,
+which was interested more in physical data management issues. I can talk mainly
+about what was happening in the top half of the project in those days and I'm
+hoping that Irv and maybe some of the rest of you - Jim - will talk about what
+was happening in the bottom half.<p>
+What really happened in the early days was Irv's group began developing a new
+data management interface, with support for indexes, locking, logging,
+concurrency and transactions, and all those kinds of things. Meanwhile the
+language folks wanted to build a prototype of their language and they needed a
+base to build it on, and the RSS wasn't ready. The only thing we could get our
+hands on was something that Raymond Lorie had built at the Cambridge Scientific
+Center<A NAME="Index105"></A>
+called XRM. So we built a prototype of our language on top of XRM in the early
+days; we called it Phase Zero<sup> 27<A NAME="Index106"></A></sup>.
+Brad has a wonderful tape which many of you saw last night that represents a
+complete working prototype of SEQUEL in 1976 I believe, complete with integrity
+assertions, which have just now made it into the product twenty years later.<i>
+[laughter]</i> And we demonstrated that, or at least showed the tape, at the
+SIGMOD<A NAME="Index107"></A>
+conference in, was it 1976?<p>
+<b>Brad Wade:</b> 1976.<p>
+<b>Don Chamberlin:</b> Hopefully today we'll get a chance to see that tape
+again. It's a wonderful tape; you get to see Brad with a handlebar mustache.
+Good stuff.<p>
+<b>Franco Putzolu:</b> Don, did you have a customer in New England?<p>
+<b>Don Chamberlin:</b> Yes, as a matter of fact, that was the most important
+outcome of the Phase Zero work, I think in my opinion. That's a kind of
+interesting story. Back in those days, there were a lot of problems with fuel
+shortages; OPEC had just raised the price of oil and the gasoline companies
+were hoarding it and there were lines at the gas stations. The MIT Sloan School
+of Management had some kind of a plan in New England where they got a grant to
+build something called the New England Energy Management Information System, or
+NEMIS, and they needed a database to keep track of how full the oil tanks were
+and things like that. So the Cambridge Scientific Center<A NAME="Index108"></A>
+was kind of tight with San Jose Research, and they got their hands on this
+Phase Zero prototype and worked on it with the Sloan School of Management on
+this energy management system<a name="fnB25" href="#fn25">[28]</a>, but anyway,
+one of the students at MIT who was involved with this was somebody named Bob
+Selinger<A NAME="Index109"></A>.
+And Bob, didn't you kind of get your fingers into Phase Zero and use it a
+little bit for something? As a result of this, Bob came out to San Jose as a
+summer student, because of the experience that he'd had with the Phase Zero
+prototype. When he came to San Jose, he met someone named Pat Griffiths<a
+name="fnB26" href="#fn26">[29]</a>. That's how Bob came to IBM.<p>
+So I think the most important outcome of the Phase Zero prototype was ...<i>
+[laughter]</i> <p>
+<b>Pat Selinger:</b> Did the energy management system ever get used? [???]<p>
+<b>Bob Selinger:</b> There were databases on it. I'm not sure they were widely
+used. Actually they used it as a database for building designs. They kept track
+of square footage, number of windows, and then they had some FORTRAN programs
+that ran on top of it. It bridged FORTRAN into, I think PL/1, to extract the
+data. It was pretty hokey.<p>
+<b>Don Chamberlin:</b> So what this language group wanted to do when we first
+got organized: we had started from this background of SQUARE<A NAME="Index110"></A>,
+but we weren't very satisfied with it for several reasons. First of all, you
+couldn't type it on a keyboard because it had a lot of funny subscripts in it.
+So we began saying we'll adapt the SQUARE ideas to a more English keyword
+approach which is easier to type, because it was based on English structures.
+We called it Structured English Query Language and used the acronym SEQUEL<A NAME="Index111"></A>
+for it. And we got to working on building a SEQUEL prototype on top of Raymond
+Lorie's access method called XRM<A NAME="Index112"></A>.<p>
+At the time, we wanted to find out if this syntax was good for anything or not,
+so we had a linguist on our staff, for reasons that are kind of obscure. Her
+name was Phyllis Reisner<A NAME="Index113"></A>,
+and what she liked to do was human-factors experiments. So she went down to San
+Jose State and recruited a bunch of San Jose State students to teach them the
+SEQUEL language and see if they could learn it. She did this for several months
+and wrote a paper about it, and gained recognition in the human-factors
+community for her work.<a name="fnB27" href="#fn27">[30]</a><sup>, 31</sup> I'm
+not sure if the results were very conclusive; it turned out that sure enough if
+you worked hard enough, you could teach SEQUEL to college students.<i>
+[laughter]</i> Most of the mistakes they made didn't really have anything to do
+with syntax. They made lots of mistakes - they wouldn't capitalize correctly,
+and things like that.<p>
+Looking back on it, I don't think the problem we thought we were solving was
+where we had the most impact. What we thought we were doing was making it
+possible for non-programmers to interact with databases. We thought that this
+was going to open up access to data to a whole new class of people who could do
+things that were never possible before because they didn't know how to program.
+This was before the days of graphical user interfaces which ultimately did make
+that sort of a revolution, and we didn't know anything about that, and so I
+don't think we impacted the world as much as we hoped we were going to in terms
+of making data accessible to non-programmers. It kind of took Apple to do that.
+The problem that we didn't think we were working on at all - at least, we
+didn't pay any attention to it - was how to embed query languages into host
+languages, or how to make a language that would serve as an interchange medium
+between different systems - those are the ways in which SQL ultimately turned
+out to be very successful, rather than as an end-user language for <i>ad
+hoc</i> users. So I think the problem that we solved wasn't really the problem
+that we thought we were solving at the time.<p>
+Anyway, we were working on this language, and we adapted it from SQUARE and
+turned it into English and then we started adding a bunch of things to it like
+GROUP BY that didn't really come out of the SQUARE heritage at all. So you
+couldn't really say it had much to do with SQUARE before we were done. Ray and
+I wrote some papers about this language in 1974. We wrote two papers: one on
+SEQUEL/DML<a name="fnB28" href="#fn28">[32]</a> and one on SEQUEL/DDL<a
+name="fnB29" href="#fn29">[33]</a>. We were cooperating very closely on this.
+The DML paper's authors were Chamberlin and Boyce; the DDL paper's authors were
+Boyce and Chamberlin, for no special reason; we just sort of split it up. We
+wanted to go to Stockholm that year because it was the year of the IFIP
+Congress in Stockholm. I had a ticket to Stockholm because of some work I'd
+done in Yorktown, so Ray submitted the DDL paper to the IFIP Congress in
+Stockholm, and the DML paper we submitted to SIGMOD<A NAME="Index114"></A>.
+This is the cover page of the SEQUEL/DML paper. It was 24 pages long. These
+were twin papers in our original estimation. We wrote them together and thought
+they were of comparable value and impact. But what happened to them was quite
+different. The DDL paper got rejected by the IFIP Congress; Ray didn't get to
+go to Stockholm. I still have that paper in my drawer; it's never been
+published. The DML paper did get accepted at SIGMOD. Several years later I got
+a call from a guy named Larry Ellison<A NAME="Index115"></A>
+who'd read that paper; he basically used some of the ideas from that paper to
+good advantage.<i> [laughter]</i> The latest incarnation of these ideas is
+longer than 24 pages long; it's the ISO standard for the SQL language, which
+was just described last week at SIGMOD by Nelson Mattos<a name="fnB30"
+href="#fn30">[34]</a>. It's now about 1600 pages.<p>
+<b>Jim Gray:</b> It's two large binders over there [on the artifact table].<p>
+<b>Mario Schkolnick:</b> Don, I remember you used to tell that Larry Ellison<A NAME="Index116"></A>
+had called you and asked for the error codes; what error codes would IBM be
+using? He wanted to be compatible.<p>
+<b>Don Chamberlin:</b> Larry called up. Larry's company in those days was not
+called Oracle. His company's gone through two changes of name. The original
+name was Software Development Laboratories<A NAME="Index117"></A><A NAME="Index118"></A>.
+He had heard about the System R prototype and he wanted to make sure that his
+product was fully compatible with it, right down to the error code values. We
+went and asked Frank<A NAME="Index119"></A>,
+"Can we give our error codes to this guy Ellison and Frank said, "No - those
+are IBM Confidential."<p>
+<b>Franco Putzolu:</b> That was the only part that was confidential.<p>
+<b>Mike Blasgen:</b> You know that whole thing is sort of interesting. When we
+submitted the TODS paper<A NAME="Index120"></A><a
+name="fnB31" href="#fn31">[35]</a>, one of the referees said that we ought to
+include the SEQUEL BNF, which we did, but it wasn't in the paper that we
+originally submitted. Its inclusion was insisted on by a reviewer and demanded
+by the editor, and so we put it in even though we thought it was kind of ...
+whatever. I think the common wisdom in the world for many years was that we
+shouldn't have done that; we should not have put it in because that was sort of
+too much detail, made it too easy for copycats to copy it. I'm not sure this is
+correct, but ...<p>
+<b>Jim Gray:</b> What was it that you put in?<p>
+<b>Mike Blasgen:</b> BNF - the syntax. No, the semantics were in the paper;
+that wasn't changed - we always described it. But somehow the details of the
+syntax ... Leonard<A NAME="Index121"></A>,
+for example, many years later felt that was a <i>big</i> mistake; we never
+should have done it.<p>
+<b>Franco Putzolu:</b> Later on I thought that publishing everything was a big
+mistake.<p>
+<b>Josephine Cheng:</b> Only you should have patented it before you
+published.<p>
+<b>Mike Blasgen:</b> People should know that patents<A NAME="Index122"></A>
+were basically prohibited. Patents at this time were prohibited by the company
+and the Supreme Court. Software patents.<p>
+<b>Franco Putzolu:</b> I remember until 1979 we were publishing everything that
+would come to our mind, either implemented or not implemented, or dreamed of;
+and then all of a sudden there was a barrier.<p>
+<b>Mike Blasgen:</b> Right, somehow we decided maybe we could make some money
+out of this thing. Actually, that's a compliment, right?<p>
+We put out a big press release in 1975 or so associated with the kicking off of
+this. And that was suppressed by GPD<a name="fnB32" href="#fn32">[36]</a>. They
+wouldn't let us put out the press release; do you remember that?<p>
+<b>Irv Traiger:</b> I don't.<p>
+<b>Mike Blasgen:</b> We had a bunch of paper work. Actually Sharon<A NAME="Index123"></A>
+got involved.<i> [laughter]</i> My wife was the lawyer and she helped them
+suppress it.<p>
+<b>Bob Yost:</b> Do you think this would have been anywhere near as successful
+if IBM had just held it inside? I don't think so. I don't think it would have
+gone anywhere near as far.<p>
+<b>Franco Putzolu:</b> Well I think the critical thing was the fact that it was
+adopted by SQL/DS and DB2 - not that much that it was popular in
+universities.<p>
+<b>Mike Blasgen:</b> I used to talk a lot about this. I was kind of a spokesman
+for System R for a long time and a lot of people inside IBM asked that
+question. My answer was exactly what Yost said, which is that if we had not
+published those papers it would have failed. Now the reason it would have
+failed is that IBM would have ignored it. <p>
+<b>various:</b> Yes.<p>
+<b>Mike Blasgen:</b> No, it's clear that if you could change history and not
+publish all those papers and know that you were getting SQL/DS and DB2 out,
+then we would have been better off not to have published the early papers. But
+I'm convinced that the only reason that anybody cared ... well, Jolls will say
+something maybe about this. Actually it's too early for your time; your time
+will come. But I'm convinced that publication was the right thing to do. I know
+a lot about this because I worked on RISC. I was the manager of the 801
+project, too. The 801 project did not publish anything, and it was much harder
+to get it out. It was much harder to get IBM to do something about it. We had
+to transfer it to Sun. SPARC was the first highly popular RISC, and it was only
+after Sun went to RISC that we could wake IBM up to the opportunity here.<p>
+<b>Tom Price:</b> Was it only after Ellison started doing Oracle that DB2 ...<p>
+<b>Mike Blasgen:</b> No, Ellison was not a factor in SQL/DS and I don't know
+about DB2.<p>
+<b>C. Mohan:</b> No, I was told that SQL/DS came out after Oracle came out.<p>
+<b>Mike Blasgen:</b> Oh, that's true, but that just shows how long it takes IBM
+to do something.<p>
+<b>Irv Traiger:</b> So thinking back to the task force days of System R, which
+wasn't named System R yet, there was this notion of getting the Phase Zero
+prototype going, that Don talked about. It was understood that GAMMA-0<A NAME="Index124"></A>
+and XRM<A NAME="Index125"></A>
+and other systems might not be the right platform. They all had a funny
+characteristic - all of them. None of them stored the values in the tuple. They
+all stored 32-bit things that would point to the values. This was in the days
+of small disks and small memory. The concept was that if somebody was a
+programmer or lived in Poughkeepsie, you didn't want to have to store
+"programmer" or "Poughkeepsie" more than once. You'd have these classes of
+names of things, like names of cities, or names of job titles, or things like
+that - people's names. You'd store pointers to an element in that class for
+these variable-length strings. All of them did this; all of them. RAM was
+binary; a tuple-id, and a pointer to a thing, and a pointer to another thing.
+If it fit, great, but very, very few things fit. It became clear pretty early
+that, what if you're just going after one tuple? You know, "Tell me about
+Mohan, in the Employee file". The overhead would be incredible because you'd be
+chasing this pointer and chasing that pointer, so why not just store the stuff
+right there, which was being done anyway in VSAM<a name="fnB33"
+href="#fn33">[37]</a> and IMS<A NAME="Index126"></A>
+and DBTG<A NAME="Index127"></A>.<p>
+So we came to that realization pretty quickly, and then, again in task force
+mode, which can kind of wear you down after a while, we came to this other
+notion of an intermediate level called the SLI<A NAME="Index128"></A>:
+the System Logical Interface<A NAME="Index129"></A>.
+This would be set-oriented query, but I think only on one index and one field
+and one table. Somehow SEQUEL would translate down to these smaller
+set-oriented things and paste together complex queries. This idea was something
+that my group, which was just getting going, was going to work on while Don and
+Ray and Paul Fehder<A NAME="Index130"></A>
+and Morton Astrahan<A NAME="Index131"></A>
+worked on the Phase Zero<A NAME="Index132"></A>
+prototype. But none of us really liked this SLI thing, so that kind of petered
+out.<p>
+Something else was going on around then that helped it peter out: I got a kind
+of co-conspirator, Franco<A NAME="Index133"></A>.
+Franco was brought out from Yorktown as part of this Leonard Liu<A NAME="Index134"></A>
+package deal with Gomory<A NAME="Index135"></A><a
+name="fnB34" href="#fn34">[38]</a>, on who would come out. He was not supposed
+to work on this System R stuff. Ed Altman<A NAME="Index136"></A>
+was one of the principals in the Mike Senko<A NAME="Index137"></A>
+department on the DIAM project, and he was becoming a second-line of various
+other groups in Computer Science. I think Franco was brought out to do a
+physical database design tool with Altman ...<p>
+<b>Franco Putzolu:</b> Yes, something like that; I never figured it out.<p>
+<b>Irv Traiger:</b> ... maybe C.P. Wang<A NAME="Index138"></A>
+was heading it, who had come from that Senko group. It was very delicate how
+Leonard would balance the skills across the Altman bunch and the Frank King
+bunch, because he really didn't want to look like he was taking advantage of
+the old DIAM people and favoring Frank King. So some of the strong people who
+came out were directed to the Altman side, including Franco. One afternoon,
+Leonard said to me I should go talk to Franco, and I didn't know why he wanted
+me to do this; he was just being kind of coy. And it was clear that Franco was
+a very, very perceptive guy. He understood what database people were doing back
+then and he really cared about applications. He would read these weird little
+papers on ...<p>
+<b>Franco Putzolu:</b> I studied IMS<A NAME="Index139"></A>,
+among other things; I even installed IMS in Yorktown once.<p>
+<b>Irv Traiger:</b> So it occurred to me that this SLI thing really was a bad
+idea, and we just needed somebody with a bit more practical insight, so I
+talked to Frank King and said we ought to get Franco. But Frank King didn't
+want to touch this situation because of this balance of power thing. We somehow
+made it happen.<p>
+Kapali Eswaran<A NAME="Index140"></A>
+was hired in around this time, and I believe he was maybe reporting to me, but
+helping these folks in the Phase Zero prototype, putting in consistency
+constraints and triggers, which as noted before have only recently made it into
+the IBM product line. There were other things going on, too. We were working on
+concurrency, trying to add that, because none of these early systems had
+concurrency. If they did, it was by accident. I had done some early stuff in
+GAMMA-0<A NAME="Index141"></A>,
+Jim Gray<A NAME="Index142"></A>
+was very interested and he was doing some things, and Raymond came up with this
+gleam of this idea of what became called predicate locks<A NAME="Index143"></A><A NAME="Index144"></A>,
+where since you're querying sets, why not lock sets: the most natural thing you
+could imagine. And that was consistent with what we had finally after a
+struggle figured out about authorization and views. Instead of authorizing
+columns of a table, just make it a view of those columns and authorize that.
+Kapali heard about some of these predicate things, and he went off and worked
+on predicate locking as well, and we began to also understand that transactions
+were like logical units, like all or nothing.<p>
+<b>Bruce Lindsay:</b> There's a great line in this paper I found in Jim's box
+about predicate locking. Little paragraph says, "The overhead and complexity of
+constructing the predicate, testing the predicate, and scheduling the predicate
+terrifies both Morton and Franco<A NAME="Index145"></A>.
+It merely scares the rest of us."<i> [laughter]</i><p>
+<b>Irv Traiger:</b> There was one short period where we thought that predicate
+locks were the right approach and, although we weren't saying it, that would
+give you this notion of a serial schedule, you know, logically equivalent to a
+single-user system. But it wasn't real crisp yet. I remember another afternoon,
+I was sitting I think in Jim Gray's bean-bag chair. He had this small office
+and this huge bean-bag chair, and a regular chair. We were talking about what
+all of this meant. Marc Auslander<A NAME="Index146"></A>
+was visiting you that day. He was just kind of wandering around, sort of
+looking over our shoulder, and suddenly Jim began to better understand what
+serial schedule meant, why it was important, and why maybe predicate locks had
+nothing to do with that. But they sort of helped us to get there. He referred
+to a paper by Donovan that had to do with something like serializability on
+cache operations. This was kind of a stretch, but that's where consistency and
+serializability happened, as I recall. It was there. Does that ring a bell at
+all, Jim?<p>
+<b>Jim Gray:</b> Yes. Also Karp &amp; Miller's<A NAME="Index147"></A>
+asynchronous communication<a name="fnB35" href="#fn35">[39]</a>. They were
+interested in determinacy and we were just looking for consistency. We wanted
+<i>an</i> answer, they wanted the <i>right</i> answer.<p>
+<b>Irv Traiger:</b> That's where that happened. Versioning was ... shadows<A NAME="Index148"></A>
+were a very strong notion in XRM<A NAME="Index149"></A>,
+as I recall, which Raymond brought to us from Cambridge<A NAME="Index150"></A>.
+He had transferred out pretty early in the cycle. So is there anything else I
+can think of? Recovery, logging, we wanted to go for tuple-level lock<A NAME="Index151"></A>ing,
+so we realized that shadows weren't going to cut it, because they were at a
+page level, so we introduced this intricate combination of record-level locking
+and logging and shadows, which actually works<a name="fnB36"
+href="#fn36">[40]</a>.<p>
+<b>Franco Putzolu:</b> Kind of.<i> [laughter]</i><p>
+<b>Irv Traiger:</b> One of the very strong notions is that we wanted to support
+all the data models, so the RSS had links, basically pointer chains, and the
+idea was to support hierarchies, networks, and relational. Over time we gave up
+on this noble ambition, but it got resurrected again at Santa Teresa. It was
+very interesting, it was more this not knowing where data was going to go,
+wanting to build the universal low-level thing, whatever might be on top of
+you.<p>
+<b>Franco Putzolu:</b> Yeah, I would say that there were two really important
+points. One is that RSS just existed. We accept as a given that you have to
+split the system into a low-level component and a high-level component. But
+only the systems with System R ancestry have this clear split. Many of the
+other systems don't, and I think suffer from it.<p>
+<b>Irv Traiger:</b> Yes, it wasn't clear that you should split it, or how to
+split it. As I mentioned, we struggled ourselves with this SLI thing that was a
+kind of medium level.<p>
+<b>Franco Putzolu:</b> The split was done at the right level. And the other
+major point was the emphasis that multiple high-level subsystems would use the
+common low-level engine. This approach was tried by all the systems that came
+after System R; all these attempts failed.<p>
+<b>Pat Selinger:</b> I remember Franco<A NAME="Index152"></A>
+that you had led at least one study that I recall on how to map IMS<A NAME="Index153"></A>
+- every construct: logical deletes, and sparse indexing, and all kinds of
+different things - all into the RSS level.<p>
+<b>Franco Putzolu:</b> Yes, what a waste.<i> [laughter]</i><p>
+<b>John Nauman:</b> But you kept doing it, Franco.<p>
+<b>Jim Gray:</b> So somebody can appreciate that all this was happening in the
+background of something called <A NAME="Index154"></A>FS<a
+name="fnB37" href="#fn37">[41]</a><A NAME="Index155"></A>
+- Future System<A NAME="Index156"></A>
+- and the people in FS thought that it was an incredible waste of research
+energy to be working on this relational database stuff. They were working on GRID<A NAME="Index157"></A>
+or some project that was much more sophisticated and advanced than anything we
+were doing - it had a GUI and was wonderful.<p>
+<b>John Nauman:</b> Actually, it was three systems: it was supposed to support
+relational, and the network CODASYL stuff, and flat files - it was going do
+everything. But that was all dropped.<p>
+<b>C. Mohan:</b> But part of that came in System/38, right? They allowed file
+system access as well as high-level query access to the same data, which is
+still there in AS/400.<p>
+<center><i>Morning break</i><p>
+<i></center></i><b>Mike Blasgen:</b> This is a brochure of the [IBM San Jose
+Research] Computer Science Department that we put out I think at the end of
+1978 or the beginning of 1979. It has a picture of the whole Computer Science
+Department in it - all the people who are in this room are in this picture. It
+was taken on the back steps outside, behind Building 28. Eric Carlson, T.C.
+Chen. It's interesting to see who has the longest ... there's also a list of
+publications here. The answer to this question probably hasn't changed. It's
+probably the same this year as it was that year. It's the publications of the
+Computer Science Department 1977-1978. Now what name do you think has the most
+publications?<p>
+<b>various:</b> Astrahan.<i> [laughter]</i> <p>
+<b>Mike Blasgen:</b> To my pleasure, Blasgen has two, so I'm not in the noise.
+Chamberlin has: "Data Base System Authorizations" in <i>Foundations of Secure
+Computing</i><a name="fnB38" href="#fn38">[42]</a>. It's probably not even on
+his CV. Anyway, that's Chamberlin, Gray, Griffiths, Mresse, Traiger, and Wade.
+But the answer of course is Ron Fagin<A NAME="Index158"></A>,
+with about ten publications. The theory guys always beat us systems guys. And
+Frank King wrote "The phonetic encoding of word-components for the computer
+input of Chinese characters". It's his only publication in here. So I'll pass
+this around and people can look at it. This is really a great little thing.
+It's got a lot of good stuff in it.<p>
+We're back on track. Unless there's some opposition, at least part of this
+afternoon's session is going to be devoted to more of this pre-1982 material.
+Any comments or suggestions? Because we're not done; in fact we haven't
+mentioned the joint studies; we haven't mentioned the interaction with Santa
+Teresa. And if we're going to lunch at noon, we only have 40 minutes. We have
+videotapes that we're going to show you. We'll show you a little snapshot of
+those just before we go to lunch. OK? Some of you may have seen little
+snapshots last night. We have videotapes from the era, from 1979, so you can
+see what you looked like if you were on tape.<p>
+This [begins showing System R slides] was the kind of talk that went around at
+the time on System R. Ease of use. See - we cover all the bases; everything
+important is there, right? Did we miss anything? We got PL/1, we got VM and
+MVS; there were no other operating systems of importance ...<p>
+<b>Mario Schkolnick:</b> And it's all under ease of use.<p>
+<b>Mike Blasgen:</b> So of course we have all the people who make more than
+their manager. We only had one database. Here's our advertisement for SEQUEL.
+Here's "Find the names and salaries of employees who make more than their
+manager" - right there, number four or something. "Give a $1000 raise to all
+programmers in Department 50" - it used to be K55, is that what it was?<p>
+<b>C. Mohan:</b> It's still K55.<p>
+<b>Mike Blasgen:</b> We compile. Now one of the things I want to talk about is
+Raymond's discovery of compilation<A NAME="Index159"></A>.
+He gave a talk in the cafeteria conference room in Building 28 once where he
+said we can compile and it will run faster. I remember that meeting very well
+because we basically threw out a huge pile of code and started all over again
+because we realized we were doing it wrong. And we had to change all our
+presentations. Like the TODS paper is all wrong, as an example, because we
+changed the way it worked.<p>
+Here's an application program. This is what SEQUEL looked like, in case people
+don't remember. The dollar signs were required because we had a scanner that
+scanned PL/1 and we didn't want to fully parse PL/1 so we just wanted to look
+for illegal delimiters. So we just tokenized it and looked for illegal symbols.
+The dollar sign is illegal in PL/1; you can't say $DECL. This is "Let a cursor
+be"; OPEN; FETCH; System R codes; the codes of course are what Ellison wanted.
+There's the same picture as you saw in the overheads. MVS still in parentheses.
+That dates it, because MVS<A NAME="Index160"></A>
+came out of parentheses in 1979. Execution. Oh yes, so we load the ...
+Performance ... More nuts. Oh, transactions. Why did this project turn into a
+research project on transactions, and locking, and logging? Actually the
+fundamental contributions of the work turns out to be the stuff that hardly
+appears in the papers, which is all the work that Jim and his colleagues did.<p>
+Oh, here's a history of INGRES, PRTV, QBE, and all the System R ... here's R*
+... so that dates this. This is actually a presentation I gave in Atlanta at
+SHARE right after the SQL/DS announcement. So here System R begins; TODS paper
+in 1976; first install - that was at Pratt &amp; Whitney in 1977. First System
+R install was 1977. So here's the definition of all the papers that we wrote.
+We called it full function, but hardly the full 1600 pages that is required
+today.<p>
+<b>Jim Gray:</b> Oh, I like that slide.<p>
+<b>Mike Blasgen:</b> ... Oh, here's the "Indian's salary's greater than the
+chief's salary". NULL<A NAME="Index161"></A>.
+Support for NULL. I remember going to talk to Ted Codd<A NAME="Index162"></A>
+about support for NULL.<i> [laughter]</i> We couldn't get together - the RSS
+and RDS couldn't get together on that, so finally the RSS said, "You guys
+decide; we'll support whatever." We supported a general NULL.<p>
+<b>Franco Putzolu:</b> I didn't like NULLs in those days.<p>
+<b>Mike Blasgen:</b> Right, you sure didn't. But we supported them; RSS
+supported NULLs, in a particular way. We allowed you to specify a NULL symbol,
+and then we would insert that wherever it was.<p>
+<b>Jim Mehl:</b> I still remember a memo that Franco<A NAME="Index163"></A>
+wrote addressed to "NULL theologians".<i> [laughter]</i><p>
+<b>Mike Blasgen:</b> The non-nerds in the room don't even know what we're
+talking about. If you don't know somebody's age ...<p>
+<b>Bruce Lindsay:</b> I just found "Revisions to the NULL Memo".<p>
+<b>Mike Blasgen:</b> There were great controversies about NULL. Just to give
+you an example, if you don't know somebody's age, but you know a lot of other
+things about them and you want to record it in a database but you don't want to
+put in their age. So you leave it blank, but now you sort, say, on age. Where
+do you want that person's age to come out: at the beginning or the end or the
+middle? This is NULL theology. There are the people who want to eat the egg
+from the big end and people who want to eat it from the little end. And then
+there are people who want to eat it from the middle.<p>
+Oh, gee, views and authorization. That's good; didn't know we had all that.
+Can't read that. I think I had a big screen for this presentation. Oh,
+accounts. I went to accounts payable. We went to ET1 - Eagle<A NAME="Index164"></A><A NAME="Index165"></A>
+Transaction 1, which is now called Debit-Credit and now called TPC/A, but it
+was at that time called Eagle Transaction 1.<p>
+<b>C. Mohan:</b> Where did the name come from?<p>
+<b>Mike Blasgen:</b> Eagle<A NAME="Index166"></A>
+was an IMS<A NAME="Index167"></A>
+successor; it was going to do everything. And they were very worried about path
+lengths. So there had been something in IMS called TP1. But TP1 was more of a
+general characterization; ET1 was a specific program. And then Jim<A NAME="Index168"></A>
+wrote all this stuff down in an article that he published in Datamation. It had
+Anonymous et al. or something like that as the author<a name="fnB39"
+href="#fn39">[43]</a>.<p>
+<b>Jim Gray:</b> Actually in about 1972, General Automation<A NAME="Index169"></A>
+beat IMS<A NAME="Index170"></A>
+at the Bank of America<A NAME="Index171"></A>
+for the automated teller system, and we saw the attack of the killer minis that
+were going to wipe out all the mainframes.<a name="fnB40" href="#fn40">[44]</a>
+We had maybe three or four years before the company was going to go out of
+business. And that was some of the stuff that was driving FS<A NAME="Index172"></A>;
+some of the stuff that was driving ...; we thought the computer industry was
+going to change, really dramatically with the minis. And the benchmark that B
+of A used was canonized as TP 1, 2, 3, 4, 5, 6, 7. TP7 was a minibatch; TP1 was
+a very, very light debit-credit transaction; and we ended up just using TP7 and
+TP1. IMS Fast Path was built to run TP1 well and that was the whole reason for
+doing IMS Fast Path. TP1 was recoded - it was a set of IMS calls - it was
+recoded for the VSS interface, which was the early name - the Andy Heller name
+- for what became DB2 eventually. It was called Eagle in one of its many
+incarnations ...<p>
+<b>Mike Blasgen:</b> To call Eagle the same as DB2 is misrepresenting history
+quite a bit. Eagle wasn't the focus on relational; it was kind of an IMS<A NAME="Index173"></A>
+successor.<p>
+<b>Franco Putzolu:</b> Well, we all came from amoebas and ...<p>
+<b>Mike Blasgen:</b> Oh, I see, it's all the DNA; a tree is the same as a
+human, right? With a few changes in the genes. Well, Eagle was a tree.<p>
+<b>C. Mohan:</b> Wasn't the data manager the same?<p>
+<b>Josephine Cheng:</b> Yes.<p>
+<b>Jim Gray:</b> It was the same project.<p>
+<b>Mike Blasgen:</b> OK, so Eagle Transaction rewrote ...<p>
+<b>Jim Gray:</b> They rewrote in VSS terms and ...<p>
+<b>Mike Blasgen:</b> Well, I<A NAME="Index174"></A>
+believe it's possible, likely, that I'm the first person ever to write ET1 in
+relational. Because I decided we had to have it and everybody else was busy. At
+that time I was a second-line manager. So I wrote it. And I remember taking
+some liberties with it.<p>
+<b>Tom Price:</b> Everyone who's ever written it has probably taken some
+liberties. <p>
+<b>Mike Blasgen:</b> ... It might well have been Bob Selinger<A NAME="Index175"></A>
+that helped, I mean I know you were working on tracing. Did you wind up tracing
+ET1?<p>
+<b>Bob Selinger:</b> Well, we called it SR1; it was the relational equivalent
+of ET1.<p>
+<b>Mike Blasgen:</b> All right, the details, which we can talk about at lunch,
+had to do with whether you had to keep the account records sorted by account.
+Or whether you can just insert the records into the table and then, at the time
+you print the bill, sort them then. And I argued for sorting then, because
+relational doesn't really have a notion of sorting order anyway. But then there
+was this argument about whether it was equivalent or not, because IMS<A NAME="Index176"></A>
+was keeping it, if you will, more organized.<p>
+So what have we got? OK, you get the idea. There was this presentation that we
+took everywhere. This went to six GUIDEs and thirteen SHAREs and database
+conferences all over the world. I have a proceedings of one of the last of the
+biggies, which was in 1983, at Wang Institute, the Eastern Computer Science
+Colloquium or something, and Jim and me and Mike Stonebraker and Ted Codd - oh,
+gee, it's just a long list of neat names ... Non-procedural, lots of
+optimization. This was one of my favorite talks. It talked about how there were
+many ways to do these things and how you would need an optimizer to make your
+choice. ... I love this: avoids exponential growth of optimization time, and
+N-way join by pruning. Aren't we good. And here's ...<p>
+<b>Bruce Lindsay:</b> Eight megabyte database; whoa!<p>
+<b>Mike Blasgen:</b> We had an eight megabyte database!<i> [laughter]</i> ...
+OK, so you get the idea.<p>
+So I'll put in some of my own reminiscences here for a minute. At one point,
+Irv and Frank decided to change the management structure, and in something that
+I've never seen happen before, Irv worked for me and I became Irv's manager. We
+switched places. So I<A NAME="Index177"></A>
+became the manager of the RSS and Irv became incredibly productive.<i>
+[laughter]</i> And I became incredibly non-productive. I spent a lot of time
+making those slides. And then Leonard<A NAME="Index178"></A>
+was offered a job back working for Bob Evans in New York, and that was onward
+and upward. He became a director at that point. Frank was named the manager of
+the Computer Science Department. That left open the job of manager of database
+systems, which Frank had been, so I took that job. That was in, like, the end
+of 1977 probably. And I<A NAME="Index179"></A>
+stayed in that job until July of 1979, when my wife was offered a job in
+Washington DC, and I thought that I should follow her, rather than be left
+behind and not have a marriage. So we<A NAME="Index180"></A><A NAME="Index181"></A>
+moved to Washington, and Robin Williams<A NAME="Index182"></A>
+succeeded me in the job of manager of Database Systems. And then shortly
+thereafter, Frank King left, also to go back to work for Bob Evans, and Abe
+Peled came. And then the department changed quite a bit; it grew, and it became
+much more diverse. We were just talking a minute ago about the fact that as
+System R became more successful, it accreted more. I remember Don Slutz, for
+example, was not working on System R in 1974 or something. But you joined, what
+the RDS<A NAME="Index183"></A>
+in ...?<p>
+<b>Don Slutz:</b> 1975.<p>
+<b>Mike Blasgen:</b> ... 1975, right. You heard the story about Franco in 1974.
+I mean he was grabbed out of some other thing, and then Don Slutz. I think that
+by the time of the end, if you count, I mean Juan Rodriguez-Rosell<A NAME="Index184"></A>
+was a performance analysis guy interested in whatever - operating systems
+performance - but we converted him into a System R performance person. And so
+by the time we were done we might have had as much as half the department
+working on - not necessarily System R, but things related to System R. Mario<A NAME="Index185"></A>
+and Paolo Tiberio<A NAME="Index186"></A>
+were working on a tool to do database design and that was a database design
+tool that was keyed off System R. Several of the projects that had preceded
+System R, sort of like EXPRESS<A NAME="Index187"></A><a
+name="fnB41" href="#fn41">[45]</a>, sort of became smaller projects; some of
+the people left.<p>
+I tell you, my artifact [the CS brochure] is winning. Because during the time
+I've been talking, it's gotten to the third person, and he's whispering, "Look
+at this!"<p>
+The joint studies<A NAME="Index188"></A>
+were brilliant in the sense of forcing IBM to move; I'm not sure it was so
+important for what we learned. Frank<A NAME="Index189"></A>
+had the idea of doing joint studies; actually, I think this was Ralph Gomory<A NAME="Index190"></A>'s
+idea, or Leonard's, or somebody's; Ralph's, I think, as much as anybody. So we
+established a relationship initially with Pratt &amp; Whitney Aircraft<A NAME="Index191"></A>,
+then with Upjohn Pharmaceuticals<A NAME="Index192"></A>
+in Kalamazoo, Michigan - Pratt &amp; Whitney Aircraft is in East Hartford,
+Connecticut. And finally, after about a one-year delay, a major relationship
+with Boeing Aircraft<A NAME="Index193"></A>,
+in Seattle, Washington. We have the reports; in fact I have copies of reports
+and there are copies up there [on the artifact table]. I think Bob Yost brought
+every single report we got. It's not quite the SQL standard - I mean nothing is
+that big - but it's a lot of paperwork that was generated. I was thinking that
+maybe Don could talk about Pratt &amp; Whitney and Upjohn. Are you the best
+person to talk about that? <p>
+<b>Don Chamberlin:</b> I'm one such person, and I'm sure there are others,
+too.<p>
+<b>Pat Selinger:</b> Jim Mehl was the chief contact for Boeing as I recall.<p>
+<b>Don Chamberlin:</b> Jim, do you want to tell us about Boeing?<p>
+<b>Mike Blasgen:</b> Well, historically, it came third.<p>
+<b>Don Chamberlin:</b> All right. The initial joint study was, as Mike says, at
+Pratt &amp; Whitney in Hartford. I'm not sure any of these joint studies really
+exercised all of the neat stuff that we had to offer, like concurrency and
+transactions and locking and different degrees of consistency and all those
+different things - they really didn't care about any of that stuff. The
+applications initially in Pratt &amp; Whitney - they were a manufacturer of jet
+engines, and they used System R for inventory control of their parts and
+supplies that they were using to build jet engines. The Upjohn Drug Company in
+Kalamazoo used System R to store the results of clinical experiments that they
+were using in support of their drug applications to the FDA. The thing that I
+remembered the most about these joint studies is that we got a lot of trips to
+beautiful Hartford, Connecticut and Kalamazoo, Michigan, and that was kind of
+neat. We got factory tours; we got a tour of the jet engine factory in
+Hartford; we got to go through all the machine shops and watch them building
+jet engines - that was kind of neat. They told us how at every stage of
+building the engine they would weigh it very carefully to see if they had left
+any extra parts inside.<p>
+<b>Tom Price:</b> I remember when we went to Pratt &amp; Whitney the first
+time, we showed them all the system mods that they needed to put on their VM
+systems so that they could run it, and they already had system mods on all
+those same lines - local mods. It was a real mess.<p>
+<b>Don Chamberlin:</b> I remember in particular a wonderful trip to Kalamazoo
+to visit the Upjohn people. They had a place that they called their homestead,
+which was a beautiful Victorian mansion on a huge plot of land outside
+Kalamazoo. It had a pond and a greenhouse and all sorts of very wonderful
+accommodations that they kept there for visitors. Tandem bicycles parked around
+for people to ride around and have a good time. They put us in a room where
+there was one whole wall completely filled with different kinds of liquor. We
+asked them if we could take home anything that we didn't drink. That was a nice
+trip.<i> [laughter]</i> <p>
+A bunch of things were happening at about this time that I think we ought to
+mention just in passing. One was that we had to change the name of our language
+from SEQUEL<A NAME="Index194"></A>
+to SQL. And the reason that we had to do that was because of a legal challenge
+that came from a lawyer. Mike, you probably can help me out with this. I
+believe it was from the Hawker Siddeley Aircraft Company<A NAME="Index195"></A>
+in Great Britain, that said SEQUEL was their registered trademark. We never
+found out what kind of an aircraft a SEQUEL was, but they said we couldn't use
+their name anymore, so we had to figure out what to do about that. I think I
+was the one who condensed all the vowels out of SEQUEL to turn it into SQL,
+based on the pattern of APL and languages that had three-lettered names that
+end in L. So that was how that happened.<p>
+A couple of other interesting things happened about that time, too. Our famous
+paper that got published in TODS: the second issue of TODS had a paper on
+System R. And there's a story about that, too. I want to prove something to you
+by showing you a foil here. If you've ever seen a reference to that paper -
+that TODS paper - it says the title of it - this is the famous fourteen-author
+paper; everybody that had ever attended any kind of a System R meeting was
+included as an author of this paper - so this is the cover page of the
+manuscript that we sent to TODS for the fourteen-author paper. If you've ever
+seen a reference to this paper, its title as it got published was "System R:
+Relational Approach to Database Management" - it didn't have the "A" in it.
+When we wrote the paper, it said, "System R: <i>A</i> Relational Approach to
+Database Management"; when it got published, the "A" went away. And the reason
+for that is because when the galley proofs came back from TODS, they sent them
+back to us for proof-reading, and all of the fourteen authors were
+alphabetical, and Astrahan<A NAME="Index196"></A>
+of course was first, so a lot of our papers are Astrahan et al. The penalty
+that Morton had to pay for that was, he had to proof-read the galleys. So I
+gave the galleys to Morton, and this was a pretty long paper, he had a lot of
+proof-reading to do, and he was pretty busy. So he did a pretty good job of
+proof-reading, but he didn't proof-read the title. So that's what happened to
+the "A".<p>
+Another thing that happened at about that time was that some technical problems
+came up that got dealt with and solved, and I thought they were kind of
+interesting and somebody ought to talk about it. I think somebody ought to talk
+about the Halloween problem<A NAME="Index197"></A>.
+Pat, you had a lot to do with the Halloween problem; do you want to talk about
+it?<p>
+<b>Pat Selinger:</b> It happened in I guess, was it 1976?<p>
+<b>Don Chamberlin:</b> 1976 or 1977.<p>
+<b>Pat Selinger:</b> I'm having a little trouble remembering this, but we had
+exercised the "person who earns more than their manager" query to death, and
+finally got to the point where the optimizer was choosing indexes sometimes to
+implement this query and it happened to think that the Salary index was a
+pretty good index to select for this. And having selected the Salary index for
+the first time in us testing out the optimizer, we ended up discovering that
+this query didn't stop. Because we were using the Salary index to go after the
+Employee table and we were also updating it, and Don Chamberlin kept getting
+more and more raises. Which made him very happy, but it made us optimizer folks
+a little bit uncomfortable. So Morton and I sat down and discovered this and
+analyzed what was going on, and came to one of your RDS meetings and it
+happened to be on Halloween. So we ended up telling the group about this and
+consulting the general wisdom to figure out what in the world we ought to be
+doing about this thing. As we talked about it, it came to be known as the
+Halloween problem. And I think it's still kept that title to this day.<p>
+<b>Don Chamberlin:</b> It's famous in the industry - everybody knows the
+Halloween problem. And it happened to be discovered on Halloween. The query was
+... they had submitted a statement that was supposed to give a ten percent
+raise to every employee who earned less than $25,000. This query ran
+successfully, with no errors, and if you examined the results, all the
+employees in the database earned $25,000, because it kept giving them a raise
+until they reached that level. So that was how the Halloween problem got its
+name.<p>
+<b>Pat Selinger:</b> An interesting footnote is that we just discovered another
+one of these as sort of a variation on that, in the latest work that we did
+having to do with referential integrity and things like that, where the
+referential integrity relationships were going to trigger off the same kind of
+non-stop behavior.<p>
+<b>Mike Blasgen:</b> It's interesting because all these odd-ball things had
+names: there were phantoms<A NAME="Index198"></A>,
+and there were other things, and those had to do with names that were somehow
+representative of what you were observing, right? So the phantom was because it
+was something that was sort of there, but not there; the name was descriptive.
+And this was called the Halloween problem not because it surprises you, or it's
+spooky, or trick-or-treat or anything; this is because it happened to be
+discovered on Halloween day. But I think most people think it's the other; I
+think most people think it's called Halloween because it's so surprising. But
+it's not.<p>
+<b>Don Chamberlin:</b> Here are a couple of more artifacts from the joint-study
+days. I wrote most of the manuals for the users at our various joint studies to
+use and we designed a nice logo. And Jean Chen helped us make these nice
+binders that a lot of you still have. When we went to Upjohn, like other
+places, they gave us a factory tour. We got a factory tour of Boeing; we got to
+see them putting together 747's and at Upjohn we got to see them making vitamin
+pills. They would give the vitamin pills away for free in the cafeteria and
+they all gave us this nice sign. This sign says, "Keep the quality up. W.E.
+Upjohn." And here's a picture of a guy squashing a pill with his thumb. It
+says, "Upjohn: originator of friable pills." "Friable" means sort of
+squashable. So W.E. Upjohn was the originator of friable pills and that's the
+heritage of the Upjohn Company, and that was apparently what he said. You know,
+Thomas Watson has a lot of famous sayings, you know, "Respect the individual"
+and stuff. What they say at Upjohn is "Keep the quality up." That was their
+slogan.<p>
+In talking about these users, we always remember Upjohn and Boeing and Pratt
+&amp; Whitney, but I just wanted to mention the fact that we had a lot of other
+users, mainly inside of IBM, as well. IBM Owego was using System R to build
+attack helicopters I think. There were several groups at STL<a name="fnB42"
+href="#fn42">[46]</a><A NAME="Index199"></A><A NAME="Index200"></A>
+that were using System R for different things; there was a guy there named Gary
+Haas<A NAME="Index201"></A>.
+Gary and Frank Nargi??? - do you remember those guys?<p>
+<b>Bruce Lindsay:</b> SREDIT.<p>
+<b>Don Chamberlin:</b> Yes, they built a sort of early GUI on top of System R,
+called SREDIT<A NAME="Index202"></A><a
+name="fnB43" href="#fn43">[47]</a>. At [IBM] Poughkeepsie<A NAME="Index203"></A>,
+there were some folks using System R in a kind of a design-automation system.
+At Yorktown<A NAME="Index204"></A>,
+there was a guy named Fred Damerau<A NAME="Index205"></A>
+who was doing natural-language queries. He had a project named REQUEST<A NAME="Index206"></A>
+that was based on System R. Most of the IBM Scientific Centers had System R
+installed. Alex Hurwitz<A NAME="Index207"></A>
+installed it at Los Angeles; Yoichi Takao<A NAME="Index208"></A>
+installed it at Tokyo; Jean-Jacques Daudenarde<A NAME="Index209"></A>
+installed it at Paris.<p>
+<b>Jean-Jacques Daudenarde:</b> We also had a joint study with a company who
+was developing some helicopter design based on two-column relations in System
+R; exclusively two column relations.<p>
+<b>Don Chamberlin:</b> The system wound up being installed in Madrid,
+Heidelberg, Rome, Cambridge<A NAME="Index210"></A>;
+Scientific Centers all over the world.<p>
+<b>Bob Yost:</b> Do you have any idea when the last System R site went down? I
+think Upjohn used System R even after SQL/DS came out because they didn't want
+to pay for it. If you used System R, then you came to have it free for a long
+period after that. So I think they used it for a long time.<p>
+<b>Don Chamberlin:</b> I don't know how long that went on.<p>
+<b>Bob Yost:</b> They were running that on a Model 145 with one megabyte of
+memory. I saw that and I said, "My God, I'm trying to put DB2 in my
+eight-megabyte machine and it hardly fits at all."<p>
+<b>Don Chamberlin:</b> So in looking back on this, one of the things that I
+marvel at is the impact that this work had when it was really, by today's
+standards, very small according to certain measures. And I brought along a
+couple of foils that kind of show you a measure of things. This is a profile
+that I drew up for Frank King one time that shows the number of people that
+were involved in System R at various stages of its life. From 1973 to 1978,
+this was kind of the profile. We started out at about ten or eleven people. And
+this was when the Phase Zero<A NAME="Index211"></A>
+prototypes were installed, and this was the different installations of System R
+at the joint study sites. As you can see, we never had twenty people in System
+R; probably the average was around fifteen. And after 1977, it fell off to half
+that. So the area under that curve was not a lot of manpower by Microsoft
+standards. But we had a pretty big impact from it.<p>
+<b>Bruce Lindsay:</b> By Santa Teresa standards.<p>
+<b>Don Chamberlin:</b> As far as the code size<A NAME="Index212"></A>
+of System R is concerned, believe it or not, it wasn't very big. The RDS was
+mostly written in PL/1 and had 38,000 lines of PL/1, and about 9,000 lines of
+assembler. Now 38,000 lines of code isn't a lot; I mean, it's pretty hard to
+find any kind of a product that small. The RSS was written in PL/S and had
+another 35,000 lines of code. So add this up, maybe 80,000 lines of code and
+that was System R for you. It's not a lot for what we were able to accomplish
+with it.<p>
+This was the size of the load map. The RSS took a megabyte and the RDS took
+another 1.2 megabytes on top of that. That's all there was in the systems that
+we installed at the joint study sites. So it wasn't very big, either in terms
+of its code size or the people that wrote it.<p>
+I kept track of the two lists, called the bug list<A NAME="Index213"></A>
+and the wish list, during the time that we had the joint studies going. We
+would have quarterly reports at each of these joint studies and they would wish
+for things and I would write them on the wish list; we mostly didn't implement
+any of them. At the end of the project, I think there were something like 160
+wishes that were open. The bugs we tried to fix, though, and I've got some
+statistics on this. This is where the bugs came from. Over the course of the
+project, we had 251 bug reports. We found most of them ourselves, but Boeing
+found a lot, too. These were the number of bugs that were found at different
+joint study sites. This is what happened to them. Out of those bugs, we fixed
+71%, we couldn't reproduce quite a few, and some of them we rejected, and so
+on. So we did our best to ...<p>
+<b>Jim Gray:</b> Ten percent are features, I heard.<p>
+<b>Don Chamberlin:</b> Yes, we declared some features. And this was the hero
+list. This is the people who fixed the most bugs in System R. And Wade is on
+the top of the hero list, and Don Slutz, Jim Mehl, Irv Traiger fixed a lot of
+bugs.<p>
+<b>Mike Blasgen:</b> The RSS didn't have any bugs.<i> [laughter]</i> No, it's
+true, the reason is because much of the RSS was written by Franco. No, it's
+really true; Franco<A NAME="Index214"></A>
+never wrote a bug. Except for one, right, Bruce<A NAME="Index215"></A>?
+Did you find one?<p>
+<b>Bruce Lindsay:</b> One.<p>
+<b>Mike Blasgen:</b> He wrote about half of RSS, and I think we found one bug.
+And that was after nine years.<p>
+<b>Brad Wade:</b> I remember index management, though, as being a trouble
+...<i> [laughter]</i><p>
+<b>Franco Putzolu:</b> How does the wish list compare with what was implemented
+afterwards by other systems? Did you ever look at that?<p>
+<b>Don Chamberlin:</b> I haven't really looked back and analyzed that. I
+couldn't tell you about that.<p>
+<b>Pat Selinger:</b> Do you have a copy?<p>
+<b>Don Chamberlin:</b> I have a copy at home; I didn't bring it.<p>
+<b>Bruce Lindsay:</b> We should send it to the SQL 3 people.<i>
+[laughter]</i><p>
+<b>Roger Miller:</b> Our wish-list is more like a database.<p>
+<b>???:</b> It fits in eight megabytes?<p>
+<b>Roger Miller:</b> No, it won't fit in eight megabytes.<p>
+<b>Don Chamberlin:</b> Raymond, did you want to talk some more about the compiler<A NAME="Index216"></A><A NAME="Index217"></A>
+and interpreter issue?<a name="fnB44" href="#fn44">[48]</a> You had a lot to do
+with that.<p>
+<b>Raymond Lorie:</b> I don't remember it.<i> [laughter]</i> I must say I tried
+to locate my foils that I used when we had a little meeting but my database
+system is not up to that task. I remember one meeting; I believe Don was there,
+and Irv, and Morton, I think, and Frank King, of course. I showed how a
+compiled SQL program would simply comprise a few assembler instructions on top
+of the RSS. It was amazingly short. It didn't stay that short, but short enough
+to pursue the idea. Now of course, because we started from an interpreter, we
+went all the way, and compiled into machine language. Later on, because I think
+Franco didn't like that, we came back to well prepared tables, rather than
+code; but of course the idea of compilation remained unchanged, because you do
+the optimizer once and you package the whole thing; then you invalidate the
+"code" if things change that impact the access strategy. So that was one of the
+contributions to the system. It was a good example of how you can change
+direction in a group and convince people to follow it. It was a good
+experience. It also brought me into the RDS, where I spent several years, which
+I enjoyed very much.<p>
+<b>Don Chamberlin:</b> I think that was one of the key things that made System
+R a success: Raymond's idea to compile rather than interpret our high-level
+language. Because that was the thing that was responsible for our performance,
+and performance was the thing we had to prove to get relational accepted.
+Everybody agreed it was sort of neat, but they didn't think it could perform.
+And Raymond was the man that made it perform.<p>
+<b>Mike Blasgen:</b> Actually, this is sort of the history. You know, the first
+FORTRAN compiler that was ever made was probably the best FORTRAN compiler in
+terms of producing the fewest instructions per FORTRAN statement. Because they
+spent so much effort to get it all just right. For example, the reason FORTRAN
+has a three-way branch - IF (ABC) 1,2,3 - is because the machine had a
+three-way branch, and that way they could generate that in a single
+instruction. It's like CAR and CDR; they worked very hard on performance, from
+the very beginning.<p>
+Let's see, in the TODS era, I gave talks at the TODS era too, and then we had
+pre-optimized packages - that was some idea that we had that we wouldn't have
+to go through optimization. But that was before compilation, correct?<p>
+<b>Don Chamberlin:</b> Yes.<p>
+<b>Mike Blasgen:</b> Before compilation we were already worried about
+performance, so we didn't believe that we would fully interpret, but we had
+this idea of pre-optimized packages, I'm not sure if it was all worked out.<p>
+<b>Tom Price:</b> It was like you only had to optimize it once, but then you
+were still interpreting.<p>
+<b>Mike Blasgen:</b> Right, you'd interpret the plan.<p>
+<b>Franco Putzolu:</b> Weren't pre-optimized packages more like views, special
+...<p>
+<b>Mike Blasgen:</b> Oh, were they?<p>
+<b>Pat Selinger:</b> Yes, I believe they were just for views.<p>
+<b>Mike Blasgen:</b> Oh, I see it was really like combining the two, doing
+composition in advance. But then I remember that after Raymond's talk, and we
+all decided that compiler was it, we had still the question of what to do for
+<i>ad hoc</i> query. Because Raymond had not proved anything about <i>ad
+hoc</i> query; he had proven something about canned transactions, that you want
+to compile canned transactions. So then the question was, "What about <i>ad
+hoc</i> query?", and then there was a bunch of work that Raymond and Pat, or I
+don't know who was involved in that, but I know Pat was involved - where you
+did measurements of interpretation of <i>ad hoc</i> query. Then the plan
+became, "We'll do both an interpreter and a compiler." And that seemed like it
+was going to be a mess, just in terms of keeping the semantics straight,
+because you have two implementations of the same thing. How are you going to
+make sure? So then Pat was able to conclude, right, that we could do both <i>ad
+hoc</i> and canned transactions with the compiler.<p>
+<b>Pat Selinger:</b> I think Don was involved in this, too.<p>
+<b>Mario Schkolnick<A NAME="Index218"></A>:</b>
+There were lots of measurements Morton and I were doing on the number of pages
+touched when doing an <i>ad hoc</i> query. Once we found 92 pages were hit to
+save touching two pages at runtime. So I remember Franco picked up the code of
+the optimizer and said "Well, let's figure out for a simple query how to reduce
+the number of pages that the optimizer was touching." So there was all that
+work going on ...<p>
+<b>Franco Putzolu:</b> Yes, Ray's proposal was good. Without it, we wouldn't be
+here today.<p>
+<b>Mike Blasgen:</b> I think there are many such things that happened, that
+without that happening, maybe we wouldn't be here today. But I think I agree
+that this was an absolutely critical one. When we did do the ET1, by the way,
+and we wrote down the debit-credit transaction and ran it and did all the path
+lengths, if you count I/O as one instruction, the path length for ET1 was about
+fifty thousand instructions, and that was state-of-the-art. So System R, thanks
+to the work of Raymond, became state-of-the-art in performance, that is, there
+was no database system that could run any faster than System R on canned
+transactions, light-weight transactions, which is what you would think would be
+the weak link in a relational database.<p>
+Notice it is really true; I hadn't realized this, but this project changed
+quite a bit from the original idea of SEQUEL, which had to with vastly
+broadening the audience of computers to include people looking up recipes and
+mechanics wanting to know how to change oil in the car that just rolled in, to
+ET1. It just did that in a couple of years, and we all just thought it was
+great. And then we were worried about FRRs and SRBs; you know we wanted to do
+SRB scheduling, because then we could get three instructions out of our path
+length. Oh, and Irv Traiger went through and did all kinds of work to get eight
+instructions out of this, and four instructions out of that. Do you remember
+all the work you did in the RSS?<p>
+<b>Irv Traiger:</b> It was Fast-Next.<A NAME="Index219"></A><A NAME="Index220"></A><p>
+<b>Mike Blasgen:</b> Yes, he did Fast-Next! FNEXT<a name="fnB45"
+href="#fn45">[49]</a>. It just cached a bunch of stuff in YTABLE1<A NAME="Index221"></A>,
+right, was what it did. And we had cache-invalidation tricks. But if you didn't
+invalidate the cache, we had Fast-Next, and that took, oh, thirty instructions
+out of a NEXT, and that was the key to survival.<p>
+<b>Franco Putzolu:</b> We got really carried away with machine language.<p>
+<b>Mike Blasgen:</b> You think that was a mistake?<p>
+<b>Franco Putzolu:</b> Yes; on the other hand, recently I've seen some systems
+doing that.
+<p>
+<a name="fn21" href="#fnB21">[23]</a> K. Shoens, A. Luniewski, P. Schwarz, J.
+Stamos, J. Thomas. "The Rufus System: Information Organization for
+Semi-Structured Data" <i>Proc. VLDB</i>, Dublin, Ireland (1993).<p>
+<a name="fn22" href="#fnB22">[24]</a> E.F. Codd. "Seven Steps to Rendezvous
+with the Casual User" <i>Proc. IFIP-TC2 Conference on Data Base Management</i>,
+Cargese, Corsica (April 1-5, 1974) pages 179-200.<p>
+<a name="fn23" href="#fnB23">[25]</a> E.F. Codd, R.S. Arnold, J-M. Cadiou, C.L.
+Chang, N. Roussopoulos. RENDEZVOUS Version 1: An Experimental English Language
+Query Formulation System for Casual Users of Relational Data Bases. IBM
+Research Report RJ 2144. San Jose, California (January 1978).<p>
+<a name="fn24" href="#fnB24">[26]</a> RDS stands for Relational Data System.<p>
+<sup>27</sup> M.M. Astrahan and D.D. Chamberlin. "Implementation of a
+structured English query language" <i>CACM 18</i>, 10 (October 1975), pages
+580-588.<p>
+<a name="fn25" href="#fnB25">[28]</a> J.J. Donovan, L.M. Gutentag, S.E.
+Madnick, and G.N. Smith. "An Application of a Generalized Management
+Information System to Energy Policy and Decision Making - The User's View"
+<i>Proc. NCC</i>, AFIPS Vol. 44 (1975) pages 681-686.<p>
+<a name="fn26" href="#fnB26">[29]</a> Now Pat Selinger.<p>
+<a name="fn27" href="#fnB27">[30]</a> P. Reisner, R. F. Boyce, and D.D.
+Chamberlin. "Human Factors Evaluation of Two Data Base Query Languages--SQUARE
+and SEQUEL" <i>Proceedings of the AFIPS National Computer Conference</i>,
+Anaheim, CA (May 1975) page 447.<p>
+<sup>31</sup> P. Reisner. "Use of Psychological Experimentation as an Aid to
+Development of a Query Language" <i>IEEE Transactions on Software
+Engineering</i>, Vol. SE-3 (May 1977) page 218.<p>
+<a name="fn28" href="#fnB28">[32]</a> D.D. Chamberlin and R.F. Boyce: "SEQUEL:
+A Structured English Query Language" <i>Proc. ACM SIGMOD Workshop on Data
+Description, Access and Control</i>, Ann Arbor, Michigan (May 1974) pages
+249-264. Note that the reference in the TODS paper says SIGFIDET instead of
+SIGMOD.<p>
+<a name="fn29" href="#fnB29">[33]</a> R.F. Boyce and D.D. Chamberlin, "Using a
+structured English query language as a data definition language" IBM Research
+Report RJ1318. San Jose, California (December 1973).<p>
+<a name="fn30" href="#fnB30">[34]</a> Nelson Mattos. "An Overview of the
+Emerging Third-Generation SQL Standard" <i>SIGMOD '95 Tutorial</i>.<p>
+<a name="fn31" href="#fnB31">[35]</a> M.M. Astrahan, M.W. Blasgen, D.D.
+Chamberlin, K.P. Eswaran, J.N. Gray, P.P. Griffiths, W.F. King, R.A. Lorie,
+P.R. McJones, J.W. Mehl, G.R. Putzolu, I.L. Traiger, B.W. Wade, and V. Watson.
+"System R: Relational Approach to Database Management" <i>ACM TODS 1</i>, 2
+(June 1976) pages 97-137.<p>
+<a name="fn32" href="#fnB32">[36]</a> GPD stands for General Products Division,
+which operated the San Jose facility hosting the research lab.<p>
+<a name="fn33" href="#fnB33">[37]</a> VSAM stands for Virtual Sequential Access
+Method.<p>
+<a name="fn34" href="#fnB34">[38]</a> Ralph E. Gomory was Director of IBM
+Research from 1970 to 1986.<p>
+<a name="fn35" href="#fnB35">[39]</a> R.M. Karp and R.E. Miller, "Properties of
+a Model for Parallel Computation: Determinacy, Termination, and Queuing,"
+<i>SIAM JAM 14</i>, 6 (June 1966), pages 1390-1411.<p>
+<a name="fn36" href="#fnB36">[40]</a> J. Gray, P. McJones, M. Blasgen, R.
+Lorie, B. Lindsay, T. Price, F. Putzolu, I. Traiger, "The Recovery Manager of
+the System R Database Manager" <i>ACM Computing Surveys 13</i>, 2 (June 1981),
+pages 223-242.<p>
+<a name="fn37" href="#fnB37">[41]</a> G. Radin and P.R. Schneider. An
+Architecture for an Extended Machine with Protected Addressing. IBM
+Poughkeepsie Laboratory Technical Report TR 00.2757 (May 21, 1976).<p>
+<a name="fn38" href="#fnB38">[42]</a> R. Demillo, D. Dobkin, A. Jones, and R.
+Lipton, editors. <i>Foundations of Secure Computing.</i> Academic Press, New
+York (1978) pages 39-56.<p>
+<a name="fn39" href="#fnB39">[43]</a> Anon et al. "A measure of transaction
+processing power" <i>Datamation 31</i>, 7 (April 1, 1985) pages 112-118.<p>
+<a name="fn40" href="#fnB40">[44]</a> J.R. Good. "Experience with a large
+distributed banking system" <i>IEEE Computer Society on Database Engineering
+6</i>, 2 (June 1983).<p>
+<a name="fn41" href="#fnB41">[45]</a> N.C. Shu, B.C. Housel, R.W. Taylor, S.P.
+Ghosh and V.Y. Lum. "EXPRESS: A Data EXtraction, Processing, and REStructuring
+System" <i>TODS 2</i>, 2 (June 1977) pages 134-174.<p>
+<a name="fn42" href="#fnB42">[46]</a> STL stands for Santa Teresa Laboratory.<p>
+<a name="fn43" href="#fnB43">[47]</a> Pronounced Shred-it.<p>
+<a name="fn44" href="#fnB44">[48]</a> R.A. Lorie and B.W. Wade. "The
+Compilation of a High Level Data Language" IBM Research Report RJ2598. San
+Jose, California (August 1979).<p>
+<a name="fn45" href="#fnB45">[49]</a> Pronounced Fuh-next.
+
+<p>
+<P><hr size=4>
+<A HREF="sqlr95-Prehisto.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="sqlr95-Spreadin.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="sqlr95-The.html"><IMG SRC="images/upg.gif" ALT="Up " border=0></A>
+ <A HREF="sqlr95.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="sqlr95-Contents.html"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+ <A HREF="sqlr95-Index.html"><IMG SRC="images/indexg.gif" ALT="Index" border=0></A>
+</body></html>

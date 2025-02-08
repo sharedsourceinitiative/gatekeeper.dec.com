@@ -1,0 +1,48 @@
+<HTML><HEAD><TITLE>
+Digital Systems Research Center: Report 23</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Research Report 23</H1>
+<P>
+<H1>Firefly: A Multiprocessor Workstation.</H1>
+<HR>
+<H2>    C. P. Thacker, L. C. Stewart, and E. H. Satterthwaite, Jr.</H2>
+<b>December 30, 1987</b><BR><i> 17 pages</i>
+<P>
+    The Firefly is a shared-memory multiprocessor workstation that
+    is used as the primary source of computing at the Digital Equipment
+    Corporation, Systems Research Center (SRC).  Two versions of the
+    Firefly have been built.  The first version contains from one
+    to seven MicroVAX 78032 processors, each with a floating point
+    unit and a sixteen kilobyte cache.  The caches are coherent, so
+    that all processors see a consistent view of main memory. A system
+    may contain from four to sixteen megabytes of storage. Input-output
+    is done via a standard DEC QBus.  Input-output devices are an
+    Ethernet controller, fixed disks, and a monochrome 1024 x 768
+    display with keyboard and mouse. Optional hardware includes a
+    high resolution color display and a controller for high capacity
+    disks.  The second version of the Firefly contains faster CVAX
+    78034 processors, sixty-four kilobyte caches, and a main memory
+    of up to 128 megabytes.
+<P>
+    The Firefly runs a software system that emulates the Ultrix system
+    call interface.  It also supports medium and coarse-grained
+    multiprocessing through multiple threads of control in a single
+    address space.  Communication is implemented uniformly through
+    the use of remote procedure calls.
+<P>
+    This report describes the goals, architecture, implementation,
+    and performance analysis of the Firefly.  It then  presents some
+    measurements of hardware performance, and concludes with some
+    brief remarks on the evolution of the software.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-023.ps.Z">PostScript compressed with UNIX compress</A></B> -- 1320 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-023.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 1120 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-023.ps.zip">PostScript compressed with ZIP</A></B> -- 1120 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-023.ps">PostScript</A></B> -- 1408 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-023.pdf">Portable Document Format (PDF)</A></B> -- 1080 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

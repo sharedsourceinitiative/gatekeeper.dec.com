@@ -1,0 +1,76 @@
+<TITLE>Digital Systems Research Center: Note 1998-013</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Technical Note 1998-013</H1>
+<H1>PixelVision Architecture</H1>
+<HR>
+<H2>Brian Kelleher. Foreword by Bob McNamara</H2>
+Note #1998-013. October 23, 1992. (Foreword October 15, 1998)
+<P>
+Foreword
+<P>
+Since the mid-1980's, the field of 3D computer graphics has enjoyed
+tremendous growth, but outside of academia much of the work has
+remained largely unpublished.  Highly competitive pressures seem to
+have created an environment in which companies are reluctant to
+publish design details of their work, fearing (perhaps justifiably)
+that exposing their proprietary technology might erode some
+competitive advantage.  This environment may have benefited
+individual companies, but the community as a whole now suffers from
+the scarcity of published work.
+<P>
+At the 1998 Eurographics/SIGGRAPH Workshop on Graphics Hardware, the
+paper "Neon: A Single-Chip 3D Workstation Graphics Accelerator" won
+praise from reviewers with comments such as: "This work 
+should be seen by the community.  We don't get enough
+papers describing the choices behind a significant project
+involving tens of man years" and "While most of the ideas
+described in this paper are not new,
+many of the ideas are not previously documented."
+<P>
+Neon borrowed architectural features from 3D accelerators developed
+at Digital Equipment Corporation's MIPS-based workstation product
+engineering group in Palo Alto.  Formed in the mid to late 1980s,
+the group had close ties with the company's research labs in Palo
+Alto; indeed, several of the group's founding members came directly
+from those research labs.
+<P>
+The PixelStamp project, begun in the late 1980s, was the group's
+first generation of 3D graphics accelerators.  The PixelVision project,
+begun in the early 1990s, was the group's second generation of 3D
+graphics accelerators.  In 1992 most of the Palo Alto workstation
+group was disbanded, though the PixelVision project was continued.
+<P>
+The ideas behind Neon's triangle setup and rasterization were borrowed
+from the PixelVision project.  The PixelVision architecture was documented
+in a 1992 manual by Brian Kelleher which was classified as company
+confidential.  We are now declassifying and making "PixelVision Architecture"
+publicly available to better acknowledge the source of ideas used 
+in Neon.  
+<P>
+The author, Brian Kelleher, currently serves as Vice President of US
+Research and Development at 3Dlabs.  Brian has more than 15 years of
+management and engineering experience designing 3D graphics
+products, during which time he is credited with 7 design patents.
+He was one of six founders of Dynamic Pictures, which was acquired
+by 3Dlabs in July 1998, and provided the leadership and vision for
+the company's new product development.  Prior to starting Dynamic
+Pictures, Brian was the head graphics designer for Digital Equipment
+Corporation's MIPS-based development team on the West Coast of the
+United States in the late 1980s and early 1990s.  Brian served as
+Dynamic Pictures' CEO from November 1993 when the company was
+founded until October 1997, at which point he became the Executive
+Vice President of Engineering and Chief Technology Officer.
+<P>
+Bob McNamara
+<P>
+October 15, 1998
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-013.ps.Z">PostScript compressed with UNIX compress</A></B> -- 256 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-013.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 192 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-013.ps.zip">PostScript compressed with ZIP</A></B> -- 192 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-013.ps">PostScript</A></B> -- 240 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-013.pdf">Portable Document Format (PDF)</A></B> -- 240 Kbytes<BR>
+</UL></P>

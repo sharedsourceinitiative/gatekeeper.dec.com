@@ -1,0 +1,19 @@
+Begin3
+Title:          MGv
+Version:        2.2.1
+Entered-date:   09DEC97
+Description:    MGv is a Motif PostScript viewer loosely based on Ghostview 1.5.
+Keywords:       postscript motif viewer ghostview ghostscript
+Author:         mu@echo-on.net (Eric A. Howe)
+Primary-site:   http://www.echo-on.net/~mu
+		434 kB mgv-2.2.1.tar.gz
+		762 kB mgv-2.2.1-ps.tar.gz
+		712 kB mgv-2.2.1-bin.tar.gz
+Alternate-site: ftp://sunsite.unc.edu/pub/Linux/apps/graphics/viewers/X
+		434 kB mgv-2.2.1.tar.gz
+		762 kB mgv-2.2.1-ps.tar.gz
+		712 kB mgv-2.2.1-bin.tar.gz
+Platforms:      Motif 1.2 or higher, GNU Make, ghostscript, Lesstif 1997-10-02
+		almost works
+Copying-policy: GPL
+End

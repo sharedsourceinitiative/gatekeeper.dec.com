@@ -1,0 +1,19 @@
+Begin3
+Title:          pixy
+Version:        3.2
+Entered-date:	28MAR96
+Description:    This program reduces the number of colors used in a set
+                of XPM (pixmap) files to a fixed predefined set of
+		colors. Options determine the
+		conversion strategy.
+                Especially useful for xpm-icon window managers like fvwm
+		or ctwm. No binary distribution available!
+Keywords:       color, conversion, reduction, xpm, pixmap, RGB, HSV, fvwm, ctwm, X11R5
+Author:         Romano Giannetti  (romano@iet.unipi.it)  
+                Martin Kraemer    (Martin.Kraemer@Mch.SNI.De)
+Primary-site:   sirio.iet.unipi.it  /pub/romano/
+                sunsite.unc.edu     /pub/Linux/X11/xutils/colors/
+		21k  pixy3.2.tar.gz
+Platform:       X11R5 or better, XPM library, ANSI C compiler 
+Copying-policy: GPL
+End

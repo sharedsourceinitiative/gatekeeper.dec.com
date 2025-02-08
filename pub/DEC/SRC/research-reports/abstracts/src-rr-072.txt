@@ -1,0 +1,27 @@
+
+				AVAILABLE ELECTRONICALLY
+
+"LM3: A Larch Interface Language for Modula-3:
+A Definition and Introduction, Version 1.0"
+Kevin D. Jones
+June 13, 1991.  84 pages
+
+Author's abstract
+
+This report describes a Larch interface language (LM3) for the Modula-3
+programming language. LM3 is a complete example of a Larch interface
+language and addresses areas previously ignored in interface language
+definition, such as the specification of non-atomic procedures and
+object types.
+
+We give a complete definition of the syntax and illustrate it with
+some straightforward examples. We also give translation functions
+from LM3 specifications to Larch Shared Language traits and show their
+use for type checking. Finally, we present example specifications
+of standard Modula-3 interfaces.
+
+To remove the possibility of misunderstanding, this report presents 
+LM3 using its base syntax and does not use any syntactic sugar. In 
+practice, such sugar is convenient and the checker accepts a sugared 
+form as well as the raw form presented here.
+

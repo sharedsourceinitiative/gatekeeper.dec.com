@@ -1,0 +1,1087 @@
+*** /wrl/proj/gatekeeper/WRL/mogul/draft-mogul-pps-api-02.txt.98jun05	Fri Jun 05 15:21:15 1998
+--- /wrl/proj/gatekeeper/WRL/mogul/draft-mogul-pps-api-02.txt	Tue Jun 09 17:57:04 1998
+***************
+*** 5,11 ****
+                                                  Jonathan Stone, Stanford
+                                                Poul-Henning Kamp, FreeBSD
+                                     Ulrich Windl, Universitaet Regensburg
+!                                                              5 June 1998
+  
+  
+     Pulse-Per-Second API for UNIX-like Operating Systems, Version 1.0
+--- 5,11 ----
+                                                  Jonathan Stone, Stanford
+                                                Poul-Henning Kamp, FreeBSD
+                                     Ulrich Windl, Universitaet Regensburg
+!                                                              9 June 1998
+  
+  
+     Pulse-Per-Second API for UNIX-like Operating Systems, Version 1.0
+***************
+*** 56,62 ****
+  
+  Mogul, Mills, Brittenson, Stone, Kamp, Windl                    [Page 1]
+  
+! Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+  
+  
+                             TABLE OF CONTENTS
+--- 56,62 ----
+  
+  Mogul, Mills, Brittenson, Stone, Kamp, Windl                    [Page 1]
+  
+! Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
+  
+  
+                             TABLE OF CONTENTS
+***************
+*** 69,98 ****
+       3.1 PPS abstraction                                               5
+       3.2 New data structures                                           6
+       3.3 Mode bit definitions                                          8
+!      3.4 New functions                                                10
+!           3.4.1 New functions: obtaining PPS sources                  10
+!           3.4.2 New functions: setting PPS parameters                 11
+!           3.4.3 New functions: access to PPS timestamps               12
+!           3.4.4 New functions: disciplining the kernel timebase       13
+!           3.4.5 New functions: waiting for an event                   14
+!      3.5 Compliance rules                                             15
+!           3.5.1 Functions                                             15
+!           3.5.2 Mode bits                                             16
+!      3.6 Examples                                                     16
+! 4 Security Considerations                                             18
+! 5 Acknowledgements                                                    18
+! 6 References                                                          19
+! 7 Authors' addresses                                                  19
+  
+! A. Extensions Related APIs                                            20
+! A.1 Extension: Parameters for the ``echo'' mechanism                  20
+! A.2 Extension: Obtaining information about external clocks            20
+! A.3 Extension: Finding a PPS source                                   21
+  
+! B. Example implementation: PPSDISC Line discipline                    22
+! B.1 Example                                                           22
+  
+  
+  1 Introduction
+  
+     RFC1589 [4] describes a model and programming interface for generic
+--- 69,101 ----
+       3.1 PPS abstraction                                               5
+       3.2 New data structures                                           6
+       3.3 Mode bit definitions                                          8
+!      3.4 New functions                                                11
+!           3.4.1 New functions: obtaining PPS sources                  11
+!           3.4.2 New functions: setting PPS parameters                 12
+!           3.4.3 New functions: access to PPS timestamps               14
+!           3.4.4 New functions: disciplining the kernel timebase       15
+!           3.4.5 New functions: waiting for an event                   15
+!      3.5 Compliance rules                                             16
+!           3.5.1 Functions                                             17
+!           3.5.2 Mode bits                                             17
+!      3.6 Examples                                                     17
+! 4 Security Considerations                                             19
+! 5 Acknowledgements                                                    20
+! 6 References                                                          20
+! 7 Authors' addresses                                                  20
+  
+! A. Extensions Related APIs                                            21
+! A.1 Extension: Parameters for the ``echo'' mechanism                  21
+! A.2 Extension: Obtaining information about external clocks            22
+! A.3 Extension: Finding a PPS source                                   22
+  
+! B. Example implementation: PPSDISC Line discipline                    23
+! B.1 Example                                                           24
+  
++ C. Available implementations                                          24
++ C.1 FreeBSD                                                           24
+  
++ 
+  1 Introduction
+  
+     RFC1589 [4] describes a model and programming interface for generic
+***************
+*** 107,121 ****
+     However, RFC1589 did not define an application programming interface
+     (API) for the PPS facility.  This document specifies such an
+     interface, for use with UNIX (or UNIX-like) operating systems.  Such
+-    systems often conform to the ``Single UNIX Specification'' [5],
+-    sometimes known as POSIX.
+  
+- 
+  Mogul, Mills, Brittenson, Stone, Kamp, Windl                    [Page 2]
+  
+! Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+  
+  
+     One convenient means to provide a PPS signal to a computer system is
+     to connect that signal to a modem-control pin on a serial-line
+     interface to the computer.  The Data Carrier Detect (DCD) pin is
+--- 110,124 ----
+     However, RFC1589 did not define an application programming interface
+     (API) for the PPS facility.  This document specifies such an
+     interface, for use with UNIX (or UNIX-like) operating systems.  Such
+  
+  Mogul, Mills, Brittenson, Stone, Kamp, Windl                    [Page 2]
+  
+! Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
+  
+  
++    systems often conform to the ``Single UNIX Specification'' [5],
++    sometimes known as POSIX.
++ 
+     One convenient means to provide a PPS signal to a computer system is
+     to connect that signal to a modem-control pin on a serial-line
+     interface to the computer.  The Data Carrier Detect (DCD) pin is
+***************
+*** 135,141 ****
+     record a high-resolution timestamp as soon as possible after it
+     detects a PPS signal transition (usually indicated by an interrupt).
+     This timestamp can then be made available, with less stringent delay
+!    constraints, to ztimekeeping software.  The software can compare the
+     captured timestamp to the received time-code to accurately determine
+     the absolute offset between the system clock and the precise time
+     source.
+--- 138,144 ----
+     record a high-resolution timestamp as soon as possible after it
+     detects a PPS signal transition (usually indicated by an interrupt).
+     This timestamp can then be made available, with less stringent delay
+!    constraints, to timekeeping software.  The software can compare the
+     captured timestamp to the received time-code to accurately determine
+     the absolute offset between the system clock and the precise time
+     source.
+***************
+*** 164,178 ****
+  
+     In principle, the rate of events to be captured, or the frequency of
+     the signals, can range from once per day (or less often) to several
+-    thousand per second.  However, since in most implementations the
+-    timestamping function will be implemented as a processor interrupt at
+-    a relatively high priority, it is prudent to limit the rate of such
+  
+  Mogul, Mills, Brittenson, Stone, Kamp, Windl                    [Page 3]
+  
+! Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+  
+  
+     events.  This may be done either by mechanisms in the hardware that
+     generates the signals, or by the operating system.
+  
+--- 167,181 ----
+  
+     In principle, the rate of events to be captured, or the frequency of
+     the signals, can range from once per day (or less often) to several
+  
+  Mogul, Mills, Brittenson, Stone, Kamp, Windl                    [Page 3]
+  
+! Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
+  
+  
++    thousand per second.  However, since in most implementations the
++    timestamping function will be implemented as a processor interrupt at
++    a relatively high priority, it is prudent to limit the rate of such
+     events.  This may be done either by mechanisms in the hardware that
+     generates the signals, or by the operating system.
+  
+***************
+*** 210,235 ****
+     microsecond.  The POSIX clock_gettime() function returns a ``struct
+     timespec'' value, with a resolution of 1 nanosecond.
+  
+!    This API uses the ``struct timespec'' representation, since in a
+!    general-purpose computer system it is just barely feasible to measure
+!    time to a precision of a few microseconds.  It might become possible
+!    to improve this resolution within the next few years.  We do not
+!    expect it to be feasible for a general-purpose system to measure time
+!    to a precision of less than one nanosecond in the foreseeable future.
+  
+  2.2 Time scale
+     Several different time scales have been proposed for use in computer
+     systems.  UTC and TAI are the two obvious candidates.
+  
+-    Some people would prefer the use of TAI, which is identical to UTC
+-    except that it does not correct for leap seconds.  Their preference
+-    for TAI stems from the difficulty of computing precise time
+  
+  Mogul, Mills, Brittenson, Stone, Kamp, Windl                    [Page 4]
+  
+! Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+  
+  
+     differences when leap seconds are involved, especially when using
+     times in the future (for which the exact number of leap seconds is,
+     in general, unknowable).
+--- 213,238 ----
+     microsecond.  The POSIX clock_gettime() function returns a ``struct
+     timespec'' value, with a resolution of 1 nanosecond.
+  
+!    This API uses an extensible representation, but defaults to the
+!    ``struct timespec'' representation, since in a general-purpose
+!    computer system it is just barely feasible to measure time to a
+!    resolution of a few microseconds.  It might become possible to
+!    improve this resolution within the next few years.
+  
+  2.2 Time scale
+     Several different time scales have been proposed for use in computer
+     systems.  UTC and TAI are the two obvious candidates.
+  
+  
++ 
+  Mogul, Mills, Brittenson, Stone, Kamp, Windl                    [Page 4]
+  
+! Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
+  
+  
++    Some people would prefer the use of TAI, which is identical to UTC
++    except that it does not correct for leap seconds.  Their preference
++    for TAI stems from the difficulty of computing precise time
+     differences when leap seconds are involved, especially when using
+     times in the future (for which the exact number of leap seconds is,
+     in general, unknowable).
+***************
+*** 273,292 ****
+  
+     The specific assignment of the logical values ``true'' and ``false''
+     with specific voltages of a PPS signal, if applicable, is outside the
+!    scope of this specification.  Implementators of PPS sources SHOULD
+     document these assignments.
+  
+     The API supports the direct provision of PPS events (and timestamps)
+     to a kernel function known as ``hardpps()'', as described in
+-    RFC1589 [4].  (although the API does not require the kernel
+-    implementation to use that symbol internally).
+  
+- 
+  Mogul, Mills, Brittenson, Stone, Kamp, Windl                    [Page 5]
+  
+! Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+  
+  
+     The API optionally supports an ``echo'' feature, in which events on
+     the incoming PPS signal may be reflected through software, after the
+     capture of the corresponding timestamp, to an output signal pin.
+--- 276,295 ----
+  
+     The specific assignment of the logical values ``true'' and ``false''
+     with specific voltages of a PPS signal, if applicable, is outside the
+!    scope of this specification.  Implementors of PPS sources SHOULD
+     document these assignments.
+  
+     The API supports the direct provision of PPS events (and timestamps)
+     to a kernel function known as ``hardpps()'', as described in
+  
+  Mogul, Mills, Brittenson, Stone, Kamp, Windl                    [Page 5]
+  
+! Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
+  
+  
++    RFC1589 [4].  (although the API does not require the kernel
++    implementation to use that symbol internally).
++ 
+     The API optionally supports an ``echo'' feature, in which events on
+     the incoming PPS signal may be reflected through software, after the
+     capture of the corresponding timestamp, to an output signal pin.
+***************
+*** 311,317 ****
+  
+  3.2 New data structures
+     The data structure declarations and symbol definitions for this API
+!    will appear in the header file <timepps.h>.
+  
+     The API includes several implementation-specific types:
+  
+--- 314,320 ----
+  
+  3.2 New data structures
+     The data structure declarations and symbol definitions for this API
+!    will appear in the header file <sys/timepps.h>.
+  
+     The API includes several implementation-specific types:
+  
+***************
+*** 332,365 ****
+                long    tv_nsec;        /* nanoseconds */
+        } timespec_t;
+  
+!    The API defines these new data structures:
+  
+-       typedef struct {
+-           pps_seq_t   assert_sequence;        /* assert event seq # */
+-           pps_seq_t   clear_sequence;         /* clear event seq # */
+  
+- 
+  Mogul, Mills, Brittenson, Stone, Kamp, Windl                    [Page 6]
+  
+! Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+  
+  
+!           struct timespec     assert_timestamp;
+!           struct timespec     clear_timestamp;
+            int         current_mode;           /* current mode bits */
+        } pps_info_t;
+  
+        typedef struct {
+            int mode;                           /* mode bits */
+!           struct timespec     assert_offset;
+!           struct timespec     clear_offset;
+        } pps_params_t;
+  
+     The ``pps_info_t'' type is returned on an inquiry to PPS source.  It
+     contains the timestamps for the most recent assert event, and the
+     most recent clear event.  The order in which these events were
+     actually received is defined by the timetamps, not by any other
+     aspect of the specification.  Each timestamp field represents the
+     value of the operating system's internal timebase when the
+     timestamped event occurred, or as close as possible to that time
+     (perhaps with the addition of a specified offset).  The current_mode
+--- 335,406 ----
+                long    tv_nsec;        /* nanoseconds */
+        } timespec_t;
+  
+!    The API defines this new union as an extensible type for representing
+!    times:
+  
+  
+  Mogul, Mills, Brittenson, Stone, Kamp, Windl                    [Page 6]
+  
+! Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
+  
+  
+!       typedef union pps_timeu {
+!               timespec_t      tspec;
+!               struct {        /* NTP long fixed-point format */
+!                       unsigned int    integral;
+!                       unsigned int    fractional;
+!               } ntp_fp_t      ntpfp;
+!               unsigned long   longpair[2];
+!       } pps_timeu_t;
+! 
+!    Future revisions of this specification may add more fields to this
+!    union.  Section 3.4.2 describes how an application selects the
+!    appropriate representation for timestamps.
+! 
+!       ---------
+!       Note: adding a field to this union that is larger than
+!       2*sizeof(long) will break binary compatibility.
+!       ---------
+! 
+!    The API defines these new data structures:
+! 
+!       typedef struct {
+!           pps_seq_t   assert_sequence;        /* assert event seq # */
+!           pps_seq_t   clear_sequence;         /* clear event seq # */
+!           pps_timeu_t assert_tu;
+!           pps_timeu_t clear_tu;
+            int         current_mode;           /* current mode bits */
+        } pps_info_t;
+  
++       #define assert_timestamp        assert_tu.tspec
++       #define clear_timestamp         clear_tu.tspec
++ 
++       #define assert_timestamp_ntpfp  assert_tu.ntpfp
++       #define clear_timestamp_ntpfp   clear_tu.ntpfp
++ 
+        typedef struct {
+            int mode;                           /* mode bits */
+!           pps_timeu_t assert_off_tu;
+!           pps_timeu_t clear_off_tu;
+        } pps_params_t;
+  
++       #define assert_offset   assert_off_tu.tspec
++       #define clear_offset    clear_off_tu.tspec
++ 
++       #define assert_offset_ntpfp     assert_off_tu.ntpfp
++       #define clear_offset_ntpfp      clear_off_tu.ntpfp
++ 
+     The ``pps_info_t'' type is returned on an inquiry to PPS source.  It
+     contains the timestamps for the most recent assert event, and the
+     most recent clear event.  The order in which these events were
+     actually received is defined by the timetamps, not by any other
+     aspect of the specification.  Each timestamp field represents the
++ 
++ Mogul, Mills, Brittenson, Stone, Kamp, Windl                    [Page 7]
++ 
++ Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
++ 
++ 
+     value of the operating system's internal timebase when the
+     timestamped event occurred, or as close as possible to that time
+     (perhaps with the addition of a specified offset).  The current_mode
+***************
+*** 395,406 ****
+        due to an insufficient sampling rate.
+        ---------
+  
+- 
+- Mogul, Mills, Brittenson, Stone, Kamp, Windl                    [Page 7]
+- 
+- Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+- 
+- 
+     As an OPTIONAL feature of the API, the implementation MAY support
+     adding offsets to the timestamps that are captured.  (Values of type
+     ``struct timespec'' can represent negative offsets.)  The
+--- 436,441 ----
+***************
+*** 416,421 ****
+--- 451,463 ----
+     are:
+  
+        #define PPS_CAPTUREASSERT       0x01
++ 
++ 
++ Mogul, Mills, Brittenson, Stone, Kamp, Windl                    [Page 8]
++ 
++ Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
++ 
++ 
+        #define PPS_CAPTURECLEAR        0x02
+        #define PPS_CAPTUREBOTH         0x03
+  
+***************
+*** 452,463 ****
+  
+     PPS_OFFSETCLEAR If set, the clear_offset value is added to the
+                     current value of the operating system's internal
+- 
+- Mogul, Mills, Brittenson, Stone, Kamp, Windl                    [Page 8]
+- 
+- Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+- 
+- 
+                     timebase in order to generate the captured
+                     clear_timestamp.  Has no meaning if the
+                     PPS_CAPTURECLEAR mode bit is clear.
+--- 494,499 ----
+***************
+*** 472,477 ****
+--- 508,520 ----
+                     be communicated to the operating system module that
+                     disciplines the system's internal timebase.
+  
++ 
++ 
++ Mogul, Mills, Brittenson, Stone, Kamp, Windl                    [Page 9]
++ 
++ Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
++ 
++ 
+     PPS_ECHOASSERT   If set, after the capture of an assert timestamp,
+                     the implementation generates a signal transition as
+                     rapidly as possible on an output signal pin.  This
+***************
+*** 510,524 ****
+           UNIX systems, such modification is normally done using
+           settimeofday() and/or adjtime(), and is restricted to
+           users with superuser privilege.)
+- Mogul, Mills, Brittenson, Stone, Kamp, Windl                    [Page 9]
+- 
+- Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+  
+- 
+     The operating system may implement all of these mode bits, or just a
+     subset of them.  If an attempt is made to set an unsupported mode
+     bit, the API will return an error.
+  
+  3.4 New functions
+     In the description of functions that follows, we use the following
+     function parameters:
+--- 553,589 ----
+           UNIX systems, such modification is normally done using
+           settimeofday() and/or adjtime(), and is restricted to
+           users with superuser privilege.)
+  
+     The operating system may implement all of these mode bits, or just a
+     subset of them.  If an attempt is made to set an unsupported mode
+     bit, the API will return an error.
+  
++    In addition, the following mode bits are defined in order to select
++    an appropriate representation for timestamps and offsets:
++ 
++       #define PPS_TSFMT_TSPEC         0x1000
++       #define PPS_TSFMT_NTPFP         0x2000
++ 
++    Exactly one of these bits MUST be set at any time.  Their meanings
++    are:
++ 
++ Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 10]
++ 
++ Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
++ 
++ 
++    PPS_TSFMT_TSPEC Timestamps and offsets are represented as values of
++                    type ``timespec_t''.  All implementations MUST
++                    support this format, and this format is the default
++                    unless an application specifies otherwise.
++ 
++    PPS_TSFMT_NTPFP Timestamps and offsets are represented as values of
++                    type ``ntp_fp_t'', which corresponds to the NTP
++                    ``64-bit unsigned fixed-point'' timestamp format [3].
++ 
++    Other such bits may be defined as fields are added to the
++    ``pps_timeu_t'' union.  Support for this format is OPTIONAL.
++ 
+  3.4 New functions
+     In the description of functions that follows, we use the following
+     function parameters:
+***************
+*** 559,564 ****
+--- 624,634 ----
+     configuration.  One typical case is a serial line, whose DCD pin is
+     connected to a source of PPS events.
+  
++ Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 11]
++ 
++ Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
++ 
++ 
+     The time_pps_destroy() function makes the PPS handle unusable, and
+     frees any storage that might have been allocated for it.  It does not
+     close the associated file descriptor, nor does it change any of the
+***************
+*** 567,577 ****
+     disciplining the system's internal timebase, it must do so using
+     time_pps_setparams() before calling time_pps_destroy().
+  
+- Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 10]
+- 
+- Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+- 
+- 
+        ---------
+        Note: On operating systems that do not follow UNIX conventions
+        for representing an accessible PPS source as an integer file
+--- 637,642 ----
+***************
+*** 614,619 ****
+--- 679,691 ----
+                                const pps_params_t *ppsparams);
+        int time_pps_getparams(pps_handle_t handle,
+                                pps_params_t *ppsparams);
++ 
++ 
++ Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 12]
++ 
++ Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
++ 
++ 
+        int time_pps_getcap(pps_handle_t handle, int *mode);
+  
+  
+***************
+*** 623,650 ****
+     (mode bits and timestamp offsets) for a PPS source.  The pps_params_t
+     type is defined in section 3.2; mode bits are defined in section 3.3.
+     An application may use time_pps_getparams() to discover the current
+- 
+- Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 11]
+- 
+- Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+- 
+- 
+     settings of the PPS parameters.  An application that needs to change
+     only a subset of the existing parameters must first call
+     time_pps_getparams() to obtain the current parameter values, then set
+     the new values using time_pps_setparams().
+  
+     An application wishing to discover which mode bits it may set, with
+     its current effective user ID, may call time_pps_getcap().  This
+     function returns the set of mode bits that may be set by the
+     application, without generating an EINVAL or EPERM error, for the
+     specified PPS source handle.  It does not return the current values
+!    for the mode bits.  The mode bits returned by time_pps_getcap() for
+!    distinct PPS handles may differ, reflecting the specific capabilities
+!    of the underlying hardware connection to the PPS source, or of the
+!    source itself.
+  
+  
+     RETURN VALUES
+  
+     On successful completion, the time_pps_setparams(),
+--- 695,729 ----
+     (mode bits and timestamp offsets) for a PPS source.  The pps_params_t
+     type is defined in section 3.2; mode bits are defined in section 3.3.
+     An application may use time_pps_getparams() to discover the current
+     settings of the PPS parameters.  An application that needs to change
+     only a subset of the existing parameters must first call
+     time_pps_getparams() to obtain the current parameter values, then set
+     the new values using time_pps_setparams().
+  
++    If an application changes the timestamp format by setting one of the
++    corresponding mode bits (e.g., PPS_TSFMT_TSPEC) using
++    time_pps_setparams(), and the format is supported by the
++    implementation, the offset fields in the ppsparams argument are
++    interpreted using that representation.  Also, all subsequent values
++    of type ``pps_info_t'' returned for the corresponding handle use that
++    representation.  If the requested timestamp format is not supported,
++    the time_pps_setparams() function has no effect and returns an error
++    value.
++ 
+     An application wishing to discover which mode bits it may set, with
+     its current effective user ID, may call time_pps_getcap().  This
+     function returns the set of mode bits that may be set by the
+     application, without generating an EINVAL or EPERM error, for the
+     specified PPS source handle.  It does not return the current values
+!    for the mode bits.  Note that time_pps_getcap() may return several
+!    mode bits corresponding to timestamp formats, even though exactly one
+!    such mode bit may be enabled at any given time.
+  
++    The mode bits returned by time_pps_getcap() for distinct PPS handles
++    may differ, reflecting the specific capabilities of the underlying
++    hardware connection to the PPS source, or of the source itself.
+  
++ 
+     RETURN VALUES
+  
+     On successful completion, the time_pps_setparams(),
+***************
+*** 659,664 ****
+--- 738,748 ----
+     time_pps_getcap() function fails, errno may be set to one of the
+     following values:
+  
++ Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 13]
++ 
++ Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
++ 
++ 
+     [EBADF]         The handle parameter is not associated with a valid
+                     file descriptor.
+  
+***************
+*** 679,691 ****
+     timestamps.
+  
+  
+- 
+- 
+- Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 12]
+- 
+- Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+- 
+- 
+     SYNOPSIS
+  
+        int time_pps_fetch(pps_handle_t handle,
+--- 763,768 ----
+***************
+*** 714,719 ****
+--- 791,805 ----
+     error.
+  
+  
++ 
++ 
++ 
++ 
++ Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 14]
++ 
++ Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
++ 
++ 
+     ERRORS
+  
+     If the time_pps_fetch() function fails, errno may be set to one of
+***************
+*** 737,748 ****
+        does not have an accurate 1-pulse-per-second signal, or is
+        otherwise inappropriately configured, use of this feature may
+        result in seriously incorrect timekeeping for the entire
+- 
+- Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 13]
+- 
+- Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+- 
+- 
+        system.  For best results, the 1-PPS signal should have much
+        better frequency stability than the system's internal clock
+        source (usually a crystal-controlled oscillator), and should
+--- 823,828 ----
+***************
+*** 771,776 ****
+--- 851,862 ----
+                                pps_info_t *ppsinfobuf);
+  
+  
++ 
++ Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 15]
++ 
++ Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
++ 
++ 
+     DESCRIPTION
+  
+     This function blocks until either a timestamp is captured from the
+***************
+*** 791,805 ****
+     and always returns 0.
+  
+  
+- 
+- 
+- 
+- 
+- Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 14]
+- 
+- Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+- 
+- 
+     RETURN VALUES
+  
+     On successful completion, the time_pps_wait() function returns 0.
+--- 877,882 ----
+***************
+*** 832,837 ****
+--- 909,919 ----
+     "MAY", and "OPTIONAL" in this document are to be interpreted as
+     described in RFC2119 [1].
+  
++ Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 16]
++ 
++ Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
++ 
++ 
+     Some features of this specification are OPTIONAL, but others are
+     REQUIRED.
+  
+***************
+*** 849,862 ****
+     per-source basis:
+        - time_pps_wait()
+  
+- 
+- 
+- 
+- Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 15]
+- 
+- Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+- 
+- 
+  3.5.2 Mode bits
+     An implementation MUST support at least one of these mode bits for
+     each PPS source:
+--- 931,936 ----
+***************
+*** 866,871 ****
+--- 940,948 ----
+     these bits for a PPS source, it MUST allow them to be set
+     simultaneously.
+  
++    An implementation MUST support these mode bits:
++       - PPS_TSFMT_TSPEC
++ 
+     An implementation MAY support these mode bits:
+        - PPS_HARDPPSONASSERT
+        - PPS_HARDPPSONCLEAR
+***************
+*** 873,883 ****
+        - PPS_ECHOINVERT
+        - PPS_OFFSETASSERT
+        - PPS_OFFSETCLEAR
+  
+     An implementation that supports PPS_HARDPPSONASSERT for a PPS source
+     MUST support PPS_OFFSETASSERT for that PPS source. An implementation
+     that supports PPS_HARDPPSONCLEAR for a PPS source MUST support
+!    PS_OFFSETCLEAR for that PPS source.
+  
+  3.6 Examples
+     A very simple use of this API might be:
+--- 950,961 ----
+        - PPS_ECHOINVERT
+        - PPS_OFFSETASSERT
+        - PPS_OFFSETCLEAR
++       - PPS_TSFMT_NTPFP
+  
+     An implementation that supports PPS_HARDPPSONASSERT for a PPS source
+     MUST support PPS_OFFSETASSERT for that PPS source. An implementation
+     that supports PPS_HARDPPSONCLEAR for a PPS source MUST support
+!    PPS_OFFSETCLEAR for that PPS source.
+  
+  3.6 Examples
+     A very simple use of this API might be:
+***************
+*** 887,892 ****
+--- 965,976 ----
+        pps_params_t params;
+        pps_info_t infobuf;
+  
++ 
++ Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 17]
++ 
++ Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
++ 
++ 
+        /* Open a file descriptor and enable PPS on rising edges */
+        fd = open(PPSfilename, O_RDONLY, 0);
+        time_pps_create(fd, &handle);
+***************
+*** 909,919 ****
+     Also note that, on a system that supports time_pps_wait(), the
+     function of these lines:
+  
+- Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 16]
+- 
+- Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+- 
+- 
+            sleep(1);
+            time_pps_fetch(handle, &infobuf);
+  
+--- 993,998 ----
+***************
+*** 942,947 ****
+--- 1021,1033 ----
+        /*
+         * Find out what features are supported
+         */
++ 
++ 
++ Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 18]
++ 
++ Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
++ 
++ 
+        time_pps_getcap(handle, &avail_mode);
+        if ((avail_mode & PPS_CAPTUREASSERT) == 0) {
+            fprintf(stderr, "%s cannot CAPTUREASSERT\n", PPSfilename);
+***************
+*** 964,976 ****
+                time_pps_wait(handle, NULL, &infobuf);
+            } else {
+                sleep(1);
+- 
+- 
+- Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 17]
+- 
+- Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+- 
+- 
+                time_pps_fetch(handle, &infobuf);
+            }
+            printf("Assert timestamp: %d.%09d, sequence: %ld\n",
+--- 1050,1055 ----
+***************
+*** 1000,1005 ****
+--- 1079,1090 ----
+     The second capability might be useful in implementing certain kinds
+     of covert communication channels.
+  
++ 
++ Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 19]
++ 
++ Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
++ 
++ 
+     In most cases, neither of these first two issues is a significant
+     security threat, because the traditional UNIX file protection
+     facility may be used to to limit access to the relevant special
+***************
+*** 1021,1033 ****
+     the drafting of this document.
+  
+  
+- 
+- 
+- Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 18]
+- 
+- Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+- 
+- 
+  6 References
+  
+     1.  Scott Bradner.  Key words for use in RFCs to Indicate Requirement
+--- 1106,1111 ----
+***************
+*** 1058,1063 ****
+--- 1136,1147 ----
+     Email: mogul@wrl.dec.com
+     Phone: 1 650 617 3304 (email preferred)
+  
++ 
++ Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 20]
++ 
++ Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
++ 
++ 
+     David L. Mills
+     Electrical Engineering Department
+     University of Delaware
+***************
+*** 1079,1090 ****
+  
+     Poul-Henning Kamp
+     The FreeBSD Project
+- 
+- Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 19]
+- 
+- Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+- 
+- 
+     Valbygaardsvej 8
+     DK-4200 Slagelse
+     Denmark
+--- 1163,1168 ----
+***************
+*** 1114,1119 ****
+--- 1192,1204 ----
+     It might be useful to extend this API to provide either or both of
+     these features:
+  
++ 
++ 
++ Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 21]
++ 
++ Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
++ 
++ 
+        - A means by which the application can discover which output
+          pin is echoing the input pin.
+  
+***************
+*** 1135,1147 ****
+        - Clock manufacturer, model number, and revision level
+        - Whether the clock is synchronized to an absolute standard
+        - For synchronized clocks,
+- 
+- 
+- Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 20]
+- 
+- Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+- 
+- 
+             * The specific standard
+             * The accuracy of the standard
+             * The path used (direct connection, shortwave, longwave,
+--- 1220,1225 ----
+***************
+*** 1173,1178 ****
+--- 1251,1261 ----
+     application to discover the PPS source (or sources) connected to a
+     system, it might be more complex than necessary.
+  
++ Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 22]
++ 
++ Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
++ 
++ 
+     A simpler approach would be to support a single function that
+     provides the identity of one or more PPS sources.
+  
+***************
+*** 1192,1204 ****
+     version, etc., which could then be used by the application to control
+     its behavior.
+  
+- 
+- 
+- Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 21]
+- 
+- Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+- 
+- 
+     This function might simply read the Nth line from a simple database,
+     containing lines such as:
+  
+--- 1275,1280 ----
+***************
+*** 1230,1235 ****
+--- 1306,1318 ----
+        #define PPSFETCH      _IOR('t', 75, pps_info_t)
+        #define PPSSETPARAM   _IOW('t', 76, pps_params_t)
+        #define PPSGETPARAM   _IOR('t', 77, pps_params_t)
++ 
++ 
++ Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 23]
++ 
++ Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
++ 
++ 
+        #define PPSGETCAP     _IOR('t', 78, int)
+  
+  
+***************
+*** 1249,1261 ****
+         */
+        ioctl(fd, PPSGETCAP, &params);
+        if ((params.mode & PPS_CAPTUREASSERT) == 0 ||
+- 
+- 
+- Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 22]
+- 
+- Internet-Draft            Pulse-Per-Second API         5 June 1998 15:17
+- 
+- 
+                (params.mode & PPS_HARDPPSONASSERT) == 0) {
+            fprintf(stderr, "PPS source is not suitable\n");
+            exit(1);
+--- 1332,1337 ----
+***************
+*** 1276,1293 ****
+--- 1352,1388 ----
+     Again, this example imprudently omits any error-checking.
+  
+  
++ C. Available implementations
+  
++    This appendix lists known publically-available implementations of the
++    API described in this document.
+  
+  
++ C.1 FreeBSD
+  
++    A prototype implementation for FreeBSD, using the parallel printer
++    port as interface is available in FreeBSD-current.
+  
+  
+  
++ Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 24]
++ 
++ Internet-Draft            Pulse-Per-Second API         9 June 1998 17:56
+  
+  
++    The relevant source files are:
+  
++       src/include/timepps.h
++       src/sys/sys/timepps.h
++       src/sys/dev/ppbus/pps.c
+  
++    A higher performance implementation, using dedicated FPGA based
++    hardware has also been made, but not yet included in the FreeBSD
++    sources.
+  
++       Information valid as of: 9 June 1998
++       URL: http://www.freebsd.org
++       Contact: Poul-Henning Kamp, phk@FreeBSD.org
+  
+  
+  
+***************
+*** 1308,1311 ****
+  
+  
+  
+! Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 23]
+--- 1403,1425 ----
+  
+  
+  
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! Mogul, Mills, Brittenson, Stone, Kamp, Windl                   [Page 25]

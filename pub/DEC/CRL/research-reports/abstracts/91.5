@@ -1,0 +1,18 @@
+			   CRL Technical Report 91/5
+		    Randomized Wait-Free Concurrent Objects
+				Maurice Herlihy
+				  3 June 1991
+
+A {\em concurrent object\/} is a data structure shared by concurrent processes.
+A {\em wait-free} implementation of a concurrent object guarantees that every
+operation completes in a finite number of steps, regardless of how processes
+interleave.  It is known, however, that if concurrent processes communicate
+only by applying read and write operations to a shared memory, then it is
+impossible to construct wait-free implementations of many simple and useful
+data objects.  In this paper we show how to construct {\em randomized}
+wait-free implementations of long-lived concurrent objects, implementations
+that guarantee that every operation completes in a finite {\em expected} number
+of steps, even against a powerful adversary.
+
+This paper will appear in the Tenth Annual ACM Symposium on Principles of
+Distributed Computing, August 19-21, Montreal, Canada.

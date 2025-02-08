@@ -1,0 +1,14 @@
+
+		AVAILABLE ELECTRONICALLY
+
+"How to Write a Proof"
+Leslie Lamport
+February 14, 1993.  12 pages
+
+Abstract:
+
+A method of writing proofs is proposed that makes it much harder to
+prove things that are not true.  The method, based on hierarchical
+structuring, is simple and practical.
+
+

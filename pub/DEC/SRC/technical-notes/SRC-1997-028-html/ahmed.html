@@ -1,0 +1,256 @@
+<html>
+<head><title>Data Cache Optimizations for Java Programs</title></head>
+<body>
+<center>
+<h1><b>Data Cache Optimizations for Java Programs</b></h1><br>
+<h2>Nawaaz Ahmed, Cornell University</h2>
+</center>
+
+
+I interned at SRC from May 19th to August 26th during the summer of
+1997. My host for the period of the internship was Mark Vandevoorde. <p>
+
+At Cornell, (where I'm doing my PhD), I work with Prof. Keshav Pingali
+on compilers for numerical applications. We are working on a different
+way of looking at programs that is "data-centric" -- since we are
+concerned about how data is being produced and consumed, we are
+looking at ways of directly reasoning about data flow instead of
+manipulating loops as is done currently. The architectures we are
+concentrating on are distributed shared memory systems (both software
+and hardware).<p>
+
+I have spent the summer here at SRC exploring methods to reduce data
+cache stalls.  My project was to measure how effectively the caches
+are being used, to evaluate the potential benefits of cache-related
+optimizations (e.g., restructuring data), and to suggest how one might
+perform such optimizations automatically.<p>
+
+To put the work in perspective, at the beginning of the summer the DCPI
+(Digital Continuous Profiling Infrastructure) group at SRC
+was looking towards using the data collected by its profiling
+tools to drive optimizations.  DCPI profiles of various
+benchmarks, e.g., SPEC95, indicate that a significant portion of 
+execution time is spent in stalls due to data cache misses.<p>
+
+As a result, Mark and I developed a methodology for automating
+optimizations by searching for access patterns in program execution
+traces. I implemented a tracer that collects information required to
+suggest the optimizations as well as implementing a cache-simulator which
+we used to simulate optimizations.<p>
+
+<h2>Overview of Specifics</h2>
+
+Early on, I decided to focus on Java programs for several reasons.
+First, the Java Virtual Machine (JVM) makes no guarantees to
+programmers about data layout, so it is easier to restructure data in
+Java than in languages like C.  Second, to study a program's access
+patterns, I wanted accurate type information for each instruction that
+reads or writes data.  Java codes (.class files) contain this
+information.  For example the GETFIELD bytecode, which reads a field of an
+object, identifies the class and the field of the object being read.
+In principle, C executables could contain similar information in the
+symbol table section.  In practice, with the C compilers that were
+available to us, rendered the information inaccurate or nonexistent.<p>
+
+<h2>Cache Simulator</h2>
+
+To measure how well the caches were being used, I converted Sanjay
+Ghemawat's Java runtime system into a cache simulator that allows for the
+creation of a multi-level memory hierarchy.  Each level of the memory
+hierarchy is parameterised by the size of the cache at that level, the
+associativity, the size of the cache-line, and whether allocation is
+done on read or write accesses.  To simplify the simulator, transfer
+of data between the various memory levels is modeled as being
+instantaneous.  Also, because the JVM is a stack machine, the
+simulator ignores all stack references rather than simulating stack
+operations that are unnecessary when registers are available.<p>
+
+For each cache, the simulator reports the number of read and write
+hits and misses for the whole cache, for each class, for each field of
+each class, and for each array type.  Thus, one can easily identify
+the data structures accounting for the majority of cache hits and
+misses.  The cache simulator also keeps track of the fraction of each
+cache-line that is actually accessed before the cache-line is
+evicted. This allows us to measure cache-pollution, i.e., the amount
+of useless data brought into the cache.<p>
+
+I ran the simulator on a suite consisting of three programs:
+<ul>
+  <li> javac -- a compiler for java programs
+  <li> javacup -- a lalr parser generator
+  <li> juno  -- a non-linear constraint solver
+</ul>
+
+Using these as benchmarks on an EV5-like cache hierarchy, 50-60% of the
+evictions take place at the first level cache while only 25% of the 
+cache-line was
+used. The average number of bytes accessed turns out to be around 13,
+which represents a cache utilization of just 41%. These numbers get
+worse for an EV6 like architecture (first level cache line size of 64
+bytes vs. 32 bytes on EV5) -- the effective cache-line size is only 21
+bytes (33%). Thus as the size of the cache-line increases,
+optimizations that reduce cache-pollution become more important.<p>
+
+<h2>Trace-Driven Optimization</h2>
+
+
+Once the simulator was working, I focussed on the problem of how one
+might automate memory-related optimizations such as restructuring
+data to improve locality and prefetching data to mask latencies.  A
+key problem seems to be how to identify common access patterns in a
+program.  Given the common access patterns, one can then attempt to
+either restructure data to improve locality, or to insert prefetches
+to mask cache miss latencies.<p>
+
+I built a tool, called tracer, that collects information about access
+patterns in a program.  The information from the tracer can be used to 
+drive several
+optimizations.  I evaluated two optimizations by simulating them in
+the cache simulator to observe the reduction in the number of read
+misses.  Unfortunately, with only javac and a JIT compiler available,
+the quality of the code was sufficiently poor that trying to measure a
+speedup was not feasible: the lack of optimizations like common
+subexpression elimination, lifting code out of loops, etc. meant that
+the overhead of data stalls was somewhat dwarfed by other
+inefficiencies.<p>
+
+<h2>Reordering Fields</h2>
+
+
+The first optimization was intended to reorder the fields of a class so that
+the more frequently accessed fields are clustered together.  The goal
+is to pack frequently accessed data into fewer cache lines.<p>
+
+Reordering did not help much in reducing the number of read misses for
+our benchmark suite.  The reductions in misses ranged from 12% (juno)
+to 2% (javac) for 32-byte cache lines.  For 64-byte cache lines, there
+was only about a 2% reduction in the number of misses.  The reason is
+that the benchmarks had few objects that were more than 64 bytes long.<p>
+
+<h2>Prefetching</h2>
+ 
+
+The second optimization was to prefetch the target of a handle at the
+point where the handle is obtained. <p> 
+
+For our three benchmark programs using the EV5 cache model, the
+heuristic prefetched 34% of the first-level misses (introducing an
+overhead of 6% more load instructions) for javacup; 14.6% (overhead:
+3.8%) for javac; and 4.9% (overhead : 0.4%) for juno.  Juno did not do
+particularly well because we did not include uniform array stride
+access prefetch in our suggestions.  Prefetching performed similarly
+with the EV6 cache model.<p>
+
+
+<h2>Challenges and Future Directions</h2>
+
+I found the project very interesting. In my mind it started a chain of
+speculation about the fundamental issues involved in memory systems. While 
+a lot of work
+has gone into  studying control and data flow, I know of very
+little work that actually talks about the control flow pattern of the
+data flow. I think this issue needs to be studied if we wish to
+understand what is ailing memory systems and how to make them more
+efficient.<p>
+
+
+
+<h2>Appendix</h2>
+
+<pre>
+
+   JAVACUP
+
+Simulated readmisses on ev5
+
+               L1       L2      L3
+        base 5302668  790216  268644      Actual count
+   reordered 5052562  791017  267562 
+  prefetched 4006014  623427  268953 
+        both 3741982  621708  268177 
+
+        base  1.0000  1.0000  1.0000      Percent of base
+   reordered  0.9528  1.0010  0.9960 
+  prefetched  0.7555  0.7889  1.0012 
+        both  0.7057  0.7868  0.9983 
+
+Simulated on ev6
+
+               L1       L2
+        base 2836101  185490       Actual count
+   reordered 2798603  186224 
+  prefetched 1745693  131252 
+        both 1701881  131720 
+
+        base  1.0000  1.0000       Percent of base
+   reordered  0.9868  1.0040 
+  prefetched  0.6155  0.7076 
+        both  0.6001  0.7101 
+
+
+
+   JAVAC
+
+Simulated readmisses on ev5
+
+               L1       L2      L3
+        base 1420800  240719   49399       Actual count
+   reordered 1395944  231566   47033 
+  prefetched 1304044  215274   48529 
+        both 1285798  208995   44960 
+
+        base  1.0000  1.0000  1.0000       Percent of base
+   reordered  0.9825  0.9620  0.9521 
+  prefetched  0.9178  0.8943  0.9824 
+        both  0.9050  0.8682  0.9101 
+
+Simulated readmisses on ev6
+
+               L1       L2
+        base  773516   35406       Actual count
+   reordered  755820   33598 
+  prefetched  679728   31746 
+        both  672758   28226 
+
+        base  1.0000  1.0000       Percent of base
+   reordered  0.9771  0.9489 
+  prefetched  0.8788  0.8966 
+        both  0.8697  0.7972 
+
+
+
+   JUNO
+
+Simulated readmisses on ev5
+
+               L1       L2      L3
+        base 2502983   37875    2247       Actual count
+   reordered 2210184   37954    2263 
+  prefetched 2385292   37136    2243 
+        both 2298945   37091    2279 
+
+        base  1.0000  1.0000  1.0000       Percent of base
+   reordered  0.8830  1.0021  1.0071 
+  prefetched  0.9530  0.9805  0.9982 
+        both  0.9185  0.9793  1.0142 
+
+Simulated readmisses on ev6
+
+               L1       L2
+        base  550187    1034       Actual count
+   reordered  544109     860 
+  prefetched  522144     983 
+        both  535400     840 
+
+        base  1.0000  1.0000       Percent of base
+   reordered  0.9890  0.8317 
+  prefetched  0.9490  0.9507 
+        both  0.9731  0.8124 
+
+</pre>
+
+</BODY>
+</HTML>
+
+
+

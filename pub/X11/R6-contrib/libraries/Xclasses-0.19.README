@@ -1,0 +1,106 @@
+------------------------------------------------------------
+                          Xclasses
+                    a X11 layout library
+------------------------------------------------------------
+
+This a a pre-release of Xclasses, not all functionality added and only compiled
+on Linux - others will follow in the final release. And you need an ELF system.
+
+Currently there is only a german documentation (pdf) with all now supported
+classes and functions.
+
+
+What is Xclasses?
+
+Xclasses is a C++ layout library for the X Window System. All objects (called
+gadgets) are font sensitiv, i.e. their size changes with the size of the used
+screen font and the size of the window. All this is done by Xclasses itself!
+
+All objects (gadgets) have the same base class (class gadget) so there are all
+used the same. Gadgets are put together in groups (class group also bases on
+gadget) which manage the correct size of all gadgets (and/or groups!) inside.
+
+
+Why use Xclasses?
+
+Xclasses is completely written in C++ so it is really object orientated! But
+C-Users may use it because most C compilers support C++ and for using Xclasses
+you neddn't to know much about C++.
+
+Xclasses is easy to use, no pointer or handles to manage or remember - simply
+classes (for C users: like structs with functions added). If you don't want to
+do some special things (like writing a multiplayer arcade game or a new window
+manager) you don't even need to know anything about X-Windows functions and how
+it works - Xclasses has its own classes for all of this that put many complex X
+functions to some easy functions together.
+
+Xclasses makes easy font and context sensitiv GUIs. And you don't need much
+time to develop a GUI!
+
+
+How to install.
+
+This pre-release has no easy install program - but a simple command line which
+should work:
+
+make install
+
+This copies the library to /usr/local/lib/ and the includes to
+/usr/local/include/. A global config file for all Xclasses programs is
+installed in /usr/lib/X11/Xclasses/.
+
+Now you can compile the example programs in the example dir, enter
+
+make
+
+in the Xclasses top directory (where you found this README).
+
+
+Uninstall if you don't like it or it doesn't work.
+
+Well, if it really doesn't work, please, send me a mail! Uninstall: simple
+remove the installed files: /usr/local/lib/libXclasses.*
+/usr/local/include/Xclasses/ /usr/X11/lib/X11/Xclasses/
+
+
+Support, Mailing list
+
+WWW: http://www.fsai.fh-trier.de/~schmitzj/Xclasses/ (newest releases,
+PDF-Doku, HTML docu will follow, german - Pre-Compiles Libs for IRIX and AIX)
+
+EMail: schmitzj@fsai.fh-trier.de
+
+Mailinglist (first use this before writing to me) Xclasses@fsai.fh-trier.de
+
+This mailing list is new and used my mailist program which is also new!
+Because of some problems it now uses "majordomo" until this problems are
+solved.
+
+To subscribe or unsubscribe or get infos write to
+
+majordomo@fsai.fh-trier.de
+
+place whatever you want in the subject and write the command
+
+HELP
+
+in the message body. So this mail will look like this:
+
+To: maillist@fsai.fh-trier.de Subject: something HELP
+
+Some minutes (or some more) later you will get a reply with the commands to
+subscribe a list or get a list with all lists you can subscribe to.
+
+Send
+
+SUBSCRIBE xclasses
+
+to subscribe to the Xclasses mailing list.
+
+
+Writing own classes that you whould like to be added to the Xclasses.
+
+Test is, send it (source code, doc file in tar-gzipped) to me via EMail.
+
+
+js/270797

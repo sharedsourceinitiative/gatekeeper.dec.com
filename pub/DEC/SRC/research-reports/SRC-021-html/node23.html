@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Processes</TITLE>
+<META NAME="description" CONTENT="Processes">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node24.html">
+<LINK REL="previous" HREF="node22.html">
+<LINK REL="up" HREF="node22.html">
+<LINK REL="next" HREF="node24.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html475"
+ HREF="node24.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html471"
+ HREF="node22.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html465"
+ HREF="node22.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html473"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html474"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html476"
+ HREF="node24.html">Address Spaces</A>
+<B> Up:</B> <A NAME="tex2html472"
+ HREF="node22.html">Concepts and Facilities</A>
+<B> Previous:</B> <A NAME="tex2html466"
+ HREF="node22.html">Concepts and Facilities</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04021000000000000000">
+Processes</A>
+</H2>
+ <A NAME="CastroValley">&#160;</A>
+<P><A NAME="472">&#160;</A>
+A Topaz process is a set of threads of control executing within a single
+virtual address space; a process also has a number of state variables
+maintained by the operating system such as identification, access control,
+and open files.  A Topaz application is made up of a single process or a
+set of communicating processes; every program (except parts of the
+operating system itself) executes within the context of some process.
+<P><A NAME="473">&#160;</A>
+The Topaz definition of a process is very similar to the Ultrix
+definition, with the main exception that a Topaz process can contain
+multiple threads of control.
+<P><A NAME="474">&#160;</A>
+What can a process do?  It can execute object programs within its own
+address space, it can make remote procedure calls to other processes (on
+either the same or a different machine), and it can invoke the operating
+system by calling procedures in Topaz interfaces such as Thread and OS.
+Through OS, it can manipulate files and create and control other
+processes.  Finally, it can request that its own execution be terminated.
+<P><A NAME="475">&#160;</A>
+<A NAME="476">&#160;</A>
+<A NAME="477">&#160;</A>
+Every process has a process identifier.  Its value is an integer between
+one and about 32000 (for compatibility with Ultrix).  The process
+identifier remains constant over the life of the process and serves as the
+name used by a client of OS to manipulate that process.  At no time do any
+two processes on the same machine have the same process identifier, but
+process identifiers are reused over time.  The process identifier equal to
+one always belongs to the Init process.
+<P><A NAME="478">&#160;</A>
+<A NAME="479">&#160;</A>
+<A NAME="480">&#160;</A>
+<A NAME="481">&#160;</A>
+Every process belongs to one process group, identified by a process group
+identifier. The process group identifier is generally equal to the process
+identifier of the process that is the `leader' of the group, and is
+specified when the process is created.  Process groups form a larger level
+of granularity to which signals can be sent, and are also used as owners
+of tty devices.  Process groups are discussed more thoroughly in Section
+<A HREF="node33.html#Alamo">2.11</A>, page <A HREF="node33.html#Alamo"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.
+<P><A NAME="484">&#160;</A>
+<A NAME="485">&#160;</A>
+<A NAME="486">&#160;</A>
+<A NAME="487">&#160;</A>
+<A NAME="488">&#160;</A>
+<A NAME="489">&#160;</A>
+The processes running on a machine are ordered into a tree by the parent
+relation.  The transitive closure of the parent relation is the ancestor
+relation.  The inverse of the parent relation is the child relation and
+the inverse of the ancestor relation is the descendant relation.  The root
+of the tree is the Init process; it is the ancestor of all other
+processes.
+<P><A NAME="490">&#160;</A>
+<A NAME="491">&#160;</A>
+<A NAME="492">&#160;</A>
+<A NAME="1971">&#160;</A>
+<A NAME="1972">&#160;</A>
+<A NAME="495">&#160;</A>
+Normally a process becomes the parent of a process it creates.  A parent
+process is expected to look after its children.  In particular, it should
+call WaitForChild for each of its children (see page <A HREF="node52.html#Newark"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).
+Also, a parent is allowed to set the process group of, or send a SigCont
+signal to, any of its descendants.  When a process terminates, any
+children it may still have become orphans and are automatically adopted by
+the Init process.  It is also possible to create a process as an orphan
+(see the StartProcess procedure, page <A HREF="node51.html#MountainView"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).
+<P><A NAME="498">&#160;</A>
+<A NAME="499">&#160;</A>
+To avoid interference between multiple threads running within a process,
+many components of the process state should not be changed after the
+process is started.  Instead, a process template mechanism is provided for
+setting these state components at the time the process is created (see
+section <A HREF="node51.html#Albany">5.3</A>, page <A HREF="node51.html#Albany"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).  Also, many procedures in OS
+accept parameters that might be implicit process state components in a
+single-threaded system such as Ultrix.  (Appendix <A HREF="node55.html#LaHonda">A.1</A>, page
+<A HREF="node55.html#LaHonda"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>, describes procedures in the OSFriends interface that
+modify global process state components; use them at your own risk.)
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html475"
+ HREF="node24.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html471"
+ HREF="node22.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html465"
+ HREF="node22.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html473"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html474"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html476"
+ HREF="node24.html">Address Spaces</A>
+<B> Up:</B> <A NAME="tex2html472"
+ HREF="node22.html">Concepts and Facilities</A>
+<B> Previous:</B> <A NAME="tex2html466"
+ HREF="node22.html">Concepts and Facilities</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

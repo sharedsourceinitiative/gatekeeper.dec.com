@@ -1,0 +1,41 @@
+"On Multiplying Points: The Paired Algebras of Forms and Sites"
+Lyle Ramshaw
+Report #169, May 01, 2001. 
+
+<html>
+<head>
+</head>
+</body>
+
+  There is a multiplication operation on points that your teachers
+  failed to tell you about, either because they didn't know about it
+  or because they judged it to be unimportant.  But that
+  multiplication turns out to have important applications in
+  computer-aided geometric design (CAGD).  Among other things, it
+  provides the best labels for Bezier control points --- better even
+  than the labels provided by polar forms (a.k.a. blossoms).</p>
+
+  Let V be a finite-dimensional vector space.  Everyone understands
+  that it makes sense to multiply covectors, the elements of the dual
+  space V* = Lin(V, R).  For example, if x, y, and z are covectors,
+  then the expression x&#178;&#160;-&#160;5yz denotes a "quadratic
+  form" on the space V.  Forms have lots of applications; for example,
+  to put a Euclidean metric on V, we would choose a positive definite
+  quadratic form as our measure of squared length.</p>
+
+  But most people don't yet realize that it also makes sense to
+  multiply vectors, the elements of V itself.  If u, v, and w are
+  vectors, then the expression u&#178;&#160;-&#160;5vw denotes an
+  object that is the dual analog of a quadratic form.  Let's call such
+  an object a "quadratic site" over V.  The sites over V of all
+  degrees form an algebra, dual to the well-known algebra of forms on
+  V.</p>
+
+  What are sites good for?  Consider, say, a cubic Bezier curve
+  segment.  It is the image, under a cubic function, of a closed
+  interval on the parameter line, say the interval [R..S].  The best
+  labels for the Bezier points of that cubic segment are the cubic
+  sites R&#179;, R&#178;&#160;S, RS&#178;, and S&#179;.</p>
+
+</body>
+</html>

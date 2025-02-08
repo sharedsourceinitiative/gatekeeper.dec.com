@@ -1,0 +1,122 @@
+README:                                             08/29/94
+
+IMPORTANT NOTE:
+On line 537 of disktool.c
+change from:
+
+      exit();
+
+to:
+
+      exit(0);
+
+This change did not get into the distributed source code. Sorry for
+any inconvenience.
+
+======================================================================
+
+This has proved to be quite an experience for me with all the feedback
+I have received from all over the world! Keep it up! Disktool has 
+evolved from a simple program for my own use, to a very important tool
+for many sysadmins out there on the InfoBan. I have been driven by user
+requests and about 75% of this release is due to them.
+
+Notes
+=====
+
+ 08/29/94 Version 2.0 - What's New
+==================================
+
+o Can now add filesystem on the fly
+	On the Properties pop-up window, the Filesystem item is now an
+	editable field where a new filesystem can be typed in and the
+	threshold and units can be adjusted before pressing the "Add
+	Filesystem" button.
+o Can now remove filesystem on the fly
+	A delete button has been added to the Properties pop-up window
+	to remove the current selected filesystem from the disktool main
+	gauge window.
+o Allow action after x number of polls
+	Previous to this release, disktool would only signal a critical
+	condition once for each filesystem and would only reset if the
+	filesystem re-gained available disk space and went above critical.
+	Now through the cmdline option, "-r", or the properties pop-up
+	window, a value can be specified as to how often a signal will be
+	sent. A value of "0" is the default and specifies the old method
+	of only one signal when the filesystem first goes critical. Any
+	other positive integer value specifies the number of polls before
+	the signal is repeated. This will happen indefinately until the
+	filesystem rises above the critical condition.
+o Force a filesystem poll with middle mouse button click
+o Added deltas
+	If "-d" cmdline option is specified, disktool will continually
+	display a delta since the last poll. The color will reflect 
+	whether there was a gain or a loss. By default, green for gain
+	and red for loss.
+o Added keyboard accelerators
+	+,-	Respectively, increase & decrease the polling interval
+		by 10 seconds with each keypress.
+	=	Display polling interval in the left footer for 1 second
+		before returning to the timestamp display.
+	h,v	Respectively, change to horizontal or vertical layout.
+	p	Force an immediate filesystem poll.
+	q,x	Quit disktool.
+o Added -cmd cmdline option
+	Can now specify the command to be executed when a filesystem
+	being monitored goes critical from the disktool command line.
+o Added KB parsing of cmdline args
+	Any threshold value containing a 'K' will be understood to be KB's,
+	anything else will default to MB's.
+o Now checks for more than MAX_GAUGES filesystems
+	Now will not crash if more then MAX_GAUGES filesystems are specified.
+o Now has a Min. width
+	No longer truncates the timestamp in the footer if only one
+	filesystem is specified with a short name (ie. /) in horizontal
+	layout.
+o Added -used cmdline option
+	Reverses the function of the gauge displays to show disk space used
+	instead of the default, disk space avail.
+
+-------------------------------
+
+The MIN and MAX polling intervals can be adjusted by changing the values
+of MIN_POLL_INT and MAX_POLL_INT, respectively, in common.h
+
+The "OK" and "Critical" colors can be adjusted by changing the value of 
+OKCOLOR and CRITCOL, respectively, in common.h
+
+Autocalc of spacing takes place if the spacing value is below 50(pixels).
+This can be adjusted by changing the value of MINSPACING in common.h
+
+Description
+===========
+`disktool' is an XView program to monitor up to 64 filesystems
+simultaneously and alert you when a particular filesystem is low on
+space. disktool is set-up to "un-iconify" when a filesystem it is
+monitoring has reached its' user-definable "critical threshold". A
+unix command can also be initiated when this threshold is reached.
+The command and un-iconifying can be repeated every so many polls,
+configurable from the cmdline or from the Properties pop-up.
+The properties pop-up is obtained by selecting any gauge with the
+right mouse button. The middle mouse button has also been mapped to 
+force a filesystem poll to update the displayed data.
+
+`disktool' is a good sysadmin tool for monitoring diskfull situations
+to avoid datafile corruption.
+
+This program is Copyright(c)1993,1994 Shaun Finn sfinn@astro.ge.com
+but please feel free to e-mail me any suggestions for improvements
+or bugs.
+
+Compilation
+===========
+A makefile has been supplied that works under SunOS 4.1.3, Solaris 2.x,
+and HP-UX(I hope) using the XView3.x libraries. There are some configurable
+options, well marked, at the top of the Makefile for OS configuration.
+A copy has also been supplied (Makefile.orig) in case you modify the
+original and you haven't got a clue where you started (I've done this).
+
+Installation
+============
+Move `disktool' to where you normally keep your binaries and move
+disktool.man to where you normally keep your man pages.

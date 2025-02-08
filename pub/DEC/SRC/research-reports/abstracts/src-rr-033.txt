@@ -1,0 +1,17 @@
+
+    "A Two-view Document Editor with User-definable Document Structure."
+    Kenneth P. Brooks.
+    November 1, 1988.  192 pages.
+
+Author's Abstract
+
+    Lilac is an experimental document preparation system which combines
+    the best features of batch-style document formatters and WYSIWYG
+    editors.  To do this it offers the user two views of the document:
+    a WYSIWYG view and a  formatter-like source view.  Changes in
+    either view are rapidly propagated to the other.  This report
+    describes both the user interface design and the implementation
+    mechanisms used to build Lilac.
+
+
+

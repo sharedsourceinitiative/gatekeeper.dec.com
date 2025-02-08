@@ -1,0 +1,22 @@
+
+                 AVAILABLE ELECTRONICALLY
+
+"The Vesta Repository: A File System Extension for Software Development"
+Sheng-Yang Chiu, Roy Levin
+June 14, 1993.  34 pages
+
+
+Conventional file systems are increasingly recognized as an unsuitable
+basis for software configuration management, especially for large systems. 
+While ordinary file systems have many useful properties, their facilities 
+for managing coordinated changes that span many files are weak. To address 
+this problem, the Vesta configuration management system implements a file 
+system extension that tailors the file abstraction to the needs of
+large-scale software development.
+
+This paper begins by presenting the essential properties required in the 
+storage facility that underlies a successful configuration management 
+system. It then defines a file-system-like abstraction derived from
+those properties and explains how it can be implemented on top of a 
+conventional file system.
+

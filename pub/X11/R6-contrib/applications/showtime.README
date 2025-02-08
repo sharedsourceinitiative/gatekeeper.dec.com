@@ -1,0 +1,467 @@
+ShowTime Users's Guide
+
+ShowTime is a program which rapidly reads and displayed images from
+files.  ShowTime can be used interactively to display single images or
+single movies, or it can be used with a script file which contains
+commands.
+
+ShowTime reports its messages (such as error messages) to a log file.
+The log file is only created if ShowTime has a message to report.  The
+file is typically created in the current working directory, and is
+called "showtime.log".  If the log file can not be created, then
+ShowTime stops, and attempts to write a message to stderr explaining
+that it could not open the log file.  Also, the message that was
+attempted to be displayed is also written to stderr, if possible.
+
+
+To run ShowTime, call it by its name.  Here is the syntax of its
+usage:
+
+  showtime [-f] [script-file] [options ...]
+
+    where <options> can be any of the following:
+
+    -n <sat>     : set the saturation scale factor.  See :ntsc
+
+    -c           : force loading CGA color palette into first 16 indices
+                   At present there is no way to turn this off once it
+                   has been turned on from the command line.
+
+    -s <delay>   : set the inter-image delay.  See :pause This is
+                   the amount of time delayed between each image,
+                   in seconds.  <delay> can be any floating point value.
+
+    -w <w> [<h>] : set the prefered window size in pixels.  The display
+                   window is set to a size greater than or equal to the
+                   size requested by the user, if the hardware supports
+                   such a window.  If the <w> argument is provided, but
+                   the <h> argument is omitted, then a value for the
+                   height is chosen such that the window, as closely as
+                   possible, has the aspect ratio of an NTSC television
+                   screen, which is the same as the old-style standard
+                   movie screen, which is 4:3.
+
+
+Here is a description of all of the ShowTime commands:
+
+:palette [filename]
+         [:rgb332]
+         [:gray]
+
+  Load a palette from a PPM file.  Normally PPM files contain images,
+  but in this usage, the PPM file is used simply as an ordered list of
+  palette entries.  The order of the color pixels in the PPM file
+  determine the order of the palette entries for the new palette.
+
+  Palettes are also loaded automatically if they are included inside
+  of PIC or CLP files.
+
+  If the <filename> argument is omitted, the file "palette.ppm" is
+  assumed.
+
+  If the string ":rgb332" is in the place of a <filename>, then a
+  palette is created and loaded where the 3 most significant bits are
+  used for red, the next 3 for green, and the least 2 significant bits
+  for blue.  This is a common colormap scheme used for full color
+  images.  When a PPM image is loaded as an image (as opposed to
+  loaded as a colormap) the red, green, and blue bits are loaded in
+  the RGB332 format.
+
+  If the string ":gray" is in the place of a <filename>, then a linear
+  graymap is created and loaded as the palette.
+
+  Any colormaps loaded are resaturated as dictated by the most recent
+  ":ntsc" command.  The default is to leave the saturation the same.
+
+:offset [x [y]]
+
+  Offset the image horizontally from the left by <x> pixels and
+  vertically from the top by <y> pixels.  The offset remains in effect
+  for each image displayed until another offset command is executed.
+
+:scale [x [y]]
+
+  Scale the image by a factor of <x> in the horizontal direction, and
+  by a factor of <y> in the vertical direction.  The scale factors can
+  be any floating point value.  If the scale factor is a negative
+  integer, then its positive reciprocal is used in scaling.  Using a
+  negative integer can be somewhat faster than using a floating point
+  value smaller than 1.0.
+
+:pause [delay]
+
+  Pause for <delay> seconds, then resume.  The argument <delay> can be any
+  floating point value.  If <delay> is a negative value, then a special
+  behaviour occurs:  The ":pause" command waits for _at_most_ <delay>
+  seconds, or until a key is pressed.
+
+:clear [bg]
+
+  Clear the screen to the background color.  If <bg> is supplied, it
+  is used as the index in the colormap to clear the screen, otherwize
+  0 is assumed, which is black in the CGA palette.
+
+:open [filename [n]]
+
+  Open the file named <filename> as file number <n>.  If the <n> argument
+  is omitted, then 0 (zero) is assumed.  <n> can be any integer between 0
+  and 10, inclusive.
+
+:close [n]
+
+  Close the file <n>.  If <n> is ommited, file 0 (zero) is closed.
+
+:next [n]
+
+  Load and dislpay the next image from the previously ":open"'d file
+  <n>.  If <n> is omitted then 0 (zero) is assumed.  The image can be
+  any of the formats recognized by ShowTime.  The image is transformed
+  according to the current settings of :offset, :scale, and the
+  current :xform.
+
+:load [n]
+
+  Load the next image from the previously ":open"'d file <n>  If <n>
+  is omitted, then 0 (zero) is assumed.  The image can be any of the
+  formats recognized by ShowTime.  The image is not displayed, but
+  simply loaded into an internal buffer.  The image is transformed
+  according to the current :xform.
+
+:echo <string>
+
+  Display a text string.
+
+:frame
+
+  Display the frame number at the current :offset location
+
+:author
+
+  Load the ShowTime title screen into the internal image buffer.  This
+  is the image shown when the program is initially run.  The image is
+  not displayed, but simply loaded into an internal buffer.
+
+  Also, a brief message describing the version and author of ShowTime
+  is written to the log file.
+
+:repeat
+
+  Display the image currently loaded into the image buffer.  The image
+  is displayed with the current settings of the :offset and :scale
+  command.
+
+:show
+
+  Same as the :repeat command.
+
+:vflip
+
+  Flip the image vertically inside the image buffer.  This does not
+  display the image, but simply tells ShowTime to display the image
+  vertically flipped.
+
+:hflip
+
+  Flip the image horizontally inside the image buffer.  This does not
+  display the image, but simply tells ShowTime to display the image
+  horizontally flipped.
+
+:ntsc [sat]
+
+  Set the saturation scale factor to <sat>.  This effects the next
+  loaded palette.  New palettes are resaturated according to the <sat>
+  value.  <sat> can be any floating poing value, but keep in mind that
+  the only valid saturations are between 0.0 and 1.0 inclusive.
+
+  This command is useful in desaturating fully saturated palettes, so
+  that they can be displayed (and recorded) in NTSC format, which does
+  not allow for chromanances saturated beyond 70%.  Therefore, a good
+  and typical value for <sat> for displaying in NTSC would be 0.7.
+
+:rem [text]
+
+  Remark.  Any <text> following a :rem command is ignored by ShowTime,
+  so it can be used to comment a ShowTime script for human readers.
+
+:xform
+
+  Begin recording the image transformation script.  All commands
+  between :xform and :endxform are recorded into the image
+  transformation.  The image transformation is applied to every image
+  loaded.  Only some ShowTime commands are allowed to be present in an
+  image transformation script.  Image transformations can not be
+  recursive.  Since the transformation is executed upon loading the
+  image and not upon displaying it, the :next command, if it appears
+  in the image transformation, will not cause an execution of the image
+  transformation.  This allows tricks like displaying several
+  simultaneous movies from separate files, if used in conjunction with
+  the <n> arguments to the :next and related image file commands.
+
+:endxform
+
+  Stop recording the image transformation.  See ":xform".
+
+:exit
+
+  End the ShowTime program script.  All text following this command is
+  ignored by ShowTime.
+
+:rapid <filename>
+
+  Read and display all of the images from the file named <filename>.
+  This ignores keyboard and mouse events, and does not use one of the
+  0-10 indexed files, but the image xforms are still performed.
+
+:resume
+
+  Resume playback mode.  This command will put ShowTime back into the
+  mode where single keypresses (or mouse button presses) control the
+  playback of movie files.
+
+:forward
+
+  Set the playback direction to forward.
+
+:reverse
+
+  Set the playback direction to reverse.
+
+<filename>
+
+  Load and display the images in the file named <filename>.  As each
+  image is loaded, the :xform script is executed, and each image is
+  displayed in succession.  Also, the current settings of :offset and
+  :scale are applied to each image in <filename> as they are
+  displayed.
+
+  If the image tranformation defined with :xform includes the :next
+  command with a file number argument (<n>), and the file <n> is open
+  and contains images, then images from file <n> are loaded and
+  displayed simultaneously with the images from <filename>.  This is a
+  good way to display multiple movies simultaneously.
+
+
+
+Playback Mode:
+
+While ShowTime is playing a movie file, ShowTime will accept keyboard
+and mouse button presses to control the playback of the movie file:
+
+
+  Keyboard:
+
+  ' '            Pause, or if already paused, step one frame.
+
+  'p' 'P' 'CR'   Resume continuous playback.
+
+  ':' 'c' 'C'    Accept the next command in the script or from input.
+
+  ',' 'r'        Set playback direction to "reverse" or step back one frame.
+
+  '<' 'R'        Set playback direction to "reverse" or play previous file.
+
+  '.' 'f'        Set playback direction to "forward" or step forward one frame.
+
+  '>' 'F'        Set playback direction to "forward" or play next file.
+
+  'q' 'Q' 'ESC'  Stop ShowTime and exit.
+
+
+  Mouse buttons (in versions with mouse support):
+
+  1              Set playback direction to "reverse" or step back one frame.
+
+  2              Pause, or if already paused, resume continuous playback.
+
+  3              Set playback direction to "forward" or step forward one frame.
+
+
+
+Image File Formats:
+
+ShowTime can recognize multiple image file formats automatically.  To
+understand how images are loaded, it is important to understand the
+way they are displayed:
+
+All images displayed in ShowTime are "color mapped" which means that
+each pixel in the image is an integer refering to an index in a color
+lookup table, or palette, which determines what color the pixel will be.
+The palette is logically separate from the image in that multiple
+images may share the same palette.  In fact, it is desirable to have
+multiple images share the same palette so that the palette does not
+have to be loaded from disk for each image.
+
+Palette files also come in different formats.  Some image formats
+include the palette with the image.  Some image formats have a
+separate palette file.  Some image formats are "true color", which
+means that they do not have a palette at all, but store the whole
+color value for each pixel.  ShowTime treats true color images in a
+special way, which still forces the use of a palette.
+
+Here is a description of various image file formats supported by
+ShowTime, and the ways they would be typically used:
+
+
+Targa image/palette:
+
+TrueVision Targa files use a versatile image format which can be
+either uncompressed or RLE compressed; can be colormapped, true color,
+or grayscale; can be vertically inverted; can be interlaced using 1, 2
+or 4 fields per frame; can be offset from the origin; can install the
+colormap starting at an index other than the first; and other
+features.  Targa's can contain their own colormap, which can be either
+an 8-bit or 16-bit colormap.  Of these, only 8-bit colormaps are
+supported by ShowTime.  However, the full-color Targas (15, 16, 24, or
+32 bit) are supported by ShowTime with the RGB332 approximation.  (See
+":palette :rgb332" for more information about RGB332.)  Monochrome
+(i.e. grayscale) Targa's can be used as PGM images, which means that
+the gray values can either be taken as gray values (which implies
+pre-loading a linear gray palette using ":palette :gray"), or they can
+be used as indices into a colormap.  This can be used in conjunction
+with another, preceeding, Targa image which contains its own colormap
+which the following "monochrome" (actually colormapped) Targa's will
+use without having to carry their own colormap.
+
+The Targa RLE compression scheme is a simple one, and its compression
+ratios are typically comparable to that of the PIC image file format.
+However, Targa's compression is considerably faster in decompression,
+so playback of compressed Targa's will be significantly faster than
+playback of PIC files.  Playback speeds of uncompressed Targa files
+are comparable to PGM and PPM files (depending on whether the Targa is
+monochrome or true color).
+
+(Note: Targa's can be automatically detected by ShowTime under most
+circumstances, but since Targa files lack a "magic number" there is
+never a guarentee that ShowTime could mistake a file using another
+format for a Targa.  However, in these situations, the file format
+would not likely be one that ShowTime supports, and in any case the
+worst that can happen is that ShowTime will display garbage and the
+symptoms will be obvious.)
+
+
+PGM image:
+
+PGM, or Portable Gray Map, is a very plain grayscale image format that
+uses no compression and a simple ASCII header.  PGM files were
+originally intended to be a portable way of storing and transfering
+gray images, but ShowTime uses them in a different way:  Each pixel
+value in a gray image is represented by a single integer.  This makes
+PGM files ideal for representing colormapped images since colormapped
+images also use a single integer to represent each pixel.  The
+difference is that for grayscale images, that integer referes to the
+pixel's luminance, whereas in colormapped images, the integer refers
+to an index in the colormap (or palette).  Therefore, when ShowTime
+displays a PGM image, it displays it with the current colormap.  If
+the PGM image actually is a grayscale image (instead of a colormapped
+image) then ShowTime can display it correctly if the palette contains
+a linear grayscale map.  To set the palette to a linear grayscale map,
+use the command ":palette :gray".
+
+PGM files come in 2 varieties:  ASCII or Raw.  ShowTime can read only
+the Raw form, since that is the faster and more common format.
+
+
+PPM image:
+
+PPM, or Portable Pixel Map, is a very plain true color image format
+that uses no compression and a simple ASCII header.  Since PPM images
+are true color, they can not be completely represented by ShowTime.
+Instead, ShowTime loades the PPM in one of 2 ways, to approximate the
+full color PPM image:  ShowTime can either dither the PPM image using
+a truncated RGB colormap, or ShowTime can convert the PPM image into a
+grayscale image by converting the colors into their corresponding
+luminance values (like the way a TV works when you turn the "color"
+knob all the way down so that the image is black and white).  Kep in
+mind that either of these true color approximations depends on the
+correct palette having been loaded in advance for the image to appear
+correct.  To load the palette with the truncated RGB colormap, use the
+command ":palette :rgb332".  To load the palette with the linear
+grayscale map, use the command ":palette :gray".
+
+PPM files come in 2 varieties:  ASCII or Raw.  ShowTime can read
+either of these formats.
+
+
+PPM palette:
+
+The PPM palette is a special, nontraditional use of the PPM format.
+Since the PPM image format is so simple, and since there is an ASCII
+version of the PPM, which ShowTime can read, PPM files make excellent
+colormap files, by using a few restrictions:  Normally a PPM file can
+have any dimensions, since they describe a rectangular image, but a
+colormap is a one-dimensional vector of RGB color triples.  To use the
+the PPM file format as a palette, the dimensions of the PPM are
+ignored, and instead, the colors present in the PPM are used, in
+order, to fill the colormap (or palette).  All pixels after the 256th
+are ignore, since the palette can have only 256 entries.
+
+To use a PPM file as a palette, use the command
+":palette <ppm-filename>"
+
+
+PIC image/palette:
+
+The PIC image file format is an escaped-run length encoded
+(compressed) colormapped image file format.  These images can contain
+their own colormaps, or the colormap can be omitted.  If the colormap
+is present, ShowTime automatically loads it, which means that the
+":palette" command is not necessary for viewing PIC images.  However,
+if you want to load a PIC colormap without also loading its image, you
+can use the ":palette" command.  If a PIC image does not contain a
+colormap, the image is displayed using the current colormap.
+
+
+
+Image File Concatenation:
+
+In order to keep the number of files in a movie down to a tollerable
+number, ShowTime allows for files which are simple concatenations of
+image files.  That is, if you have a sequence of image files in a
+movie, you can copy them head-to-tail (with no stray bytes in between
+images) and ShowTime will read the entire file of images.  This is
+particularly useful for MS-DOS machines, which slow to a crawl if the
+number of files in a directory is larger than about 100.  In any case,
+it makes organizing movies simpler.
+
+
+
+Adding Image File Types to ShowTime:
+
+All image files are handled in a specific, modular way in ShowTime, so
+it is easy to add to the image file formats that ShowTime can handle.
+There are 2 components to any image format ShowTime can handle:  A
+header, and the image body.  For each image format, write one routine
+to load the header, and another to load the image body.  The function
+prototypes for each of these routines and the required behaviours is
+always the same.  The image header loading routine must set the number of
+rows and columns in the image body, as well as setting a pointer to
+the routine which loads in the image body.  ShowTime must be able to
+automatically determine which image file format any image is by
+reading its header, so the image header loading routine must return a
+nonzero number if the image header routine did not find the image file
+to be correct for that type.  If the image header routine determines
+that a file is not of the type it knows about, then the routine should
+fseek to rewind the file so that subsequent image file loaders can
+have the image stream from the beginning.
+
+After the image loading routines are written, put them together into
+one file, include the "image.h" and "showtime.h" files at the top
+along with whatever other files are "#include"'d, and create a header
+file to describe their prototypes.  Then, edit the "image.c" file.
+Add a "#include" statement near the top to include the new module's
+header file.  Then change the "load_header" routine to call the new
+image header loading routine.  Follow the way other image file
+formats' headers are loaded.  The "load_image" routine will not have
+to be changed, since the image header loading routine will set a
+pointer to the routine to load the image body.  However, make sure the
+prototype of the image body loading routine conforms exactly to the
+prototype for image body loaders.  See the "image.h" file for the
+prototype, and see the "pbm.c" and "pbm.h" files for examples of image
+header loaders and image body loaders.  Recompile Showtime.
+
+After ShowTime has been recompiled, the new image format will be
+handled automatically.  That is, in order to have ShowTime use the new
+image handling routines, simple tell it to read a file of the new
+type.  Since the image header routine tells ShowTime whether or not a
+given file is of a particular type, ShowTime will automatically use
+the appropriate image file loading routines.

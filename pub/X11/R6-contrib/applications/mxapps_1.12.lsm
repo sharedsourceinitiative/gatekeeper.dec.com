@@ -1,0 +1,13 @@
+Begin3
+Title:          mxApps
+Version:        1.12
+Entered-date:   10JAN98
+Description:    X/Motif Mail/FTP clients for Linux
+Keywords:       mxMail mxFtp mail ftp
+Author:         Andy Jefferson (andy@ajsoft.demon.co.uk)
+Maintained-by:  andy@ajsoft.demon.co.uk
+Primary-site:   ftp.x.org /contrib/applications
+Original-site:  http://www.ajsoft.demon.co.uk/mxapps/download.html
+Platforms:      Linux-ELF system
+Copying-policy: GPL
+End

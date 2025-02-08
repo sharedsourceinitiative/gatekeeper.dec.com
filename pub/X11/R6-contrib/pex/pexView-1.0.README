@@ -1,0 +1,47 @@
+
+                         ANNOUNCING pexView-1.0
+                                   A
+                       PEX Viewer for OFF Objects
+                            by Saki Gaitatzes
+                           gaitat@vnet.ibm.com
+
+What is it:
+    A PEX Viewer for 3D OFF Objects. In the viewObject/doc directory you can
+    find a description of the OFF format. Plenty of objects are included to
+    get you started in the viewObject/objects directory.
+
+What features does the viewer have:
+    Display Solid/Wireframe objects.
+    Turn Culling/Edges On/Off.
+    Single object Shadow
+    Morphing is available if the topologies of the two objects is the same
+    Do Fly bys' 
+
+Why is it better:
+    For the first time you can also create objects. Here is a small list:
+    Tetrahedron Cube Octahedron Dodecahedron Icosahedron Cuboctahedron
+    Icosidodecahedron Rhombicosidodecahedron Snub_cube Snub_dodecahedron
+    Truncated_cube Truncated_dodecahedron Truncated_icosahedron
+    Ellipsoid SuperEllipsoid Torus SuperTorus Box Cone Cylinder Sphere
+    Mountains, Implicit Functions
+
+What else can I do with it:
+    There is a Color Editor, Material Editor and Light Editor so you can
+    change the attributes of the objects on the fly. (A View Editor coming)
+
+Can I save my changes:
+    Yes, but of course.
+
+Can I generate animation sequences:
+    Yes, but of course. When you go into video mode all the frames from
+    that point on (until you stop) are saved in MPEG format. Use your
+    favorite viewer.
+
+Can I get a hardcopy:
+    Well if you have a color postscript printer thats great.
+    But black and white is good for me.
+
+Where can I get it from:
+    Anonymous ftp from ftp.x.org:/contrib/pex
+    
+

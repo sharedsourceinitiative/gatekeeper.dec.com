@@ -1,0 +1,14 @@
+Begin3
+Title:          FileRunner
+Version:        2.4.1
+Entered-date:   04JAN98
+Description:    File Manager with FTP capabilities. Uses Tcl/Tk.
+Keywords:       file manager ftp x11
+Author:         hch@cd.chalmers.se (Henrik Harmsen)
+                Henrik.Harmsen@erv.ericsson.se (Henrik Harmsen)
+Primary-site:   http://www.cd.chalmers.se/~hch/filerunner.html
+Alternate-site: sunsite.unc.edu /pub/Linux/X11/desktop
+                ca 100kB  FileRunner_2.4.1.tgz
+Platform:       Unix/X11 with Tcl/Tk 8.0 or later.
+Copying-policy: GNU General Public License.
+End

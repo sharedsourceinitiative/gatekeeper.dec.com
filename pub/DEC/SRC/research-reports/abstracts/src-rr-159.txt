@@ -1,0 +1,16 @@
+"Extended Static Checking"
+David L. Detlefs, K. Rustan M. Leino, Greg Nelson, James B. Saxe
+Report #159, December 18, 1998
+44 pages.
+
+The paper describes a mechanical checker for software that catches
+many common programming errors, in particular array index bounds
+errors, nil dereference errors, and synchronization errors in
+multi-threaded programs.  The checking is performed at compile-time.
+The checker uses an automatic theorem-prover to reason about the
+semantics of conditional statements, loops, procedure and method
+calls, and exceptions.  The checker has been implemented for
+Modula-3.  It has been applied to thousands of lines of code,
+including mature systems code as well as fresh untested
+code, and it has found a number of errors.
+

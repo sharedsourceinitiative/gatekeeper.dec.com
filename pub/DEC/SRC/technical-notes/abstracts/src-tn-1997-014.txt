@@ -1,0 +1,18 @@
+"Exploring Unknown Environments"
+Susane Albers, Monika Rauch Henzinger
+Note #1997-014. 30 pages.
+
+We consider exploration problems where a robot has to construct a 
+complete map of an unknown environment. We assume that the environment 
+is modeled by a directed, strongly connected graph. The robot's task is 
+to visit all nodes and edges of the graph using the minimum number R of 
+edge traversals. Koutsoupias gave a lower bound for R of Omega(d^2 m), 
+and Deng and Papadimitriou showed an upper bound of d^{O(d)} m, where m
+is the number edges in the graph and d is the minimum number of edges that 
+have to be added to make the graph Eulerian. We give the first
+sub-exponential algorithm for this exploration problem, which achieves
+an upper bound of d^{O(log d)} m. We also show  a matching lower bound 
+of d^{Omega(log d)}m for our algorithm. Additionally, we give lower bounds 
+of 2^{Omega(d)}m, resp. d^{Omega(log d)}m for various other natural 
+exploration algorithms.
+

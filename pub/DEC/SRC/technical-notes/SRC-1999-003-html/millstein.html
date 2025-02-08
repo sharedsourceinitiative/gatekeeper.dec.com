@@ -1,0 +1,107 @@
+<html>
+<head><title>Toward More Informative ESC/Java Warning Messages</title> 
+</head>
+<body>
+<center> <h1> <b>Toward More Informative ESC/Java Warning Messages
+</b> </h1> <br>
+<h2> Todd Millstein, 
+University of Washington</h2>
+</center>
+
+<h2>Introduction</h2>
+
+This year will be my fourth as a PhD student in computer science at
+the University of Washington.  My advisor is Craig Chambers, and my
+research involves the study of object-oriented programming languages
+that support multimethods.  In particular, I have designed modular
+static typechecking algorithms for such languages.<p>
+
+I chose to do an internship at SRC for several reasons.  I have been
+interested in formal methods for many years, so I was happy for the
+opportunity to learn about the challenges and tradeoffs involved in
+creating a practical program verification tool.  I also knew a bit
+about SRC and thought that it would be a fun and exciting work
+environment.  Finally, I was interested in taking a break from my PhD
+research and getting a glimpse of life outside academia.<p>
+
+
+<h2>Extended Static Checking</h2>
+
+The Extended Static Checker for Java (ESC/Java) is a tool designed to
+catch common programming errors at compile-time.  A programmer writes
+an ordinary Java program but adds annotations, such as pre- and
+postconditions on methods.  Each annotated method is translated into a
+logical formula which is valid if and only if the method meets its
+specification.  A theorem prover searches for counter-examples to the
+logical formula, which correspond to possible errors in the original
+Java method.  A key design principle of ESC/Java is modular checking,
+which means that each method is checked in isolation, given only the
+specifications, and not the implementations, of other methods in the
+program.<P>
+
+
+<h2>More Informative Warning Messages</h2>
+
+Reducing program checking to theorem proving allows ESC/Java to check
+a wide variety of program properties and to leverage existing theorem
+proving technology.  However, this architecture makes error reporting
+challenging.  In particular, it is difficult to turn counter-examples
+from the theorem prover into useful user-level messages about the
+original Java method.<P>
+
+Previously, ESC/Java was able to deduce from a counter-example which
+ESC/Java annotation had failed to verify.  For example, if a method's
+postcondition is potentially violated, ESC/Java reports this
+information to the programmer.  My summer project consisted in
+extending this "report warning" in a way that would
+generate more specific (and useful) information.  We were most
+successful in targeting specific programming situations that ESC/Java
+users have found hard to understand.  <p>
+
+Our work took the following direction: Since methods often have
+numerous possible execution paths, depending on the choice made at
+each branching point, we implemented a way to extract--from the
+counter-example--a complete trace of the particular execution path
+through the method that caused the warning to occur.<P>
+
+We then targeted two specific kinds of ESC/Java warnings that can be
+hard to understand:<P>  
+
+The first--a common warning--occurs when a class 
+has a particular kind of sharing constraint 
+on one of its fields, where the sharing constraint is insufficiently annotated.   
+For this we devised ESC/Java support for specifying this constraint 
+and for understanding when an implicit constraint of this kind is 
+potentially violated.<P>
+
+The second involved providing support for suggesting annotations to remove
+spurious warnings related to Java's covariant subtype rule for arrays.  
+In particular, <i>S[]</i> is treated in Java as a subtype of <i>T[]</i> 
+when <i>S</i> is a
+subtype of <i>T</i>.  The use of this rule is not always provably safe at
+compile-time.  Therefore, Java enforces a run-time safety check on 
+arrays.  Because of this potential lack of compile-time safety, ESC/Java
+issues warnings unless there are sufficient annotations to allow
+arrays to be verified statically.<P>
+
+
+<h2>Reducing the ESC/Java Annotation Burden</h2>
+
+For the last few weeks of my internship, I worked on a completely
+different problem--trying to reduce the annotation burden on
+programmers.  If ESC/Java is run on an unannotated program, many
+spurious warnings will result (for example, a pointer dereference
+will cause a null dereference warning to be issued).  Our observation
+is that spurious warnings can be reduced by checking a method using
+some context from its callers and callees, rather than performing
+completely modular checking.  To this end, we implemented an
+infrastructure in ESC/Java to allow method calls to be inlined and
+checked by ESC/Java in several different ways.  We have just begun
+designing experiments that make use of this new infrastructure.<P>
+
+
+
+</body>
+
+</html>
+

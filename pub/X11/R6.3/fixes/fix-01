@@ -1,0 +1,6751 @@
+                     Release 6.3 Public Patch #01
+                             X Consortium
+
+To apply this patch:
+
+cd to the top of the source tree (to the directory containing the "xc"
+and "contrib" subdirectories) and do:
+        patch -p -s < ThisFile
+Patch will work silently unless an error occurs.
+If you want to watch patch do its thing, leave out the "-s" argument to patch.
+
+Finally, to rebuild after applying this patch, cd to the "xc" subdirectory
+and do:
+        make Everything >& every.log
+
+Brief notes on what this patch fixes:
+
+config:    README erroneously refers to R7
+config:    X11.tmpl Strcasecmp in the middle of #ifndef ExtensionDefines
+config:    clean gzip compressed fonts
+config:    allow {site,host}.def to over-ride vendor.cf OptimizedCDebugFlags 
+config:    AIX shared library build when -DUseInstalled
+config:    additional systems need ProjectRulesFile
+Xlib:      fix for non-ISO8859-1 X{wc,mb}LookupString with XKB
+Xlib:      XKB lookup encoding-name for locale
+Xplib:     fix use of NULL to terminate strings
+xkbfile:   miscellaneous bug fixes from SGI
+nls:       work around broken FreeBSD locales
+Xserver:   don't install Xprt server twice
+printddx:  use xalloc/xfree consistently
+hpddx:     use imake variable rather than hard-coded PICFLAGS for gcc users
+hpddx:     fix bad comment
+free86ddx: miscellaneous fixes
+lbx:       miscellaneous fixes
+xfwp:      don't install man page twice
+xfwp:      fixes for old linux
+xkbcomp:   miscellaneous bug fixes from SGI
+xrx:       man page clarifications
+
+Note: The last three lines in the file xc/doc/hardcopy/ICE/ICElib.PS.Z 
+contained in ftp://ftp.x.org/pub/R6.3/tars/xc-3.tar.gz are corrupt.
+A good copy of this file is available from ftp://ftp.x.org/ pub/R6.3/xc/
+doc/hardcopy/ICE/ICElib.PS.Z.
+
+
+*** bug-report@@/PUBLIC-LATEST	Mon Dec 23 09:22:45 1996
+--- xc/bug-report	Tue Dec 31 08:17:10 1996
+***************
+*** 3,9 ****
+  
+       VERSION:
+  
+! R6.3
+  [X Consortium public patches edit this line to indicate the patch level]
+  
+       CLIENT MACHINE and OPERATING SYSTEM:
+--- 3,9 ----
+  
+       VERSION:
+  
+! R6.3, public-patch-1
+  [X Consortium public patches edit this line to indicate the patch level]
+  
+       CLIENT MACHINE and OPERATING SYSTEM:
+*** ./config/cf/README@@/PUBLIC-LATEST	Tue Nov 26 16:06:54 1996
+--- xc/config/cf/README	Thu Dec 26 08:35:18 1996
+***************
+*** 1,4 ****
+! $XConsortium: README /main/63 1996/11/26 16:07:22 swick $
+  
+  The easiest way to write an Imakefile is to find another one that does
+  something similar and copy/modify it!
+--- 1,4 ----
+! $XConsortium: README /main/64 1996/12/26 08:30:09 kaleb $
+  
+  The easiest way to write an Imakefile is to find another one that does
+  something similar and copy/modify it!
+***************
+*** 295,301 ****
+  	TwmDir			directory in which to install twm config files
+  	UseCCMakeDepend		boolean for using alternate makedepend script
+  	UseRgbTxt		use rgb.txt file as is instead of DBM-compiled
+! 	VendorHasX11R7libXext	don't need Security & AppGroup in xrx plug-in
+  	XAppLoadDir		directory in which to install app defaults
+  	XFileSearchPathBase	base file search path
+  	XFileSearchPathDefault	default path to search for app defaults files
+--- 295,301 ----
+  	TwmDir			directory in which to install twm config files
+  	UseCCMakeDepend		boolean for using alternate makedepend script
+  	UseRgbTxt		use rgb.txt file as is instead of DBM-compiled
+! 	VendorHasX11R6_3libXext	don't need Security & AppGroup in xrx plug-in
+  	XAppLoadDir		directory in which to install app defaults
+  	XFileSearchPathBase	base file search path
+  	XFileSearchPathDefault	default path to search for app defaults files
+*** ./config/cf/X11.tmpl@@/PUBLIC-LATEST	Mon Dec  9 16:38:38 1996
+--- xc/config/cf/X11.tmpl	Fri Dec 27 16:21:38 1996
+***************
+*** 1,6 ****
+  XCOMM ----------------------------------------------------------------------
+  XCOMM X Window System Build Parameters and Rules
+! XCOMM $XConsortium: X11.tmpl /main/289 1996/12/09 16:34:08 kaleb $
+  
+  /***************************************************************************
+   *                                                                         *
+--- 1,6 ----
+  XCOMM ----------------------------------------------------------------------
+  XCOMM X Window System Build Parameters and Rules
+! XCOMM $XConsortium: X11.tmpl /main/290 1996/12/27 16:14:21 kaleb $
+  
+  /***************************************************************************
+   *                                                                         *
+***************
+*** 331,348 ****
+  #endif
+  #endif
+  
+- #ifndef HasStrcasecmp
+- #define HasStrcasecmp YES
+- #endif
+- 
+- #ifndef StrcasecmpDefines
+- # if HasStrcasecmp
+- #  define StrcasecmpDefines /**/
+- # else
+- #  define StrcasecmpDefines -DNEED_STRCASECMP
+- # endif
+- #endif
+- 
+  #ifndef SitePervasiveExtensionDefines
+  #define SitePervasiveExtensionDefines /**/
+  #endif
+--- 331,336 ----
+***************
+*** 356,362 ****
+--- 344,363 ----
+  #define BaseExtensionDefines MultibufferDefines -DMITMISC -DXTEST -DXSYNC -DXCMISC RECORDDefines PexDefines ShmDefines XieDefines BigReqDefines VidTuneExtensionDefines DBEDefines SiteExtensionDefines
+  #endif
+  #define ExtensionDefines BaseExtensionDefines ExtensionOSDefines
++ #endif /* ExtensionDefines */
++ 
++ #ifndef HasStrcasecmp
++ #define HasStrcasecmp YES
++ #endif
++ 
++ #ifndef StrcasecmpDefines
++ # if HasStrcasecmp
++ #  define StrcasecmpDefines /**/
++ # else
++ #  define StrcasecmpDefines -DNEED_STRCASECMP
++ # endif
+  #endif
++ 
+  #ifndef ServerXdmcpDefines
+  #define ServerXdmcpDefines -DXDMCP
+  #endif
+***************
+*** 1205,1211 ****
+  MakeFontsDir($(OBJS))							@@\
+  									@@\
+  clean::									@@\
+! 	RemoveFiles(*.pcf *.pcf.Z)
+  #endif /* MakeFonts */
+  
+  
+--- 1206,1212 ----
+  MakeFontsDir($(OBJS))							@@\
+  									@@\
+  clean::									@@\
+! 	RemoveFiles(*.pcf *.pcf.Z *.pcf.gz)
+  #endif /* MakeFonts */
+  
+  
+***************
+*** 1260,1266 ****
+  #define UncompressedFontTarget(basename)				@@\
+  FontBaseObj(basename):  FontSrc(basename)				@@\
+  	RunProgram(FONTC,$(FONTCFLAGS) $? -o $@)
+! #endif /* CompressedFontTarget */
+  
+  /*
+   * CompressedFontTarget
+--- 1261,1267 ----
+  #define UncompressedFontTarget(basename)				@@\
+  FontBaseObj(basename):  FontSrc(basename)				@@\
+  	RunProgram(FONTC,$(FONTCFLAGS) $? -o $@)
+! #endif /* UncompressedFontTarget */
+  
+  /*
+   * CompressedFontTarget
+*** ./config/cf/hp.cf@@/PUBLIC-LATEST	Wed Dec  4 10:10:32 1996
+--- xc/config/cf/hp.cf	Thu Dec 26 08:57:57 1996
+***************
+*** 1,4 ****
+! XCOMM platform:  $XConsortium: hp.cf /main/82 1996/12/04 10:10:30 swick $
+  
+  #ifndef OSName
+  # define OSName		DefaultOSName
+--- 1,4 ----
+! XCOMM platform:  $XConsortium: hp.cf /main/83 1996/12/26 08:52:54 kaleb $
+  
+  #ifndef OSName
+  # define OSName		DefaultOSName
+***************
+*** 59,73 ****
+  #endif
+  
+  
+! #define SystemV                YES
+! #define Malloc0ReturnsNull     YES
+  
+  #ifdef __hp9000s800
+! # define OptimizedCDebugFlags   +O1
+! # define DefaultCCOptions       -Ae +ESlit
+! # define SharedLibraryCCOptions -Ae
+! # define StandardDefines        -Dhpux -DSYSV
+! # define ServerExtraDefines	-DXOS -DBSTORE -DSOFTWARE_CURSOR -DNO_ALLOCA -DSCREEN_PIXMAPS -DMERGE_SAVE_UNDERS -DHAS_IFREQ -DFORCE_SEPARATE_PRIVATE
+  
+  # if OSMajorVersion > 9
+  #  include <hpLib.rules>
+--- 59,79 ----
+  #endif
+  
+  
+! #define SystemV				YES
+! #define Malloc0ReturnsNull		YES
+  
+  #ifdef __hp9000s800
+! # ifndef OptimizedCDebugFlags
+! #  define OptimizedCDebugFlags		+O1
+! # endif
+! # ifndef DefaultCCOptions
+! #  define DefaultCCOptions		-Ae +ESlit
+! # endif
+! # ifndef SharedLibraryCCOptions
+! #  define SharedLibraryCCOptions	-Ae
+! # endif
+! # define StandardDefines		-Dhpux -DSYSV
+! # define ServerExtraDefines		-DXOS -DBSTORE -DSOFTWARE_CURSOR -DNO_ALLOCA -DSCREEN_PIXMAPS -DMERGE_SAVE_UNDERS -DHAS_IFREQ -DFORCE_SEPARATE_PRIVATE
+  
+  # if OSMajorVersion > 9
+  #  include <hpLib.rules>
+*** ./config/cf/ibm.cf@@/PUBLIC-LATEST	Wed Dec  4 10:10:42 1996
+--- xc/config/cf/ibm.cf	Thu Dec 26 08:57:36 1996
+***************
+*** 1,4 ****
+! XCOMM platform:  $XConsortium: ibm.cf /main/79 1996/12/04 10:10:41 swick $
+  
+  #ifndef OSName
+  # define OSName		DefaultOSName
+--- 1,4 ----
+! XCOMM platform:  $XConsortium: ibm.cf /main/80 1996/12/26 08:52:31 kaleb $
+  
+  #ifndef OSName
+  # define OSName		DefaultOSName
+***************
+*** 46,58 ****
+   * C++ shared libraries.
+   */
+  
+! #ifndef CplusplusCmd
+! # if ThreadedX
+! #  define CplusplusCmd		xlC_r
+! # else
+! #  define CplusplusCmd		xlC
+  # endif
+  #endif
+  #ifndef CplusplusFilt
+  # define CplusplusFilt		/usr/lpp/xlC/bin/c++filt
+  #endif
+--- 46,61 ----
+   * C++ shared libraries.
+   */
+  
+! #if !HasGcc2ForCplusplus
+! # ifndef CplusplusCmd
+! #  if ThreadedX
+! #   define CplusplusCmd		xlC_r
+! #  else
+! #   define CplusplusCmd		xlC
+! #  endif
+  # endif
+  #endif
++ 
+  #ifndef CplusplusFilt
+  # define CplusplusFilt		/usr/lpp/xlC/bin/c++filt
+  #endif
+***************
+*** 63,70 ****
+  #  define CplusplusLibC		/usr/lpp/xlC/lib/libC_r.a
+  # endif
+  #endif
+! #ifndef CplusplusDependIncludes
+! #define CplusplusDependIncludes -I/usr/lpp/xlC/include
+  #endif
+  
+  /*
+--- 66,75 ----
+  #  define CplusplusLibC		/usr/lpp/xlC/lib/libC_r.a
+  # endif
+  #endif
+! #if !HasGcc2ForCplusplus
+! # ifndef CplusplusDependIncludes
+! #  define CplusplusDependIncludes -I/usr/lpp/xlC/include
+! # endif
+  #endif
+  
+  /*
+*** ./config/cf/ibmLib.rules@@/PUBLIC-LATEST	Sat Sep 28 16:19:01 1996
+--- xc/config/cf/ibmLib.rules	Mon Dec 30 16:18:21 1996
+***************
+*** 1,4 ****
+! XCOMM $XConsortium: ibmLib.rules /main/13 1996/09/28 16:10:43 rws $
+  
+  /*
+   * AIX shared library rules
+--- 1,4 ----
+! XCOMM $XConsortium: ibmLib.rules /main/15 1996/12/30 16:06:05 kaleb $
+  
+  /*
+   * AIX shared library rules
+***************
+*** 179,186 ****
+  Concat(lib,libname.a):  solist $(UNSHAREDOBJS) $(EXTRALIBRARYDEPS)	@@\
+  	RemoveFiles($@~ shr.o shr4.o)					@@\
+  	(cd down; $(AR) up/$@~ solist)					@@\
+! 	MakeExportList(libname,libname.inp)				@@\
+! 	$(LD) -o shr.o $@~ -H512 -T512 -bM\:SRE -bE\:libname.inp -bnoentry $(REQUIREDLIBS) BaseShLibReqs $(LDPOSTLIBS)	@@\
+  	$(LN) shr.o shr4.o						@@\
+  	RemoveFile($@~)							@@\
+  	case ,$(SHR4OBJLIBS), in *,libname,*) shr4obj=shr4.o;; esac &&\	@@\
+--- 179,186 ----
+  Concat(lib,libname.a):  solist $(UNSHAREDOBJS) $(EXTRALIBRARYDEPS)	@@\
+  	RemoveFiles($@~ shr.o shr4.o)					@@\
+  	(cd down; $(AR) up/$@~ solist)					@@\
+! 	MakeExportList(libname,libname.imp)				@@\
+! 	$(LD) -o shr.o $@~ -H512 -T512 -bM\:SRE -bE\:libname.imp -bnoentry $(REQUIREDLIBS) BaseShLibReqs $(LDPOSTLIBS)	@@\
+  	$(LN) shr.o shr4.o						@@\
+  	RemoveFile($@~)							@@\
+  	case ,$(SHR4OBJLIBS), in *,libname,*) shr4obj=shr4.o;; esac &&\	@@\
+***************
+*** 188,195 ****
+  	RemoveFile($@)							@@\
+  	$(MV) $@~ $@							@@\
+  	LinkBuildLibrary($@)						@@\
+! 	RemoveFile($(BUILDLIBDIR)/libname.imp)				@@\
+! 	cd $(BUILDLIBDIR); $(LN) $(BUILDINCTOP)/$(CURRENT_DIR)/libname.inp libname.imp @@\
+  									@@\
+  clean::									@@\
+  	$(RM) Concat(lib,libname.a)
+--- 188,194 ----
+  	RemoveFile($@)							@@\
+  	$(MV) $@~ $@							@@\
+  	LinkBuildLibrary($@)						@@\
+! 	LinkBuildLibrary(libname.imp)					@@\
+  									@@\
+  clean::									@@\
+  	$(RM) Concat(lib,libname.a)
+*** ./config/cf/linux.cf@@/PUBLIC-LATEST	Sun Sep 29 18:23:24 1996
+--- xc/config/cf/linux.cf	Thu Dec 26 08:57:45 1996
+***************
+*** 1,4 ****
+! XCOMM platform:  $XConsortium: linux.cf /main/26 1996/09/29 18:19:31 kaleb $
+  
+  #ifndef OSName
+  #define OSName			DefaultOSName
+--- 1,4 ----
+! XCOMM platform:  $XConsortium: linux.cf /main/27 1996/12/26 08:52:44 kaleb $
+  
+  #ifndef OSName
+  #define OSName			DefaultOSName
+***************
+*** 52,66 ****
+  #if UseElfFormat
+  #if OSMajorVersion == 1 && OSMinorVersion < 2
+  #define CcCmd			gcc -b i486-linuxelf
+  #define AsCmd			/usr/i486-linuxelf/bin/as
+  #define LdCmd			ld -m elf_i386
+  #else
+  #define CcCmd			gcc
+  #define AsCmd			as
+  #define LdCmd			ld
+  #endif
+  #define AsmDefines		-D__ELF__
+- #define CplusplusCmd		g++ -b i486-linuxelf
+  #else
+  #define CcCmd			gcc
+  #if OSMajorVersion == 1 && OSMinorVersion > 1
+--- 52,67 ----
+  #if UseElfFormat
+  #if OSMajorVersion == 1 && OSMinorVersion < 2
+  #define CcCmd			gcc -b i486-linuxelf
++ #define CplusplusCmd		g++ -b i486-linuxelf
+  #define AsCmd			/usr/i486-linuxelf/bin/as
+  #define LdCmd			ld -m elf_i386
+  #else
+  #define CcCmd			gcc
++ #define CplusplusCmd		g++
+  #define AsCmd			as
+  #define LdCmd			ld
+  #endif
+  #define AsmDefines		-D__ELF__
+  #else
+  #define CcCmd			gcc
+  #if OSMajorVersion == 1 && OSMinorVersion > 1
+*** ./config/cf/osf1.cf@@/PUBLIC-LATEST	Wed Oct 30 19:22:10 1996
+--- xc/config/cf/osf1.cf	Fri Dec 27 16:18:03 1996
+***************
+*** 1,4 ****
+! XCOMM platform:  $XConsortium: osf1.cf /main/72 1996/10/30 19:17:45 kaleb $
+  /* only tested with Digital OSF/1 */
+  
+  #ifndef OSName
+--- 1,4 ----
+! XCOMM platform:  $XConsortium: osf1.cf /main/73 1996/12/27 16:10:46 kaleb $
+  /* only tested with Digital OSF/1 */
+  
+  #ifndef OSName
+***************
+*** 51,57 ****
+--- 51,59 ----
+  #endif
+  
+  #if ModernOSF1
++ #ifndef OptimizedCDebugFlags
+  #define OptimizedCDebugFlags	-O2 -Olimit 2000
++ #endif
+  #ifndef ExtraLoadFlags
+  /*
+   * In OSF/1 3.0 Digital has shared libXdmcp and libXau. What's more,
+*** site.def@@/PUBLIC-LATEST	Tue Oct 15 09:31:12 1996
+--- xc/config/cf/site.def	Tue Dec 31 08:07:20 1996
+***************
+*** 1,4 ****
+! XCOMM site:  $XConsortium: site.def /main/revisionist/3 1996/10/15 09:31:04 swick $
+  
+  /***************************************************************************
+   *                                                                         *
+--- 1,4 ----
+! XCOMM site:  $XConsortium: site.def /main/revisionist/4 1996/12/31 08:02:07 kaleb $
+  
+  /***************************************************************************
+   *                                                                         *
+***************
+*** 39,47 ****
+   * the two following macros need to be defined directly (where "X11" is
+   * really whatever the TopLevelProject macro is defined to be).
+   */
+! # if defined(SunArchitecture) || defined(AIXArchitecture) \
+!      || defined(USLArchitecture) || defined(UXPArchitecture) \
+!      || defined(SCOArchitecture)
+  #  ifndef ProjectRulesFile
+  #   define ProjectRulesFile	<X11.rules>
+  #  endif
+--- 39,47 ----
+   * the two following macros need to be defined directly (where "X11" is
+   * really whatever the TopLevelProject macro is defined to be).
+   */
+! # if defined(AIXArchitecture) || defined(SVR4Architecture) || \
+!      defined(SCOArchitecture) || defined(Win32Architecture) || \
+!      defined(UXPArchitecture) || defined(SunArchitecture)
+  #  ifndef ProjectRulesFile
+  #   define ProjectRulesFile	<X11.rules>
+  #  endif
+*** ./config/cf/sun.cf@@/PUBLIC-LATEST	Wed Dec  4 10:10:55 1996
+--- xc/config/cf/sun.cf	Thu Dec 26 08:57:17 1996
+***************
+*** 1,4 ****
+! XCOMM platform:  $XConsortium: sun.cf /main/159 1996/12/04 10:10:52 swick $
+  
+  #ifndef OSName
+  # define OSName		DefaultOSName
+--- 1,4 ----
+! XCOMM platform:  $XConsortium: sun.cf /main/160 1996/12/26 08:52:18 kaleb $
+  
+  #ifndef OSName
+  # define OSName		DefaultOSName
+***************
+*** 223,232 ****
+  #  endif
+  # endif
+  # if HasGcc2
+! #  ifdef i386Architecture
+! #   define OptimizedCDebugFlags -m486 -O2 -fno-strength-reduce
+! #  else
+! #   define OptimizedCDebugFlags -O2
+  #  endif
+  # else
+  #  define SharedLibraryCcCmd cc
+--- 223,234 ----
+  #  endif
+  # endif
+  # if HasGcc2
+! #  ifndef OptimizedCDebugFlags
+! #   ifdef i386Architecture
+! #    define OptimizedCDebugFlags -m486 -O2 -fno-strength-reduce
+! #   else
+! #    define OptimizedCDebugFlags -O2
+! #   endif
+  #  endif
+  # else
+  #  define SharedLibraryCcCmd cc
+*** ./lib/X11/Imakefile@@/PUBLIC-LATEST	Sat Sep 28 16:42:25 1996
+--- xc/lib/X11/Imakefile	Sun Dec 29 10:27:44 1996
+***************
+*** 1,4 ****
+! XCOMM $XConsortium: Imakefile /main/194 1996/09/28 16:34:05 rws $
+  #define DoNormalLib NormalLibX11
+  #define DoSharedLib SharedLibX11
+  #define DoDebugLib DebugLibX11
+--- 1,4 ----
+! XCOMM $XConsortium: Imakefile /main/195 1996/12/29 10:22:36 kaleb $
+  #define DoNormalLib NormalLibX11
+  #define DoSharedLib SharedLibX11
+  #define DoDebugLib DebugLibX11
+***************
+*** 909,914 ****
+--- 909,915 ----
+  SpecialCLibObjectRule(XKBCvt,$(_NOOP_),$(RCONST_DEFINES))
+  SpecialCLibObjectRule(KeyBind,$(ICONFIGFILES),$(XKB_DEFINES))
+  SpecialCLibObjectRule(XKBBind,$(ICONFIGFILES),$(XKB_DEFINES))
++ SpecialCLibObjectRule(imConv,$(ICONFIGFILES),$(XKB_DEFINES))
+  #endif
+  #if HasKrb5
+  SpecialCLibObjectRule(k5encode,$(_NOOP_),$(K5INCL))
+*** ./lib/X11/XKBBind.c@@/PUBLIC-LATEST	Sat Aug 31 12:47:57 1996
+--- xc/lib/X11/XKBBind.c	Fri Dec 27 15:19:49 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: XKBBind.c /main/20 1996/08/31 12:44:10 kaleb $ */
+  /*
+  
+  Copyright (c) 1985, 1987, 1994  X Consortium
+--- 1,4 ----
+! /* $XConsortium: XKBBind.c /main/21 1996/12/27 15:12:34 kaleb $ */
+  /*
+  
+  Copyright (c) 1985, 1987, 1994  X Consortium
+***************
+*** 582,589 ****
+      LockDisplay(dpy);
+      xkbi->desc = desc;
+  
+!     xkbi->charset = _XkbGetCharset(NULL);
+!     _XkbGetConverters(xkbi->charset,&xkbi->cvt);
+      UnlockDisplay(dpy);
+      oldEvents= xkbi->selected_events;
+      if (!(xkbi->xlib_ctrls&XkbLC_IgnoreNewKeyboards)) {
+--- 582,588 ----
+      LockDisplay(dpy);
+      xkbi->desc = desc;
+  
+!     _XkbGetConverters(_XkbGetCharset(),&xkbi->cvt);
+      UnlockDisplay(dpy);
+      oldEvents= xkbi->selected_events;
+      if (!(xkbi->xlib_ctrls&XkbLC_IgnoreNewKeyboards)) {
+*** ./lib/X11/XKBCvt.c@@/PUBLIC-LATEST	Sat Aug 31 12:48:05 1996
+--- xc/lib/X11/XKBCvt.c	Fri Dec 27 15:20:02 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: XKBCvt.c /main/23 1996/08/31 12:44:18 kaleb $ */
+  /*
+  
+  Copyright (c) 1988, 1989  X Consortium
+--- 1,4 ----
+! /* $XConsortium: XKBCvt.c /main/25 1996/12/27 15:12:44 kaleb $ */
+  /*
+  
+  Copyright (c) 1988, 1989  X Consortium
+***************
+*** 37,42 ****
+--- 37,44 ----
+  #include <X11/Xlib.h>
+  #define NEED_EVENTS
+  #include "Xlibint.h"
++ #include "Xlcint.h"
++ #include "XlcPubI.h"
+  #include <X11/Xutil.h>
+  #include <X11/Xmd.h>
+  #define XK_LATIN1
+***************
+*** 48,54 ****
+  #include <ctype.h>
+  #include <X11/Xos.h>
+  
+! #ifdef __sgi
+  #define	XKB_EXTEND_LOOKUP_STRING
+  #endif
+  
+--- 50,56 ----
+  #include <ctype.h>
+  #include <X11/Xos.h>
+  
+! #ifdef __sgi_not_xconsortium
+  #define	XKB_EXTEND_LOOKUP_STRING
+  #endif
+  
+***************
+*** 142,147 ****
+--- 144,150 ----
+      0xe8, 0xe9, 0xea, 0xeb, 0xec, 0xed, 0xee, 0xef,
+      0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, /* 15 */
+      0xf8, 0xf9, 0xfa, 0xfb, 0xfc, 0xfd, 0xfe, 0xff};
++ 
+  /* maps Greek keysyms to 8859-7 */
+  static unsigned char Const greek[128] =
+     {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+***************
+*** 490,496 ****
+  	register int i;
+  	for (i=0;i<sizeof(koi8)/sizeof(unsigned char);i++) {
+  	    if (koi8[i]==buffer[0])
+! 		return 0xd80|i;
+  	}
+      }
+      return NoSymbol;
+--- 493,499 ----
+  	register int i;
+  	for (i=0;i<sizeof(koi8)/sizeof(unsigned char);i++) {
+  	    if (koi8[i]==buffer[0])
+! 		return 0x680|i;
+  	}
+      }
+      return NoSymbol;
+***************
+*** 576,616 ****
+  
+  int 
+  #if NeedFunctionPrototypes
+! _XkbGetConverters(char *charset, XkbConverters *cvt_rtrn)
+  #else
+! _XkbGetConverters(charset, cvt_rtrn)
+!     char *charset;
+      XkbConverters *cvt_rtrn;
+  #endif
+  {
+      if ( cvt_rtrn ) {
+! 	if ( (charset==NULL) || (Strcmp(charset,"ascii")==0) )
+  	     *cvt_rtrn = cvt_ascii;
+! 	else if (Strcmp(charset,"iso8859-1")==0)
+  	     *cvt_rtrn = cvt_latin1;
+! 	else if (Strcmp(charset, "iso8859-2")==0)
+  	     *cvt_rtrn = cvt_latin2;
+! 	else if (Strcmp(charset, "iso8859-3")==0)
+  	     *cvt_rtrn = cvt_latin3;
+! 	else if (Strcmp(charset, "iso8859-4")==0)
+  	     *cvt_rtrn = cvt_latin4;
+! 	else if (Strcmp(charset, "iso8859-5")==0)
+  	     *cvt_rtrn = cvt_Cyrillic;
+! 	else if (Strcmp(charset, "iso8859-6")==0)
+  	     *cvt_rtrn = cvt_Arabic;
+! 	else if (Strcmp(charset, "iso8859-7")==0)
+  	     *cvt_rtrn = cvt_Greek;
+! 	else if (Strcmp(charset, "iso8859-8")==0)
+  	     *cvt_rtrn = cvt_Hebrew;
+! 	else if (Strcmp(charset, "apl")==0)
+  	     *cvt_rtrn = cvt_APL;
+! 	else if (Strcmp(charset, "jisx0201")==0)
+  	     *cvt_rtrn = cvt_X0201;
+! 	else if (Strcmp(charset, "kana")==0)
+  	     *cvt_rtrn = cvt_kana;
+! 	else if (Strcmp(charset, "tis620.2533-1")==0)
+  	     *cvt_rtrn = cvt_Thai;
+! 	else if (Strcmp(charset, "koi8")==0)
+  	     *cvt_rtrn = cvt_Koi8;
+  	/* other codesets go here */
+  	else *cvt_rtrn = cvt_latin1;
+--- 579,629 ----
+  
+  int 
+  #if NeedFunctionPrototypes
+! _XkbGetConverters(char *encoding_name, XkbConverters *cvt_rtrn)
+  #else
+! _XkbGetConverters(encoding_name, cvt_rtrn)
+!     char *encoding_name;
+      XkbConverters *cvt_rtrn;
+  #endif
+  {
+      if ( cvt_rtrn ) {
+! 	if ( (encoding_name==NULL) || 
+! 	     (Strcmp(encoding_name,"ascii")==0) ||
+! 	     (Strcmp(encoding_name,"string")==0) )
+  	     *cvt_rtrn = cvt_ascii;
+! 	else if (Strcmp(encoding_name,"iso8859-1")==0)
+  	     *cvt_rtrn = cvt_latin1;
+! 	else if (Strcmp(encoding_name, "iso8859-2")==0)
+  	     *cvt_rtrn = cvt_latin2;
+! 	else if (Strcmp(encoding_name, "iso8859-3")==0)
+  	     *cvt_rtrn = cvt_latin3;
+! 	else if (Strcmp(encoding_name, "iso8859-4")==0)
+  	     *cvt_rtrn = cvt_latin4;
+! 	else if (Strcmp(encoding_name, "iso8859-5")==0)
+  	     *cvt_rtrn = cvt_Cyrillic;
+! 	else if (Strcmp(encoding_name, "iso8859-6")==0)
+  	     *cvt_rtrn = cvt_Arabic;
+! 	else if (Strcmp(encoding_name, "iso8859-7")==0)
+  	     *cvt_rtrn = cvt_Greek;
+! 	else if (Strcmp(encoding_name, "iso8859-8")==0)
+  	     *cvt_rtrn = cvt_Hebrew;
+! 	else if (Strcmp(encoding_name, "apl")==0) /* what is this? */
+  	     *cvt_rtrn = cvt_APL;
+! #if 0
+! 	else if (Strcmp(encoding_name, "ja.euc")==0)
+! 	     *cvt_rtrn = ???;
+! 	else if (Strcmp(encoding_name, "ja.jis")==0)
+! 	     *cvt_rtrn = ???;
+! 	else if (Strcmp(encoding_name, "ja.sjis")==0)
+! 	     *cvt_rtrn = ???;
+! #endif 
+! 	else if (Strcmp(encoding_name, "jisx0201")==0) /* ??? */
+  	     *cvt_rtrn = cvt_X0201;
+! 	else if (Strcmp(encoding_name, "kana")==0) /* ??? */
+  	     *cvt_rtrn = cvt_kana;
+! 	else if (Strcmp(encoding_name, "tactis")==0)
+  	     *cvt_rtrn = cvt_Thai;
+! 	else if (Strcmp(encoding_name, "koi8-r")==0)
+  	     *cvt_rtrn = cvt_Koi8;
+  	/* other codesets go here */
+  	else *cvt_rtrn = cvt_latin1;
+***************
+*** 622,638 ****
+  
+  /***====================================================================***/
+  
+  #ifdef XKB_EXTEND_LOOKUP_STRING
+  #define	CHARSET_FILE	"/usr/lib/X11/input/charsets"
+! static char *_XkbKnownLanguages = "c=ascii:da,de,en,es,fi,fr,is,it,nl,no,pt,sv=iso8859-1:hu,pl,cs=iso8859-2:bg,ru=iso8859-5:ar,ara=iso8859-6:el=iso8859-7:th,th_TH,th_TH.TACTIS:tis620.2533-1";
+  
+  char	*
+! #if NeedFunctionPrototypes
+! _XkbGetCharset(char *locale)
+! #else
+! _XkbGetCharset(locale)
+!     char *locale;
+! #endif
+  {
+      /*
+       * PAGE USAGE TUNING: explicitly initialize to move these to data
+--- 635,651 ----
+  
+  /***====================================================================***/
+  
++ /* 
++  * The function _XkbGetCharset seems to be missnamed as what it seems to
++  * be used for is to determine the encoding-name for the locale. ???
++  */
++ 
+  #ifdef XKB_EXTEND_LOOKUP_STRING
+  #define	CHARSET_FILE	"/usr/lib/X11/input/charsets"
+! static char *_XkbKnownLanguages = "c=ascii:da,de,en,es,fi,fr,is,it,nl,no,pt,sv=iso8859-1:hu,pl,cs=iso8859-2:bg,ru=iso8859-5:ar,ara=iso8859-6:el=iso8859-7:th,th_TH,th_TH.TACTIS=tactis";
+  
+  char	*
+! _XkbGetCharset()
+  {
+      /*
+       * PAGE USAGE TUNING: explicitly initialize to move these to data
+***************
+*** 642,654 ****
+      char lang[256];
+      char *start,*tmp,*end,*next,*set;
+      char *country,*charset;
+  
+!     if ( locale == NULL ) {
+! 	tmp = getenv( "_XKB_CHARSET" );
+! 	if ( tmp )
+! 	    return tmp;
+! 	else locale = setlocale(LC_CTYPE,NULL);
+!     }
+      if ( locale == NULL )
+  	return NULL;
+  
+--- 655,667 ----
+      char lang[256];
+      char *start,*tmp,*end,*next,*set;
+      char *country,*charset;
++     char *locale;
+  
+!     tmp = getenv( "_XKB_CHARSET" );
+!     if ( tmp )
+! 	return tmp;
+!     locale = setlocale(LC_CTYPE,NULL);
+! 
+      if ( locale == NULL )
+  	return NULL;
+  
+***************
+*** 720,740 ****
+  }
+  #else
+  char	*
+! #if NeedFunctionPrototypes
+! _XkbGetCharset(char *locale)
+! #else
+! _XkbGetCharset(locale)
+!     char *locale;
+! #endif
+  {
+! char *tmp;
+  
+!     if ( locale == NULL ) {
+! 	tmp = getenv( "_XKB_CHARSET" );
+! 	if ( tmp )
+! 	    return tmp;
+! 	else locale = setlocale(LC_CTYPE,NULL);
+!     }
+      return NULL;
+  }
+  #endif
+--- 733,751 ----
+  }
+  #else
+  char	*
+! _XkbGetCharset()
+  {
+!     char *tmp;
+!     XLCd lcd;
+  
+!     tmp = getenv( "_XKB_CHARSET" );
+!     if ( tmp )
+! 	return tmp;
+! 
+!     lcd = _XlcCurrentLC();
+!     if ( lcd )
+! 	return XLC_PUBLIC(lcd,encoding_name);
+! 
+      return NULL;
+  }
+  #endif
+*** ./lib/X11/XKBlibint.h@@/PUBLIC-LATEST	Fri Feb  2 14:11:29 1996
+--- xc/lib/X11/XKBlibint.h	Fri Dec 27 15:20:05 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: XKBlibint.h /main/11 1996/02/02 14:10:04 kaleb $ */
+  /************************************************************
+  Copyright (c) 1993 by Silicon Graphics Computer Systems, Inc.
+  
+--- 1,4 ----
+! /* $XConsortium: XKBlibint.h /main/12 1996/12/27 15:12:48 kaleb $ */
+  /************************************************************
+  Copyright (c) 1993 by Silicon Graphics Computer Systems, Inc.
+  
+***************
+*** 82,89 ****
+  	XkbDescRec	*desc;
+  	XkbMapChangesRec changes;
+  	Atom		 composeLED;
+- 
+- 	char		*charset;
+  	XkbConverters	 cvt;
+  } XkbInfoRec, *XkbInfoPtr;
+  
+--- 82,87 ----
+***************
+*** 342,354 ****
+  
+  extern char	*_XkbGetCharset(
+  #if NeedFunctionPrototypes
+! 	char *		/* locale */
+  #endif
+  );
+  extern int	 _XkbGetConverters(
+  #if NeedFunctionPrototypes
+! 	char *		/* charset */,
+! 	XkbConverters *	/* cvt_rtrn */
+  #endif
+  );
+  
+--- 340,352 ----
+  
+  extern char	*_XkbGetCharset(
+  #if NeedFunctionPrototypes
+!     void
+  #endif
+  );
+  extern int	 _XkbGetConverters(
+  #if NeedFunctionPrototypes
+!     char *		/* encoding_name */,
+!     XkbConverters *	/* cvt_rtrn */
+  #endif
+  );
+  
+*** ./lib/X11/imConv.c@@/PUBLIC-LATEST	Tue Oct 22 14:28:58 1996
+--- xc/lib/X11/imConv.c	Sun Dec 29 10:28:13 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: imConv.c /main/7 1996/10/22 14:24:38 kaleb $ */
+  /******************************************************************
+  
+                Copyright 1991, 1992 by Fuji Xerox Co.,Ltd.
+--- 1,4 ----
+! /* $XConsortium: imConv.c /main/9 1996/12/29 10:23:02 kaleb $ */
+  /******************************************************************
+  
+                Copyright 1991, 1992 by Fuji Xerox Co.,Ltd.
+***************
+*** 38,43 ****
+--- 38,47 ----
+  #include "Xlcint.h"
+  #include "Ximint.h"
+  
++ #ifdef XKB
++ #define	XLookupString		_XLookupString
++ #endif
++ 
+  /* maps Cyrillic keysyms to 8859-5 */
+  static unsigned char cyrillic[128] = {
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, /* 0x80 - */
+***************
+*** 122,129 ****
+  }
+  
+  #define BUF_SIZE (20)
+- static char local_buf[BUF_SIZE] = {0};	/* Clean up bss */
+- static unsigned char look[BUF_SIZE] = {0};	/* Clean up bss */
+  
+  int
+  _XimLookupMBText(ic, event, buffer, nbytes, keysym, status)
+--- 126,131 ----
+***************
+*** 142,147 ****
+--- 144,151 ----
+      unsigned char c;
+      Status	dummy;
+      Xim	im = (Xim)ic->core.im;
++     char local_buf[BUF_SIZE];
++     unsigned char look[BUF_SIZE];
+  
+      count = XLookupString(event, (char *)buffer, nbytes, &symbol, status);
+      if (keysym) *keysym = symbol;
+***************
+*** 197,202 ****
+--- 201,208 ----
+      unsigned char c;
+      Status	dummy;
+      Xim	im = (Xim)ic->core.im;
++     char local_buf[BUF_SIZE];
++     unsigned char look[BUF_SIZE];
+  
+      count = XLookupString(event, (char *)look, nbytes, &symbol, status);
+      if (keysym) *keysym = symbol;
+***************
+*** 203,209 ****
+      if ((nbytes == 0) || (symbol == NoSymbol)) {
+  	return(count);
+      }
+!     if (count == 0) { /* Not ISO 8859-1 Encoding */
+  	kset = (symbol >> 8) & 0xffffff;
+  	for (i = 0; i < codeset_size; i++) {
+  	    if (kset == codeset[i].kset) {
+--- 209,216 ----
+      if ((nbytes == 0) || (symbol == NoSymbol)) {
+  	return(count);
+      }
+!     if (count == 0) {
+! 	/* Not ISO 8859-1 Encoding */
+  	kset = (symbol >> 8) & 0xffffff;
+  	for (i = 0; i < codeset_size; i++) {
+  	    if (kset == codeset[i].kset) {
+*** ./lib/Xp/XpAttr.c@@/PUBLIC-LATEST	Sat Nov 16 15:32:22 1996
+--- xc/lib/Xp/XpAttr.c	Fri Dec 27 16:29:08 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: XpAttr.c /main/2 1996/11/16 15:20:50 rws $ */
+  /******************************************************************************
+   ******************************************************************************
+   **
+--- 1,4 ----
+! /* $XConsortium: XpAttr.c /main/3 1996/12/27 16:21:50 kaleb $ */
+  /******************************************************************************
+   ******************************************************************************
+   **
+***************
+*** 92,98 ****
+  
+      _XReadPad (dpy, (char *) buf, (long) rep.stringLen );
+  
+!     buf[rep.stringLen] = NULL;		/* tack on NULL terminator */
+  
+      UnlockDisplay(dpy);
+      SyncHandle();
+--- 92,98 ----
+  
+      _XReadPad (dpy, (char *) buf, (long) rep.stringLen );
+  
+!     buf[rep.stringLen] = 0;
+  
+      UnlockDisplay(dpy);
+      SyncHandle();
+***************
+*** 153,162 ****
+          return( (char *) NULL ); /* malloc error */
+      }
+  
+!     buf[rep.valueLen] = NULL;
+  
+      _XReadPad (dpy, (char *) buf, (long) rep.valueLen );
+!     buf[rep.valueLen] = NULL;		/* tack on NULL terminator */
+  
+      UnlockDisplay(dpy);
+      SyncHandle();
+--- 153,162 ----
+          return( (char *) NULL ); /* malloc error */
+      }
+  
+!     buf[rep.valueLen] = 0;
+  
+      _XReadPad (dpy, (char *) buf, (long) rep.valueLen );
+!     buf[rep.valueLen] = 0;
+  
+      UnlockDisplay(dpy);
+      SyncHandle();
+*** ./lib/Xp/XpPrinter.c@@/PUBLIC-LATEST	Sat Nov 16 15:33:30 1996
+--- xc/lib/Xp/XpPrinter.c	Fri Dec 27 16:29:11 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: XpPrinter.c /main/2 1996/11/16 15:21:58 rws $ */
+  /******************************************************************************
+   ******************************************************************************
+   **
+--- 1,4 ----
+! /* $XConsortium: XpPrinter.c /main/3 1996/12/27 16:21:53 kaleb $ */
+  /******************************************************************************
+   ******************************************************************************
+   **
+***************
+*** 161,167 ****
+  		}
+  
+  		_XReadPad (dpy, (char *) dataVR, (long) dataLenVR);
+! 		dataVR[dataLenVR] = NULL;	/* add NULL termination */
+  		ptr_list[i].name = (char *) dataVR;
+  	    }
+  	    else {
+--- 161,167 ----
+  		}
+  
+  		_XReadPad (dpy, (char *) dataVR, (long) dataLenVR);
+! 		dataVR[dataLenVR] = 0;
+  		ptr_list[i].name = (char *) dataVR;
+  	    }
+  	    else {
+***************
+*** 183,189 ****
+  		}
+  
+  		_XReadPad (dpy, (char *) dataVR, (long) dataLenVR);
+! 		dataVR[dataLenVR] = NULL;	/* add NULL termination */
+  		ptr_list[i].desc = (char *) dataVR;
+  	    }
+  	    else {
+--- 183,189 ----
+  		}
+  
+  		_XReadPad (dpy, (char *) dataVR, (long) dataLenVR);
+! 		dataVR[dataLenVR] = 0;
+  		ptr_list[i].desc = (char *) dataVR;
+  	    }
+  	    else {
+*** ./lib/xkbfile/xkbconfig.c@@/PUBLIC-LATEST	Sat Aug 31 12:49:13 1996
+--- xc/lib/xkbfile/xkbconfig.c	Fri Dec 27 20:58:05 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: xkbconfig.c /main/4 1996/08/31 12:45:25 kaleb $ */
+  /************************************************************
+   Copyright (c) 1995 by Silicon Graphics Computer Systems, Inc.
+  
+--- 1,4 ----
+! /* $XConsortium: xkbconfig.c /main/5 1996/12/27 20:52:56 kaleb $ */
+  /************************************************************
+   Copyright (c) 1995 by Silicon Graphics Computer Systems, Inc.
+  
+***************
+*** 931,936 ****
+--- 931,937 ----
+  {
+  unsigned	on,off;
+  XkbControlsPtr	ctrls;
++ unsigned int	mask;
+  
+      if (XkbAllocControls(xkb,XkbAllControlsMask)!=Success)
+  	return False;
+***************
+*** 939,944 ****
+--- 940,973 ----
+  	 ctrls->enabled_ctrls=  rtrn->initial_ctrls;
+      else ctrls->enabled_ctrls|= rtrn->initial_ctrls;
+      ctrls->enabled_ctrls&= ~rtrn->initial_ctrls_clear;
++     if (rtrn->internal_mods.replace) {
++ 	ctrls->internal.real_mods= rtrn->internal_mods.mods;
++ 	ctrls->internal.vmods= rtrn->internal_mods.vmods;
++     }
++     else {
++ 	ctrls->internal.real_mods&= ~rtrn->internal_mods.mods_clear;
++ 	ctrls->internal.vmods&= ~rtrn->internal_mods.vmods_clear;
++ 	ctrls->internal.real_mods|= rtrn->internal_mods.mods;
++ 	ctrls->internal.vmods|= rtrn->internal_mods.vmods;
++     }
++     mask= 0;
++     (void)XkbVirtualModsToReal(xkb,ctrls->internal.vmods,&mask);
++     ctrls->internal.mask= (ctrls->internal.real_mods|mask);
++ 
++     if (rtrn->ignore_lock_mods.replace) {
++ 	ctrls->ignore_lock.real_mods= rtrn->ignore_lock_mods.mods;
++ 	ctrls->ignore_lock.vmods= rtrn->ignore_lock_mods.vmods;
++     }
++     else {
++ 	ctrls->ignore_lock.real_mods&= ~rtrn->ignore_lock_mods.mods_clear;
++ 	ctrls->ignore_lock.vmods&= ~rtrn->ignore_lock_mods.vmods_clear;
++ 	ctrls->ignore_lock.real_mods|= rtrn->ignore_lock_mods.mods;
++ 	ctrls->ignore_lock.vmods|= rtrn->ignore_lock_mods.vmods;
++     }
++     mask= 0;
++     (void)XkbVirtualModsToReal(xkb,ctrls->ignore_lock.vmods,&mask);
++     ctrls->ignore_lock.mask= (ctrls->ignore_lock.real_mods|mask);
++ 
+      if (rtrn->repeat_delay>0)
+  	ctrls->repeat_delay= rtrn->repeat_delay;
+      if (rtrn->repeat_interval>0)
+*** ./lib/xkbfile/xkbmisc.c@@/PUBLIC-LATEST	Mon Feb  5 06:01:14 1996
+--- xc/lib/xkbfile/xkbmisc.c	Fri Dec 27 20:58:20 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: xkbmisc.c /main/6 1996/02/05 05:59:47 kaleb $ */
+  /************************************************************
+   Copyright (c) 1995 by Silicon Graphics Computer Systems, Inc.
+  
+--- 1,4 ----
+! /* $XConsortium: xkbmisc.c /main/7 1996/12/27 20:53:10 kaleb $ */
+  /************************************************************
+   Copyright (c) 1995 by Silicon Graphics Computer Systems, Inc.
+  
+***************
+*** 485,491 ****
+  	a= xkb->geom->key_aliases;
+  	for (i=0;i<xkb->geom->num_key_aliases;i++,a++) {
+  	    if (strncmp(name,a->alias,XkbKeyNameLength)==0)
+! 		return XkbFindKeycodeByName(xkb,name,False);
+  	}
+      }
+      if (xkb->names && xkb->names->key_aliases) {
+--- 485,491 ----
+  	a= xkb->geom->key_aliases;
+  	for (i=0;i<xkb->geom->num_key_aliases;i++,a++) {
+  	    if (strncmp(name,a->alias,XkbKeyNameLength)==0)
+! 		return XkbFindKeycodeByName(xkb,a->real,False);
+  	}
+      }
+      if (xkb->names && xkb->names->key_aliases) {
+***************
+*** 493,499 ****
+  	a= xkb->names->key_aliases;
+  	for (i=0;i<xkb->names->num_key_aliases;i++,a++) {
+  	    if (strncmp(name,a->alias,XkbKeyNameLength)==0)
+! 		return XkbFindKeycodeByName(xkb,name,False);
+  	}
+      }
+      return 0;
+--- 493,499 ----
+  	a= xkb->names->key_aliases;
+  	for (i=0;i<xkb->names->num_key_aliases;i++,a++) {
+  	    if (strncmp(name,a->alias,XkbKeyNameLength)==0)
+! 		return XkbFindKeycodeByName(xkb,a->real,False);
+  	}
+      }
+      return 0;
+*** ./lib/xkbfile/xkbout.c@@/PUBLIC-LATEST	Sat Aug 31 12:49:23 1996
+--- xc/lib/xkbfile/xkbout.c	Fri Dec 27 20:58:29 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: xkbout.c /main/5 1996/08/31 12:45:35 kaleb $ */
+  /************************************************************
+   Copyright (c) 1994 by Silicon Graphics Computer Systems, Inc.
+  
+--- 1,4 ----
+! /* $XConsortium: xkbout.c /main/6 1996/12/27 20:53:20 kaleb $ */
+  /************************************************************
+   Copyright (c) 1994 by Silicon Graphics Computer Systems, Inc.
+  
+***************
+*** 148,153 ****
+--- 148,155 ----
+  	 fprintf(file,"xkb_keycodes \"%s\" {\n",
+  					XkbAtomText(dpy,kcName,XkbXKBFile));
+      else fprintf(file,"xkb_keycodes {\n");
++     fprintf(file,"    minimum = %d;\n",xkb->min_key_code);
++     fprintf(file,"    maximum = %d;\n",xkb->max_key_code);
+      for (i=xkb->min_key_code;i<=xkb->max_key_code;i++) {
+  	if (xkb->names->keys[i].name[0]!='\0') {
+  	    fprintf(file,"    %6s = %d;\n",
+*** ./lib/xkbfile/xkbtext.c@@/PUBLIC-LATEST	Sat Aug 31 12:49:28 1996
+--- xc/lib/xkbfile/xkbtext.c	Sat Dec 28 05:44:37 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: xkbtext.c /main/6 1996/08/31 12:45:41 kaleb $ */
+  /************************************************************
+   Copyright (c) 1994 by Silicon Graphics Computer Systems, Inc.
+  
+--- 1,4 ----
+! /* $XConsortium: xkbtext.c /main/7 1996/12/28 05:39:31 kaleb $ */
+  /************************************************************
+   Copyright (c) 1994 by Silicon Graphics Computer Systems, Inc.
+  
+***************
+*** 1609,1615 ****
+  
+  /***====================================================================***/
+  
+! #define	PIXEL_MAX	65537
+  
+  Bool
+  #if NeedFunctionPrototypes
+--- 1609,1615 ----
+  
+  /***====================================================================***/
+  
+! #define	PIXEL_MAX	65535
+  
+  Bool
+  #if NeedFunctionPrototypes
+*** ./nls/compose.dir@@/PUBLIC-LATEST	Wed Oct 23 07:20:10 1996
+--- xc/nls/compose.dir	Wed Dec 25 23:58:09 1996
+***************
+*** 1,4 ****
+! XCOMM $XConsortium: compose.dir /main/4 1996/10/23 07:15:50 kaleb $
+  XCOMM
+  XCOMM	This file contains compose table file name.
+  XCOMM	The first word is the compose table file name and
+--- 1,4 ----
+! XCOMM $XConsortium: compose.dir /main/5 1996/12/25 23:53:00 kaleb $
+  XCOMM
+  XCOMM	This file contains compose table file name.
+  XCOMM	The first word is the compose table file name and
+***************
+*** 22,27 ****
+--- 22,28 ----
+  iso8859-1/Compose	is_IS.ISO8859-1
+  iso8859-1/Compose	it_IT.ISO8859-1
+  iso8859-1/Compose	it_CH.ISO8859-1
++ iso8859-1/Compose	lt_LN.ISO8859-1
+  iso8859-1/Compose	nl_NL.ISO8859-1
+  iso8859-1/Compose	nl_BE.ISO8859-1
+  iso8859-1/Compose	no_NO.ISO8859-1
+*** ./nls/locale.alias@@/PUBLIC-LATEST	Wed Oct 23 07:20:13 1996
+--- xc/nls/locale.alias	Wed Dec 25 23:58:05 1996
+***************
+*** 1,4 ****
+! XCOMM	$XConsortium: locale.alias /main/20 1996/10/23 07:15:52 kaleb $
+  XCOMM
+  XCOMM	This file contains alias name of locale.
+  XCOMM	Each alias name is described within one line.
+--- 1,4 ----
+! XCOMM	$XConsortium: locale.alias /main/21 1996/12/25 23:52:56 kaleb $
+  XCOMM
+  XCOMM	This file contains alias name of locale.
+  XCOMM	Each alias name is described within one line.
+***************
+*** 158,163 ****
+--- 158,165 ----
+  ko_KR			ko_KR.eucKR
+  ko_KR.EUC		ko_KR.eucKR
+  ko_KR.euc		ko_KR.eucKR
++ XCOMM most locales in FreeBSD 2.1.[56] don't work, allow use of generic latin-1
++ lt_LN.ISO_8859-1	lt_LN.ISO8859-1
+  mk			mk_MK.ISO8859-5
+  mk_MK			mk_MK.ISO8859-5
+  nl			nl_NL.ISO8859-1
+*** ./nls/locale.dir@@/PUBLIC-LATEST	Wed Oct 23 07:20:16 1996
+--- xc/nls/locale.dir	Wed Dec 25 23:57:51 1996
+***************
+*** 1,4 ****
+! XCOMM	$XConsortium: locale.dir /main/6 1996/10/23 07:15:55 kaleb $
+  XCOMM
+  XCOMM	This file contains locale database file name 
+  XCOMM	The first word is the locale database file name and
+--- 1,4 ----
+! XCOMM	$XConsortium: locale.dir /main/7 1996/12/25 23:52:49 kaleb $
+  XCOMM
+  XCOMM	This file contains locale database file name 
+  XCOMM	The first word is the locale database file name and
+***************
+*** 34,40 ****
+  ja.SJIS/XLC_LOCALE	ja_JP.SJIS
+  ja.JIS/XLC_LOCALE	ja_JP.JIS7
+  ko/XLC_LOCALE		ko_KR.eucKR
+! ISO8859-5/XLC_LOCALE	mk_MK.ISO8859-5
+  iso8859-1/XLC_LOCALE	nl_BE.ISO8859-1
+  iso8859-1/XLC_LOCALE	nl_NL.ISO8859-1
+  iso8859-1/XLC_LOCALE	no_NO.ISO8859-1
+--- 34,41 ----
+  ja.SJIS/XLC_LOCALE	ja_JP.SJIS
+  ja.JIS/XLC_LOCALE	ja_JP.JIS7
+  ko/XLC_LOCALE		ko_KR.eucKR
+! iso8859-1/XLC_LOCALE	lt_LN.ISO8859-1
+! iso8859-5/XLC_LOCALE	mk_MK.ISO8859-5
+  iso8859-1/XLC_LOCALE	nl_BE.ISO8859-1
+  iso8859-1/XLC_LOCALE	nl_NL.ISO8859-1
+  iso8859-1/XLC_LOCALE	no_NO.ISO8859-1
+*** ./programs/Xserver/Imakefile@@/PUBLIC-LATEST	Wed Dec 18 16:31:58 1996
+--- xc/programs/Xserver/Imakefile	Fri Dec 27 16:23:24 1996
+***************
+*** 1,4 ****
+! XCOMM $XConsortium: Imakefile /main/232 1996/12/18 16:29:36 lehors $
+  /*
+   * Server Master Makefile
+   */
+--- 1,4 ----
+! XCOMM $XConsortium: Imakefile /main/234 1996/12/27 16:16:06 kaleb $
+  /*
+   * Server Master Makefile
+   */
+***************
+*** 1053,1065 ****
+  XPOBJS = Xprint/ddxInit.o
+  XPLIBS = PreFbLibs PostFbLibs
+  #endif
+! #if defined(SparcArchitecture) && defined(SVR4Architecture)
+  XPSYSLIBS = $(CBRT) $(SYSLIBS) -lw
+  #else
+  XPSYSLIBS = $(CBRT) $(SYSLIBS)
+  #endif
+  ServerTarget(Xprt,$(XPSUBDIRS),$(XPOBJS),$(XPLIBS),$(XPSYSLIBS))
+- InstallProgram(Xprt,$(BINDIR))
+  #endif	/* XprtServer */
+  
+  #if XnestServer
+--- 1053,1064 ----
+  XPOBJS = Xprint/ddxInit.o
+  XPLIBS = PreFbLibs PostFbLibs
+  #endif
+! #if (defined(SunArchitecture) || defined(SparcArchitecture)) && defined(SVR4Architecture)
+  XPSYSLIBS = $(CBRT) $(SYSLIBS) -lw
+  #else
+  XPSYSLIBS = $(CBRT) $(SYSLIBS)
+  #endif
+  ServerTarget(Xprt,$(XPSUBDIRS),$(XPOBJS),$(XPLIBS),$(XPSYSLIBS))
+  #endif	/* XprtServer */
+  
+  #if XnestServer
+*** ./programs/Xserver/Xprint/Init.c@@/PUBLIC-LATEST	Sat Nov 16 15:35:00 1996
+--- xc/programs/Xserver/Xprint/Init.c	Mon Dec 30 15:00:56 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: Init.c /main/3 1996/11/16 15:23:29 rws $ */
+  /*
+  (c) Copyright 1996 Hewlett-Packard Company
+  (c) Copyright 1996 International Business Machines Corp.
+--- 1,4 ----
+! /* $XConsortium: Init.c /main/4 1996/12/30 14:55:45 kaleb $ */
+  /*
+  (c) Copyright 1996 Hewlett-Packard Company
+  (c) Copyright 1996 International Business Machines Corp.
+***************
+*** 95,103 ****
+--- 95,107 ----
+  
+  extern  char    *display;		/* display number as a string */
+  
++ #if 0
+  /* extern char *Xalloc(); */
+  extern void  Xfree();
+  /* extern char *Xrealloc(); */
++ #else
++ #include "os.h"
++ #endif
+  
+  extern char *getenv();
+  extern void XpAddPrinterAttribute();
+***************
+*** 539,549 ****
+  	pEntry = pTmp)
+      {
+  	if(pEntry->name != (char *)NULL)
+! 	    free(pEntry->name);
+  	if(pEntry->qualifier != (char *)NULL)
+! 	    free(pEntry->qualifier);
+  	pTmp = pEntry->next;
+! 	free(pEntry);
+      }
+      nameMap = (NameMapPtr)NULL;
+  }
+--- 543,553 ----
+  	pEntry = pTmp)
+      {
+  	if(pEntry->name != (char *)NULL)
+! 	    xfree(pEntry->name);
+  	if(pEntry->qualifier != (char *)NULL)
+! 	    xfree(pEntry->qualifier);
+  	pTmp = pEntry->next;
+! 	xfree(pEntry);
+      }
+      nameMap = (NameMapPtr)NULL;
+  }
+***************
+*** 558,564 ****
+  {
+      NameMapPtr pEntry;
+  
+!     if((pEntry = (NameMapPtr)malloc(sizeof(NameMapEntry))) == (NameMapPtr)NULL)
+  	return FALSE;
+      pEntry->name = name;
+      pEntry->qualifier = qualifier;
+--- 562,568 ----
+  {
+      NameMapPtr pEntry;
+  
+!     if((pEntry = (NameMapPtr)xalloc(sizeof(NameMapEntry))) == (NameMapPtr)NULL)
+  	return FALSE;
+      pEntry->name = name;
+      pEntry->qualifier = qualifier;
+***************
+*** 698,732 ****
+       */
+      if(dirName = XpGetConfigDir(TRUE))
+      {
+!         filePath = malloc(strlen(dirName) + strlen(XPRINTERSFILENAME) + 2);
+  
+  	if(filePath == (char *)NULL)
+  	{
+! 	    free(dirName);
+  	    return (char *)NULL;
+  	}
+  
+  	sprintf(filePath, "%s/%s", dirName, XPRINTERSFILENAME);
+! 	free(dirName);
+  	if(access(filePath, R_OK) == 0)
+  	    return filePath;
+  
+! 	free(filePath);
+      }
+  
+      if(dirName = XpGetConfigDir(FALSE))
+      {
+! 	filePath = malloc(strlen(dirName) + strlen(XPRINTERSFILENAME) + 2);
+  	if(filePath == (char *)NULL)
+  	{
+! 	    free(dirName);
+  	    return (char *)NULL;
+  	}
+  	sprintf(filePath, "%s/%s", dirName, XPRINTERSFILENAME);
+! 	free(dirName);
+  	if(access(filePath, R_OK) == 0)
+  	    return filePath;
+! 	free(filePath);
+      }
+      return (char *)NULL;
+  }
+--- 702,738 ----
+       */
+      if(dirName = XpGetConfigDir(TRUE))
+      {
+!         filePath = (char *)xalloc(strlen(dirName) +
+! 				  strlen(XPRINTERSFILENAME) + 2);
+  
+  	if(filePath == (char *)NULL)
+  	{
+! 	    xfree(dirName);
+  	    return (char *)NULL;
+  	}
+  
+  	sprintf(filePath, "%s/%s", dirName, XPRINTERSFILENAME);
+! 	xfree(dirName);
+  	if(access(filePath, R_OK) == 0)
+  	    return filePath;
+  
+! 	xfree(filePath);
+      }
+  
+      if(dirName = XpGetConfigDir(FALSE))
+      {
+! 	filePath = (char *)xalloc(strlen(dirName) +
+! 				  strlen(XPRINTERSFILENAME) + 2);
+  	if(filePath == (char *)NULL)
+  	{
+! 	    xfree(dirName);
+  	    return (char *)NULL;
+  	}
+  	sprintf(filePath, "%s/%s", dirName, XPRINTERSFILENAME);
+! 	xfree(dirName);
+  	if(access(filePath, R_OK) == 0)
+  	    return filePath;
+! 	xfree(filePath);
+      }
+      return (char *)NULL;
+  }
+***************
+*** 786,792 ****
+  		    name = strdup(tok);
+  		    if((tok = strtok((char *)NULL, " \t\012")) == (char *)NULL)
+  		    {
+! 			free(name);
+  			continue;
+  		    }
+  		    qualifier = strdup(tok);
+--- 792,798 ----
+  		    name = strdup(tok);
+  		    if((tok = strtok((char *)NULL, " \t\012")) == (char *)NULL)
+  		    {
+! 			xfree(name);
+  			continue;
+  		    }
+  		    qualifier = strdup(tok);
+***************
+*** 830,836 ****
+  
+      if(freeConfigFileName)
+      {
+! 	free(configFileName);
+  	configFileName = (char *)NULL;
+      }
+  
+--- 836,842 ----
+  
+      if(freeConfigFileName)
+      {
+! 	xfree(configFileName);
+  	configFileName = (char *)NULL;
+      }
+  
+***************
+*** 884,890 ****
+  	if(pDrvEnt != (DriverMapPtr)NULL) 
+  	    continue;
+  
+! 	if((pDrvEnt = (DriverMapPtr)malloc(sizeof(DriverMapEntry))) == 
+  	    (DriverMapPtr)NULL)
+  	{
+  	    FreeDriverMap(driverMap);
+--- 890,896 ----
+  	if(pDrvEnt != (DriverMapPtr)NULL) 
+  	    continue;
+  
+! 	if((pDrvEnt = (DriverMapPtr)xalloc(sizeof(DriverMapEntry))) == 
+  	    (DriverMapPtr)NULL)
+  	{
+  	    FreeDriverMap(driverMap);
+***************
+*** 962,968 ****
+      if(!configDir || !modelName)
+  	return (char *)NULL;
+  
+!     pathName = (char *)Xalloc(strlen(configDir) + strlen(MODELDIRNAME) +
+  			      strlen(modelName) + strlen(FONTDIRNAME) + 
+  			      strlen("fonts.dir") + 5);
+      if(!pathName)
+--- 968,974 ----
+      if(!configDir || !modelName)
+  	return (char *)NULL;
+  
+!     pathName = (char *)xalloc(strlen(configDir) + strlen(MODELDIRNAME) +
+  			      strlen(modelName) + strlen(FONTDIRNAME) + 
+  			      strlen("fonts.dir") + 5);
+      if(!pathName)
+***************
+*** 971,977 ****
+  	    FONTDIRNAME, "fonts.dir");
+      if(access(pathName, R_OK) != 0)
+      {
+! 	Xfree(pathName);
+  	return (char *)NULL;
+      }
+      pathName[strlen(pathName) - 9] = (char)'\0'; /* erase fonts.dir */
+--- 977,983 ----
+  	    FONTDIRNAME, "fonts.dir");
+      if(access(pathName, R_OK) != 0)
+      {
+! 	xfree(pathName);
+  	return (char *)NULL;
+      }
+      pathName[strlen(pathName) - 9] = (char)'\0'; /* erase fonts.dir */
+***************
+*** 1309,1315 ****
+      /*
+       * Allocate memory for the worst case - a driver per printer
+       */
+!     driverNames = (char **)Xalloc(sizeof(char *) * driverCount);
+  
+      /*
+       * Assign the driver for the first printer to the first screen
+--- 1315,1321 ----
+      /*
+       * Allocate memory for the worst case - a driver per printer
+       */
+!     driverNames = (char **)xalloc(sizeof(char *) * driverCount);
+  
+      /*
+       * Assign the driver for the first printer to the first screen
+***************
+*** 1387,1393 ****
+  	}
+      }
+  
+!     Xfree(driverNames);
+  
+      AugmentFontPath();
+  
+--- 1393,1399 ----
+  	}
+      }
+  
+!     xfree(driverNames);
+  
+      AugmentFontPath();
+  
+***************
+*** 1555,1561 ****
+        if ((nextPath = strchr(curPath, ':')) != NULL)
+          *nextPath = 0;
+    
+!       chance = (char *)malloc(strlen(curPath) + strlen(fileName) + 2);
+        sprintf(chance,"%s/%s",curPath,fileName);
+    
+        /* see if we can read from the file */
+--- 1561,1567 ----
+        if ((nextPath = strchr(curPath, ':')) != NULL)
+          *nextPath = 0;
+    
+!       chance = (char *)xalloc(strlen(curPath) + strlen(fileName) + 2);
+        sprintf(chance,"%s/%s",curPath,fileName);
+    
+        /* see if we can read from the file */
+***************
+*** 1569,1575 ****
+          return chance;
+        }
+    
+!       free(chance);
+  
+        if (nextPath == NULL) /* End of path list? */
+          break;
+--- 1575,1581 ----
+          return chance;
+        }
+    
+!       xfree(chance);
+  
+        if (nextPath == NULL) /* End of path list? */
+          break;
+*** ./programs/Xserver/Xprint/Util.c@@/PUBLIC-LATEST	Sat Nov 16 15:35:13 1996
+--- xc/programs/Xserver/Xprint/Util.c	Mon Dec 30 15:01:10 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: Util.c /main/2 1996/11/16 15:23:41 rws $ */
+  /*
+  (c) Copyright 1996 Hewlett-Packard Company
+  (c) Copyright 1996 International Business Machines Corp.
+--- 1,4 ----
+! /* $XConsortium: Util.c /main/3 1996/12/30 14:55:57 kaleb $ */
+  /*
+  (c) Copyright 1996 Hewlett-Packard Company
+  (c) Copyright 1996 International Business Machines Corp.
+***************
+*** 68,80 ****
+          {
+  	    char *newString;
+      
+! 	    newString = (char *)Xalloc(strlen(string) + strlen(replacement) - 
+  				       strlen(target) + 1);
+  	    strncpy(newString, string, pKeyString - string);
+  	    newString[pKeyString - string] = '\0';
+  	    strcat(newString, replacement);
+  	    strcat(newString, pKeyString + strlen(target));
+! 	    Xfree(string);
+  	    string = newString;
+          }
+      }
+--- 68,80 ----
+          {
+  	    char *newString;
+      
+! 	    newString = (char *)xalloc(strlen(string) + strlen(replacement) - 
+  				       strlen(target) + 1);
+  	    strncpy(newString, string, pKeyString - string);
+  	    newString[pKeyString - string] = '\0';
+  	    strcat(newString, replacement);
+  	    strcat(newString, pKeyString + strlen(target));
+! 	    xfree(string);
+  	    string = newString;
+          }
+      }
+***************
+*** 106,118 ****
+          {
+  	    char *newString;
+      
+! 	    newString = (char *)Xalloc(strlen(string) + 
+  				        strlen(inFileName) + 1);
+  	    strncpy(newString, string, pKeyString - string);
+  	    newString[pKeyString - string] = '\0';
+  	    strcat(newString, inFileName);
+  	    strcat(newString, pKeyString + strlen(pInFileString));
+! 	    Xfree(string);
+  	    string = newString;
+          }
+      }
+--- 106,118 ----
+          {
+  	    char *newString;
+      
+! 	    newString = (char *)xalloc(strlen(string) + 
+  				        strlen(inFileName) + 1);
+  	    strncpy(newString, string, pKeyString - string);
+  	    newString[pKeyString - string] = '\0';
+  	    strcat(newString, inFileName);
+  	    strcat(newString, pKeyString + strlen(pInFileString));
+! 	    xfree(string);
+  	    string = newString;
+          }
+      }
+***************
+*** 124,136 ****
+          {
+  	    char *newString;
+      
+! 	    newString = (char *)Xalloc(strlen(string) + 
+  				        strlen(outFileName) + 1);
+  	    strncpy(newString, string, pKeyString - string);
+  	    newString[pKeyString - string] = '\0';
+  	    strcat(newString, outFileName);
+  	    strcat(newString, pKeyString + strlen(pOutFileString));
+! 	    Xfree(string);
+  	    string = newString;
+          }
+      }
+--- 124,136 ----
+          {
+  	    char *newString;
+      
+! 	    newString = (char *)xalloc(strlen(string) + 
+  				        strlen(outFileName) + 1);
+  	    strncpy(newString, string, pKeyString - string);
+  	    newString[pKeyString - string] = '\0';
+  	    strcat(newString, outFileName);
+  	    strcat(newString, pKeyString + strlen(pOutFileString));
+! 	    xfree(string);
+  	    string = newString;
+          }
+      }
+***************
+*** 212,218 ****
+      fclose(*ppSrcFile);
+      *ppSrcFile = (FILE *)NULL;
+      unlink(*pSrcFileName);
+!     Xfree(*pSrcFileName);
+      *pSrcFileName = (char *)NULL;
+  
+      return TRUE;
+--- 212,218 ----
+      fclose(*ppSrcFile);
+      *ppSrcFile = (FILE *)NULL;
+      unlink(*pSrcFileName);
+!     xfree(*pSrcFileName);
+      *pSrcFileName = (char *)NULL;
+  
+      return TRUE;
+***************
+*** 235,241 ****
+      if(client->clientGone)
+  	return Success;
+  
+!     pRep = (xPrintGetDocumentDataReply *)malloc(sz_xPrintGetDocumentDataReply+ 
+  	   QUADPAD(maxBufSize));
+  
+      for(bytesToWrite = min(maxBufSize, fileLen),
+--- 235,241 ----
+      if(client->clientGone)
+  	return Success;
+  
+!     pRep = (xPrintGetDocumentDataReply *)xalloc(sz_xPrintGetDocumentDataReply+ 
+  	   QUADPAD(maxBufSize));
+  
+      for(bytesToWrite = min(maxBufSize, fileLen),
+***************
+*** 276,282 ****
+  	bytesWritten += bytesToWrite;
+      }
+  
+!     free(pRep);
+      return result;
+  }
+  
+--- 276,282 ----
+  	bytesWritten += bytesToWrite;
+      }
+  
+!     xfree(pRep);
+      return result;
+  }
+  
+*** ./programs/Xserver/Xprint/Xrm.c@@/PUBLIC-LATEST	Sat Sep 28 17:07:38 1996
+--- xc/programs/Xserver/Xprint/Xrm.c	Mon Dec 30 15:01:15 1996
+***************
+*** 1,5 ****
+  /*
+!  * $XConsortium: Xrm.c /main/1 1996/09/28 16:59:17 rws $
+   */
+  /*
+  (c) Copyright 1996 Hewlett-Packard Company
+--- 1,5 ----
+  /*
+!  * $XConsortium: Xrm.c /main/2 1996/12/30 14:56:02 kaleb $
+   */
+  /*
+  (c) Copyright 1996 Hewlett-Packard Company
+***************
+*** 487,493 ****
+  {
+      register XrmDatabase db;
+  
+!     db = (XrmDatabase) Xalloc(sizeof(XrmHashBucketRec));
+      if (db) {
+  	db->table = (NTable)NULL;
+  #ifdef NOT_IN_SERVER
+--- 487,493 ----
+  {
+      register XrmDatabase db;
+  
+!     db = (XrmDatabase) xalloc(sizeof(XrmHashBucketRec));
+      if (db) {
+  	db->table = (NTable)NULL;
+  #ifdef NOT_IN_SERVER
+***************
+*** 525,531 ****
+  	    fentry->next = tentry;
+  	}
+      }
+!     Xfree((char *)ftable->buckets);
+  }
+  
+  /* move all tables from ftable to ttable, and free ftable.
+--- 525,531 ----
+  	    fentry->next = tentry;
+  	}
+      }
+!     xfree((char *)ftable->buckets);
+  }
+  
+  /* move all tables from ftable to ttable, and free ftable.
+***************
+*** 552,558 ****
+  	    fentry->next = tentry;
+  	}
+      }
+!     Xfree((char *)ftable);
+  }
+  
+  /* grow the table, based on current number of entries */
+--- 552,558 ----
+  	    fentry->next = tentry;
+  	}
+      }
+!     xfree((char *)ftable);
+  }
+  
+  /* grow the table, based on current number of entries */
+***************
+*** 576,582 ****
+  	ltable = (LTable)table;
+  	/* cons up a copy to make MoveValues look symmetric */
+  	otable = *ltable;
+! 	ltable->buckets = (VEntry *)Xalloc(i * sizeof(VEntry));
+  	if (!ltable->buckets) {
+  	    ltable->buckets = otable.buckets;
+  	    return;
+--- 576,582 ----
+  	ltable = (LTable)table;
+  	/* cons up a copy to make MoveValues look symmetric */
+  	otable = *ltable;
+! 	ltable->buckets = (VEntry *)xalloc(i * sizeof(VEntry));
+  	if (!ltable->buckets) {
+  	    ltable->buckets = otable.buckets;
+  	    return;
+***************
+*** 587,593 ****
+      } else {
+  	register NTable ntable;
+  
+! 	ntable = (NTable)Xalloc(sizeof(NTableRec) + i * sizeof(NTable));
+  	if (!ntable)
+  	    return;
+  	*ntable = *table;
+--- 587,593 ----
+      } else {
+  	register NTable ntable;
+  
+! 	ntable = (NTable)xalloc(sizeof(NTableRec) + i * sizeof(NTable));
+  	if (!ntable)
+  	    return;
+  	*ntable = *table;
+***************
+*** 645,651 ****
+  		    fentry = *prev;
+  		    *prev = tentry->next;
+  		    /* free the overridden entry */
+! 		    Xfree((char *)tentry);
+  		    /* get next tentry */
+  		    tentry = *prev;
+  		} else {
+--- 645,651 ----
+  		    fentry = *prev;
+  		    *prev = tentry->next;
+  		    /* free the overridden entry */
+! 		    xfree((char *)tentry);
+  		    /* get next tentry */
+  		    tentry = *prev;
+  		} else {
+***************
+*** 654,660 ****
+  		    tentry = fentry; /* use as a temp var */
+  		    fentry = fentry->next;
+  		    /* free the overpowered entry */
+! 		    Xfree((char *)tentry);
+  		    /* get next tentry */
+  		    tentry = *prev;
+  		}
+--- 654,660 ----
+  		    tentry = fentry; /* use as a temp var */
+  		    fentry = fentry->next;
+  		    /* free the overpowered entry */
+! 		    xfree((char *)tentry);
+  		    /* get next tentry */
+  		    tentry = *prev;
+  		}
+***************
+*** 672,679 ****
+  	    }
+  	}
+      }
+!     Xfree((char *)ftable->buckets);
+!     Xfree((char *)ftable);
+      /* resize if necessary, now that we're all done */
+      GROW(pprev);
+  }
+--- 672,679 ----
+  	    }
+  	}
+      }
+!     xfree((char *)ftable->buckets);
+!     xfree((char *)ftable);
+      /* resize if necessary, now that we're all done */
+      GROW(pprev);
+  }
+***************
+*** 747,753 ****
+  	    }
+  	}
+      }
+!     Xfree((char *)ftable);
+      /* resize if necessary, now that we're all done */
+      GROW(pprev);
+  }
+--- 747,753 ----
+  	    }
+  	}
+      }
+!     xfree((char *)ftable);
+      /* resize if necessary, now that we're all done */
+      GROW(pprev);
+  }
+***************
+*** 793,799 ****
+  	    }
+  	}
+  	(from->methods->destroy)(from->mbstate);
+! 	Xfree((char *)from);
+      }
+  }
+  
+--- 793,799 ----
+  	    }
+  	}
+  	(from->methods->destroy)(from->mbstate);
+! 	xfree((char *)from);
+      }
+  }
+  
+***************
+*** 819,825 ****
+      NTable *nprev, *firstpprev;
+  
+  #define NEWTABLE(q,i) \
+!     table = (NTable)Xalloc(sizeof(LTableRec)); \
+      if (!table) \
+  	return; \
+      table->name = q; \
+--- 819,825 ----
+      NTable *nprev, *firstpprev;
+  
+  #define NEWTABLE(q,i) \
+!     table = (NTable)xalloc(sizeof(LTableRec)); \
+      if (!table) \
+  	return; \
+      table->name = q; \
+***************
+*** 832,838 ****
+  	nprev = NodeBuckets(table); \
+      } else { \
+  	table->leaf = 1; \
+! 	if (!(nprev = (NTable *)Xalloc(sizeof(VEntry *)))) \
+  	    return; \
+  	((LTable)table)->buckets = (VEntry *)nprev; \
+      } \
+--- 832,838 ----
+  	nprev = NodeBuckets(table); \
+      } else { \
+  	table->leaf = 1; \
+! 	if (!(nprev = (NTable *)xalloc(sizeof(VEntry *)))) \
+  	    return; \
+  	((LTable)table)->buckets = (VEntry *)nprev; \
+      } \
+***************
+*** 918,924 ****
+  		}
+  		/* splice out and free old entry */
+  		*vprev = entry->next;
+! 		Xfree((char *)entry);
+  		(*pprev)->entries--;
+  	    }
+  	    /* this is where to insert */
+--- 918,924 ----
+  		}
+  		/* splice out and free old entry */
+  		*vprev = entry->next;
+! 		xfree((char *)entry);
+  		(*pprev)->entries--;
+  	    }
+  	    /* this is where to insert */
+***************
+*** 944,950 ****
+  	prev = nprev;
+      }
+      /* now allocate the value entry */
+!     entry = (VEntry)Xalloc(((type == XrmQString) ?
+  			     sizeof(VEntryRec) : sizeof(DEntryRec)) +
+  			    value->size);
+      if (!entry)
+--- 944,950 ----
+  	prev = nprev;
+      }
+      /* now allocate the value entry */
+!     entry = (VEntry)xalloc(((type == XrmQString) ?
+  			     sizeof(VEntryRec) : sizeof(DEntryRec)) +
+  			    value->size);
+      if (!entry)
+***************
+*** 974,983 ****
+  	unsigned oldsize = (maxResourceQuark + 1) >> 3;
+  	unsigned size = ((q | 0x7f) + 1) >> 3; /* reallocate in chunks */
+  	if (resourceQuarks)
+! 	    resourceQuarks = (unsigned char *)Xrealloc((char *)resourceQuarks,
+  						       size);
+  	else
+! 	    resourceQuarks = (unsigned char *)Xalloc(size);
+  	if (resourceQuarks) {
+  	    bzero((char *)&resourceQuarks[oldsize], size - oldsize);
+  	    maxResourceQuark = (size << 3) - 1;
+--- 974,983 ----
+  	unsigned oldsize = (maxResourceQuark + 1) >> 3;
+  	unsigned size = ((q | 0x7f) + 1) >> 3; /* reallocate in chunks */
+  	if (resourceQuarks)
+! 	    resourceQuarks = (unsigned char *)xrealloc((char *)resourceQuarks,
+  						       size);
+  	else
+! 	    resourceQuarks = (unsigned char *)xalloc(size);
+  	if (resourceQuarks) {
+  	    bzero((char *)&resourceQuarks[oldsize], size - oldsize);
+  	    maxResourceQuark = (size << 3) - 1;
+***************
+*** 1094,1100 ****
+      if (!db)
+  	return;
+  
+!     if (!(value_str = (char *)Xalloc(sizeof(char) * alloc_chars)))
+  	return;
+  
+      (*db->methods->mbinit)(db->mbstate);
+--- 1094,1100 ----
+      if (!db)
+  	return;
+  
+!     if (!(value_str = (char *)xalloc(sizeof(char) * alloc_chars)))
+  	return;
+  
+      (*db->methods->mbinit)(db->mbstate);
+***************
+*** 1427,1436 ****
+  		char * temp_str;
+  
+  		alloc_chars += BUFSIZ/10;		
+! 		temp_str = (char *)Xrealloc(value_str, sizeof(char) * alloc_chars);
+  
+  		if (!temp_str) {
+! 		    Xfree(value_str);
+  		    (*db->methods->mbfinish)(db->mbstate);
+  		    return;
+  		}
+--- 1427,1436 ----
+  		char * temp_str;
+  
+  		alloc_chars += BUFSIZ/10;		
+! 		temp_str = (char *)xrealloc(value_str, sizeof(char) * alloc_chars);
+  
+  		if (!temp_str) {
+! 		    xfree(value_str);
+  		    (*db->methods->mbfinish)(db->mbstate);
+  		    return;
+  		}
+***************
+*** 1455,1461 ****
+  	PutEntry(db, bindings, quarks, XrmQString, &value);
+      }
+  
+!     Xfree(value_str);
+      (*db->methods->mbfinish)(db->mbstate);
+  }
+  
+--- 1455,1461 ----
+  	PutEntry(db, bindings, quarks, XrmQString, &value);
+      }
+  
+!     xfree(value_str);
+      (*db->methods->mbfinish)(db->mbstate);
+  }
+  
+***************
+*** 1530,1536 ****
+  
+      GetSizeOfFile(filename, size);
+  	
+!     if (!(filebuf = (char *)Xalloc(size + 1))) { /* leave room for '\0' */
+  	close(fd);
+  	return (char *)NULL;
+      }
+--- 1530,1536 ----
+  
+      GetSizeOfFile(filename, size);
+  	
+!     if (!(filebuf = (char *)xalloc(size + 1))) { /* leave room for '\0' */
+  	close(fd);
+  	return (char *)NULL;
+      }
+***************
+*** 1538,1544 ****
+      if (ReadFile(fd, filebuf, size) != size) { /* If we didn't read the
+  						  correct number of bytes. */
+  	CloseFile(fd);
+! 	Xfree(filebuf);
+  	return (char *)NULL;
+      }
+      CloseFile(fd);
+--- 1538,1544 ----
+      if (ReadFile(fd, filebuf, size) != size) { /* If we didn't read the
+  						  correct number of bytes. */
+  	CloseFile(fd);
+! 	xfree(filebuf);
+  	return (char *)NULL;
+      }
+      CloseFile(fd);
+***************
+*** 1574,1580 ****
+      if (!(str = ReadInFile(realfname)))
+  	return;
+      GetDatabase(db, str, realfname, True);
+!     Xfree(str);
+  }
+  
+  #if NeedFunctionPrototypes
+--- 1574,1580 ----
+      if (!(str = ReadInFile(realfname)))
+  	return;
+      GetDatabase(db, str, realfname, True);
+!     xfree(str);
+  }
+  
+  #if NeedFunctionPrototypes
+***************
+*** 1593,1599 ****
+  
+      db = NewDatabase();
+      GetDatabase(db, str, filename, True);
+!     Xfree(str);
+      return db;
+  }
+  
+--- 1593,1599 ----
+  
+      db = NewDatabase();
+      GetDatabase(db, str, filename, True);
+!     xfree(str);
+      return db;
+  }
+  
+***************
+*** 1621,1627 ****
+      } else
+  	db = NewDatabase();
+      GetDatabase(db, str, filename, True);
+!     Xfree(str);
+      if (!override)
+  	XrmCombineDatabase(db, target, False);
+      return 1;
+--- 1621,1627 ----
+      } else
+  	db = NewDatabase();
+      GetDatabase(db, str, filename, True);
+!     xfree(str);
+      if (!override)
+  	XrmCombineDatabase(db, target, False);
+      return 1;
+***************
+*** 2506,2516 ****
+      for (i = table->table.mask; i >= 0; i--, buckets++) {
+  	for (next = *buckets; entry = next; ) {
+  	    next = entry->next;
+! 	    Xfree((char *)entry);
+  	}
+      }
+!     Xfree((char *)table->buckets);
+!     Xfree((char *)table);
+  }
+  
+  /* destroy all contained tables, plus table itself */
+--- 2506,2516 ----
+      for (i = table->table.mask; i >= 0; i--, buckets++) {
+  	for (next = *buckets; entry = next; ) {
+  	    next = entry->next;
+! 	    xfree((char *)entry);
+  	}
+      }
+!     xfree((char *)table->buckets);
+!     xfree((char *)table);
+  }
+  
+  /* destroy all contained tables, plus table itself */
+***************
+*** 2531,2537 ****
+  		DestroyNTable(entry);
+  	}
+      }
+!     Xfree((char *)table);
+  }
+  
+  char *XrmLocaleOfDatabase(db)
+--- 2531,2537 ----
+  		DestroyNTable(entry);
+  	}
+      }
+!     xfree((char *)table);
+  }
+  
+  char *XrmLocaleOfDatabase(db)
+***************
+*** 2554,2559 ****
+  		DestroyNTable(table);
+  	}
+  	(*db->methods->destroy)(db->mbstate);
+! 	Xfree((char *)db);
+      }
+  }
+--- 2554,2559 ----
+  		DestroyNTable(table);
+  	}
+  	(*db->methods->destroy)(db->mbstate);
+! 	xfree((char *)db);
+      }
+  }
+*** ./programs/Xserver/Xprint/attributes.c@@/PUBLIC-LATEST	Sun Nov 24 16:51:01 1996
+--- xc/programs/Xserver/Xprint/attributes.c	Mon Dec 30 15:01:24 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: attributes.c /main/5 1996/11/24 16:45:53 rws $ */
+  /*
+  (c) Copyright 1996 Hewlett-Packard Company
+  (c) Copyright 1996 International Business Machines Corp.
+--- 1,4 ----
+! /* $XConsortium: attributes.c /main/6 1996/12/30 14:56:11 kaleb $ */
+  /*
+  (c) Copyright 1996 Hewlett-Packard Company
+  (c) Copyright 1996 International Business Machines Corp.
+***************
+*** 152,158 ****
+  	{
+  	    if(strcmp(langName, "C") == 0)
+  		return (char *)NULL;
+! 	    langDir = (char *)malloc(strlen(langName) + 2);
+  	    sprintf(langDir, "/%s", langName);
+  	    freeLangDir = True;
+  	}
+--- 152,158 ----
+  	{
+  	    if(strcmp(langName, "C") == 0)
+  		return (char *)NULL;
+! 	    langDir = (char *)xalloc(strlen(langName) + 2);
+  	    sprintf(langDir, "/%s", langName);
+  	    freeLangDir = True;
+  	}
+***************
+*** 166,177 ****
+      if((configDir = getenv("XPCONFIGDIR")) == (char *)NULL)
+  	configDir = XPRINTDIR;
+  
+!     dirName = (char *)malloc(strlen(configDir) + strlen(XPDIR) + 
+  			      strlen(langDir) + 1);
+      sprintf(dirName, "%s%s%s", configDir, langDir, XPDIR);
+  
+      if(freeLangDir == True)
+! 	free(langDir);
+  
+      return dirName;
+  }
+--- 166,177 ----
+      if((configDir = getenv("XPCONFIGDIR")) == (char *)NULL)
+  	configDir = XPRINTDIR;
+  
+!     dirName = (char *)xalloc(strlen(configDir) + strlen(XPDIR) + 
+  			      strlen(langDir) + 1);
+      sprintf(dirName, "%s%s%s", configDir, langDir, XPDIR);
+  
+      if(freeLangDir == True)
+! 	xfree(langDir);
+  
+      return dirName;
+  }
+***************
+*** 190,196 ****
+  
+      if((dirName = XpGetConfigDir(False)) == (char *)NULL)
+  	return (XrmDatabase)NULL;
+!     if((fileName = (char *)malloc(strlen(dirName) + strlen(attrName) + 1)) ==
+         (char *)NULL)
+  	return (XrmDatabase)NULL;
+      sprintf(fileName, "%s%s", dirName, attrName);
+--- 190,196 ----
+  
+      if((dirName = XpGetConfigDir(False)) == (char *)NULL)
+  	return (XrmDatabase)NULL;
+!     if((fileName = (char *)xalloc(strlen(dirName) + strlen(attrName) + 1)) ==
+         (char *)NULL)
+  	return (XrmDatabase)NULL;
+      sprintf(fileName, "%s%s", dirName, attrName);
+***************
+*** 200,206 ****
+  
+      if((dirName = XpGetConfigDir(True)) == (char *)NULL) 
+  	return db;
+!     if((fileName = (char *)malloc(strlen(dirName) + strlen(attrName) + 1)) ==
+         (char *)NULL)
+  	return db;
+      sprintf(fileName, "%s%s", dirName, attrName);
+--- 200,206 ----
+  
+      if((dirName = XpGetConfigDir(True)) == (char *)NULL) 
+  	return db;
+!     if((fileName = (char *)xalloc(strlen(dirName) + strlen(attrName) + 1)) ==
+         (char *)NULL)
+  	return db;
+      sprintf(fileName, "%s%s", dirName, attrName);
+***************
+*** 319,325 ****
+  
+          if(value.addr != (XPointer)NULL)
+          {
+!             fileName = (char *)malloc(strlen(XPMODELDIR) + 
+  				      strlen((char *)value.addr) + 
+  				      strlen("model-config") + 3);
+  	    sprintf(fileName, "%s/%s/%s", XPMODELDIR, value.addr,
+--- 319,325 ----
+  
+          if(value.addr != (XPointer)NULL)
+          {
+!             fileName = (char *)xalloc(strlen(XPMODELDIR) + 
+  				      strlen((char *)value.addr) + 
+  				      strlen("model-config") + 3);
+  	    sprintf(fileName, "%s/%s/%s", XPMODELDIR, value.addr,
+***************
+*** 440,448 ****
+  	    XrmDestroyDatabase(pAttr->docAttrs);
+  	if(pAttr->jobAttrs != (XrmDatabase)NULL)
+  	    XrmDestroyDatabase(pAttr->jobAttrs);
+! 	free(pAttr->name);
+! 	free(pAttr->qualifier);
+! 	free(pAttr);
+      }
+      attrList = (PrAttrPtr)NULL;
+  }
+--- 440,448 ----
+  	    XrmDestroyDatabase(pAttr->docAttrs);
+  	if(pAttr->jobAttrs != (XrmDatabase)NULL)
+  	    XrmDestroyDatabase(pAttr->jobAttrs);
+! 	xfree(pAttr->name);
+! 	xfree(pAttr->qualifier);
+! 	xfree(pAttr);
+      }
+      attrList = (PrAttrPtr)NULL;
+  }
+***************
+*** 474,480 ****
+  {
+      PrAttrPtr pAttr;
+  
+!     if((pAttr = (PrAttrPtr)malloc(sizeof(PrAttrs))) == (PrAttrPtr)NULL)
+  	return;
+  
+      if(attrGeneration != serverGeneration)
+--- 474,480 ----
+  {
+      PrAttrPtr pAttr;
+  
+!     if((pAttr = (PrAttrPtr)xalloc(sizeof(PrAttrs))) == (PrAttrPtr)NULL)
+  	return;
+  
+      if(attrGeneration != serverGeneration)
+***************
+*** 887,898 ****
+      }
+      if(db == (XrmDatabase)NULL) 
+      {
+! 	char *retval = (char *)malloc(1);
+  	retval[0] = (char)'\0';
+  	return retval;
+      }
+  
+!     if((enumStruct.stringDb = (char *)malloc(1024)) == (char *)NULL)
+  	return (char *)NULL;
+      enumStruct.stringDb[0] = (char)'\0';
+      enumStruct.nextPos = 0;
+--- 887,898 ----
+      }
+      if(db == (XrmDatabase)NULL) 
+      {
+! 	char *retval = (char *)xalloc(1);
+  	retval[0] = (char)'\0';
+  	return retval;
+      }
+  
+!     if((enumStruct.stringDb = (char *)xalloc(1024)) == (char *)NULL)
+  	return (char *)NULL;
+      enumStruct.stringDb[0] = (char)'\0';
+      enumStruct.nextPos = 0;
+***************
+*** 1054,1066 ****
+      if(!localeName || strlen(localeName) == 0)
+  	localeName = "C";
+  
+!     if((totalAttrs = (char *)malloc(strlen(serverAttrStr) + strlen(localeName)
+  				    + 11)) == (char *)NULL)
+  	return (XrmDatabase)NULL;
+      sprintf(totalAttrs, "%s\n%s\t%s", serverAttrStr, "*locale:", localeName);
+  
+      db =  XrmGetStringDatabase(totalAttrs);
+!     free(totalAttrs);
+      return db;
+  }
+  
+--- 1054,1066 ----
+      if(!localeName || strlen(localeName) == 0)
+  	localeName = "C";
+  
+!     if((totalAttrs = (char *)xalloc(strlen(serverAttrStr) + strlen(localeName)
+  				    + 11)) == (char *)NULL)
+  	return (XrmDatabase)NULL;
+      sprintf(totalAttrs, "%s\n%s\t%s", serverAttrStr, "*locale:", localeName);
+  
+      db =  XrmGetStringDatabase(totalAttrs);
+!     xfree(totalAttrs);
+      return db;
+  }
+  
+***************
+*** 1233,1239 ****
+      return command;
+  }
+  
+! #if defined(CSRG_BASED) || defined(linux) || (defined(sun) && !defined(SVR4))
+  #define iswspace(c) (isascii(c) && isspace(toascii(c)))
+  #endif
+  
+--- 1233,1239 ----
+      return command;
+  }
+  
+! #if defined(CSRG_BASED) || defined(linux) || (defined(sun) && !defined(SVR4)) || (defined(SVR4) && !defined(sun) && !defined(USL))
+  #define iswspace(c) (isascii(c) && isspace(toascii(c)))
+  #endif
+  
+***************
+*** 1275,1281 ****
+  	    break;
+      }
+  
+!     if((*outStr = (char *)malloc(i + 1)) == (char *)NULL)
+  	return 0;
+      strncpy(*outStr, tok, i);
+      (*outStr)[i] = (char)'\0';
+--- 1275,1281 ----
+  	    break;
+      }
+  
+!     if((*outStr = (char *)xalloc(i + 1)) == (char *)NULL)
+  	return 0;
+      strncpy(*outStr, tok, i);
+      (*outStr)[i] = (char)'\0';
+***************
+*** 1291,1298 ****
+      if(vector == (char **)NULL) return;
+  
+      for(i = 0; vector[i] != (char *)NULL; i++)
+! 	free(vector[i]);
+!     free(vector);
+  }
+  
+  
+--- 1291,1298 ----
+      if(vector == (char **)NULL) return;
+  
+      for(i = 0; vector[i] != (char *)NULL; i++)
+! 	xfree(vector[i]);
+!     xfree(vector);
+  }
+  
+  
+***************
+*** 1312,1318 ****
+      for(numAdd = 0; pAddition[numAdd] != (char *)NULL; numAdd++)
+  	;
+  
+!     *pTarget = (char **)realloc((void *)*pTarget, (numTarget + numAdd + 1) * 
+  	       sizeof(char *));
+      if(*pTarget == (char **)NULL)
+  	return;
+--- 1312,1318 ----
+      for(numAdd = 0; pAddition[numAdd] != (char *)NULL; numAdd++)
+  	;
+  
+!     *pTarget = (char **)xrealloc((void *)*pTarget, (numTarget + numAdd + 1) * 
+  	       sizeof(char *));
+      if(*pTarget == (char **)NULL)
+  	return;
+***************
+*** 1333,1339 ****
+      static int beenHere = 0; /* prevent recursion on embedded %options%
+  			     */
+  
+!     pVector = (char **)malloc(sizeof(char *));
+      pVector[0] = (char *)NULL;
+      for(i = 0; (numChars = GetToken(argString, &curTok)) != 0; 
+  	i++, argString += numChars)
+--- 1333,1339 ----
+      static int beenHere = 0; /* prevent recursion on embedded %options%
+  			     */
+  
+!     pVector = (char **)xalloc(sizeof(char *));
+      pVector[0] = (char *)NULL;
+      for(i = 0; (numChars = GetToken(argString, &curTok)) != 0; 
+  	i++, argString += numChars)
+***************
+*** 1342,1352 ****
+  	{
+  	    if(curTok[0] == (char)'\0')
+  	    {
+! 		free(curTok);
+  	    }
+  	    else
+  	    {
+! 	        pVector = realloc((void *)pVector, (i + 2)*sizeof(char *));
+  	        if(pVector == (char **)NULL)
+  	            return (char **)NULL;
+  	        pVector[i] = curTok;
+--- 1342,1353 ----
+  	{
+  	    if(curTok[0] == (char)'\0')
+  	    {
+! 		xfree(curTok);
+  	    }
+  	    else
+  	    {
+! 	        pVector = (char **)xrealloc((void *)pVector,
+! 					    (i + 2)*sizeof(char *));
+  	        if(pVector == (char **)NULL)
+  	            return (char **)NULL;
+  	        pVector[i] = curTok;
+***************
+*** 1360,1373 ****
+  	    curTok = ReplaceAllKeywords(pContext, curTok);
+  	    beenHere = 1;
+  	    optionsVec = BuildArgVector(curTok, pContext);
+! 	    free(curTok);
+  	    beenHere = 0;
+  	    AddVector(&pVector, optionsVec);
+! 	    free(optionsVec);
+  	}
+      }
+      if(numChars == 0 && curTok != (char *)NULL)
+! 	free(curTok);
+      return pVector;
+  }
+  
+--- 1361,1374 ----
+  	    curTok = ReplaceAllKeywords(pContext, curTok);
+  	    beenHere = 1;
+  	    optionsVec = BuildArgVector(curTok, pContext);
+! 	    xfree(curTok);
+  	    beenHere = 0;
+  	    AddVector(&pVector, optionsVec);
+! 	    xfree(optionsVec);
+  	}
+      }
+      if(numChars == 0 && curTok != (char *)NULL)
+! 	xfree(curTok);
+      return pVector;
+  }
+  
+***************
+*** 1425,1431 ****
+  	return BadAlloc;
+  
+      cmdNam = VectorizeCommand(command, &vector, pContext);
+!     free(command);
+  
+      if(cmdNam == (char *)NULL)
+  	return BadAlloc;
+--- 1426,1432 ----
+  	return BadAlloc;
+  
+      cmdNam = VectorizeCommand(command, &vector, pContext);
+!     xfree(command);
+  
+      if(cmdNam == (char *)NULL)
+  	return BadAlloc;
+***************
+*** 1435,1444 ****
+          vector[i] = ReplaceAllKeywords(pContext, vector[i]);
+  	if(vector[i] == (char *)NULL)
+  	{
+! 	    free(cmdNam);
+  	    for(i = 0; vector[i] != (char *)NULL; i++)
+! 		free(vector[i]);
+! 	    free(vector);
+  	    return BadAlloc;
+  	}
+      }
+--- 1436,1445 ----
+          vector[i] = ReplaceAllKeywords(pContext, vector[i]);
+  	if(vector[i] == (char *)NULL)
+  	{
+! 	    xfree(cmdNam);
+  	    for(i = 0; vector[i] != (char *)NULL; i++)
+! 		xfree(vector[i]);
+! 	    xfree(vector);
+  	    return BadAlloc;
+  	}
+      }
+***************
+*** 1450,1456 ****
+      SendFileToCommand(fileName, cmdNam, vector, userName);
+  
+      FreeVector(vector);
+!     free(cmdNam);
+  }
+  
+  /*
+--- 1451,1457 ----
+      SendFileToCommand(fileName, cmdNam, vector, userName);
+  
+      FreeVector(vector);
+!     xfree(cmdNam);
+  }
+  
+  /*
+***************
+*** 1492,1504 ****
+  
+  	  if( which == MEDIUM && !strcmp( val, medium ) )
+  	    {
+! 		free( copy );
+  		return strdup( tray );
+  	    }
+  
+  	  if( which == TRAY && !strcmp( val, tray ) )
+  	    {
+! 		free( copy );
+  		return strdup( medium );
+  	    }
+  	  
+--- 1493,1505 ----
+  
+  	  if( which == MEDIUM && !strcmp( val, medium ) )
+  	    {
+! 		xfree( copy );
+  		return strdup( tray );
+  	    }
+  
+  	  if( which == TRAY && !strcmp( val, tray ) )
+  	    {
+! 		xfree( copy );
+  		return strdup( medium );
+  	    }
+  	  
+***************
+*** 1505,1511 ****
+  	  pS = pE + 1;
+        }
+  
+!     free( copy );
+      return strdup( NULL_STRING );
+  }
+  
+--- 1506,1512 ----
+  	  pS = pE + 1;
+        }
+  
+!     xfree( copy );
+      return strdup( NULL_STRING );
+  }
+  
+***************
+*** 1544,1550 ****
+      m = SearchInputTrays( pCon, TRAY, defTray );
+      if( !strcmp( m, defMedium ) )
+        {
+! 	  Xfree( m );
+  	  *tray = strdup( defTray );
+  	  *medium = strdup( defMedium );
+  	  return;
+--- 1545,1551 ----
+      m = SearchInputTrays( pCon, TRAY, defTray );
+      if( !strcmp( m, defMedium ) )
+        {
+! 	  xfree( m );
+  	  *tray = strdup( defTray );
+  	  *medium = strdup( defMedium );
+  	  return;
+***************
+*** 1570,1574 ****
+       */
+      *tray = strdup( defTray );
+      *medium = m;
+!     Xfree( t );
+  }
+--- 1571,1575 ----
+       */
+      *tray = strdup( defTray );
+      *medium = m;
+!     xfree( t );
+  }
+*** ./programs/Xserver/Xprint/pcl/Pcl.h@@/PUBLIC-LATEST	Sat Nov 16 15:38:22 1996
+--- xc/programs/Xserver/Xprint/pcl/Pcl.h	Mon Dec 30 15:01:31 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: Pcl.h /main/2 1996/11/16 15:26:51 rws $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+--- 1,4 ----
+! /* $XConsortium: Pcl.h /main/3 1996/12/30 14:56:18 kaleb $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+***************
+*** 95,101 ****
+  extern int PclPixmapPrivateIndex;
+  extern int PclGCPrivateIndex;
+  
+- /*
+  /*
+   * This structure defines a mapping from an X colormap ID to a list of
+   * print contexts which use the colormap.
+--- 95,100 ----
+*** ./programs/Xserver/Xprint/pcl/PclArea.c@@/PUBLIC-LATEST	Sat Sep 28 17:08:49 1996
+--- xc/programs/Xserver/Xprint/pcl/PclArea.c	Mon Dec 30 16:41:58 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: PclArea.c /main/1 1996/09/28 17:00:30 rws $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+--- 1,4 ----
+! /* $XConsortium: PclArea.c /main/3 1996/12/30 16:36:46 kaleb $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+***************
+*** 46,51 ****
+--- 46,52 ----
+  */
+  
+  #include <stdio.h>
++ #include <sys/types.h>
+  #include <sys/stat.h>
+  #include "Pcl.h"
+  #include "pixmapstr.h"
+***************
+*** 167,173 ****
+      h = y2 - y1;
+      w = BitmapBytePad( x2 - x1 );
+      
+!     bits = (char *)malloc( h * w );
+      mfbGetImage( (DrawablePtr)pix, x1, y1, x2 - x1, h, 
+  		XYPixmap, ~0, bits );
+  
+--- 168,174 ----
+      h = y2 - y1;
+      w = BitmapBytePad( x2 - x1 );
+      
+!     bits = (char *)xalloc( h * w );
+      mfbGetImage( (DrawablePtr)pix, x1, y1, x2 - x1, h, 
+  		XYPixmap, ~0, bits );
+  
+***************
+*** 200,206 ****
+      /*
+       * Clean things up a bit
+       */
+!     free( bits );
+  }
+  
+  static void
+--- 201,207 ----
+      /*
+       * Clean things up a bit
+       */
+!     xfree( bits );
+  }
+  
+  static void
+***************
+*** 224,230 ****
+      h = y2 - y1;
+      w = PixmapBytePad( x2 - x1, pix->drawable.depth );
+      
+!     bits = (char *)malloc( h * w );
+      if (pix->drawable.depth <= 8)
+  	cfbGetImage( (DrawablePtr)pix, x1, y1, x2 - x1, h, 
+  		ZPixmap, ~0, bits );
+--- 225,231 ----
+      h = y2 - y1;
+      w = PixmapBytePad( x2 - x1, pix->drawable.depth );
+      
+!     bits = (char *)xalloc( h * w );
+      if (pix->drawable.depth <= 8)
+  	cfbGetImage( (DrawablePtr)pix, x1, y1, x2 - x1, h, 
+  		ZPixmap, ~0, bits );
+***************
+*** 261,267 ****
+      /*
+       * Clean things up a bit
+       */
+!     free( bits );
+  }
+  
+  RegionPtr
+--- 262,268 ----
+      /*
+       * Clean things up a bit
+       */
+!     xfree( bits );
+  }
+  
+  RegionPtr
+*** ./programs/Xserver/Xprint/pcl/PclColor.c@@/PUBLIC-LATEST	Wed Dec 11 15:28:05 1996
+--- xc/programs/Xserver/Xprint/pcl/PclColor.c	Mon Dec 30 16:42:10 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: PclColor.c /main/2 1996/12/11 15:27:00 lehors $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+--- 1,4 ----
+! /* $XConsortium: PclColor.c /main/4 1996/12/30 16:36:57 kaleb $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+***************
+*** 49,57 ****
+  #include <stdio.h>
+  #include <string.h>
+  #include <stdlib.h>
+- #include <sys/stat.h>
+  #include <sys/wait.h>
+  #include <unistd.h>
+  
+  #include "colormapst.h"
+  #include "windowstr.h"
+--- 49,57 ----
+  #include <stdio.h>
+  #include <string.h>
+  #include <stdlib.h>
+  #include <sys/wait.h>
+  #include <unistd.h>
++ #include <math.h>
+  
+  #include "colormapst.h"
+  #include "windowstr.h"
+***************
+*** 147,153 ****
+  	/*
+  	 * Set up the mapping between the color map and the context
+  	 */
+!     new = (PclCmapToContexts *)malloc( sizeof( PclCmapToContexts ) );
+  
+      if( new )
+        {
+--- 147,153 ----
+  	/*
+  	 * Set up the mapping between the color map and the context
+  	 */
+!     new = (PclCmapToContexts *)xalloc( sizeof( PclCmapToContexts ) );
+  
+      if( new )
+        {
+***************
+*** 220,226 ****
+  		
+  		tCon = con;
+  		con = con->next;
+! 		free( tCon );
+  	    }
+  	  
+  	  /*
+--- 220,226 ----
+  		
+  		tCon = con;
+  		con = con->next;
+! 		xfree( tCon );
+  	    }
+  	  
+  	  /*
+***************
+*** 386,392 ****
+        }
+  
+      /* If the colormap isn't already there, make an entry for it */
+!     new = (PclPaletteMapPtr)malloc( sizeof( PclPaletteMap ) );
+      new->colormapId = cmap->mid;
+      new->paletteId = cPriv->nextPaletteId++;
+      new->downloaded = 0;
+--- 386,392 ----
+        }
+  
+      /* If the colormap isn't already there, make an entry for it */
+!     new = (PclPaletteMapPtr)xalloc( sizeof( PclPaletteMap ) );
+      new->colormapId = cmap->mid;
+      new->paletteId = cPriv->nextPaletteId++;
+      new->downloaded = 0;
+***************
+*** 453,459 ****
+  		tCmap = pCmap;
+  		pCmap = pCmap->next;
+  	    }
+! 	  new = (PclContextListPtr)malloc( sizeof( PclContextList ) );
+  	  new->context = pCon;
+  	  new->next = pCmap->contexts;
+  	  pCmap->contexts = new;
+--- 453,459 ----
+  		tCmap = pCmap;
+  		pCmap = pCmap->next;
+  	    }
+! 	  new = (PclContextListPtr)xalloc( sizeof( PclContextList ) );
+  	  new->context = pCon;
+  	  new->next = pCmap->contexts;
+  	  pCmap->contexts = new;
+***************
+*** 685,712 ****
+      return;
+  }
+  
+- /* -*-C-*-
+- *******************************************************************************
+- *
+- * File:         xpmap.c
+- * RCS:          $Header: /proj/x11/xc/programs/Xserver/Xprint/pcl/PclColor.c /main/2 1996/12/11 15:27:00 lehors $
+- * Description:  3d color mapper for Xp contributed PCL driver.
+- * Author:       Andrew Fitzhugh
+- * Created:      Fri Feb 16 11:41:08 1996
+- * Modified:     Fri Feb 16 16:03:40 1996 (AEF) fitz@hplaef.hpl.hp.com
+- * Language:     C
+- * Package:      N/A
+- * Status:       Experimental (Do Not Distribute)
+- *
+- * (C) Copyright 1996, Hewlett-Packard Laboratories, all rights reserved.
+- *
+- *******************************************************************************
+- */
+- 
+- /* Compile with "cc -Ae -o xpmap xpmap.c" */
+- 
+- #include <math.h>
+- 
+  unsigned char *PclReadMap(char *name, int *dim)
+  {
+      FILE *fp;
+--- 685,690 ----
+***************
+*** 740,746 ****
+  	return(NULL);
+      }
+      
+!     if ((data = (unsigned char *) malloc(sizeof(char) * size)) == NULL) {
+  	fclose(fp);
+  	return(NULL);
+      }
+--- 718,724 ----
+  	return(NULL);
+      }
+      
+!     if ((data = (unsigned char *) xalloc(sizeof(char) * size)) == NULL) {
+  	fclose(fp);
+  	return(NULL);
+      }
+*** ./programs/Xserver/Xprint/pcl/PclGC.c@@/PUBLIC-LATEST	Sat Sep 28 17:09:36 1996
+--- xc/programs/Xserver/Xprint/pcl/PclGC.c	Mon Dec 30 15:01:55 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: PclGC.c /main/1 1996/09/28 17:01:16 rws $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+--- 1,4 ----
+! /* $XConsortium: PclGC.c /main/2 1996/12/30 14:56:42 kaleb $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+***************
+*** 219,228 ****
+  	   * out from under us.
+  	   */
+  	  if( pPriv->dash != NULL )
+! 	    Xfree( pPriv->dash );
+  	  if( gc.numInDashList != 0 )
+  	    {
+! 		pPriv->dash = (unsigned char *)Xalloc( sizeof( unsigned char ) 
+  						      * gc.numInDashList );
+  		for( i = 0; i < gc.numInDashList; i++ )
+  		  pPriv->dash[i] = gc.dash[i];
+--- 219,228 ----
+  	   * out from under us.
+  	   */
+  	  if( pPriv->dash != NULL )
+! 	    xfree( pPriv->dash );
+  	  if( gc.numInDashList != 0 )
+  	    {
+! 		pPriv->dash = (unsigned char *)xalloc( sizeof( unsigned char ) 
+  						      * gc.numInDashList );
+  		for( i = 0; i < gc.numInDashList; i++ )
+  		  pPriv->dash[i] = gc.dash[i];
+***************
+*** 236,245 ****
+  	   * out from under us.
+  	   */
+  	  if( pPriv->dash != NULL )
+! 	    Xfree( pPriv->dash );
+  	  if( gc.numInDashList != 0 )
+  	    {
+! 		pPriv->dash = (unsigned char *)Xalloc( sizeof( unsigned char ) 
+  						      * gc.numInDashList );
+  		for( i = 0; i < gc.numInDashList; i++ )
+  		  pPriv->dash[i] = gc.dash[i];
+--- 236,245 ----
+  	   * out from under us.
+  	   */
+  	  if( pPriv->dash != NULL )
+! 	    xfree( pPriv->dash );
+  	  if( gc.numInDashList != 0 )
+  	    {
+! 		pPriv->dash = (unsigned char *)xalloc( sizeof( unsigned char ) 
+  						      * gc.numInDashList );
+  		for( i = 0; i < gc.numInDashList; i++ )
+  		  pPriv->dash[i] = gc.dash[i];
+***************
+*** 352,360 ****
+      if( !PclGetDrawablePrivateStuff( pDrawable, &dGC, &valid, outFile ) )
+        return FALSE;
+  
+-     cPriv = ( PclGetContextFromWindow( (WindowPtr)pDrawable ) )
+-       ->devPrivates[PclContextPrivateIndex].ptr;
+- 
+      pCon = PclGetContextFromWindow( (WindowPtr)pDrawable );
+      cPriv = pCon->devPrivates[PclContextPrivateIndex].ptr;
+  
+--- 352,357 ----
+***************
+*** 441,447 ****
+  #endif /* XP_PCL_COLOR */
+        }
+      
+! /*    
+      if( changeMask & GCFunction )
+        {
+  	  int rop = -1;
+--- 438,444 ----
+  #endif /* XP_PCL_COLOR */
+        }
+      
+! #if 0
+      if( changeMask & GCFunction )
+        {
+  	  int rop = -1;
+***************
+*** 502,571 ****
+  	    {
+  		sprintf( t, "MC1,%d;", rop );
+  		SEND_PCL( *outFile, t );
+! /*
+!     if( changeMask & GCFunction )
+!       {
+! 	  int rop;
+! 	  char t[10];
+! 	  
+! 	  switch( pGC->alu )
+! 	    {
+! 	      case GXClear:
+! 		rop = 0;
+! 		break;
+! 	      case GXAnd:
+! 		rop = 136;
+! 		break;
+! 	      case GXandReverse:
+! 		rop = 68;
+! 		break;
+! 	      case GXcopy:
+! 		rop = 204;
+! 		break;
+! 	      case GXandInverted:
+! 		rop = 34;
+! 		break;
+! 	      case GXnoop:
+! 		rop = 170;
+! 		break;
+! 	      case GXxor:
+! 		rop = 238;
+! 		break;
+! 	      case GXor:
+! 		rop = 238;
+! 		break;
+! 	      case GXnor:
+! 		rop = 17;
+! 		break;
+! 	      case GXequiv:
+! 		rop = 153;
+! 		break;
+! 	      case GXinvert:
+! 		rop = 85;
+! 		break;
+! 	      case GXorReverse:
+! 		rop = 221;
+! 		break;
+! 	      case GXcopyInverted:
+! 		rop = 51;
+! 		break;
+! 	      case GXorInverted:
+! 		rop = 187;
+! 		break;
+! 	      case GXnand:
+! 		rop = 119;
+! 		break;
+! 	      case GXset:
+! 		rop = 1;
+! 		break;
+! 	    }
+! 	  if( rop != -1 )
+! 	    {
+! 		sprintf( t, "MC1,%d;", rop );
+! 		SEND_PCL( *outFile, t );
+! 	    }
+!       }
+! */
+  
+      if( changeMask & GCForeground )
+        switch( pGC->fgPixel )
+--- 499,505 ----
+  	    {
+  		sprintf( t, "MC1,%d;", rop );
+  		SEND_PCL( *outFile, t );
+! #endif
+  
+      if( changeMask & GCForeground )
+        switch( pGC->fgPixel )
+***************
+*** 860,866 ****
+  		PclSendPattern( bits, sz, pGC->depth, h, w, 101, *outFile );
+  		FreeScratchGC( scratchGC );
+  		(*pGC->pScreen->DestroyPixmap)( scratchPix );
+! 		Xfree( bits );
+  	    }
+        }
+  
+--- 794,800 ----
+  		PclSendPattern( bits, sz, pGC->depth, h, w, 101, *outFile );
+  		FreeScratchGC( scratchGC );
+  		(*pGC->pScreen->DestroyPixmap)( scratchPix );
+! 		xfree( bits );
+  	    }
+        }
+  
+*** ./programs/Xserver/Xprint/pcl/PclInit.c@@/PUBLIC-LATEST	Sat Sep 28 17:09:48 1996
+--- xc/programs/Xserver/Xprint/pcl/PclInit.c	Mon Dec 30 16:42:19 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: PclInit.c /main/1 1996/09/28 17:01:28 rws $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+--- 1,4 ----
+! /* $XConsortium: PclInit.c /main/3 1996/12/30 16:37:06 kaleb $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+***************
+*** 79,85 ****
+  
+  #include <stdio.h>
+  #include <string.h>
+- #include <sys/stat.h>
+  #include <sys/wait.h>
+  
+  #include "Pcl.h"
+--- 79,84 ----
+***************
+*** 177,183 ****
+  #endif
+  #endif
+  
+!     Xfree( pPriv );
+      
+      return status;
+  }
+--- 176,182 ----
+  #endif
+  #endif
+  
+!     xfree( pPriv );
+      
+      return status;
+  }
+***************
+*** 298,304 ****
+      for( i = 0; i < NUM_DEPTHS( Depths ); i++ )
+        {
+  	  pScreen->allowedDepths[i].vids =
+! 	    (VisualID *)Xalloc( sizeof(VisualID ) );
+  	  pScreen->allowedDepths[i].vids[0] = i + 1;
+        }
+      
+--- 297,303 ----
+      for( i = 0; i < NUM_DEPTHS( Depths ); i++ )
+        {
+  	  pScreen->allowedDepths[i].vids =
+! 	    (VisualID *)xalloc( sizeof(VisualID ) );
+  	  pScreen->allowedDepths[i].vids[0] = i + 1;
+        }
+      
+***************
+*** 345,351 ****
+          PclGeneration = serverGeneration;
+      }
+  
+!     pScreen->devPrivates[PclScreenPrivateIndex].ptr = (pointer)Xalloc(
+                  sizeof(PclScreenPrivRec));
+  }
+  
+--- 344,350 ----
+          PclGeneration = serverGeneration;
+      }
+  
+!     pScreen->devPrivates[PclScreenPrivateIndex].ptr = (pointer)xalloc(
+                  sizeof(PclScreenPrivRec));
+  }
+  
+***************
+*** 425,437 ****
+      pConPriv->getDocBufSize = 0;
+      modelID = XpGetOneAttribute(pCon, XPPrinterAttr, "xp-model-identifier");
+      if ( (configDir = XpGetConfigDir(False)) != (char *) NULL ) {
+! 	pathName = (char *)Xalloc(strlen(configDir) + strlen(MODELDIRNAME) +
+  				strlen(modelID) + strlen("color.map") + 4);
+  	if (pathName) {
+  	    sprintf(pathName, "%s/%s/%s/%s", configDir, MODELDIRNAME, modelID,
+  				"color.map");
+  	    pConPriv->ctbl = PclReadMap(pathName, &pConPriv->ctbldim);
+! 	    Xfree(pathName);
+  
+  	} else
+  	    pConPriv->ctbl = NULL;
+--- 424,436 ----
+      pConPriv->getDocBufSize = 0;
+      modelID = XpGetOneAttribute(pCon, XPPrinterAttr, "xp-model-identifier");
+      if ( (configDir = XpGetConfigDir(False)) != (char *) NULL ) {
+! 	pathName = (char *)xalloc(strlen(configDir) + strlen(MODELDIRNAME) +
+  				strlen(modelID) + strlen("color.map") + 4);
+  	if (pathName) {
+  	    sprintf(pathName, "%s/%s/%s/%s", configDir, MODELDIRNAME, modelID,
+  				"color.map");
+  	    pConPriv->ctbl = PclReadMap(pathName, &pConPriv->ctbldim);
+! 	    xfree(pathName);
+  
+  	} else
+  	    pConPriv->ctbl = NULL;
+***************
+*** 565,571 ****
+      if( pConPriv->pageFileName != (char *)NULL )
+        {
+  	  unlink( pConPriv->pageFileName );
+! 	  Xfree( pConPriv->pageFileName );
+  	  pConPriv->pageFileName = (char *)NULL;
+        }
+      
+--- 564,570 ----
+      if( pConPriv->pageFileName != (char *)NULL )
+        {
+  	  unlink( pConPriv->pageFileName );
+! 	  xfree( pConPriv->pageFileName );
+  	  pConPriv->pageFileName = (char *)NULL;
+        }
+      
+***************
+*** 577,591 ****
+      if( pConPriv->jobFileName != (char *)NULL )
+        {
+  	  unlink( pConPriv->jobFileName );
+! 	  Xfree( pConPriv->jobFileName );
+  	  pConPriv->jobFileName = (char *)NULL;
+        }
+  
+!     Xfree( pConPriv->dash );
+!     free(pConPriv->ctbl);
+      pConPriv->ctbl = NULL;
+  #ifdef XP_PCL_LJ3
+!     Xfree( pConPriv->figures );
+  #endif /* XP_PCL_LJ3 */
+  
+      /*
+--- 576,590 ----
+      if( pConPriv->jobFileName != (char *)NULL )
+        {
+  	  unlink( pConPriv->jobFileName );
+! 	  xfree( pConPriv->jobFileName );
+  	  pConPriv->jobFileName = (char *)NULL;
+        }
+  
+!     xfree( pConPriv->dash );
+!     xfree(pConPriv->ctbl);
+      pConPriv->ctbl = NULL;
+  #ifdef XP_PCL_LJ3
+!     xfree( pConPriv->figures );
+  #endif /* XP_PCL_LJ3 */
+  
+      /*
+***************
+*** 596,602 ****
+        {
+  	  t = p;
+  	  p = p->next;
+! 	  free( t );
+        }
+      pConPriv->palettes = NULL;
+  
+--- 595,601 ----
+        {
+  	  t = p;
+  	  p = p->next;
+! 	  xfree( t );
+        }
+      pConPriv->palettes = NULL;
+  
+***************
+*** 625,631 ****
+  			    temp = pCmap->contexts;
+  			    pCmap->contexts = con = con->next;
+  			}
+! 		      free( temp );
+  		  }
+  		else
+  		  con = con->next;
+--- 624,630 ----
+  			    temp = pCmap->contexts;
+  			    pCmap->contexts = con = con->next;
+  			}
+! 		      xfree( temp );
+  		  }
+  		else
+  		  con = con->next;
+*** ./programs/Xserver/Xprint/pcl/PclLine.c@@/PUBLIC-LATEST	Sat Sep 28 17:09:56 1996
+--- xc/programs/Xserver/Xprint/pcl/PclLine.c	Mon Dec 30 15:02:07 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: PclLine.c /main/1 1996/09/28 17:01:36 rws $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+--- 1,4 ----
+! /* $XConsortium: PclLine.c /main/2 1996/12/30 14:56:54 kaleb $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+***************
+*** 112,118 ****
+       */
+      region = miRegionCreate( NULL, 0 );
+      drawRects = (xRectangle *)
+!       Xalloc( ( nPoints - 1 ) * sizeof( xRectangle ) );
+  
+      /*
+       * Calculate the "fudge factor" based on the line width.
+--- 112,118 ----
+       */
+      region = miRegionCreate( NULL, 0 );
+      drawRects = (xRectangle *)
+!       xalloc( ( nPoints - 1 ) * sizeof( xRectangle ) );
+  
+      /*
+       * Calculate the "fudge factor" based on the line width.
+***************
+*** 192,198 ****
+       */
+      miRegionDestroy( drawRegion );
+      miRegionDestroy( region );
+!     Xfree( drawRects );
+  }
+  
+  void
+--- 192,198 ----
+       */
+      miRegionDestroy( drawRegion );
+      miRegionDestroy( region );
+!     xfree( drawRects );
+  }
+  
+  void
+***************
+*** 228,234 ****
+       */
+      region = miRegionCreate( NULL, 0 );
+      drawRects = (xRectangle *)
+!       Xalloc( nSegments * sizeof( xRectangle ) );
+  
+      /*
+       * Calculate the fudge factor, based on the line width
+--- 228,234 ----
+       */
+      region = miRegionCreate( NULL, 0 );
+      drawRects = (xRectangle *)
+!       xalloc( nSegments * sizeof( xRectangle ) );
+  
+      /*
+       * Calculate the fudge factor, based on the line width
+***************
+*** 309,314 ****
+       */
+      miRegionDestroy( drawRegion );
+      miRegionDestroy( region );
+!     Xfree( drawRects );
+  }
+  
+--- 309,314 ----
+       */
+      miRegionDestroy( drawRegion );
+      miRegionDestroy( region );
+!     xfree( drawRects );
+  }
+  
+*** ./programs/Xserver/Xprint/pcl/PclMisc.c@@/PUBLIC-LATEST	Wed Nov  6 06:58:13 1996
+--- xc/programs/Xserver/Xprint/pcl/PclMisc.c	Mon Dec 30 15:02:11 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: PclMisc.c /main/2 1996/11/06 06:54:35 kaleb $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+--- 1,4 ----
+! /* $XConsortium: PclMisc.c /main/3 1996/12/30 14:56:58 kaleb $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+***************
+*** 131,137 ****
+  	    return (char *)NULL;
+  
+  	n = (pProp->format/8) * pProp->size; /* size (bytes) of prop */
+! 	retVal = (char *)Xalloc(n + 1);
+  	(void)memcpy((void *)retVal, (void *)pProp->data, n);
+  	retVal[n] = '\0';
+  
+--- 131,137 ----
+  	    return (char *)NULL;
+  
+  	n = (pProp->format/8) * pProp->size; /* size (bytes) of prop */
+! 	retVal = (char *)xalloc(n + 1);
+  	(void)memcpy((void *)retVal, (void *)pProp->data, n);
+  	retVal[n] = '\0';
+  
+***************
+*** 230,236 ****
+  
+      ptr = pConPriv->figures;
+      while ( ( pConPriv->fcount + n) > pConPriv->fcount_max ) {
+! 	ptr = (char *)realloc(ptr, 1024 + pConPriv->fcount_max);
+  	if ( !ptr )
+  	    return;
+  	pConPriv->figures = ptr;
+--- 230,236 ----
+  
+      ptr = pConPriv->figures;
+      while ( ( pConPriv->fcount + n) > pConPriv->fcount_max ) {
+! 	ptr = (char *)xrealloc(ptr, 1024 + pConPriv->fcount_max);
+  	if ( !ptr )
+  	    return;
+  	pConPriv->figures = ptr;
+*** ./programs/Xserver/Xprint/pcl/PclPolygon.c@@/PUBLIC-LATEST	Sat Sep 28 17:10:23 1996
+--- xc/programs/Xserver/Xprint/pcl/PclPolygon.c	Mon Dec 30 15:02:15 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: PclPolygon.c /main/1 1996/09/28 17:02:03 rws $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+--- 1,4 ----
+! /* $XConsortium: PclPolygon.c /main/2 1996/12/30 14:57:02 kaleb $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+***************
+*** 80,86 ****
+       * regions. 
+       */
+      region = miRegionCreate( NULL, 0 );
+!     drawRects = (xRectangle *)Xalloc( nRects * sizeof( xRectangle ) );
+      
+      fudge = 3 * pGC->lineWidth + 1;
+      
+--- 80,86 ----
+       * regions. 
+       */
+      region = miRegionCreate( NULL, 0 );
+!     drawRects = (xRectangle *)xalloc( nRects * sizeof( xRectangle ) );
+      
+      fudge = 3 * pGC->lineWidth + 1;
+      
+***************
+*** 138,144 ****
+       */
+      miRegionDestroy( drawRegion );
+      miRegionDestroy( region );
+!     Xfree( drawRects );
+  }
+  
+  void
+--- 138,144 ----
+       */
+      miRegionDestroy( drawRegion );
+      miRegionDestroy( region );
+!     xfree( drawRects );
+  }
+  
+  void
+***************
+*** 291,297 ****
+       * regions.
+       */
+      region = miRegionCreate( NULL, 0 );
+!     drawRects = (xRectangle *)Xalloc( nRects * sizeof( xRectangle ) );
+  
+  
+      fudge = 3 * pGC->lineWidth + 1;
+--- 291,297 ----
+       * regions.
+       */
+      region = miRegionCreate( NULL, 0 );
+!     drawRects = (xRectangle *)xalloc( nRects * sizeof( xRectangle ) );
+  
+  
+      fudge = 3 * pGC->lineWidth + 1;
+***************
+*** 349,354 ****
+       */
+      miRegionDestroy( drawRegion );
+      miRegionDestroy( region );
+!     Xfree( drawRects );
+  }
+  
+--- 349,354 ----
+       */
+      miRegionDestroy( drawRegion );
+      miRegionDestroy( region );
+!     xfree( drawRects );
+  }
+  
+*** ./programs/Xserver/Xprint/pcl/PclPrint.c@@/PUBLIC-LATEST	Sat Nov 16 15:38:28 1996
+--- xc/programs/Xserver/Xprint/pcl/PclPrint.c	Mon Dec 30 16:42:28 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: PclPrint.c /main/2 1996/11/16 15:26:56 rws $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+--- 1,4 ----
+! /* $XConsortium: PclPrint.c /main/4 1996/12/30 16:37:15 kaleb $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+***************
+*** 46,51 ****
+--- 46,52 ----
+  
+  #include <stdio.h>
+  #include <string.h>
++ #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <sys/wait.h>
+  #include <unistd.h>
+***************
+*** 89,95 ****
+  	    pConPriv->pPageFile = (FILE *)NULL;
+  	}
+  	unlink(pConPriv->pageFileName);
+! 	Xfree(pConPriv->pageFileName);
+  	pConPriv->pageFileName = (char *)NULL;
+      }
+  
+--- 90,96 ----
+  	    pConPriv->pPageFile = (FILE *)NULL;
+  	}
+  	unlink(pConPriv->pageFileName);
+! 	xfree(pConPriv->pageFileName);
+  	pConPriv->pageFileName = (char *)NULL;
+      }
+  
+***************
+*** 177,183 ****
+  
+  	  fclose( fp );
+  	  unlink( fileName );
+! 	  Xfree( fileName );
+  
+  	  if( priv->getDocClient != (ClientPtr)NULL ) {
+  	      XpFinishDocData( priv->getDocClient );
+--- 178,184 ----
+  
+  	  fclose( fp );
+  	  unlink( fileName );
+! 	  xfree( fileName );
+  
+  	  if( priv->getDocClient != (ClientPtr)NULL ) {
+  	      XpFinishDocData( priv->getDocClient );
+***************
+*** 218,224 ****
+      XpSubmitJob( priv->jobFileName, pCon );
+      fclose( priv->pJobFile );
+      unlink( priv->jobFileName );
+!     Xfree( priv->jobFileName );
+      priv->jobFileName = NULL;
+  
+      PclDestroySoftFontInfo(priv->pSoftFontInfo);
+--- 219,225 ----
+      XpSubmitJob( priv->jobFileName, pCon );
+      fclose( priv->pJobFile );
+      unlink( priv->jobFileName );
+!     xfree( priv->jobFileName );
+      priv->jobFileName = NULL;
+  
+      PclDestroySoftFontInfo(priv->pSoftFontInfo);
+***************
+*** 474,480 ****
+      fclose( pPriv->pJobFile );
+      unlink( pPriv->jobFileName );
+  
+!     Xfree(pPriv->jobFileName);
+  
+      if (!XpOpenTmpFile("w+", &pPriv->jobFileName, &pPriv->pJobFile))
+  	return BadAlloc;
+--- 475,481 ----
+      fclose( pPriv->pJobFile );
+      unlink( pPriv->jobFileName );
+  
+!     xfree(pPriv->jobFileName);
+  
+      if (!XpOpenTmpFile("w+", &pPriv->jobFileName, &pPriv->pJobFile))
+  	return BadAlloc;
+*** ./programs/Xserver/Xprint/pcl/PclSFonts.c@@/PUBLIC-LATEST	Sat Sep 28 17:10:36 1996
+--- xc/programs/Xserver/Xprint/pcl/PclSFonts.c	Mon Dec 30 15:02:24 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: PclSFonts.c /main/1 1996/09/28 17:02:16 rws $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+--- 1,4 ----
+! /* $XConsortium: PclSFonts.c /main/2 1996/12/30 14:57:11 kaleb $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+***************
+*** 134,140 ****
+  {
+  PclSoftFontInfoPtr pSoftFontInfo;
+  
+!     pSoftFontInfo = (PclSoftFontInfoPtr)Xalloc(sizeof(PclSoftFontInfoRec));
+      if ( pSoftFontInfo == (PclSoftFontInfoPtr) NULL)
+  	return (PclSoftFontInfoPtr) NULL;
+      pSoftFontInfo->phead8 = (PclFontHead8Ptr)NULL;
+--- 134,140 ----
+  {
+  PclSoftFontInfoPtr pSoftFontInfo;
+  
+!     pSoftFontInfo = (PclSoftFontInfoPtr)xalloc(sizeof(PclSoftFontInfoRec));
+      if ( pSoftFontInfo == (PclSoftFontInfoPtr) NULL)
+  	return (PclSoftFontInfoPtr) NULL;
+      pSoftFontInfo->phead8 = (PclFontHead8Ptr)NULL;
+***************
+*** 161,195 ****
+  
+      pfh8  = pSoftFontInfo->phead8;
+      while (pfh8 != (PclFontHead8Ptr) NULL) {
+! 	Xfree(pfh8->fontname);
+! 	Xfree(pfh8->index);
+  	pfh8_next = pfh8->next;
+! 	Xfree(pfh8);
+  	pfh8 = pfh8_next;
+      }
+  
+      pfh16 = pSoftFontInfo->phead16;
+      while (pfh16 != (PclFontHead16Ptr) NULL) {
+! 	Xfree(pfh16->fontname);
+  	nindex_col = pfh16->lastCol - pfh16->firstCol + 1;
+  	nindex_row = pfh16->lastRow - pfh16->firstRow + 1;
+  	for (i=0; i<nindex_row; i++)
+! 	    Xfree(pfh16->index[i]);
+! 	Xfree(pfh16->index);
+  	pfh16_next = pfh16->next;
+! 	Xfree(pfh16);
+  	pfh16 = pfh16_next;
+      }
+  
+      pin = pSoftFontInfo->pinfont;
+      while (pin != (PclInternalFontPtr) NULL) {
+! 	Xfree(pin->fontname);
+  	pin_next = pin->next;
+! 	Xfree(pin);
+  	pin = pin_next;
+      }
+  
+!     Xfree(pSoftFontInfo);
+  }
+  
+  /* -*- PclDownloadHeader -*-
+--- 161,195 ----
+  
+      pfh8  = pSoftFontInfo->phead8;
+      while (pfh8 != (PclFontHead8Ptr) NULL) {
+! 	xfree(pfh8->fontname);
+! 	xfree(pfh8->index);
+  	pfh8_next = pfh8->next;
+! 	xfree(pfh8);
+  	pfh8 = pfh8_next;
+      }
+  
+      pfh16 = pSoftFontInfo->phead16;
+      while (pfh16 != (PclFontHead16Ptr) NULL) {
+! 	xfree(pfh16->fontname);
+  	nindex_col = pfh16->lastCol - pfh16->firstCol + 1;
+  	nindex_row = pfh16->lastRow - pfh16->firstRow + 1;
+  	for (i=0; i<nindex_row; i++)
+! 	    xfree(pfh16->index[i]);
+! 	xfree(pfh16->index);
+  	pfh16_next = pfh16->next;
+! 	xfree(pfh16);
+  	pfh16 = pfh16_next;
+      }
+  
+      pin = pSoftFontInfo->pinfont;
+      while (pin != (PclInternalFontPtr) NULL) {
+! 	xfree(pin->fontname);
+  	pin_next = pin->next;
+! 	xfree(pin);
+  	pin = pin_next;
+      }
+  
+!     xfree(pSoftFontInfo);
+  }
+  
+  /* -*- PclDownloadHeader -*-
+***************
+*** 333,339 ****
+       */
+      if (raster) {
+  	fwrite(raster, nbytes, 1, fp);
+! 	Xfree(raster);
+      } else
+  	fwrite(cd->raster_top, nbytes, 1, fp);
+  
+--- 333,339 ----
+       */
+      if (raster) {
+  	fwrite(raster, nbytes, 1, fp);
+! 	xfree(raster);
+      } else
+  	fwrite(cd->raster_top, nbytes, 1, fp);
+  
+***************
+*** 364,375 ****
+      *nbytes = cd->height * byte_width;
+  
+      /* Create buffer for storing compress bitmap glyph  */
+!     raster = (unsigned char *)Xalloc(*nbytes);
+      rptr_s = raster;
+      rptr_e = raster;
+      rptr_end = raster + *nbytes;
+  
+!     tmp_s = (unsigned char *)Xalloc(cd->width * 8 + 2);
+  
+      p = cd->raster_top;
+      for (i=0; i<cd->height; i++) {
+--- 364,375 ----
+      *nbytes = cd->height * byte_width;
+  
+      /* Create buffer for storing compress bitmap glyph  */
+!     raster = (unsigned char *)xalloc(*nbytes);
+      rptr_s = raster;
+      rptr_e = raster;
+      rptr_end = raster + *nbytes;
+  
+!     tmp_s = (unsigned char *)xalloc(cd->width * 8 + 2);
+  
+      p = cd->raster_top;
+      for (i=0; i<cd->height; i++) {
+***************
+*** 414,421 ****
+  	    *rptr_s += 1;
+  	else {
+  	    if ( rptr_e + (tmp_ptr - tmp_s) > rptr_end ) {
+! 		Xfree(raster);
+! 		Xfree(tmp_s);
+  		return (unsigned char *)NULL;
+  	    }
+  	    memcpy (rptr_e, tmp_s, tmp_ptr - tmp_s);
+--- 414,421 ----
+  	    *rptr_s += 1;
+  	else {
+  	    if ( rptr_e + (tmp_ptr - tmp_s) > rptr_end ) {
+! 		xfree(raster);
+! 		xfree(tmp_s);
+  		return (unsigned char *)NULL;
+  	    }
+  	    memcpy (rptr_e, tmp_s, tmp_ptr - tmp_s);
+***************
+*** 423,429 ****
+  	    rptr_e = rptr_s + (tmp_ptr - tmp_s);
+  	}
+      }
+!     Xfree(tmp_s);
+      *nbytes = rptr_e - raster;
+  
+      return raster;
+--- 423,429 ----
+  	    rptr_e = rptr_s + (tmp_ptr - tmp_s);
+  	}
+      }
+!     xfree(tmp_s);
+      *nbytes = rptr_e - raster;
+  
+      return raster;
+*** ./programs/Xserver/Xprint/pcl/PclSpans.c@@/PUBLIC-LATEST	Sat Sep 28 17:11:05 1996
+--- xc/programs/Xserver/Xprint/pcl/PclSpans.c	Mon Dec 30 15:02:30 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: PclSpans.c /main/1 1996/09/28 17:02:45 rws $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+--- 1,4 ----
+! /* $XConsortium: PclSpans.c /main/2 1996/12/30 14:57:17 kaleb $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+***************
+*** 74,80 ****
+      /*
+       * Build a region out of the spans
+       */
+!     rects = (xRectangle *)Xalloc( nSpans * sizeof( xRectangle ) );
+      xoffset = pDrawable->x;
+      yoffset = pDrawable->y;
+      
+--- 74,80 ----
+      /*
+       * Build a region out of the spans
+       */
+!     rects = (xRectangle *)xalloc( nSpans * sizeof( xRectangle ) );
+      xoffset = pDrawable->x;
+      yoffset = pDrawable->y;
+      
+***************
+*** 118,124 ****
+       */
+      miRegionDestroy( fillRegion );
+      miRegionDestroy( region );
+!     Xfree( rects );
+  }
+  
+  void
+--- 118,124 ----
+       */
+      miRegionDestroy( fillRegion );
+      miRegionDestroy( region );
+!     xfree( rects );
+  }
+  
+  void
+*** ./programs/Xserver/Xprint/pcl/PclText.c@@/PUBLIC-LATEST	Sat Sep 28 17:11:11 1996
+--- xc/programs/Xserver/Xprint/pcl/PclText.c	Mon Dec 30 15:02:35 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: PclText.c /main/1 1996/09/28 17:02:51 rws $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+--- 1,4 ----
+! /* $XConsortium: PclText.c /main/2 1996/12/30 14:57:22 kaleb $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+***************
+*** 140,146 ****
+  		fillCharDescData(&cd, *chinfo);
+          	PclDownloadSoftFont8(pConPriv->pJobFile, pSoftFontInfo,
+  					pfh8, &cd, p);
+!         	Xfree(cd.raster_top);
+  	    }
+  	}
+  
+--- 140,146 ----
+  		fillCharDescData(&cd, *chinfo);
+          	PclDownloadSoftFont8(pConPriv->pJobFile, pSoftFontInfo,
+  					pfh8, &cd, p);
+!         	xfree(cd.raster_top);
+  	    }
+  	}
+  
+***************
+*** 327,333 ****
+  		fillCharDescData(&cd, *chinfo);
+  		PclDownloadSoftFont16(pConPriv->pJobFile, pSoftFontInfo,
+  				pfh16, &cd, row, col);
+! 		Xfree(cd.raster_top);
+  	    }
+  	}
+  
+--- 327,333 ----
+  		fillCharDescData(&cd, *chinfo);
+  		PclDownloadSoftFont16(pConPriv->pJobFile, pSoftFontInfo,
+  				pfh16, &cd, row, col);
+! 		xfree(cd.raster_top);
+  	    }
+  	}
+  
+***************
+*** 531,537 ****
+      /*
+       * Create Font Header Information
+       */
+!     pfh8 = (PclFontHead8Ptr)Xalloc(sizeof(PclFontHead8Rec));
+      if (pfh8 == (PclFontHead8Ptr)NULL)
+  	return (PclFontHead8Ptr)NULL;
+  
+--- 531,537 ----
+      /*
+       * Create Font Header Information
+       */
+!     pfh8 = (PclFontHead8Ptr)xalloc(sizeof(PclFontHead8Rec));
+      if (pfh8 == (PclFontHead8Ptr)NULL)
+  	return (PclFontHead8Ptr)NULL;
+  
+***************
+*** 545,562 ****
+  
+      fillFontDescData(pfont, &(pfh8->fd), space_width);
+      pfh8->fid = 0;
+!     pfh8->fontname = (char *)Xalloc(strlen(fontname) + 1);
+      if (pfh8->fontname == (char *)NULL) {
+! 	Xfree(pfh8);
+  	return (PclFontHead8Ptr) NULL;
+      }
+      strcpy(pfh8->fontname, fontname);
+  
+      nindex = 0xff;
+!     pfh8->index = (unsigned char *)Xalloc(nindex);
+      if ( pfh8->index == (unsigned char *) NULL ) {
+! 	Xfree(pfh8->fontname);
+! 	Xfree(pfh8);
+  	return (PclFontHead8Ptr) NULL;
+      }
+  
+--- 545,562 ----
+  
+      fillFontDescData(pfont, &(pfh8->fd), space_width);
+      pfh8->fid = 0;
+!     pfh8->fontname = (char *)xalloc(strlen(fontname) + 1);
+      if (pfh8->fontname == (char *)NULL) {
+! 	xfree(pfh8);
+  	return (PclFontHead8Ptr) NULL;
+      }
+      strcpy(pfh8->fontname, fontname);
+  
+      nindex = 0xff;
+!     pfh8->index = (unsigned char *)xalloc(nindex);
+      if ( pfh8->index == (unsigned char *) NULL ) {
+! 	xfree(pfh8->fontname);
+! 	xfree(pfh8);
+  	return (PclFontHead8Ptr) NULL;
+      }
+  
+***************
+*** 607,613 ****
+      /*
+       * Create Font Header Information
+       */
+!     pfh16 = (PclFontHead16Ptr)Xalloc(sizeof(PclFontHead16Rec));
+      if (pfh16 == (PclFontHead16Ptr)NULL)
+  	return (PclFontHead16Ptr)NULL;
+  
+--- 607,613 ----
+      /*
+       * Create Font Header Information
+       */
+!     pfh16 = (PclFontHead16Ptr)xalloc(sizeof(PclFontHead16Rec));
+      if (pfh16 == (PclFontHead16Ptr)NULL)
+  	return (PclFontHead16Ptr)NULL;
+  
+***************
+*** 624,632 ****
+      fillFontDescData(pfont, &(pfh16->fd), space_width);
+      pfh16->cur_fid = 0;
+      pfh16->cur_cindex = 0;
+!     pfh16->fontname = (char *)Xalloc(strlen(fontname) + 1);
+      if (pfh16->fontname == (char *)NULL) {
+! 	Xfree(pfh16);
+  	return (PclFontHead16Ptr) NULL;
+      }
+      strcpy(pfh16->fontname, fontname);
+--- 624,632 ----
+      fillFontDescData(pfont, &(pfh16->fd), space_width);
+      pfh16->cur_fid = 0;
+      pfh16->cur_cindex = 0;
+!     pfh16->fontname = (char *)xalloc(strlen(fontname) + 1);
+      if (pfh16->fontname == (char *)NULL) {
+! 	xfree(pfh16);
+  	return (PclFontHead16Ptr) NULL;
+      }
+      strcpy(pfh16->fontname, fontname);
+***************
+*** 634,652 ****
+      pfi = (FontInfoRec *)&pfont->info;
+      nindex_col = pfi->lastCol - pfi->firstCol + 1;
+      nindex_row = pfi->lastRow - pfi->firstRow + 1;
+!     index = (PclFontMapRec **)Xalloc(sizeof(PclFontMapRec *)*nindex_row);
+      if (index == (PclFontMapRec **)NULL) {
+! 	Xfree(pfh16->fontname);
+! 	Xfree(pfh16);
+  	return (PclFontHead16Ptr) NULL;
+      }
+      for (i=0; i<nindex_row; i++) {
+! 	index[i] = (PclFontMapRec *)Xalloc(sizeof(PclFontMapRec)*nindex_col);
+  	if (index[i] == (PclFontMapRec *)NULL) {
+  	    for(j=0; j<i; j++)
+! 		Xfree(index[j]);
+! 	    Xfree(pfh16->fontname);
+! 	    Xfree(pfh16);
+  	    return (PclFontHead16Ptr) NULL;
+  	}
+          for (j=0; j<=nindex_col; j++)
+--- 634,652 ----
+      pfi = (FontInfoRec *)&pfont->info;
+      nindex_col = pfi->lastCol - pfi->firstCol + 1;
+      nindex_row = pfi->lastRow - pfi->firstRow + 1;
+!     index = (PclFontMapRec **)xalloc(sizeof(PclFontMapRec *)*nindex_row);
+      if (index == (PclFontMapRec **)NULL) {
+! 	xfree(pfh16->fontname);
+! 	xfree(pfh16);
+  	return (PclFontHead16Ptr) NULL;
+      }
+      for (i=0; i<nindex_row; i++) {
+! 	index[i] = (PclFontMapRec *)xalloc(sizeof(PclFontMapRec)*nindex_col);
+  	if (index[i] == (PclFontMapRec *)NULL) {
+  	    for(j=0; j<i; j++)
+! 		xfree(index[j]);
+! 	    xfree(pfh16->fontname);
+! 	    xfree(pfh16);
+  	    return (PclFontHead16Ptr) NULL;
+  	}
+          for (j=0; j<=nindex_col; j++)
+***************
+*** 701,713 ****
+      /*
+       * Create Internal Font Information
+       */
+!     pin = (PclInternalFontPtr)Xalloc(sizeof(PclInternalFontRec));
+      if (pin == (PclInternalFontPtr)NULL)
+  	return (PclInternalFontPtr)NULL;
+  
+!     pin->fontname = (char *)Xalloc(strlen(fontname) + 1);
+      if (pin->fontname == (char *)NULL) {
+! 	Xfree(pin);
+  	return (PclInternalFontPtr) NULL;
+      }
+      strcpy(pin->fontname, fontname);
+--- 701,713 ----
+      /*
+       * Create Internal Font Information
+       */
+!     pin = (PclInternalFontPtr)xalloc(sizeof(PclInternalFontRec));
+      if (pin == (PclInternalFontPtr)NULL)
+  	return (PclInternalFontPtr)NULL;
+  
+!     pin->fontname = (char *)xalloc(strlen(fontname) + 1);
+      if (pin->fontname == (char *)NULL) {
+! 	xfree(pin);
+  	return (PclInternalFontPtr) NULL;
+      }
+      strcpy(pin->fontname, fontname);
+***************
+*** 739,746 ****
+  	}
+      }
+      if ( mask != 0x1f ) {
+! 	Xfree(pin->fontname);
+! 	Xfree(pin);
+  	return (PclInternalFontPtr) NULL;
+      }
+  
+--- 739,746 ----
+  	}
+      }
+      if ( mask != 0x1f ) {
+! 	xfree(pin->fontname);
+! 	xfree(pin);
+  	return (PclInternalFontPtr) NULL;
+      }
+  
+***************
+*** 799,805 ****
+      pcd->font_pitch = pci->metrics.characterWidth;
+  
+      byte_width = (pcd->width + 7)/8;
+!     pcd->raster_top = (unsigned char *)Xalloc(byte_width * pcd->height);
+      if (pcd->raster_top == (unsigned char *)NULL)
+  	return (PclCharDataPtr)NULL;
+  
+--- 799,805 ----
+      pcd->font_pitch = pci->metrics.characterWidth;
+  
+      byte_width = (pcd->width + 7)/8;
+!     pcd->raster_top = (unsigned char *)xalloc(byte_width * pcd->height);
+      if (pcd->raster_top == (unsigned char *)NULL)
+  	return (PclCharDataPtr)NULL;
+  
+*** ./programs/Xserver/Xprint/pcl/PclWindow.c@@/PUBLIC-LATEST	Sat Sep 28 17:11:23 1996
+--- xc/programs/Xserver/Xprint/pcl/PclWindow.c	Mon Dec 30 16:42:41 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: PclWindow.c /main/1 1996/09/28 17:03:03 rws $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+--- 1,4 ----
+! /* $XConsortium: PclWindow.c /main/3 1996/12/30 16:37:28 kaleb $ */
+  /*******************************************************************
+  **
+  **    *********************************************************
+***************
+*** 48,54 ****
+  
+  #include <stdio.h>
+  #include <string.h>
+- #include <sys/stat.h>
+  #include <sys/wait.h>
+  
+  #include "mistruct.h"
+--- 48,53 ----
+***************
+*** 91,97 ****
+  {
+      PclWindowPrivPtr pPriv;
+      
+! /*
+      Bool status = Success;
+      ScreenPtr pScreen = pWin->drawable.pScreen;
+      PclScreenPrivPtr pScreenPriv = (PclScreenPrivPtr) 
+--- 90,96 ----
+  {
+      PclWindowPrivPtr pPriv;
+      
+! #if 0
+      Bool status = Success;
+      ScreenPtr pScreen = pWin->drawable.pScreen;
+      PclScreenPrivPtr pScreenPriv = (PclScreenPrivPtr) 
+***************
+*** 101,115 ****
+  
+      /*
+       * Initialize this window's private struct.
+!      *
+      pWinPriv->jobFileName = (char *)NULL;
+      pWinPriv->pJobFile = (FILE *)NULL;
+      pWinPriv->pageFileName = (char *)NULL;
+      pWinPriv->pPageFile = (FILE *)NULL;
+      
+!     if(pWin->parent == (WindowPtr)NULL)  /* root window?
+      {
+! 	Atom propName; /* type = XA_STRING
+  	char *propVal;
+  	int i;
+          XrmDatabase rmdb = pScreenPriv->resDB;
+--- 100,114 ----
+  
+      /*
+       * Initialize this window's private struct.
+!      */
+      pWinPriv->jobFileName = (char *)NULL;
+      pWinPriv->pJobFile = (FILE *)NULL;
+      pWinPriv->pageFileName = (char *)NULL;
+      pWinPriv->pPageFile = (FILE *)NULL;
+      
+!     if(pWin->parent == (WindowPtr)NULL)  /* root window? */
+      {
+! 	Atom propName; /* type = XA_STRING */
+  	char *propVal;
+  	int i;
+          XrmDatabase rmdb = pScreenPriv->resDB;
+***************
+*** 117,123 ****
+          /*
+           * Put the defaults spec'd in the config files in properties on this
+  	 * screen's root window.
+!          *
+  	for(i = 0; propStrings[i] != (char *)NULL; i++)
+  	{
+              if((propVal = _DtPrintGetPrinterResource(pWin, rmdb, 
+--- 116,122 ----
+          /*
+           * Put the defaults spec'd in the config files in properties on this
+  	 * screen's root window.
+!          */
+  	for(i = 0; propStrings[i] != (char *)NULL; i++)
+  	{
+              if((propVal = _DtPrintGetPrinterResource(pWin, rmdb, 
+***************
+*** 129,141 ****
+  	        ChangeWindowProperty(pWin, propName, XA_STRING, 8, 
+  			             PropModeReplace,  strlen(propVal), 
+  			             (pointer)propVal, FALSE);
+! 	        Xfree(propVal);
+  	    }
+  	}
+      }
+  
+      return status;
+! */
+  
+      /*
+       * Invalidate the window's private print context.
+--- 128,140 ----
+  	        ChangeWindowProperty(pWin, propName, XA_STRING, 8, 
+  			             PropModeReplace,  strlen(propVal), 
+  			             (pointer)propVal, FALSE);
+! 	        xfree(propVal);
+  	    }
+  	}
+      }
+  
+      return status;
+! #endif
+  
+      /*
+       * Invalidate the window's private print context.
+***************
+*** 325,332 ****
+  	  box.y2 = pScreen->height;
+  	  REGION_INIT(pScreen, &pWin->clipList, &box, 1);
+  	  pWin->drawable.serialNumber = NEXT_SERIAL_NUMBER;
+! 	  newValues[ABSX] = (pointer)pBgWin->drawable.x;
+! 	  newValues[ABSY] = (pointer)pBgWin->drawable.y;
+        }
+      else
+        {
+--- 324,331 ----
+  	  box.y2 = pScreen->height;
+  	  REGION_INIT(pScreen, &pWin->clipList, &box, 1);
+  	  pWin->drawable.serialNumber = NEXT_SERIAL_NUMBER;
+! 	  newValues[ABSX] = (pointer)(long)pBgWin->drawable.x;
+! 	  newValues[ABSY] = (pointer)(long)pBgWin->drawable.y;
+        }
+      else
+        {
+***************
+*** 350,368 ****
+  	mask &= ~index;
+  	switch (index) {
+  	case GCFunction:
+! 	    if ((pointer) pGC->alu != newValues[FUNCTION]) {
+  		gcmask |= index;
+  		gcval[i++] = newValues[FUNCTION];
+  	    }
+  	    break;
+  	case GCTileStipXOrigin:
+! 	    if ((pointer) pGC->patOrg.x != newValues[ABSX]) {
+  		gcmask |= index;
+  		gcval[i++] = newValues[ABSX];
+  	    }
+  	    break;
+  	case GCTileStipYOrigin:
+! 	    if ((pointer) pGC->patOrg.y != newValues[ABSY]) {
+  		gcmask |= index;
+  		gcval[i++] = newValues[ABSY];
+  	    }
+--- 349,367 ----
+  	mask &= ~index;
+  	switch (index) {
+  	case GCFunction:
+! 	    if ((pointer)(long) pGC->alu != newValues[FUNCTION]) {
+  		gcmask |= index;
+  		gcval[i++] = newValues[FUNCTION];
+  	    }
+  	    break;
+  	case GCTileStipXOrigin:
+! 	    if ((pointer)(long) pGC->patOrg.x != newValues[ABSX]) {
+  		gcmask |= index;
+  		gcval[i++] = newValues[ABSX];
+  	    }
+  	    break;
+  	case GCTileStipYOrigin:
+! 	    if ((pointer)(long) pGC->patOrg.y != newValues[ABSY]) {
+  		gcmask |= index;
+  		gcval[i++] = newValues[ABSY];
+  	    }
+*** ./programs/Xserver/Xprint/ps/PsInit.c@@/PUBLIC-LATEST	Sat Nov 16 15:36:42 1996
+--- xc/programs/Xserver/Xprint/ps/PsInit.c	Mon Dec 30 16:43:45 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: PsInit.c /main/3 1996/11/16 15:25:10 rws $ */
+  /*
+   * (c) Copyright 1996 Hewlett-Packard Company
+   * (c) Copyright 1996 International Business Machines Corp.
+--- 1,4 ----
+! /* $XConsortium: PsInit.c /main/5 1996/12/30 16:38:33 kaleb $ */
+  /*
+   * (c) Copyright 1996 Hewlett-Packard Company
+   * (c) Copyright 1996 International Business Machines Corp.
+***************
+*** 51,56 ****
+--- 51,57 ----
+  
+  #include <stdio.h>
+  #include <string.h>
++ #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <sys/wait.h>
+  
+***************
+*** 229,235 ****
+      PsGeneration = serverGeneration;
+    }
+    pScreen->devPrivates[PsScreenPrivateIndex].ptr =
+!            (pointer)Xalloc(sizeof(PsScreenPrivRec));
+  }
+  
+  /*
+--- 230,236 ----
+      PsGeneration = serverGeneration;
+    }
+    pScreen->devPrivates[PsScreenPrivateIndex].ptr =
+!            (pointer)xalloc(sizeof(PsScreenPrivRec));
+  }
+  
+  /*
+***************
+*** 361,367 ****
+    if( pConPriv->jobFileName!=(char *)NULL )
+    {
+      unlink(pConPriv->jobFileName);
+!     Xfree(pConPriv->jobFileName);
+      pConPriv->jobFileName = (char *)NULL;
+    }
+  
+--- 362,368 ----
+    if( pConPriv->jobFileName!=(char *)NULL )
+    {
+      unlink(pConPriv->jobFileName);
+!     xfree(pConPriv->jobFileName);
+      pConPriv->jobFileName = (char *)NULL;
+    }
+  
+*** ./programs/Xserver/Xprint/ps/PsLine.c@@/PUBLIC-LATEST	Sat Nov 16 15:36:47 1996
+--- xc/programs/Xserver/Xprint/ps/PsLine.c	Mon Dec 30 15:02:52 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: PsLine.c /main/2 1996/11/16 15:25:15 rws $ */
+  /*
+   * (c) Copyright 1996 Hewlett-Packard Company
+   * (c) Copyright 1996 International Business Machines Corp.
+--- 1,4 ----
+! /* $XConsortium: PsLine.c /main/3 1996/12/30 14:57:39 kaleb $ */
+  /*
+   * (c) Copyright 1996 Hewlett-Packard Company
+   * (c) Copyright 1996 International Business Machines Corp.
+***************
+*** 93,99 ****
+      PsOut_Offset(psOut, pDrawable->x, pDrawable->y);
+      PsOut_Color(psOut, PsGetPixelColor(cMap, pGC->fgPixel));
+      PsLineAttrs(psOut, pGC, cMap);
+!     pts = (PsPointPtr)Xalloc(sizeof(PsPointRec)*nPoints);
+      if( mode==CoordModeOrigin )
+      {
+        for( i=0 ; i<nPoints ; i++ )
+--- 93,99 ----
+      PsOut_Offset(psOut, pDrawable->x, pDrawable->y);
+      PsOut_Color(psOut, PsGetPixelColor(cMap, pGC->fgPixel));
+      PsLineAttrs(psOut, pGC, cMap);
+!     pts = (PsPointPtr)xalloc(sizeof(PsPointRec)*nPoints);
+      if( mode==CoordModeOrigin )
+      {
+        for( i=0 ; i<nPoints ; i++ )
+***************
+*** 109,115 ****
+        }
+      }
+      PsOut_Lines(psOut, nPoints, pts);
+!     Xfree(pts);
+    }
+  }
+  
+--- 109,115 ----
+        }
+      }
+      PsOut_Lines(psOut, nPoints, pts);
+!     xfree(pts);
+    }
+  }
+  
+*** ./programs/Xserver/Xprint/ps/PsMisc.c@@/PUBLIC-LATEST	Sat Nov 16 15:36:52 1996
+--- xc/programs/Xserver/Xprint/ps/PsMisc.c	Mon Dec 30 15:02:57 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: PsMisc.c /main/3 1996/11/16 15:25:20 rws $ */
+  /*
+   * (c) Copyright 1996 Hewlett-Packard Company
+   * (c) Copyright 1996 International Business Machines Corp.
+--- 1,4 ----
+! /* $XConsortium: PsMisc.c /main/4 1996/12/30 14:57:44 kaleb $ */
+  /*
+   * (c) Copyright 1996 Hewlett-Packard Company
+   * (c) Copyright 1996 International Business Machines Corp.
+***************
+*** 173,179 ****
+  
+  	n = (pProp->format/8) * pProp->size; *//* size (bytes) of prop */
+  /*
+! 	retVal = (char *)Xalloc(n + 1);
+  	(void)memcpy((void *)retVal, (void *)pProp->data, n);
+  	retVal[n] = '\0';
+  
+--- 173,179 ----
+  
+  	n = (pProp->format/8) * pProp->size; *//* size (bytes) of prop */
+  /*
+! 	retVal = (char *)xalloc(n + 1);
+  	(void)memcpy((void *)retVal, (void *)pProp->data, n);
+  	retVal[n] = '\0';
+  
+***************
+*** 279,285 ****
+      if( !nDsh ) dsh = (int *)0;
+      else
+      {
+!       dsh = (int *)malloc(sizeof(int)*nDsh);
+        for( i=0 ; i<nDsh ; i++ ) dsh[i] = (int)pGC->dash[i]&0xFF;
+      }
+    }
+--- 279,285 ----
+      if( !nDsh ) dsh = (int *)0;
+      else
+      {
+!       dsh = (int *)xalloc(sizeof(int)*nDsh);
+        for( i=0 ; i<nDsh ; i++ ) dsh[i] = (int)pGC->dash[i]&0xFF;
+      }
+    }
+***************
+*** 291,295 ****
+      PsOut_LineAttrs(psOut, (int)pGC->lineWidth,
+                      cap, join, nDsh, dsh, dshOff,
+                      PsGetPixelColor(cMap, pGC->bgPixel));
+!   if( nDsh && dsh ) free(dsh);
+  }
+--- 291,295 ----
+      PsOut_LineAttrs(psOut, (int)pGC->lineWidth,
+                      cap, join, nDsh, dsh, dshOff,
+                      PsGetPixelColor(cMap, pGC->bgPixel));
+!   if( nDsh && dsh ) xfree(dsh);
+  }
+*** ./programs/Xserver/Xprint/ps/PsPixel.c@@/PUBLIC-LATEST	Sat Nov 16 15:36:56 1996
+--- xc/programs/Xserver/Xprint/ps/PsPixel.c	Mon Dec 30 15:03:02 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: PsPixel.c /main/2 1996/11/16 15:25:24 rws $ */
+  /*
+   * (c) Copyright 1996 Hewlett-Packard Company
+   * (c) Copyright 1996 International Business Machines Corp.
+--- 1,4 ----
+! /* $XConsortium: PsPixel.c /main/3 1996/12/30 14:57:49 kaleb $ */
+  /*
+   * (c) Copyright 1996 Hewlett-Packard Company
+   * (c) Copyright 1996 International Business Machines Corp.
+***************
+*** 95,101 ****
+      if( PsUpdateDrawableGC(pGC, pDrawable, &psOut, &cMap)==FALSE ) return;
+      PsOut_Offset(psOut, pDrawable->x, pDrawable->y);
+      PsOut_Color(psOut, PsGetPixelColor(cMap, pGC->fgPixel));
+!     pts = (PsPointPtr)Xalloc(sizeof(PsPointRec)*nPoints);
+      if( mode==CoordModeOrigin )
+      {
+        for( i=0 ; i<nPoints ; i++ )
+--- 95,101 ----
+      if( PsUpdateDrawableGC(pGC, pDrawable, &psOut, &cMap)==FALSE ) return;
+      PsOut_Offset(psOut, pDrawable->x, pDrawable->y);
+      PsOut_Color(psOut, PsGetPixelColor(cMap, pGC->fgPixel));
+!     pts = (PsPointPtr)xalloc(sizeof(PsPointRec)*nPoints);
+      if( mode==CoordModeOrigin )
+      {
+        for( i=0 ; i<nPoints ; i++ )
+***************
+*** 111,117 ****
+        }
+      }
+      PsOut_Points(psOut, nPoints, pts);
+!     Xfree(pts);
+    }
+  }
+  
+--- 111,117 ----
+        }
+      }
+      PsOut_Points(psOut, nPoints, pts);
+!     xfree(pts);
+    }
+  }
+  
+*** ./programs/Xserver/Xprint/ps/PsPolygon.c@@/PUBLIC-LATEST	Sat Nov 16 15:37:06 1996
+--- xc/programs/Xserver/Xprint/ps/PsPolygon.c	Mon Dec 30 15:03:07 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: PsPolygon.c /main/2 1996/11/16 15:25:34 rws $ */
+  /*
+   * (c) Copyright 1996 Hewlett-Packard Company
+   * (c) Copyright 1996 International Business Machines Corp.
+--- 1,4 ----
+! /* $XConsortium: PsPolygon.c /main/3 1996/12/30 14:57:54 kaleb $ */
+  /*
+   * (c) Copyright 1996 Hewlett-Packard Company
+   * (c) Copyright 1996 International Business Machines Corp.
+***************
+*** 142,148 ****
+      if( pGC->fillRule==EvenOddRule ) rule = PsEvenOdd;
+      else                             rule = PsNZWinding;
+      PsOut_FillRule(psOut, rule);
+!     pts = (PsPointPtr)Xalloc(sizeof(PsPointRec)*nPoints);
+      if( mode==CoordModeOrigin )
+      {
+        for( i=0 ; i<nPoints ; i++ )
+--- 142,148 ----
+      if( pGC->fillRule==EvenOddRule ) rule = PsEvenOdd;
+      else                             rule = PsNZWinding;
+      PsOut_FillRule(psOut, rule);
+!     pts = (PsPointPtr)xalloc(sizeof(PsPointRec)*nPoints);
+      if( mode==CoordModeOrigin )
+      {
+        for( i=0 ; i<nPoints ; i++ )
+***************
+*** 158,164 ****
+        }
+      }
+      PsOut_Polygon(psOut, nPoints, pts);
+!     Xfree(pts);
+    }
+  }
+  
+--- 158,164 ----
+        }
+      }
+      PsOut_Polygon(psOut, nPoints, pts);
+!     xfree(pts);
+    }
+  }
+  
+*** ./programs/Xserver/Xprint/ps/PsPrint.c@@/PUBLIC-LATEST	Sat Nov 16 15:37:12 1996
+--- xc/programs/Xserver/Xprint/ps/PsPrint.c	Mon Dec 30 16:43:57 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: PsPrint.c /main/2 1996/11/16 15:25:40 rws $ */
+  /*
+   * (c) Copyright 1996 Hewlett-Packard Company
+   * (c) Copyright 1996 International Business Machines Corp.
+--- 1,4 ----
+! /* $XConsortium: PsPrint.c /main/4 1996/12/30 16:38:45 kaleb $ */
+  /*
+   * (c) Copyright 1996 Hewlett-Packard Company
+   * (c) Copyright 1996 International Business Machines Corp.
+***************
+*** 51,56 ****
+--- 51,57 ----
+  
+  #include <stdio.h>
+  #include <string.h>
++ #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <sys/wait.h>
+  #include <unistd.h>
+***************
+*** 124,130 ****
+      priv->pJobFile = NULL;
+  
+      unlink(priv->jobFileName);
+!     Xfree(priv->jobFileName);
+      priv->jobFileName = (char *)NULL;
+  
+      return Success;
+--- 125,131 ----
+      priv->pJobFile = NULL;
+  
+      unlink(priv->jobFileName);
+!     xfree(priv->jobFileName);
+      priv->jobFileName = (char *)NULL;
+  
+      return Success;
+***************
+*** 150,156 ****
+      }
+  
+      unlink(priv->jobFileName);
+!     Xfree(priv->jobFileName);
+      priv->jobFileName = (char *)NULL;
+  
+      return BadAlloc;
+--- 151,157 ----
+      }
+  
+      unlink(priv->jobFileName);
+!     xfree(priv->jobFileName);
+      priv->jobFileName = (char *)NULL;
+  
+      return BadAlloc;
+***************
+*** 182,188 ****
+    }
+  
+    unlink(priv->jobFileName);
+!   Xfree(priv->jobFileName);
+    priv->jobFileName = (char *)NULL;
+  
+    return r;
+--- 183,189 ----
+    }
+  
+    unlink(priv->jobFileName);
+!   xfree(priv->jobFileName);
+    priv->jobFileName = (char *)NULL;
+  
+    return r;
+*** ./programs/Xserver/Xprint/ps/PsSpans.c@@/PUBLIC-LATEST	Sat Nov 16 15:37:17 1996
+--- xc/programs/Xserver/Xprint/ps/PsSpans.c	Mon Dec 30 15:03:22 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: PsSpans.c /main/2 1996/11/16 15:25:45 rws $ */
+  /*
+   * (c) Copyright 1996 Hewlett-Packard Company
+   * (c) Copyright 1996 International Business Machines Corp.
+--- 1,4 ----
+! /* $XConsortium: PsSpans.c /main/3 1996/12/30 14:58:09 kaleb $ */
+  /*
+   * (c) Copyright 1996 Hewlett-Packard Company
+   * (c) Copyright 1996 International Business Machines Corp.
+***************
+*** 77,83 ****
+    /*
+     * Build a region out of the spans
+     */
+!   rects   = (xRectangle *)Xalloc(nSpans*sizeof(xRectangle));
+    xoffset = pDrawable->x;
+    yoffset = pDrawable->y;
+  
+--- 77,83 ----
+    /*
+     * Build a region out of the spans
+     */
+!   rects   = (xRectangle *)xalloc(nSpans*sizeof(xRectangle));
+    xoffset = pDrawable->x;
+    yoffset = pDrawable->y;
+  
+***************
+*** 121,127 ****
+     */
+    miRegionDestroy(fillRegion);
+    miRegionDestroy(region);
+!   Xfree(rects);
+  }
+  
+  void
+--- 121,127 ----
+     */
+    miRegionDestroy(fillRegion);
+    miRegionDestroy(region);
+!   xfree(rects);
+  }
+  
+  void
+*** ./programs/Xserver/Xprint/ps/PsText.c@@/PUBLIC-LATEST	Sat Nov 16 15:37:21 1996
+--- xc/programs/Xserver/Xprint/ps/PsText.c	Mon Dec 30 15:03:47 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: PsText.c /main/2 1996/11/16 15:25:49 rws $ */
+  /*
+   * (c) Copyright 1996 Hewlett-Packard Company
+   * (c) Copyright 1996 International Business Machines Corp.
+--- 1,4 ----
+! /* $XConsortium: PsText.c /main/3 1996/12/30 14:58:35 kaleb $ */
+  /*
+   * (c) Copyright 1996 Hewlett-Packard Company
+   * (c) Copyright 1996 International Business Machines Corp.
+***************
+*** 144,153 ****
+      int   i;
+      char *str;
+      if( !count ) return x;
+!     str = malloc(count);
+      for( i=0 ; i<count ; i++ ) str[i] = string[i];
+      PsPolyText8(pDrawable, pGC, x, y, count, str);
+!     free(str);
+    }
+    return x;
+  }
+--- 144,153 ----
+      int   i;
+      char *str;
+      if( !count ) return x;
+!     str = (char *)xalloc(count);
+      for( i=0 ; i<count ; i++ ) str[i] = string[i];
+      PsPolyText8(pDrawable, pGC, x, y, count, str);
+!     xfree(str);
+    }
+    return x;
+  }
+***************
+*** 242,248 ****
+      int   i;
+      char *str;
+      if( !count ) return;
+!     str = malloc(count);
+      for( i=0 ; i<count ; i++ ) str[i] = string[i];
+      PsImageText8(pDrawable, pGC, x, y, count, str);
+      free(str);
+--- 242,248 ----
+      int   i;
+      char *str;
+      if( !count ) return;
+!     str = (char *)xalloc(count);
+      for( i=0 ; i<count ; i++ ) str[i] = string[i];
+      PsImageText8(pDrawable, pGC, x, y, count, str);
+      free(str);
+*** ./programs/Xserver/Xprint/ps/PsWindow.c@@/PUBLIC-LATEST	Sat Nov 16 15:37:25 1996
+--- xc/programs/Xserver/Xprint/ps/PsWindow.c	Mon Dec 30 16:44:05 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: PsWindow.c /main/2 1996/11/16 15:25:53 rws $ */
+  /*
+   * (c) Copyright 1996 Hewlett-Packard Company
+   * (c) Copyright 1996 International Business Machines Corp.
+--- 1,4 ----
+! /* $XConsortium: PsWindow.c /main/4 1996/12/30 16:38:52 kaleb $ */
+  /*
+   * (c) Copyright 1996 Hewlett-Packard Company
+   * (c) Copyright 1996 International Business Machines Corp.
+***************
+*** 51,57 ****
+  
+  #include <stdio.h>
+  #include <string.h>
+- #include <sys/stat.h>
+  #include <sys/wait.h>
+  
+  #include "mistruct.h"
+--- 51,56 ----
+***************
+*** 93,99 ****
+  {
+    PsWindowPrivPtr pPriv;
+  
+! /*
+      Bool status = Success;
+      ScreenPtr pScreen = pWin->drawable.pScreen;
+      PsScreenPrivPtr pScreenPriv = (PsScreenPrivPtr) 
+--- 92,98 ----
+  {
+    PsWindowPrivPtr pPriv;
+  
+! #if 0
+      Bool status = Success;
+      ScreenPtr pScreen = pWin->drawable.pScreen;
+      PsScreenPrivPtr pScreenPriv = (PsScreenPrivPtr) 
+***************
+*** 103,117 ****
+  
+      /*
+       * Initialize this window's private struct.
+!      *
+      pWinPriv->jobFileName = (char *)NULL;
+      pWinPriv->pJobFile = (FILE *)NULL;
+      pWinPriv->pageFileName = (char *)NULL;
+      pWinPriv->pPageFile = (FILE *)NULL;
+      
+!     if(pWin->parent == (WindowPtr)NULL)  /* root window?
+      {
+! 	Atom propName; /* type = XA_STRING
+  	char *propVal;
+  	int i;
+          XrmDatabase rmdb = pScreenPriv->resDB;
+--- 102,116 ----
+  
+      /*
+       * Initialize this window's private struct.
+!      */
+      pWinPriv->jobFileName = (char *)NULL;
+      pWinPriv->pJobFile = (FILE *)NULL;
+      pWinPriv->pageFileName = (char *)NULL;
+      pWinPriv->pPageFile = (FILE *)NULL;
+      
+!     if(pWin->parent == (WindowPtr)NULL)  /* root window? */
+      {
+! 	Atom propName; /* type = XA_STRING */
+  	char *propVal;
+  	int i;
+          XrmDatabase rmdb = pScreenPriv->resDB;
+***************
+*** 119,125 ****
+          /*
+           * Put the defaults spec'd in the config files in properties on this
+  	 * screen's root window.
+!          *
+  	for(i = 0; propStrings[i] != (char *)NULL; i++)
+  	{
+              if((propVal = _DtPrintGetPrinterResource(pWin, rmdb, 
+--- 118,124 ----
+          /*
+           * Put the defaults spec'd in the config files in properties on this
+  	 * screen's root window.
+!          */
+  	for(i = 0; propStrings[i] != (char *)NULL; i++)
+  	{
+              if((propVal = _DtPrintGetPrinterResource(pWin, rmdb, 
+***************
+*** 131,143 ****
+  	        ChangeWindowProperty(pWin, propName, XA_STRING, 8, 
+  			             PropModeReplace,  strlen(propVal), 
+  			             (pointer)propVal, FALSE);
+! 	        Xfree(propVal);
+  	    }
+  	}
+      }
+  
+      return status;
+! */
+  
+    pPriv = (PsWindowPrivPtr)pWin->devPrivates[PsWindowPrivateIndex].ptr;
+    pPriv->validContext = 0;
+--- 130,142 ----
+  	        ChangeWindowProperty(pWin, propName, XA_STRING, 8, 
+  			             PropModeReplace,  strlen(propVal), 
+  			             (pointer)propVal, FALSE);
+! 	        xfree(propVal);
+  	    }
+  	}
+      }
+  
+      return status;
+! #endif
+  
+    pPriv = (PsWindowPrivPtr)pWin->devPrivates[PsWindowPrivateIndex].ptr;
+    pPriv->validContext = 0;
+***************
+*** 306,313 ****
+      box.y2 = pScreen->height;
+      REGION_INIT(pScreen, &pWin->clipList, &box, 1);
+      pWin->drawable.serialNumber = NEXT_SERIAL_NUMBER;
+!     newValues[ABSX] = (pointer)pBgWin->drawable.x;
+!     newValues[ABSY] = (pointer)pBgWin->drawable.y;
+    }
+    else
+    {
+--- 305,312 ----
+      box.y2 = pScreen->height;
+      REGION_INIT(pScreen, &pWin->clipList, &box, 1);
+      pWin->drawable.serialNumber = NEXT_SERIAL_NUMBER;
+!     newValues[ABSX] = (pointer)(long)pBgWin->drawable.x;
+!     newValues[ABSY] = (pointer)(long)pBgWin->drawable.y;
+    }
+    else
+    {
+***************
+*** 332,338 ****
+      switch(index)
+      {
+        case GCFunction:
+!         if( (pointer)pGC->alu!=newValues[FUNCTION] )
+          {
+            gcmask |= index;
+            gcval[i++] = newValues[FUNCTION];
+--- 331,337 ----
+      switch(index)
+      {
+        case GCFunction:
+!         if( (pointer)(long)pGC->alu!=newValues[FUNCTION] )
+          {
+            gcmask |= index;
+            gcval[i++] = newValues[FUNCTION];
+***************
+*** 339,345 ****
+          }
+          break;
+        case GCTileStipXOrigin:
+!         if( (pointer)pGC->patOrg.x!=newValues[ABSX] )
+          {
+            gcmask |= index;
+            gcval[i++] = newValues[ABSX];
+--- 338,344 ----
+          }
+          break;
+        case GCTileStipXOrigin:
+!         if( (pointer)(long)pGC->patOrg.x!=newValues[ABSX] )
+          {
+            gcmask |= index;
+            gcval[i++] = newValues[ABSX];
+***************
+*** 346,352 ****
+          }
+          break;
+        case GCTileStipYOrigin:
+!         if( (pointer)pGC->patOrg.y!=newValues[ABSY] )
+          {
+            gcmask |= index;
+            gcval[i++] = newValues[ABSY];
+--- 345,351 ----
+          }
+          break;
+        case GCTileStipYOrigin:
+!         if( (pointer)(long)pGC->patOrg.y!=newValues[ABSY] )
+          {
+            gcmask |= index;
+            gcval[i++] = newValues[ABSY];
+*** ./programs/Xserver/Xprint/ps/psout.c@@/PUBLIC-LATEST	Sat Nov 16 15:37:30 1996
+--- xc/programs/Xserver/Xprint/ps/psout.c	Mon Dec 30 15:04:07 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: psout.c /main/2 1996/11/16 15:25:58 rws $ */
+  /*
+   * (c) Copyright 1996 Hewlett-Packard Company
+   * (c) Copyright 1996 International Business Machines Corp.
+--- 1,4 ----
+! /* $XConsortium: psout.c /main/3 1996/12/30 14:58:54 kaleb $ */
+  /*
+   * (c) Copyright 1996 Hewlett-Packard Company
+   * (c) Copyright 1996 International Business Machines Corp.
+***************
+*** 50,55 ****
+--- 50,56 ----
+  ********************************************************************/
+  
+  #include <stdlib.h>
++ #include "os.h"
+  #include "psout.h"
+  
+  PsElmPtr PsCloneFillElementList(int nElms, PsElmPtr elms);
+***************
+*** 423,429 ****
+   *  Get ready to output PostScript header
+   */
+    PsOutPtr psout;
+!   psout = (PsOutPtr)malloc(sizeof(PsOutRec));
+    memset(psout, 0, sizeof(PsOutRec));
+    psout->Fp = fp;
+  
+--- 424,430 ----
+   *  Get ready to output PostScript header
+   */
+    PsOutPtr psout;
+!   psout = (PsOutPtr)xalloc(sizeof(PsOutRec));
+    memset(psout, 0, sizeof(PsOutRec));
+    psout->Fp = fp;
+  
+***************
+*** 465,478 ****
+    int  i;
+  
+    S_Comment(self, "%%EOF");
+!   if( self->NDashes && self->Dashes ) free(self->Dashes);
+!   if( self->FontName ) free(self->FontName);
+!   if( self->Patterns ) free(self->Patterns);
+!   if( self->Clip.rects ) free(self->Clip.rects);
+    if( closeFile ) fclose(self->Fp);
+!   for( i=0 ; i<self->NDownloads ; i++ ) free(self->Downloads[i]);
+!   if( self->Downloads ) free(self->Downloads);
+!   free(self);
+  }
+  
+  void
+--- 466,479 ----
+    int  i;
+  
+    S_Comment(self, "%%EOF");
+!   if( self->NDashes && self->Dashes ) xfree(self->Dashes);
+!   if( self->FontName ) xfree(self->FontName);
+!   if( self->Patterns ) xfree(self->Patterns);
+!   if( self->Clip.rects ) xfree(self->Clip.rects);
+    if( closeFile ) fclose(self->Fp);
+!   for( i=0 ; i<self->NDownloads ; i++ ) xfree(self->Downloads[i]);
+!   if( self->Downloads ) xfree(self->Downloads);
+!   xfree(self);
+  }
+  
+  void
+***************
+*** 528,535 ****
+    self->NDashes     = -1;
+    self->FontSize    = -1;
+    for( i=0 ; i<4 ; i++ ) self->FontMtx[i] = -1.;
+!   if( self->Dashes   ) { free(self->Dashes);   self->Dashes   = (int *)0;  }
+!   if( self->FontName ) { free(self->FontName); self->FontName = (char *)0; }
+  }
+  
+  void
+--- 529,536 ----
+    self->NDashes     = -1;
+    self->FontSize    = -1;
+    for( i=0 ; i<4 ; i++ ) self->FontMtx[i] = -1.;
+!   if( self->Dashes   ) { xfree(self->Dashes);   self->Dashes   = (int *)0;  }
+!   if( self->FontName ) { xfree(self->FontName); self->FontName = (char *)0; }
+  }
+  
+  void
+***************
+*** 611,618 ****
+    }
+    if( !changed ) return;
+  
+!   if( self->Clip.rects )       free(self->Clip.rects);
+!   if( self->Clip.outterClips ) free(self->Clip.outterClips);
+    if( self->Clip.elms )
+      PsDestroyFillElementList(self->Clip.nElms, self->Clip.elms);
+    self->ClipType          = clpTyp;
+--- 612,619 ----
+    }
+    if( !changed ) return;
+  
+!   if( self->Clip.rects )       xfree(self->Clip.rects);
+!   if( self->Clip.outterClips ) xfree(self->Clip.outterClips);
+    if( self->Clip.elms )
+      PsDestroyFillElementList(self->Clip.nElms, self->Clip.elms);
+    self->ClipType          = clpTyp;
+***************
+*** 621,633 ****
+    self->Clip.nOutterClips = clpinf->nOutterClips;
+    if( clpinf->nRects )
+    {
+!     self->Clip.rects = malloc(clpinf->nRects*sizeof(PsRectRec));
+      memcpy(self->Clip.rects, clpinf->rects, clpinf->nRects*sizeof(PsRectRec));
+    }
+    else self->Clip.rects = 0;
+    if( clpinf->nOutterClips )
+    {
+!     self->Clip.outterClips = malloc(clpinf->nOutterClips*sizeof(PsRectRec));
+      memcpy(self->Clip.outterClips, clpinf->outterClips,
+             clpinf->nOutterClips*sizeof(PsRectRec));
+    }
+--- 622,635 ----
+    self->Clip.nOutterClips = clpinf->nOutterClips;
+    if( clpinf->nRects )
+    {
+!     self->Clip.rects = (PsRectPtr)xalloc(clpinf->nRects*sizeof(PsRectRec));
+      memcpy(self->Clip.rects, clpinf->rects, clpinf->nRects*sizeof(PsRectRec));
+    }
+    else self->Clip.rects = 0;
+    if( clpinf->nOutterClips )
+    {
+!     self->Clip.outterClips = (PsRectPtr)xalloc(clpinf->nOutterClips*
+! 					       sizeof(PsRectRec));
+      memcpy(self->Clip.outterClips, clpinf->outterClips,
+             clpinf->nOutterClips*sizeof(PsRectRec));
+    }
+***************
+*** 756,765 ****
+    if( !same )
+    {
+      if( self->NDashes && self->Dashes )
+!       { free(self->Dashes); self->Dashes = (int *)0; }
+      self->NDashes    = nDsh;
+      self->DashOffset = dshOff;
+!     if( nDsh ) self->Dashes = (int *)malloc(sizeof(int)*nDsh);
+      S_OutTok(self, "[", 0);
+      for( i=0 ; i<nDsh ; i++ )
+      {
+--- 758,767 ----
+    if( !same )
+    {
+      if( self->NDashes && self->Dashes )
+!       { xfree(self->Dashes); self->Dashes = (int *)0; }
+      self->NDashes    = nDsh;
+      self->DashOffset = dshOff;
+!     if( nDsh ) self->Dashes = (int *)xalloc(sizeof(int)*nDsh);
+      S_OutTok(self, "[", 0);
+      for( i=0 ; i<nDsh ; i++ )
+      {
+***************
+*** 781,788 ****
+    char      buf[256];
+    if( self->FontName && strcmp(fnam, self->FontName)==0 &&
+        siz==self->FontSize ) return;
+!   if( self->FontName ) free(self->FontName);
+!   self->FontName = malloc(strlen(fnam)+1);
+    strcpy(self->FontName, fnam);
+    self->FontSize = siz;
+    for( i=0 ; i<4 ; i++ ) self->FontMtx[i] = -1.;
+--- 783,790 ----
+    char      buf[256];
+    if( self->FontName && strcmp(fnam, self->FontName)==0 &&
+        siz==self->FontSize ) return;
+!   if( self->FontName ) xfree(self->FontName);
+!   self->FontName = (char *)xalloc(strlen(fnam)+1);
+    strcpy(self->FontName, fnam);
+    self->FontSize = siz;
+    for( i=0 ; i<4 ; i++ ) self->FontMtx[i] = -1.;
+***************
+*** 802,809 ****
+    if( self->FontName && strcmp(fnam, self->FontName)==0 &&
+        mtx[0]==self->FontMtx[0] && mtx[1]==self->FontMtx[1] &&
+        mtx[2]==self->FontMtx[2] && mtx[3]==self->FontMtx[3] ) return;
+!   if( self->FontName ) free(self->FontName);
+!   self->FontName = malloc(strlen(fnam)+1);
+    strcpy(self->FontName, fnam);
+    for( i=0 ; i<4 ; i++ ) self->FontMtx[i] = mtx[i];
+    self->FontSize = -1;
+--- 804,811 ----
+    if( self->FontName && strcmp(fnam, self->FontName)==0 &&
+        mtx[0]==self->FontMtx[0] && mtx[1]==self->FontMtx[1] &&
+        mtx[2]==self->FontMtx[2] && mtx[3]==self->FontMtx[3] ) return;
+!   if( self->FontName ) xfree(self->FontName);
+!   self->FontName = (char *)xalloc(strlen(fnam)+1);
+    strcpy(self->FontName, fnam);
+    for( i=0 ; i<4 ; i++ ) self->FontMtx[i] = mtx[i];
+    self->FontSize = -1;
+***************
+*** 1152,1163 ****
+      {
+        self->MxPatterns *= 2;
+        self->Patterns =
+!         realloc(self->Patterns, sizeof(PsPatRec)*self->MxPatterns);
+      }
+      else
+      {
+        self->MxPatterns = 64;
+!       self->Patterns = malloc(sizeof(PsPatRec)*self->MxPatterns);
+      }
+    }
+    self->Patterns[self->NPatterns].tag  = tag;
+--- 1154,1165 ----
+      {
+        self->MxPatterns *= 2;
+        self->Patterns =
+!         (PsPatPtr)xrealloc(self->Patterns, sizeof(PsPatRec)*self->MxPatterns);
+      }
+      else
+      {
+        self->MxPatterns = 64;
+!       self->Patterns = (PsPatPtr)xalloc(sizeof(PsPatRec)*self->MxPatterns);
+      }
+    }
+    self->Patterns[self->NPatterns].tag  = tag;
+***************
+*** 1243,1259 ****
+      if( self->NDownloads )
+      {
+        self->MxDownloads *= 2;
+!       self->Downloads = realloc(self->Downloads,
+                                  self->MxDownloads*sizeof(char *));
+      }
+      else
+      {
+        self->MxDownloads = 32;
+!       self->Downloads = malloc(self->MxDownloads*sizeof(char *));
+      }
+    }
+  
+!   self->Downloads[self->NDownloads] = malloc(strlen(name)+1);
+    strcpy(self->Downloads[self->NDownloads], name);
+    self->NDownloads += 1;
+  
+--- 1245,1261 ----
+      if( self->NDownloads )
+      {
+        self->MxDownloads *= 2;
+!       self->Downloads = (char **)xrealloc(self->Downloads,
+                                  self->MxDownloads*sizeof(char *));
+      }
+      else
+      {
+        self->MxDownloads = 32;
+!       self->Downloads = (char **)xalloc(self->MxDownloads*sizeof(char *));
+      }
+    }
+  
+!   self->Downloads[self->NDownloads] = (char *)xalloc(strlen(name)+1);
+    strcpy(self->Downloads[self->NDownloads], name);
+    self->NDownloads += 1;
+  
+*** ./programs/Xserver/hw/hp/input/drivers/Imakefile@@/PUBLIC-LATEST	Tue Jan 24 02:38:39 1995
+--- xc/programs/Xserver/hw/hp/input/drivers/Imakefile	Thu Dec 26 09:06:05 1996
+***************
+*** 1,4 ****
+! XCOMM $XConsortium: Imakefile,v 1.4 95/01/24 02:38:39 dpw Exp $
+  
+  #include <Server.tmpl>
+  
+--- 1,4 ----
+! XCOMM $XConsortium: Imakefile /main/5 1996/12/26 09:00:56 kaleb $
+  
+  #include <Server.tmpl>
+  
+***************
+*** 7,13 ****
+  	$(CC) -c $(CFLAGS) $(PICFLAGS) $*.c
+  
+  DRVRLIBDIR = $(LIBDIR)/extensions
+! PICFLAGS = +z
+  SRCS = hp7lc2k.c hp7lc2m.c hil_driver.c
+  INCLUDES = -I. -I.. -I../../../../../../include \
+             -I../../../../../../include/extensions
+--- 7,13 ----
+  	$(CC) -c $(CFLAGS) $(PICFLAGS) $*.c
+  
+  DRVRLIBDIR = $(LIBDIR)/extensions
+! PICFLAGS = PositionIndependentCFlags
+  SRCS = hp7lc2k.c hp7lc2m.c hil_driver.c
+  INCLUDES = -I. -I.. -I../../../../../../include \
+             -I../../../../../../include/extensions
+*** ./programs/Xserver/hw/hp/input/hpKeyMap.c@@/PUBLIC-LATEST	Tue Jan 24 02:46:58 1995
+--- xc/programs/Xserver/hw/hp/input/hpKeyMap.c	Fri Dec 27 16:22:33 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: hpKeyMap.c,v 1.3 95/01/24 02:46:58 dpw Exp $ */
+  /*
+  
+  Copyright (c) 1986, 1987  X Consortium
+--- 1,4 ----
+! /* $XConsortium: hpKeyMap.c /main/4 1996/12/27 16:15:16 kaleb $ */
+  /*
+  
+  Copyright (c) 1986, 1987  X Consortium
+***************
+*** 85,91 ****
+   /* code values in comments at line end are actual value reported on HIL.
+      REMEMBER, there is an offset of MIN_KEYCODE+2 applied to this table!
+      The PS2 keyboard table begins at offset 0, the 46021A table begins with
+!     the third row. *./
+  	/* Extend Char Right -- a.k.a. Kanji? */	
+  	XK_Control_R,		NoSymbol,		NoSymbol,	NoSymbol,	/* 0x00 */
+  	NoSymbol,		NoSymbol,		NoSymbol,	NoSymbol,	/* 0x01 */
+--- 85,91 ----
+   /* code values in comments at line end are actual value reported on HIL.
+      REMEMBER, there is an offset of MIN_KEYCODE+2 applied to this table!
+      The PS2 keyboard table begins at offset 0, the 46021A table begins with
+!     the third row. */
+  	/* Extend Char Right -- a.k.a. Kanji? */	
+  	XK_Control_R,		NoSymbol,		NoSymbol,	NoSymbol,	/* 0x00 */
+  	NoSymbol,		NoSymbol,		NoSymbol,	NoSymbol,	/* 0x01 */
+*** ./programs/Xserver/hw/xfree86/accel/mach64/mach64pcach.c@@/PUBLIC-LATEST	Tue Oct 22 10:38:00 1996
+--- xc/programs/Xserver/hw/xfree86/accel/mach64/mach64pcach.c	Sat Dec 28 14:51:31 1996
+***************
+*** 26,32 ****
+   * Modified for the Mach64 by Kevin E. Martin (martin@cs.unc.edu)
+   *
+   */
+! /* $XConsortium: mach64pcach.c /main/10 1996/10/22 10:33:40 kaleb $ */
+  
+  
+  /*       Offscreen memory organization for one 256-line cache set:
+--- 26,32 ----
+   * Modified for the Mach64 by Kevin E. Martin (martin@cs.unc.edu)
+   *
+   */
+! /* $XConsortium: mach64pcach.c /main/11 1996/12/28 14:44:13 kaleb $ */
+  
+  
+  /*       Offscreen memory organization for one 256-line cache set:
+***************
+*** 219,225 ****
+         }
+  
+         if (cache_sets > 0)
+!           mach64CacheInfo = (CacheInfoPtr)Xcalloc(sizeof(CacheInfo));
+  
+         switch (cache_sets) {
+         case 0:
+--- 219,225 ----
+         }
+  
+         if (cache_sets > 0)
+!           mach64CacheInfo = (CacheInfoPtr)Xcalloc(MaxSlots * sizeof(CacheInfo));
+  
+         switch (cache_sets) {
+         case 0:
+*** ./programs/Xserver/hw/xfree86/accel/s3/s3.c@@/PUBLIC-LATEST	Fri Oct 25 10:26:39 1996
+--- xc/programs/Xserver/hw/xfree86/accel/s3/s3.c	Sat Dec 28 16:01:53 1996
+***************
+*** 30,36 ****
+   * Modified by Amancio Hasty and Jon Tombs
+   * 
+   */
+! /* $XConsortium: s3.c /main/46 1996/10/25 10:22:18 kaleb $ */
+  
+  #include "misc.h"
+  #include "cfb.h"
+--- 30,36 ----
+   * Modified by Amancio Hasty and Jon Tombs
+   * 
+   */
+! /* $XConsortium: s3.c /main/48 1996/12/28 15:54:30 kaleb $ */
+  
+  #include "misc.h"
+  #include "cfb.h"
+***************
+*** 3458,3464 ****
+        if (S3_964_SERIES(s3ChipId) || S3_968_SERIES(s3ChipId)) {
+  	 if (!pMode->PrivSize || !pMode->Private) {
+  	    pMode->PrivSize = S3_MODEPRIV_SIZE;
+! 	    pMode->Private = (INT32 *)Xcalloc(S3_MODEPRIV_SIZE);
+  	    pMode->Private[0] = 0;
+  	 }
+  
+--- 3458,3464 ----
+        if (S3_964_SERIES(s3ChipId) || S3_968_SERIES(s3ChipId)) {
+  	 if (!pMode->PrivSize || !pMode->Private) {
+  	    pMode->PrivSize = S3_MODEPRIV_SIZE;
+! 	    pMode->Private = (INT32 *)Xcalloc(sizeof(INT32) * S3_MODEPRIV_SIZE);
+  	    pMode->Private[0] = 0;
+  	 }
+  
+***************
+*** 4638,4644 ****
+     if (S3_964_SERIES(s3ChipId) || S3_968_SERIES(s3ChipId)) {
+  	 if (!pMode->PrivSize || !pMode->Private) {
+  	    pMode->PrivSize = S3_MODEPRIV_SIZE;
+! 	    pMode->Private = (INT32 *)Xcalloc(S3_MODEPRIV_SIZE);
+  	    pMode->Private[0] = 0;
+  	 }
+  
+--- 4638,4644 ----
+     if (S3_964_SERIES(s3ChipId) || S3_968_SERIES(s3ChipId)) {
+  	 if (!pMode->PrivSize || !pMode->Private) {
+  	    pMode->PrivSize = S3_MODEPRIV_SIZE;
+! 	    pMode->Private = (INT32 *)Xcalloc(sizeof(INT32) * S3_MODEPRIV_SIZE);
+  	    pMode->Private[0] = 0;
+  	 }
+  
+*** ./programs/Xserver/hw/xfree86/accel/s3/s3misc.c@@/PUBLIC-LATEST	Sun Oct 27 11:09:10 1996
+--- xc/programs/Xserver/hw/xfree86/accel/s3/s3misc.c	Sat Dec 28 14:49:31 1996
+***************
+*** 30,36 ****
+   * Modified by Amancio Hasty and Jon Tombs
+   * 
+   */
+! /* $XConsortium: s3misc.c /main/35 1996/10/27 11:04:48 kaleb $ */
+  
+  
+  #include "cfb.h"
+--- 30,36 ----
+   * Modified by Amancio Hasty and Jon Tombs
+   * 
+   */
+! /* $XConsortium: s3misc.c /main/36 1996/12/28 14:42:12 kaleb $ */
+  
+  
+  #include "cfb.h"
+***************
+*** 568,574 ****
+        /* now testing Trio32 BITBLT bug 
+         * using a 2*2 pixel pattern BLT from (0,0) to (0,2) */
+  
+!       pat = (unsigned char*) Xcalloc(2 * 2);
+     
+        /* init source pattern:   2*2 pixel checker pattern (glyph source) */
+        pat[0 * s3Bpp] = pat[3 * s3Bpp] = 0;
+--- 568,574 ----
+        /* now testing Trio32 BITBLT bug 
+         * using a 2*2 pixel pattern BLT from (0,0) to (0,2) */
+  
+!       pat = (unsigned char*) Xcalloc(s3Bpp * 4);
+     
+        /* init source pattern:   2*2 pixel checker pattern (glyph source) */
+        pat[0 * s3Bpp] = pat[3 * s3Bpp] = 0;
+***************
+*** 661,667 ****
+        /* now testing S3 968 dashed line bug :-(
+         * using an 8 pixel line (0,0) to (7,0) */
+  
+!       pat = (unsigned char*) Xcalloc(8);
+  
+        /* first test original dashed line code (MIX_DST); 
+         * then workaround ( MIX_OR zero) */
+--- 661,667 ----
+        /* now testing S3 968 dashed line bug :-(
+         * using an 8 pixel line (0,0) to (7,0) */
+  
+!       pat = (unsigned char*) Xcalloc(s3Bpp * 8);
+  
+        /* first test original dashed line code (MIX_DST); 
+         * then workaround ( MIX_OR zero) */
+*** ./programs/Xserver/hw/xfree86/accel/s3_virge/s3.c@@/PUBLIC-LATEST	Sun Oct 27 11:51:19 1996
+--- xc/programs/Xserver/hw/xfree86/accel/s3_virge/s3.c	Sat Dec 28 14:50:28 1996
+***************
+*** 30,36 ****
+   * Modified by Amancio Hasty and Jon Tombs
+   *
+   */
+! /* $XConsortium: s3.c /main/8 1996/10/27 11:46:56 kaleb $ */
+  
+  #include "misc.h"
+  #include "cfb.h"
+--- 30,36 ----
+   * Modified by Amancio Hasty and Jon Tombs
+   *
+   */
+! /* $XConsortium: s3.c /main/9 1996/12/28 14:43:20 kaleb $ */
+  
+  #include "misc.h"
+  #include "cfb.h"
+***************
+*** 1512,1518 ****
+        /* Setup the Mode.Private if required */
+        if (!pMode->PrivSize || !pMode->Private) {
+  	 pMode->PrivSize = S3_MODEPRIV_SIZE;
+! 	 pMode->Private = (INT32 *)Xcalloc(S3_MODEPRIV_SIZE);
+  	 pMode->Private[0] = 0;
+        }
+  
+--- 1512,1518 ----
+        /* Setup the Mode.Private if required */
+        if (!pMode->PrivSize || !pMode->Private) {
+  	 pMode->PrivSize = S3_MODEPRIV_SIZE;
+! 	 pMode->Private = (INT32 *)Xcalloc(sizeof(INT32) * S3_MODEPRIV_SIZE);
+  	 pMode->Private[0] = 0;
+        }
+  
+*** ./programs/Xserver/hw/xfree86/common/xf86Config.c@@/PUBLIC-LATEST	Sun Oct 27 11:09:36 1996
+--- xc/programs/Xserver/hw/xfree86/common/xf86Config.c	Sat Dec 28 14:53:35 1996
+***************
+*** 21,27 ****
+   * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+   * PERFORMANCE OF THIS SOFTWARE.
+   */
+! /* $XConsortium: xf86Config.c /main/57 1996/10/27 11:05:13 kaleb $ */
+  
+  #ifndef X_NOT_STDC_ENV
+  #include <stdlib.h>
+--- 21,27 ----
+   * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+   * PERFORMANCE OF THIS SOFTWARE.
+   */
+! /* $XConsortium: xf86Config.c /main/58 1996/12/28 14:46:17 kaleb $ */
+  
+  #ifndef X_NOT_STDC_ENV
+  #include <stdlib.h>
+***************
+*** 3131,3137 ****
+  	       found = TRUE;
+  	       if (!p->PrivSize || !p->Private) {
+  		  p->PrivSize = S3_MODEPRIV_SIZE;
+! 		  p->Private = (INT32 *)Xcalloc(S3_MODEPRIV_SIZE);
+  		  p->Private[0] = 0;
+  	       }
+  	       p->Private[0] |= (1 << opt);
+--- 3131,3137 ----
+  	       found = TRUE;
+  	       if (!p->PrivSize || !p->Private) {
+  		  p->PrivSize = S3_MODEPRIV_SIZE;
+! 		  p->Private = (INT32 *)Xcalloc(sizeof(INT32) * S3_MODEPRIV_SIZE);
+  		  p->Private[0] = 0;
+  	       }
+  	       p->Private[0] |= (1 << opt);
+*** ./programs/Xserver/hw/xfree86/common/xf86Dl.c@@/PUBLIC-LATEST	Fri Oct 25 14:15:50 1996
+--- xc/programs/Xserver/hw/xfree86/common/xf86Dl.c	Sat Dec 28 15:45:30 1996
+***************
+*** 22,27 ****
+--- 22,28 ----
+   * PERFORMANCE OF THIS SOFTWARE.
+   *
+   */
++ /* $XConsortium: xf86Dl.c /main/10 1996/12/28 15:40:19 kaleb $ */
+  
+  #include <os.h>			/* for Error() */
+  #include <dlfcn.h>
+***************
+*** 64,70 ****
+      /* allocate a copy even for the absolute path, for consistency in
+       * error reporting/recovery.
+       */
+!     keep = dir_elem = (char *) xcalloc(1, strlen(path) + 1);
+      strcpy(dir_elem, path);
+  
+      /* absolute path */
+--- 65,71 ----
+      /* allocate a copy even for the absolute path, for consistency in
+       * error reporting/recovery.
+       */
+!     keep = dir_elem = (char *) Xcalloc(strlen(path) + 1);
+      strcpy(dir_elem, path);
+  
+      /* absolute path */
+***************
+*** 78,88 ****
+  	    /* only allow fully specified path */
+  	    if (*dir_elem == '/') {
+  		if (dir_elem[strlen(dir_elem) - 1] == '/') {
+! 		    path_elem = (char*) xcalloc(1, strlen(file) +
+  					        strlen(dir_elem) + 1);
+  		    strcpy(path_elem, dir_elem);
+  		} else {
+! 		    path_elem = (char*) xcalloc(1, strlen(file) +
+  						strlen(dir_elem) + 2);
+  		    strcpy(path_elem, dir_elem);
+  		    path_elem[strlen(dir_elem)] = '/';
+--- 79,89 ----
+  	    /* only allow fully specified path */
+  	    if (*dir_elem == '/') {
+  		if (dir_elem[strlen(dir_elem) - 1] == '/') {
+! 		    path_elem = (char*) Xcalloc(strlen(file) +
+  					        strlen(dir_elem) + 1);
+  		    strcpy(path_elem, dir_elem);
+  		} else {
+! 		    path_elem = (char*) Xcalloc(strlen(file) +
+  						strlen(dir_elem) + 2);
+  		    strcpy(path_elem, dir_elem);
+  		    path_elem[strlen(dir_elem)] = '/';
+*** ./programs/Xserver/lbx/lbxmain.c@@/PUBLIC-LATEST	Sun Dec 22 12:40:14 1996
+--- xc/programs/Xserver/lbx/lbxmain.c	Mon Dec 30 18:07:34 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: lbxmain.c /main/71 1996/12/22 12:36:03 rws $ */
+  /*
+   * Copyright 1992 Network Computing Devices
+   * Copyright 1996 X Consortium, Inc.
+--- 1,4 ----
+! /* $XConsortium: lbxmain.c /main/73 1996/12/30 18:01:14 rws $ */
+  /*
+   * Copyright 1992 Network Computing Devices
+   * Copyright 1996 X Consortium, Inc.
+***************
+*** 497,503 ****
+  /* ARGSUSED */
+  static Bool
+  LbxCheckCompressInput (dummy1, dummy2)
+!     pointer dummy1;
+      pointer dummy2;
+  {
+      LbxProxyPtr	    proxy;
+--- 497,503 ----
+  /* ARGSUSED */
+  static Bool
+  LbxCheckCompressInput (dummy1, dummy2)
+!     ClientPtr dummy1;
+      pointer dummy2;
+  {
+      LbxProxyPtr	    proxy;
+***************
+*** 715,726 ****
+      isblocked = LbxIsClientBlocked(lbxClient);
+  
+      if (lbxClient->reqs_pending && !isblocked) {
+- 	if (!--lbxClient->reqs_pending && (lbxClient != proxy->curRecv))
+- 	    LbxSwitchRecv (proxy, proxy->curRecv);
+  	ret = StandardReadRequestFromClient(client);
+  	if (ret > 0 && (MAJOROP(client) == LbxReqCode) &&
+  	    (MINOROP(client) == X_LbxEndLargeRequest))
+  	    ret = PrepareLargeReqBuffer(client);
+  	return ret;
+      }
+      while (1) {
+--- 715,726 ----
+      isblocked = LbxIsClientBlocked(lbxClient);
+  
+      if (lbxClient->reqs_pending && !isblocked) {
+  	ret = StandardReadRequestFromClient(client);
+  	if (ret > 0 && (MAJOROP(client) == LbxReqCode) &&
+  	    (MINOROP(client) == X_LbxEndLargeRequest))
+  	    ret = PrepareLargeReqBuffer(client);
++ 	if (!--lbxClient->reqs_pending && (lbxClient != proxy->curRecv))
++ 	    LbxSwitchRecv (proxy, proxy->curRecv);
+  	return ret;
+      }
+      while (1) {
+*** ./programs/Xserver/lbx/lbxdix.c@@/PUBLIC-LATEST	Sun Dec 22 12:39:29 1996
+--- xc/programs/Xserver/lbx/lbxdix.c	Thu Dec 26 12:05:07 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: lbxdix.c /main/27 1996/12/22 12:35:35 rws $ */
+  /*
+   * Copyright 1993 Network Computing Devices, Inc.
+   * Copyright 1996 X Consortium, Inc.
+--- 1,4 ----
+! /* $XConsortium: lbxdix.c /main/28 1996/12/26 11:58:11 rws $ */
+  /*
+   * Copyright 1993 Network Computing Devices, Inc.
+   * Copyright 1996 X Consortium, Inc.
+***************
+*** 92,103 ****
+      NewClientInfoRec nci;
+      LbxProxyPtr proxy = LbxProxy(client);
+  
+!     if (reason || !proxy->useTags) {
+  	SendConnSetup(client, reason);
+- 	if ((i = client->clientState) == ClientStateRunning)
+- 	    client->clientState = ClientStateInitial; /* yes, this is crufty */
+  	LbxForceOutput(proxy); /* expedient to avoid another state variable */
+- 	client->clientState = i;
+  	return (client->noClientException);
+      }
+  
+--- 92,100 ----
+      NewClientInfoRec nci;
+      LbxProxyPtr proxy = LbxProxy(client);
+  
+!     if (reason) {
+  	SendConnSetup(client, reason);
+  	LbxForceOutput(proxy); /* expedient to avoid another state variable */
+  	return (client->noClientException);
+      }
+  
+*** ./programs/Xserver/os/io.c@@/PUBLIC-LATEST	Wed Dec 18 16:32:09 1996
+--- xc/programs/Xserver/os/io.c	Fri Dec 27 15:47:01 1996
+***************
+*** 45,51 ****
+  SOFTWARE.
+  
+  ******************************************************************/
+! /* $XConsortium: io.c /main/71 1996/12/18 16:29:46 lehors $ */
+  /*****************************************************************
+   * i/o functions
+   *
+--- 45,51 ----
+  SOFTWARE.
+  
+  ******************************************************************/
+! /* $XConsortium: io.c /main/72 1996/12/27 15:40:56 rws $ */
+  /*****************************************************************
+   * i/o functions
+   *
+***************
+*** 980,986 ****
+  	    if (client->clientGone)
+  		continue;
+  	    oc = (OsCommPtr)client->osPrivate;
+! 	    if (FD_ISSET(oc->fd, &ClientsWithInput))
+  	    {
+  		FD_SET(oc->fd, &OutputPending); /* set the bit again */
+  		NewOutputPending = TRUE;
+--- 980,990 ----
+  	    if (client->clientGone)
+  		continue;
+  	    oc = (OsCommPtr)client->osPrivate;
+! 	    if (
+! #ifdef LBX
+! 		!oc->proxy &&
+! #endif
+! 		FD_ISSET(oc->fd, &ClientsWithInput))
+  	    {
+  		FD_SET(oc->fd, &OutputPending); /* set the bit again */
+  		NewOutputPending = TRUE;
+***************
+*** 1000,1006 ****
+  	    if (client->clientGone)
+  		continue;
+  	    oc = (OsCommPtr)client->osPrivate;
+! 	    if (FD_ISSET(oc->fd, &ClientsWithInput))
+  	    {
+  		FD_SET(oc->fd, &newOutputPending); /* set the bit again */
+  		NewOutputPending = TRUE;
+--- 1004,1014 ----
+  	    if (client->clientGone)
+  		continue;
+  	    oc = (OsCommPtr)client->osPrivate;
+! 	    if (
+! #ifdef LBX
+! 		!oc->proxy &&
+! #endif
+! 		FD_ISSET(oc->fd, &ClientsWithInput))
+  	    {
+  		FD_SET(oc->fd, &newOutputPending); /* set the bit again */
+  		NewOutputPending = TRUE;
+*** ./programs/lbxproxy/di/dispatch.c@@/PUBLIC-LATEST	Fri Dec 20 10:08:55 1996
+--- xc/programs/lbxproxy/di/dispatch.c	Thu Dec 26 19:18:17 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: dispatch.c /main/37 1996/12/20 10:02:30 rws $ */
+  /*
+   * Copyright 1992 Network Computing Devices
+   * Copyright 1996 X Consortium, Inc.
+--- 1,4 ----
+! /* $XConsortium: dispatch.c /main/38 1996/12/26 19:13:46 rws $ */
+  /*
+   * Copyright 1992 Network Computing Devices
+   * Copyright 1996 X Consortium, Inc.
+***************
+*** 153,159 ****
+  		    break;
+  	        }
+  	    }
+! 	    if (result >= 0)
+  		client->server->prev_exec = client;
+  	    FlushAllOutput();
+  	}
+--- 153,159 ----
+  		    break;
+  	        }
+  	    }
+! 	    if (result >= 0 && client != client->server->serverClient)
+  		client->server->prev_exec = client;
+  	    FlushAllOutput();
+  	}
+*** ./programs/lbxproxy/di/lbxfuncs.c@@/PUBLIC-LATEST	Sun Dec 15 21:34:45 1996
+--- xc/programs/lbxproxy/di/lbxfuncs.c	Thu Dec 26 12:05:53 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: lbxfuncs.c /main/45 1996/12/15 21:28:12 rws $ */
+  /*
+   * Copyright 1994 Network Computing Devices, Inc.
+   * Copyright 1996 X Consortium, Inc.
+--- 1,4 ----
+! /* $XConsortium: lbxfuncs.c /main/46 1996/12/26 11:58:51 rws $ */
+  /*
+   * Copyright 1994 Network Computing Devices, Inc.
+   * Copyright 1996 X Consortium, Inc.
+***************
+*** 1332,1356 ****
+  
+  	AttendClient(client);
+  	if (prefix->success) {
+! 	    if (lbxNegOpt.useTags) {
+! 		get_setup_reply(client, (char *) reply, len);
+! 		return FALSE;
+! 	    } else {
+! 		CARD16 majorVer = prefix->majorVersion,
+! 		       minorVer = prefix->minorVersion;
+! 
+! 		if (client->swapped) {
+! 		    SwapConnectionInfo((xConnSetup *) & prefix[1]);
+! 		    swaps (&majorVer, n);
+! 		    swaps (&minorVer, n);
+! 		}
+! 
+! 		finish_setup_reply (client, (xConnSetup *)&prefix[1], len, 
+! 				    0, NULL, 0,
+! 				    (int) majorVer, (int) minorVer);
+! 
+! 		return FALSE;
+! 	    }
+  	}
+  	return TRUE;
+      }
+--- 1332,1339 ----
+  
+  	AttendClient(client);
+  	if (prefix->success) {
+! 	    get_setup_reply(client, (char *) reply, len);
+! 	    return FALSE;
+  	}
+  	return TRUE;
+      }
+*** ./programs/lbxproxy/di/swaprep.c@@/PUBLIC-LATEST	Fri Nov 15 21:41:10 1996
+--- xc/programs/lbxproxy/di/swaprep.c	Thu Dec 26 12:06:59 1996
+***************
+*** 1,5 ****
+  /*
+!  * $XConsortium: swaprep.c /main/8 1996/11/15 21:29:41 rws $
+   *
+   * Copyright 1994 Network Computing Devices, Inc.
+   *
+--- 1,5 ----
+  /*
+!  * $XConsortium: swaprep.c /main/9 1996/12/26 11:59:57 rws $
+   *
+   * Copyright 1994 Network Computing Devices, Inc.
+   *
+***************
+*** 103,165 ****
+      cpswaps(pcsp->minorVersion, cspT.minorVersion);
+      cpswaps(pcsp->length, cspT.length);
+      (void)WriteToClient(pClient, sizeof(cspT), (char *) &cspT);
+- }
+- 
+- void
+- SwapConnectionInfo(pConnSetup)
+-     xConnSetup *pConnSetup;
+- {
+-     int         i,
+-                 j,
+-                 k;
+-     xDepth     *pDepth;
+-     char        n;
+-     xWindowRoot *pRoot;
+-     char	*dp = (char *) pConnSetup;
+-     static int  pad[4] = {0, 3, 2, 1};
+-     xVisualType *pVis;
+- 
+-     swapl(&pConnSetup->release, n);
+-     swapl(&pConnSetup->ridBase, n);
+-     swapl(&pConnSetup->ridMask, n);
+-     swapl(&pConnSetup->motionBufferSize, n);
+-     swaps(&pConnSetup->nbytesVendor, n);
+-     swaps(&pConnSetup->maxRequestSize, n);
+-     dp += sizeof(xConnSetup);
+-     /* skip vendor string & pixmap formats */
+-     dp += pConnSetup->nbytesVendor + pad[pConnSetup->nbytesVendor & 3];
+-     dp += (pConnSetup->numFormats * sizeof(xPixmapFormat));
+- 
+-     for (i = 0; i < pConnSetup->numRoots; i++) {
+- 	pRoot = (xWindowRoot *) dp;
+- 	swapl(&pRoot->windowId, n);
+- 	swapl(&pRoot->defaultColormap, n);
+- 	swapl(&pRoot->whitePixel, n);
+- 	swapl(&pRoot->blackPixel, n);
+- 	swapl(&pRoot->currentInputMask, n);
+- 	swaps(&pRoot->pixWidth, n);
+- 	swaps(&pRoot->pixHeight, n);
+- 	swaps(&pRoot->mmWidth, n);
+- 	swaps(&pRoot->mmHeight, n);
+- 	swaps(&pRoot->minInstalledMaps, n);
+- 	swaps(&pRoot->maxInstalledMaps, n);
+- 	swapl(&pRoot->rootVisualID, n);
+- 	dp += sizeof(xWindowRoot);
+- 	for (j = 0; j < pRoot->nDepths; j++) {
+- 	    pDepth = (xDepth *) dp;
+- 	    dp += sizeof(xDepth);
+- 	    swaps(&pDepth->nVisuals, n);
+- 	    for (k = 0; k < pDepth->nVisuals; k++) {
+- 		pVis = (xVisualType *) dp;
+- 		swapl(&pVis->visualID, n);
+- 		swaps(&pVis->colormapEntries, n);
+- 		swapl(&pVis->redMask, n);
+- 		swapl(&pVis->greenMask, n);
+- 		swapl(&pVis->blueMask, n);
+- 		dp += sizeof(xVisualType);
+- 	    }
+- 	}
+-     }
+  }
+  
+  void
+--- 103,108 ----
+*** ./programs/lbxproxy/os/connection.c@@/PUBLIC-LATEST	Wed Dec  4 17:44:48 1996
+--- xc/programs/lbxproxy/os/connection.c	Thu Dec 26 18:57:33 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: connection.c /main/26 1996/12/04 17:39:19 rws $ */
+  /***********************************************************
+  
+  Copyright (c) 1987, 1989  X Consortium
+--- 1,4 ----
+! /* $XConsortium: connection.c /main/27 1996/12/26 18:53:34 rws $ */
+  /***********************************************************
+  
+  Copyright (c) 1987, 1989  X Consortium
+***************
+*** 1918,1924 ****
+--- 1918,1926 ----
+  	    FD_SET(connection, &ClientsWithInput);
+  	}
+  	XFD_UNSET(&SavedClientsWithInput, &GrabImperviousClients);
++ 	FD_CLR(connection, &AllSockets);
+  	XFD_COPYSET(&AllSockets, &SavedAllSockets);
++ 	FD_CLR(connection, &AllClients);
+  	XFD_COPYSET(&AllClients, &SavedAllClients);
+  	XFD_UNSET(&AllSockets, &AllClients);
+  	XFD_ANDSET(&AllClients, &AllClients, &GrabImperviousClients);
+*** programs/lbxproxy/os/io.c@@/PUBLIC-LATEST	Wed Nov 20 22:25:14 1996
+--- xc/programs/lbxproxy/os/io.c	Mon Dec 30 18:09:40 1996
+***************
+*** 45,51 ****
+  SOFTWARE.
+  
+  ******************************************************************/
+! /* $XConsortium: io.c /main/12 1996/11/20 22:20:28 rws $ */
+  /*****************************************************************
+   * i/o functions
+   *
+--- 45,51 ----
+  SOFTWARE.
+  
+  ******************************************************************/
+! /* $XConsortium: io.c /main/13 1996/12/30 18:02:45 rws $ */
+  /*****************************************************************
+   * i/o functions
+   *
+***************
+*** 830,842 ****
+  {
+      unsigned char *obuf;
+  
+!     obuf = (unsigned char *)xrealloc(oco->buf, len + BUFSIZE);
+      if (!obuf)
+      {
+  	oco->count = 0;
+  	return(-1);
+      }
+!     oco->size = len + BUFSIZE;
+      oco->buf = obuf;
+      return 0;
+  }
+--- 830,844 ----
+  {
+      unsigned char *obuf;
+  
+!     if (len < BUFSIZE)
+! 	len = BUFSIZE;
+!     obuf = (unsigned char *)xrealloc(oco->buf, len);
+      if (!obuf)
+      {
+  	oco->count = 0;
+  	return(-1);
+      }
+!     oco->size = len;
+      oco->buf = obuf;
+      return 0;
+  }
+***************
+*** 848,904 ****
+      char *extraBuf;
+      int extraCount; /* do not modify... returned below */
+  {
+!     ConnectionOutputPtr nextbuf;
+      register ConnectionOutputPtr oco;
+!     int retval = extraCount;
+  
+!     if (!oc->ofirst) {
+! 	return StandardFlushClient(who, oc, extraBuf, extraCount);
+      }
+! 
+!     if (oco = oc->output) {
+! 	oc->olast->next = oco;
+! 	oc->olast = oco;
+!     }
+! 
+!     oco = oc->ofirst;
+!     do {
+! 	Bool nocomp = oco->nocompress;
+! 	nextbuf = (oco != oc->olast) ? oco->next : NULL;
+! 	oc->output = oco;
+! 	if (nocomp)
+! 	    (*oc->compressOff)(oc->fd);
+! 	if (oc->olast == oco) {
+! 	    StandardFlushClient(who, oc, extraBuf, extraCount);
+! 	    extraCount = 0;
+! 	}
+! 	else
+! 	    StandardFlushClient(who, oc, (char *)NULL, 0);
+! 	if (nocomp)
+! 	    (*oc->compressOn)(oc->fd);
+! 	if (oc->output != (ConnectionOutputPtr) NULL) {
+! 	    oc->output = (ConnectionOutputPtr) NULL;
+! 	    break;
+! 	}
+!     } while (oco = nextbuf);
+!     oc->ofirst = oco;
+! 
+!     /*
+!      * If we didn't get a chance to flush the extraBuf above, then
+!      * we need to buffer it here.
+!      */
+!     if (extraCount) {
+! 	int newlen = oco->count + extraCount + padlength[extraCount & 3];
+! 	oco = oc->olast;
+! 	if (ExpandOutputBuffer(oco, newlen) < 0) {
+! 	    close (oc->fd);
+! 	    MarkClientException(who);
+! 	    return(-1);
+! 	}
+! 	memmove((char *)oco->buf + oco->count, extraBuf, extraCount);
+! 	oco->count = newlen;
+      }
+- 
+      return retval;
+  }
+  
+--- 850,902 ----
+      char *extraBuf;
+      int extraCount; /* do not modify... returned below */
+  {
+!     ConnectionOutputPtr obuf;
+      register ConnectionOutputPtr oco;
+!     int retval;
+  
+!     if (oco = oc->ofirst) {
+! 	obuf = oc->output;
+! 	do {
+! 	    Bool nocomp = oco->nocompress;
+! 	    oc->output = oco;
+! 	    oco = (oco != oc->olast) ? oco->next : NULL;
+! 	    if (nocomp)
+! 		(*oc->compressOff)(oc->fd);
+! 	    retval = StandardFlushClient(who, oc, (char *)NULL, 0);
+! 	    if (nocomp)
+! 		(*oc->compressOn)(oc->fd);
+! 	    if (retval < 0) {
+! 		oc->output = obuf;
+! 		return retval;
+! 	    }
+! 	    if (oc->output) {
+! 		if (extraCount) {
+! 		    int len = obuf->count + (extraCount + 3) & ~3;
+! 		    if (ExpandOutputBuffer(obuf, len) < 0) {
+! 			close (oc->fd);
+! 			MarkClientException(who);
+! 			return(-1);
+! 		    }
+! 		    memmove((char *)obuf->buf + obuf->count,
+! 			    extraBuf, extraCount);
+! 		    obuf->count = len;
+! 		    oc->olast->next = obuf;
+! 		    oc->olast = obuf;
+! 		    obuf = NULL;
+! 		}
+! 		oc->output = obuf;
+! 		return extraCount;
+! 	    }
+! 	} while (oc->ofirst = oco);
+! 	oc->output = obuf;
+      }
+!     retval = StandardFlushClient(who, oc, extraBuf, extraCount);
+!     if (retval <= 0)
+! 	return retval;
+!     if (oc->output && extraCount) {
+! 	oc->ofirst = oc->olast = oc->output;
+! 	oc->output = NULL;
+      }
+      return retval;
+  }
+  
+*** ./programs/xfwp/Imakefile@@/PUBLIC-LATEST	Wed Dec 11 10:50:06 1996
+--- xc/programs/xfwp/Imakefile	Fri Dec 27 16:24:05 1996
+***************
+*** 1,4 ****
+! XCOMM $XConsortium: Imakefile /main/7 1996/12/11 10:50:20 swick $
+  
+           DEPLIBS = $(DEPICELIB)
+   LOCAL_LIBRARIES = $(ICELIB)
+--- 1,4 ----
+! XCOMM $XConsortium: Imakefile /main/8 1996/12/27 16:16:48 kaleb $
+  
+           DEPLIBS = $(DEPICELIB)
+   LOCAL_LIBRARIES = $(ICELIB)
+***************
+*** 8,11 ****
+  
+  ComplexProgramTarget(xfwp)
+  
+- InstallManPage(xfwp,$(MANDIR))
+--- 8,10 ----
+*** ./programs/xfwp/xfwp.c@@/PUBLIC-LATEST	Thu Dec 12 16:56:16 1996
+--- xc/programs/xfwp/xfwp.c	Fri Dec 27 16:25:49 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: xfwp.c /main/37 1996/12/12 16:56:38 swick $ */
+  
+  /*
+  Copyright (c) 1996  X Consortium
+--- 1,4 ----
+! /* $XConsortium: xfwp.c /main/38 1996/12/27 16:18:32 kaleb $ */
+  
+  /*
+  Copyright (c) 1996  X Consortium
+***************
+*** 65,70 ****
+--- 65,74 ----
+  #include <X11/PM/PMproto.h>
+  #include <assert.h>
+  #include "xfwp.h"
++ 
++ #ifndef SOMAXCONN
++ #define SOMAXCONN 128
++ #endif
+  
+  extern int errno;
+  struct clientDataStruct global_data;  /* necessary for ICE callbacks */
+*** ./programs/xkbcomp/alias.c@@/PUBLIC-LATEST	Fri Feb  2 14:18:36 1996
+--- xc/programs/xkbcomp/alias.c	Fri Dec 27 21:21:17 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: alias.c /main/6 1996/02/02 14:17:11 kaleb $ */
+  /************************************************************
+   Copyright (c) 1995 by Silicon Graphics Computer Systems, Inc.
+  
+--- 1,4 ----
+! /* $XConsortium: alias.c /main/7 1996/12/27 21:16:10 kaleb $ */
+  /************************************************************
+   Copyright (c) 1995 by Silicon Graphics Computer Systems, Inc.
+  
+***************
+*** 152,162 ****
+  
+  Bool
+  #if NeedFunctionPrototypes
+! MergeAliases(AliasInfo **into,AliasInfo **merge)
+  #else
+! MergeAliases(into,merge)
+      AliasInfo **	into;
+      AliasInfo **	merge;
+  #endif
+  {
+  AliasInfo *	tmp;
+--- 152,163 ----
+  
+  Bool
+  #if NeedFunctionPrototypes
+! MergeAliases(AliasInfo **into,AliasInfo **merge,unsigned how_merge)
+  #else
+! MergeAliases(into,merge,how_merge)
+      AliasInfo **	into;
+      AliasInfo **	merge;
++     unsigned		how_merge;
+  #endif
+  {
+  AliasInfo *	tmp;
+***************
+*** 171,177 ****
+      }	
+      bzero((char *)&def,sizeof(KeyAliasDef));
+      for (tmp= *merge;tmp!=NULL;tmp= (AliasInfo *)tmp->def.next) {
+! 	def.merge= tmp->def.merge;
+  	memcpy(def.alias,tmp->alias,XkbKeyNameLength);
+  	memcpy(def.real,tmp->real,XkbKeyNameLength);
+  	if (!HandleAliasDef(&def,def.merge,tmp->def.fileID,into))
+--- 172,180 ----
+      }	
+      bzero((char *)&def,sizeof(KeyAliasDef));
+      for (tmp= *merge;tmp!=NULL;tmp= (AliasInfo *)tmp->def.next) {
+! 	if (how_merge==MergeDefault)
+! 	     def.merge= tmp->def.merge;
+! 	else def.merge= how_merge;
+  	memcpy(def.alias,tmp->alias,XkbKeyNameLength);
+  	memcpy(def.real,tmp->real,XkbKeyNameLength);
+  	if (!HandleAliasDef(&def,def.merge,tmp->def.fileID,into))
+*** ./programs/xkbcomp/alias.h@@/PUBLIC-LATEST	Tue Jan 23 06:58:02 1996
+--- xc/programs/xkbcomp/alias.h	Fri Dec 27 21:21:35 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: alias.h /main/2 1996/01/23 06:56:44 kaleb $ */
+  /************************************************************
+   Copyright (c) 1995 by Silicon Graphics Computer Systems, Inc.
+  
+--- 1,4 ----
+! /* $XConsortium: alias.h /main/3 1996/12/27 21:16:25 kaleb $ */
+  /************************************************************
+   Copyright (c) 1995 by Silicon Graphics Computer Systems, Inc.
+  
+***************
+*** 52,58 ****
+  extern Bool MergeAliases(
+  #if NeedFunctionPrototypes
+  	AliasInfo **		/* into */,
+! 	AliasInfo **		/* merge */
+  #endif
+  );
+  
+--- 52,59 ----
+  extern Bool MergeAliases(
+  #if NeedFunctionPrototypes
+  	AliasInfo **		/* into */,
+! 	AliasInfo **		/* merge */,
+! 	unsigned		/* how_merge */
+  #endif
+  );
+  
+*** ./programs/xkbcomp/geometry.c@@/PUBLIC-LATEST	Fri Feb  2 14:41:40 1996
+--- xc/programs/xkbcomp/geometry.c	Fri Dec 27 21:21:45 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: geometry.c /main/6 1996/02/02 14:40:15 kaleb $ */
+  /************************************************************
+   Copyright (c) 1994 by Silicon Graphics Computer Systems, Inc.
+  
+--- 1,4 ----
+! /* $XConsortium: geometry.c /main/7 1996/12/27 21:16:35 kaleb $ */
+  /************************************************************
+   Copyright (c) 1994 by Silicon Graphics Computer Systems, Inc.
+  
+***************
+*** 1447,1453 ****
+  		into->errorCount++;
+   	}
+      }
+!     if (!MergeAliases(&into->aliases,&from->aliases))
+  	into->errorCount++;
+      return;
+  }
+--- 1447,1453 ----
+  		into->errorCount++;
+   	}
+      }
+!     if (!MergeAliases(&into->aliases,&from->aliases,merge))
+  	into->errorCount++;
+      return;
+  }
+*** ./programs/xkbcomp/keycodes.c@@/PUBLIC-LATEST	Fri Mar  1 14:33:55 1996
+--- xc/programs/xkbcomp/keycodes.c	Fri Dec 27 21:22:03 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: keycodes.c /main/10 1996/03/01 14:32:14 kaleb $ */
+  /************************************************************
+   Copyright (c) 1994 by Silicon Graphics Computer Systems, Inc.
+  
+--- 1,4 ----
+! /* $XConsortium: keycodes.c /main/11 1996/12/27 21:16:54 kaleb $ */
+  /************************************************************
+   Copyright (c) 1994 by Silicon Graphics Computer Systems, Inc.
+  
+***************
+*** 49,63 ****
+  
+  /***====================================================================***/
+  
+- #define	HTBL_SIZE 257
+- 
+- typedef struct _KeyNameHash {
+- 	char		codes[HTBL_SIZE];
+- 	unsigned long	names[HTBL_SIZE];
+- } KeyNameHash;
+- 
+- #define	HashKeyName(n)	(((n[0]^n[2])<<8)|(n[1]^n[3]))
+- 
+  void
+  #if NeedFunctionPrototypes
+  LongToKeyName(unsigned long val,char *name)
+--- 49,54 ----
+***************
+*** 74,144 ****
+      return;
+  }
+  
+- static int
+- #if NeedFunctionPrototypes
+- HashAdd(KeyNameHash *tbl,char *name,int kc,int replace,int *kcRtrn)
+- #else
+- HashAdd(tbl,name,kc,replace,kcRtrn)
+-     KeyNameHash *	tbl;
+-     char *		name;
+-     int			kc;
+-     int			replace;
+-     int *		kcRtrn;
+- #endif
+- {
+- unsigned short hval,ndx;
+- unsigned long lval;
+- register unsigned i;
+- 
+-     *kcRtrn= 0;
+-     hval= HashKeyName(name);
+-     lval= KeyNameToLong(name);
+-     ndx= hval/HTBL_SIZE;
+-     for (i=ndx;i<HTBL_SIZE;i++) {
+- 	if (tbl->codes[i]==0) {
+- 	    tbl->names[i]= lval;
+- 	    tbl->codes[i]= kc;
+- 	    return i;
+- 	}
+- 	else if (tbl->names[i]==lval) {
+- 	    if (kcRtrn)
+- 		*kcRtrn= tbl->codes[i];
+- 	    if (replace)
+- 		tbl->codes[i]= kc;
+- 	    return i;
+- 	}
+-     }
+-     for (i=0;i<ndx;i++) {
+- 	if (tbl->codes[i]==0) {
+- 	    tbl->names[i]= lval;
+- 	    tbl->codes[i]= kc;
+- 	    return i;
+- 	}
+- 	else if (tbl->names[i]==lval) {
+- 	    if (kcRtrn)
+- 		*kcRtrn= tbl->codes[i];
+- 	    if (replace)
+- 		tbl->codes[i]= kc;
+- 	    return i;
+- 	}
+-     }
+-     WSGO2("Couldn't add \"<%s> = %d\" to table\n",name,kc);
+-     return -1;
+- }
+- 
+- static int
+- #if NeedFunctionPrototypes
+- HashRemoveName(KeyNameHash *tbl,char *name,int *kcRtrn)
+- #else
+- HashRemoveName(tbl,name,kcRtrn)
+-     KeyNameHash *	tbl;
+-     char *		name;
+-     int *		kcRtrn;
+- #endif
+- {
+-     return HashAdd(tbl,name,0,True,kcRtrn);
+- }
+- 
+  /***====================================================================***/
+  
+  typedef struct _IndicatorNameInfo {
+--- 65,70 ----
+***************
+*** 159,166 ****
+      int			explicitMax;
+      int			effectiveMin;
+      int			effectiveMax;
+!     KeyNameHash		hash;
+!     unsigned long	names[256];
+      IndicatorNameInfo *	leds;
+      AliasInfo *		aliases;
+  } KeyNamesInfo;
+--- 85,92 ----
+      int			explicitMax;
+      int			effectiveMin;
+      int			effectiveMax;
+!     unsigned long	names[XkbMaxLegalKeyCode+1];
+!     unsigned 		files[XkbMaxLegalKeyCode+1];
+      IndicatorNameInfo *	leds;
+      AliasInfo *		aliases;
+  } KeyNamesInfo;
+***************
+*** 372,379 ****
+      info->computedMin= 256;
+      info->effectiveMin= 8;
+      info->effectiveMax= 255;
+-     bzero((char *)&info->hash,sizeof(info->hash));
+      bzero((char *)info->names,sizeof(info->names));
+      if (info->leds)
+  	ClearIndicatorNameInfo(info->leds,info);
+      if (info->aliases)
+--- 298,305 ----
+      info->computedMin= 256;
+      info->effectiveMin= 8;
+      info->effectiveMax= 255;
+      bzero((char *)info->names,sizeof(info->names));
++     bzero((char *)info->files,sizeof(info->files));
+      if (info->leds)
+  	ClearIndicatorNameInfo(info->leds,info);
+      if (info->aliases)
+***************
+*** 397,480 ****
+      return;
+  }
+  
+  static Bool
+  #if NeedFunctionPrototypes
+  AddKeyName(	KeyNamesInfo *	info,
+! 		int		code,
+  		char *		name,
+  		unsigned	merge,
+  		Bool		reportCollisions)
+  #else
+! AddKeyName(info,code,name,merge,reportCollisions)
+      KeyNamesInfo *	info;
+!     int			code;
+      char *		name;
+      unsigned		merge;
+      Bool		reportCollisions;
+  #endif
+  {
+! int	old,override;
+  unsigned long	lval;
+  
+!     if ((code<info->effectiveMin)||(code>info->effectiveMax)) {
+! 	ERROR2("Illegal keycode %d for name <%s>\n",code,name);
+  	ACTION2("Must be in the range %d-%d inclusive\n",info->effectiveMin,
+  							 info->effectiveMax);
+! 	return 0;
+      }
+!     if (code<info->computedMin)	info->computedMin= code;
+!     if (code>info->computedMax)	info->computedMax= code;
+      lval= KeyNameToLong(name);
+!     if (info->names[code]!=0) {
+  	char buf[6];
+  
+! 	LongToKeyName(info->names[code],buf);
+  	buf[4]= '\0';
+! 	if (info->names[code]==lval) {
+  	    if (reportCollisions) {
+! 		WARN("Multiple identical key name defintions\n");
+! 		ACTION2("Later occurences of \"<%s> = %d\" ignored\n",buf,code);
+  	    }
+! 	    return 1;
+  	}
+  	if (merge==MergeAugment) {
+  	    if (reportCollisions) {
+! 		ERROR1("Multiple names for keycode %d\n",code);
+  		ACTION2("Using <%s>, ignoring <%s>\n",buf,name);
+  	    }
+! 	    return 0;
+  	}
+  	else {
+  	    int old;
+  	    if (reportCollisions) {
+! 		ERROR1("Multiple names for keycode %d\n",code);
+  		ACTION2("Using <%s>, ignoring <%s>\n",name,buf);
+  	    }
+! 	    if (!HashRemoveName(&info->hash,buf,&old))
+! 		return 0;
+! 	    info->names[code]= 0;
+  	}
+      }
+      override= (merge==MergeOverride);
+!     if (HashAdd(&info->hash,name,code,override,&old)<0)
+! 	return 0;
+!     else if ((old!=0)&&(old!=code)) {
+  	if (override) {
+- 	    info->names[code]= lval;
+  	    info->names[old]= 0;
+  	    if (reportCollisions) {
+! 		ERROR1("Key name <%s> assigned to multiple keys\n",name);
+! 		ACTION2("Using %d, ignoring %d\n",code,old);
+! 		return False;
+  	    }
+  	}
+! 	else if (reportCollisions) {
+! 	    ERROR1("Key name <%s> assigned to multiple keys\n",name);
+! 	    ACTION2("Using %d, ignoring %d\n",old,code);
+! 	    return False;
+  	}
+      }
+!     else info->names[code]= lval;
+      return True;
+  }
+  
+--- 323,432 ----
+      return;
+  }
+  
++ int
++ #if NeedFunctionPrototypes
++ FindKeyByLong(KeyNamesInfo *info,unsigned long name)
++ #else
++ FindKeyByLong(info,name)
++     KeyNamesInfo *	info;
++     unsigned long	name;
++ #endif
++ {
++ register int i;
++ 
++     for (i=info->effectiveMin;i<=info->effectiveMax;i++) {
++ 	if (info->names[i]==name)
++ 	    return i;
++     }
++     return 0;
++ }
++ 
+  static Bool
+  #if NeedFunctionPrototypes
+  AddKeyName(	KeyNamesInfo *	info,
+! 		int		kc,
+  		char *		name,
+  		unsigned	merge,
++ 		unsigned	fileID,
+  		Bool		reportCollisions)
+  #else
+! AddKeyName(info,kc,name,merge,fileID,reportCollisions)
+      KeyNamesInfo *	info;
+!     int			kc;
+      char *		name;
+      unsigned		merge;
++     unsigned		fileID;
+      Bool		reportCollisions;
+  #endif
+  {
+! int		old,override;
+  unsigned long	lval;
+  
+!     if ((kc<info->effectiveMin)||(kc>info->effectiveMax)) {
+! 	ERROR2("Illegal keycode %d for name <%s>\n",kc,name);
+  	ACTION2("Must be in the range %d-%d inclusive\n",info->effectiveMin,
+  							 info->effectiveMax);
+! 	return False;
+      }
+!     if (kc<info->computedMin)	info->computedMin= kc;
+!     if (kc>info->computedMax)	info->computedMax= kc;
+      lval= KeyNameToLong(name);
+! 
+!     if (reportCollisions) {
+! 	reportCollisions= ((warningLevel>7)||
+! 			   ((warningLevel>0)&&(fileID==info->files[kc])));
+!     }
+! 
+!     if (info->names[kc]!=0) {
+  	char buf[6];
+  
+! 	LongToKeyName(info->names[kc],buf);
+  	buf[4]= '\0';
+! 	if (info->names[kc]==lval) {
+  	    if (reportCollisions) {
+! 		WARN("Multiple identical key name definitions\n");
+! 		ACTION2("Later occurences of \"<%s> = %d\" ignored\n",buf,kc);
+  	    }
+! 	    return True;
+  	}
+  	if (merge==MergeAugment) {
+  	    if (reportCollisions) {
+! 		WARN1("Multiple names for keycode %d\n",kc);
+  		ACTION2("Using <%s>, ignoring <%s>\n",buf,name);
+  	    }
+! 	    return True;
+  	}
+  	else {
+  	    int old;
+  	    if (reportCollisions) {
+! 		WARN1("Multiple names for keycode %d\n",kc);
+  		ACTION2("Using <%s>, ignoring <%s>\n",name,buf);
+  	    }
+! 	    info->names[kc]= 0;
+! 	    info->files[kc]= 0;
+  	}
+      }
+      override= (merge==MergeOverride);
+!     old= FindKeyByLong(info,lval);
+!     if ((old!=0)&&(old!=kc)) {
+  	if (override) {
+  	    info->names[old]= 0;
++ 	    info->files[old]= 0;
+  	    if (reportCollisions) {
+! 		WARN1("Key name <%s> assigned to multiple keys\n",name);
+! 		ACTION2("Using %d, ignoring %d\n",kc,old);
+  	    }
+  	}
+! 	else {
+! 	    if (reportCollisions) {
+! 		WARN1("Key name <%s> assigned to multiple keys\n",name);
+! 		ACTION2("Using %d, ignoring %d\n",old,kc);
+! 	    }
+! 	    return True;
+  	}
+      }
+!     info->names[kc]= lval;
+!     info->files[kc]= fileID;
+      return True;
+  }
+  
+***************
+*** 506,512 ****
+  	    continue;
+  	LongToKeyName(from->names[i],buf);
+  	buf[4]= '\0';
+! 	if (!AddKeyName(into,i,buf,merge,False))
+  	    into->errorCount++;
+      }
+      if (from->leds) {
+--- 458,464 ----
+  	    continue;
+  	LongToKeyName(from->names[i],buf);
+  	buf[4]= '\0';
+! 	if (!AddKeyName(into,i,buf,merge,from->fileID,False))
+  	    into->errorCount++;
+      }
+      if (from->leds) {
+***************
+*** 519,526 ****
+  	    next= (IndicatorNameInfo *)led->defs.next;
+  	}
+      }
+!     if (!MergeAliases(&into->aliases,&from->aliases))
+  	into->errorCount++;
+      return;
+  }
+  
+--- 471,486 ----
+  	    next= (IndicatorNameInfo *)led->defs.next;
+  	}
+      }
+!     if (!MergeAliases(&into->aliases,&from->aliases,merge))
+  	into->errorCount++;
++     if (from->explicitMin>0) {
++ 	if ((into->explicitMin<0)||(into->explicitMin>from->explicitMin))
++ 	    into->effectiveMin= into->explicitMin= from->explicitMin;
++     }
++     if (from->explicitMax>0) {
++ 	if ((into->explicitMax<0)||(into->explicitMax<from->explicitMax))
++ 	     into->effectiveMax= into->explicitMax= from->explicitMax;
++     }
+      return;
+  }
+  
+***************
+*** 643,649 ****
+  	     merge= MergeOverride;
+  	else merge= stmt->merge;
+      }
+!     return AddKeyName(info,code,stmt->name,merge,True);
+  }
+  
+  #define	MIN_KEYCODE_DEF		0
+--- 603,609 ----
+  	     merge= MergeOverride;
+  	else merge= stmt->merge;
+      }
+!     return AddKeyName(info,code,stmt->name,merge,info->fileID,True);
+  }
+  
+  #define	MIN_KEYCODE_DEF		0
+*** ./programs/xkbcomp/symbols.c@@/PUBLIC-LATEST	Sat Aug 31 12:19:37 1996
+--- xc/programs/xkbcomp/symbols.c	Fri Dec 27 21:22:16 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: symbols.c /main/12 1996/08/31 12:15:50 kaleb $ */
+  /************************************************************
+   Copyright (c) 1994 by Silicon Graphics Computer Systems, Inc.
+  
+--- 1,4 ----
+! /* $XConsortium: symbols.c /main/13 1996/12/27 21:17:07 kaleb $ */
+  /************************************************************
+   Copyright (c) 1994 by Silicon Graphics Computer Systems, Inc.
+  
+***************
+*** 693,699 ****
+  	}
+  	from->modMap= NULL;
+      }
+!     if (!MergeAliases(&into->aliases,&from->aliases))
+  	into->errorCount++;
+      return;
+  }
+--- 693,699 ----
+  	}
+  	from->modMap= NULL;
+      }
+!     if (!MergeAliases(&into->aliases,&from->aliases,merge))
+  	into->errorCount++;
+      return;
+  }
+*** ./programs/xkbcomp/xkbcomp.c@@/PUBLIC-LATEST	Sat Aug 31 12:19:46 1996
+--- xc/programs/xkbcomp/xkbcomp.c	Fri Dec 27 21:22:31 1996
+***************
+*** 1,4 ****
+! /* $XConsortium: xkbcomp.c /main/11 1996/08/31 12:15:58 kaleb $ */
+  /************************************************************
+   Copyright (c) 1994 by Silicon Graphics Computer Systems, Inc.
+  
+--- 1,4 ----
+! /* $XConsortium: xkbcomp.c /main/12 1996/12/27 21:17:23 kaleb $ */
+  /************************************************************
+   Copyright (c) 1994 by Silicon Graphics Computer Systems, Inc.
+  
+***************
+*** 693,702 ****
+  #ifdef DEBUG
+      if (debugFlags&0x2)
+  	yydebug= 1;
+- #ifdef sgi
+-     if (debugFlags&0x4)
+- 	mallopt(M_DEBUG,1);
+- #endif
+  #endif
+      if (preErrorMsg)
+  	uSetPreErrorMessage(preErrorMsg);
+--- 693,698 ----
+*** programs/xrx/helper/xrx.man@@/PUBLIC-LATEST	Fri Dec 20 18:03:25 1996
+--- xc/programs/xrx/helper/xrx.man	Thu Dec 26 14:06:41 1996
+***************
+*** 1,4 ****
+! .\" $XConsortium: xrx.man /main/3 1996/12/20 18:01:08 lehors $
+  .\" Copyright (c) 1996  X Consortium
+  .\" 
+  .\" Permission is hereby granted, free of charge, to any person obtaining
+--- 1,4 ----
+! .\" $XConsortium: xrx.man /main/4 1996/12/26 14:04:41 lehors $
+  .\" Copyright (c) 1996  X Consortium
+  .\" 
+  .\" Permission is hereby granted, free of charge, to any person obtaining
+***************
+*** 107,117 ****
+  address of your server if you wish remote applications to be able to use
+  LBX across the Internet.
+  .PP
+! If the RX document requests XPRINT service, \fIxrx\fP will look for the
+! variables ``XPRINTER'', ``PDPRINTER'', ``LPDEST'', ``PRINTER'', and
+! ``XPSERVERLIST'' to get the printer name and X Print server address to
+! use. Note that although this set of variables allows to specify more than
+! one server and printer, only the first pair will be used.
+  .PP
+  Finally, if you are using a firewall proxy, \fIxrx\fP will look for
+  ``PROXY_MANAGER'' to get the address of your proxy manager (see
+--- 107,120 ----
+  address of your server if you wish remote applications to be able to use
+  LBX across the Internet.
+  .PP
+! If the RX document requests XPRINT service, \fIxrx\fP looks for the
+! variable ``XPRINTER'' to get the printer name and X Print server address to
+! use. If the server address is not specified as part of XPRINTER, \fIxrx\fP
+! uses the first one specified through the variable ``XPSERVERLIST'' when it
+! is set. When it is not \fIxrx\fP then tries to use the video server as the
+! print server. If the printer name is not specified via XPRINTER, \fIxrx\fP
+! looks for it in the variables ``PDPRINTER'', then ``LPDEST'', and finally
+! ``PRINTER'',
+  .PP
+  Finally, if you are using a firewall proxy, \fIxrx\fP will look for
+  ``PROXY_MANAGER'' to get the address of your proxy manager (see
+*** programs/xrx/plugin/libxrx.man@@/PUBLIC-LATEST	Fri Dec 20 18:03:06 1996
+--- xc/programs/xrx/plugin/libxrx.man	Thu Dec 26 14:06:48 1996
+***************
+*** 1,4 ****
+! .\" $XConsortium: libxrx.man /main/3 1996/12/20 18:00:53 lehors $
+  .\" Copyright (c) 1996  X Consortium
+  .\" 
+  .\" Permission is hereby granted, free of charge, to any person obtaining
+--- 1,4 ----
+! .\" $XConsortium: libxrx.man /main/4 1996/12/26 14:04:47 lehors $
+  .\" Copyright (c) 1996  X Consortium
+  .\" 
+  .\" Permission is hereby granted, free of charge, to any person obtaining
+***************
+*** 123,133 ****
+  address of your server if you wish remote applications to be able to use
+  LBX across the Internet.
+  .PP
+! If the RX document requests XPRINT service, the \fIRX Plug-in\fP will look
+! for the variables ``XPRINTER'', ``PDPRINTER'', ``LPDEST'', ``PRINTER'', and
+! ``XPSERVERLIST'' to get the printer name and X Print server address to
+! use. Note that although this set of variables allows to specify more than
+! one server and printer, only the first pair will be used.
+  .PP
+  Finally, if you are using a firewall proxy, \fIRX Plug-in\fP will look for
+  ``PROXY_MANAGER'' to get the address of your proxy manager (see
+--- 123,136 ----
+  address of your server if you wish remote applications to be able to use
+  LBX across the Internet.
+  .PP
+! If the RX document requests XPRINT service, \fIRX Plug-in\fP looks for the
+! variable ``XPRINTER'' to get the printer name and X Print server address to
+! use. If the server address is not specified as part of XPRINTER, \fIRX
+! Plug-in\fP uses the first one specified through the variable
+! ``XPSERVERLIST'' when it is set. When it is not \fIRX Plug-in\fP then tries
+! to use the video server as the print server. If the printer name is not
+! specified via XPRINTER, \fIRX Plug-in\fP looks for it in the variables
+! ``PDPRINTER'', then ``LPDEST'', and finally ``PRINTER'',
+  .PP
+  Finally, if you are using a firewall proxy, \fIRX Plug-in\fP will look for
+  ``PROXY_MANAGER'' to get the address of your proxy manager (see

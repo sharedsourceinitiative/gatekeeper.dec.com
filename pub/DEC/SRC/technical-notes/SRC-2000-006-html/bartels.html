@@ -1,0 +1,114 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.73 [en] (WinNT; U) [Netscape]">
+   <title>Cloudburst Intern Report</title>
+</head>
+<body bgcolor="#FFFFFF">
+&nbsp;
+<br>&nbsp;
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" >
+<tr>
+<td><font size=+1></font><font size=+1></font>
+<center>
+<p><b><font size=+1>Cloudburst:&nbsp;</font></b>
+<br><b><font size=+1>A Compressing, Log-Structured Logical Disk for Flash
+Memory</font></b>
+<p><b>Gretta Bartels</b>
+<br><b>University of Washington</b></center>
+</td>
+</tr>
+</table></center>
+
+<br>&nbsp;
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" >
+<tr>
+<td><b>1 Introduction</b>
+<p>This summer, I worked with Tim Mann on building Cloudburst, a device
+driver that enables persistent file storage on handheld computers with
+flash memory, such as the Itsy. Cloudburst is a compressing, log-structured
+logical disk. Currently, handheld computers with flash generally have read-only
+file systems, or read-write file systems with no compression.
+<br>&nbsp;
+<p><b>2 Flash Memory</b>
+<p>Flash memory has characteristics that make it different from most other
+forms of persistent storage. To its advantage, reading and writing flash
+is nearly as fast as reading and writing DRAM. However, flash can not generally
+be rewritten. Each bit in a flash memory has an erase state -- say, 1.
+When the flash is erased, all of the bits in the flash are set to 1. Each
+individual bit may be flipped to 0 at any time. But to flip back from 0
+to 1, an entire sector of the flash must be erased simultaneously. Sectors
+are large, often 256 KB or 512 KB, and it takes a long time to erase a
+sector, nearly a second.
+<p>For this reason, rewriting small blocks of data in-place on flash memory
+is very inefficient. For example, suppose we are trying to store an array
+of 1024 512-byte blocks in a sector of flash. Suppose we need to update
+one of the blocks, and that some of the bits in the block will flip from
+0 to 1 when we do the update. To do the update, we'll need to:
+<ol>
+<li>
+Read the entire half-MB sector into memory from flash</li>
+
+<li>
+Update the block in memory</li>
+
+<li>
+Erase the sector</li>
+
+<li>
+Rewrite the entire sector from memory to flash</li>
+</ol>
+Besides being time- and memory-consuming, this approach also leaves a sizable
+window of opportunity for data loss, should the system lose power. Furthermore,
+each sector of flash may only be erased about 100,000 times. After that,
+it no longer guarantees data integrity.
+<br>&nbsp;
+<p><b>3 Cloudburst Rationale</b>
+<p>We designed Cloudburst to be:
+<ul>
+<li>
+log structured, because writing blocks in-place on flash is very inefficient</li>
+
+<li>
+compressing, because flash is generally quite small, and file systems expand
+to fill all available space</li>
+
+<li>
+a logical disk, because implementing complete file systems is tricky and
+unnecessary. By working at a lower level, we can support many different
+file systems.</li>
+</ul>
+The logical disk abstraction is a layer between the file system and the
+storage medium. To the file system, the logical (or virtual) disk acts
+like a normal, magnetic disk: it reads and writes blocks of a fixed size.
+However, under the covers, the logical disk can store the data on the storage
+medium however it chooses.
+<p>In the case of Cloudburst, we store the data in a log, writing blocks
+sequentially on the flash. Because there is no minimum write granularity
+on the flash, we can compress the blocks as we write them to the log without
+losing space due to fragmentation.
+<br>&nbsp;
+<p><b>4 Related Work</b>
+<p>Many different combinations of compression, log-structure, logical disks,
+and flash-friendliness have been tried before. To the best of our knowledge,
+the combination of all four has never been tried.
+<br>&nbsp;
+<p><b>5 Acknowledgments</b>
+<p>I would like to thank Tim Mann, my host, for being so helpful, available,
+and knowledgeable about the task at hand. Thanks also to Mike Burrows for
+explaining various compression algorithms and coming up with so many great
+ideas for Cloudburst's cleaner algorithms.
+<br>&nbsp;
+<h4>
+6 About the Author</h4>
+I'm a third-year student in the PhD program in computer science at the
+University of Washington. Hank Levy is my advisor at UW. In my most recent
+project before coming to SRC, I designed and implemented a highly scalable
+failure detection and reporting protocol for large clusters in a LAN environment.</td>
+</tr>
+</table></center>
+
+<br>&nbsp;
+</body>
+</html>

@@ -1,0 +1,37 @@
+<HTML>
+<HEAD>
+<TITLE>Changes included in SRC Technical Note 1997-005c</TITLE>
+</HEAD>
+<BODY BGCOLOR="#ffffff" VLINK="#006633">
+<H2>Changes included in SRC Technical Note 1997-005c</H2>
+
+<P>The following list reflects the complete set of changes made to SRC
+Technical Note
+<A HREF="ftp://ftp.digital.com/pub/DEC/SRC/technical-notes/SRC-1997-005b.html"
+>1997-005b</A> to produce the revised note
+<A HREF="ftp://ftp.digital.com/pub/DEC/SRC/technical-notes/SRC-1997-005c.html"
+>1997-005c</A>.</P>
+
+<UL>
+
+<LI>The optional argument <I>existing_writable</I> is added to the
+signature of _run_tool.  For backward compatibility, the new argument
+is last and its default value is FALSE, so old models have the same
+semantics as before the language change.
+
+<P><LI>A paragraph is added to clarify that modification of
+preexisting files by a tool (when permitted) is handled in the same
+way as creation of new files.
+
+<P><LI>The _run_tool argument <I>fp_contents</I> is changed from type
+t_boolean to type t_int.  For backward compatibility, boolean values
+are accepted and translated into appropriate integer values.
+
+<P><LI>Documentation of _par_map(t_closure f, t_binding b) is added.
+It was omitted by mistake in the previous revision.
+
+<P><LI>Minor HTML formatting bugs are corrected.
+
+</UL>
+</BODY>
+</HTML>

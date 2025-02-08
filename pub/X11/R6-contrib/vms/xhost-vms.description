@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+XHOST                            Server access control program for X
+                                 Authors: Bob Scheifler, MIT Laboratory for
+                                          Computer Science
+                                          Jim Gettys, MIT Project Athena (DEC)
+VAX                              Language: VAX C 3.2 or DEC C 4.0
+AXP                              Language: DEC C
+-------------------------------------------------------------------------------

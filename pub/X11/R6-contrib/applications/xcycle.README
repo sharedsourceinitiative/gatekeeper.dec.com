@@ -1,0 +1,18 @@
+    Xcycle is a small program I wrote (in like 10 minutes !!) which basically
+cycles thru the hsv color space and changes your root window color to the 
+current color.
+
+    It's a quick hack, so don't expect miracles !!
+
+    Options include 
+   
+        -display <host:dpy>           The display to run on.
+        -speed   <speed>              Cycling speed [ 1 - 10].
+        -banzai                       Enable full color cycling. (Kinda jumpy!)
+
+
+    I basically stole some portions of xdaliclock to do this i.e
+
+  "XDaliClock v1.05; Copyright (c) 1991, 1992 Jamie Zawinski <jwz@lucid.com>"
+
+    Tell me whatyathink:     tolulope@caip.rutgers.edu

@@ -1,0 +1,23 @@
+"Color and Sound in Algorithm Animation"
+Marc H. Brown and John Hershberger
+August 30, 1991.  44 pages
+
+Authors' abstract:
+
+Although systems for animating algorithms are becoming more powerful
+and easier for programmers to use, not enough attention has been 
+given to the techniques that an algorithm animator needs to create 
+effective visualizations. This paper reviews the techniques for 
+algorithm animation reported in the literature thus far and introduces 
+new techniques that we have developed for using color and, to a lesser 
+extent, sound. The paper also presents six algorithm animations 
+that illustrate the new techniques. A videotape of these animations 
+is available.
+
+A videotape (76b) accompanies report 76a:
+
+"An Anthology of Algorithm Animations using Zeus"
+Edited by Marc H. Brown
+Time: 59:00
+
+

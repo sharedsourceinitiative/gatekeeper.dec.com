@@ -1,0 +1,148 @@
+
+                               Xoids v1.5
+
+                      An X Window System arcade game
+
+     All files in this distribution Copyright (C) 1996 by Tim Ebling
+         tebling@oce.orst.edu see disclaimer at end of this file
+
+==============
+
+NOTE: This README applies to v1.2 of Xoids.  A README for v1.5 should be
+available within a few days.  TE (9/10/96)
+
+What is Xoids?
+==============
+
+    Xoids is an asteroids-type game written for X in my (spare) time.  The
+    game was originally developed on a Sun4 system while on an oceanographic
+    research cruise.  It's by no means finished.
+
+What is the Current Version of Xoids?
+=====================================
+
+    Xoids 1.5 is the latest release, and is dated 9/10/96
+
+Is There An Xoids Home Page?
+============================
+
+    Why yes, and it's located at http://www.orst.edu/~eblingt/xoids.html
+
+What Are Some of Xoids' Features?
+=================================
+
+    While Xoids is strikingly similar to the original Asteroids game, 
+    there are some differences:
+
+    o  Full color pixmaps
+    o  One or Two Player (duel and cooperative) modes
+    o  Can bounce off asteroids instead of dying (if going slow)
+    o  Shots have relative speed, and impart intertia to the ship
+    o  Asteroids have appropriate "masses": realistic physics
+    o  The alien (called the Slurb) tracks players rather than
+       flying around aimlessly
+    o  Thrusting and using hyperspace can overheat your engines (boom!)
+    o  Co-op mode links players together via a flexible space-cable
+
+Game Play Modes
+===============
+
+    There are currently three modes of play:
+
+    One Player
+    ----------
+
+        Start out with five ships.  Keep blasting asteroids and
+        accumulating points until you're out of ships.  Simple but fun.
+        The alien Slurb can make life difficult.  More asteroids get added
+        once you clear a level and move to the next.
+
+    Two Player Duel
+    ---------------
+
+        Go head to head with a friend sitting at the same keyboard
+        (no networking YET - sorry).  Blast asteroids and each other.
+        Points are decremented for dying, but there are unlimited lives.
+        First player to reach 20,000 points wins.
+
+    Two Player Cooperative
+    ----------------------
+
+        Similar to the Duel, except that the players' ships are
+        linked via an elastic cable.  I didn't want one player to run 
+        out of lives before the other, so there are unlimited lives.
+        Since the first player to 20,000 "wins", it may be more 
+        competitive than cooperative, but hey... such is life (and 
+        death) in space.  It's quite easy to make things difficult for
+        the other player by trying to swing him (or her) into other
+        objects.
+
+Compiling and Installing Xoids
+==============================
+
+    Please see the file 'INSTALL'
+
+Playing
+=======
+
+    For now, the controls are hardwired:
+
+    Player 1
+    --------
+
+            Thrust                Up Arrow (keypad 8)
+            Rotate Right          Right Arrow (keypad 6)
+            Rotate Left           Left Arrow (keypad 4)
+            Fire                  Right Shift
+            Hyperspace            Return
+
+    Player 2
+    --------
+
+            Thrust                F
+            Rotate Right          B
+            Rotate Left           C
+            Fire                  Left Shift
+            Hyperspace            Space Bar
+
+    General
+    -------
+
+            Quit                  Q
+            Pause                 P
+            Menu                  Escape
+            Decrease Clock Speed  -
+            Increase Clock Speed  + (no shift needed)
+
+Miscellaneous Notes
+===================
+
+    That's about all for now.  Naturally, I've got a lot of big plans
+    for Xoids, including more alien ships, bigger than window playfields,
+    network play, weapons power-ups, etc, etc.
+
+    If you enjoy the game, make any modifications to it, have problems
+    with it, or just want to talk about oceanography or something, then
+    feel free to email me at tebling@oce.orst.edu.
+
+    Thanks, and enjoy!!
+
+    Tim Ebling
+
+Disclaimer
+==========
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 1, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+

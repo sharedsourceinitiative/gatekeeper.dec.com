@@ -1,0 +1,243 @@
+<HTML>
+<HEAD>
+<TITLE>
+2. Related Work - Continuous Profiling: Where Have All the Cycles Gone?
+</TITLE>
+</HEAD>
+
+<BODY>
+
+<H1>
+<CENTER>
+<A HREF="sosp97.html">Continuous Profiling: Where Have All the Cycles Gone?</A>
+<P>
+2. Related Work
+</CENTER>
+</H1>
+
+<P>
+Few other profiling systems can monitor complete system activity with
+high-frequency sampling and low overhead; only ours and
+Morph<A HREF="references.html#Zha97">[Zha97]</A>
+are designed to run continuously for long
+periods on production systems, something that is essential for
+obtaining useful profiles of large complex applications such as
+databases.  In addition, we know of no other system that can analyze
+time-biased samples to produce accurate fine-grained information about
+the number of cycles taken by each instruction and the reasons for
+stalls; the only other tools that can produce similar information use
+simulators, at much higher cost.
+</P>
+
+<P>
+Table 1 below compares several profiling systems.
+The <I>overhead</I> column describes how much profiling slows down
+the target program; low overhead is defined arbitrarily as less than
+20%.  The <I>scope</I> column shows whether the profiling
+system is restricted to a single application (App) or can measure full
+system activity (Sys).  The <I>grain</I> column indicates the range
+over which an individual measurement applies.  For example, gprof
+counts procedure executions, whereas pixie can count executions of
+each instruction.  Prof goes even further and reports the time spent
+executing each instruction, which, given the wide variations in
+latencies of different instructions, is often more useful than just an
+execution count.  The <I>stalls</I> column indicates whether and how
+well the system can subdivide the time spent at an instruction into
+components like cache miss latency, branch misprediction delays, etc.
+</P>
+
+<P>
+
+<CENTER>
+<TABLE BORDER CELLPADDING=4>
+    <TR ALIGN="left">
+	<TH>System</TH>
+	<TH>Overhead</TH>
+	<TH>Scope</TH>
+	<TH>Grain</TH>
+	<TH>Stalls</TH>
+    </TR>
+    <TR><TD COLSPAN = 5> </TD>
+    </TR>
+    <TR ALIGN="left">
+	<TD>pixie</TD>
+	<TD>High</TD>
+	<TD>App</TD>
+	<TD>inst count</TD>
+	<TD>none</TD>
+    </TR>
+    <TR ALIGN="left">
+	<TD>gprof</TD>
+	<TD>High</TD>
+	<TD>App</TD>
+	<TD>proc count</TD>
+	<TD>none</TD>
+    </TR>
+    <TR ALIGN="left">
+	<TD>jprof</TD>
+	<TD>High</TD>
+	<TD>App</TD>
+	<TD>proc count</TD>
+	<TD>none</TD>
+    </TR>
+    <TR ALIGN="left">
+	<TD>quartz</TD>
+	<TD>High</TD>
+	<TD>App</TD>
+	<TD>proc count</TD>
+	<TD>none</TD>
+    </TR>
+    <TR ALIGN="left">
+	<TD>MTOOL</TD>
+	<TD>High</TD>
+	<TD>App</TD>
+	<TD>inst count/time</TD>
+	<TD>inaccurate</TD>
+    </TR>
+    <TR ALIGN="left">
+	<TD>SimOS</TD>
+	<TD>High</TD>
+	<TD>Sys</TD>
+	<TD>inst time</TD>
+	<TD>accurate</TD>
+    </TR>
+    <TR ALIGN="left">
+	<TD>Speedshop (pixie)</TD>
+	<TD>High</TD>
+	<TD>App</TD>
+	<TD>inst count</TD>
+	<TD>none</TD>
+    </TR>
+    <TR ALIGN="left">
+	<TD>Vtune (dynamic)</TD>
+	<TD> High</TD>
+	<TD>App</TD>
+	<TD>inst time</TD>
+	<TD>accurate</TD>
+    </TR>
+    <TR><TD COLSPAN = 5> </TD>
+    </TR>
+    <TR ALIGN="left">
+	<TD>prof</TD>
+	<TD>Low</TD>
+	<TD>App</TD>
+	<TD>inst time</TD>
+	<TD>none</TD>
+    </TR>
+    <TR ALIGN="left">
+	<TD>iprobe</TD>
+	<TD>High</TD>
+	<TD>Sys</TD>
+	<TD>inst time</TD>
+	<TD>inaccurate</TD>
+    </TR>
+    <TR ALIGN="left">
+	<TD>Morph</TD>
+	<TD>Low</TD>
+	<TD>Sys</TD>
+	<TD>inst time</TD>
+	<TD>none</TD>
+    </TR>
+    <TR ALIGN="left">
+	<TD>Vtune (sampler)</TD>
+	<TD>Low</TD>
+	<TD>Sys</TD>
+	<TD>inst time</TD>
+	<TD>inaccurate</TD>
+    </TR>
+    <TR ALIGN="left">
+	<TD>SpeedShop (timer and counters)</TD>
+	<TD>Low</TD>
+	<TD>Sys</TD>
+	<TD>inst time</TD>
+	<TD>inaccurate</TD>
+    </TR>
+    <TR ALIGN="left">
+	<TD>DCPI</TD>
+	<TD>Low</TD>
+	<TD>Sys</TD>
+	<TD>inst time</TD>
+	<TD>accurate</TD>
+    </TR>
+</TABLE>
+<B>Table 1: Profiling Systems</B>
+</CENTER>
+
+</P>
+
+<P>
+The systems fall into two groups.  The first includes
+<I>pixie</I><A HREF="references.html#MIPS90">[MIPS90]</A>,
+<I>gprof</I><A HREF="references.html#GraKM82">[GraKM82]</A>,
+<I>jprof</I><A HREF="references.html#ReiS94">[ReiS94]</A>,
+<I>quartz</I><A HREF="references.html#AndL91">[AndL91]</A>,
+<I>MTOOL</I><A HREF="references.html#GolH93">[GolH93]</A>,
+<I>SimOS</I><A HREF="references.html#RosHWG95">[RosHWG95]</A>,
+part of SGI's <I>SpeedShop</I><A HREF="references.html#Zag96">[Zag96]</A>,
+and Intel's <I>Vtune</I> dynamic 
+analyzer<A HREF="references.html#Vtune">[Vtune]</A>.
+These systems use binary modification,
+compiler support, or direct simulation of programs to gather
+measurements.  They all have high overhead and usually require
+significant user intervention.  The slowdown is too large for
+continuous measurements during production use, despite techniques that
+reduce instrumentation overhead 
+substantially<A HREF="references.html#BalL94">[BalL94]</A>.  In
+addition, only the simulation-based systems provide accurate
+information about the locations and causes of stalls.
+</P>
+
+<P>
+The systems in the second group use statistical sampling to collect
+fine-grained information on program or system behavior.  Some sampling
+systems, including <I>Morph</I><A HREF="references.html#Zha97">[Zha97]</A>,
+<I>prof</I><A HREF="references.html#prof">[prof]</A>,
+and part of SpeedShop, rely on an existing source
+of interrupts (e.g., timer interrupts) to generate program-counter
+samples.  This prevents them from sampling within those interrupt
+routines, and can also result in correlations between the sampling and
+other system activity.  By using hardware performance counters and
+randomizing the interval between samples, we are able to sample
+activity within essentially the entire system (except for our
+interrupt handler itself) and to avoid correlations with any other
+activity.
+</P>
+
+<P>
+Other systems that use performance counters, including
+<I>iprobe</I><A HREF="references.html#Ipr">[Ipr]</A>,
+the <I>Vtune</I> sampler<A HREF="references.html#Vtune">[Vtune]</A>, 
+and part of SpeedShop, share some of the characteristics of our system.
+However, iprobe and Vtune cannot be used for continuous profiling,
+mostly because they need a lot of memory for sample data.  In
+addition, iprobe, the Vtune sampler, and SpeedShop all fail to map the
+sample data accurately back to individual instructions.  In contrast,
+our tools produce an accurate accounting of stall cycles incurred by
+each instruction and the reasons for the stalls.
+</P>
+<HR>
+
+<BLOCKQUOTE>
+<A HREF="sosp97.html"> Beginning of paper </A> <BR>
+<A HREF="abstract.html">Abstract</A> <BR>
+<A HREF="introduction.html">1. Introduction</A> <BR>
+2. Related Work <BR>
+<A HREF="examples.html">3. Data Analysis Examples</A> <BR>
+<A HREF="collection.html">4. Data Collection System</A> <BR>
+<A HREF="collection-performance.html">5. Profiling Performance</A> <BR>
+<A HREF="analysis.html">6. Data Analysis Overview</A> <BR>
+<A HREF="future.html">7. Future Directions</A> <BR>
+<A HREF="conclusions.html">8. Conclusions</A> <BR>
+<A HREF="acks.html">Acknowledgements</A> <BR>
+<A HREF="references.html">References</A>
+</BLOCKQUOTE>
+
+<HR>
+
+This paper was published in the Proceedings of the 16th ACM Symposium
+on Operating Systems Principles, October, 1997. Copyright 1997 by the
+Assocation for Computing Machinery. All rights reserved. Republished
+by permission.
+
+</BODY>
+</HTML>

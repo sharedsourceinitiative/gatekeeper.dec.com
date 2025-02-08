@@ -1,0 +1,66 @@
+Hi,
+
+
+    Thanks for using "xacursor", the program can:
+    1. changes the cursor to the one specified using the "-cursor" option
+    2. shows the standard demonstration by the option "-demo"
+    3. changes the cursor in the sequence specified in a configuration file,
+       so an animated effect is achieved.  The animated cursor can have
+       changing colors, and can be animated in different ways.
+
+
+    A set of bitmaps (they can be made using programs like "bitmap") is needed 
+for the animation; with a configuration file, like this:
+    [cursor 1]  [mask 1]  [fg 1]  [bg 1]
+    [cursor 2]  [mask 2]  [fg 2]  [bg 2]
+        .           .        .      .
+    [cursor n]  [mask n]  [fg n]  [bg n]
+
+([mask], [fg] and [bg] can be omitted; "NA" is used as place holder.)
+
+e.g. icon/cat1.xbm  icon/cat_m.xbm  red
+     ([cursor]= icon/cat1.xbm,  [mask]= icon/cat_m.xbm,  [fg]= red) 
+
+     cat1.xbm  NA  red 
+     ([cursor]= cat1.xbm,  [fg]= red;  "NA" is a place holder for [mask]) 
+
+
+    Once the file (contains only a few lines) is finished, you can start the
+animation by "xacursor [the_above_file]".  Some sample bitmaps are in the
+directory "aicon"; their config. files are "earth", "egypt", "demo", "dan", 
+"neon3", "sheep", etc.  If in doubt, use "xacursor -h" for help.
+
+
+    You may use "xmkmf" to generate a "Makefile" to compile the program;
+or use the standard one "Makefile.std".  The MAN-page is called "xacursor.man".
+In addition, this software has been compiled in systems running SunOS, Solaris,
+Ultrix, AIX, HP_UX, and Linux using both "cc" and "gcc". 
+
+
+    To enjoy "xacursor" right away, do:
+        xacursor -bg gold1 -fg firebrick -r -demo
+    (then go to the root window...)
+
+    you can also try:
+        ./xacursor -path aicon -mask earth_m.xbm -fg wheat -bg cadetblue earth
+        ./xacursor -path aicon -fg firebrick -bg goldenrod1 demo
+        ./xacursor -path aicon dan
+        ./xacursor -path aicon -bg lightyellow sheep
+
+    and (these take effect in the root window, due to the "-r" option)
+        ./xacursor -path aicon -mask neon3_m.xbm -r neon3
+        ./xacursor -path aicon -bg tan -r egypt
+
+
+    Thanks also goes to Jason Ting (jting@napier.uwaterloo.ca), he suggested me
+to provide a better README file (here it is); and has also compiled the
+software under HP_UX.
+
+
+    Please don't be hesitated to give me some suggestions and comments, or
+just an encouragement, for every student needs encouragements, right? 
+
+
+(e-mail: k2wong@descartes.uwaterloo.ca)
+(WWW:    http://www.undergrad.math.uwaterloo.ca/~k2wong)
+

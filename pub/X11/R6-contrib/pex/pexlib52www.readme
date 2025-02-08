@@ -1,0 +1,25 @@
+
+The PEXlib 5.2 Specification - WWW files.
+
+The 3 files:
+  pexlib52www.html1.tar.Z
+  pexlib52www.html2.tar.Z
+  and
+  pexlib52www.gifs.tar
+
+contain all of the html files and associated .gif files
+needed for a World Wide Web version of the PEXlib 5.2
+Specification (Public Review Draft - dated 1/27/95).
+(Ensure after untar-ing and uncompressing these files,
+that the file permissions are correct).
+Also, be aware that all of these files must appear in
+the same directory.
+
+The 'home' file to view is 'pexlib52main.html'.
+
+You can also see the files using your WWW browser
+URL:
+  http://x.org/pexlib/
+
+-------------------------------------
+Donated by Jennifer M. Kaufman of IBM.  

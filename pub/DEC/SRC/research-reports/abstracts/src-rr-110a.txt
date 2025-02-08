@@ -1,0 +1,23 @@
+"Algorithm Animation Using 3D Interactive Graphics"
+Marc H. Brown and Marc A. Najork
+September 15, 1993. 19 pages
+
+This report describes a variety of 3D interactive graphics techniques
+for visualizing programs. The third dimension provides an extra degree
+of freedom for conveying information, much as color adds to
+black-and-white images, animation adds to static images, and sound
+adds to silent animations. The examples in this report illustrate three
+fundamental uses of 3D: for providing additional information about
+objects that are intrinsically two-dimensional, for uniting multiple
+views, and for capturing a history of execution. The application of
+dynamic three-dimensional graphics to program visualization is largely
+unexplored.
+
+A videotape (110b) of these animations is available: 
+
+"Algorithm Animation Using 3D Interactive Graphics"
+Marc H. Brown and Marc A. Najork
+Time: 10:00
+
+
+

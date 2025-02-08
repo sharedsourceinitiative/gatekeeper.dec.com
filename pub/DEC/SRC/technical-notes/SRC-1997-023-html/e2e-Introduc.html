@@ -1,0 +1,104 @@
+<HTML><HEAD>
+<!-- This document was created from RTF source by rtftohtml version 3.8 -->
+<TITLE>              Each to Each Programmer Reference Manual - Introduction </TITLE></HEAD>
+<BODY BACKGROUND="" BGCOLOR="#FFFFFF" TEXT="#000000">
+<A HREF="e2e.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="e2e-APIs.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="e2e.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="e2e.html#Contents"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+<hr size=4>
+<H1>
+Introduction </H1>
+<UL>
+<LI><A HREF="#Heading2">Overview of an Each to Each application</A>
+<LI><A HREF="#Heading3">Terminology</A>
+</UL>
+<hr size=4>
+This document describes how to incorporate the Each to Each recommendation
+technology in a complete application. Each to Each applies collaborative
+filtering techniques to the problem of making subjective recommendations to
+consumers faced with "infoglut". The basic idea is to ask people to vote for
+items on a numeric scale, then perform a statistical analysis of the collection
+of all people's votes, and use the results of the analysis to predict
+additional items of potential interest to a particular person. Unlike some
+competitive approaches, the Each to Each technology separates prediction from
+analysis, allows predictions to be made using compact "models" produced by the
+analysis, and provides meaningful predictions after a person has provided just
+a few votes.<p>
+The general goal of the APIs presented in this document is to separate core
+recommendation functionality from application-dependent features such as choice
+of platform, database, communication mechanism, etc. Implementing the "glue"
+code to connect these APIs into a complete application is straightforward.<p>
+The APIs are written in C++, but avoid advanced C++ features (e.g., no multiple
+inheritance, templates, or exceptions). Bindings for other languages (e.g.,
+Java, C) would not be difficult to design.<p>
+This document describes everything needed for pure vote-based predictions of
+person-item and person-person affinity (the latter to be used for choosing
+reviews of potential interest to a person). The appendix describes an
+enhancement called categories, which allow the use of demographic information
+and item categorization information in predictions. We have little experience
+with categories.<p>
+The technology is available for licensing; see <b><i>Appendix B: Technology
+Availability</i></b>.
+<a name="_Toc400263145"></a>
+
+<h2>
+<A NAME="Heading2">Overview of an Each to Each application</A></h2>
+
+The
+Each to Each technology separates prediction from analysis. Prediction involves
+interacting with a person to record his votes or ratings of specific items,
+computing predicted ratings, and providing them back to the person. Analysis
+involves applying a statistical algorithm to the collection of votes gathered
+from all people, producing a compact set of <i>models</i> used to drive future
+predictions.<p>
+The prediction component, or <i>predictor</i> for short, is inherently
+interactive. The analysis component, or <i>solver</i> for short, does not need
+to have low-latency communication with the prediction function or the user
+interface. In a typical internet application, the predictor runs as an
+application gateway, accessed via an interface such as CGI, NSAPI, or ISAPI,
+while the solver runs as a stand-alone process, perhaps on a different server
+computer. In a retail kiosk application, the predictor runs in the kiosk
+computer while the solver runs at a central data center; periodic dial-up
+communication is used to send votes to the solver and updated models to the
+kiosks. Finally, in a CD-ROM application, the predictor runs on a personal
+computer, using pre-computed models stored on the CD-ROM. Votes are stored on
+the local hard drive, and optionally sent to a central data center via dial-up
+communication and/or the Internet. Here is a diagram showing the overall data
+flow:<p>
+<IMG SRC="e2e02.gif"><a name="_Toc400263146"></a>
+
+<h2>
+<A NAME="Heading3">Terminology</A></h2>
+
+We
+have already introduced the terms predictor and solver. We should point out
+that we use the term "predictor" to refer to two different things: the
+<tt>ee_predict</tt> API in the Each to Each SDK and the component of an
+application that records new votes and generates predictions. Similarly, we use
+the term "solver" to refer both to the <tt>ee_solve</tt> API and the component
+of an application that calls this API.<p>
+There are a few other terms with special meanings in this document:<p>
+<i>Person</i>: someone who votes for items and asks for recommendations.<p>
+<i>Item</i>: something that can be voted on.<p>
+<i>Vote</i>: actual or predicted assessment of an item by a person, consisting
+of a score and a weight.<p>
+<i>Score</i>: a numeric value between 0.0 and 1.0, where higher numbers mean
+more positive assessments.<p>
+<i>Weight</i>: a nonnegative floating-point value. On input to Each to Each,
+weights have a linear interpretation (e.g., .5 means half as confident as 1.0),
+but the particular scale (e.g., 0.0 to 1.0 or 0.0 to 10.0) doesn't matter. On
+output from Each to Each, weights are approximate and ordered but not linear
+and will be between 0.0 and 1.0. Determining appropriate thresholds upon which
+to base recommendations typically requires a bit of application-dependent
+tuning.<p>
+<i>Model</i>: a block of data (currently 128 bytes in length) computed by the
+solver for each person and for each item. The predictor functions use the model
+in fast algorithms for predicting votes and correlations.
+<a name="_Toc400263147"></a>
+<P><hr size=4>
+<A HREF="e2e.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="e2e-APIs.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="e2e.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="e2e.html#Contents"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+</body></html>

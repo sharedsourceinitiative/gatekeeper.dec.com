@@ -1,0 +1,235 @@
+<html>
+
+<head>
+<title>
+Zippers: A Focus+Context Display of Web Pages
+</title>
+</head>
+
+<body>
+<h1>Zippers: A Focus+Context Display of Web Pages</h1>
+
+<A HREF="http://www.research.digital.com/people/mhb">
+     Marc H. Brown</A><br>
+DEC Systems Research Center<br>
+130 Lytton Ave.<br>
+Palo Alto, CA 94301<br>
+<a href="mailto:mhb@pa.dec.com">mhb@pa.dec.com</a>
+
+<p>
+
+<A HREF="http://www.research.digital.com/people/weihl">
+     William E. Weihl</A><br>
+DEC Systems Research Center<br>
+130 Lytton Ave.<br>
+Palo Alto, CA 94301<br>
+<a href="mailto:weihl@pa.dec.com">weihl@pa.dec.com</a>
+
+
+<h2>Abstract</h2>
+
+This report describes <em>zippers</em>, an application of
+outline-processor technology to the display of Web pages. Zippers
+allow users to expand and contract selected sections of a document,
+thereby displaying simultaneously the contents of individual sections
+of a document as well as its overall structure.  
+Zippers can be implemented either directly in a Web browser or by 
+a proxy (and consequently used by any off-the-shelf Web browser); 
+in either case, no changes to HTML source files are required. <p>
+
+
+<h2>Overview</h2>
+
+As people rush to put information onto the World Wide Web, more and
+more structured documents are appearing. These documents include home
+pages with lots of hierarchically organized links, papers with many
+sections and subsections, and other lengthy documents such as books
+and manuals.<p>
+
+All Web browsers that we know of display each page as a continuous
+scroll. Unfortunately, it is easy to lose context when viewing a
+snippet of the whole, and it is hard to jump to arbitrary places in
+the page. These problems become more severe with longer pages.<p>
+
+Outline processors provide one well known technique for addressing these
+problems.  Outline processors allow a user to expand and contract
+selected sections and subsections of a document, thus retaining the
+high-level structure of the document while also displaying individual
+sections. In addition, outline processors allow the user to rapidly
+jump within the document.  This report describes the application of
+outline processor technology to the display of Web pages.<p>
+
+<h2>Zippers</h2>
+
+Our display of Web pages infers an outline structure from the
+heading tags (i.e., H1, H2, ..., H6) in the HTML source. We
+mark each heading with an icon called a <em>zipper</em>. Clicking on the
+zipper causes the section introduced by the heading to expand and
+contract.
+Re-expanding a section causes the state of all subsections to reappear
+as they were before the section was contracted. However,
+shift-clicking on a zipper icon causes the section <em>and all of its
+subsections</em> to expand or to contract.<p>
+
+The two sets of screen dumps below shows a Web page using Netscape
+(top) and using zippers (bottom).
+The zipper display is within the WebCard
+browser, an integrated system for handling e-mail messages, bboard
+articles, and Web pages <a href="#webcard">[3]</a>.<p>
+
+The screen dumps below show the SRC home page. The page contains a
+level-1 heading (a graphic with the letters SRC followed by "Systems
+Research Center"), some text, and then four level-2 headings. The
+bottom-left screen dump is the default display with zippers: The
+single level-1 heading is automatically expanded, thereby causing the
+text it contains and any subheaders to be displayed. By default,
+subheaders are displayed contracted.  In the bottom-right screen dump,
+we've expanded the second and third subheaders.<p>
+
+<center>
+<a href="SRC-140-figs/src-netscape.gif">
+  <img vspace=5 alt="Figure Goes Here" src="SRC-140-figs/src-netscape-thumb.gif"></a><br>
+<a href="SRC-140-figs/src-webcard1.gif">
+  <img alt="Figure Goes Here" vspace=5 hspace=5 src="SRC-140-figs/src-webcard1-thumb.gif"></a>
+<a href="SRC-140-figs/src-webcard2.gif">
+  <img alt="Figure Goes Here" vspace=5 hspace=5 src="SRC-140-figs/src-webcard2-thumb.gif"></a>
+</center>
+
+
+The screen dumps below show a large document, "A Beginner's Guide to
+HTML" by NCSA <a href="#ncsa-html-toc">[1]</a>. (We edited the page to add section
+numbers, in order to facilitate the description of zippers.) The
+Netscape display is 21 screens of information, scrolled to the spot
+just before section "3.1 The Minimal HTML Document." The zipper
+displays are scrolled to about the same location. In the bottom-left
+screen dump, we've expanded section "3 Creating HTML Documents" of the
+default zipper display. The contents of the section are displayed
+("HTML documents \dots\ screen display."), and the three subsections
+are visible in their contracted form. In the bottom-right screen dump,
+we've expanded three more sections: "3.2 Basic Markup Tags," and then
+"3.2.2 Headings" (which only became visible after "3.2 Basic Markup
+Tags" was expanded), and finally "3.3 Linking to Other Documents."
+
+
+<center>
+<a href="SRC-140-figs/html-netscape.gif">
+  <img vspace=5 alt="Figure Goes Here" src="SRC-140-figs/html-netscape-thumb.gif"></a><br>
+<a href="SRC-140-figs/html-webcard1.gif">
+  <img vspace=5 hspace=5 alt="Figure Goes Here" src="SRC-140-figs/html-webcard1-thumb.gif"></a>
+<a href="SRC-140-figs/html-webcard2.gif">
+  <img vspace=5 hspace=5 alt="Figure Goes Here" src="SRC-140-figs/html-webcard2-thumb.gif"></a>
+</center>
+
+
+
+<h2>Discussion</h2>
+
+Zippers work well on Web pages that use heading tags to indicate the
+logical structure of the page. Unfortunately, many authors use heading
+tags to produce particular formatting effects, such as font and
+pointsize changes, rather than indicate logical structure. On such pages, users
+simply turn off the zippers and the page is displayed conventionally.<p>
+
+We know of one Web site that has hand-coded
+zippers <a href="#handcoded-zippers">[7]</a>. The drawback of hand coding zippers
+is that it requires server interaction to expand or contract, and an
+exponential number of files (or a complex script) to generate all
+states.<p>
+
+Authors of long pages frequently add a table of contents to the top of
+the page, with entries in the table linking to the various
+sections. Sometimes, each section appears on its own page, with
+"next," "previous," "up," and "top" links on each page.
+Unfortunately, it is easy for the viewer to lose the big picture
+because the table of contents is not visible while looking at the
+contents of a particular section.<p>
+
+An alternative to zippers for retaining the big picture while viewing
+the details is a multi-panel display, such as in
+SuperBook <a href="#superbook">[2]</a>.  One panel displays the table of contents
+and the other panel displays sections in the document. Clicking on an
+entry in the table of contents causes the other panel to display the
+corresponding part of the document. The user can also open and close
+levels of the table of contents, but the body of a section is always
+displayed in the second panel. A multi-panel display such as Superbook
+could be implemented using Netscape's frames, by adding appropriate
+HTML markups and Java code to a source document.<p>
+
+Another related system 
+is SoftQuad's Panorama Pro <a href="#panorama">[6]</a>,
+which displays SGML documents using a two-panel viewer similar to that
+of SuperBook.  Panorama Pro is also loosely integrated with the Web:
+The application can be configured as an external viewer of documents
+whose MIME type is SGML. Clicking on a URL in a document displayed
+by Panorama Pro will cause Netscape (or some other user-specified
+browser) to fetch <em>and display</em> the URL. Electronic Book
+Technologies' DynaText <a href="#ebt">[4]</a> is another impressive SGML viewer; it
+is integrated into Netscape as a plug-in.  It's important to realize,
+however, that Panorama Pro and DynaText are not Web browsers.<p>
+
+Our decision to expand an outline view in place was inspired in part
+by Pad++ <a href="#pad++">[5]</a>, a zooming graphical interface, and in part by 
+the host of successful "context+focus" visualizations developed at
+Xerox PARC.<p>
+
+We are currently working on a proxy-based implementation of zippers
+that allows zipper-enhanced pages to be displayed in any Web browser.
+The idea is simple: A "zipper proxy" runs on the same machine as the
+user's browser and sits between the browser and the browser's normal
+proxy. The zipper proxy uses the normal proxy for fetching pages, and
+modifies the returned HTML to elide material and to include zipper
+icons. Each zipper icon is linked to a specially constructed URL that
+is intercepted by the zipper proxy and which allows the zipper proxy
+to return an appropriate view of the page.<p>
+
+
+<h2>Conclusion</h2>
+
+Viewing a Web page using zippers has the nice property of allowing one
+to see details of parts of the page while maintaining the global
+context of the entire page. The larger the Web page -- or the smaller
+the vertical space available for the display -- the more benefit there
+is to this technique.  Putting this technology into a browser or into
+a proxy seems preferable to hand-coding it into each document.<p>
+
+
+<h2>References</h2>
+
+<dl compact>
+
+<dt>[<a name="ncsa-html-toc">1</a>]
+<dd>A Beginner's Guide to HTML<br>
+<code><a href="http://www.ncsa.uiuc.edu/demoweb/html-primer.html">http://www.ncsa.uiuc.edu/demoweb/html-primer.html</a></code><p>
+
+<dt>[<a name="superbook">2</a>]
+<dd>About Bellcore's SuperBook(R) Document Browser<br>
+<code><a href="http://superbook.bellcore.com:80/SB/">http://superbook.bellcore.com:80/SB/</a></code><p>
+
+<dt>[<A NAME="Brown95">3</A>]
+<dd>Marc H. Brown.<br>
+Browsing the Web with a Mail/News Reader.<br>
+<i>Proc. of the 8th ACM Symposium on User Interface Software and Technology</i>,
+pages 197-198, November 1995.
+<p>
+
+<dt>[<a name="ebt">4</a>]
+<dd>EBT--Product Information<br>
+<code><a href="http://www.ebt.com/docs/prodinfo.html">http://www.ebt.com/docs/prodinfo.html</a></code><p>
+
+<dt>[<a name="pad++">5</a>]
+<dd>Pad++: Zoomable Graphical Interfaces<br>
+<code><a href="http://www.cs.unm.edu/pad++/">http://www.cs.unm.edu/pad++/</a></code><p>
+
+<dt>[<a name="panorama">6</a>]
+<dd>SoftQuad: Panorama PRO<br>
+<code><a href="http://www.sq.com/products/panorama/panor-fe.htm">http://www.sq.com/products/panorama/panor-fe.htm</a></code><p>
+
+<dt>[<a name="handcoded-zippers">7</a>]
+<dd>UCI Bookstore Ordering Information<br>
+<code><a href="http://bookweb.cwis.uci.edu:8042/Orders/orders-pt.html">http://bookweb.cwis.uci.edu:8042/Orders/orders-pt.html</a></code><p>
+
+</dl>
+
+</body>
+
+</html>

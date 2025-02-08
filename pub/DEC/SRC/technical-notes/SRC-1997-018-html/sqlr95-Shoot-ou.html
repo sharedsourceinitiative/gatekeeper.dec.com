@@ -1,0 +1,235 @@
+<HTML><HEAD>
+<!-- This document was created from RTF source by rtftohtml version $Revision: 3.6 $ -->
+<TITLE>The 1995 SQL Reunion: People, Projects, and Politics - Shoot-out at the OK Corral</TITLE></HEAD>
+<BODY BACKGROUND="" BGCOLOR="#FFFFFF" TEXT=#000000>
+<A HREF="sqlr95-SQL_DS.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="sqlr95-System-2.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="sqlr95-IBM.html"><IMG SRC="images/upg.gif" ALT="Up " border=0></A>
+ <A HREF="sqlr95.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="sqlr95-Contents.html"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+ <A HREF="sqlr95-Index.html"><IMG SRC="images/indexg.gif" ALT="Index" border=0></A>
+<hr size=4>
+<H2>
+Shoot-out at the OK Corral</H2>
+<b>Jim Gray:</b> The part I didn't understand is, there was something called
+QBE that came out?<p>
+<b>Mike Blasgen:</b> Oh, that's a whole other story. We have a whole session
+for query.<p>
+<b>Jim Gray:</b> No, it's before this.<p>
+<b>Mike Blasgen:</b> OK, let's go to that; that's a good point, you're right.<p>
+<b>Jim Gray:</b> There was QBE, and then VS/QUERY and the shoot-out at the OK
+Corral<A NAME="Index299"></A>;
+all predates this ...<p>
+<b>Mike Blasgen:</b> OK, let's do that. Brad, can you do QBE<A NAME="Index300"></A><A NAME="Index301"></A>?<p>
+<b>Brad Wade:</b> I'm going to have to have quite considerable bit of help on
+this, because in time-honored tradition of IBM, we had the System R group
+working on relational database systems at San Jose, and we had Mosh&eacute; Zloof<A NAME="Index302"></A>
+working on Query by Example<a name="fnB53" href="#fn53">[57]</a> - another
+relational database system - at Yorktown<A NAME="Index303"></A>.
+So a question arose as to why do we have two groups in IBM on opposite coasts
+who are doing exactly the same thing. And exactly where Mosh&eacute; and his
+group came from, how they got started, I know not. <p>
+<b>Mike Blasgen:</b> Actually, I know the answer to that, and I'll talk about
+it only because it's interesting. There was a group in Yorktown<A NAME="Index304"></A>
+that was working on something called Programming by Example.<a name="fnB54"
+href="#fn54">[58]</a> Their idea was that somehow you could do business data
+processing, like payroll, by giving an example of what you wanted, right, it
+was sort of like the output back. If you just showed a fancy piece of software
+what you wanted as the output, it would figure out how to get it.<p>
+<b>Jim Gray:</b> The RPG model.<p>
+<b>Mike Blasgen:</b> So it was, "Show me what you want as the output, and I'll
+figure out how to get it to you from the data that I know is available." That
+never came to anything. Actually, do you know what programming by example is?
+It really actually happened; it's VisiCalc. That's the closest thing you have
+to programming by example, and it's very close, it really is what they were
+thinking about. But they never got that, they never got VisiCalc. But they got
+something kind of like it, which was Query By Example. So not programming by
+example, but at least query by example. And the idea was you could draw a
+picture of the answer, and say, "This is the answer I want" and then it would
+actually figure out how to get that and give you the answer. So that was Query
+By Example; Mosh&eacute; Zloof was the key guy, and Peter de Jong<A NAME="Index305"></A>
+was the manager.<p>
+<b>Brad Wade:</b> And so, Query By Example was an early graphical interface, if
+you will, because it would draw a picture of the table on your screen, and if
+you wanted "Salary = 10000," you would write "10000" in the Salary column. And
+I guess if you wanted people with Salary greater than 10000, you'd write
+"&gt;10000" in the Salary column. In place of SQL's SELECT clause, you'd write
+a "P." in the columns that you wanted the query to emit. I can vaguely remember
+playing the Query Game<A NAME="Index306"></A>
+with some of Mosh&eacute;'s stuff, but my reaction is that simple things in
+Query by Example were simple, and complicated things were impossible; at least
+they were possible in SQL.<p>
+But anyway, in the time-honored tradition of IBM, we had two groups doing the
+same thing. The performance issue also raised its head. The shoot-out at the OK
+Corral comes from a direct head-to-head performance comparison.<p>
+<b>Jim Gray:</b> Brad, I think that before this, somebody from the field fell
+in love with QBE, and they were actually shipping it.<p>
+<b>Jim Mehl:</b> As an RPQ or something.<p>
+<b>Jim Gray:</b> And there were people in the field, and they loved it. They
+had stories of tape librarians who'd automated their tape library with it, and
+Gene Trivett<A NAME="Index307"></A>
+was going around and fixing some of the performance problems, and it was
+popping up all over the planet. So it had a very loyal following. It was
+obvious to everybody that this did something wonderful. That this was an
+end-user program. So then the question became, "So why don't we cancel System
+R?" or "Why don't we grow this thing?" I think Bob [Jolls] must have been
+confronted with this question a lot.<p>
+<b>Bob Jolls:</b> The VS/QUERY group was constantly trying to get the best of
+both SQL and QBE, and so that came later. But certainly when I managed that
+group, we had to settle all that. But I never was involved in anything where
+people looked at QBE as a production replacement for SQL.<p>
+<b>Jim Gray:</b> So what was the purpose of the shoot-out?<p>
+<b>Pat Selinger:</b> I think it was driven by research management.<p>
+<b>Mike Blasgen:</b> I'll tell you what the shoot-out was. It was a very
+unpleasant and interesting confrontation. Gomory<A NAME="Index308"></A>
+was worried about the fact that he was investing heavily in two projects that
+seemed to be doing roughly the same thing. One of our arguments was that we had
+all these smart people like Franco and Jim that had built the RSS, and the RSS
+was really good stuff, really good code, I mean it's in SQL/DS even today; the
+same code.<p>
+<b>C. Mohan:</b> Around when was this?<p>
+<b>Mike Blasgen:</b> I don't have the exact date, but around 1978, right? When
+did the actual shoot-out occur? 1978? Gomory asked Dick Case<A NAME="Index309"></A>
+to do a review of the work. Dick Case included Ashok Chandra<A NAME="Index310"></A>,
+who currently runs the Computer Science Department - he's the latest version of
+Frank King - and one other person, who were all disinterested people, but were
+technically capable. They went to Yorktown and learned all about QBE, and then
+they came to San Jose to learn all about System R, and I gave them my long
+lecture about how the lock manager works and how Compare-and-Swap<A NAME="Index311"></A>
+could do locking, and we did it all right, and we knew how to do
+Compare-and-Swap-Double. Dick Case was really impressed, because he's probably
+the architect of Compare-and-Swap. Ashok was there, and there was this whole
+issue of whether you could do QBE on SQL. So that was a different approach,
+that was, if you will, our approach, which we wanted VS/QUERY to adopt, which
+was that you wouldn't write QBE on the RSS. That's multiple personalities. We
+wanted QBE as a graphical interface, emphasizing its strengths - the graphical
+stuff - and de-emphasizing its weaknesses, which are XRM<A NAME="Index312"></A>,
+no multi-user, poor storage management, and poor performance. Because they were
+not a compiler, they were an interpreter only. So Irv Traiger<A NAME="Index313"></A>
+did an enormous amount of work, three months work, to show detail-by-detail how
+you could map QBE to SQL. There was a controversy about whether the language
+QBE was actually well-specified. There was an ambiguity in it and I have notes
+from a meeting in which Peter de Jong said, "Well I can't prove you wrong but
+I'm sure you're wrong. I don't accept your claim that we're ambiguous, even
+though you've documented it eight ways to hell that it was ambiguous." Anyway,
+you showed that it could all be done. And so these guys were out there to
+evaluate it, and one of the issues was performance, because our claim was you
+would want to do it that way among other reasons because you'd get far better
+performance. The people back east said, "No, that's not right because it is
+<i>ad hoc</i> query and interpretation's fine for <i>ad hoc</i> query." They
+wanted to program directly to the RSS.<p>
+<b>Brad Wade:</b> Thank you, Mike. My recollections don't go anywhere near as
+deep. I do remember it came down to performance. We had System R running on one
+of the 3270's in the terminal room. We installed QBE on another user-id, and
+had it loaded up on another terminal there in the terminal room. We primed it;
+we typed in a SQL query to do something or other; I don't even remember what.
+We set up the QBE thing to do the same query, and, sophisticated processes of
+the era, we pressed the ENTER keys at the same time and held our stop-watches
+up to it to see which would come back first. I even forget whether it was
+thirty seconds, or a minute and thirty seconds - System R was back with the
+answer, so we looked over at the other terminal and - it's crashed. System R's
+star ascended fairly nicely after that.<p>
+<b>Mike Blasgen:</b> We let them make up some of the queries, because they had
+come ...<p>
+<b>Bruce Lindsay:</b> You mean they didn't finish any queries?<p>
+<b>Mike Blasgen:</b> No, they did. There was a big performance difference. Even
+though we were compiling <i>ad hoc</i> queries ...<p>
+<b>Jim Gray:</b> The most striking performance difference was that Brad could
+type, and I forget who the person for QBE was, but he typed with two fingers
+and lots of mistakes.<i> [laughter]</i> So when they'd say, "Next query," Brad
+would go "Whirrr."<i> [laughter]</i><p>
+<b>Mike Blasgen:</b> Well, anyway, it turned out to be a dramatic performance
+difference, and you could hear the cheers in your brain, even if you couldn't
+hear them with your ears. Everybody was very elated, because the performance
+difference was so dramatic, even on the queries that de Jong had given to Ashok
+and Case to give, because he was hoping those were our weak underbelly, even on
+those we were dramatically faster, like a factor of ten I think in some
+cases.<p>
+<b>???:</b> This was on UFI<A NAME="Index314"></A><a
+name="fnB55" href="#fn55">[59]</a>?<p>
+<b>Mike Blasgen:</b> Yes, we were using UFI against the QBE front-end.<p>
+<b>Jim Gray:</b> What was the OK Corral?<p>
+<b>Mike Blasgen:</b> The terminal room, where the RSS was developed.<p>
+<b>Brad Wade:</b> After the event, and our visitors had gone, someone - I do
+not remember who - made up a sign. I think the sign just said, "The OK Corral."
+And somebody stuck it on the door. There was some movie that I remember seeing
+when I was ten years old; some famous western gun-slinging shoot-out.<p>
+<b>Irv Traiger:</b> Wyatt Earp and Doc Holiday and Hirsh Cohen.<i>
+[laughter]</i> <p>
+<b>Jim Gray:</b> <i>High Noon</i>.<p>
+<b>Mike Blasgen:</b> So that's exactly what happened, and it was great, and we
+called it the OK Corral after that, always the shoot-out. What happened was QBE
+continued as an IUP<a name="fnB56" href="#fn56">[60]</a>, but it never really
+went anywhere; it was never significantly enhanced. Santa Teresa didn't want to
+take it. DP, which was the sales division that supported the IUPs, continued
+selling it but didn't invest in it.<p>
+<b>Jim Gray:</b> Didn't it get reimplemented as part of DB2?<p>
+<b>various:</b> QMF<A NAME="Index315"></A><A NAME="Index316"></A><a
+name="fnB57" href="#fn57">[61]</a><A NAME="Index317"></A>.<p>
+<b>Mike Blasgen:</b> Sorry. Yes.<p>
+<b>Roger Miller:</b> It didn't become a very popular usage even in QMF.<p>
+<b>Roger Bamford:</b> We cloned it.<p>
+<b>Mike Blasgen:</b> That's interesting.<p>
+<b>Paul McJones:</b> It's now called Microsoft Access.<i> [laughter]</i><p>
+<b>Mike Blasgen:</b> Some version of that will probably win.<p>
+<b>C. Mohan:</b> But other companies are implementing it, right? Paradox and
+all sorts of guys are implementing it.<p>
+<b>Roger Bamford:</b> I think the original objections are true: anything
+complicated is impossible. Our customers are using SQL statements that go on
+for pages. In QBE that would put you against the wall??? ... take all the joins
+and everything.<p>
+<b>Mike Blasgen:</b> So there was a report. What I remember about the report
+was a ringing endorsement of the RSS. <p>
+<b>Jim Gray:</b> The index component in particular.<i> [laughter]</i><p>
+<b>Mike Blasgen:</b> I think they especially liked the locking; I think they
+loved the use of Compare-And-Swap-Double.<i> [laughter]</i> And then there was
+some ambiguous recommendation, I don't know what ever happened to it, but as
+far as I know, Zloof never got the RSS. Peter de Jong went to MIT and is still
+there.<p>
+<b>Brad Wade:</b> And Mosh&eacute;; where is Mosh&eacute; these days?<p>
+<b>C. Mohan:</b> HP Labs. He started his own company, that didn't fly, then he
+joined Ashton-Tate; now he's with HP Labs.<p>
+<b>Jim Gray:</b> And Peter is at Apollo doing transactions inside of CORBA; HP
+Apollo.<p>
+<b>Mike Blasgen:</b> What happened to Mosh&eacute; Zloof is he went on to
+something called Office by Example. In fact that talk that I gave about the
+SQL/DS; the next speaker was Mosh&eacute; about Office by Example - OBE. He got
+a whole group of about twenty-five young, real programmers - not designers - he
+was real careful about to hire programmers. So he had a bunch of people and he
+got them to give him his own building - the Bernen House at Yorktown<A NAME="Index318"></A>,
+and he took it over, and he was going to build a PC product. Gomory supported
+it completely. And then one day, the management changed - I think it had to do
+with Birnbaum's departure and the reannointment of Herb Schorr, and then maybe
+Abe Peled on staff. Somehow that set of people ganged up and said, "We're not
+going to support that at the level it's being supported," which was thirty
+people times a hundred thousand - three million dollars a year. And
+Mosh&eacute; didn't like this, and eventually left IBM. And so he formed his
+own company as a startup to do it - I guess it didn't work - went to
+Ashton-Tate; Ashton-Tate was bought by Borland, then he went to HP.<p>
+<b>C. Mohan:</b> He's now doing Rendering by Example<a name="fnB58"
+href="#fn58">[62]</a> - easy-to-do programming by example. So maybe he's going
+back to the System for Business Automation kind of stuff.<p>
+<center><i>Afternoon break</i><p>
+<i></center></i>
+<p>
+<a name="fn53" href="#fnB53">[57]</a> M.M. Zloof. "Query by Example" <i>Proc.
+NCC 44</i> (1975) pages 431-438.<p>
+<a name="fn54" href="#fnB54">[58]</a> M.M. Zloof and S.P. de Jong. "The System
+for Business Automation (SBA): Programming Language" <i>CACM 20</i>, 6 (June
+1977) pages 385-396. <p>
+<a name="fn55" href="#fnB55">[59]</a> UFI stands for User-Friendly Interface.<p>
+<a name="fn56" href="#fnB56">[60]</a> IUP stands for Installed User Program.<p>
+<a name="fn57" href="#fnB57">[61]</a> QMF stands for Query Management
+Facility.<p>
+<a name="fn58" href="#fnB58">[62]</a> R. Krishnamurthy and M.M. Zloof. "RBE:
+Rendering By Example" <i>Proc. Eleventh International Conference on Data
+Engineering</i> (March 1995) pages 288-297.
+
+<P><hr size=4>
+<A HREF="sqlr95-SQL_DS.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="sqlr95-System-2.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="sqlr95-IBM.html"><IMG SRC="images/upg.gif" ALT="Up " border=0></A>
+ <A HREF="sqlr95.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="sqlr95-Contents.html"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+ <A HREF="sqlr95-Index.html"><IMG SRC="images/indexg.gif" ALT="Index" border=0></A>
+</body></html>

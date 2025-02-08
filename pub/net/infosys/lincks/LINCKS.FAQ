@@ -1,0 +1,945 @@
+File: @(#)LINCKS.FAQ	1.12
+Version: 1.12
+Date: 6/8/94
+
+This file contains answers to some of the questions that we have been
+asked about the LINCKS database system.  We provide it in the hope that
+you will be able to find out what you need directly.  If, however, you
+don't find the answer to your question.  Feel free to contact us at
+lincks@ida.liu.se.
+
+You can find the answer to your question by searching for #) where # is
+the number you want.
+
+Questions about LINCKS's capabilities, model, etc.:
+
+1) Does LINCKS support distributed databases? I read about LINCKS on
+   USENET and would like to know if LINCKS supports distributed
+   databases?
+
+2) Can LINCKS handle management of large objects (3Mb) with the
+   possibility of accessing any part of them?
+
+3) Can LINCKS handle simultaneous transactions (up to 40 in the same
+   table)?
+
+4) Does LINCKS support rules to define what to do when data is inserted?
+
+5) Does LINCKS support views able to modify data on the original
+   tables, in order to do updates and insertions in addition to
+   retrieves?
+
+6) Does LINCKS alert you when a particular event happens?
+
+7) Does LINCKS have unique object identifiers for life?
+
+8) Does LINCKS allow the user to define functions on the server to
+   work on the database, manipulating objects?
+
+9) Simply, what is the LINCKS data model?
+
+10) Briefly, can you describe the LINCKS architecture?
+
+11) Is there something like embedded 'SQL'?
+
+12) Does LINCKS support type hierarchies, inheritance, and user-defined
+    types?
+
+13) What is the meaning of the additions to the ATTR keyword like:
+    `ATTR TEXT Paragraph'? Are they identifiers or keywords?
+
+Installation problems:
+
+14) t2lincks fails when I do the "make installdb" step.  I get a failure
+    message at the end of the t2lincks run that looks like: "fatal_error:
+    Couldn't set link: Paragraph" Is there anything that I can do?
+
+15) Compilation failed on a DECstation on the file ltexttr.c.  What's
+    going on?
+
+16) I seem to be missing some library functions.  Where should usleep be?
+
+17) Linking of xlincks fails under Linux. I'm unable to link 
+    with libXaw even though I have it installed and the linker
+    is looking in the right directory! What can I do?
+
+Run-time problems:
+
+18) When starting xlincks I get a message like: "Warning: Cannot convert
+    string "gray" to type Pixmap".  What can I do?
+
+19) Something seems odd about RPC usage (in this case on linux).  Are the
+    arguments to registerrpc wrong?
+
+20) On linux, dbstat and log files are telling me that TCP_NODELAY is not
+    supported.  Is this a problem?
+
+21) When I log in, I get a message from xlincks saying "Cannot retrieve
+    user root.  Either user someuser unknown or database corrupted".
+    What can I do?
+
+22) Things seem to run very slowly at times.  This is particularly when
+    it's retrieving a large number of objects.  Is there anything I can do
+    to speed it up?
+
+23) The database grows quickly with use.  What can I do?
+
+24) On startup of xlincks, I get the message, "Could not find the
+    command history."  What is the problem?
+
+25) I can't get cutoff to work.  What's going on?
+
+26) I'm having difficulty with my port mapper.  When I try to use some
+    program that logs into the database (dbroot, xlincks, t2lincks,
+    etc.), it returns an error that there is no monitor running on the
+    machine.  Alternatively, I'm getting messages about the port mapper
+    when trying to use these programs.  I get a message of `Port mapper
+    failure' or `Port mapper unavailable'.  What can I check?
+
+Miscellaneous questions:
+
+27) Does LINCKS run on HP's?  We have HP 720's with HP-UX 9.01 and would
+    like to run LINCKS there.
+
+28) Is there a mailing list for people interested in LINCKS?
+
+29) Is there somewhere I can send mail when I have questions or comments
+    about LINCKS?
+
+30) What do you need to know in order to help me with my problem?
+
+31) Is there a programmers guide/API reference manual available?
+
+32) Is cutoff really necessary?  Can't the same thing be done using the
+    dbdump/t2lincks combination?
+
+33) What are the size requirements for getting LINCKS up and running?
+
+34) Do I have to have root privileges to run this stuff?
+
+35) Can I change things using my Xdefaults file?
+
+36) Can I change the M-L (Meta L) prefix to Meta X instead? And
+    can I also use Shift + Button for expansion?
+
+37) What are comparative sizes compiling with debugging symbols and not,
+    using cc vs. gcc (2.4.5 is what we have currently)?
+
+========================================================================
+1) Does LINCKS support distributed databases? I read about LINCKS on
+   USENET and would like to know if LINCKS supports distributed
+   databases?
+
+No, it doesn't.  However, it does allow you to have the database
+running on a different machine than the one where you run the workspace
+program.  You can only run against one database at a time.  This
+database can of course have its files distributed around the file
+system with links from its database directory, but that's all.
+
+Our original intention was to support distributed databases, but we have
+not yet addressed that issue.
+
+========================================================================
+2) Can LINCKS handle management of large objects (3Mb) with the
+   possibility of accessing any part of them.
+
+We currently have no clustering capabilities in the database, but you
+could use a composite object if you want to access just a part of a
+bigger object. As far I know, we have not tested the database with
+objects that large.  We mostly work with smaller objects such as
+paragraphs or sections of objects.
+
+Most of our work has been done with objects much smaller than this as
+we have mostly worked with textual information.  However, some students
+did a prototype application using an earlier version of LINCKS in which
+they stored bitmaps of art pictures as (the image part of) database
+objects. These were of course quite large and caused no
+problems. The earlier version of LINCKS did not include the current
+X Windows interface and interactive capabilities, so this prototype
+included an application specific user interface.  The current LINCKS
+user interface does not support graphics, though if one had the
+appropriate X widgets, this would not be too difficult to add.
+
+There are no size constraints on objects or parts of objects inherent
+in the system.  However, the memory constraints of the machine where
+you run the workspace process does constrain how large objects you can
+view (or how many large objects).  LINCKS does not currently contain
+routines for automatically swapping out objects when workspace memory
+is used up, although it does provide low-level routines for doing
+this, (RO_RELEASEOBJ in liblincks).
+
+If large objects are composite objects, rather than a single atomic
+object, then it is possible to access the various parts via a
+hierarchical organisation. This would ensure that only the parts
+needing to be viewed were brought into the workspace, thus lessening
+the likelihood of running out of workspace memory.
+
+========================================================================
+3) Can LINCKS handle simultaneous transactions (up to 40 in the same
+   table).
+
+LINCKS has no real transaction management, since we would create
+parallel versions of the object(s) in question when a parallel update
+occurs. You could possibly build a transaction management facility
+using the versioning mechanism in the database or using the composite
+objects for grouping transactions.
+
+========================================================================
+4) Does LINCKS support rules to define what to do when data is inserted.
+
+Yes, but in a limited way.  As it stands now, when you add a new
+object, you can automatically add links to that object to (1) its
+parent or (2) any other object that can be accessed through the
+parent.  This is what is called "autolinking" and is described in the
+AUTOLINKS section of the chapter "NOTES on Generic Presentation
+Descriptors" in the xlincks manual.
+
+Whether further work on this area happens depends on the future level
+of funding.
+
+========================================================================
+5) Does LINCKS support views able to modify data on the original
+   tables, in order to do updates and insertions in addition to
+   retrieves.
+
+Yes, although we don't actually use hard-wired 'tables' per se.
+Instead, we would have a user-defined view (called a Generic
+Presentation Descriptor) which would be used to view objects as
+`tables'.  Deletions and insertions in the original underlying objects
+can be done via these user-defined views.
+
+========================================================================
+6) Does LINCKS alert you when a particular event happens?
+
+There is currently a restricted set of alerts that have to do with
+parallel editing of objects.  If you retrieve an object which some other
+user is editing, you'll be notified that it's being edited.  If you then
+edit that object, the person already editing will be notified that you
+are starting to edit.
+
+========================================================================
+7) Does LINCKS have unique object identifiers for life?
+
+It depends what you mean with this question.  If you mean, "Will an
+object and its versions remain for the life of the database?", then the
+answer is yes.  As long as the dbdump program is not used, all versions
+of an object will kept.  As long as the object is linked into the
+database at some point (that is, as long as it is referenced), it will
+remain accessible.
+
+If, instead, you mean, "Will the object identifiers in one login
+session for an object be the same in all login sessions?", then the
+answer is no.  Object identifiers are valid only within a single
+labeling space.  We have developed a notion of `local labeling' so
+that the object identifier is unique only within a single labeling
+space -- the database server is one such labeling space, and each
+workspace constitutes such a labeling space.  Consistency amongst the
+various labeling spaces is maintained through `interface tables' which
+are built dynamically at both ends of a connection.  Therefore, the
+object and version numbers seen at the interface are only valid
+identifiers for the session, since the objects (and versions) may be
+numbered differently at the next session.
+
+========================================================================
+8) Does LINCKS allow the user to define functions on the server to
+   work on the database, manipulating objects?
+
+There is no support in LINCKS to easily write functions which will
+operate on DB objects within the DB server process.  This is because
+the DB server process only has a limited "understanding" of the
+structure of LINCKS attributes.  For instance, the interpretation of
+history is outside of the DB server, and the attributes are simply a
+block of memory for the DB server.
+
+The LINCKS system does, however, contain some functions which operate on
+links within the DB server.  It would be possible to write further C
+functions to manipulate DB objects at this level.  However it would
+require a detailed understanding of the software, and there is no
+support for this.  Any such functions would of course need to be
+compiled together with the original LINCKS code.
+
+A user could write an application which includes an extra workspace
+process running on the same machine as the DB server process, and
+which manipulates objects from within that workspace process.
+
+========================================================================
+9) Simply, what is the LINCKS data model?
+
+The basic data model is built on the idea of frame-like,
+semi-structured objects in which each object has:
+
+- an application dependent binary information part, interpreted
+  by the application(s).  This is called the image.
+
+- attributes describing or typing the binary data, and
+
+- links to other objects.
+
+         Parts of a LINCKS object
+    +---------------------------------------+
+    |              | ATTRIBUTES             |
+    |              |                        |
+    |              | SYSTEM:Created         |
+    |              |    Mon, March 8, 1993  |
+    |              | SYSTEM:Owner           |
+    |              |    Martin Sjolin       |
+    |  IMAGE       |------------------------|
+    |(unstructured | LINKS                  |
+    | data)        |                        |   \ 
+    |              | SYSTEM:Created_from    | === point to some object
+    |              | DOCUMENT:AUTHOR        |   /
+    |              |                        |
+    +---------------------------------------+
+
+Each object has a development history (including a link to the version
+of the object from which this version was developed), and temporal
+history.
+
+Furthermore, so-called `composite objects' are supported, with the same
+history mechanisms applied to composite objects.  Composite objects, as
+well as a more complete description of the LINCKS model, can be found in
+the xlincks user's manual.
+
+========================================================================
+10) Briefly, can you describe the LINCKS architecture?
+
+The LINCKS system is based upon a client-server, multi-user architecture.
+The server consists of three different processes - monitor and netserv
+(one each per database), and dbs (one per connected client).
+
+- The `monitor' process serializes creation of objects, imposes access
+  control, and implements notification upon object creation (among
+  other things).
+
+- The 'netserv' process handles connections from clients, checks the
+  password and user id, and if those are correct, forks off a new
+  process which starts the 'dbs' process, and
+
+- The 'dbs' interacts with the clients.  It retrieves and stores
+  objects (and the data) in files using the monitor to ensure unique
+  object ids, etc. It exits when the client is finished.
+
+(The netserv process works somewhat like the 'inetd' daemon, accepting
+ connections to the database, forking off a new process, etc).
+
+========================================================================
+11) Is there something like embedded 'SQL'?
+
+No, there is currently only a hypertext browser, but we're working on
+adding index facilities as well as possibly a more general tool for
+programmed access to the database.
+
+========================================================================
+12) Does LINCKS support type hierarchies, inheritance, and user-defined
+    types?
+
+The short answer is that we do not as yet support types and type
+hierarchies.  However it is really more complicated than that. We do
+have something which we call "presentation descriptors", which function
+very much like type descriptors in that each presentation descriptor
+describes the default structure, layout, formatting, etc.  for a particular 
+type of object.  These presentation descriptors can also inherit from 
+each other as would types.
+
+Ideally we would eventually like to extend and reorganise this
+mechanism into a fully fledged typing mechanism, where the presentation
+descriptor is one aspect of a type.  However we will not be doing this
+in the near future.
+
+========================================================================
+13) What is the meaning of the additions to the ATTR keyword like:
+    `ATTR TEXT Paragraph'? Are they identifiers or keywords?
+
+ATTR is the keyword (just as LINK is). "TEXT" and "Paragraph" are
+identifiers in the object's attributes section, where "TEXT" is a group
+name of a group of attributes and "Paragraph" is a field name of an
+attribute in the TEXT group.  That is, the pair TEXT:Paragraph uniquely
+identifies an attribute in the object.  Links are identified in the
+same way.
+
+========================================================================
+14) t2lincks fails when I do the "make installdb" step.  I get a failure
+    message at the end of the t2lincks run that looks like: "fatal_error:
+    Couldn't set link: Paragraph" Is there anything that I can do?
+
+t2lincks has a limitation in that it doesn't store and release nodes
+until the end (or when a node name is re-used).  This means that the
+machine on which you run t2lincks needs to be pretty hefty on the
+memory/swap space.  This is a known limitation on which we are working,
+but for the moment, if it is possible, run t2lincks on a "bigger"
+machine.  If you're in a client/server LAN environment, trying running
+it on the server machine rather than on a client workstation.
+
+That is:
+
+(NFS fileserver means the machine with the disk on which the database is
+stored.)
+
+1) run t2lincks and the database server on the NFS fileserver.
+
+2) run the database server on the NFS fileserver and run t2lincks on a
+   separate machine (client).
+
+3) if you don't have access to the fileserver, run the server on a
+   client and t2lincks on a different client.
+
+4) if all of these fail, try running t2lincks on a machine with larger
+   swap space
+
+The new version of t2lincks allows individual flushing of nodes to be
+inserted, but such statements must be inserted manually in Export.t2l at
+this point.  See the t2lincks man page if you are interested.  We will
+also try to add flushing to a future release of dbdump.
+
+========================================================================
+15) Compilation failed on a DECstation on the file ltexttr.c.  What's
+    going on?
+
+From the Make.config file:
+# if your compiler doesn't handle rather long strings by default,
+# then put whatever compiler flags you need here to make it do so.
+# this affects the file interfaces/xlincks/libxl/ltexttr.c only.
+# ultrix needs -Wf,-XNl6000, for example (no, there's no space after the
+# comma, and the comma is needed.  it means that the process phase `f'
+# should use the switch -XNl6000).
+LONGNAMES       = # -Wf,-XNl6000
+
+You probably need to uncomment this line -- that is, remove the #.
+
+========================================================================
+16) I seem to be missing some library functions.  Where should usleep be?
+
+usleep is a system function on Suns which you might not have.  It's
+unimportant for the functionality of xlincks and therefore it is made
+optional.  Make sure you have the EXTRA_DEFINES set to the right thing
+for your architecture.  It should not have -DHAVE_USLEEP in it.
+
+========================================================================
+17) Linking of xlincks fails under Linux. I'm unable to link 
+    with libXaw even though I have it installed and the linker
+    is looking in the right directory! What can I do?
+
+ -  First check if the library directory is correctly given in
+    on link command and in the Make.config
+
+ -  Second, by default we generated code and link with debugging
+    option on (-g), which causes the Linux ld to link staticly
+    and _not_ using the *.sa/*.so but instead the *.a library.
+ 
+    If you do not care about the debugging information, just
+    change the debug flag in the Make.config to exclude '-g',
+    and try to link xlincks again. You might would like to 
+    relink everything without '-g' to get dynamicly linked
+    programs. 
+   
+ -  Contact us on by sending e-mail to lincks-bugs@ida.liu.se
+
+========================================================================
+18) When starting xlincks I get a message like: "Warning: Cannot convert
+    string "gray" to type Pixmap". What can I do?
+
+xlincks uses (by default) three different bitmaps for background
+shading for Parallel Editing Notification, "Bound" windows, and for the
+difference operations. We removed the compiled-in bitmaps which were in
+release 2.1 to enable you to customize the bitmaps and colors.
+
+This error means that xlincks cannot find the files with bitmaps
+in "standard" places (for X11).  Normally they are included in the
+X11 distribution. Now, we have included the necessary bitmaps in the
+lincks-2.2/interface/xlincks/bitmaps directory, but you will also 
+have to tell xlincks *where* to find them - if we assume that you have 
+installed the source for lincks in /usr/local/src/lincks-2.2, add the 
+following to your `.Xdefaults' file (or use xrdb -merge):
+
+!
+! External pixmaps (if xlincks cannot find them on your system)
+!
+xlincks.pixmapChangeWidth:	2
+xlincks.pixmapChangeHeight:	2
+xlincks.pixmapChange:		\
+    /usr/local/src/lincks-2.2/interface/xlincks/bitmaps/gray
+
+xlincks.pixmapDeleteWidth:	2
+xlincks.pixmapDeleteHeight:	2
+xlincks.pixmapDelete:		\
+    /usr/local/src/lincks-2.2/interface/xlincks/bitmaps/gray
+
+xlincks.pixmapInsertWidth:	4
+xlincks.pixmapInsertHeight:	4
+xlincks.pixmapInsert:		\
+    /usr/local/src/lincks-2.2/interface/xlincks/bitmaps/gray3
+
+xlincks.pixmapInvisibleWidth:	2
+xlincks.pixmapInvisibleHeight:	2
+xlincks.pixmapInvisible:	\
+    /usr/local/src/lincks-2.2/interface/xlincks/bitmaps/gray1
+
+xlincks.pixmapPenWidth:		2
+xlincks.pixmapPenHeight:	2
+xlincks.pixmapPen:		\
+    /usr/local/src/lincks-2.2/interface/xlincks/bitmaps/gray
+
+xlincks.pixmapBoundWidth:	4
+xlincks.pixmapBoundHeight:	4
+xlincks.pixmapBound:		\
+   /usr/local/src/lincks-2.2/interface/xlincks/bitmaps/gray3
+
+========================================================================
+19) Something seems odd about RPC usage (in this case on linux).  Are the
+    arguments to registerrpc wrong?
+
+   Somehow I am having trouble running lincks-2.x on a Linux 0.99.13
+   system (gcc 2.4.5, libc 4.4.2c).  The output of rpcinfo seems
+   strange to me. Shouldn't the portnumber be set to 6073, not the
+   versionnumber?
+
+   In ~/dbms/monitor/monitormain.c I found:
+	registerrpc((u_long)MONITORPROGNO, lincksport, ACCESS,
+		     Access, xdr_label, xdr_access) ||
+   but the manual page for rpc says:
+       registerrpc(prognum, versnum, procnum, procname, inproc,
+       outproc)
+
+   You seem to disagree about the second argument.
+
+Well, the disagreement is in fact in our terminology. The thing called
+`lincksport' is a part of the network connection identifier used
+between the database server and the workspace, and we chose to use the
+same number for indicating database server program version for the rpc
+calls between the database server processes and the database monitor
+process. It is an unfortunate source of confusion, but it's not a bug.
+
+========================================================================
+20) On linux, dbstat and log files are telling me that TCP_NODELAY is not
+    supported.  Is this a problem?
+
+   dbstat gives me the following output:
+   /usr/lincks-2.0/database/DB$ dbstat .
+           Internet port number: 6073
+           Host for servers: DOS_Buster
+           Database owner: root
+           Server program directory: 
+                   /usr/lincks-2.0/database/bin
+           Logging directory: 
+                   /usr/lincks-2.0/database/DB/log
+           The monitor is running.
+           netserv responds.
+           @(#)netserv.c   1.12 5/3/94, using encrypted passwd, 32 bit label.
+   dbstat: Set TCP_NODELAY not supported.
+   The database is available for workspace connection.
+
+   and in ws.log I find:
+   93-10-12  01:05:43  User: (S) 6073  DB: /usr/lincks-2.0/database/DB
+                       workspace: Cannot set TCP_NODELAY on this machine,
+				  Bad file number
+
+   93-10-12  01:07:57  User: (S) 6073  DB: /usr/lincks-2.0/database/DB
+                       workspace: Cannot set TCP_NODELAY on this machine,
+				  Address already in use
+
+This does need some clarification:  the message concerning TCP_NODELAY
+is just an informational message telling you/us that linux networking
+code does not yet support the TCP_NODELAY IP options. You can just
+ignore those messages and continue working.
+
+However, if TCP_NODELAY is not supported, the communication between the
+workspace and the database server will slow down by adding a constant
+time delay for each node transferred (about 200ms). This delay is
+enforced by the network (in the attempt to fill up packets before
+sending them), and we have not found a way to avoid it other than
+through setting TCP_NODELAY.
+
+========================================================================
+21) When I log in, I get a message from xlincks saying "Cannot retrieve
+    user root.  Either user someuser unknown or database corrupted".
+    What can I do?
+
+[Also check the answer to question 24]
+
+If you are sure that the user is in the passwd file, and you are sure
+that the password you're typing in is right, then the likely thing is
+that the database is truly whacked.  We've had some difficulty on some
+architectures (HP and linux are two) with getting t2lincks to load the
+database properly on the "make installdb" step.  If that completed
+successfully, then things are a bit baffling.  If it didn't, then we
+suggest that you:
+
+1. stop the database server (BINDIR/lincks -k DBDIR)
+2. remove the current database directory
+3. re-create the DB (cd DB; make create; make installdb )
+
+and see if it works.  If it doesn't, please send lincks-bugs@ida.liu.se
+mail and tell us (1) what architecture you are using, (2) what the
+output of the installation process was, (3) which version of the LINCKS
+system you are using.
+
+========================================================================
+22) Things seem to run very slowly at times.  This is particularly when
+    it's retrieving a large number of objects.  Is there anything I can do
+    to speed it up?
+
+We have noticed the same but don't really have a good answer as to why.
+We think that it might be a combination of NFS traffic, multiple
+transactions to get information from the database machine, a loaded
+database server, and so on.  We hope to work on speedups if interest is
+high enough.
+
+One way to speed up LINCKS is to turn off the command history, if this
+is not something you are interested in using.  If command history is
+on, it is creating and modifying objects to document each retrieval,
+which is a significant overhead if you are retrieving a large number of
+objects.  If a large number of objects are being retrieved in quick
+succession, it is possible that synchronisation of the command history
+is also costing extra time.
+
+See question 23 for how to turn off command history.
+
+========================================================================
+23) The database grows quickly with use.  What can I do?
+
+Keep in mind that the LINCKS system is a research system and we have
+lots of disk space :-).  We never delete objects and we never change
+objects -- we create new versions instead.  Our efforts have not gone
+into the most efficient way to store database information.  However,
+there are some things that you can do to slow the growth and collect
+garbage.
+
+These options are:
+1. If you don't care about command history (which we have but don't use
+   in applications yet), you can run the database without command
+   history, which at present means re/compiling the database.  Add the
+   flag -DCOMHISTOFF to the EXTRA_DEFINES and recompile the system.  You
+   will never have command history stored, which is a significant space
+   savings.  We estimate that having command history on takes about 1
+   megabyte of disk space per 3000 commands stored.
+
+2. You can regularly run cutoff for garbage collection.  See the man
+   page for cutoff for full information.
+
+3. If you don't care about history at all (old versions of objects,
+   etc.) you can periodically eradicate history by running dbdump to
+   dump the file to a t2lincks file, then create an empty database and
+   load in the t2lincks file with the t2lincks program.  See the dbdump
+   and t2lincks man pages.
+
+========================================================================
+24) On startup of xlincks, I get the message, "Could not find the
+    command history."  What is the problem?
+
+We have two different cases:
+
+1. You have changed either the `groups' or `wrgroups' file without stopping 
+   and restarting the database server. After adding a new user and when
+   trying to login as the new user, you get "Could not find the command 
+   history" message.  
+
+   If you did not stop and restart the database server after adding the
+   new user to `groups' or `wrgroups' files, stop and restart the database
+   then try to login again.
+
+2. This means that you removed the -DCOMHISTOFF flag from the EXTRA_DEFINES
+   or as an extra option to the configure script.
+
+    a) First, be sure that the installation steps in the DB
+       directory ("make create" and "make installdb") worked correctly.  
+    b) If they did, the database should be fine.  
+    c) If they didn't, then there's a problem in there somewhere that we'd 
+       be happy to try to help you find. Send us mail telling us what's going 
+       on.
+    d) If the database installed correctly, but you still get this problem, 
+       then we have another (unknown)  problem.  Please send us mail.
+
+========================================================================
+25) I can't get cutoff to work.  What's going on?
+
+Cutoff is a tricky beast.  Note that you MUST:
+
+cd DBDIR
+mkdir Archive
+cp * Archive/
+
+before you run cutoff.  If you don't make the Archive directory and
+copy all of the files, cutoff won't work.  If you have done this, and
+it still doesn't work, then the problem is a new one, so please send us
+mail.  How to run cutoff is in the cutoff man page.
+
+========================================================================
+26) I'm having difficulty with my port mapper.  When I try to use some
+    program that logs into the database (dbroot, xlincks, t2lincks,
+    etc.), it returns an error that there is no monitor running on the
+    machine.  Alternatively, I'm getting messages about the port mapper
+    when trying to use these programs.  I get a message of `Port mapper
+    failure' or `Port mapper unavailable'.  What can I check?
+
+First, check to make sure that you have a running portmapper on your
+machine (should be setup by part of the networking rc.* in etc/rc* - 
+under Linux the portmapper is mostly started from rc.inet1)
+
+Secondly, make sure that you didn't start the server on the wrong 
+machine.  You can start the server from an another host, 
+but the machine on which you issued the command "lincks -s DBDIR"
+should be the same one listed in DBDIR/.lincksrc as HOST.
+
+If you ARE running the server on the right machine, check the processes
+(using a command such as ps -- "ps guxaww | egrep '(monitor|netserv)'"
+on a sun) and verify that monitor and netserv ARE running.
+
+If it's on the right machine, and monitor and netserv are running, then
+we begin to get into the twilight zone.  Verify that
+
+	rpcinfo -u machinename largenumber
+
+works, where "machinename" is the machine where the database server is
+running and where "largenumber" is MONITORPROGNO in DBDIR/.lincksrc.
+It should return something like: "program 572662306 version 6073 ready
+and waiting".  If it doesn't, then there's a serious problem about
+which we should communicate by mail.  If it works ok, then try "dbstat
+DBDIR" and see what it tells you.  That should be ok, too.  You should
+be able to use the database normally.  If you continue to have
+problems, please let us know.
+
+========================================================================
+27) Does LINCKS run on HP's?  We have HP 720's with HP-UX 9.01 and would
+    like to run LINCKS there.
+
+Yes, LINCKS runs on HP's.  There have been some difficulties with the
+networking code, but we think we've solved them.
+
+========================================================================
+28) Is there a mailing list for people interested in LINCKS?
+
+Yes, there is.  To be added to the mailing list, send mail to
+lincks-users-request@ida.liu.se and ask to be added (this is NOT an
+automagic listserv style mailing list.  You will be added manually by
+us).  Send mail to the same address to be removed.  
+
+Mail to the mailing list itself should be sent to 
+lincks-users@ida.liu.se.
+
+========================================================================
+29) Is there somewhere I can send mail when I have questions or comments
+    about LINCKS?
+
+Yes.  You can send bug reports to lincks-bugs@ida.liu.se and you can
+send general mail that is not of interest to the mailing list
+to lincks@ida.liu.se.
+
+========================================================================
+30) What do you need to know in order to help me with my problem?
+
+Please send us (1) the kind of machine you're on (Sun4, SGI, DEC, Cray
+:-), etc.), (2) the operating system (SunOS 4, Irix, Xenix, etc.), (3)
+the version of the LINCKS system, (4) any error output or log file
+stuff that you think is relevant, and (5) the output of either 
+"gdb program core" or "dbx program core" -- or something similar -- if
+the program dumped core.
+
+========================================================================
+31) Is there a programmers guide/API reference manual available?
+
+The basic reason that we have not included documentation of an API is
+that we do not yet have a really well-defined and separated API.
+We do, however, have a paper which we could send you which describes how
+one goes about developing applications in LINCKS at three different
+levels. These levels are:
+
+1) applications which do not require any extra functionality beyond
+what we already provide.  The application programming is then a matter
+of building the correct "presentation descriptors" for getting the
+desired views of your data.  How to build presentation descriptors is
+described in the manual (chapter on GPD's).
+
+2) applications which require some extra functionality (e.g.
+classification of a new object into a hierarchy, or addition of some
+fields to produce a further data field, or...), but where the current
+interface functionality is adequate.  Here the application programming
+is essentially as above, plus that one needs to write the extra
+functions and add a way of calling them, either by adding them to one
+of the existing menus, or by adding the desired function call in the
+existing code.  The liblincks library (the documentation of which is
+essentially correct) gives the appropriate functions to use for
+database editing as a part of such functionality - i.e. it gives
+functions which can add, change and delete, link and attribute fields
+in objects.
+
+3) applications which require new interface functionality (e.g.
+graphical editing capabilities) are more complex to build and require
+building new widgets in X and integrating them into the existing code.
+
+We could send you a copy of the paper which describes the process of
+building applications at these three levels.  Although it is more
+abstract than a manual, it may be of some use.
+
+We would eventually like to have an API to support the building of at
+least level 2 type applications in a more modular way.  However, this
+is something we have not yet done.  A number of people have built
+applications of this sort and rather easily integrated into the
+existing code, which is fairly well-documented.  We could certainly
+give some help and guidance as to where in the code to integrate your
+application specific pieces, once you were building a specific
+application.
+
+Building applications which require significant new interface
+functionality is certainly a lot more problematic - not least because
+of the difficulties of programming in X.
+
+There is a programmers manual covering the basic storage server or more
+aptly describing the library implementing the interface, liblincks.a.
+This library is used for building the programs in the utils directory.
+It is also used in the lower parts of the 'xlincks' application.
+
+The programmers manual was not included in the current release, because
+as it stands today is NOT up to date with respect to the current state
+of liblincks.a.  Two newer additions to the library are not described,
+and it might not be completely accurate even in what is in the
+programming manual.  We are working on correcting the manual and
+extending it with examples.
+
+However, if you would like to work the with basic storage server, this 
+manual plus the files includes/liblincks.h and libs/liblincks/usfuns.c
+(describes the exported interface) should be more or less sufficient.
+If you are interested in getting the manual, please send us mail, and
+we can send you a postscript file of the manual.
+
+========================================================================
+32) Is cutoff really necessary?  Can't the same thing be done using the
+    dbdump/t2lincks combination?
+
+Nope - there is a big difference between the two.  Cutoff doesn't
+remove anything, just does garbage collection.  That is, it compacts
+the database so it won't have unreferenced objects any longer.  It also
+removes "holes" in the database files.  Dbdump takes away all the
+history!
+
+========================================================================
+33) What are the size requirements for getting LINCKS up and running?
+
+The complete directory takes around 4MB. The files in the docs
+directory are Postscript files and can be printed and then discarded.
+The total time for a installation can be cut down quite a bit if the
+database server process and `t2lincks' (used for importing data into
+the database during installation) are run on the machine mounting the
+disks, e.g.  avoiding mounting disks over NFS (run it all on the
+corresponding NFS server if possible to cut time).
+
+If you really are worried about keeping it small during startup, you
+could follow these steps instead of the normal installation process:
+
+0. Configure the system as described in the INSTALL file. Make sure you're 
+  doing optimization rather than including debugging symbols  (for example, 
+  -O instead of -g) by editing the Make.config file.
+
+1. Go down into dbms directory and do a `make' (create the servers
+   programs and the libraries). If ok do a `make install' and
+   `make clean'.
+
+2. Go down into the utils directory and `make' (create programs for
+   import/export of files).  As above, do a `make install' and 
+   `make clean'.
+
+3. Go down into `interfaces' and do a `make' followed by a
+   `make install' and `make clean' to create the interface program 
+   xlincks.
+
+4. Go down into DB and do `make' and then follow the instructions.
+
+5. Go into the `libs' directory and do a `make clean' to remove
+   libraries and *.o files. You can then compress the toplevel DB
+   directory -- with `gzip -r .' for example --  (with Export.t2l, etc).
+
+6. In the lincks-2.x directory do `make clean' to clean up. If you have 
+   installed in another subdirectory, you can remove the lincks-2.x 
+   directory completely.
+
+
+========================================================================
+34) Do I have to have root privileges to run this stuff?
+
+No.  Not unless you give root ownership of the database by setting OWNER
+in Make.config to be root.  Other than that, we know of no reason why
+anything would require any part of LINCKS being started as root.
+
+We have, however, heard from SCO users that you do have to run the
+"lincks" program as root in order to be able to log in.  We cannot test
+this.
+
+========================================================================
+35) Can I change things using my Xdefaults file?
+
+[See also answers to question 36 and 18]
+
+Some things.  You can, for example, change the default accelerators,
+the defaults for the LaTeX Export window (Export), bitmaps/colors used
+for parallel editing notification and differences after a compare
+operation. This is documented in the xlincks manual.
+
+You can change the autoFill functionality (to make it wrap automatically
+at the end of the line) by adding the line:
+
+xlincks*autoFill: True
+
+to your ~/.Xdefaults.  You can change fonts and colors in a similar
+way, but we only have experience changing fonts and dimensions. For a
+description of the resources tree and resource name, see the xlincks
+manual page. 
+
+For default (fallback) values, see the interface/xlincks/resources.h 
+file (which you should not change, add instead your own application 
+defaults to your ~/.Xdefaults file).
+
+========================================================================
+36) Can I change the M-L (Meta L) prefix to Meta X instead? And
+    can I also use Shift + Button for expansion?
+
+Yes you can do that - we have included a file which you can add
+to your `.Xdefaults' or load using `xrdb' (see xrdb manual page).
+
+You find the file as lincks-2.2/interface/xlincks/Xlincks-mx.ad
+
+========================================================================
+37) What are comparative sizes compiling with debugging symbols and not,
+    using cc vs. gcc (2.4.5 is what we have currently)?
+
+Using the following setup on a Sun4 running SunOS 4.1.3:
+
+In all cases, EXTRA_DEFINES was
+EXTRA_DEFINES = -DHAVE_FLOCK -DHAVE_F_SETOWN -DHAVE_GETDTABLESIZE \
+		-DHAVE_RELIABLE_SIGNALS -DHAVE_BSD_SIGHANDLER \
+		-DHAVE_USLEEP -DHAVE_RANDOM -DHAVE_SETLINEBUF \
+		-DHAVE_SETSID -DCRYPT_PASSWD -DCOMHISTOFF
+
+Test case 1: CC = cc, DEBUGFLAG = -g
+
+Test case 2: CC = cc, DEBUGFLAG = -O
+
+Test case 3: CC = cc, DEBUGFLAG = -O4
+
+Test case 4: CC = gcc, DEBUGFLAG = -g
+
+Test case 5: CC = gcc, DEBUGFLAG = -O
+
+Test case 6: CC = gcc, DEBUGFLAG = -O2 (highest level of optimization)
+
+We then did a "make install.progs" to install only the binaries.  We
+then installed the database from DB.  At that point we checked how much
+disk space was being used for the database directory, executables and
+all.
+
+Test case	Megs used.
+===========================
+cc with -g:	3.389
+cc with -O:	1.837
+cc with -O4:	1.821
+gcc with -g:	4.245
+gcc with -O:	1.868
+gcc with -O2:	1.853
+
+In all cases, the installed database was 1.003 Mb, but this is likely to
+be smaller in the future, as the database from which the t2lincks file
+was exported will be trimmed.
+
+========================================================================
+
+Compiled and maintained by Martin Sjölin, edited by David Partain.
+Answers provided by Lin Padgham, Martin Sjölin, Ralph Rönnquist and
+David Partain.

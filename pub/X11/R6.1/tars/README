@@ -1,0 +1,33 @@
+This directory contains sources for X11 Release 6.1, public patch 1.
+
+The software release consists of four gzipped tar files:
+
+  xc-1.tar.gz		everything in xc/ that isn't in the other tar files
+  xc-2.tar.gz		xc/fonts, xc/doc/specs, xc/util
+  xc-3.tar.gz		xc/doc/hardcopy, xc/test
+  contrib-1.tar.gz	contrib/
+
+The following files are contained in the tar files, but are also
+available separately in this directory:
+
+  RELNOTES.*		Release Notes for X11 Release 6.1
+  INSTALL.*		Building and Installing the X Window System
+  Manifest.*		R6.1 Contrib Manifest
+
+The following files may aid you in using this FTP directory
+
+  README		this file; a short index of what's here
+  CHECKSUMS		checksums of the tar files
+
+The tar files are stored in "gzip" format on our FTP server, and thus
+have a ".gz" suffix.  If you cannot handle gzip compression, you can
+have our FTP server convert them to "compress" (.Z) or uncompressed
+format.  Changing the suffix of the filename you ask for will change
+its format on the fly.  Change ".gz" to ".Z" to get compress format.
+Remove the ".gz" suffix entirely to get the file uncompressed.
+
+You may examine the file xc/bug-report in your local source tree to
+see what public patches have been applied to your X11R6.1 source tree.
+
+After transferring the files, please read the Release Notes and Build
+Instructions for information on how to extract and build the software.

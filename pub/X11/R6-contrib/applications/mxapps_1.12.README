@@ -1,0 +1,86 @@
+mxMail/mxFtp
+============
+
+mxMail and mxFtp are applications designed for operating on UNIX platforms.
+They use X/Motif and are written in C++. They have been designed for Linux but
+*should* run with little or no modifications on other UNIX OS's (the only
+part that will require significant work is the akSound class in the class
+library that comes with the applications - it is Linux-specific).
+
+Description of directories
+--------------------------
+app-defaults - contains the resource files for 'mxMail' and 'mxFtp'.
+AppKit       - contains the code for the AppKit class library.
+src          - contains the code for the 'mxMail' and 'mxFtp' applications.
+lib          - where the libAppKit.a is stored when it is built.
+bin          - where the 'mxMail' and 'mxFtp' binaries are stored when built.
+doc	     - (limited) documentation for 'mxMail' and 'mxFtp'.
+sounds       - audio sounds used by 'mxMail' and 'mxFtp'.
+
+Building the applications
+-------------------------
+To build mxMail/mxFtp you WILL require the following :-
+a). C++ compiler (e.g egcs), and a ISO C++ standard library
+b). X window system (X11R6 ideally, but X11R5 should be OK)
+c). Motif (version 2.0 or greater). Please see below about Motif1.2.4
+
+
+To build mxMail and mxFtp, do the following :-
+
+a). build the AppKit class library. On Linux this is achieved by cd'ing to the
+    AppKit directory and typing 'make'. This creates libAppKit.so in the lib
+    directory. If you want a static libAppKit type 'make static'.
+b). build the applications. On Linux this is achieved by cd'ing to the src
+    directory and typing 'make'. This creates 'mxmail' and 'mxftp' in the bin
+    directory. If you want static binaries, type 'make static'.
+
+Installing the applications
+---------------------------
+Refer to the file INSTALL.
+
+
+Running the applications
+------------------------
+To run 'mxMail' you also require 'sendmail' on your system.
+To run 'mxFtp' you also require 'ftp' on your system.
+
+
+Customising the audio sounds used by mxMail/mxFtp
+-------------------------------------------------
+Simply go into the sounds directory and replace the provided sounds with your
+own WAV or VOC files (the provided sounds are all WAV format).
+
+
+Build details
+-------------
+The static binaries were built with a system using
+egcs      1.0.2
+libstdc++ 2.8.0
+binutils  2.8.1.0.27
+ld.so     1.9.5
+Motif	  RedHat 2.1
+X11R6     3.3.1
+
+X11R5/Motif1.2.4
+----------------
+I have been told by Thanh Ma (tma@encore.com) that it is possible to build using
+an X11R5/Motif1.2.4 system with the following comments :-
+
+> 1/ There is no Xm/ComboBox.h as referenced in akComboBox.C (I think there is
+>    a free ComboBox widget in ftp.x.org/contrib/widget...)
+> 2/ There is no XmINDICATOR_CHECK_BOX
+> 3/ There is no sys/soundcard.h (should there be something like -DNO_SOUND ?)
+> 4/ There is no XmNselectedPositions and XmNselectedPositionCount as
+>    referenced in akList.C
+> Either commented and/or removed the above and I could get AppKit to compile.
+
+
+Version Information
+-------------------
+Refer to the file version.html
+
+
+
+
+Andy Jefferson (andy@ajsoft.demon.co.uk)
+20/05/98

@@ -1,0 +1,24 @@
+
+	AVAILABLE ELECTRONICALLY
+
+"A High-speed DES Implementation for Network Applications"
+Hans Eberle
+September 23, 1992.  24 pages
+
+
+Author's abstract:
+
+This paper describes a high-speed data encryption chip implementing the
+Data Encryption Standard (DES). The DES implementation supports
+Electronic Code Book mode and Cipher Block Chaining mode. The chip is
+based on a gallium arsenide (GaAs) gate array containing 50K
+transistors. At a clock frequency of 250 MHz, data can be encrypted or
+decrypted at a rate of 1 GBit/second, making this the fastest
+single-chip implementation reported to date. High performance and high
+density have been achieved by using custom-designed circuits to
+implement the core of the DES algorithm. These circuits employ
+precharged logic, a methodology novel to the design of GaAs devices. A
+pipelined flow-through architecture and an efficient key exchange
+mechanism make this chip suitable for low-latency network controllers.
+
+

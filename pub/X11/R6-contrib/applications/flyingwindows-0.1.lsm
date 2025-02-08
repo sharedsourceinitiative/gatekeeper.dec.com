@@ -1,0 +1,19 @@
+Begin3
+Title:          Flying Windows
+Version:        0.1
+Entered-date:   29APR99
+Description:    An xscreensaver hack which shows either flying X11 icons, or
+		flying Windows(TM) icons.  In the latter case, UN*X goodguys
+		like Tux the Linux Penguin, the FreeBSD Daemon,
+		a Sun Microsystems UFO, or an SGI logo come and blast them.
+		Requires xscreensaver ( http://www.jwz.org/xscreensaver/ ).
+Keywords:       xscreensaver
+Author:         Bill Kendrick <bill@newbreedsoftware.com>
+Maintained-by:  Bill Kendrick <bill@newbreedsoftware.com>
+Primary-site:   ftp.sonic.net /pub/users/nbs/unix/x/flyingwindows/
+		22272 flyingwindows-0.1.tar.gz
+Alternate-site: 
+Original-site:  
+Platforms:      X11
+Copying-policy: Open Source
+End

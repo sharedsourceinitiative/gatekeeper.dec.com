@@ -1,0 +1,112 @@
+                        --==> X-Tuner 2.0 <==--
+                      Copyright (C) 1996 Mike Tinnes
+                     (tinnes@kitten.ndscs.nodak.edu)  
+
+  The Xwindows interface for the RadioREVEAL and RadioTrack FM radio cards!
+
+------------------------------------------------------------------------------
+
+     This program is free software; you can redistribute it and/or modify it
+     under the terms of the GNU General Public License as published by the
+     Free Software Foundation; either version 2 of the License, or (at your
+     option) any later version.
+
+     This program is distributed in the hope that it will be useful, but
+     WITHOUT ANY WARRANTY; without even the implied warranty of
+     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+     General Public License for more details.
+
+     You should have received a copy of the GNU General Public License along
+     with this program; if not, write to the Free Software Foundation, Inc.,
+     675 Mass Ave, Cambridge, MA 02139, USA.
+
+-----------------------------------------------------------------------------
+
+Xtuner was developed to enable Linux users to control Reveal's RA300 PC Radio 
+Card and the AIMS Lab RadioTrack FM tuner card under Xwindows. It implements 
+most all the features found with the software included from the manufacturer 
+including presets, volume control, fine tuning, and timed auto on/off.  
+  
+This program was compiled using the following:
+
+  ELF Linux (kernel version 2.0.7)
+  gcc 2.7.2
+  Xforms 0.81
+  
+
+Installation instructions: 
+
+-> Be sure the Xforms libraries (preferrably the most recent version) are 
+   installed on your system before going on.
+
+   The entire XForms distribution is accessible via:
+
+   http://bragg.phys.uwm.edu/xforms OR http://www.uwm.edu/~zhao
+                                                                  
+The binaries are included in the distribution and should work with most Linux
+ELF systems.  However, if you have trouble running Xtuner, the source is
+included along with it.
+
+To unpack:
+
+  tar xvfz Xtuner-2.0.tar.gz 
+
+To compile:
+  
+  cd xtuner-2.0/
+
+  *The makefile must be modified to suit your OS as follows..
+  
+    - for Linux: cp Makefile.Linux Makefile
+
+    - for FreeBSD: cp Makefile.BSD Makefile
+
+  make xtuner
+
+To run:
+
+  xtuner <option> &
+
+  Where <option> can be one of the following:
+ 
+  -0x20 or -0x30 according to the port your card is on. Default port is 0x30.
+
+  Xtuner MUST be run as ROOT!  Noone else!
+
+  Also, the icons "xtuner.xpm" and/or "radio.xpm" will have to be installed 
+  manually, according to which menuing system you're using under X.
+  
+  note: The file .radiorc is used for presets and is placed in /root. This
+        file should not be modified or moved.
+
+-----------------------------------------------------------------------------
+   
+COPYRIGHT:
+
+RadioTrack is a trademark of AIMS Lab, (c) 1994 AIMS Lab, Inc.
+ ALL RIGHTS RESERVED.
+
+Reveal and RadioREVEAL is a tradmark of REVEAL Computer Products (c) 1995,
+ ALL RIGHTS RESERVED. 
+
+This program is being distributed under the GNU Public License. 
+
+ACKNOWLEDGMENTS:
+
+Thanks to Lars Koeller (Lars_Koeller@odie.physik2.uni-rostock.de) for 
+the port to FreeBSD, and to Alberto Vignani (alberto.vignani@pmn.it) for 
+sheding some light on the radio card internals!
+                  
+-----------------------------------------------------------------------------
+
+Thanks for using Xtuner!
+
+If you have any questions/comments, or if you thought this program
+ROCKED send email to:
+
+tinnes@plains.nodak.edu
+
+(flames > /dev/null)
+
+-----------------------------------------------------------------------------
+dp

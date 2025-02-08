@@ -1,0 +1,14 @@
+flyingwindows-0.1
+by Bill Kendrick
+bill@newbreedsoftware.com
+April 29, 1999
+
+A "screenhack" for xscreensaver.
+
+MicroSoft(tm) Windows(tm) icons are flying at you, but you've got help
+from either Tux the Linux Penguin, the FreeBSD Daemon, a Sun Microsystems
+UFO, or the SGI logo, who shoot the Windows(tm) icons out of the sky!
+
+There's also a nice, non-violent "X11" logo mode.
+
+Requires "xscreensaver" ( http://www.jwz.org/xscreensaver/ ) to compile.

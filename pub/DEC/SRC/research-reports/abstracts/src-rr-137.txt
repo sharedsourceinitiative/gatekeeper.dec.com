@@ -1,0 +1,9 @@
+"Proving Possibility Properties"
+Leslie Lamport
+Report #137. July 4, 1995, Revised December 1, 1997
+
+A method is described for proving "always possibly" properties of
+specifications in formalisms with linear-time trace semantics.  It is
+shown to be relatively complete for TLA (Temporal Logic of Actions)
+specifications.
+

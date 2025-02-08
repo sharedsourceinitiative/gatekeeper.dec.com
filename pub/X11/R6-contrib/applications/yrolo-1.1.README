@@ -1,0 +1,136 @@
+Yrolo $Revision: 1.1 $ $Date: 1995/05/07 19:34:10 $
+
+******************************************************************************
+This software is NOT a shareware..it's a freeware. You can do anything with
+it except making money. I wrote in in my own time, mostly after work and
+weekends. My employer SEMCOR, Inc. has nothing to do with this software.
+Look at the Copyright notice for more details.
+******************************************************************************
+
+The latest release of this software will be available at:
+ftp://ftp.x.org/contrib/applications/
+
+Before reporting bugs, please make sure that you have the latest release.
+
+Please look at the ChangeLog file for things new in this release.  If you
+contributed or submitted a bug report, your name should be there as well.
+
+REQUIREMENTS
+1) Unix
+2) A C compiler (ANSI or Non ANSI)
+3) X and Motif (1.1 or 1.2) libraries
+
+Yrolo is a program for maintaining database for people's name, address, phone
+number, email etc. The data structure is based on another Motif rolodex
+program written by gregg hanna (mrolo13) with many enhancements and
+modifications. I borrowed several routines from gregg's program for handling the
+database. Yrolo can be used to send mail to the people at your database. If
+the database contains the e-mail address field, this address will be used
+to send mail. However, Yrolo can mail to anyone with a valid e-mail address.
+While including file in the message, if the file is binary, it will be
+automatically "uuencoded".
+
+I personally compiled and tested the software at the following platforms. If
+you port it to a different platform, please send me patches.
+
+o Sparc 10 (SunOS 4.1.4, X11R5, Motif 1.2) - stock cc and gcc 2.6.3
+o Sparc LX (Solaris 2.3, OpenWindows 3.2, Motif 1.2) - gcc 2.5.6
+o Interactive UNIX 3.2 (i486 33, Motif 1.1) - gcc 2.5.8
+o SGI IRIX 5.2
+
+It is reported that it compiles and works on
+o UnixWare version ?
+
+FEATURES:
+   o Add Card
+   o Edit Card
+   o Delete Card
+   o Print a selected card (can be restricted to specific field/s)
+   o Print all cards (can be restricted to specific field/s)
+   o Send E-mail
+   o Include text or binary file in the mail message
+   o Search database 
+   o Restricted search
+   o Save/Load database
+   o Context Sensitive help
+   o Supports X toolkit command line options and some more
+   o X Resources
+
+Please look at the "converter" directory if you need to convert your existing
+"mrolo13" database to "yrolo" format.
+
+To COMPILE:
+
+You will need GNU gunzip software to uncompress the archive. If you do not
+have gzip package, it is available at:
+ftp://prep.ai.mit.edu/pub/gnu/
+
+To extract the archive, at the shell prompt, type:
+gunzip < yrolo-1.1.tar.gz | tar xvf -
+cd yrolo1.1
+
+(If you need to change anything, edit the "Yrolo.tmpl", do not edit the
+"Imakefile". Edit "Yrolo.tmpl" if compilation fails.)
+
+at your shell prompt, type:
+
+xmkmf
+make
+
+if you want to install,
+make install
+make install.man
+
+If compiled successfully, to run, type:
+yrolo
+
+Click on Help menu for on-line help for getting started.
+
+X RESOURCES
+Appropriate fallback resources are used at compile time. That means, the
+program will have a nice look without the app-defaults file. However if you
+insist to change the resources, please look the file YRolo.ad. If you change
+the X resources, make sure that you do it right, otherwise Yrolo will not
+work right. Even a empty resources file screw things up. I suggest no to
+install application resources file.
+
+ACKNOWLEDGEMENT
+o Thanks to Jack P. Starrantino (jps@semcor.com) for allowing to put the
+  code in the public domain.
+o Thanks to Wil Roesler (wil@semcor.com) for suggesting many things.
+
+o Thanks to gregg hanna for mrolo. If I didn't see his program I probably won't
+  write this one. The file format of mrolo and yrolo is similar. The differences
+  are: (1) yrolo has more fields (2) yrolo format has a identification tag.
+
+COPYRIGHT
+-------------------------------------------------------------------------------
+Copyright 1995 by Muhammad A Muquit. 
+
+Permission to use, copy, modify, distribute this software is hereby granted,
+provided this copyright notice appear in all copies and that both that
+copyright notice and this permission notice appear in supporting
+documentation, and the name of my employer SEMCOR, Inc. and Company not be
+used in in advertising or publicity pertaining to distribution of the
+software without specific, written prior permission.  
+
+The software is provided "as is" without express or implied warranty.
+
+I disclaim all warranties with regard to this software, including all implied
+warranties of merchantability and fitness, in no event shell me or my employer
+SEMCOR, Inc. be liable for any special, indirect or consequential damages or
+any damages whatsoever resulting from loss of use, data or profits, whether
+in an action of contract, negligence or other tortious action, arising out of or
+in connection with the use or performance of this software.
+-------------------------------------------------------------------------------
+
+If you have any suggestion or bug report, please send me mail at:
+   muquit@semcor.com
+
+   URL: http://www.semcor.com/~muquit/
+
+If you like the software, please drop me a line. Your note may inspire me
+to write free software like this. So, do consider to send me a line.
+
+Enjoy!
+

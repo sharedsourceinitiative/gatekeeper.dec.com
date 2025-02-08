@@ -1,0 +1,31 @@
+
+			CRL Technical Report 91/14
+			   Surface Modeling with
+			 Oriented Particle Systems
+			     Richard Szeliski
+			      David Tonnesen
+			    December 30, 1991
+
+Splines and deformable surface models are widely used in computer graphics
+to describe free-form surfaces.  These methods require manual preprocessing
+to discretize the surface into patches and to specify their connectivity.
+We present a new model of elastic surfaces based on interacting particle
+systems, which, unlike previous techniques, can be used to split, join, or
+extend surfaces without the need for manual intervention.  The particles we
+use have long-range attraction forces and short-range repulsion forces and
+follow Newtonian dynamics, much like recent computational models of fluids
+and solids.  To enable our particles to model surface elements instead of
+point masses or volume elements, we add an orientation to each particle's
+state.  We devise new interaction potentials for our {\em oriented
+particles} which favor locally planar or spherical arrangements.  We also
+develop techniques for adding new particles automatically, which enables
+our surfaces to stretch and grow.  We demonstrate the application of our
+new particle system to modeling surfaces in 3-D and the interpolation of
+3-D point sets.
+
+Keywords: computer graphics, geometric modeling, surface interpolation,
+particle systems, physically-based modeling, oriented particles, dynamics,
+simulation.
+
+[Availability note: 91/14 is available as a complete report, or separated
+into the text (91/14-short) and figures (91/14-figs).]

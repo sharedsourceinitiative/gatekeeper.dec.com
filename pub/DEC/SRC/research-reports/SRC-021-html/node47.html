@@ -1,0 +1,269 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Manipulating the Name Space</TITLE>
+<META NAME="description" CONTENT="Manipulating the Name Space">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="previous" HREF="node46.html">
+<LINK REL="up" HREF="node39.html">
+<LINK REL="next" HREF="node48.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html769"
+ HREF="node48.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html765"
+ HREF="node39.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html761"
+ HREF="node46.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html767"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html768"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html770"
+ HREF="node48.html">The OS Interface: Processes</A>
+<B> Up:</B> <A NAME="tex2html766"
+ HREF="node39.html">The OS Interface: Files</A>
+<B> Previous:</B> <A NAME="tex2html762"
+ HREF="node46.html">Opening and Examining Directories</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04048000000000000000">
+Manipulating the Name Space</A>
+</H2>
+ <A NAME="BigBasin">&#160;</A>
+This subsection contains procedures for creating, deleting, and renaming
+entries in directories, including creating and deleting directories
+themselves, creating symbolic links and hard links, removing symbolic
+links and files (including hard links).  Recall that Open (or OpenWrite)
+creates a file, and therefore a directory entry, under some conditions.
+For an overview of the file name space, see Section <A HREF="node28.html#Gilroy">2.6</A>, page
+<A HREF="node28.html#Gilroy"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.
+<P><A NAME="2146">&#160;</A>
+<PRE>
+PROCEDURE MakeDir(
+    dir: Dir;
+    path: PathName;
+    mode: FileMode;
+    euser: User := NIL)
+  RAISES {Error};
+  (* NotSuperUserEC, PathES, FileExistsEC, FailureES? *)
+</PRE>
+<P><A NAME="1195">&#160;</A>
+<A NAME="1196">&#160;</A>
+<A NAME="1197">&#160;</A>
+MakeDir creates an empty directory with the specified path name. MakeDir
+creates at most one directory: it raises LookUpEC if one of the
+intermediate components in the specified path name does not exist.  It
+raises FileExistsEC if there is an existing directory entry with that path
+name.  MakeDir sets the file mode of the new directory to the specified
+file mode, adjusted using the value of the umask (see the GetUMask procedure
+on page <A HREF="node40.html#SanMateo"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>); normally the caller should specify a mode of
+ReadWriteExecuteAll.
+<P>
+MakeDir interprets the euser parameter the same way Open does.
+<P><A NAME="2147">&#160;</A>
+<PRE>
+PROCEDURE RemoveDir(
+    dir: Dir;
+    path: PathName := NIL;
+    euser: User := NIL)
+  RAISES {Error};
+  (* NotSuperUserEC, PathES, DirectoryNotEmptyEC, FileBusyEC,
+     FailureES? *)
+</PRE>
+<P><A NAME="1200">&#160;</A>
+<A NAME="1201">&#160;</A>
+<A NAME="1202">&#160;</A>
+<A NAME="1203">&#160;</A>
+<A NAME="2148">&#160;</A>
+<A NAME="2149">&#160;</A>
+<A NAME="1206">&#160;</A>
+RemoveDir deletes the directory with the specified path name and also
+deletes the entry for that directory from its parent directory.  It raises
+NotADirectory if the specified path doesn't name a directory, or
+DirectoryNotEmptyEC if the directory to be deleted contains anything other
+than the . and .. entries.  It raises FileBusyEC if the directory is the
+root directory of a logical volume, or if there is another logical volume
+mounted on top of the directory.  (Mounting volumes is described in
+section <A HREF="node29.html#Hayward">2.7</A>, page <A HREF="node29.html#Hayward"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>, and Appendix
+<A HREF="node59.html#Hillsborough">A.5</A>, page <A HREF="node59.html#Hillsborough"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.)
+<P><A NAME="1211">&#160;</A>
+Once a directory has been deleted, an attempt to use an old directory
+handle for it raises LookUpEC.
+<P>
+RemoveDir interprets the euser parameter the same way Open does.
+<P><A NAME="RedwoodCity">&#160;</A><A NAME="2150">&#160;</A>
+<PRE>
+PROCEDURE SymLink(
+    fromDir: Dir;
+    from: PathName;
+    to: PathName;
+    euser: User := NIL)
+  RAISES {Error};
+  (* NotSuperUserEC, PathES, FileExistsEC, FailureES? *)
+</PRE>
+<P><A NAME="1214">&#160;</A>
+SymLink creates a symbolic link with the path name specified by from and
+fromDir; it raises FileExistsEC if the path name is already in use.  The
+content of the link is set to the value of the `to' parameter, without any
+checking or evaluation performed on it.  The use of symbolic links in the
+file name space is described on page <A HREF="node28.html#SanPablo"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.
+<P>
+SymLink interprets the euser parameter the same way Open does.
+<P>
+Ultrix note: SymLink raises NameTooLongEC if the `to' parameter is longer
+than 255 characters.
+<P><A NAME="Pleasanton">&#160;</A><A NAME="2151">&#160;</A>
+<PRE>
+PROCEDURE HardLink(
+    oldDir: Dir;
+    oldPath: PathName;
+    newDir: Dir;
+    newPath: PathName;
+    euser: User := NIL)
+  RAISES {Error};
+  (* NotSuperUserEC, PathES, FileExistsEC,
+     CannotLinkToDirectoryEC, CrossDeviceLinkEC,
+     FailureES? *)
+</PRE>
+<P><A NAME="1218">&#160;</A>
+<A NAME="1219">&#160;</A>
+HardLink creates a new directory entry with the path name specified by
+newPath and newDir that refers to the same file link as does the path name
+specified by oldPath and oldDir.  It raises FileExistsEC if the new path
+name is already in use, CannotLinkToDirectoryEC if the old path name is
+that of a directory, or CrossDeviceLinkEC if the new path name lies in a
+different logical volume than the old one.
+<P>
+Once the link is made, the new and old links are equivalent with respect
+to all the file system operations.
+<P>
+HardLink interprets the euser parameter the same way Open does.
+<P><A NAME="PaloAlto">&#160;</A><A NAME="2152">&#160;</A>
+<PRE>
+PROCEDURE Remove(
+    dir: Dir;
+    pathName: PathName;
+    euser: User := NIL)
+  RAISES {Error};
+  (* NotSuperUserEC, PathES, DirectoryUnlinkEC *)
+</PRE>
+<P><A NAME="1222">&#160;</A>
+<A NAME="1223">&#160;</A>
+<A NAME="1224">&#160;</A>
+<A NAME="1225">&#160;</A>
+<A NAME="1226">&#160;</A>
+Remove deletes the directory entry with the specified path name. This must
+be an entry created by Open, SymLink, OSFriends.MakeDevice, or HardLink;
+Remove raises raises DirectoryUnlinkEC if the entry is for a directory.
+<P>
+The entry is removed from the directory immediately.  If it refers to a
+file, the file is not deleted from the disk until no other directory
+entries (hard links) or open-file objects refer to it.  If entry refers to
+a symbolic link, the link is deleted but the object to which the link
+referred (if any) is not affected.
+<P>
+Remove interprets the euser parameter the same way Open does.
+<P><A NAME="2153">&#160;</A>
+<PRE>
+PROCEDURE Rename(
+    oldDir: Dir;
+    oldPath: PathName;
+    newDir: Dir;
+    newPath: PathName;
+    euser: User := NIL)
+  RAISES {Error};
+  (* NotSuperUserEC, PathES,
+     CrossDeviceLinkEC, DirectoryUnlinkEC, DirectoryNotEmptyEC,
+     InvalidArgumentEC, FailureES? *)
+</PRE>
+<P>
+Rename moves a file or directory `atomically' from one directory to
+another.   Rename guarantees that the operation is atomic with respect to
+concurrent operations, and with respect to system crashes.
+<P><A NAME="1228">&#160;</A>
+When the old path name specifies a file, Rename requires either that the
+new path name specifies a file, or that it is nonexistent.  When the old
+path name specifies a directory, Rename requires either that the new path
+name specifies an empty directory (excluding . and ..), or that it is
+nonexistent.  Rename raises DirectoryUnlinkEC if the old path name
+specifies a file and the new path specifies an existing directory, or vice
+versa.  Rename raises DirectoryNotEmptyEC if the old path name specifies a
+directory and the new path name specifies an existing non-empty directory.
+Rename raises CrossDeviceLinkEC if the new path name is in a different
+logical volume than the old path name.  Rename raises InvalidArgumentEC if
+the operation would put a cycle into the file system, e.g., renaming /a as
+/a/b.
+<P>
+Rename interprets the euser parameter the same way Open does.
+<P><A NAME="1229">&#160;</A>
+Taos note: if the system crashes while a file is being renamed, the file
+will not be lost, but it may be referred to by both the old and new path
+names, or there may be an extra reference count on the file. The first
+problem is not detected; the second can be detected and fixed by the
+scavenger (but will not cause any harm).  If a directory is being renamed,
+the operation will either complete or will be backed out by a forced run
+of the scavenger when the system reboots.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html769"
+ HREF="node48.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html765"
+ HREF="node39.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html761"
+ HREF="node46.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html767"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html768"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html770"
+ HREF="node48.html">The OS Interface: Processes</A>
+<B> Up:</B> <A NAME="tex2html766"
+ HREF="node39.html">The OS Interface: Files</A>
+<B> Previous:</B> <A NAME="tex2html762"
+ HREF="node46.html">Opening and Examining Directories</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

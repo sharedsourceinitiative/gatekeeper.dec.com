@@ -1,0 +1,36 @@
+XFibs:		Graphical interface for FIBS.
+Requirements:	X-Window System, Motif
+Distribution:	Source code.
+
+Welcome to backgammon on the Internet. That's what all this is about. If you
+have a WWW browser, take a look at the WWW Backgammon Page:
+
+	http://www.statslab.cam.ac.uk/~sret1/backgammon/main.html
+
+FIBS is the First Internet Backgammon Server, developed by Andreas Schneider. 
+
+FIBS allows users to play backgammon against real people (and even some silicon
+players) over the internet. Sometimes tournaments are organized on FIBS (they
+are usually advertised in the login header). There are players of every
+conceivable ability logging onto FIBS, from absolute beginners to serious
+Backgammon Champion contenders. But if you ever want to know anything, there
+are plenty of people willing to help.
+
+FIBS uses a textual interface, which draws the backgammon board with ASCII
+characters. You can see who is currently logged on and invite someone to play.
+Games are saved automatically, so you never have to worry about people with
+dodgy connections. There is often plenty of friendly banter and you can join
+in, roll the dice, move the pieces, double your opponent all with simple
+commands.
+
+XFibs makes all this an even more enjoyable experience. XFibs replaces the
+scrolling ASCII boards with a nice graphical board using Motif and the
+X-Window System. You can roll the dice, move, double, resign etc. all with
+a flick of the mouse :-) The chat & banter are displayed in a seperate window.
+
+This version (0.8) is a great improvement over the previous and I hope to be
+able to remove the requirement for Motif - this will lead to version 1.0 :-)
+
+Enjoy and see you on FIBS..
+
+Mike Quinn (mikeq on FIBS)

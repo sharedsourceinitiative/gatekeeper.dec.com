@@ -1,0 +1,17 @@
+"To Provide or To Bound: Sampling in Fully Dynamic 
+Graph Algorithms" 
+Monika R. Henzinger and Mikkel Thorup
+Report #143, October 8, 1996. 11 pages.
+
+In dynamic graph algorithms the following provide-or-bound problem has
+to be solved quickly: Given a set S containing a subset R and a way of
+generating random elements from S testing for membership in R, either
+(i) provide an element of R or (ii) give a (small) upper bound on the
+size of R that holds with high probability.  We give an optimal
+algorithm for this problem.
+
+This algorithm improves the time per operation for various dyamic graph
+algorithms by a factor of O(log n). For example, it improves the
+time per update for fully dynamic connectivity from O(log^3n) to
+O(log^2 n). 
+

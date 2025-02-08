@@ -1,0 +1,90 @@
+$Id: README,v 1.1.1.1 1996/04/16 15:12:03 leon Exp $
+
+DESCRIPTION :
+-----------
+
+K-lendars is a multi-user / multi-calendar diary. 
+It is a MOTIF user interface to a distributed calendar manager.
+Communications are based on email and require a dispatch mechanism 
+(procmail, slocal,...)
+Anyway if you do not want to use the multi user capabilities, you can use 
+k-lendars in single-user mode, with one or more calendars.
+
+Features:
+
+- multi/calendar support
+- multi/user support, with group managment mechanisms
+- select/unselect any calendar
+- Year view
+- Day view
+- repeating appointments
+- alarms (up to 1 week before an appointment)
+- MOTIF 1.2 interface
+- mouse oriented interface
+- customizability
+
+
+
+
+AVAILABILITY :
+------------
+
+k-lendars is freely available, read the  COPYRIGHT file.
+ftp location:
+	koala.inria.fr:/pub/k-lendars-1.5.tar.gz
+	ftp.x.org:/contrib/applications/k-lendars-1.5.tar.gz
+
+
+AUTHOR :
+------
+
+Jean-Michel.Leon@sophia.inria.fr - Groupe Bull
+http://www.inria.fr/koala/jml.html
+
+
+
+PLATFORMS :
+---------
+
+k-lendars was successfully tested on these systems:
+(for each one appears the vrsion that has been successfully tested)
+
+---- 1.2
+	SunOS 4.1.3 1 sun4m
+	gcc version 2.3.3
+	X11R5
+	MOTIF 1.2
+---- 1.2
+	SunOS 4.1.3 1 sun4m
+	gcc version 2.3.3
+	X11R6
+	MOTIF 1.2
+----1.1
+	HP 9000/827 running HP-UX 9.04, 
+	gcc
+	X11R5
+	Motif 1.2
+----1.2.1.1
+	ULTRIX 4.3 0 RISC
+	gcc version 2.6.0
+	X11R5
+	Motif 1.2
+----1.2.1.1
+	Linux Slackware 1.2.0
+	X11R5
+	Motif 1.2.1
+----1.1
+	IBM RS6000 AIX 3.2.5
+	cc
+	X11R5
+	Motif 1.2
+----1.1
+	FreeBSD
+	Motif 1.2.3
+----1.1
+	Digital OSF/1 AXP v3.0
+	native cc
+	X11R?
+	Motif 1.2.3
+----
+(to be continued)

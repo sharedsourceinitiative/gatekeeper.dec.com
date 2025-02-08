@@ -1,0 +1,26 @@
+
+                        AVAILABLE ELECTRONICALLY
+
+"Safe, Efficient Garbage Collection for C++"
+John R. Ellis and David L. Detlefs
+June 10, 1993.  76 pages
+
+
+We propose adding safe, efficient garbage collection to C++,
+eliminating the possibility of storage-management bugs and making 
+the design of complex, object-oriented systems much easier. This 
+can be accomplished with almost no change to the language itself 
+and only small changes to existing implementations, while retaining
+compatibility with existing class libraries.
+
+Our proposal is the first to take a holistic, system-level approach,
+integrating four technologies. The language interface specifies how 
+programmers access garbage collection through the language. An optional 
+safe subset of the language automatically enforces the safe-use rules 
+of garbage collection and precludes storage bugs. A variety of collection
+algorithms are compatible with the language interface, but some are 
+easier to implement and more compatible with existing C++ and C 
+implementations. Finally, code-generator safety ensures that compilers 
+generate correct code for use with collectors.
+
+

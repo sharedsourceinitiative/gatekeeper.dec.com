@@ -1,0 +1,499 @@
+XCmail
+
+Welcome to XCmail a new MIME and POP3 capable mailtool for X11 using
+the Xclasses layout library. XCmail was designed completely object
+orientated and due to this may be improved easily.
+
+The main purpose of XCmail is to read and write mails which may have
+added ("attached") any kind of data. For this, XCmail can handle MIME
+types and has so called "helpers" to display contents of different MIME
+types.
+
+XCmail also offers "encoders" which encode and decode binary data
+into ASCII to allow the transport via mail over the Internet.
+
+The program works with a local mailbox (eg. /var/spool/mail) and POP3.
+With POP3 XCmail uses the faster UIDL function of POP3 servers (may 
+be disabled if servers don't support this) and has a so called "UIDL
+history": If you get mails from your POP3 server but don't want to
+remove them there and later remove them only locally other mailers
+will read this mails again. Not XCmail! The UIDL history keeps a 
+history of the mail of the news host so it won't read them again.
+This history only needs about 3 KB - so enable it if possible.
+
+The GUI (graphical user interface) was designed to be mostly self
+explaining, but of cause there may be some things which are not
+explaining themself, like settings or standard names that are unknown
+to first time users.
+
+XCmail supports multiple mailboxes, it has an address book for your
+favority email addresses and XCmail allows to start external programs 
+to encode mails or handle MIME types.
+
+And very interesting: XCmail supports PGP within PGP MIME format
+(RFC 2015). But the PGP support is still really BETA code which may 
+fail and crash XCmail and needs much more tests. This is no crazy
+S/MIME from other wannabe mailers!
+
+
+Installing:
+
+To install XCmail use the "install.sh" script. It askes some questions
+where to place the binary and the additional files and copies them.
+
+If you are not the system administrator better change the default
+directories. Even if you are root you might want to change it.
+
+
+First start:
+
+When you start XCmail the first time, you might be asked to create a
+directory called "Mail" in your home directory. You should answer
+this question with "Yes". If you already have such a directory (eg.
+from other programs), no question appears. If you already used
+netscape's mailtool it created a directory "nsmail" which is the
+same as "Mail" but a different name. You may rename this or set a
+softlink to use your old mailfolders in XCmail.
+
+XCmail will create another hidden directory ".XCmail" in you home 
+directory to save its settings. You should not change anything in it
+if you don't know what you are doing.
+
+It also creates a directory "plugins" where you can place XCmail
+plugins. You can find some example plugins in the plugins
+subdirectory, simply copy them to ~/.XCmail/plugins/ and start
+XCmail.
+
+
+Main window:
+
+After starting, you will see the main window with a list of all your
+mails (often called the "mailslist"), some control buttons at the 
+bottom, a pull down menu and a mailbox selection bar below this menu.
+
+After starting up the (system-) mailbox is selected.
+
+Double click on a mail will open a new window showing the mail; 
+pushing the right mouse button over the mailslist will open a context 
+menu.
+
+The pull down menu has many options, like save, print or search a
+selected mail, open preferences windows, save the preferences and
+change the way the mails are being listed. Keep in mind that the last
+must be saved with the "Save preferences" item to be stored 
+permanently.
+
+XCmail offers several sorting methodes:
+ - nothing:                    don't sort
+ - sender:                     sort alphabetically by sender name
+ - subject:                    alphabetically by subject
+ - send date:                  oldest mails on top
+ - rev send date:              newest mails on top
+ - rev send date, new first:   newest on top, unread chronologically
+ - size:                       biggest on top
+
+"Quick mail" may offers some selected addresses from your 
+addressbook.
+
+If a new mail arrives durring reading mail with XCmail, two beeps
+appear and the "N" button in the upper right is highlighted and 
+enabled. If you press this button, the new arrived mail(s) will be 
+read and shown.
+
+
+Read mail window:
+
+The mail section shows the mail body. In the upper right you can see a
+list of attachments to the mail, if there are some. By selecting an
+attachment, this will be displayed or you will be prompted for a 
+filename to save it (depends on the MIME type and my be setup in the 
+helpers preferences).
+
+A helper may offer its own pull down menu entries.
+
+
+New mail window:
+
+On the upper left you can enter the addressee and the subject of the 
+mail. You can enter a single mail address or a comma-separated list
+of mail addresses. You can also enter an alias from your addressbook 
+or directly choose one from the addressbook popup ("..." button).
+
+In the lower part of the window you can enter the message body. At the
+upper right a list of attached data files is being displayed. Press 
+"add" to add another file. This will open an file dialog and after 
+this an encoder dialog. In the encoder dialog you must specify an 
+encoder ("base64" is a good choice). Depending on your settings you 
+might also want to change the MIME type, but mostly you accept the 
+default.
+
+You can find the spell checker in the "message" menu.
+
+
+Search window:
+
+The search window offers some simple functions to search around in
+your mails. Choose a search area (sender, subject, etc), enter a search
+key in the input field, then press the "search" or "continue search" button
+behind the item you want to search for. The search always starts at the top
+and continue search starts behind the current mail highlighted in the
+mainwindow.
+
+Below these lines you can specify some search parameters:
+ - Literal/Regulare expressions
+    search key is a simple word or a regular expression
+ - keep dialog
+    this will keep search window open when an item was found
+ - ignore case
+    ignore case durring searching
+ - mark all matches
+    marks all mails which match and don't stop after each match
+
+
+General settings window:
+
+This window offers many options for reading, writing and printing.
+
+- Send mail page:
+  * save sent mails in outbox
+	will copy any sent mail in an outbox folder stored in the
+	"~/Mail" directory - if you see this in the mailslist a new
+	button called "resend" is available to send this mail again
+	(for this a newmail window is opened)
+  * dashed above signature
+    will add two dashes ("--") above your signature
+  * allow own mime type
+    allows the selection of the MIME type in the encoder dialog
+  * quoted printable/translated 7bit/full 8bit
+    set default transfer encoding for non 7bit characters (like
+	german umlauts) - default is quoted printable
+  * XFace allows you to send a picture of yourself with any mail.
+    For this you must create a 48x48 pixel black/white XBM image.
+  * Outbox filename
+    name of the outbox folder in "~/Mail" - default is "outbox"
+  * Signature filename
+    name of the signature file in your home directory - default 
+    is ".signature"
+	XCmail allowes to start external programs in the signature but
+	other mailer don't offer this feature. So if you use different
+	mails (why?) these can't handle the commands and simple show
+	them.
+  * Reply-To address
+	fill this field if you have a different email reply address than
+	the one you use to send mails - normally you don't need this
+  * Reply opening
+  * Reply closing
+  * Forward opening
+  * Forward closing
+    allows you to set an own opening text before you replys and
+    forwards - to use this enable the "user defined openings" menu in
+    the Preferences/Quote pull down menu in the main window
+    Any opening and closing may have several directives that will be
+    replaced:
+     %n - name of the sender of the mail
+     %e - email address of the sender
+     %d - sending date
+     %s - subject of the mail
+     %S - normalized subject - without "Re:" prefixes
+     %% - percent letter
+     \n - new line
+
+- Read/print mail page:
+  * wrap mail text
+    normally a message body is shown as it was sent, but if you select
+    this, the text in wrapped in the reader window for better
+    readablility - or not
+  * beep twice on new mail
+    beep twice if a new mail arrives - makes it easier to recognize
+    new mails because most things beep only once. But some systems
+    are broken or poor and make a horrible noise if they beep the
+    second long beep
+  * move deleted mails to trash folder
+	Moves all deleted mails to a folder called "Trash" in your
+	"~/Mail" directory. You must and should delete any mails in the
+	trash folder by hand or you trash folder will get really big.
+
+  * print spooler
+    the command to print
+
+- POP3 page:
+  * Mail server hostname
+    name of your POP3 mail server
+  * Mail account name
+    your mail account name
+  * After getting
+     + leave on server
+     + remove from server
+	This allows you to leave or remove the mails you transfered from
+	your POP3 server to your local machine (where XCmail runs). Most
+	POP3-only users will remove the mails (or nobody will do this and
+	your mailfolder on your mail server will grow and grow and
+	transfer will get slower and slower because all mails have to be
+	checked if they have already transfered).
+  * Use POP3 UIDL function
+    Newer POP3 server (by now mostly all) support this feature to 
+    speed up checking for new mails. Enable this except you get
+    errors durring getting mails.
+  * UIDL history
+	If you delete mails in you POP3 folder but you leave all mails on your
+    POP3 server ("after getting" setting) you will get this mail next
+    time you pull for POP3 mails again except you enable this option.
+    It will save a history of the last 1000 mail UIDLs.
+  * POP3 mode
+    Set up your favorite storing area and startup folder:
+    "save mails in own folder" will put all mails got via POP in an
+     own folder (default behaviour)
+    "save mails in own folder & open at startup" will also put all POP
+     mails in an own folder and show this folder at startup and when
+     you press the "mailbox" button (this will hide the local inbox
+     folder so only usefull for POP3-only users)
+    "save mails in system inbox folder" allows you to have one inbox
+     folder your your POP mails and your local mails because all POP
+     mails will be stored in the same folder.
+  * Use remote host to send mails
+  * POP3 sender host
+    Enable this if you using POP3 to get mails and want to send mails.
+	You can enter any SMTP host for POP3 sender but mostly this is the
+	same as your POP3 server.
+  * Spool outgoing mails before sending
+    If you have no permanent Internet connection enable this. If 
+    enabled all written mails will be spooled and not directly send.
+    Next, if you have established you connection all spooled mails
+    can be send at once (use mainwindow Special/Send spooled mails
+    pulldown menu).
+  * Your name
+  * EMail address
+    Your must fill this out if you want to send mails with POP3.
+
+-PGP
+  * PGP command + path
+    the PGP command
+  * PGP ID
+    your PGP key name
+
+- ispell
+  -> docu missing
+
+
+MIME & helpers settings window:
+
+-MIME helpers page:
+  on the left a list of MIME types, right what to do if this MIME type
+  appears in the reader window
+  
+  * Do
+    show            - show body without any job
+    save            - save body
+    internal helper - select a helper - this will later do something 
+                      with the body - look below for helper list 
+                      and settings
+    command         - enter a command, the placeholder "%s" will be 
+                      replaced by a temporary file, eg. "acroread %s"
+                      will start acrobat reader with the mail body 
+
+
+Buildin helpers:
+
+ html        Mime type: text/html
+           - Translates HTML attachments to ASCII to allow to read it
+			 in the normal showmail window without lanching any huge
+			 HTML browser. Only the importent tags for reading are 
+			 supported. All URLs found (and EMail addresses) are put
+			 in some pull down menus. Use these to open a new mail 
+			 window or launch a WWW browser (currently only Netscape
+			 Navigator).
+
+
+ url         Mime type: text/plain, text/*
+           - Puts all found URLs (and EMail addresses) in some pull
+             down menus to open a new mail window or launch a WWW 
+             browser.
+
+There are some more helpers as plugins available. Look in the
+"Helpers setup" page for a complete list with a short description and
+some special settings.
+
+
+Addressbook window:
+
+Allows you to handle any kind of email addresses and aliases. The
+aliases can be used in the newmail window. If you enable the "quick
+address" button for an address, this is beeing placed in the "Quick
+mail" menu in the main window.
+
+If you close the window the aliases are being saved.
+
+XCmail has some buildin converters for addressbooks of other mailers
+to the XCmail addressbook in the "import" menu. You can also find 
+some more converters in the tools subdirectory of the XCmail archive.
+
+
+Mail filter window:
+
+Sorry, mail filters are currently not implemented.
+
+
+Signature window:
+
+Enter your signature here, any command may be entered in backquotes
+and will be executed where adding the signature, eg. a fortune
+command (`fortune`).
+
+
+General hints:
+
+XCmail uses Xclasses, so you can use the Xclasses X-Resources and the
+Xclasses setup feature (see Xclasses pull down menu at the right end
+of the menu bar for the setup window).
+
+You can open any number of reader windows but too much will slow down
+your machine and your memory! Be warned! (after opening 76 reader 
+windows my Linux machine with 32 MB Ram was swapping and swapping
+and swapping - for every simple mouse move) On the other hand simply
+reading more than 2000 mails in a folder is no problem (with now
+88 MB - don't try more than 1500 with 32 MB!).
+
+Administrators may place default mimetypes, mailcaps and plugins in
+/usr/local/XCmail and /usr/local/XCmail/plugins. This directory may
+be changed to any value with the environement variable "XCMAILDIR"
+(like /opt/XCmail).
+
+
+Interesting X-Resources:
+
+XCmail*ncase.state: PRESSED|RELEASED
+    State of "Ignore case" button
+XCmail*mark.state: PRESSED|RELEASED
+    State of "Mark all matches" button
+XCmail*keep.state: PRESSED|RELEASED
+    State of "Keep dialog" button
+XCmail*searchmode.selected: 0|1
+    0: Literal, 1: Regular expression
+XCmail*mainwindow.geometry: WxH+X+Y
+    Geometry of mainwindow
+XCmail*file_dialog_window: WxH+X+Y
+    Geometry of all file dialogs
+XCmail*subwindows*window.geometry: WxH+X+Y
+    Geometry of reader windows
+XCmail*window.geometry: WxH+X+Y
+    Geometry of create mail windows
+XCmail*generalprefs.geometry: WxH+X+Y
+    Geometry of preferences window
+XCmail*addressbook.geometry: WxH+X+Y
+    Geometry of addressbook window
+XCmail*editsignature.geometry: WxH+X+Y
+    Geometry of mainwindow
+XCmail*searchwindow.geometry: WxH+X+Y
+    Geometry of mainwindow
+XCmail*levelwindow*geometry: WxH+X+Y
+    Geometry of level window
+XCmail.subwindows.?.window.maingroup.textboxgroup.mailbody.body.basecolor:
+    Color of textboxes in read mail window
+XCmail*hilight: True
+    if you like this visual effect
+XCmail*mainwindow.group.group.direction: Horiz
+    will place all buttons of the mainwindow on one row
+    (normalle they use two rows) - if you like it...
+XCmail*timeoutpointer: True|False
+    enable/disable the Xclasses timeout feature that will display
+    a busy pointer if XCmail is working for some seconds
+    sometimes this may crash because the Xclasses code for this
+    is development code
+XCmail*shadow: True|False
+    enable/disable the Xclasses shadow function for popup windows
+    (this could slow down output speed!)
+
+
+Writing own helpers and enoders:
+
+Helpers and encoders are writting as C++ classes. See the header
+files "helper.h" and "encoder.h" for more information. If you don't
+have them look at plugin development (see below for details).
+
+
+Plugins
+
+XCmail 0.10 and later support external plugins - mostly external
+helpers. This plugins must be placed in ~/.XCmail/plugins or
+/usr/local/XCmail/plugins directory and will be automatically used
+if placed there.
+
+To write own plugins get the XCmail plugin documentation. If you have
+the XCmail sources look in the plugins directory. If not look at
+http://www.fsai.fh-trier.de/~schmitzj/Xclasses/XCmail.
+
+
+Troubleshooting
+
+XCmail uses Xclasses for its GUI. So you might have some differences
+to your other programs that don't use this - other Xclasses programs
+work fine together. If you have wrong colors in your XCmail window
+try the option "-blackwhite" or change the basecolor to something
+like "#c0c0c0" that color grabbers like netscape use.
+
+
+Mailing lists
+
+XCmail has two mailing lists - one only to announce new releases and
+on to discuss, ask questions, etc.
+
+To subscribe write to "majordomo@fsai.fh-trier.de" and subscribe to
+"xcmail" or/and "xcmail-announce". Members of list "xcmail" 
+automatically receive mails from "xcmail-announce".
+
+
+Copyright
+
+XCmail is currently published as freeware binary and is still under
+development - so some parts of the program are in beta state. Any
+ideas for new features, bug reports and congratulations are welcome.
+Write an email (using XCmail would be nice, of cause) with subject
+"XCmail" to the XCmail mailing list or to
+
+"schmitzj@fsai.fh-trier.de",
+"beckerr@fsai.fh-trier.de" or
+"herzogr@fsai.fh-trier.de" 
+
+Simply use the "Mail the authors" item in the "Xclasses" menu
+(mailing list prefered!).
+
+Please have a look in the "author" section of the "About Program"
+dialog in the "Xclasses" menu, to investigate which is most appropriate
+address to use. The you can also find some nice words to helpfull 
+people.
+
+XCmail is offered free of charge during development and the binary may 
+be copied to any media as long as this README is part of it.
+
+
+XCmail online:
+
+New releases of XCmail and Xclasses are offered online via WWW at
+
+http://www.fsai.fh-trier.de/~schmitzj/Xclasses/XCmail
+http://www.fsai.fh-trier.de/~schmitzj/Xclasses
+
+and some software mirrors (like sunsite).
+
+
+Authors:
+
+The main part (all specifications, GUIs, reader, sendmail, settings,
+PGP support, etc):
+ Juergen Schmitz (schmitzj@fsai.fh-trier.de),
+
+Most of the encoders and helpers, bug fixes and ISO-Charset 
+translation, sorting improvements, small but important fixes:
+ Ralf Becker (beckerr@fsai.fh-trier.de).
+
+The postscript printing moduls and the addressbook backend, sorting 
+improvements, bug fixes, found many bugs:
+ Ralf Herzog (herzogr@fsai.fh-trier.de).
+
+Beta testers:
+ the three above (on IRIX and Linux),
+ many users of host FSAI.fh-trier.de (especially thanks to Heiko
+  Federhenn, Thorsten Ries and Tobias Winterhalter) on Linux
+ Andreas "Arensa" Arens on IRIX and AIX
+ many users all over the world (special thanks to Erik Mouw and 
+  Gerd Prümm)

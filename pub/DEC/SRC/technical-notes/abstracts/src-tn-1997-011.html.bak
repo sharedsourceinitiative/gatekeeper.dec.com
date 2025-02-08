@@ -1,0 +1,22 @@
+<TITLE>Digital Systems Research Center: Note 1997-011</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Technical Note 1997-011</H1>
+<H1>Tight Thresholds for the Pure Literal Rule</H1>
+<HR>
+<H2>Michael Mitzenmacher</H2>
+<b>Note #1997-011. June 17, 1997</b><BR><i>6 pages</i>
+<P>
+We consider the threshold for the solvability of random k-SAT
+formulas using the pure literal rule.  We demonstrate how this
+threshold can be found by using differential equations to determine
+the appropriate limiting behavior of the pure literal rule.
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-011.ps.Z">PostScript compressed with UNIX compress</A></B> -- 88 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-011.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 80 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-011.ps.zip">PostScript compressed with ZIP</A></B> -- 80 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-011.ps">PostScript</A></B> -- 152 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-011.pdf">Portable Document Format (PDF)</A></B> -- 68 Kbytes<BR>
+</UL></P>

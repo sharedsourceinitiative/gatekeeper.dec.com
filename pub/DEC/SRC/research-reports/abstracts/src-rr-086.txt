@@ -1,0 +1,17 @@
+ 
+			AVAILABLE ELECTRONICALLY
+
+"A Logical View of Composition"
+Martin Abadi and Gordon D. Plotkin
+May 1, 1992.  35 pages
+
+
+Authors' abstract
+
+We define two logics of safety specifications for reactive systems. 
+The logics provide a setting for the study of composition  rules.
+The two logics arise naturally from extant specification approaches; 
+one of the logics is intuitionistic, while the other one is linear.
+
+
+

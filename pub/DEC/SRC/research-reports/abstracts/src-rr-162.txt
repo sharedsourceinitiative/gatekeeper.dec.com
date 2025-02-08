@@ -1,0 +1,27 @@
+"An Efficient Matching Algorithm for a High-Throughput, Low-Latency Data Switch"
+Thomas L. Rodeheffer and James B. Saxe
+Report #162, November 5, 1998. 24 pages.
+
+This paper focuses on two desired properties of cell-based
+switches for digital data net-works: (1) data cells should
+not be detained inside the switch any longer than necessary
+(the work-conserving property) and (2) data cells that have
+been in the switch longer (older cells) should have priority
+over younger cells (the order-conserving property).  A
+well-known, but expensive design of a work- and 
+order-conserving switch is the output-queued switch.
+
+A different switch design is the speedup crossbar switch, 
+in which input buffers are con-nected to output buffers 
+through a crossbar that runs at a multiple (called the speedup) 
+of the external cell rate.  A matching algorithm determines 
+which cells are forwarded through the crossbar at any given 
+time.  Previous work has proposed a matching al-go-rithm called 
+the lowest output occupancy first algorithm (LOOFA).  It is 
+known that a LOOFA switch with speedup at least 2 is work-conserving.
+
+We propose a refinement of LOOFA called the lowest output 
+occupancy and timestamp first algorithm (LOOTFA).  The main 
+result of this paper is that a LOOTFA cross-bar switch is 
+work- and order-conserving provided that the speedup is at 
+least 3.  We prove this result and consider some generalizations.

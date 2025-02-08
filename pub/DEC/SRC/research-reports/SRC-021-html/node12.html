@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Reporting Errors</TITLE>
+<META NAME="description" CONTENT="Reporting Errors">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node13.html">
+<LINK REL="previous" HREF="node11.html">
+<LINK REL="up" HREF="node11.html">
+<LINK REL="next" HREF="node13.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html262"
+ HREF="node13.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html258"
+ HREF="node11.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html252"
+ HREF="node11.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html260"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html261"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html263"
+ HREF="node13.html">File System</A>
+<B> Up:</B> <A NAME="tex2html259"
+ HREF="node11.html">Topaz Operating System Interface</A>
+<B> Previous:</B> <A NAME="tex2html253"
+ HREF="node11.html">Topaz Operating System Interface</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION02041000000000000000">
+Reporting Errors</A>
+</H2>
+<A NAME="sec-exceptions">&#160;</A>
+<A NAME="240">&#160;</A>
+<A NAME="241">&#160;</A>
+A UNIX system call reports an error by storing an error number in the
+variable <TT>errno</TT> and then returning the value  -1.  The variable
+<TT>errno</TT> causes a problem for a multithreaded client, since
+different values could be assigned due to concurrent system calls
+reporting errors.  (Another source of confusion results from system calls
+that can return -1, e.g.,  <TT>nice</TT> or <TT>ptrace</TT>.)
+<P><A NAME="246">&#160;</A>
+<A NAME="247">&#160;</A>
+A workable but clumsy solution would be for every system call that could
+report an error to return an error code via a result parameter.  We chose
+to use Modula-2+ exceptions instead.  Exceptions have the advantage over
+return codes that they can't be accidentally ignored, because an exception
+for which no handler exists results in abnormal termination of the
+program.<A NAME="tex2html2"
+ HREF="footnode.html#382"><SUP><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/foot_motif.gif"></SUP></A> Exceptions are handled by
+enclosing a statement sequence that could raise an exception with a
+<TT>TRY ... EXCEPT</TT> statement.
+<P><A NAME="250">&#160;</A>
+<A NAME="251">&#160;</A>
+<A NAME="252">&#160;</A>
+<A NAME="253">&#160;</A>
+A Modula-2+ procedure declaration may include a <TT>RAISES</TT> clause
+enumerating the exceptions the procedure may raise.  The declaration of an
+exception may include a parameter, allowing a value to be passed to the
+exception handler.  Most procedures in the Topaz operating system
+interface can raise the exception <TT>Error</TT>, which is declared with a
+parameter serving as an error code, analogous to the UNIX error number.
+Topaz defines the exception <TT>Alerted</TT> for reporting thread alerts
+(discussed in Section <A HREF="node10.html#sec-cancelling">3.3</A>).  Each procedure in the Topaz
+operating system interface that may do an unbounded wait includes
+<TT>Alerted</TT> in its <TT>RAISES</TT> clause.  As described in
+Section <A HREF="node14.html#sec-signals">4.3</A>, Topaz also uses exceptions to report
+synchronous events such as hardware traps.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html262"
+ HREF="node13.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html258"
+ HREF="node11.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html252"
+ HREF="node11.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html260"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html261"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html263"
+ HREF="node13.html">File System</A>
+<B> Up:</B> <A NAME="tex2html259"
+ HREF="node11.html">Topaz Operating System Interface</A>
+<B> Previous:</B> <A NAME="tex2html253"
+ HREF="node11.html">Topaz Operating System Interface</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

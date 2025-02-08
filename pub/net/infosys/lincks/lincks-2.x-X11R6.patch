@@ -1,0 +1,241 @@
+From marsj Wed Aug  3 19:45:50 1994
+Status: RO
+X-VM-v5-Data: ([nil nil nil t nil nil t nil nil]
+	["7891" "Wed" " 3" "August" "1994" "19:43:17" "+0200" "Martin Sjolin" "marsj" nil "221" "Re: First cut at patches for X11R6" "^From:" nil nil "8" nil nil (number " " mark " FZ  Martin Sjolin     Aug  3  221/7891  " thread-indent "\"Re: First cut at patches for X11R6\"\n") nil]
+	nil)
+Received: from obelix by ida.liu.se (5.65b/ida.minimaster-V1.0b6d5)
+	id AA28685; Wed, 3 Aug 94 19:43:22 +0200
+Received: from obel11 by obelix (5.65b/ida.slave-V1.0b3)
+	id AA02309; Wed, 3 Aug 94 19:43:20 +0200
+Received: by obel11 (5.65b/ida.slave-V1.0b3)
+	id AA15235; Wed, 3 Aug 94 19:43:17 +0200
+Message-Id: <9408031743.AA15235@obel11>
+In-Reply-To: <9408031041.AA02925@obel11>
+References: <9408031041.AA02925@obel11>
+From: Martin Sjolin <marsj>
+To: Martin Sjolin <marsj>
+Cc: Lincks User Mailing List <lincks-users@ida.liu.se>
+Subject: Re: First cut at patches for X11R6
+Date: Wed, 3 Aug 94 19:43:17 +0200
+
+I wrote:
+MS> Hi all
+MS> below is a first cut at R6 patch - i have compiled and linked
+MS> xlincks, and run a small trial run against my X11R5 server ...
+MS> Also, concerning linking, you might need to change the Make.config 
+MS> line from
+
+MS>    X11_LIBS 	= -lXaw -lXmu -lXt -lXext -lX11
+
+MS> to
+
+MS>    X11_LIBS	= -lXaw -lXmu -lXt -lSM -lICE -lXext -lX11 
+
+Below is a second cut a the a R6 patch, I had forgotten
+a few things in the first patch. This time,
+
+cd lincks-2.x
+patch < 'patch'
+
+good luck,
+
+msj
+--- ./interface/xlincks/libxl/ltextsink.c.orig	Thu Jun  9 01:00:31 1994
++++ ./interface/xlincks/libxl/ltextsink.c	Tue Aug  2 12:21:00 1994
+@@ -82,6 +82,13 @@
+ /*********************************************************************
+  * LOCAL DEFINES, STRUCTS, TYPEDEFS, ETC.:
+  *********************************************************************/
++/* needed to compile under R6 since font def moved into real Sink */
++#if XT_REVISION > 5
++#define TEXT_SINK_FONT xltext_sink.font
++#else
++#define TEXT_SINK_FONT text_sink.font
++#endif /* XT_REVISION <= 5 */
++
+ /*
+  * The following lines are added for R4-R5 compatibility:
+  * R4 defines LF, R5 defines XawLF, etc.
+@@ -98,8 +105,8 @@
+ #endif
+ 
+ #define GETLASTPOS XawTextSourceScan(source, (XawTextPosition)0, XawstAll, (XawTextScanDirection)XawsdRight, 1, TRUE)
+-#define ASCENT(sink)  (sink->text_sink.font->ascent)
+-#define DESCENT(sink) (sink->text_sink.font->descent)
++#define ASCENT(sink)  (sink->TEXT_SINK_FONT->ascent)
++#define DESCENT(sink) (sink->TEXT_SINK_FONT->descent)
+ #define TEXTHEIGHT(sink)      (ASCENT(sink) + DESCENT(sink) + 1)
+ 
+ /*********************************************************************
+@@ -124,7 +131,7 @@
+ static void Initialize P_(( Widget request, Widget new ));
+ static void InsertCursor P_(( Widget w, XtPosition x, XtPosition y,
+                                XawTextInsertState state ));
+-static int MaxLines P_(( TextSinkObject w, XtDimension height ));
++static int MaxLines P_(( Widget w, XtDimension height ));
+ static XtDimension PaintText P_(( Widget w, GC gc, XtPosition x, XtPosition y,
+                                  unsigned char * buf, int len ));
+ static void Resolve P_(( Widget w, XawTextPosition pos, int fromx, int
+@@ -147,6 +154,10 @@
+        offset(indent), XtRIndentMode, (caddr_t)NULL},
+     {XtNfontmap, XtCFontmap, XtRFontMarks, sizeof(XlFontMap), 
+        offset(fontinfo), XtRFontMarks, (caddr_t)NULL}, 
++#if XT_REVISION > 5
++    {XtNfont, XtCFont, XtRFontStruct, sizeof (XFontStruct *),
++	offset(font), XtRString, XtDefaultFont},
++#endif
+ };
+ #undef offset
+ 
+@@ -223,7 +234,7 @@
+ {
+     register int i, width, nonPrinting;
+     XlTextSinkObject sink = (XlTextSinkObject) w;
+-    XFontStruct *font = sink->text_sink.font;
++    XFontStruct *font = sink->TEXT_SINK_FONT;
+     Position *tab;
+ 
+     if ( c == LF ) return(0);
+@@ -298,7 +309,7 @@
+     TextWidget ctx = (TextWidget) XtParent(w);
+ 
+     Position max_x;
+-    Dimension width = XTextWidth(sink->text_sink.font, (char *) buf, len); 
++    Dimension width = XTextWidth(sink->TEXT_SINK_FONT, (char *) buf, len); 
+     max_x = (Position) ctx->core.width;
+ 
+     if ( ((int) width) <= -x)	           /* Don't draw if we can't see it. */
+@@ -365,6 +376,7 @@
+   return;
+ }
+ 
++/*  */
+ /**********************************************************************
+  * Function: static void DisplayText(SIX PARAMETERS)
+  * Parameters:
+@@ -691,17 +703,19 @@
+ 
+ /*  */
+ /**********************************************************************
+- * Function: static int MaxLines(TextSinkObject w, XtDimension height)
++ * Function: static int MaxLines(Widget w, XtDimension height)
+  * 
+  * Modifications:
+  *      <list mods with name and date>
+  */
+ static int MaxLines(w, height)
+-  TextSinkObject w;
++  Widget w;
+   XtDimension height;
+ {
++  XlTextSinkObject sink = (XlTextSinkObject) w;
+   int fontheight, numlines;
+-  fontheight = (w->text_sink.font->ascent) + (w->text_sink.font->descent) + 1;
++  fontheight = (sink->TEXT_SINK_FONT->ascent) + 
++               (sink->TEXT_SINK_FONT->descent) + 1;
+   numlines = (int) height / fontheight;
+ 
+   return numlines;
+@@ -709,18 +723,19 @@
+ 
+ /*  */
+ /**********************************************************************
+- * Function: int XlSinkMaxHeight(TextSinkObject w, int lines)
++ * Function: int XlSinkMaxHeight(Widget w, int lines)
+  * 
+  * Modifications:
+  *      <list mods with name and date>
+  */
+ int XlSinkMaxHeight(w, lines)
+-  TextSinkObject w;
++  Widget w;
+   int lines;
+ {
++  XlTextSinkObject sink = (XlTextSinkObject) w;
+   int fontheight;
+-
+-  fontheight = (w->text_sink.font->ascent) + (w->text_sink.font->descent) + 1;
++  fontheight = (sink->TEXT_SINK_FONT->ascent) 
++             + (sink->TEXT_SINK_FONT->descent) + 1;
+   return lines * fontheight;
+ }
+ 
+@@ -738,7 +753,7 @@
+ 			  | GCForeground | GCBackground );
+     XGCValues values;
+ 
+-    values.font = sink->text_sink.font->fid;
++    values.font = sink->TEXT_SINK_FONT->fid;
+     values.graphics_exposures = (Bool) FALSE;
+     values.foreground = sink->text_sink.foreground;
+     values.background = sink->text_sink.background;
+@@ -829,7 +844,7 @@
+     XlTextSinkObject w = (XlTextSinkObject) new;
+     XlTextSinkObject old_w = (XlTextSinkObject) current;
+ 
+-    if (w->text_sink.font != old_w->text_sink.font ||
++    if (w->TEXT_SINK_FONT != old_w->TEXT_SINK_FONT ||
+ 	w->text_sink.foreground != old_w->text_sink.foreground ||
+ 	w->text_sink.background != old_w->text_sink.background) {
+ 	XtReleaseGC((Widget)w, w->xltext_sink.normgc);
+--- ./interface/xlincks/libxl/ltextsinkP.h.orig	Thu May 26 14:15:30 1994
++++ ./interface/xlincks/libxl/ltextsinkP.h	Tue Aug  2 12:11:50 1994
+@@ -74,6 +74,9 @@
+     XlJustifyType justify;      /* text justification   */
+     int indent;                 /* pixels to indent in a paragraph */
+     XlFontMap	fontinfo;	/* markings for different fonts in text */
++#if XT_REVISION > 5
++    XFontStruct *font;		/* display font */
++#endif /* XT_REVISION > 5 */
+ 
+     /* private state */
+     GC normgc, invgc, xorgc;
+--- ./interface/xlincks/libxl/ltextscrolling.c.orig	Thu May 26 14:15:34 1994
++++ ./interface/xlincks/libxl/ltextscrolling.c	Wed Aug  3 19:27:25 1994
+@@ -98,6 +98,6 @@
+   y = ctx->text.ev_y;
+   (void) XTranslateCoordinates(XtDisplay(ctx), XtWindow(ctx), XtWindow(gran),
+ 			       x, y, &newx, &newy, &ignore);
+-  XlViewAutoScroll(gran, newx, newy, XlSinkMaxHeight((TextSinkObject)ctx->text.sink,1));
++  XlViewAutoScroll(gran, newx, newy, XlSinkMaxHeight((Widget) ctx->text.sink,1));
+ }
+ 
+--- ./interface/xlincks/graphP.h.orig	Thu May 26 14:15:58 1994
++++ ./interface/xlincks/graphP.h	Wed Aug  3 19:24:02 1994
+@@ -47,7 +47,9 @@
+ 
+ /* Representations type for the graph widget. */
+ #define XtRGraph "Graph"
++#ifndef XtRGravity 
+ #define XtRGravity "Gravity"
++#endif /* R6 */
+ #define XtRLayout "Layout"
+ 
+ typedef struct _GraphClassRec {
+--- ./interface/xlincks/xstuff.c.orig	Sun Jun 12 20:52:51 1994
++++ ./interface/xlincks/xstuff.c	Wed Aug  3 19:27:57 1994
+@@ -1549,7 +1549,7 @@
+ 
+   XtVaSetValues((Widget) w, XtNstring, (XtArgVal) np->val.attvalue, NULL);
+ 
+-  height = XlSinkMaxHeight((TextSinkObject)w->text.sink, XlTextNumLines((Widget) w) + 1);
++  height = XlSinkMaxHeight((Widget) w->text.sink, XlTextNumLines((Widget) w) + 1);
+   XtVaSetValues((Widget) w, XtNheight, height, NULL);
+ }
+ 
+--- ./protos/f_ltextsink.h.orig	Mon Jun  6 22:50:06 1994
++++ ./protos/f_ltextsink.h	Tue Aug  2 12:21:40 1994
+@@ -43,6 +43,6 @@
+ #define _f_ltextsink_
+ 
+ int CharWidth P_(( Widget w, int x, unsigned int c ));
+-int XlSinkMaxHeight P_(( TextSinkObject w, int lines ));
++int XlSinkMaxHeight P_(( Widget w, int lines ));
+ 
+ #endif /* _f_ltextsink_ */
+
+
+--
+Martin Sj\"olin | http://www.ida.liu.se/labs/iislab/people/marsj
+Department of Computer Science, LiTH, S-581 83 Link\"oping, SWEDEN 
+phone : +46 13 28 24 10 | fax : +46 13 28 26 66 | e-mail: marsj@ida.liu.se 

@@ -1,0 +1,73 @@
+Users in the U.S. can get this software from the following mirrors:
+
+	ftp.uu.net:pub/database/lincks/
+	gatekeeper.dec.com:/pub/net/infosys/lincks/
+	sunsite.unc.edu:pub/packages/database/lincks/
+
+This directory contains the source code and bootstrap database for 
+the LINCKS (Linkopings INtelligent Communication of Knowledge System)
+database system.  
+
+If you don't have gnuzip, see the file COMPRESSION in the top directory.
+
+We can be reached by e-mail at lincks@ida.liu.se.  Bug reports can be
+sent to lincks-bugs@ida.liu.se.
+
+The files in this directory are:
+
+README			This file.
+ANNOUNCMENT		Copy of the announcement sent out on UseNet.
+HISTORY			List of bug fixes and improvements done
+			to the system. Also included in tar files.
+LINCKS.FAQ		Frequently Asked Questions about the LINCKS
+			system.  Also included in the tar files.
+
+lincks-2.tar.gz		A (symbolic link) to the last version
+
+lincks-2.2.1.tar.gz	LINCKS Release 2.2 patchlevel 1, the
+			source for the database system, the
+			documentation, and the bootstrap database.
+			This is a gzip compressed tar file.  If
+			you don't have gzip, I recommend you get it, as
+			it's better than `compress' (IMHO).  It's
+			available at prep.ai.mit.edu in pub/gnu and at
+			other GNU ftp sites (released 940609). 
+
+lincks-2.2.tar.gz	LINCKS Release 2.2 (released 940602)
+lincks-2.1.tar.gz	LINCKS Release 2.1 
+
+lincks-2.2.1.patch.README Information about lincks-2.2.1.patch.gz 
+lincks-2.2.1.patch.gz	Patch for LINCKS Release 2.2 (lincks-2.2.tar.gz)
+
+lincks-2.x-X11R6.patch	Patch for compiling LINCKS under X11R6
+
+xlincks_manual.ps.gz	the xlincks User's Manual for the interface to
+			the LINCKS system, also include in the tar files.
+			Compressed with gzip.
+
+lincks_admin.ps.gz	the LINCKS System Adminstration Manual, also
+			included in the tar files. Compressed with gzip.
+
+liblincks_man.ps.gz     the LINCKS low level library API programming 
+			reference manue. Compressed with gzip.
+
+lincks-html-doc.tar.gz  the xlincks Users's Manual, the System Adminstration
+ 			manual and the liblincks manual in HTLM format.
+			Compressed with gzip.
+
+articles/		directory with LINCKS related articles and	
+			technical reports.
+
+alpha/			directory with patches to LINCKS, alpha quality.
+
+User contributions and patches will be added to this directory as time
+goes by.
+
+xnotify.shar.gz:	the current release of xnotify, a little toy to
+			pop up messages on one or multiple X displays
+			and get some sort of response to that message.
+			Written by David Partain.  This is compressed
+			using gzip, which is GNU's compression
+			utility.  I suggest you get it if you don't
+			have it.
+

@@ -1,0 +1,130 @@
+HOW TO INSTALL M3PC-Klagenfurt
+------------------------------
+
+
+(1) The files you need:
+
+    (a) mandatory:
+            readme     (you should read it)
+            tar.exe    (to untar the tar files on your computer)
+            djgpp.exe  (the gnu-C compiler - used by the Modula-3 compiler)
+            m3.tar     (binaries and libraries of the Modula-3 compiler)
+
+    (b) optional:
+            m3src.tar   (sources of the Modula-3 "compiler",
+                         the Modula-3 linker ("driver") and
+                         the Modula-3 standard library "libm3")
+            install.txt (this file)
+
+
+(2) Move "tar.exe" somewhere into one of your path directories.
+
+
+(3) If you do not have directory "\tmp", create it. It is used
+    by the C-compiler. Type
+     c> md \tmp
+
+
+(4) Install the gnu-C compiler on your PC:
+     c> cd \
+     c> tar xvf djgpp.tar
+    It  is necessary  to change  to  the  root directory  (with  the  first
+    command).  The second command will extract the C-compiler  from the tar
+    file into the directory "\djgpp". You may now delete the file djgpp.tar
+    - it saves diskspace. The C compiler requires about 6.7 MB disk space.
+
+
+(5) Install the Modula-3 binaries:
+     c> cd \
+     c> tar xvf m3.tar
+    Again you have to be in the root-directory.  The Modula-3 binaries will
+    be extracted  into the directory "\m3".  After the extraction  you will
+    have the following files in the directory "\m3\bin":
+
+           m3.exe             the compiler-driver
+           m3compil.exe       the m3-compiler
+           m3shell.exe        the Modula-3-PC shell
+           emake.exe          make command whithout shell
+
+    The  interface files (*.i3)  are in  "\m3\include",  the  libraries  in
+    "\m3\lib"  and the  document files  are kept in "\m3\doc". The complete
+    Modula-3 compiler (without sources) needs about 6.6 MB of disk space.
+
+
+(6) Configure your PC:
+    Take a look at the files "\m3\config.m3"  and  "\m3\m3rc.bat".  You can
+    use "config.m3" instead of your config.sys. If this is not possible, be
+    sure to change your file  to match the declarations in it.  You have to
+    start "m3rc.bat" before you can use the m3-compiler. The best thing is,
+    to add the line "\m3\m3rc.bat" at the end of your autoexec.bat. Be sure
+    to change the line that sets up smartdrive (the DOS diskcache).  If you
+    don't give smartdrive several megabytes,  the compilations will be very
+    slow.  So leave about 2-3 MB  of your available main memory for running
+    your  programs  and  give  the  rest  to  smartdrive  (up to 10 MB  for
+    smartdrive will still speed up compilations, but 6 MB is reasonable).
+
+    CAUTION:
+    use  CTRL-SYSINTR  (often called CTRL-BREAK, too) instead of CTRL-C  to
+    interrupt programs or the Modula-3 compiler, respectively.  Make copies
+    of the file  \m3\lib\filename.map  frequently.  This is the translation
+    table to map filenames between long UNIX style names and DOS filenames.
+    If your system hangs because of wrong configuration or sometimes if you
+    press  CTRL-C,  this file may become corrupted.  Once the file is lost,
+    you will not be able to start any Modula-3 program (including the shell
+    and  the  compiler ).    There  are  three  backup  copies  within  the
+    distribution:
+
+             \m3\lib\filename.max
+             \m3\lib\filename.min
+             \m3\lib\filename.bak
+
+    The latter is identical with "m3\lib\filename.map".  But as soon as you
+    change the file  (by using  your own  long filenames)  you have to make
+    your own backups.
+
+    If you plan  to recompile the system,  it may be wise  to switch to the
+    longer version BEFORE making  any  changes  to  the  translation  table
+    (see 9).
+
+
+(7) Print out the manualpages for the m3-shell (you will find a LaTeX and a
+    PostScript  version  in  "\m3\doc").  Take a look  at the interfaces in
+    "\m3\local\include" ,   the  interfaces  there   are   implemented   in
+    "libm3loc.a" and might be interesting for you.
+
+
+(8) Reboot your PC and enjoy using the Modula-3 PC compiler!   You can test
+    the Modula-3 compiler by typing:
+
+            c> m3shell
+            m3> cd /m3/test
+            m3> make hello
+                m3 -why ... and other parameters
+                program missing -> link hello
+                converting hello to hello.exe
+            m3> hello
+                Hello M3-PC world !
+            m3> exit
+            c>
+
+
+(9) Optional:
+    If you want  the source-files  of  your  system,  change  to  the  root
+    directory  and  extract "m3src.tar".  For all sources  of the compiler,
+    driver  and  the standard library  you need  about 5.9 MB  of free disk
+    space. There are batch-files "m3make.bat"  in each  "dos386"  directory
+    which you can use to recompile your system. Before you can do this, you
+    have to instruct your system about a lot of new long filenames.  In the
+    m3shell type:
+
+           m3> cd /m3/lib
+           m3> copy filename.bak filename.map
+           m3> exit
+
+    Then restart the shell by typing "m3shell" and go on recompiling.
+
+
+
+C.Weich, K.-H.Eder
+University of Klagenfurt/AUSTRIA
+November, the 10th 1994

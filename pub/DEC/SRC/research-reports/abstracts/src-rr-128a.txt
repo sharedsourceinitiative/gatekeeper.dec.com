@@ -1,0 +1,20 @@
+"A Library for Visualizing Combinatorial Structures"
+Marc A. Najork and Marc H. Brown
+September 1, 1994. 20 pages.
+
+This paper describes ANIM3D, a 3D animation library targeted at
+visualizing combinatorial structures. In particular, we are interested
+in algorithm animation. Constructing a new view for an algorithm
+typically takes dozens of design iterations, and can be very
+time-consuming. Our library eases the programmer's burden by providing
+high-level constructs for performing animations, and by offering an
+interpretive environment that eliminates the need for recompilations.
+This paper also illustrates ANIM3D's expressiveness by developing
+a 3D animation of Dijkstra's shortest-path algorithm in just 70 lines
+of code. 
+
+A videotape 128b accompanies report 128a.
+
+A Library for Visualizing Combinatorial Structures"
+Marc A. Najork and Marc H. Brown
+Time: 6:22 minutes.

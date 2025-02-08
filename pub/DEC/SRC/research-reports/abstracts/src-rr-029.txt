@@ -1,0 +1,25 @@
+			AVAILABLE ELECTRONICALLY	
+
+    "The Existence of Refinement Mappings."
+    Martin  Abadi and Leslie Lamport.
+    August 14, 1988.  42 pages.
+
+Authors' Abstract
+
+    Refinement mappings are used to prove that a lower-level
+    specification correctly implements a higher-level one.  We consider
+    specifications consisting of a state machine (which may be
+    infinite-state) that specifies safety requirements, and an arbitrary
+    supplementary property that specifies liveness requirements.  A
+    refinement mapping from a lower-level specification S_{1} to a
+    higher-level one S_{2} is a mapping from S_{1}'s state space to
+    S_{2}'s state space. It maps steps of S_{1}'s state machine  to
+    steps of  S_{2}'s state machine and maps behaviors allowed by
+    S_{1} to behaviors allowed by S_{2}.  We show that, under reasonable
+    assumptions about the specifications, if  S_{1} implements S_{2},
+    then by adding auxiliary variables to S_{1} we can guarantee the
+    existence of a refinement mapping.  This provides a completeness
+    result for a practical, hierarchical specification method.
+
+
+

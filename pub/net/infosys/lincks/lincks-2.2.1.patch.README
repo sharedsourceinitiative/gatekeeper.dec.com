@@ -1,0 +1,51 @@
+
+This is the README file belong to lincks-2.2.1.patch which is
+the first patch for LINCKS Version 2.2. The complete source for 
+LINCKS-2.2 with patch 1 applied can be found at
+
+ ftp.ida.liu.se/pub/lincks/lincks-2.2.1.tar.gz
+ ftp.sunet.se:pub/unix/databases/object-oriented/lincks/lincks-2.2.1.tar.gz
+ ftp.uu.net:pub/database/lincks/lincks-2.2.1.tar.gz
+ gatekeeper.dec.com:/pub/net/infosys/lincks/lincks-2.2.1.tar.gz
+
+Apply the patch (`context style') as follows:
+
+ 1) move down into the lincks-2.2 tree with `cd lincks-2.2'
+ 2) apply the patch with `patch -p1 < lincks-2.2.1.patch'
+ 3) run configure and make
+
+This patch fixes the following problems:
+
+  * Should compile with an ANSI compiler without any warnings
+    concerning `promotion' and mismatched arguments. Thanks to  
+    Martin Richartz <martin@tk.telematik.informatik.uni-karlsruhe.de> 
+    for pointing us in the right direction.
+
+  * Compiles correctly on SCO 3.2v4.2/ODT - thanks to Daryl Sayers 
+    <daryl@stone.oz.au> for telling us what went wrong and what had 
+    to be corrected.
+
+  * Configure and compiles (almost) on SGI machines. Thanks to 
+    Joe Rehder <joe@vab02.larc.nasa.gov> for taking the time to 
+    help us correcting the problems with the Makefiles and 
+    header files.
+
+  * compiles correctly on MIPS/OSF (64-bits machine), thanks to
+    David Morley <morley@aaii.oz.au> for reporting the problems. 
+    These were caused by an incorrect test in the configure script.
+
+  * Converted a few "%d" into "%ld" to avoid problemes on 64-bits
+    machine, also fixed a few cast to use long to/from (void *)
+    instead of int to/from (void *)
+
+  * Corrected the Makefile(s) to stop upon error in instead of 
+    just to continue ..
+
+  * Added comments to README and LINCKS.FAQ concerning linking
+    of xlincks under LINUX.
+
+  * Fixed a few uninitialized variables in a few corners of the
+    code (lincks/libparser/dbs/cutoff/libxl).
+
+Please send bug reports to lincks@ida.liu.se    
+

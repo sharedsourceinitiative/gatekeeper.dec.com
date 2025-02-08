@@ -1,0 +1,151 @@
+<!-- This file generated automatically by mtex2html(1) -->
+<HTML>
+<HEAD>
+<TITLE>dcpiepoch</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#ffffff" VLINK="#006633">
+<H2>dcpictl(1)</H2>
+
+<H3>NAME</H3>
+<BLOCKQUOTE>
+<P>
+
+dcpictl - Control operation of <TT>dcpid</TT> daemon.
+</BLOCKQUOTE>
+
+<H3>SYNOPSIS</H3>
+<BLOCKQUOTE>
+<P>
+
+<B>dcpictl</B> <I>command</I>
+</BLOCKQUOTE>
+
+<H3>COMMANDS</H3>
+<BLOCKQUOTE>
+<P>
+
+<DL>
+<DT>flush<P>
+
+<DD>Flush all unsaved in-memory samples to their associated profiles in
+the on-disk profile database.  This command is useful for explicitly
+forcing all samples to nonvolatile storage.<P>
+
+Samples are normally only saved to disk periodically (e.g. every few
+minutes), or when driver buffer space is running low.  The <I>quit</I>
+and <I>epoch</I> commands also flush all unsaved samples to disk.<P>
+
+<DT>epoch<P>
+
+<DD>Starts a new profiling epoch after flushing all unsaved in-memory
+samples to their associated profiles in the on-disk profile database.
+The <I>flush</I> command can be used to flush unsaved samples without
+starting a new epoch.<P>
+
+Epochs are designed to capture relatively coarse time intervals
+measured in minutes.  An epoch is represented by a GMT (Greenwich Mean
+Time) timestamp for the start of the epoch, in YYMMDDHHMM format.  For
+example, the epoch 9612042334 corresponds to December 4, 1996 at 23:34
+GMT (or December 4, 1996 at 15:34 PST).<P>
+
+<DT>quit<P>
+
+<DD>Terminates the active dcpid(1) daemon after flushing all unsaved
+in-memory samples to their associated profiles in the on-disk profile
+database.  The <I>flush</I> command can be used to flush unsaved samples
+without terminating dcpid(1).<P>
+
+<DT>register <I>pid</I> [<I>start</I> <I>size</I> <I>imageid</I>] <I>image name</I><P>
+
+<DD>Notifies dcpid(1) that the named image is loaded into the process
+named by <TT>pid</TT>. If the optional <TT>start</TT>, <TT>size</TT>, and <TT>imageid</TT>
+parameters are not specified, their values are read from the named
+image.  <TT>Start</TT> specifies the address at which the text section of
+the image is mapped into the process.  <TT>Size</TT> is the size of the
+image text section in bytes.  <TT>Imageid</TT> is the image identifier for
+the image (see <TT>dcpiscan</TT>.)<P>
+
+This facility is useful only in unusual circumstances: for example,
+when the image is loaded into the process via mmap instead of by the
+image loader or the <TT>dlopen</TT> library call.<P>
+
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>DESCRIPTION</H3>
+<BLOCKQUOTE>
+<P>
+
+Dcpictl provides control over the operation of the dcpid(1) daemon.
+It is structured as a client application that causes a command to be
+invoked at the daemon.  The programs dcpiflush(1), dcpiepoch(1), and
+dcpiquit(1) are now implemented as shell scripts that simply invoke
+dcpictl with the appropriate options.<P>
+
+In contrast to earlier implementations of dcpiflush(1), dcpiepoch(1),
+and dcpiquit(1), commands are invoked synchronously by dcpictl;
+dcpictl does not exit until a reply is received from the daemon.
+</BLOCKQUOTE>
+
+<H3>SEE ALSO</H3>
+<BLOCKQUOTE>
+<P>
+
+<A HREF="dcpi.html">dcpi(1)</A>,
+<A HREF="dcpiflow.html">dcpiflow(1)</A>,
+<A HREF="dcpiprof.html">dcpiprof(1)</A>,
+<A HREF="dcpilist.html">dcpilist(1)</A>,
+<A HREF="dcpidis.html">dcpidis(1)</A>,
+<A HREF="dcpiscan.html">dcpiscan(1)</A>,
+<A HREF="dcpiepoch.html">dcpiepoch(1)</A>,
+<A HREF="dcpiflush.html">dcpiflush(1)</A>,
+<A HREF="dcpicalc.html">dcpicalc(1)</A>,
+<A HREF="dcpilabel.html">dcpilabel(1)</A>,
+<A HREF="dcpi2ps.html">dcpi2ps(1)</A>,
+<A HREF="dcpicat.html">dcpicat(1)</A>,
+<A HREF="dcpiquit.html">dcpiquit(1)</A>,
+<A HREF="dcpidiff.html">dcpidiff(1)</A>,
+<A HREF="dcpitopstalls.html">dcpitopstalls(1)</A>,
+<A HREF="dcpiwhatcg.html">dcpiwhatcg(1)</A>,
+<A HREF="dcpisource.html">dcpisource(1)</A>,
+<A HREF="dcpicc.html">dcpicc(1)</A>,
+<A HREF="dcpiversion.html">dcpiversion(1)</A>,
+<A HREF="dcpiuninstall.html">dcpiuninstall(1)</A>,
+<A HREF="dcpi2pix.html">dcpi2pix(1)</A>,
+<A HREF="dcpikdiff.html">dcpikdiff(1)</A>,
+<A HREF="dcpix.html">dcpix(1)</A>,
+<A HREF="dcpisumxct.html">dcpisumxct(1)</A>,
+<A HREF="dcpistats.html">dcpistats(1)</A>,
+<A HREF="dcpid.html">dcpid(1)</A>,
+<A HREF="dcpiformat.html">dcpiformat(4)</A>,
+<A HREF="dcpiloader.html">dcpiloader(5)</A><P>
+
+For more information, see the 
+<A HREF="../home.html">DIGITAL Continuous
+Profiling Infrastructure project home page
+(http://www.research.digital.com/SRC/dcpi/ from outside DIGITAL)</A>.
+</BLOCKQUOTE>
+
+<H3>COPYRIGHT</H3>
+<BLOCKQUOTE>
+<P>
+
+<a href="http://www.digital.com/info/tm.html">
+Copyright 1996-97, Digital Equipment Corporation.
+</a>
+</BLOCKQUOTE>
+
+<H3>AUTHORS</H3>
+<BLOCKQUOTE>
+<P>
+
+Carl Waldspurger and Sanjay Ghemawat
+</BLOCKQUOTE>
+
+This page was generated automatically by
+<A HREF="http://www.research.digital.com/SRC/mtex/">mtex software</A>.
+</BODY>
+</HTML>

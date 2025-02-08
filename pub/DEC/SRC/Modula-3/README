@@ -1,0 +1,60 @@
+
+This directory contains software and files related to Modula-3.
+A mirrored copy of this directory is also available at
+
+  ftp://ftp-i3.informatik.rwth-aachen.de/pub/Modula-3
+
+If appropriate, please use the mirror site, located in Germany, to
+conserve network bandwidth.
+
+The contents of this directory are:
+
+  release-X.Y/        - latest release of SRC Modula-3,
+
+    boot-XYZ          - the bootstrap compiler for platform XYZ
+    m3cc              - the GCC-based back end
+    m3cc-2.5.7        - the old GCC-base back end (needed for HPPA)
+    m3                - the full SRC Modula-3 sources
+    m3gdb             - a version of gdb modified to recognize Modula-3 symbols
+    html              - a copy of the WWW documentation
+    docs              - misc. documents
+
+  contrib/            - other contributed Modula-3 software,
+
+    m3rpc-X.Y.tar.Z   - a Modula-3 implementation of Sun RPC
+    m3pc/             - an MS-DOS version of SRC Modula-3
+    M3forDOS/         - another MS-DOS version of SRC Modula-3
+    energize/         - Modula-3 extensions for Lucid's Energize environment
+
+    zeusdoc.tar.Z     - a old version of the Zeus user manual
+    M2toM3-1.0.tar.Z  - a Modula-2 to Modula-3 translator
+    vbtkit.25Mar93.ps.Z  - an old version of the VBTKit user manual
+    formsvbt.25Mar93.ps.Z - an old version of the FormsVBT user manual
+    formsvbt.AppC.26Mar93.ps.Z - more FormsVBT info
+    Obliq.ps          - an old version of the Obliq documentation
+
+  comp.lang.modula3/  - archive of the messages sent to the m3 mailing list
+                        and to comp.lang.modula3,
+
+    YY-MM.Z           - compressed archive of month MM of year YY,
+    kwic              - a keyword-in-context listing of all subject lines,
+    kwic.Z            - a compressed copy of kwic,
+
+  errata/             - listings of known errors in Modula-3 publications,
+
+  README              - this file.
+
+---------------------------
+
+For those with World-Wide Web access, the Modula-3 home page is at
+
+  http://www.research.digital.com/SRC/modula-3/html/home.html
+
+and the Modula-3 FAQ is at
+
+  http://www.vlsi.polymtl.ca/m3/m3-faq.html
+
+---------------------------
+#
+# Last modified on Fri Mar  3 13:10:01 PST 1995 by kalsow  
+#

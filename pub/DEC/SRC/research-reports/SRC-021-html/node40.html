@@ -1,0 +1,299 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Standard Declarations</TITLE>
+<META NAME="description" CONTENT="Standard Declarations">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node41.html">
+<LINK REL="previous" HREF="node39.html">
+<LINK REL="up" HREF="node39.html">
+<LINK REL="next" HREF="node41.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html687"
+ HREF="node41.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html683"
+ HREF="node39.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html677"
+ HREF="node39.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html685"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html686"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html688"
+ HREF="node41.html">Opening Files</A>
+<B> Up:</B> <A NAME="tex2html684"
+ HREF="node39.html">The OS Interface: Files</A>
+<B> Previous:</B> <A NAME="tex2html678"
+ HREF="node39.html">The OS Interface: Files</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04041000000000000000">
+Standard Declarations</A>
+</H2>
+ <A NAME="Crocket">&#160;</A>
+There are a number of types and constants related to files and directories
+that are used throughout the OS interface.  This subsection describes most
+of them, and also describes two procedures ConsFileMode and GetUMask.
+<P><A NAME="1995">&#160;</A>
+<A NAME="1996">&#160;</A>
+<PRE>
+TYPE
+  PID = RECORD i: INTEGER; END;
+  PGRP = PID;
+</PRE>
+<P><A NAME="819">&#160;</A>
+<A NAME="820">&#160;</A>
+A value of type PID is a process identifier.  (PID is declared as a
+one-word record so that the compiler's type checker will help catch some
+programming errors.)
+<P>
+A value of type PGRP is a process group identifier.  Process groups are
+mainly used to multiplex terminals among several jobs, as described in
+section <A HREF="node33.html#Alamo">2.11</A>, page <A HREF="node33.html#Alamo"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.
+<P><A NAME="1997">&#160;</A>
+<PRE>
+TYPE
+  File = REF;
+</PRE>
+<P><A NAME="824">&#160;</A>
+<A NAME="825">&#160;</A>
+A value of type File is a file handle (a reference to an open-file object;
+see Section <A HREF="node27.html#Aptos">2.5</A>, page <A HREF="node27.html#Aptos"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).
+<P><A NAME="1998">&#160;</A>
+<PRE>
+TYPE
+  PathName = Text.T;
+</PRE>
+<P><A NAME="829">&#160;</A>
+A value of type PathName is a path name (see Section <A HREF="node28.html#Gilroy">2.6</A>, page
+<A HREF="node28.html#Gilroy"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).
+<P><A NAME="1999">&#160;</A>
+<PRE>
+TYPE
+  Dir = REF;
+</PRE>
+<P><A NAME="833">&#160;</A>
+<A NAME="834">&#160;</A>
+<A NAME="2000">&#160;</A>
+A value of type Dir is a directory handle, which serves as a base for
+looking up a relative path name, as described in Section <A HREF="node28.html#Gilroy">2.6</A>,
+page <A HREF="node28.html#Gilroy"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.  Supplying NIL for the directory handle means to
+use the working directory of the process instead, as described in Section
+<A HREF="node30.html#DalyCity">2.8</A>, page <A HREF="node30.html#DalyCity"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.  Directory handles are created by the
+OpenDir procedure (see page <A HREF="node46.html#Cupertino"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).
+<P><A NAME="2001">&#160;</A>
+<A NAME="842">&#160;</A>
+<PRE>
+TYPE
+  User = REF;
+</PRE>
+<P>
+A value of type User is a specification of a user (see page
+<A HREF="node26.html#BoulderCreek"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).
+<P><A NAME="2002">&#160;</A>
+<A NAME="2003">&#160;</A>
+<A NAME="2004">&#160;</A>
+<A NAME="2005">&#160;</A>
+<PRE>
+TYPE
+  FileAccess = (xOK, wOK, rOK);
+  FileAccessMode = SET OF FileAccess;
+  AccessClass = (Others, Group, Owner);
+  AccessMode = ARRAY AccessClass OF BITS 3 FOR FileAccessMode;
+</PRE>
+<P><A NAME="Orinda">&#160;</A>An access mode is associated with each directory and file and is used when
+a path name is looked up by Open or another procedure to decide whether
+the access is valid.  The access mode says who can do what to the file or
+directory to which it is attached.  For a file, `what' means reading
+(rOK), writing (wOK), and executing as program object code (xOK).  For a
+directory, `what' means reading (rOK), making new entries (wOK), and
+searching as part of translating a path name (xOK).
+<P><A NAME="849">&#160;</A>
+<A NAME="850">&#160;</A>
+<A NAME="851">&#160;</A>
+<A NAME="2006">&#160;</A>
+<A NAME="2007">&#160;</A>
+<A NAME="2008">&#160;</A>
+<A NAME="855">&#160;</A>
+<A NAME="856">&#160;</A>
+`Who' means one of three things: a process whose user name is the same as
+the owner field of the object (Owner); a process whose user name is a
+member of the user group associated with the object (Group); or any other
+process (Other).  (Recall that the effective user name is used for access
+to local objects, but the real user name is used for access to remote
+objects.)
+<P><A NAME="2009">&#160;</A>
+<A NAME="2010">&#160;</A>
+<A NAME="2011">&#160;</A>
+<A NAME="2012">&#160;</A>
+<A NAME="2013">&#160;</A>
+<PRE>
+TYPE
+  FileAttributes =
+    (SaveTextAfterUse,
+     SetGIDonExec,
+     SetUIDonExec);
+  FileState = SET OF FileAttributes;
+</PRE>
+<P><A NAME="862">&#160;</A>
+A value of type FileState packages up some miscellaneous attributes that
+are specified when a file is created.  SetUIDonExec means to set the
+effective user name of a process executing the file to the owner of the
+file.  SetGIDonExec means to set the effective group ID of a process
+executing the file to the group of the owner of the file.
+SaveTextAfterUse tells the system to save the virtual memory backing file
+version of the program text portion of the file even when no process is
+executing the program.
+<P>
+Taos note: SetGIDonExec and SaveTextAfterUse are ignored.
+<P><A NAME="2014">&#160;</A>
+<PRE>
+TYPE
+  FileMode = RECORD
+    access: BITS 9 FOR AccessMode;
+    fileState: BITS 3 FOR FileState;
+  END;
+</PRE>
+<P><A NAME="864">&#160;</A>
+<A NAME="865">&#160;</A>
+A file mode combines an access mode and a set of file attributes into a
+single quantity.
+<P><A NAME="2015">&#160;</A>
+<PRE>
+PROCEDURE ConsFileMode(
+    owner, group, others: FileAccessMode := FileAccessMode{};
+    fileState: FileState := FileState{})
+    : FileMode
+  RAISES {};
+</PRE>
+<P>
+ConsFileMode constructs a FileMode, substituting for the lack of record
+and array constructors in Modula-2+.  Note that the order of the first
+three parameters is the opposite of the order in AccessClass.  This makes
+the default values more useful.
+<P><A NAME="2016">&#160;</A>
+<A NAME="2017">&#160;</A>
+<A NAME="2018">&#160;</A>
+<A NAME="2019">&#160;</A>
+<A NAME="2020">&#160;</A>
+<A NAME="2021">&#160;</A>
+<PRE>
+CONST
+  RW = FileAccessMode{wOK, rOK};
+  RWX = FileAccessMode{xOK, wOK, rOK};
+
+VAR
+  ReadWriteAll: FileMode;
+  ReadWriteExecuteAll: FileMode;
+  ReadWriteMe: FileMode;
+  ReadWriteExecuteMe: FileMode;
+</PRE>
+<P>
+These variables are initialized as follows:
+<P>
+<BR>
+<BR>
+<IMG WIDTH="498" HEIGHT="112" ALIGN="BOTTOM" BORDER="0"
+ SRC="img4.gif"
+ ALT="\begin{boxedverbatim}
+ReadWriteAll := ConsFileMode(RW, RW, RW);
+ReadWriteExecute...
+ ...:= ConsFileMode(RW);
+ReadWriteExecuteMe := ConsFileMode(RWX);\end{boxedverbatim}">
+<BR>
+<P><A NAME="SanMateo">&#160;</A><A NAME="2022">&#160;</A>
+<PRE>
+PROCEDURE GetUMask(): AccessMode RAISES {};
+</PRE>
+<P><A NAME="878">&#160;</A>
+<A NAME="879">&#160;</A>
+GetUMask returns the value of the file access mode creation mask,
+traditionally called the umask, associated with the calling process.
+Whenever a file or directory is created, the mode parameter passed (to
+Open, MakeDir, or OSFriends.MakeDevice) is adjusted as follows:
+<P>
+<BR>
+<BR>
+<IMG WIDTH="575" HEIGHT="93" ALIGN="BOTTOM" BORDER="0"
+ SRC="img5.gif"
+ ALT="\begin{boxedverbatim}
+mode.access[Owner] := mode.access[Owner] - umask[Owner];
+m...
+ ...;
+mode.access[Others] := mode.access[Others] - umask[Others];\end{boxedverbatim}">
+<BR>
+<BR>
+<P><A NAME="2023">&#160;</A>
+<A NAME="2024">&#160;</A>
+The umask is set when a process is created (see the SetUMask procedure on
+page <A HREF="node51.html#SanFrancisco"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>) and is not normally changed during the
+execution of a process.  (If necessary, it can be changed using
+OSFriends.SetMyUMask; see Appendix <A HREF="node55.html#LaHonda">A.1</A>, page <A HREF="node55.html#LaHonda"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.)
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html687"
+ HREF="node41.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html683"
+ HREF="node39.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html677"
+ HREF="node39.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html685"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html686"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html688"
+ HREF="node41.html">Opening Files</A>
+<B> Up:</B> <A NAME="tex2html684"
+ HREF="node39.html">The OS Interface: Files</A>
+<B> Previous:</B> <A NAME="tex2html678"
+ HREF="node39.html">The OS Interface: Files</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

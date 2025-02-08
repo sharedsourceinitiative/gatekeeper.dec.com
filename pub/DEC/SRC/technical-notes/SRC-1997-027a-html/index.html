@@ -1,0 +1,1303 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<TITLE>A Simple, Intuitive Hypermedia Synchronization Model and
+its Realization in the Browser/Java Environment</TITLE>
+<!--
+<LINK REL="STYLESHEET" HREF="paper.css">
+-->
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<basefont size="2">
+
+<H1 ALIGN="CENTER">A Simple, Intuitive Hypermedia Synchronization Model and
+its Realization in the Browser/Java Environment</H1>
+<P ALIGN="CENTER">
+Jin Yu<BR>
+DEC Systems Research Center<BR>
+130 Lytton Ave., Palo Alto, CA 94301, U.S.A.<BR>
+jinyu@pa.dec.com
+</P>
+
+<H3 ALIGN="CENTER">Abstract</H3>
+
+<BLOCKQUOTE><I>
+This paper presents a simple and intuitive hypermedia synchronization
+model - the Media Relation Graph (MRG), and an alternative
+implementation of the Hypermedia Presentation and Authoring System
+(HPAS), which is the testbed for MRG. HPAS is a system for presenting,
+integrating, and managing time-based hypermedia documents on the Web.
+The underlying temporal model of HPAS combines the power of both
+interval-based and point-based synchronization mechanisms. The new
+Java-based implementation exploits many rich features of commercial
+Web browsers and reuses existing browser components, such as plugins
+and Java applets.  (An overview of HPAS and its original Unix/C
+implementation can be found elsewhere [<A HREF="#Yu">18</A>].)
+</I></BLOCKQUOTE>
+
+<B>Topics:</B> Hypertext / Hypermedia / Multimedia
+
+<P>
+
+<B>Keywords:</B> presentation, temporal synchronization, hypermedia document
+
+<H2><A NAME="intro">1 Introduction</A>
+</H2>
+
+The exponential growth in the number and variety of Web-oriented
+products and services is driven by the use of rich media types such as
+image, audio, and video.  The combination and integration of these
+monomedia, or multimedia, is widely used for representing and
+exchanging information. Used together with both content-based and
+time-based navigation, the result is the merging of multimedia and
+hyperlinks, or hypermedia.
+
+<P>
+Many important multimedia applications cannot be implemented using
+today's Web technology such as HTML and HTTP.  Scenarios like "show
+image 1 for 10 seconds; after image 1 has started for 5 seconds, play
+audio 1 and show image 2 in parallel for 20 seconds" cannot be easily
+expressed in current Web technology.  However, this kind of scenarios
+is typical in many areas, including:
+<UL>
+<LI>TV-like content on the Web
+<LI>Integrated streaming audio/video on the Internet
+<LI>Interactive/on-demand television/video
+<LI>Canned CD-ROM multimedia presentation
+</UL><EM>Time-based hypermedia documents</EM> are well-suited for applications in
+the above areas.
+
+<P>
+Within a time-based hypermedia framework, a distinction should be made
+between hypermedia documents and hypermedia objects (or simply
+documents and objects). Objects usually represent monomedia data, such
+as MPEG videos and GIF images, which are identified by Uniform
+Resource Locators (URLs) [<A
+ HREF="#RFC1738">2</A>] and MIME types
+[<A
+ HREF="#RFC1341">4</A>].  Documents function as containers for objects. A
+document describes the meta information about the enclosed
+objects. The information includes the temporal, spatial, and content
+relationships among a number of related objects, and the attributes of
+individual objects. Examples of documents are HSL (a format
+implemented by our system) and SMIL [<A
+ HREF="#SYMM">19</A>]. HTML files are also
+hypermedia documents, except that they are not time-based.  Documents
+can also be treated like objects; e.g. an HTML file embedded into an
+HSL document is treated as an HTML object.
+
+<P>
+The presentation of a time-based hypermedia document can be modeled by
+a directed acyclic graph (DAG), as in Figure&nbsp;<A HREF="#Presentation_DAG">1</A>. Vertices in the graph represent media objects, and the directed
+edges represent the flow of time. Note that the edges point downward,
+so the time flows top to bottom in the graph. Intuitively, an edge
+from vertices <I>v</I><SUB>1</SUB> to <I>v</I><SUB>2</SUB> means that <I>v</I><SUB>1</SUB> to <I>v</I><SUB>2</SUB> are played in
+serial, with <I>v</I><SUB>1</SUB> before <I>v</I><SUB>2</SUB>; ie. they do not overlap in time.  At
+any point of a presentation, there is a (possibly empty) set of media
+objects playing on the screen, which can be modelled as a set of
+multiple concurrent threads, with each thread presenting an active
+object. The number of concurrent threads changes dynamically
+throughout a presentation. For example, in Figure&nbsp;<A HREF="#Presentation_DAG">1</A>, there are three concurrent threads (and thus three active
+objects) at some time instant, represented by the three blackened
+vertices.
+
+<P>
+<DIV ALIGN="CENTER"><A NAME="Presentation_DAG">&#160;</A><A NAME="42">&#160;</A>
+<TABLE WIDTH="50%">
+<CAPTION><STRONG>Figure 1:</STRONG>
+Presentation graph</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+
+<IMG
+ WIDTH="130" HEIGHT="123" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.gif"
+ ALT="\includegraphics{dag.eps}"></DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Our temporal synchronization model, the Media Relation Graph (MRG), is
+based on some further refinement of the temporal DAG described
+above. To represent the information in MRG, we have designed the
+Hypermedia Synchronization Language (HSL, a SGML-conforming format
+[<A
+ HREF="#Travis">16</A>]). HSL documents can be interpreted and presented by the
+Hypermedia Presentation and Authoring System (HPAS), which we have
+developed as a testbed for MRG and HSL. In this paper, we will
+describe the Java-based implementation of HPAS, which supports a rich
+subset of the features in the original Unix/C implementation
+[<A
+ HREF="#Yu">18</A>].
+
+<P>
+The next section describes our temporal model in detail. Sections
+<A HREF="#validation">3</A> and <A HREF="#scheduling">4</A> discuss the validation and
+presentation of documents produced by our synchronization model,
+respectively. Section <A HREF="#hsl">5</A> outlines the format of HSL
+documents. Hyperlinking is briefly explained in section
+<A HREF="#hyperlink">6</A>.  Finally, section <A HREF="#implementation">7</A> describes the
+new browser/Java-based implementation.
+
+<H2><A NAME="model">2 Synchronization model</A>
+</H2>
+
+<!-- bowdlerize_start -->
+There are two levels of multimedia synchronization, namely
+intra-object synchronization and inter-object synchronization
+[<A
+ HREF="#Blakowski">3</A>]. The former is concerned with the time relations within one
+media object, such as an MPEG video, while the latter is concerned
+with time relations between two or more media objects. There are yet
+two more subtypes of synchronization within the inter-object category:
+low-level ``lip'' synchronization and high-level endpoints-based
+synchronization. In the HPAS project, we are mainly interested in
+high-level endpoints-based synchronization.
+<!-- bowdlerize_end -->
+
+<P>
+There have been numerous approaches in specifying high-level media
+synchronizations. Most of them bear two characteristics. First, the
+syntax is declarative. Declarative syntax is easier to author and
+easier to convert. On the other hand, scripting-based systems require
+proficiency in programming, which severely limits the range of
+authors. Scripts are also less portable and reusable.  Second, the
+specifications are relation-based; that is, each object is described
+in terms of other temporally related objects. Timeline-based
+(non-relational) systems require the start/end times of objects to be
+fixed on the time axis; therefore, document parts cannot be
+efficiently reused (requires readjusting all the start/end times of
+the objects to be reused); furthermore, timeline-based specifications
+cannot model nondeterminism (objects with unknown durations). It
+should also be pointed out that both the scripting and timeline
+approaches do not scale well.
+
+<P>
+The relation-based specifications can be further divided into two
+major flavors: interval-based vs. point-based [<A
+ HREF="#Wahl">17</A>].  In
+interval-based models, each media object is associated with a temporal
+interval, which is characterized as a nonzero duration of time.
+According to Allen, given any two temporal intervals, there are 13
+mutually exclusive relationships [<A
+ HREF="#Allen">1</A>]. The 13 temporal
+relations can be represented as Figure&nbsp;<A HREF="#Allen_and_MRG">2</A>a
+[<A
+ HREF="#Little">13</A>]. The figure shows only seven of the thirteen relations
+since the remaining ones are inverse relations, by simply swapping
+the labels. For instance, <EM>after</EM> is the inverse relation of
+<EM>before</EM>.  In point-based approaches, relations are based on time
+instants. Given two time instants, there are 3 mutually exclusive
+relationships, namely <EM>before</EM> (&lt;), <EM>simultaneous to</EM> (=),
+and <EM>after</EM> (&gt;) [<A
+ HREF="#Wahl">17</A>]. Few existing multimedia systems
+are solely based on point-based specifications; Madeus [<A
+ HREF="#Jourdan">9</A>] is
+purely based on Allen's interval relations; most other systems, such
+as CMIF [<A
+ HREF="#Hardman">7</A>], ISIS [<A
+ HREF="#Kim">11</A>], OCPN [<A
+ HREF="#Little">13</A>], Firefly
+[<A
+ HREF="#Buchanan">5</A>], and CHIMP [<A
+ HREF="#Candan">6</A>], are based on a hybrid of the
+two approaches.
+
+<P>
+<DIV ALIGN="CENTER"><A NAME="Allen_and_MRG">&#160;</A><A NAME="107">&#160;</A>
+<TABLE WIDTH="50%">
+<CAPTION><STRONG>Figure 2:</STRONG>
+Allen's relations and MRG</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+
+<!-- WIDTH="344" HEIGHT="391" ALIGN="BOTTOM" BORDER="0" -->
+<IMG
+ ALIGN="BOTTOM" BORDER="0"
+ SRC="img3.gif"
+ ALT="\resizebox{3in}{!}{\includegraphics{relation.eps}}"></DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Our temporal synchronization model, MRG, is also based on a hybrid of
+the interval-based and point-based approaches. Media objects are
+modeled as temporal intervals, and the start/end times of the objects
+are treated as time instants. The merit of our approach is that the
+specification is particularly intuitive; this makes the authoring
+process much easier. In the following sections, the semantics of MRG
+will be described in greater detail.
+
+<H3><A NAME="SECTION00021000000000000000">2.1 Endpoints-based relations</A>
+</H3>
+
+Allen's 13 interval relations cover all the possible relationships
+between two temporal intervals. The 13 interval relations can
+efficiently describe what happened between two temporal
+intervals in history (i.e. after play-out of the two objects
+corresponding to the two intervals); however, Allen's relations are
+not well-suited for specifying what should happen between two
+intervals in the future [<A
+ HREF="#Keramane">10</A>]. For example, in the relation
+<I>p</I><SUB><I>a</I></SUB> <EM>overlaps</EM> <I>p</I><SUB><I>b</I></SUB>, <I>p</I><SUB><I>b</I></SUB> cannot be started
+during <I>p</I><SUB><I>a</I></SUB> if the end time of <I>p</I><SUB><I>a</I></SUB> is unknown.
+
+<P>
+Unlike Allen's purely interval-based model, our approach takes into
+account not only time intervals, but also time instants.  Our model is
+based on the observation that there are 12 relations between the 4
+endpoints of 2 temporal intervals. The 12 relations are listed in
+Table&nbsp;<A HREF="#12_relations">1</A>. Note that there are two implicit relations
+that always hold between the endpoints, namely ``<I>a</I>.start&lt;<I>a</I>.end''
+and ``<I>b</I>.start&lt;<I>b</I>.end''.
+
+<P>
+
+<DIV ALIGN="CENTER">
+<table><tr valign="TOP">
+
+<td>
+<A NAME="12_relations">&#160;</A><TABLE CELLPADDING=3 BORDER="1" ALIGN="CENTER">
+<CAPTION><STRONG>Table 1:</STRONG>
+12 endpoints-based relations</CAPTION>
+<TR><TD ALIGN="LEFT"><I>a</I>.end&lt;<I>b</I>.start</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.end=<I>b</I>.start</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.end&gt;<I>b</I>.start</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.start&lt;<I>b</I>.end</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.start=<I>b</I>.end</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.start&gt;<I>b</I>.end</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.start&lt;<I>b</I>.start</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.start=<I>b</I>.start</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.start&gt;<I>b</I>.start</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.end&lt;<I>b</I>.end</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.end=<I>b</I>.end</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.end&gt;<I>b</I>.end</TD>
+</TR>
+</TABLE>
+</td>
+
+<td>
+<A NAME="10_relations">&#160;</A><TABLE CELLPADDING=3 BORDER="1" ALIGN="CENTER">
+<CAPTION><STRONG>Table 2:</STRONG>
+10 reduced endpoints-based relations</CAPTION>
+<TR><TD ALIGN="LEFT"><I>a</I>.end&lt;=<I>b</I>.start</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.end&gt;<I>b</I>.start</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.start&lt;<I>b</I>.end</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.start&gt;=<I>b</I>.end</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.start&lt;<I>b</I>.start</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.start=<I>b</I>.start</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.start&gt;<I>b</I>.start</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.end&lt;<I>b</I>.end</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.end=<I>b</I>.end</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.end&gt;<I>b</I>.end</TD>
+</TR>
+</TABLE>
+</td>
+
+</tr></table>
+</DIV>
+
+<P>
+
+For the purpose of defining multimedia synchronization operators, it
+is useful to collapse the relations ``<I>a</I>.end&lt;<I>b</I>.start'' and
+``<I>a</I>.end=<I>b</I>.start'' into one relation ``<I>a</I>.end&lt;=<I>b</I>.start'', and the
+relations ``<I>a</I>.start=<I>b</I>.end'' and ``<I>a</I>.start&gt;<I>b</I>.end'' into one relation
+``<I>a</I>.start&gt;=<I>b</I>.end''. Therefore, we have reduced the 12 relations into
+10 relations, which are listed in Table&nbsp;<A HREF="#10_relations">2</A>.
+
+<!-- bowdlerize_start -->
+<P>
+Note that the 10 relations are not mutually exclusive (Allen's
+relations are).  The interrelations of the 10 relations are shown in
+the implication table (Table&nbsp;<A HREF="#implication">3</A>). The Venn diagram
+(Figure&nbsp;<A HREF="#venn">3</A>) illustrates the relationships graphically.
+
+<P>
+<DIV ALIGN="CENTER">
+<A NAME="implication">&#160;</A>
+<TABLE>
+<CAPTION><STRONG>Table 3:</STRONG>
+Implication table of the 10 relations</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT"><I>a</I>.end&lt;=<I>b</I>.start</TD>
+<TD ALIGN="LEFT">==&gt;</TD>
+<TD ALIGN="LEFT"><I>a</I>.start&lt;<I>b</I>.end, <I>a</I>.start&lt;<I>b</I>.start, <I>a</I>.end&lt;<I>b</I>.end</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.end&gt;<I>b</I>.start</TD>
+<TD ALIGN="LEFT">==&gt;</TD>
+<TD ALIGN="LEFT">no info</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.start&lt;<I>b</I>.end</TD>
+<TD ALIGN="LEFT">==&gt;</TD>
+<TD ALIGN="LEFT">no info</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.start&gt;=<I>b</I>.end</TD>
+<TD ALIGN="LEFT">==&gt;</TD>
+<TD ALIGN="LEFT"><I>a</I>.end&gt;<I>b</I>.start, <I>a</I>.start&gt;<I>b</I>.start, <I>a</I>.end&gt;<I>b</I>.end</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.start&lt;<I>b</I>.start</TD>
+<TD ALIGN="LEFT">==&gt;</TD>
+<TD ALIGN="LEFT"><I>a</I>.start&lt;<I>b</I>.end</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.start=<I>b</I>.start</TD>
+<TD ALIGN="LEFT">==&gt;</TD>
+<TD ALIGN="LEFT"><I>a</I>.end&gt;<I>b</I>.start, <I>a</I>.start&lt;<I>b</I>.end</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.start&gt;<I>b</I>.start</TD>
+<TD ALIGN="LEFT">==&gt;</TD>
+<TD ALIGN="LEFT"><I>a</I>.end&gt;<I>b</I>.start</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.end&lt;<I>b</I>.end</TD>
+<TD ALIGN="LEFT">==&gt;</TD>
+<TD ALIGN="LEFT"><I>a</I>.start&lt;<I>b</I>.end</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.end=<I>b</I>.end</TD>
+<TD ALIGN="LEFT">==&gt;</TD>
+<TD ALIGN="LEFT"><I>a</I>.end&gt;<I>b</I>.start, <I>a</I>.start&lt;<I>b</I>.end</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><I>a</I>.end&gt;<I>b</I>.end</TD>
+<TD ALIGN="LEFT">==&gt;</TD>
+<TD ALIGN="LEFT"><I>a</I>.end&gt;<I>b</I>.start</TD>
+</TR>
+</TABLE></DIV></TD></TR>
+</TABLE>
+</DIV>
+<P>
+<DIV ALIGN="CENTER"><A NAME="venn">&#160;</A><A NAME="145">&#160;</A>
+<TABLE WIDTH="50%">
+<CAPTION><STRONG>Figure 3:</STRONG>
+Venn diagram of the 10 relations</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+
+<IMG
+ WIDTH="347" HEIGHT="311" ALIGN="BOTTOM" BORDER="0"
+ SRC="img4.gif"
+ ALT="\includegraphics{venn.eps}"></DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+From the Venn diagram, we can see that some relations are disjoint, some of
+them have subset relationship, and yet others intersect but do not form
+subset relationship.
+
+<P>
+<!-- bowdlerize_end -->
+
+<H3><A NAME="SECTION00022000000000000000">2.2 Media Relation Graph</A>
+</H3>
+
+Obviously, not all the 10 relations are needed to specify time
+relations in multimedia. Therefore, we define the most useful and
+intuitive 3 out of the 10 relations as MRG operators. The 3 relations
+are ``<I>a</I>.end&lt;=<I>b</I>.start'', ``<I>a</I>.start=<I>b</I>.start'', and
+``<I>a</I>.end=<I>b</I>.end''; they are named 
+<B><I>SerialLink</I></B>,
+<B><I>StartSync</I></B>, and <B><I>EndSync</I></B>, respectively.
+For (<I>a SerialLink b</I>), we call <B><I>a</I></B> the parent and <B><I>b</I></B> the
+child; for (<I>a StartSync b</I>) and (<I>a EndSync b</I>), we
+call <B><I>a</I></B> and <B><I>b</I></B> peers. Each of the 3 operators forms a temporal
+constraint between its operands.
+
+<P>
+The combination of the 3 MRG operators can express all the 10
+relations.  With the help of an intermediate interval <B><I>i</I></B>,
+we can express the remaining 7 relations, as illustrated below.
+
+<P>
+<UL>
+<LI>(<I>a EndSync i StartSync b</I>)    <B>==&gt;</B> <B><I>a</I></B>.end<B>&gt;</B><B><I>b</I></B>.start
+<LI>(<I>a StartSync i EndSync b</I>)    <B>==&gt;</B> <B><I>a</I></B>.start<B>&lt;</B><B><I>b</I></B>.end
+<LI>(<I>b SerialLink a</I>)               <B>==&gt;</B> <B><I>a</I></B>.start<B>&gt;=</B><B><I>b</I></B>.end
+<LI>(<I>a StartSync i SerialLink b</I>) <B>==&gt;</B> <B><I>a</I></B>.start<B>&lt;</B><B><I>b</I></B>.start
+<LI>(<I>b StartSync i SerialLink a</I>) <B>==&gt;</B> <B><I>a</I></B>.start<B>&gt;</B><B><I>b</I></B>.start
+<LI>(<I>a SerialLink i EndSync b</I>)   <B>==&gt;</B> <B><I>a</I></B>.end<B>&lt;</B><B><I>b</I></B>.end
+<LI>(<I>b SerialLink i EndSync a</I>)   <B>==&gt;</B> <B><I>a</I></B>.end<B>&gt;</B><B><I>b</I></B>.end
+</UL>
+<P>
+Intuitively speaking, (<I>a SerialLink b</I>) means objects <B><I>a</I></B>
+and <B><I>b</I></B> occur in sequence; and (<I>a StartSync b</I>) and
+(<I>a EndSync b</I>) mean objects <B><I>a</I></B> and <B><I>b</I></B> start and end at the
+same time, respectively.
+
+<P>
+In graph context, the three operators are represented by three kinds
+of edges in MRG. As shown in Figure&nbsp;<A HREF="#MRG_TVG">4</A>a, a one-way arrow
+denotes the 
+<B><I>SerialLink</I></B> operator, where the left hand side operand is
+the vertex at the starting end of the arrow and the right hand side
+operand is the vertex being pointed to by the arrow. Similarly, the
+<B><I>StartSync</I></B> operator is denoted by a solid line segment, and the
+<B><I>EndSync</I></B> operator is represented by a dashed line segment.  Note that
+the DAG we introduced in section <A HREF="#intro">1</A> (Figure&nbsp;<A HREF="#Presentation_DAG">1</A>) is a simplified version of MRG; the DAG lacks the constraints
+<B><I>StartSync</I></B> and <B><I>EndSync</I></B>.
+
+<P>
+<DIV ALIGN="CENTER"><A NAME="MRG_TVG">&#160;</A><A NAME="174">&#160;</A>
+<TABLE WIDTH="50%">
+<CAPTION><STRONG>Figure 4:</STRONG>
+MRG vs. TVG</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+
+<IMG
+ WIDTH="301" HEIGHT="363" ALIGN="BOTTOM" BORDER="0"
+ SRC="img5.gif"
+ ALT="\includegraphics{mrg-tvg.eps}"></DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+There are two kinds of vertices in MRG. A rectangular vertex
+represents a regular media object and a round vertex represents a
+delay object, which does not have media type, content, or
+spatial layout. Finally, for an MRG to model a complete HSL document,
+we also need a <B><I>root</I></B> vertex, which denotes the starting point of the
+hypermedia presentation defined by the HSL document. Since an object
+in an HSL document has an associated temporal interval and is
+represented by a vertex in MRG, the operands of the three MRG
+operators can be ``object'', ``interval'', or ``vertex'', depending on
+the context.
+
+<!-- bowdlerize_start -->
+<P>
+<B><I>SerialLink</I></B> is a best-effort operator. It tries its best to make the
+transition between its two operands instantaneous (the ``<B>=</B>'' part of
+
+<B><I>SerialLink</I></B>). The ``<B>&lt;</B>'' part of 
+<B><I>SerialLink</I></B> models
+nondeterministic delay, which is always minimized. For (<I>a SerialLink b</I>), what can cause <B><I>b</I></B>.start to be delayed? First, if we
+have (<I>c SerialLink b</I>) and <B><I>a</I></B>.end<B>&lt;</B><B><I>c</I></B>.end, then the start
+time of <B><I>b</I></B> will be delayed to the end time of <B><I>c</I></B>. We call this
+``V''-shape, as <B><I>a</I></B>, <B><I>b</I></B>, <B><I>c</I></B>, and the two 
+<B><I>SerialLink</I></B> edges form a
+``V''. This scenario can be extended to ``W''-shape or ``M''-shape,
+involving any number of parents and children.  In general, the start
+time of an object is the latest end time (which is nondeterministic)
+of its parents. Second, if we have (<I>f StartSync b</I>) and
+<B><I>a</I></B>.end<B>&lt;</B><B><I>f</I></B>.start, then the start time of <B><I>b</I></B> will be delayed from
+the end time of <B><I>a</I></B> to the start time of <B><I>f</I></B>.  Both situations are
+shown in Figure&nbsp;<A HREF="#MRG_TVG">4</A>a. Note that the quantitative aspect
+(e.g. <B><I>a</I></B>.end<B>&lt;</B><B><I>c</I></B>.end and <B><I>a</I></B>.end<B>&lt;</B><B><I>f</I></B>.start) is not captured in
+MRG. On the whole, if an MRG is a tree (no multiple parents) and
+contains no <B><I>StartSync</I></B>s, all 
+<B><I>SerialLink</I></B>s are instantaneous;
+i.e. ``<B>&lt;=</B>'' becomes ``<B>=</B>''. 
+<B><I>SerialLink</I></B> is transitive.
+
+<P>
+Both the <B><I>StartSync</I></B> and <B><I>EndSync</I></B> operators behave like rendezvous
+points.  That is, if (<I>a StartSync b</I>), the start time of <B><I>a</I></B>
+and <B><I>b</I></B> is the greater of <B><I>starta</I></B> and <B><I>startb</I></B>, where <B><I>starta</I></B> and
+<B><I>startb</I></B> are the start times of <B><I>a</I></B> and <B><I>b</I></B> without the <B><I>StartSync</I></B>
+constraint. The same rule applies to <B><I>EndSync</I></B>. Note that <B><I>EndSync</I></B>
+never affects the start times of its operands. <B><I>StartSync</I></B> and
+<B><I>EndSync</I></B> are transitive and symmetric.
+<!-- bowdlerize_end -->
+
+<P>
+In addition to the visible components (vertices and edges) of MRG,
+which are qualitative, each object may optionally define a
+quantitative attribute <B><I>ttl</I></B> (time to live), which specifies the
+lifetime of the object. For a text or image object, <B><I>ttl</I></B> specifies
+how long the object will be displayed; for an audio or video object,
+it enforces how long the object will be played, regardless of the
+object's natural content length; for a delay object, it specifies the
+amount of delay time introduced by the object. If <B><I>ttl</I></B> is unspecified,
+a text or image object will be displayed forever, and an audio or
+video object will be played until the end of its natural content.
+
+<P>
+With the definitions of 
+<B><I>SerialLink</I></B>, <B><I>StartSync</I></B>, <B><I>EndSync</I></B>, <B><I>ttl</I></B>,
+and delay object, we can now use MRG to express Allen's 13 interval
+relations. This is illustrated in Figure&nbsp;<A HREF="#Allen_and_MRG">2</A>b.
+
+<!-- bowdlerize_start -->
+<P>
+The MRG operators 
+<B><I>SerialLink</I></B>, <B><I>StartSync</I></B>, and <B><I>EndSync</I></B> are
+generally called synchronization arcs, or simply sync-arcs. The
+generalized sync-arc relates two time instants, called source and
+destination. In CMIF [<A
+ HREF="#Rossum">14</A>], the sync-arc modifies the
+destination; in the W3C multimedia standard SMIL [<A
+ HREF="#SYMM">19</A>], the
+sync-arc modifies the source. Both of them allow a delay to be
+specified on the arc. The former delays the destination, and the
+latter delays the source.  The 
+<B><I>SerialLink</I></B> operator is a sync-arc
+from the end point of the first object to the start point of the
+second object, with a minimized nondeterministic delay applied to the
+destination. The above three types of sync-arcs are all binary
+operators. <B><I>StartSync</I></B> and <B><I>EndSync</I></B> operators are <B><I>n</I></B>-ary sync-arcs;
+i.e. they can be applied to a group of objects.  This significantly
+reduces the amount of specification effort required.  Although delays
+cannot be directly specified on the arcs, they can be emulated by a
+combination of delay objects and 
+<B><I>SerialLink</I></B>s. For example, to
+specify <B><I>f</I></B> starts 5 seconds after <B><I>c</I></B> starts, we add a delay object
+<B><I>d</I></B> with <B><I>ttl</I></B> equal to 5 seconds, and relate <B><I>c</I></B>, <B><I>f</I></B>, and <B><I>d</I></B> by
+(<I>c StartSync d</I>) and (<I>d SerialLink f</I>)
+(Figure&nbsp;<A HREF="#MRG_TVG">4</A>a).
+<!-- bowdlerize_end -->
+
+<H2><A NAME="validation">3 Validation of MRG specifications</A>
+</H2>
+
+Temporal inconsistencies are easily introduced when authoring
+complicated multimedia documents. There are two major categories of
+inconsistencies, namely qualitative and quantitative. Qualitative
+inconsistencies are caused by conflicting temporal relations, while
+quantitative inconsistencies are caused by incompatible durations
+[<A
+ HREF="#Layaida">12</A>]. Due to the simplicity of MRG and its rendezvous-based
+operators, quantitative inconsistencies do not exist in our model;
+i.e. quantitative consistency is guaranteed by construction. Therefore,
+we only need to check for qualitative inconsistencies.
+
+<P>
+To facilitate the detection of qualitative inconsistencies, we first
+transform an MRG into a Temporal Validation Graph (TVG), which
+contains two types of vertices. A TVG ``start'' vertex contains one or
+more start points of the vertices in MRG; a TVG ``end'' vertex
+contains one or more end points of the vertices in MRG. The
+transformation satisfies the following rules:
+
+<P>
+<DL COMPACT>
+<DT>1.
+<DD>For each vertex <B><I>a</I></B> in the MRG, there are two TVG vertices <B><I>as</I></B> and
+<B><I>ae</I></B> containing <B><I>a</I></B>.start and <B><I>a</I></B>.end, respectively; there is also a
+directed dashed edge from <B><I>as</I></B> to <B><I>ae</I></B>.
+<DT>2.
+<DD>If (<I>a StartSync b</I>), <B><I>a</I></B>.start and <B><I>b</I></B>.start are in one TVG ``start''
+vertex.
+<DT>3.
+<DD>If (<I>a EndSync b</I>), <B><I>a</I></B>.end and <B><I>b</I></B>.end are in one TVG ``end'' vertex.
+<DT>4.
+<DD>If (<I>a SerialLink b</I>), there is a directed solid edge from
+<B><I>ae</I></B> to <B><I>bs</I></B>.
+</DL>
+<P>
+Figure&nbsp;<A HREF="#MRG_TVG">4</A>b shows the TVG corresponding to the MRG in
+Figure&nbsp;<A HREF="#MRG_TVG">4</A>a. Note that the vertices along a path in a TVG
+alternate between ``start'' and ``end'' (edges from ``start'' vertices
+to ``end'' vertices are dashed, while edges from ``end'' vertices to
+``start'' vertices are solid). TVG has the following important
+properties:
+
+<P>
+<UL>
+<LI>If there is a path from <B><I>as</I></B> to <B><I>bs</I></B>, then <B><I>a</I></B>.start<B>&lt;</B><B><I>b</I></B>.start.
+<LI>If there is a path from <B><I>ae</I></B> to <B><I>be</I></B>, then <B><I>a</I></B>.end<B>&lt;</B><B><I>b</I></B>.end.
+<LI>If there is a path from <B><I>as</I></B> to <B><I>be</I></B>, then <B><I>a</I></B>.start<B>&lt;</B><B><I>b</I></B>.end.
+<LI>If there is a path from <B><I>ae</I></B> to <B><I>bs</I></B>, then <B><I>a</I></B>.end<B>&lt;=</B><B><I>b</I></B>.start.
+</UL>
+<P>
+Therefore, to ensure the validity of a temporal specification represented by
+an MRG, we need to follow the following procedure:
+
+<P>
+<UL>
+<LI>To add (<I>a SerialLink b</I>), there must be no path from <B><I>bs</I></B> to <B><I>ae</I></B>.
+<LI>To add (<I>a StartSync b</I>), there must be no path from <B><I>as</I></B> to <B><I>bs</I></B>, and no path from <B><I>bs</I></B> to <B><I>as</I></B>.
+<LI>To add (<I>a EndSync b</I>), there must be no path from <B><I>ae</I></B> to <B><I>be</I></B>,
+and no path from <B><I>be</I></B> to <B><I>ae</I></B>.
+</UL>
+<P>
+The above procedure can be implemented using standard reachability
+analysis (depth first search), therefore, the running time of each
+addition of MRG edges is linear (in terms of number of vertices and
+edges in the TVG); hence the validation of the whole MRG is a quadratic
+problem.
+
+<P>
+The consistency checking procedure is applied incrementally in
+the authoring stage (via our authoring tool).  Since we allow the
+creation of HSL documents using text editors, we also need to apply
+the validation algorithm before presenting an HSL document. The
+validation procedure is applied to every temporal constraint (specified
+by one of the three MRG operators) in the document. If an inconsistent
+constraint is detected, the user is warned and the constraint is simply
+ignored.
+
+<!-- bowdlerize_start -->
+<P>
+If there is no path from either endpoint of one object to either
+endpoint of another object in a TVG, then there is no temporal
+relationship between the two objects. This usually means that the
+author does not care about the relationship between the two - which
+one starts first, and so on. If the author does care, he/she will add
+a constraint between the two objects in the corresponding MRG, whether
+implicitly (through transitivity) or explicitly.
+
+<P>
+Finally, from the properties of TVG, we can further derive two
+temporal overlapping rules:
+
+<P>
+<UL>
+<LI>If <B><I>as</I>=<I>bs</I></B> or <B><I>ae</I>=<I>be</I></B>, then <B><I>a</I></B> and <B><I>b</I></B> overlap in time.
+<LI>If there is a path from <B><I>ae</I></B> to <B><I>bs</I></B>, or from <B><I>be</I></B> to <B><I>as</I></B>,
+then <B><I>a</I></B> and <B><I>b</I></B> do not overlap in time.
+</UL>
+<!-- bowdlerize_end -->
+
+<H2><A NAME="scheduling">4 Presentation scheduling</A>
+</H2>
+
+In order to ensure that media objects are presented in the specified
+order, a presentation scheduler needs to be developed. There are two
+types of hypermedia schedulers, namely compile-time scheduler and
+run-time scheduler [<A
+ HREF="#Buchanan">5</A>]. A compile-time scheduler is
+static. It fixes the start and end times of objects, according to the
+temporal information specified in the hypermedia document; an optimum
+schedule may be generated by some form of quantitative analysis.
+<!-- bowdlerize_start -->
+The compile-time scheduler may also help prefetching, resource allocation
+and detection. A sophisticated compile-time scheduler may use
+heuristics and statistics to pre-arm hyperlinks [<A
+ HREF="#Rossum">14</A>].
+<!-- bowdlerize_end -->
+On the other hand, a run-time scheduler is dynamic, and well-adapted to
+handling unpredictable behaviors (such as user interactions). It also
+constantly adjusts itself to match the changes in its execution
+environment.
+
+<P>
+Before proceeding further with presentation scheduling, let us make a
+distinction between various kinds of media objects in hypermedia
+systems, based on their start and end behavior:
+
+<P>
+<UL>
+<LI>Bounded object <BR>
+The start and end times (or the start time and duration) of the object
+are known. For example, text and images with <B><I>ttl</I></B> specified, pre-recorded
+(stored) audio/video clips, etc. We call audio/video continuous objects and
+text/image discrete objects.
+<LI>Unterminated object <BR>
+The start time of the object is known, but the end time is unknown. For
+example, a live feed without a scheduled end time, a program execution
+(such as simulations and CGI scripts), etc.
+<LI>Unpredictable object <BR>
+The object may be started by a hyperlink and terminated by another hyperlink.
+</UL>
+<P>
+For most multimedia documents, the durations (<B><I>ttl</I></B>) of stored
+audio/video objects are not specified, so we cannot obtain their end
+times at the document level. First, if an audio/video object is
+remote, we could try to retrieve the meta information through a
+network protocol - using a special purpose video server which
+implements a protocol call that returns the intrinsic duration of
+a media object. However, we cannot rely on special protocols, as the
+Web is built on top of generic protocols like HTTP.  We could also try
+to read the header of the media object to determine its timing
+information, but this is highly media-dependent (such as how many
+bytes we need to read). Moreover, there are media types whose headers
+do not have the necessary meta information (e.g. AVI). Even if we
+managed to obtain the intrinsic duration of a stored media object,
+the real play-out duration will likely vary under environmental
+conditions, such as slow or bursty network access and lack of
+client processing power. Second, if the audio/video object is local,
+we must obtain the timing information by reading the header of the
+media file. As described above, this is not always achievable.
+Furthermore, environmental constraints such as the speed of the
+client CPU also make the duration of the stored object a variable.
+
+<P>
+Because of the volatile nature of the Internet and the large variety
+of media types, all bounded objects that do not have <B><I>ttl</I></B> explicitly
+specified become unterminated objects. Hence, multimedia presentations
+on the Web are inherently nondeterministic.
+
+<P>
+Our conclusion is that the compile-time scheduler is only useful in a
+closed environment, such as where media objects are all stored locally
+and media types are all well understood by the system.  Since our
+target environment is the Web, we choose to implement a run-time only
+scheduler, which handles unterminated and unpredictable objects, as
+well as bounded continuous and discrete objects.
+
+<P>
+Now let us proceed with the presentation algorithm. First, we need to describe
+the states of hypermedia objects in HPAS:
+
+<P>
+<UL>
+<LI>Activated <BR>
+A visual object has appeared on the screen; an aural object has occupied
+an audio resource (such as an audio channel).
+<LI>Playing <BR>
+A continuous object is in progress.
+<LI>Paused <BR>
+A continuous object is temporarily paused.
+<LI>Content end <BR>
+A continuous object has reached the end of its natural content.
+<LI><B><I>ttl</I></B> expired <BR>
+The author-specified lifetime of an object has been reached.
+<LI>Finished <BR>
+If <B><I>ttl</I></B> is defined, this state is the same as ``<B><I>ttl</I></B> expired''; otherwise,
+it is the same as ``content end''.
+<LI>Deactivated <BR>
+A visual object has disappeared from the screen; an aural object has released
+its audio resource.
+</UL>
+<P>
+If the lifetime (<B><I>ttl</I></B>) of an object has expired before the end of its
+natural content, the object is immediately cut off from playing. What
+is the behavior of an object between the finished and deactivated
+states? For a discrete object, it stays on the screen until entering
+the deactivated state; for a video object, its last frame stays on the
+screen; for an audio object, it keeps its visual components (such as
+volume controls) visible, if any.
+
+<P>
+The activation of object <B><I>a</I></B> is governed by the following rules:
+
+<P>
+<DL COMPACT>
+<DT>1.
+<DD><B><I>a</I></B>'s parents and the parents' <B><I>EndSync</I></B> peers have all entered the
+deactivated state; and for each <B><I>b</I></B>, where <B><I>b</I></B> is one of <B><I>a</I></B>'s
+<B><I>StartSync</I></B> peers, <B><I>b</I></B>'s parents and the parents' <B><I>EndSync</I></B> peers have
+all entered the deactivated state.
+<DT>2.
+<DD><B><I>a</I></B> and all of its <B><I>StartSync</I></B> peers enter the activated state at the
+same time, once Rule 1 is satisfied.
+</DL>
+<P>
+The deactivation of object <B><I>a</I></B> is governed by the following rules:
+
+<P>
+<DL COMPACT>
+<DT>1.
+<DD><B><I>a</I></B> and all of its <B><I>EndSync</I></B> peers have entered the finished state.
+<DT>2.
+<DD><B><I>a</I></B> and all of its <B><I>EndSync</I></B> peers enter the deactivated state at the
+same time, once Rule 1 is satisfied.
+</DL>
+
+<!-- bowdlerize_start -->
+<P>
+The object activation/deactivation policies translate to the following
+event-driven presentation algorithm, which is the core of our run-time
+scheduler.
+
+<P><PRE>
+onContentEnd() {
+  if ttl unspecified
+    onFinished()
+}
+
+onTTLExpired() {
+  onFinished()
+}
+
+onFinished() {
+  set this object's state to finished
+
+  for p in (EndSync peers of this object)
+    if p is not in the finished state
+      return
+  // now all EndSync peers are in the finished state
+
+  // deactivate this object and all of its EndSync peers,
+  // and activate their children if appropriate
+  for o in (this object and its EndSync peers) {
+    deactivate o
+
+    for c in (children of o)
+      if c satisfies the activation policy {
+        // implies that c's StartSync peers
+        // also satisfy the activation policy
+        activate c and c's StartSync peers
+        play c and c's StartSync peers
+      }
+  }
+}
+</PRE>
+<P>
+Either one of the ``onContentEnd'' and ``onTTLExpired'' event handlers
+may invoke ``onFinished'', depending on whether <B><I>ttl</I></B> is defined. The
+event handler ``onFinished'' tries to satisfy the deactivation policy
+in the first ``for'' loop; it then deactivates the object and its
+<B><I>EndSync</I></B> peers, and activates their children if they satisfy the
+activation policy. Essentially, the ``onFinished'' event handler
+traverses the MRG in a stepwise, breadth-first fashion.
+<!-- bowdlerize_end -->
+
+<P>
+Besides common functions like ``play'' and ``pause'', our presentation
+scheduler also implements the ``skip'' and ``jump'' operations. The
+``skip'' operation allows a user to deactivate all currently activated
+objects, and activate their children, if the children satisfy the
+activation policy. With ``skip'', the user can step through a
+presentation at a faster pace. The user may also use hyperlinks to
+``jump'' to a future or past object in the presentation. When jumping
+to a future object, the scheduler first traverses the MRG until it
+finds the object, then it activates the object and its <B><I>StartSync</I></B>
+peers. For a past object, the whole presentation is first reset to its
+startup state, then the scheduler treats the past object as a future
+object and advances to it. The ``jump'' operation can also be used to
+start a presentation from the middle of a document. In that case, the
+starting point of the presentation is addressed by an object ID. The
+scheduler simply advances to the object and starts the presentation
+from there.
+
+<H2><A NAME="hsl">5 HSL document</A>
+</H2>
+
+HSL (Hypermedia Synchronization Language) is a SGML-conforming
+descriptive format. Its declarative syntax provides a simple yet
+powerful way to describe hypermedia presentations.
+
+<P>
+Let's consider the following sample code from an HSL document:<PRE>
+...
+&lt;comp&gt; ... &lt;/comp&gt;
+
+&lt;obj .../&gt;
+
+&lt;comp id="Bird"&gt;
+  &lt;obj id="BirdShow" src="bshow.mpg"/&gt;
+  &lt;obj id="BirdWalk" src="bwalk.mpg"/&gt;
+  &lt;obj id="delay1" ttl="4s" seriallink='BirdIntro'/&gt;
+  &lt;obj id="BirdIntro" src="bintro.html" ttl="20"/&gt;
+
+  &lt;comp id="Seagull" seriallink='BirdSong'/&gt; ... &lt;/comp&gt;
+  &lt;obj id="BirdSong" src="bsong.wav"/&gt;
+
+  &lt;startsync&gt;BirdShow BirdWalk delay1&lt;/startsync&gt;
+  &lt;endsync&gt;BirdShow BirdWalk&lt;/endsync&gt;
+&lt;/comp&gt;
+...
+</PRE>
+<P>
+The <B>&lt;</B>obj<B>&gt;</B> element represents a (atomic) media object; it cannot be
+nested. The <B>&lt;</B>comp<B>&gt;</B> element represents a composite object; it
+groups a set of objects (atomic or composite) together. <B>&lt;</B>comp<B>&gt;</B> may
+be nested to an arbitrary depth; therefore an HSL document has a
+tree-like document structure. Upon the activation of a <B>&lt;</B>comp<B>&gt;</B>, the
+first lexical element (<B>&lt;</B>obj<B>&gt;</B> or <B>&lt;</B>comp<B>&gt;</B>) within the <B>&lt;</B>comp<B>&gt;</B>
+will be activated. The top level construct of an HSL document
+(<B>&lt;</B>body<B>&gt;</B>) is modelled as an implicit composite object, so the
+presentation of the HSL document starts with the first lexical
+<B>&lt;</B>obj<B>&gt;</B> or <B>&lt;</B>comp<B>&gt;</B> in the document.
+
+<P>
+Each composite object represents exactly one MRG, with the vertices
+corresponding to the immediate children of the <B>&lt;</B>comp<B>&gt;</B>. The MRG may
+be disconnected. In that case, it is the union of two or more
+connected subgraphs. One of them is the subgraph containing the first
+lexical element of the <B>&lt;</B>comp<B>&gt;</B>; this subgraph represents the
+default or main presentation; all other subgraphs represent
+<EM>atemporal</EM> [<A
+ HREF="#AHM">8</A>] presentations. The atemporal presentations
+can only be activated by hyperlinks (see section <A HREF="#hyperlink">6</A>).
+Essentially, atemporal presentations allow users to choose among
+different paths (alternative presentations) within a document.  In the
+HSL code segment above, ``BirdShow'', ``BirdWalk'', ``delay1'', and
+``BirdIntro'' form the default or main presentation, while ``Seagull'' and
+``BirdSong'' form an atemporal presentation.
+
+<H2><A NAME="hyperlink">6 Hyperlink</A>
+</H2>
+
+A hypermedia system must support extensive user interactions through
+<EM>hyperlinks</EM>. In HPAS, a hyperlink defines a relationship
+between two entities, namely the source anchor and the destination
+anchor. The source anchor is denoted by a hypermedia object within an
+HSL document; the destination anchor is much more flexible - it can be any
+entity addressable by a URL [<A
+ HREF="#RFC1738">2</A>].  An author can specify the
+effect on the source when a hyperlink is followed.  The default
+behavior is ``overlay'', which means the presentation containing the
+source is terminated immediately and replaced with the destination
+presentation. Alternatively, ``spawn'' means the system should start
+another window to present the destination, while keeping the source
+intact; ``coexist'' means the system should present the destination
+and the source side by side, if possible.
+
+<P>
+The destination of a hyperlink may be a future or past object in the
+current presentation, as we have described in the ``jump'' operation
+from section <A HREF="#scheduling">4</A>. In addition, the destination may
+represent an object in an atemporal presentation. The activation of
+such a hyperlink starts the atemporal presentation from the object
+represented by the destination anchor.
+
+<P>
+What we have described so far is the document level hyperlinks, which
+are defined by HSL. There is another level of hyperlinks, namely
+object level links. Examples include hyperlinks within a video stream, and
+the <B>&lt;</B>a<B>&gt;</B> element within an HTML object which has been embedded into
+an HSL document. Object level links require the knowledge of specific
+media types, so their behaviors are solely controlled by media
+handlers [<A
+ HREF="#Yu">18</A>]; object level hyperlinks are not visible in the
+document layer.
+
+<H2><A NAME="implementation">7 Implementation</A>
+</H2>
+
+Advances in browser technology allow many new interesting applications
+to be written. Plugins and ActiveX controls extend browsers'
+capabilities seamlessly, and Java applets allow rapid development of
+platform independent applications.  By exploiting features in
+LiveConnect [<A
+ HREF="#LC">23</A>] and Dynamic&nbsp;HTML [<A
+ HREF="#DHTML">22</A>], HPAS is able to
+reuse existing software components such as plugins and applets as
+media handlers.  Continuous objects (audio/video) are played by the
+Java Media Player [<A
+ HREF="#Intel">21</A>] (wrapped in an applet) and the
+RealPlayer [<A
+ HREF="#Real">24</A>] plugin; discrete objects (text/image) are
+rendered directly in the HTML browser.
+
+<P>
+To control the browser, applets, and plugins, HPAS uses the Java class
+``netscape.javascript.JSObject'', which provides a handle to the
+JavaScript interpreter. Dynamic&nbsp;HTML allows HTML elements to be
+created, deleted, and modified by JavaScript on the fly. Therefore, to
+activate a media object, HPAS simply directs the JavaScript interpreter to
+output the appropriate HTML element, and the browser will either
+render the HTML element directly, or launch the appropriate plugin or
+applet to render it. Here are some example HTML elements emitted by
+HPAS:
+
+<P><PRE>
+&lt;!-- text object --&gt;
+&lt;object id="gold"
+  style="position:absolute;left:4;top:200;width:320;height:240"
+  data="fish.html"&gt;
+&lt;/object&gt;
+
+&lt;!-- image object --&gt;
+&lt;img id="silver"
+  style="position:absolute;..."
+  src="flower.jpg"&gt;
+
+&lt;!-- audio/video object --&gt;
+&lt;object id="copper"
+  style="position:absolute;..."
+  classid="java:hpas.mhandler.jmf"&gt;
+  &lt;param name="MediaFile" value="run.mpg"&gt;
+&lt;/object&gt;
+
+&lt;!-- RealAudio/RealVideo --&gt;
+&lt;object id="iron"
+  style="position:absolute;..."
+  data="realworld.rpm"&gt;
+&lt;/object&gt;
+</PRE>
+<P>
+To deactivate a media object, HPAS asks the JavaScript interpreter to
+delete the HTML element with the corresponding ID.  To control a media
+handler (applet or plugin), HPAS gets the Java object representing the
+media handler from JavaScript, and then calls whatever public methods
+are available (such as ``play'' and ``pause'') from that Java object.
+
+<P>
+HPAS is implemented as a Java applet with a set of Java classes, which
+can be either stored locally or downloaded on the fly before
+presenting an HSL document. Running as a Java applet also allows
+multiple HSL documents to be played in multiple browser windows at
+the same time.  Because HPAS runs inside HTML browsers, to present an
+HSL document, an HTML wrapper is needed:
+
+<P><PRE>
+&lt;html&gt;&lt;head&gt;...&lt;/head&gt;&lt;body&gt;
+&lt;applet name="hpas" code="hpas.AppletMain"
+  mayscript width="0" height="0"&gt;
+  &lt;param name="src" value="http://www.goldfish.com/demo.hsl"&gt;
+&lt;/applet&gt;
+
+&lt;div id="layout"
+style="position:absolute;left:100;top:200;width:640;height:480"&gt;&lt;/div&gt;
+
+&lt;!-- other HTML goes here --&gt;
+&lt;/body&gt;&lt;/html&gt;
+</PRE>
+<P>
+The <B>&lt;</B>applet<B>&gt;</B> element contains the invisible HPAS applet. It is
+invisible because HPAS controls are displayed as popup windows, thus
+leaving all the space in the browser window for media rendering. The
+<B>&lt;</B>div<B>&gt;</B> element defines the area in which an HSL presentation will be
+displayed. Typically the <B>&lt;</B>div<B>&gt;</B> occupies the whole browser window,
+but in the above example, it starts from (100, 200) and has the size
+640&times;480. The <B>&lt;</B>div<B>&gt;</B> element must have the ID ``layout'', so
+that the HPAS applet may access it from JavaScript. An author can also
+define other static HTML elements in the HTML wrapper, which will have
+nothing to do with HPAS.
+
+<P>
+The HTML wrapper approach also facilitates the use of external layout.
+Instead of the single <B>&lt;</B>div<B>&gt;</B> element with ID ``layout'', the author
+defines a series of <B>&lt;</B>div<B>&gt;</B> elements, each corresponds to an HSL
+object (with the same ID). Those <B>&lt;</B>div<B>&gt;</B> elements define the
+geometry of the corresponding HSL objects; therefore, no layout
+information is needed in the HSL document itself. This external layout
+mechanism allows a single HSL document to be reused with different spatial
+layouts. The idea is analogous to applying different stylesheets to an
+HTML document.
+
+<P>
+Since HPAS is in the form of a Java applet, it can be controlled by
+JavaScript code embedded in HTML documents. For example, to start
+playing an HSL presentation, the following JavaScript statement can be
+used:<PRE>
+document.applets['hpas'].play();
+</PRE>As a consequence, an author may choose to create his/her own user
+interface (using a combination of HTML and JavaScript) instead of
+HPAS' default Java AWT interface.
+
+<P>
+Figure&nbsp;<A HREF="#presentation.shot">5</A> shows a running HSL presentation (the
+surrounding Netscape browser window frames and borders are cropped
+out).
+
+<DIV ALIGN="CENTER"><A NAME="presentation.shot">&#160;</A><A NAME="1221">&#160;</A>
+<TABLE WIDTH="50%">
+<CAPTION><STRONG>Figure 5:</STRONG>
+A scene from an HSL presentation</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+
+<!-- WIDTH="461" HEIGHT="410" ALIGN="BOTTOM" BORDER="0" -->
+<IMG
+ WIDTH="550" ALIGN="BOTTOM" BORDER="0"
+ SRC="img6.gif"
+ ALT="\resizebox{4in}{!}{\includegraphics{presentation.eps}}"></DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+The W3C multimedia standard SMIL [<A
+ HREF="#SYMM">19</A>] addresses many similar
+issues in hypermedia synchronization; therefore, a converter has been
+implemented (within HPAS applet) to present SMIL documents in the HPAS
+environment. Since SMIL and HSL use different temporal models, a few
+SMIL features will be missing after the conversion.
+
+<!-- bowdlerize_start -->
+<P>
+The current browser/Java-based implementation consists of less than
+10,000 lines of Java code, while the original Unix/C-based
+implementation has around 30,000 lines of C/C++ code. Why is there
+such a big difference?  First, we are now reusing existing software as
+media handlers; second, Java provides many useful utilities, such as
+Vector and Hashtable, which saved us from rewriting them from
+scratch.
+<!-- bowdlerize_end -->
+
+<P>
+The Java version of HPAS is available at
+<code><a href="http://www.research.digital.com/SRC/HPAS/">http://www.research.digital.com/SRC/HPAS/</a></code>.
+
+<H2><A NAME="future">8 Conclusions and future work</A>
+</H2>
+
+In the past two and a half years we have been working on the HPAS
+project to support the presentation and composition of time-based
+hypermedia documents. The current implementation provides services for
+integrating and reusing pluggable components such as Java applets and
+browser plugins. Hypermedia objects rendered by those software
+components are synchronized both temporally and spatially during the
+presentation stage of HSL documents.
+
+<P>
+The system is well suited for presenting dynamic and interactive
+information on the Web, such as product/service advertisements,
+distance learning and self-guided course work, entertainment
+information, etc.
+
+<P>
+Currently, the authoring tool is still based on Unix/C, so we are
+planning to rewrite it as a standalone Java application.  In the near
+future, we would like to implement Document Object Model (DOM)
+[<A
+ HREF="#DOM">20</A>] for HSL/SMIL. Applying DOM on top of HSL/SMIL will allow
+authors to create highly interactive time-based hypermedia documents.
+
+<H2><A NAME="future">9 Acknowledgment</A>
+</H2>
+
+I am indebted to Monika Henzinger, for her suggestion on graph
+transformation (from MRG to TVG), and to Yuan Yu, for the tireless
+discussion on the temporal model. Finally, I would like to give
+special thanks to the reviewers Paul McJones, Marc Najork, and Krishna
+Bharat for their timely advice on the content and structure of the
+paper.
+
+<H2><A NAME="SECTIONREF">References</A>
+</H2>
+<DL COMPACT>
+
+<P></P><DT><A NAME="Allen"><STRONG>1</STRONG></A>
+<DD> J.F. Allen.
+Maintaining Knowledge about Temporal Intervals.
+<I>Communications of the ACM</I>,
+vol.26. no.11, pp. 832-843, November 1983.
+
+<P></P><DT><A NAME="RFC1738"><STRONG>2</STRONG></A>
+<DD> T. Berners-Lee, L. Masinter, and M. McCahill.
+Uniform Resource Locators (URL), RFC1738.
+December 1994.
+
+<P></P><DT><A NAME="Blakowski"><STRONG>3</STRONG></A>
+<DD> G. Blakowski and R. Steinmetz.
+A Media Synchronization Survey: Reference Model, Specification,
+and Case Studies.
+<I>IEEE Journal on Selected Areas in Communications</I>,
+vol.14, no.1, pp. 5-35, January 1996.
+
+<P></P><DT><A NAME="RFC1341"><STRONG>4</STRONG></A>
+<DD> N. Borenstein and N. Freed.
+MIME (Multipurpose Internet Mail Extensions), RFC1341.
+June 1992.
+
+<P></P><DT><A NAME="Buchanan"><STRONG>5</STRONG></A>
+<DD> M.C. Buchanan and P.T. Zellweger.
+Automatic Temporal Layout Mechanisms.
+<I>Proceedings of ACM Multimedia'93</I>,
+pp. 341-350, August 1993.
+
+<P></P><DT><A NAME="Candan"><STRONG>6</STRONG></A>
+<DD> K.S Candan, B. Prabhakaran, and V.S. Subrahmanian.
+CHIMP: A Framework for Supporting Distributed Multimedia Document Authoring
+and Presentation.
+<I>Proceedings of ACM Multimedia'96</I>,
+pp. 329-340, November 1996.
+
+<P></P><DT><A NAME="Hardman"><STRONG>7</STRONG></A>
+<DD> L. Hardman, G. van Rossum, and D.C.A. Bulterman.
+Structured Multimedia Authoring.
+<I>Proceedings of ACM Multimedia'93</I>,
+pp. 283-289, August 1993.
+
+<P></P><DT><A NAME="AHM"><STRONG>8</STRONG></A>
+<DD> L. Hardman, D.C.A. Bulterman, and G. van Rossum.
+The Amsterdam Hypermedia Model.
+<I>Communications of the ACM</I>,
+vol.37. no.2, pp. 50-62, February 1994.
+
+<P></P><DT><A NAME="Jourdan"><STRONG>9</STRONG></A>
+<DD> M. Jourdan, N. Layaida, and L. Sabry-Ismail.
+Time Representation and Management in MADEUS: an Authoring Environment for
+Multimedia Documents.
+<I>Proceedings of Multimedia Computing and Networking 1997</I>,
+pp. 68-79, February 1997.
+
+<P></P><DT><A NAME="Keramane"><STRONG>10</STRONG></A>
+<DD> C. Keramane and A. Duda.
+Interval Expressions - a Functional Model for Interactive Dynamic
+Multimedia Presentations.
+<I>Proceedings of IEEE ICMCS'96</I>,
+pp. 283-286, June 1996.
+
+<P></P><DT><A NAME="Kim"><STRONG>11</STRONG></A>
+<DD> M.Y. Kim and J. Song.
+Multimedia Documents with Elastic Time.
+<I>Proceedings of ACM Multimedia'93</I>,
+pp. 143-154, August 1993.
+
+<P></P><DT><A NAME="Layaida"><STRONG>12</STRONG></A>
+<DD> N. Layaida and L. Sabry-Ismail.
+Maintaining Temporal Consistency of Multimedia Documents Using
+Constraint Networks.
+<I>Proceedings of Multimedia Computing and Networking 1996</I>,
+pp. 124-135, January 1996.
+
+<P></P><DT><A NAME="Little"><STRONG>13</STRONG></A>
+<DD> T.D.C. Little and A. Ghafoor.
+Synchronization and Storage Models for Multimedia Objects.
+<I>IEEE Journal on Selected Areas in Communications</I>,
+vol.8, no.3, pp. 413-427, April 1990.
+
+<P></P><DT><A NAME="Rossum"><STRONG>14</STRONG></A>
+<DD> G. van Rossum, J. Jansen, K.S. Mullender, D.C.A. Bulterman.
+CMIFed: A Presentation Environment for Portable Hypermedia Documents.
+<I>Proceedings of ACM Multimedia'93</I>,
+pp. 183-188, August 1993.
+
+<P></P><DT><A NAME="Schnepf"><STRONG>15</STRONG></A>
+<DD> J. Schnepf, J.A. Konstan, and D.H.C. Du.
+Doing FLIPS: FLexible Interactive Presentation Synchronization.
+<I>IEEE Journal on Selected Areas in Communications</I>,
+vol.14, no.1, pp. 114-125, January 1996.
+
+<P></P><DT><A NAME="Travis"><STRONG>16</STRONG></A>
+<DD> B. Travis and D. Waldt.
+<I>The SGML Implementation Guide</I>.
+Springer-Verlag, 1995.
+
+<P></P><DT><A NAME="Wahl"><STRONG>17</STRONG></A>
+<DD> T. Wahl and K. Rothermel.
+Representing Time in Multimedia Systems.
+<I>Proceedings of IEEE ICMCS'94</I>,
+pp. 538-543, May 1994.
+
+<P></P><DT><A NAME="Yu"><STRONG>18</STRONG></A>
+<DD> J. Yu and Y. Xiang.
+Hypermedia Presentation and Authoring System.
+<I>Proceedings of the 6th International WWW Conference</I>,
+pp. 153-164, April 1997.
+
+<P></P><DT><A NAME="SYMM"><STRONG>19</STRONG></A>
+<DD> W3C SYMM Working Group.
+Synchronized Multimedia Integration Language (SMIL). <BR>
+<a href="http://www.w3.org/TR/REC-smil/">http://www.w3.org/TR/REC-smil/</a>.
+
+<P></P><DT><A NAME="DOM"><STRONG>20</STRONG></A>
+<DD> W3C DOM Working Group.
+Document Object Model Specification. <BR>
+<a href="http://www.w3.org/TR/WD-DOM/">http://www.w3.org/TR/WD-DOM/</a>.
+
+<P></P><DT><A NAME="Intel"><STRONG>21</STRONG></A>
+<DD> Intel Media for Java. <BR>
+<a href="http://www.intel.com/ial/jmedia/">http://www.intel.com/ial/jmedia/</a>.
+
+<P></P><DT><A NAME="DHTML"><STRONG>22</STRONG></A>
+<DD> Dynamic HTML in Netscape Communicator. <BR>
+<a href="http://developer.netscape.com/library/documentation/communicator/dynhtml/">http://developer.netscape.com/library/documentation/communicator/dynhtml/</a>.
+
+<P></P><DT><A NAME="LC"><STRONG>23</STRONG></A>
+<DD> LiveConnect, in Netscape JavaScript Guide, chapter 5. <BR>
+<a href="http://developer.netscape.com/library/documentation/communicator/jsguide4/livecon.htm">http://developer.netscape.com/library/documentation/communicator/jsguide4/livecon.htm</a>.
+
+<P></P><DT><A NAME="Real"><STRONG>24</STRONG></A>
+<DD> RealPlayer 4.0. <BR>
+<a href="http://www.real.com/products/player/">http://www.real.com/products/player/</a>.
+
+</DL>
+
+</BODY>
+</HTML>

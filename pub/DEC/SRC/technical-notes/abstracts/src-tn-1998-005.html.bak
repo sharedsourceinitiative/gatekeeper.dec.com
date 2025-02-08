@@ -1,0 +1,27 @@
+<TITLE>Digital Systems Research Center: Note 1998-005</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Technical Note 1998-005</H1>
+<H1>Reduction in TLA</H1>
+<HR>
+<H2>Ernie Cohen and Leslie Lamport</H2>
+Note #1998-005, March 10, 1998
+<P>
+Reduction theorems allow one to deduce properties of a concurrent
+system specification from properties of a simpler, coarser-grained
+version called the reduced specification.  We present reduction
+theorems based upon a more precise relation between the original and
+reduced specifications than earlier ones, permitting the use of
+reduction to reason about a larger class of properties.  In
+particular, we present reduction theorems that handle general 
+liveness properties.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-005.ps.Z">PostScript compressed with UNIX compress</A></B> -- 296 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-005.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 272 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-005.ps.zip">PostScript compressed with ZIP</A></B> -- 280 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-005.ps">PostScript</A></B> -- 528 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-005.pdf">Portable Document Format (PDF)</A></B> -- 99 Kbytes<BR>
+</UL></P>

@@ -1,0 +1,35 @@
+<TITLE>Digital Systems Research Center: Note 1998-015</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Technical Note 1998-015</H1>
+<H1>Scheduling Data Transfers in a Network and the Set Scheduling Problem</H1>
+<HR>
+<H2>Ashish Goel, Monika R. Henzinger, Serge Plotkin, and Eva Tardos</H2>
+Note #1998-015. November 13, 1998.
+<P>
+In this paper we consider the online ftp problem.  The goal is
+to service a sequence of file transfer requests given bandwidth
+constraints of the underlying communication network. The main result
+of the paper is a technique that leads to algorithms that optimize
+several natural metrics, such as max-stretch, total flow time, max
+flow time, and total completion time. In particular, we show how to
+achieve optimum total flow time and optimum max-stretch if we
+increase the capacity of the underlying network by a logarithmic
+factor.
+<P>
+We show that the resource augmentation is necessary by proving
+polynomial lower bounds on the max-stretch and total flow time for
+the case where online and offline algorithms are using same-capacity
+edges. Moreover, we also give poly-logarithmic lower bounds on the
+resource augmentation factor necessary in order to keep the total
+flow time and max-stretch within a constant factor of optimum.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-015.ps.Z">PostScript compressed with UNIX compress</A></B> -- 68 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-015.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 52 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-015.ps.zip">PostScript compressed with ZIP</A></B> -- 52 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-015.ps">PostScript</A></B> -- 144 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-015.pdf">Portable Document Format (PDF)</A></B> -- 96 Kbytes<BR>
+</UL></P>

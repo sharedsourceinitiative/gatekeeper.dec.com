@@ -1,0 +1,50 @@
+<HTML><HEAD><TITLE>
+Digital Systems Research Center: Report 4</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Research Report 4</H1>
+<P>
+<H1>Eliminating go to's while Preserving Program Structure.</H1>
+<HR>
+<H2>    Lyle Ramshaw.</H2>
+<b>July 15, 1985</b><BR><i> 26 pages</i>
+<P>
+     Suppose that we want to eliminate the local go to statements in
+     a PASCAL program by replacing them with multilevel loop exit
+     statements.  There is a standard technique for doing so that
+     succeeds if and only if the flow graph of the PASCAL program
+     is reducible.  This technique assumes that we don't allow ourselves
+     either to introduce new variables or to replicate code, but that
+     we do allow ourselves to reorder the atomic tests and actions
+     within the text of the program and to rewrite the connecting
+     control structures from scratch.  In this paper, we shall
+     investigate the extent to which go tos can be replaced with exits
+     while preserving as much as possible of the program's original
+     structure.  On the negative side, we shall find that there are
+     programs whose flow graphs are reducible but whose go tos cannot
+     be eliminated without reordering their tests and actions.  That
+     is, programs with go tos can have their atomic elements in some
+     weird static order, an order that doesn't correspond in any
+     structured way to the dynamic flow of control.  We shall analyze
+     this situation by augmenting our flow graphs with edges that
+     encode the static order of the atomic elements and then showing
+     that the augmented flow graphs of programs with exits are always
+     reducible.  On the positive side, given a program with go tos
+     whose augmented flow graph is reducible, we shall show that we
+     can replace its go tos with exits while preserving essentially
+     all of its structure.  In fact, we can simply delete the go to
+     statements and the labels they jump to and insert various exit
+     statements and labeled Repeat-Endloop pairs for them to jump
+     out of, without changing the rest of the program text in any
+     way.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-004.ps.Z">PostScript compressed with UNIX compress</A></B> -- 2184 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-004.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 1856 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-004.ps.zip">PostScript compressed with ZIP</A></B> -- 1856 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-004.ps">PostScript</A></B> -- 2320 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-004.pdf">Portable Document Format (PDF)</A></B> -- 1784 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

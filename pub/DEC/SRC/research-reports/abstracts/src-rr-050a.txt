@@ -1,0 +1,40 @@
+   "An Efficient Algorithm for Finding the CSG Representation 
+    of a Simple Polygon."
+    David Dobkin, Leonidas Guibas, John Hershberger, and  Jack Snoeyink.
+    September 10, 1989.  22 pages.
+
+    Modeling two-dimensional and three-dimensional objects is an
+    important theme in computer graphics.  Two main types of models
+    are used in both cases: boundary representations, which represent
+    the surface of an object explicitly but represent its interior only
+    implicitly, and constructive solid geometry representations, which
+    model a complex object, surface and interior together, as a boolean
+    combination of simpler objects.  Because neither representation
+    is good for all applications, conversion between the two is often
+    necessary.
+
+    We consider the problem of converting boundary representations of
+    polyhedral objects into constructive solid geometry (CSG)
+    representations.  The CSG representations for a polyhedron P are
+    based on the half-spaces supporting the faces of P. For certain
+    kinds of polyhedra this problem is equivalent to the corresponding
+    problem for simple polygons in the plane.  We give a new proof that
+    the interior of each simple polygon can be represented by a monotone
+    boolean formula based on the half-planes supporting the sides of
+    the polygon and using each such half-plane only once.  Our main
+    contribution is an efficient and practical O(n log n) algorithm
+    for doing this boundary-to-CSG conversion for a simple polygon of
+    n sides.  We also prove that such nice formulae do not always exist
+    for general polyhedra in three dimensions.
+
+A Videotape (50b) accompanies report 50a. 
+
+    "Boolean Formulae for Simple Polygons."
+    John Hershberger and Marc H. Brown.
+    Time 6:15
+
+    This videotape shows the boundary-to-CSG conversion algorithm in
+    action, featuring a visualization created with the Zeus algorithm
+    animation system.  Multiple color views, updated as the program
+    runs, illustrate different aspects of the algorithm.
+

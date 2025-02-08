@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Time</TITLE>
+<META NAME="description" CONTENT="Time">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node93.html">
+<LINK REL="previous" HREF="node91.html">
+<LINK REL="up" HREF="node85.html">
+<LINK REL="next" HREF="node93.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html1339"
+ HREF="node93.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html1335"
+ HREF="node85.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html1329"
+ HREF="node91.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html1337"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html1338"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1340"
+ HREF="node93.html">UID</A>
+<B> Up:</B> <A NAME="tex2html1336"
+ HREF="node85.html">Topaz Interfaces Imported by</A>
+<B> Previous:</B> <A NAME="tex2html1330"
+ HREF="node91.html">ThreadFriends</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION040107000000000000000">
+Time</A>
+</H2>
+<P>
+The Time interface contains types for describing absolute times and time
+intervals; it also contains procedures for doing arithmetic on time
+values, for reading and setting the system clock, and for delaying the
+execution of the calling thread for a specified amount of time.
+<P><A NAME="1898">&#160;</A>
+<PRE>
+TYPE
+  T = RECORD
+    seconds: CARDINAL;
+    microseconds: [0..999999];
+  END;
+</PRE>
+<P>
+A value of type T represents either an instant in time relative to the
+epoch (January 1, 1970 at 00:00:00.0 GMT) or the length of an interval in
+time.  (The type Time.T is actually equated to NubTypes.Time.)
+<P>
+<BR><HR>
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

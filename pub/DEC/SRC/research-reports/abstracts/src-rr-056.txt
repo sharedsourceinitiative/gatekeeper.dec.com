@@ -1,0 +1,22 @@
+
+
+  "Abstract Types and the Dot Notation"
+  Luca Cardelli and Xavier Leroy
+  March 10, 1990.  32 pages
+
+Authors' abstract
+
+  We investigate the use of the dot notation in the context of
+ abstract types. The dot notation---that is, a.f referring to the
+ operation f provided by the abstraction a---is used by programming
+ languages such as Modula-2 and CLU. We compare this notation with 
+ the  Mitchell-Plotkin approach, which draws a parallel between 
+ type abstraction and (weak) existential quantification in 
+ constructive logic. The basic operations on existentials coming from 
+ logic give new insights about the meaning of type abstraction, but 
+ differ completely from the more familiar dot notation. In this paper,
+ we formalize simple calculi equipped with the dot notation, and relate 
+ them to  a more classical calculus `a la Mitchell and Plotkin. This work 
+ provides some theoretical foundations for the dot notation, and suggests 
+ some useful extensions.
+

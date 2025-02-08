@@ -1,0 +1,465 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Creating Processes</TITLE>
+<META NAME="description" CONTENT="Creating Processes">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node52.html">
+<LINK REL="previous" HREF="node50.html">
+<LINK REL="up" HREF="node48.html">
+<LINK REL="next" HREF="node52.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html822"
+ HREF="node52.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html818"
+ HREF="node48.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html812"
+ HREF="node50.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html820"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html821"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html823"
+ HREF="node52.html">Terminating Processes</A>
+<B> Up:</B> <A NAME="tex2html819"
+ HREF="node48.html">The OS Interface: Processes</A>
+<B> Previous:</B> <A NAME="tex2html813"
+ HREF="node50.html">Sending and Handling Signals</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04053000000000000000">
+Creating Processes</A>
+</H2>
+ <A NAME="Albany">&#160;</A>
+This subsection describes the procedures used to start new processes.  In
+the general case, many pieces of state must be specified for a new
+process, so in addition to the procedures that actually start a process
+there are a number of auxiliary procedures for specifying its state.
+<P><A NAME="2192">&#160;</A>
+<PRE>
+TYPE
+  ProcessTemplate = REF;
+</PRE>
+<P><A NAME="1340">&#160;</A>
+A process template is used as a way of shortening the parameter list to
+StartProcess and StartProcessSearch.  It contains initial values for most
+components of a process (a few are passed explicitly to StartProcess and
+StartProcessSearch).  One creates a process template with
+NewProcessTemplate; modifies it using SetDescriptor, SetUMask, SetWD,
+SetControlTerminal, UnsetControlTerminal, SetPGRP, SetUser, and
+SetSignalState, as well as OSFriends.SetSTrace and OSFriends.SetPriority
+described in Appendix <A HREF="node58.html#Felton">A.4</A>, page <A HREF="node58.html#Felton"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>; and finally
+passes it to StartProcess or StartProcessSearch.  One eliminates a surplus
+process template (one that is not going to be used) by calling
+CloseTemplate.
+<P><A NAME="2193">&#160;</A>
+<PRE>
+PROCEDURE NewProcessTemplate(): ProcessTemplate RAISES {};
+</PRE>
+<P>
+NewProcessTemplate creates a new process template with the following
+content:
+<P><UL>
+<LI> <A NAME="1345">&#160;</A>
+    An empty array of file handles (see SetDescriptor in this section and
+    GetDescriptor on page <A HREF="node43.html#PleasantHill"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).
+<LI> <A NAME="1347">&#160;</A>
+<A NAME="1348">&#160;</A>
+<A NAME="1349">&#160;</A>
+<A NAME="1350">&#160;</A>
+<A NAME="1351">&#160;</A>
+<A NAME="1352">&#160;</A>
+<A NAME="1353">&#160;</A>
+<A NAME="1354">&#160;</A>
+    The same process group, real and effective user name and password,
+    umask, working directory, control terminal, and initial thread
+    priority as those of process calling NewProcessTemplate.
+<LI> <A NAME="1355">&#160;</A>
+    The signal state SignalDefault for all signals, except the state
+    SignalIgnore for those signals whose state in the process calling
+    NewProcessTemplate is SignalIgnore.
+</UL>
+<P><A NAME="1357">&#160;</A>
+Once a process template has been used in a call to StartProcess or
+StartProcessSearch (unsuccessful or otherwise), it becomes invalid and
+InvalidArgumentEC is raised if it is used again.  The value NIL is also
+considered to be an invalid process template.
+<P><A NAME="Piedmont">&#160;</A><A NAME="2194">&#160;</A>
+<PRE>
+PROCEDURE SetDescriptor(
+    template: ProcessTemplate;
+    d: CARDINAL;
+    f: File)
+  RAISES {Error}; (* BadFileEC, InvalidArgumentEC *)
+</PRE>
+<P><A NAME="1360">&#160;</A>
+SetDescriptor sets the d'th entry in the array of file handles passed to
+the new process to the specified value.  Once SetDescriptor returns,
+calling Close on the same file handle has no effect on the file handle
+stored in the template.  (It is as if SetDescriptor calls Dup.)  See the
+discussion of GetDescriptor on page <A HREF="node43.html#PleasantHill"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.  SetDescriptor
+raises InvalidArgumentEC if template is invalid.
+<P><A NAME="SanFrancisco">&#160;</A><A NAME="2195">&#160;</A>
+<PRE>
+PROCEDURE SetUMask(
+    template: ProcessTemplate;
+    umask: AccessMode)
+  RAISES {Error}; (* InvalidArgumentEC *)
+</PRE>
+<P><A NAME="1364">&#160;</A>
+SetUMask sets the umask (file access mode creation mask) in the template
+to the specified value.  It raises InvalidArgumentEC if template is
+invalid.
+<P><A NAME="Richmond">&#160;</A><A NAME="2196">&#160;</A>
+<PRE>
+PROCEDURE SetWD(
+    template: ProcessTemplate;
+    dir: Dir;
+    path: PathName := NIL;
+    euser: User := NIL)
+  RAISES {Error};
+  (* NotSuperUserEC, InvalidArgumentEC, NotADirectoryEC,
+     FailureES? *)
+</PRE>
+<P><A NAME="1367">&#160;</A>
+SetWD sets the working directory in the template to be the directory with
+the path name specified by the path and dir parameters.  It raises
+InvalidArgumentEC if template is invalid, or NotADirectoryEC if this is
+not the path name of a directory.
+<P>
+SetWD interprets the euser parameter the same way Open does.
+<P><A NAME="SanAnselmo">&#160;</A><A NAME="2197">&#160;</A>
+<PRE>
+PROCEDURE SetControlTerminal(
+    template: ProcessTemplate;
+    f: File;
+    setGroup: BOOLEAN := TRUE)
+  RAISES {Error};
+  (* InvalidArgumentEC, BadFileEC, NotATerminalEC *)
+</PRE>
+<P><A NAME="1370">&#160;</A>
+<A NAME="1371">&#160;</A>
+SetControlTerminal sets the control terminal in the template to be the
+specified file.  It raises InvalidArgumentEC if template is invalid, or
+NotATerminalEC if the file is not a tty device.  If setGroup is TRUE, then
+when the new process is started using this template, the distinguished
+process group of the file is set to be that of the new process.
+<P><A NAME="2198">&#160;</A>
+<PRE>
+PROCEDURE UnsetControlTerminal(template: ProcessTemplate)
+  RAISES {Error}; (* InvalidArgumentEC *)
+</PRE>
+<P><A NAME="1373">&#160;</A>
+UnsetControlTerminal modifies the process template so that the new process
+created from it will not have a control terminal.  As mentioned in Section
+<A HREF="node32.html#Livermore">2.10</A>, page <A HREF="node32.html#Livermore"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>, a process with no control terminal
+automatically acquires as a control terminal the first tty device that it
+opens.  UnsetControlTerminal raises InvalidArgumentEC if template is
+invalid.
+<P><A NAME="2199">&#160;</A>
+<PRE>
+PROCEDURE SetPGRP(template: ProcessTemplate)
+  RAISES {Error}; (* InvalidArgumentEC *)
+</PRE>
+<P><A NAME="1377">&#160;</A>
+<A NAME="1378">&#160;</A>
+SetPGRP sets a flag in the template so the process started using that
+template will be its own process group leader: its process group
+identifier will be the same as its process identifier.  (The process
+identifier of the new process is always returned by StartProcess and
+StartProcessSearch.)  SetPGRP raises InvalidArgumentEC if template is
+invalid.
+<P><A NAME="SantaClara">&#160;</A><A NAME="2200">&#160;</A>
+<PRE>
+PROCEDURE SetUser(
+    template: ProcessTemplate;
+    effective: User;
+    real: User := NIL;
+    pswd: Text.T := NIL)
+  RAISES {Error};
+  (* InvalidArgumentEC, InvalidCredentialsEC, NotSuperUserEC *)
+</PRE>
+<P><A NAME="1381">&#160;</A>
+<A NAME="1382">&#160;</A>
+<A NAME="1383">&#160;</A>
+SetUser sets the effective and real user names and password in the
+template to the specified values.  It raises InvalidArgumentEC if template
+is invalid or effective is NIL.  It raises NotSuperUserEC unless the
+calling process is the super-user, or the effective parameter is equal to
+the real parameter, or is equal to the current effective or real user name
+of the calling process.
+<P><A NAME="1384">&#160;</A>
+Specifying NIL for real means not to change the real user name or password
+in the template.  If real is not NIL, then normally pswd must be the
+corresponding password (in clear text); after the password has been
+checked, the real user name and password are stored in the template.
+There are a few special cases:
+<P><UL>
+<LI> If real=real user name of calling process and pswd=NIL, the real user name
+and password already in the template are left unchanged.
+<LI> If real=`root' and pswd=NIL, then NotSuperUserEC is raised if the calling
+process is not the super-user, otherwise the specified real user name and
+password are stored in the template without further validation.
+<LI> In all other cases, the specified real user name and password are checked.
+InvalidCredentialsEC is raised if they are not valid, otherwise they are
+assigned to the template.
+</UL>
+<P>
+Ultrix note: SetUser currently raises NotSuperUser if the calling process
+is not the super-user.
+<P><A NAME="2201">&#160;</A>
+<PRE>
+PROCEDURE SetSignalState(
+    template: ProcessTemplate;
+    signal: Signal;
+    state: SignalState)
+  RAISES {Error}; (* InvalidArgumentEC, BadStateForSignalEC *)
+</PRE>
+<P><A NAME="1388">&#160;</A>
+SetSignalState allows changing the initial signal states that will be in
+effect when a new process is started.  The template created by
+NewProcessTemplate specifies SignalDefault for all signals, except those
+whose state in the calling process was SignalIgnore are also set to
+SignalIgnore in the template.
+<P><A NAME="2202">&#160;</A>
+<A NAME="2203">&#160;</A>
+<A NAME="2204">&#160;</A>
+SetSignalState raises InvalidArgumentEC if template is invalid.  It raises
+BadStateForSignalEC if signal equals SigKill or SigStop, or if signal
+equals SigCont and state equals SignalIgnore.
+<P><A NAME="1392">&#160;</A>
+<A NAME="1393">&#160;</A>
+If an Ultrix application is started with this process template, the
+SignalState value is mapped to Ultrix signal handler and signal mask
+settings (see sigvec(2)) as follows:
+<P>
+<BR>
+<BR>
+<IMG WIDTH="498" HEIGHT="130" ALIGN="BOTTOM" BORDER="0"
+ SRC="img10.gif"
+ ALT="\begin{boxedverbatim}
+CASE state OF
+\vert SignalDefault: handler := SIG_DFL; mas...
+ ...E;
+\vert SignalHandle: handler := SIG_DFL; mask := TRUE;
+END;\end{boxedverbatim}">
+<BR>
+<BR>
+<P><A NAME="2205">&#160;</A>
+<PRE>
+TYPE
+  Relationship = (Child, Orphan);
+</PRE>
+<P><A NAME="2206">&#160;</A>
+<PRE>
+PROCEDURE StartProcess(
+    dir: Dir;
+    path: PathName;
+    argv: Text.RefArray := NIL;
+    template: ProcessTemplate := NIL;
+    relationship: Relationship := Child;
+    env: Text.RefArray := NIL;
+    euser: User := NIL)
+    : PID
+  RAISES {Error};
+  (* NotSuperUserEC, PathES, InvalidArgumentEC,
+     BadExecutableEC, ShortExecutableEC, NotEnoughVMEC,
+     FailureES? *)
+</PRE>
+<P><A NAME="MountainView">&#160;</A><A NAME="2207">&#160;</A>
+<PRE>
+PROCEDURE StartProcessSearch(
+    VAR IN searchPath: SearchPath;
+    path: PathName;
+    argv: Text.RefArray := NIL;
+    template: ProcessTemplate := NIL;
+    relationship: Relationship := Child;
+    env: Text.RefArray := NIL;
+    spStart: CARDINAL := 0;
+    spCount: CARDINAL := LAST(CARDINAL);
+    euser: User := NIL)
+    : PID
+  RAISES {Error};
+  (* NotSuperUserEC, PathES, InvalidArgumentEC,
+     BadExecutableEC, ShortExecutableEC, NotEnoughVMEC,
+     FailureES? *)
+</PRE>
+<P><A NAME="1402">&#160;</A>
+<A NAME="1403">&#160;</A>
+StartProcess starts a new process running the program with the path name
+specified by dir and path.  StartProcessSearch starts a new process
+running a program with a path name specified by searchPath[spStart FOR
+spCount] and path.  (Like the OpenSearch procedure, described on page
+<A HREF="node41.html#SanRafael"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>, it tries successive elements within searchPath to find a
+file executable by the calling process with the specified path name.) Both
+StartProcess and StartProcessSearch return the process identifier of the
+new process.
+<P><A NAME="1405">&#160;</A>
+The file specified by the path name is taken to be an a.out file if its
+first longword contains one of three `magic numbers'; for details see
+a.out(5).  StartProcess and StartProcessSearch raise ShortExecutableEC
+if the a.out file is not as long as indicated by the size fields in its
+header.
+<P>
+Alternatively, if the specified file starts with an appropriate header, it
+is deemed to be a script to be executed by an interpreter specified in
+that header.  The format of such a script header is given by the grammar:
+<P><PRE>
+&lt;scriptheader&gt; ::= # ! &lt;optblanks&gt; &lt;interpreter&gt; &lt;optarg&gt; &lt;newline&gt;
+&lt;optblanks&gt;    ::= &lt;empty&gt; | &lt;blanks&gt;
+&lt;blanks&gt;       ::= &lt;blank&gt; | &lt;blanks&gt; &lt;blank&gt;
+&lt;blank&gt;        ::= &lt;the \040 character&gt;
+&lt;interpreter&gt;  ::= &lt;pathname&gt;
+&lt;optarg&gt;       ::= &lt;empty&gt; | &lt;arg&gt;
+&lt;arg&gt;          ::= &lt;blanks&gt; &lt;zero or more characters, excluding \012&gt;
+&lt;newline&gt;      ::= &lt;the \012 character&gt;
+</PRE>
+<P>
+The <TT>&#60;</TT>interpreter<TT>&#62;</TT> specifies the path name of another file, which must be
+in a.out format (or else BadExecutableEC is raised).  That program is
+started, with the original argument list prefixed by the name of the
+interpreter script and <TT>&#60;</TT>arg<TT>&#62;</TT> from the script header.
+<P>
+StartProcess and StartProcessSearch raise BadExecutableEC if the file is
+neither an a.out file nor an interpreter script.
+<P><A NAME="2208">&#160;</A>
+If the SetUIDonExec flag is set in the file mode of the file passed to
+StartProcess or StartProcessSearch, then the new process is created with
+its effective user name equal to the user name of the owner of the file.
+<P>
+If template is NIL, a new template as created by NewProcessTemplate is
+used.  InvalidArgumentEC is raised if template is not NIL but is otherwise
+invalid.
+<P><A NAME="1411">&#160;</A>
+<A NAME="1412">&#160;</A>
+<A NAME="1413">&#160;</A>
+<A NAME="1414">&#160;</A>
+If relationship is Child, the new process becomes a child of the caller,
+who assumes the burden of eventually calling WaitForChild with the process
+identifier of the child. If relationship is Orphan, the new child becomes
+a child of the Init process (whose process identifier equals one).
+(WaitForChild raises an exception when called with the process identifier
+of an orphan.)
+<P><A NAME="1415">&#160;</A>
+<A NAME="1416">&#160;</A>
+<A NAME="1417">&#160;</A>
+<A NAME="1418">&#160;</A>
+<A NAME="1419">&#160;</A>
+If argv is not NIL, it contains character-string arguments to be passed to
+the child in the standard Ultrix fashion. If the child is a Topaz program,
+it can retrieve these arguments via Params.GetParameter.  By convention,
+argv should be non-NIL and its first element should be the name of the
+program, i.e., the last component of the path parameter.  (If argv is NIL
+or is a zero-length array, the child is given one argument equal to the
+path parameter used to start it.)
+<P><A NAME="1420">&#160;</A>
+<A NAME="1421">&#160;</A>
+<A NAME="1422">&#160;</A>
+<A NAME="1423">&#160;</A>
+<A NAME="1424">&#160;</A>
+<A NAME="1425">&#160;</A>
+If env is not NIL, it contains the environment variables to be passed to
+the child in the standard Ultrix fashion. (Each element of env is a string
+of the form name=value; see environ(7) for more details.) If the child is
+a Topaz program, it can retrieve these environment strings via
+Params.GetEnvironmentName and Params.GetEnvironment.  If env is NIL, the
+environment of the calling process is passed.  (To pass an empty
+environment, create a zero-length Text.RefArray.)
+<P>
+After StartProcess or StartProcessSearch returns or raises an exception,
+the supplied template becomes invalid.  Each procedure raises
+TooManyProcessesEC if there are no more address spaces (on Taos) or
+process table entries (on Ultrix), or NotEnoughVMEC if the new process
+would require more virtual memory than is allowed by the imposed maximum
+(see getrlimit(2)).
+<P>
+StartProcess and StartProcessSearch interpret the euser parameter the same
+way Open does.  Note that euser is only used to do the access check on the
+path parameter; it is not inherited as the user name of the new process
+unless SetUser is used.
+<P>
+Taos note: The SetUIDonExec flag is ignored if the file passed to
+StartProcess or StartProcessSearch resides on a remote machine.  (In the
+future, Taos will allow `trusted servers to supply SetUIDonExec programs.)
+<P>
+Ultrix note: If relationship is Orphan, an extra transient process is
+created. If SetUser has been set for the new process, the new user must
+have execute permission on the given file.
+<P><A NAME="2209">&#160;</A>
+<PRE>
+PROCEDURE CloseTemplate(template: ProcessTemplate)
+  RAISES {Error};
+</PRE>
+<P><A NAME="1427">&#160;</A>
+<A NAME="1428">&#160;</A>
+CloseTemplate closes a template that is not going to be used to start a
+new process.  This releases all resources held by the template and marks
+the template as invalid.  CloseTemplate has no effect if the template has
+already been used to start a process or has been closed.  CloseTemplate is
+an optimization for use by careful programmers; its effect occurs
+automatically when a template is garbage-collected or the creating process
+terminates.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html822"
+ HREF="node52.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html818"
+ HREF="node48.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html812"
+ HREF="node50.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html820"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html821"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html823"
+ HREF="node52.html">Terminating Processes</A>
+<B> Up:</B> <A NAME="tex2html819"
+ HREF="node48.html">The OS Interface: Processes</A>
+<B> Previous:</B> <A NAME="tex2html813"
+ HREF="node50.html">Sending and Handling Signals</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

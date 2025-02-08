@@ -1,0 +1,218 @@
+<!$Id: README.html,v 1.2 1994/07/05 00:55:57 pturner Exp pturner $>
+
+<pre>
+
+Thu Jul  4 10:15:14 PDT 1996
+
+Xmgr Release v3.01 patchlevel #8
+
+(C) COPYRIGHT 1991-1996 Paul J Turner
+All Rights Reserved
+
+
+Copyright 1996 by Paul J Turner, Portland, OR
+
+                        All Rights Reserved
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies and that
+both that copyright notice and this permission notice appear in
+supporting documentation.
+
+PAUL J TURNER DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL
+PAUL J TURNER BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR
+ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+SOFTWARE.
+
+
+This is xmgr Release 3.01pl8, a plotting tool for workstations using X/Motif.
+Source code is available via anonymous ftp to:
+
+    ftp://ftp.teleport.com/pub/users/pturner/acegr/xmgr-3.01.tar.gz
+
+To build xmgr, cd to xmgr-3.01pl8/src, edit the Makefile and type 'make', 
+or use the Imakefile. I don't use imake in the course of development so 
+there are most likely problems with the Imakefile.
+
+For a demo, in xmgr-3.01pl8/examples is a script 'dotest' (see the file 
+README.ex in the examples subdirectory about the particulars of the 
+script), edit 'dotest' to make sure that the variable ACEGR is pointing
+to the correct executable. You might let me know about problems you may 
+encounter running the demos. Some of the demos are for color systems 
+only and will not draw meaningful graphs on mono or grayscale systems.
+
+Xmgr 3.01 has been compiled on SGIs, RS6000s, Decstations, DEC
+Alpha, Suns (SunOS 4.1.x and Solaris), HP 7xx, and Linux. I'm very interested 
+in compilation on other platforms.
+
+On some systems, the file pars.c will need to be compiled separately. Use the 
+'cc' command provided in the Makefile to compile pars.c, then 'make' to 
+resume the compilation.
+
+RELEASE NOTES:
+
+This version will not compile on systems using X11R3 with Motif 1.0x.
+
+Documentation is in better shape but a lot of work remains.
+
+Linux is now my primary development system.
+
+There is now a mailing list for users of ACE/gr send mail to:
+
+        majordomo@admin.ogi.edu
+
+with a body of (not in the "Subject:" line):
+
+        subscribe acegr
+
+to subscribe. Majordomo is a mail list management package, and automatically
+handles additions and removals from the list. For information about majordomo
+at our site, sent mail to majordomo@admin.ogi.edu with a body of
+
+        help
+
+Use the address, acegr@admin.ogi.edu, to send mail to the list.
+
+Please use the mailing list for comments, suggestions, and bug reports,
+but keep in mind that there are > 300 people on the list.
+
+CHANGES:
+
+-----------------------------------------
+From 3.01pl7 to 3.01pl8
+
+* Removed references to ftp.ccalmr.ogi.edu 
+
+-----------------------------------------
+From 3.01pl6 to 3.01pl7
+
+* Added support for setting the widths of bar charts
+
+-----------------------------------------
+From 3.01pl5 to 3.01pl6
+
+* A bug Graph/Copy that lead to improperly pointing strings used for
+  title and subtitles.
+* Couldn't change the focus when the graph with the current focus had
+  ist axes inverted.
+
+-----------------------------------------
+From 3.01pl4 to 3.01pl5
+
+* A bug in the legend drawing routine that caused line styles
+  to be drawn incorrectly.
+
+-----------------------------------------
+From 3.01pl3 to 3.01pl4
+
+* Method of getting file name from file selection boxes was broken.
+
+* Legends in the UI are supported for MAXPLOT sets only (30).
+
+* If a parameter file is given on the command line, use it as the
+  default in the file selection dialog for parameters.
+  
+-----------------------------------------
+From 3.01pl2 to 3.01pl3
+
+* Push n Zoom did not save the tick precision.
+
+* Added ISO Latin encodings by Przemek Klosowski (przemek@rrdbartok.nist.gov).
+  You can now display the Angstrom symbol. There is no on screen display of
+  the extended characters (something will show, but it won't be right). 3.02
+  will use the xvertext routines so that it will be a bit more WYSIWYG.
+  Use \c to go into the upper 128 characters and \C to return to normal.
+  \cE\C is the Angstrom symbol.
+
+* Numerous functions were declared XtCallbackProc when they should've been
+  void.
+
+* Fixed some broken links in the HTML documentation.
+
+-----------------------------------------
+From 3.01 to 3.01pl2
+
+PostScript documentation provided by Bob Barta (bob@f2ahp3.jhuapl.edu),
+look in the contrib directory xmgr-3.01/contrib/ps.
+
+GR_HELPFILE and GR_HELPVIEWER were incorrectly specified in
+the Makefile.
+
+Bugs in a couple of PanelChoice items in the tick popups led to
+problems with SGI (and possibly SUN) servers. Thanx to 
+Joe English <joe@trystero.art.com> for pointing this out.
+
+Blank lines are now used as set separators. If this behavior
+causes problems, look in files.c (search for 'commented') and 
+uncomment the specified lines in readxy().
+
+Assumption about the way realloc() works was incorrect - there is no
+guarantee the the additional memory is zero'ed - this led to core dumps
+on SGIs when using the -maxsets commandline parameter.
+
+getvptr() in pars.yacc returned pointers from sets in the current graph
+only.
+
+arrange() used for the -arrange command line option was broken.
+
+-----------------------------------------
+From 3.00 to 3.01
+
+The following should be closed for 3.01
+
+In Regions/Extract points, the To set is off by one and set 0 cannot
+be used as a destination.
+
+HDF variables with names containing imbedded blanks not read.
+
+Nonlinear curve fitting module broken (this is not a 
+supported feature).
+
+DX and DY in the yacc grammar refer to X and Y of the current set.
+Formerly, these referred to the span of X and Y wrt to the current 
+graph.
+
+Selecting the set and graph in Data/Transformations/Histogram have
+no effect. Next available set in the current graph is used for the
+result.
+
+XYRT data sets can generate errors in PostScript output.
+Could be due to small radii.
+
+Delete points in regions causes core dump.
+
+Interpolation module in Data/Transformations not implemented.
+For a later release.
+
+Information about hot links was not saved properly, nor was
+the popup updated when hot link info was read in from a file.
+
+-----------------------------------------
+Problems and works in progress:
+
+  * Region operations only work on sets of type XY
+  * Log plot major tick spacing needs to be in terms of magnitudes.
+  * Changing to PostScript fonts has led to problems with the mapping
+	of Greek and special characters (Hershey fonts are still used
+	for on screen text). I've tried to adhere to the PostScript
+	collating sequence for Greek characters - I've not got to the
+	special characters yet, so this remains a problem. There is also
+	a difference in size between the Hershey and PostScript fonts
+	that leads to problems in getting WYSIWYG hardcopy.
+  * The fills and patterns drawn on the screen and the .mif output are
+	not matched in the PostScript output. I know how to do it,
+	but I haven't found the time.
+
+Comments and bug reports to the acegr mailing list:
+
+acegr@admin.ogi.edu
+
+Items not appropriate for the mailing list should be sent to:
+
+pturner@teleport.com
+
+</pre>

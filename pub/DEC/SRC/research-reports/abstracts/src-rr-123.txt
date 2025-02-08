@@ -1,0 +1,14 @@
+"Inside Hector: The Systems View"
+Loretta Guarino Reid and James R. Meehan
+April 28, 1994.  43 pages.
+
+Over a period of two and a half years, a team from the Systems
+Research Center designed, built, and revised a set of software
+tools for the dictionary division of Oxford University Press. Many 
+aspects of this project were novel, including the approach to 
+lexicography, the software environment, the problems of scale, and 
+the demands of high performance and high reliability. In this paper, 
+two members of the team describe some of the systems problems they 
+faced in building these tools, and the solutions they devised to 
+solve them.
+

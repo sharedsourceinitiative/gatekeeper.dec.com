@@ -1,0 +1,163 @@
+	*************************************
+	DEC Western Research Laboratory (WRL) 
+	Technical Reports and Technical Notes
+	*************************************
+
+Ftp information: All the reports and notes listed in this directory
+are in postscript compressed form. The format "WRL-TR" refers to all
+technical reports and the format "WRL-TN" refers to all technical
+notes.  In other words, "WRL-TR-86.1.ps.Z" refers to the postscript
+compressed form of tech report 86/1. If you have questions about the
+files in this directory send a message to "gw-admin@pa.dec.com".
+
+Technical notes are for rapid distribution of technical material.  Usually 
+this represents work in progress.  Our technical reports may include large 
+portions of prior technical notes. 
+
+We have a technical report server from which you can also retrieve
+reports and notes (in hard copy and postscript), as well as receive
+abstracts of the reports or get added to our mailing list. Send a
+message to the server with "help" in the subject line for information
+on how to use it. If you would like to obtain a hard copy of any of
+the reports or notes, send a subject line similar to "order 89/2 90/1".
+Be sure to include your postal mail address. The reports will be mailed 
+out to you withing a couple of weeks. Send server requests to 
+wrl-techreports@pa.dec.com, or
+{ihnp4,decvax,ucbvax,hplabs,allegra}!decpa!wrl-techreports, or
+JOVE::WRL-TECHREPORTS.
+
+
+
+
+	      === TECHNICAL REPORTS ===
+Key	Author(s)   Hard Copy	Title
+		      Only
+=======================================================================
+Prospectus.87  			WRL Prospectus 87-88
+86/1    Nielsen         	Titan System Manual
+86/3    Wall                    Global Register Allocation at Link Time
+86/4    Hamburgen               Optimal Finned Heat Sinks
+87/1    Wall/Powell             The Mahler Experience: Using an Intermediate
+                                Language as the Machine Description
+87/2    Mogul et al.            The Packet Filter: An Efficient Mechanism for
+                                User-level Network Code
+87/3    Kent/Mogul              Fragmentation Considered Harmful
+87/4    Kent                    Cache Coherence in Distributed Systems
+87/5    Wall                    Register Windows vs. Register Allocation
+87/6    Asente		*       Editing Graphical Objects using Procedural
+                                Representations
+87/7    Reid                    The USENET Cookbook: and Experiment in
+                                Electronic Publication
+88/1    Dion            *       Fast Printed Circuit Board Routing
+88/2    Bartlett                Compacting Garbage Collection with Ambiguous
+                                Roots
+88/3    Mogul                   The Experimental Literature of The Internet:
+                                An Annotated Bibliography
+88/4    Boggs et al.            Measured Capacity of an Ethernet: Myth and
+                                Reality
+88/5    Estrin, Mogul,          Visa Protocols for Controlling Inter-
+        Tsudik, Anand           Organizational Datagram Flow: Extended
+                                Description
+89/1    Bartlett                SCHEME->C  A Portable Scheme-to-C Compiler
+89/2    Turrini                 Optimal Group Distribution in Carry-Skip Adders
+89/3    Hamburgen               Precise Robotic Paste Dot Dispensing
+89/4    Mogul                   Simple and Flexible Datagram Access Controls
+                                for Unix-based Gateways
+89/5    Srinivasan,             Spritely NFS:  Implementation and Performance
+        Mogul                   of Cache-Consistency Protocols
+89/7    Jouppi, Wall            Available Instruction-Level Parallelism for
+                                Superscalar and Superpipelined Machines
+89/8    Jouppi, et al.          A Unified Vector/Scalar Floating-Point
+                                Architecture
+89/9    Jouppi                  Architectural and Organizational Tradeoffs in
+                                the Design of the MultiTitan CPU
+89/10   Jouppi                  Integration and Packaging Plateaus of Processor
+                                Performance
+89/11   Jouppi, Tang            A 20-MIPS Sustained 32-bit CMOS Microprocessor
+                                with High Ratio of Sustained to Peak
+                                Performance
+89/13   Jouppi                  The Distribution of Instruction-Level and
+                                Machine Parallelism and Its Effect on
+                                Performance
+89/14   Borg, et al.            Long Address Traces from RISC Machines:
+                                Generation and Analysis
+89/17   Wall                    Link-Time Code Modification
+90/1    Tang,Yang               Noise Issues in the ECL Circuit Family
+90/2    Larrabee                Efficient Generation of Test Patterns Using
+                                Boolean Satisfiability
+90/3    Larrabee         *      Two Papers on Test Pattern Generation
+90/4    Nelson                  Virtual Memory vs. The File System
+90/5    Mogul                   Efficient Use of Workstations for Passive
+                                Monitoring of Local Area Networks
+90/6    Fitch                   A One-Dimensional Thermal Model for
+                                the VAX 9000 Multi Chip Units
+90/7    Mayo, et al.     *      1990 DECWRL/Livermore Magic Release
+90/9    McGillis et al.         Pool Boiling Enhancement Techniques for Water
+                                at Low Pressure
+91/1    McCormack               Writing Fast X Servers for Dumb Color Frame
+                                Buffers
+91/3    Stark                   Analysis of Power Supply Networks in VLSI
+                                Circuits
+91/4    Boggs                   TurboChannel T1 Adapter
+91/5    McFarling               Procedure Merging with Instruction Caches
+91/6    Bartlett                Don't Fidget with Widgets, Draw!
+91/7    McGillis et al.         Pool Boiling on Small Heat Dissipating Elements
+                                in Water at Subatmospheric Pressure
+91/8    Yip                     Incremental, Generational Mostly-Copying
+                                Garbage Collection in Uncooperative Environments
+91/9    Hamburgen               Interleaved Fin Thermal Connectors for Multichip
+                                Modules
+91/10   Wall                    Experience with a Software-Defined Machine
+                                Architecture
+91/11   Mogul          	        Network Locality at the Scale of Processes
+91/12   Jouppi                  Cache Write Policies and Performance
+92/1   Hamburgen et al.         Packaging a 150W Bipolar ECL Microprocessor
+92/2    Mogul                   Observing TCP Dynamics in Real Networks
+92/3    Wall                    Systems for Late Code Modification
+92/5	Kao                     Piecewise Linear Models for Switch-Level Simulation
+92/6  Srivastava, Wall          A Practical System for Intermodule Code Optimization
+                                at Link-Time
+93/1   McCormack et al.         A Smart Frame Buffer
+93/2   Mogul                    Recovery in Spritely NFS
+93/3   Jouppi, Wilton   	Tradeoffs in Two-Level On-Chip Caching
+93/4   Srivastava               Unreachable Procedures in Object-oriented
+				Programming
+93/6   Wall                     Limits of Instruction-Level Parallelism
+
+		       === TECHNICAL NOTES ===
+Key     Author(s)       	Title
+=======================================================================
+TN-4    Reid, Kent              TCP/IP PrintServer: Print Server Protocol
+TN-7    Kent                    TCP/IP PrintServer: Server Architecture and
+                                Implementation
+TN-9    McCormack               Smart Code, Stupid Memory  A Fast X Server
+                                for a Dumb Color Frame Memory
+TN-11   Ousterhout              Why Aren't Operating Systems Getting Faster
+                                As Fast As Hardware?
+TN-12   Bartlett                Mostly-Copying Garbage Collection Picks Up
+                                Generations and C++
+TN-15   Wall                    Limits of Instruction-Level Parallelism
+TN-16   Mogul, Borg             The Effect of Context Switches on Cache
+                                Performance
+TN-17   Goldberg                MTOOL: A Method For Detecting Memory
+                                Bottlenecks
+TN-18   Wall                    Predicting Program Behavior Using Real or
+                                Estimated Profiles
+TN-19   Wall                    Systems for Late Code Modification
+TN-21   Srivastava              Unreachable Procedures in Object-oriented
+                                Programming
+TN-22   McFarling               Cache Replacement with Dynamic Exclusion
+TN-23   McGillis, et al         Boiling Binary Mixtures at Subatmospheric
+                                Pressures
+TN-24   Fitch                   A Comparison of Acoustic and Infrared
+                                Inspection Techniques for Die Attach
+TN-26   Boggs                   TurboChannel Versatec Adapter
+TN-27   Mogul                   A Recovery Protocol for Spritely NFS
+TN-29	Boyle			Electrical Evaluation Of The BIPS-0 Package
+TN-30   Bartlett                Transparent Controls for Interactive Graphics
+TN-32   Dion, Monier            Design Tools for BIPS-0
+TN-36   McFarling               Combining Branch Predictors
+TN-37   Mayo, Touati            Boolean Matching for Full-Custom ECL Gates
+TN-40   Kao, Horowitz           Piecewise Linear Models for Rsim
+TN-44	Eustace, Srivastava	ATOM: A Flexible Interface for Building High Performance
+				Program Analysis Tools

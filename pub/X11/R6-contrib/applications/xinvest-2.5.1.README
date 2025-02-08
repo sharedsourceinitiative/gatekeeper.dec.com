@@ -1,0 +1,145 @@
+                                                            Sep 22, 1997
+
+Announcing the release of Xinvest 2.5.1.
+
+Check out the Xinvest home page at http://sunsite.auc.dk/xinvest/. Here
+you can find the latest source and Linux binary along with other helpful
+information on using Xinvest.
+
+See the CHANGES file for what's changed. See the TODO file for what's coming up. 
+
+Primary Site    -> http://sunsite.auc.dk/xinvest/
+
+Alternate site
+Source          -> ftp://ftp.x.org/contrib/applications/xinvest-2.5.tar.gz
+Linux Static Binary  
+                -> ftp://ftp.x.org/contrib/applications/xinvest-2.5.bin.tar.gz
+
+The XPM library -> ftp://ftp.x.org/contrib/libraries
+
+==========================================================================
+
+What is Xinvest?
+----------------
+
+Xinvest is a personal finance tracking and performance tool for UNIX systems 
+using the X Window System. Xinvest requires Motif 1.2 or later and XPM. 
+
+Xinvest is tested on the following platforms:  HPUX 9.05, Solaris 2.5 CDE, and 
+Linux 2.0.27. Xinvest is known to build on the following UNIX systems: IBM AIX, 
+DEC Unix, FreeBSD, NeXTStep, SunOS 4.x, and Unixware. 
+
+
+With Xinvest you can:
+
+Centralize record keeping by storing all transactions in account specific files.  
+Calculate yield, total and annualized returns (including the effects of buys, 
+sells, and dividends). This provides a means of comparing the results of all 
+accounts in a portfolio, be they CDs, bonds, mutual funds, or your checking 
+account. The report generator allows you to select report contents and to
+generate multiple reports simultaneously.
+
+Receive automatic price updates in conjunction with the Xquote WWW quote
+retrieval program.
+
+Plot various transaction parameters such as share price, shares per transaction,
+transaction cost, transaction value (at current price), dividends, internal and
+total return, and/or cumulative and moving averages of the above.  Plots are 
+transaction based bar or date based x-y charts.
+
+View asset allocation of accounts in a portfolio. Specify categories, what 
+percent of an account is in that category, and which accounts are of interest 
+and Xinvest will tell you the value and percentage of all categories in the 
+defined portfolio.  Predefined is a account category to view weighting of 
+accounts in the total portfolio.  Categories are hierarchical, so you can 
+zoom into the makeup of your portfolio.  View in text and pie chart form.
+
+Use the provided financial calculator with commonly used equations.  Included 
+are FV, PV, FV of sum of payments, and periodic loan payments.
+
+Hopefully, all of this is displayed using  an easy-to-use, point-and-click 
+interface.  There are few command line switches, no dot files, and X resources 
+are limited to color and font selection allowing you to tailor the look of the 
+tool to your own preferences.
+=============================================================================
+
+Building Xinvest
+----------------
+
+Xinvest is tested on the following platforms:  HPUX 9.05, Solaris 2.5 CDE, and 
+Linux 2.0.  Xinvest is known to build on AIX, DEC Unix, FreeBSD, 
+NeXTStep, SGI IRIX 5, SunOS 4.x, and Unixware systems.  
+
+
+Known difficulties by machine/OS.
+---------------------------------
+1. Unixware users should use gcc if possible.  Unixware 2.1 users can use
+   the native compiler.  You may also wish to define NEED_STRCASECMP in the
+   Imakefile or Makefile.distrib or link against libucb (-lucb).
+
+2. SunOS 4.x users should use Sun's acc, GNU gcc, or another ANSI compliant
+   compiler. 
+
+3. a. IRIX 5.3 users should know xpm.h is missing from the standard 
+      distribution, though libXpm is present. Motif includes are installed in 
+      /usr/include/abi.  
+   b. IRIX 5.x users should define NEED_STRPTIME in the Imakefile or Makefile,
+      IRIX 6.x users should _not_.
+   c. Xinvest Motif 2.0 resources generate a warning:
+          "Warning: CvtStringToSlidingMode: Unknown string".  
+      This is safe to ignore or remove "*Graphscale.slidingMode:        SLIDER" 
+      from resCommon.h and Xinvest.ad before building.
+
+To build Xinvest.
+-----------------
+0. Go to the Xinvest home page (http://sunsite.auc.dk/xinvest/) to find a
+   source archive.
+
+1. Download and uncompress the source archive.  There are two ways to uncompress
+   the archive:
+   a. If you have GNU tar:  "tar -xvzf xinvest-VERSION.tar.gz"
+    or
+   b. "gunzip < xinvest-VERSION.tar.gz | tar -xvf -"
+
+   Xinvest will create it's own subdirectory named 'xinvest-VERSION'. Note that
+   'VERSION' will be a number, such as 2.3.
+
+2. cd to xinvest-VERSION.
+
+If you have imake.
+3. Look over the Imakefile provided.  
+   a. If you have XPM or Motif in non-standard places add the include 
+      directories where the headers are found to INCLUDES.  
+   b. Add the full path name of the XPM and Motif libraries to SYS_LIBRARIES.  
+   c. If you want internationalized currency and have strfmon (man strfmon) then
+      add -DSTRFMON to DEFINES.  
+   d. If you want a transparent icon add -DSHAPE to DEFINES. 
+
+4. xmkmf; make Makefile; make depend; make; make install.  You may need to
+   be root to do the installation.
+
+If you don't have imake.
+3. Copy Makefile.distrib to Makefile. Look over the provided Makefile.  You're 
+   kind of on your own here.
+   a. Set CFLAGS, INCLUDES, LIBS, and LIBDIR and the build should go well.  
+   b. Add -DSTRFMON to CFLAGS if your environment supports the strfmon (man 
+      strfmon) function call. 
+   c. Add -DSHAPE to CFLAGS if you want a transparent icon. This will require 
+      linking against libXext (already in LIBS in the Makefile).
+
+4. Type make. Copy Xinvest to your bin area (usually /usr/bin/X11).  
+
+To test Xinvest. 
+----------------
+1. Load up the data files provided in the sample subdirectory.  Try out all of 
+   the functions. Don't forget to add one or more accounts in the portfolio 
+   tool.  These examples are very basic, more elaborate portfolio compositions 
+   are certainly possible.  Read the online help.  This should explain the
+   use of anything that is not obvious.
+
+
+=======================================================================
+Questions?  For build problems, ask a local knowledgeable person, they will
+            know your system better than I will.  If all else fails or for
+            questions or comments on Xinvest: buser@micro.ti.com
+=======================================================================

@@ -1,0 +1,238 @@
+<html>
+<head><title>Extended Static Checking of programs with cyclic dependencies</title></head>
+<body>
+<center>
+<h1><b>Extended Static Checking of programs with cyclic dependencies</b></h1><br
+>
+<h2>Rajeev Joshi, University of Texas at Austin</h2>
+</center>
+
+
+<P>This page describes a summer project undertaken by Rajeev Joshi (UT
+Austin) while a summer intern at SRC, summer 1997, hosted by <A
+HREF="http://www.research.digital.com/SRC/people/Rustan_Leino">Rustan
+Leino</A>. </P>
+
+<H2>Overview</H2>
+
+<P>The goal of <A HREF="Esc.html">Extended Static Checking</A> (ESC) is
+to check, at compile time, for common runtime errors, e.g., dereferencing
+a <TT>nil</TT> pointer, accessing an array out of bounds. Given a program
+annotated with a specification, an ESC compiler produces a <I>verification
+condition</I>, a predicate in first-order logic, which expresses that the
+program meets the given specification. This verification condition is then
+given to a theorem prover, which checks whether or not it is valid. In
+most cases, the prover is expected to report either that the condition
+is valid or that it is invalid (and then also provide an error context);
+in some cases, the prover may just give up. </P>
+
+<P>My project this summer (under Rustan Leino) was to study some of the
+difficulties that arise in reasoning about programs with recursive data
+structures such as linked lists. To track our progress, we chose an example
+based on the Sieve of Eratosthenes algorithm for generating primes; the
+example seems to be fairly representative of the class of programs we were
+interested in. Over the course of the summer, we manually sketched a proof
+of correctness of this program and determined that we needed to modify
+one of the original axioms, as the prover is not equipped with induction.
+I also extended Rustan's ESC/<A
+HREF="http://www.research.digital.com/SRC/personal/Rustan_Leino/papers.h
+tml#krml65">Ecstatic</A>
+compiler to generate appropriate verification conditions for programs with
+data abstraction and simple recursive data types. We then tried running
+the prover on the resulting conditions and found that, with the exception
+of one axiom schema which we had to instantiate ourselves, the entire example
+could be checked automatically. </P>
+
+<P>In the remainder of this note, I shall give a brief introduction to
+ESC and describe the problem that I worked on during the summer. </P>
+
+<H2>Background</H2>
+
+<P>Consider the following sample specification:</P>
+
+<PRE>    class Rational
+    {       field num, den : integer
+       spec field ok : boolean = (den # 0)
+    }
+
+    procedure normalise(r : Rational)
+    {   pre       r.ok
+        modifies  r.num, r.den
+        post      r.num * r.den' = r.num' * r.den
+    }</PRE>
+
+<P>Class <TT>Rational</TT> has three fields: two integer fields representing
+the numerator and the denominator, and a <I>specification field</I>, whose
+value is a function of the values of other fields. In ESC jargon, the specification
+field is said to <I>depend</I> on the fields of which it is a function.
+In the example above, for all objects <TT>r</TT> of type <TT>Rational</TT>,
+we have that <TT>r.ok</TT> depends on <TT>r.den</TT> . </P>
+
+<P>The specification of procedure <TT>normalise</TT> has three clauses
+which refer, in order, to the precondition, the modification list, and
+the postcondition respectively. The precondition is a first-order predicate
+which is assumed to hold upon entry into the procedure; it is expected
+to be established by the caller. The postcondition is a first-order predicate
+which is required to hold upon exit from the procedure body; it relates
+unprimed variables (denoting variable values upon entry) and primed variables
+(denoting variable values upon exit) and it is expected to be satisfied
+by the procedure implementation. The modification list describes the variables
+that the implementation is allowed to modify; it is translated into predicates,
+called <I>modification constraints</I>, which are conjoined to the postcondition.
+</P>
+
+<P>Informally speaking, a modification constraint asserts that the value
+of a field (such as <TT>den</TT> above) changes only in those objects where
+the procedure is allowed to modify it. Modification lists may mention specification
+fields; in such cases, the list is first <I>desugared</I> (i.e., rewritten)
+into another list before modification constraints are generated. The rules
+for desugaring modification lists are somewhat complex -- they are based
+on engineering decisions intended to make them easier for programmers to
+use -- but, to get some idea of how they work, consider the modification
+list </P>
+
+<PRE>    modifies r.ok</PRE>
+
+<P>for the example above. This list would be desugared into </P>
+
+<PRE>    modifies r.ok , r.den</PRE>
+
+<P>which produces the following modification constraints, where <TT>s</TT>
+ranges over objects of type <TT>Rational</TT>: </P>
+
+<PRE>    (All s :: s.ok = s.ok'    \/  s = r)
+    (All s :: s.den = s.den'  \/  s = r)
+    (All s :: s.num = s.num')</PRE>
+
+<P>In more complex examples in which several levels of abstraction are
+layered one on top of another, desugaring a modification list typically
+involves computing a transitive closure of the dependency relation. </P>
+
+<H2>Cyclic Dependencies</H2>
+
+<P>To understand the difficulties that may arise with recursive data structures,
+consider the following definition of a linked list: </P>
+
+<PRE>    class List
+    {       field value : integer
+            field next : List
+       spec field valid : boolean = (value # 0  /\  (next = nil \/ next.valid))
+    }
+
+    procedure Init(l : List)
+    {   modifies  l.valid
+        post      l.valid'
+    }</PRE>
+
+<P>Note that the declaration of field <TT>valid</TT> introduces the following
+dependency:</P>
+
+<BLOCKQUOTE>
+<P>for all objects <TT>l</TT> of type <TT>List</TT> , <TT>l.valid</TT>
+depends on <TT>l.next.valid</TT> . </P>
+</BLOCKQUOTE>
+
+<P>Such a dependency of a specification field (<TT>valid</TT> at object
+<TT>l</TT>) on itself (<TT>valid</TT> at object <TT>l.next</TT>) is called
+a <I>cyclic dependency</I>. A preliminary difficulty with cyclic dependencies
+is finding a compact representation for modification lists. Recall that
+desugaring typically requires computing the transitive closure of the dependency
+relation. In the presence of cyclic dependencies, this closure is no longer
+finite. For instance, a naive desugaring of the modification list for procedure
+<TT>Init</TT> above yields </P>
+
+<PRE>    modifies l.valid, l.next.valid, l.next.next.valid, ...
+             l.value, l.next.value, l.next.next.value, ...
+             l.next, l.next.next, l.next.next.next, ...</PRE>
+
+<P>so we need a way to represent such infinite sets succinctly. A simple
+solution is to use a closure operator &quot;<TT>*</TT>&quot; (pronounced
+&quot;star&quot;) which denotes &quot;0 or more occurrences of&quot; ;
+then, the modification list above may be written as</P>
+
+<PRE>    modifies l.next*.valid, l.next*.value, l.next*.next .</PRE>
+
+<P>The next difficulty is to determine how to generate appropriate modification
+constaints for such expressions. A naive translation of </P>
+
+<PRE>    modifies l.next*.value</PRE>
+
+<P>would give </P>
+
+<PRE>    (All s :: s.value = s.value'  \/  (s \in l.next*)) .</PRE>
+
+<P>Since the prover is not equipped to reason about such closures, we rewrite
+the second disjunct using a 4-argument predicate <TT>REACH</TT>, introduced
+in 1983 by <A HREF="http://www.research.digital.com/SRC/people/Greg_Nelson">Greg
+Nelson</A> (who also provided a set of useful axioms for it). Informally
+speaking, <TT>(REACH u z f x)</TT> asserts that it is possible to reach
+object <TT>z</TT> from object <TT>u</TT> by following the pointer field
+<TT>f</TT>, without ever following the <TT>f</TT> pointer of object <TT>x</TT>.
+For the example above, the modification constraint would be written as</P>
+
+<PRE>    (All s :: s.value = s.value'  \/  (REACH l s next nil) ) .</PRE>
+
+<H2>Some Discoveries</H2>
+
+<P>In proving the Sieve of Eratosthenes example, we found that we needed
+only two axioms about <TT>REACH</TT> (viz., A1 and A2 from Nelson's paper).
+We also discovered that we had to modify the <I>pointwiseness axiom</I>
+schema for cyclic dependencies (due to Dave Detlefs), which, for the example
+above, yielded</P>
+
+<PRE>    (All s ::
+       (All w : w # nil  /\  (REACH s w next nil)
+              : w.value = w.value'  /\   w.next = w.next')
+    ==&gt;
+       s.valid = s.valid' )</PRE>
+
+<P>We found that, since the prover is not equipped for induction, this
+axiom was not enough to prove even the following simple Hoare triple (due
+to <A HREF="http://www.research.digital.com/SRC/people/Jim_Saxe">Jim Saxe</A>):</P>
+
+<PRE>      { s.valid  /\  s # t  /\  (REACH s t next nil)  /\  t.valid }
+    t.next := nil
+      { s.valid }</PRE>
+
+<P>Our new axiom schema now yields</P>
+
+<PRE>    (All s ::
+       (All w : w # nil  /\  (REACH s w next nil)
+              :    (w.value = w.value'  /\  w.next = w.next')
+                \/ w.valid = w.valid' )
+    ==&gt;
+       s.valid = s.valid' )</PRE>
+
+<P>which seems sufficient, at least for the examples we have considered.
+</P>
+
+<H2>Future Work</H2>
+
+<P>There are at least two directions for future work. The first is to study
+programs with recursive data structures in which more than one field is
+involved in the recursion. (An example is a binary tree, with pointers
+for left- and right- children.) This involves generalising the <TT>REACH</TT>
+predicate to accept a relation (or a set of fields) as its third argument.
+Since we have used only 2 axioms about <TT>REACH</TT> so far, this extension
+may turn out to be reasonably straightforward. The second direction of
+research is to find sufficient conditions under which users may not introduce
+inconsistencies into the checker. Currently, as pointed out by Jim Saxe,
+it is possible to introduce an inconsistency by using cyclic dependencies.
+As an example, consider changing the definition of <TT>valid</TT> to</P>
+
+<PRE>    spec field valid : boolean = (value # 0  /\  (next = nil  \/ 
+~next.valid))</PRE>
+
+<P>where <TT>~</TT> denotes negation. Suppose initially that there is only
+one object <TT>t</TT>, whose <TT>value</TT> field is nonzero and whose
+<TT>next</TT> field is <TT>nil</TT>. Then the assignment </P>
+
+<PRE>    t.next := t</PRE>
+
+<P>introduces an inconsistency, since now there is no solution to the recursive
+equation in <TT>valid</TT>. </P>
+
+
+</BODY>
+</HTML>
+

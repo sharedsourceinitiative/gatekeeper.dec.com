@@ -1,0 +1,10 @@
+"Disk Paxos"
+Eli Gafni and Leslie Lamport
+Report #163, July 4, 2000. 43 pages
+
+We present an algorithm, called Disk Paxos, for implementing a
+reliable distributed system with a network of processors and disks.
+Like the original Paxos algorithm, Disk Paxos maintains consistency in
+the presence of arbitrary non-Byzantine faults.  Progress can be
+guaranteed as long as a majority of the disks are available, even if
+all processors but one have failed.

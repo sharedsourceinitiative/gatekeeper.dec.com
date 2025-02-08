@@ -1,0 +1,31 @@
+			  CRL Technical Report 93/11
+				       
+			       Counting Networks
+				       
+
+		 	James Aspnes, Maurice Herlihy, 
+			        and Nir Shavit
+				       
+			        August 6, 1993
+
+
+Many fundamental multi-processor coordination problems can be expressed
+as counting problems: processes must cooperate to assign successive
+values from a given range, such as addresses in memory or destinations
+on an interconnection network.  Conventional solutions to these problems
+perform poorly because of synchronization bottlenecks and high memory
+contention.
+
+Motivated by observations on the behavior of sorting networks, we offer
+a new approach to solving such problems, by introducing counting networks,
+a new class of networks that can be used to count.  We give two counting
+network constructions, one of depth log n (1+ log n) / 2 using n log n 
+(1+ log n) / 4 ``gates,'' and a second of depth log^2 n using nlog^2 n / 
+2 gates.  These networks avoid the sequential bottlenecks inherent to 
+earlier solutions, and substantially lower the memory contention.
+
+Finally, to show that counting networks are not merely mathematical 
+creatures, we provide experimental evidence that they outperform 
+conventional synchronization techniques under a variety of circumstances.
+
+This report supersedes CRL Tech Report 90/11.

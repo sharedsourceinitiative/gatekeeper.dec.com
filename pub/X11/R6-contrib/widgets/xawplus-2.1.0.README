@@ -1,0 +1,82 @@
+
+		The XawPlus wiget set and applications
+
+			   Version 2.1.0
+
+			December 19th, 1999
+
+			Author: Roland Krause
+
+
+ * What is XawPlus and what is new ?
+
+XawPlus is a clone of the original Xaw library, providing a more up to date
+look to the original Athena widget set. This library is as compatible as
+possible to the original. In the most cases it is possible to compile the
+source code of a Xaw client without any changes (except the include path
+of the XawPlus header files) to get the new look of XawPlus to this client.
+
+XawPlus make it possible to use XPM pixmaps in labels, toggles or buttons
+without changing the code of your application via setting the bitmap resource.
+A transparent background is provided. Since Release 1.5 XawPlus also provide
+a tooltip function for buttons, toggles, repeaters and menu buttons. A help
+window is popped up if the mouse pointer stay over the buttons window and a
+help text is given.
+
+XawPlus comes with a set of adapted applications using also the new features
+and widgets of XawPlus.
+
+
+ * What is different to XawPlus 2.0 ?
+
+There are two major changes to XawPlus 2.0 and a few bugfixes:
+
+The pixmap conversion concept was completely redesigned and is now
+Xt compatible (the previous was not). I used the old type converter
+interface to avoid conflicts with editres. It is possible to set bitmaps,
+pixmaps and clip masks with editres without any restrictions. It is now also
+possible to set bitmaps, pixmaps and clip masks from the program code with
+XtSetValues(). See Xfm in the applications archive for an example.
+
+Label now has a truncate mechanism for label strings, that does not fit
+into the labels window. It is possible to truncate these strings from the
+left or from the right side, dependent on a resource of label.
+
+
+ * How do I build XawPlus and its clients ?
+
+To build XawPlus, the GNU compilers gcc/g++ are required. Try the version
+2.7.x or better. It should be possible to use any other compiler set, but
+in this case it is required to change the $CC entry in all makefiles.
+XawPlus comes with the following archive files:
+
+ xawplus-2.1.0.tgz		The library itself
+ xawplus-2.1-apps.tgz		Adapted Applications for XawPlus:
+				bitmap, editres, ghostview, pixmap,
+				xcalc, xcalendar, xe, xed, xfd, xfm,
+				xfontsel, xless, xmag, xman, xminesweep,
+				and xtartool
+ xawplus_doc-2.1.tgz		The documentation in HTML
+
+In the first step log in as superuser root and put the xawplus archive
+to /tmp and untar it. Change to the XawPlus directory and type 'make' to
+compile and install the library. This should work on all linux boxes.
+For other systems take a look at the makefile.
+In the next step put the applications archive to /tmp, untar it and compile
+it using the script ./BuildAll in the applications file tree.
+
+
+ * On what machines XawPlus is tested on ?
+
+At this time on linux boxes with Intel hardware with X11R5 and X11R6 and
+partially on an alpha system with ULTRIX. If you have tested XawPlus on
+other systems please mail me your results!
+
+If there are any hints, suggestions or bug reports feel free to mail me:
+
+
+Roland Krause December 19th, 1999
+
+rokrause@aol.com
+
+

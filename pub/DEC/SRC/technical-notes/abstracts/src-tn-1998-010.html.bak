@@ -1,0 +1,35 @@
+<TITLE>Digital Systems Research Center: Note 1998-010</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Technical Note 1998-010</H1>
+<H1>Scheduling Multicasts on Unit-Capacity Trees and Meshes</H1>
+<HR>
+<H2>Monika Rauch Henzinger and Stefano Leonardi</H2>
+Note #1998-010, May 8, 1998.
+<P>
+This paper studies the multicast routing and admission control problem
+on unit-capacity tree and mesh topologies in the throughput-model.
+The problem is a generalization of the edge-disjoint paths problem and
+is NP-hard both on trees and meshes.
+<P>
+We study both the offline and the online version of the problem: In
+the offline setting, we give the first constant-factor approximation
+algorithm for trees, and an O((log log n)^2)-factor approximation
+algorithm for meshes.
+<P>
+In the online setting, we give the first polylogarithmic competitive
+online algorithm for tree and mesh topologies.  No
+polylogarithmic-competitive algorithm is possible on general network
+topologies and there exists a polylogarithmic lower bound on the
+competitive ratio of any online algorithm on tree topologies.  We
+prove the same lower bound for meshes.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-010.ps.Z">PostScript compressed with UNIX compress</A></B> -- 280 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-010.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 248 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-010.ps.zip">PostScript compressed with ZIP</A></B> -- 248 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-010.ps">PostScript</A></B> -- 576 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1998-010.pdf">Portable Document Format (PDF)</A></B> -- 240 Kbytes<BR>
+</UL></P>

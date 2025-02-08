@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Miscellaneous File-System Operations</TITLE>
+<META NAME="description" CONTENT="Miscellaneous File-System Operations">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node58.html">
+<LINK REL="previous" HREF="node56.html">
+<LINK REL="up" HREF="node54.html">
+<LINK REL="next" HREF="node58.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html898"
+ HREF="node58.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html894"
+ HREF="node54.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html888"
+ HREF="node56.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html896"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html897"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html899"
+ HREF="node58.html">Manipulating Process Templates</A>
+<B> Up:</B> <A NAME="tex2html895"
+ HREF="node54.html">The OSFriends Interface</A>
+<B> Previous:</B> <A NAME="tex2html889"
+ HREF="node56.html">Manipulating User Specifications</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04063000000000000000">
+Miscellaneous File-System Operations</A>
+</H2>
+ <A NAME="Milpitas">&#160;</A>
+<P><A NAME="2243">&#160;</A>
+<PRE>
+PROCEDURE EqualFile(f1, f2: File): BOOLEAN RAISES {Error};
+</PRE>
+<P><A NAME="1564">&#160;</A>
+<A NAME="1565">&#160;</A>
+EqualFile returns TRUE if the two file handles refer to the same
+underlying regular file, device, or pipe.  This is not needed if both are
+regular files, since the vid and fileSeq fields in the record returned by
+OS.GetInfo uniquely determine regular files.
+<P>
+Ultrix note: EqualFile reports all sockets and pipes as equal.
+<P><A NAME="2244">&#160;</A>
+<PRE>
+PROCEDURE EnsureAllWritten() RAISES {Error};
+</PRE>
+<P><A NAME="1567">&#160;</A>
+EnsureAllWritten is equivalent to calling OS.EnsureWritten for every open
+local file.  It is also the only way to ensure that directory
+modifications have been flushed to disk.
+<P><A NAME="2245">&#160;</A>
+<A NAME="1569">&#160;</A>
+<PRE>
+PROCEDURE MakeDevice(
+    dir: Dir;
+    path: PathName;
+    devMajor: Major;
+    devMinor: Minor;
+    mode: FileMode)
+  RAISES {Error}; (* FileExistsEC, NotSuperUserEC *)
+</PRE>
+<P><A NAME="1570">&#160;</A>
+<A NAME="1571">&#160;</A>
+MakeDevice creates a device file with the specified path name and major
+and minor device number.  MakeDevice raises FileExistsEC if the specified
+path name is already in use, or NotSuperUserEC unless the caller is the
+super-user.  MakeDevice sets the file mode of the new device file to the
+specified file mode, adjusted using the value of the umask (see the
+GetUMask procedure on page <A HREF="node40.html#SanMateo"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>).
+<P><A NAME="2246">&#160;</A>
+<PRE>
+PROCEDURE SetExclusiveUse(
+    f: File;
+    flag: BOOLEAN := TRUE)
+  RAISES {Error};
+  (* BadFileEC, InvalidObjectEC, RemoteFileEC *)
+</PRE>
+<P><A NAME="1574">&#160;</A>
+SetExclusiveUse<A NAME="tex2html4"
+ HREF="footnode.html#1575"><SUP><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/foot_motif.gif"></SUP></A>
+sets or resets the exclusive-use flag on the file referred to by f; it
+raises InvalidObjectEC unless f refers to a regular file or device.  When
+a file has its exclusive-use flag set, further opens on the same file are
+rejected. Once the flag is set, it stays set until all open-file objects
+referring to the file are deleted, which occurs when all file handles
+referring to those open-file objects are closed.
+<P>
+Taos note: There is currently no known good use for the exclusive-use
+flag.
+<P>
+The exclusive-use flag has no relationship to advisory locks.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html898"
+ HREF="node58.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html894"
+ HREF="node54.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html888"
+ HREF="node56.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html896"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html897"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html899"
+ HREF="node58.html">Manipulating Process Templates</A>
+<B> Up:</B> <A NAME="tex2html895"
+ HREF="node54.html">The OSFriends Interface</A>
+<B> Previous:</B> <A NAME="tex2html889"
+ HREF="node56.html">Manipulating User Specifications</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

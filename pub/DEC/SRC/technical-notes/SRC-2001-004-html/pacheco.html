@@ -1,0 +1,203 @@
+<html>
+<head>
+<title>Carlos Pacheco: Verifying TLA+ Invariants with ACL2</title>
+</head>
+<body>
+
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" HEIGHT="1%" >
+
+<tr>
+<td>
+
+<center><b><font size=+1>Verifying TLA+ Invariants with
+ACL2</font></b></center>
+
+</td>
+</tr>
+
+</table>
+</center>
+
+<br>&nbsp;
+
+<center>
+<table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="75%" >
+
+<tr>
+<td>
+
+<center>
+
+<b>Carlos Pacheco</b>
+<br><b>University of Texas at Austin</b>
+
+</center>
+
+</td>
+</tr>
+
+</table>
+</center>
+
+<br>&nbsp;
+<br>&nbsp;
+
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=1 WIDTH="70%" HEIGHT="1%" >
+
+<tr>
+<td><b>1. Introduction</b>
+<p>
+
+Reasoning in TLA [5] consists largely of reasoning about actions.  By
+most accounts, 90% of all reasoning in TLA+ specifications [4] occurs
+at the action level, where temporal logic has been eliminated. Action
+reasoning alone, for example, is involved in all but the last step of
+establishing an invariant of a specification. Consider a system with
+starting state <i>Init</i> and next-state relation <i>Next</i>. In
+order to establish an invariant <i>Inv</i> of the system, we need two
+lemmas:<p>
+
+
+1. <i>Init => Inv </i><br> 2. <i>Inv /\ Next => Inv'</i><p>
+
+
+Once we establish these two lemmas, one application of a TLA inference
+rule, along with simple temporal reasoning, lets us establish the
+invariant at the temporal level (the formula []<i>Inv</i>). In the
+Disk Synod algorithm [1], establishing []<i>Inv</i> from formulas like
+(1) and (2) above takes up one page, while the creation of an
+invariant and its verification at the action level spans 18 pages.<p>
+
+Our goal is to provide mechanical support for proving TLA+ invariants
+at the action level. A system that deals effectively with action-level
+formulas would take us a long way in mechanically checking the
+correctness of specifications.<p>
+
+Our platform of choice for mechanical verification is <a
+href="http://www.cs.utexas.edu/users/moore/acl2">ACL2</a> [1].  The
+ACL2 system is attractive for several reasons. It is among the most
+automated in the spectrum of theorem provers. It blends arithmetic
+decision procedures with rewriting techniques. Finally, it is a stable
+and robust system, designed to tackle industrial-size verification
+projects.<p>
+
+
+<b>2. A Mechanical Translator</b><p>
+
+A first experiment at the University of Texas at Austin [7] consisted
+in manually translating the Disk Synod algorithm into ACL2 and
+verifying two invariants of the algorithm. The goal of the summer
+project was to automate the translation. We wrote a proof-of-concept
+TLA/ACL2 mechanical translator. The translation scheme is largely
+based on ACL2's finite set theory [6].  Note the keyword <i>finite</i>
+in the previous sentence: the translator handles a subset of TLA+
+concepts, and infinite sets are not allowed.<p>
+
+Our translator not only translates TLA+ specifications, but also
+<i>structured proofs</i> [3] of conjectures about the
+specifications. In writing a structured proof, we mark some reasoning
+steps as ``checked by ACL2'' and leave others unmarked (Figure 1). We
+use ACL2 to check only those steps marked as ACL2 steps. The idea is
+that, short of mechanically verifying every step of a proof, a user
+might first want to explore pieces of a proof that are not entirely
+clear or where he lacks confidence. Also, we want to use ACL2 only on
+steps where it is appropriate to use ACL2: low-level, quantifier-free
+formulas.<p>
+
+<center>
+<img src="hinv1pf.gif"><p> <i>Figure 1. A portion of the proof of
+invariant HInv1 in the Disk Synod algorithm.</i><p>
+</center>
+
+<b>3. Results</b><p>
+
+Our translator handled the entire TLA+ specification of Disk Synod and
+two structured proofs of invariants of the algorithm (invariants
+<i>I2a</i> and <i>I2c</i> in the Disk Paxos paper [1]). We used ACL2
+to check most steps of these invariants. The few steps we avoided were
+obviously correct high-level steps such as step <1>8 in Figure 1
+above, whose correctness follows by the fact that steps <1>1 through
+<1>7 (not shown in detail in Figure 1) establish the invariant for
+every disjunct of <i>HNext</i>, the next-state action.<p>
+
+Our effort led us to discover some needed hypotheses that were absent
+in the original structured proofs.<p>
+
+<b>4. Conclusion</b><p>
+
+ACL2 is a general-purpose theorem prover, and one can use it to verify
+every step of a proof in almost any mathematical domain, from real
+analysis to circuit design. In our first experiments, we used ACL2 to
+verify every step in the proofs of <i>I2a</i> and <i>I2c</i>. More
+than half our time was spent trying to reason about simple steps in
+higher-level concepts like quantification.  The main drawback in using
+ACL2 is the different levels of abstraction at which TLA+ and ACL2
+users commonly operate. ACL2 theories are usually fairly low-level,
+concrete and computational.  On the other hand, TLA+ specifications
+tend to be more descriptive than constructive, and make liberal use of
+higher-level concepts which are difficult to handle in ACL2's
+first-order, essentially quantifier-free logic.<p>
+
+
+Our second approach was to use ACL2 only where it might be
+suitable--closer to the leaves of a proof, where quantification has
+been eliminated and all that remains are large but low-level
+formulas. Although low-level, these formulas are nontrivial and can
+be a challenge for any theorem prover. Moreover, it is most often in
+these elaborate steps where errors are uncovered. It is to ACL2's
+credit that it did so much work with little guidance. At the correct
+level of abstraction, the prover not only helped us verify statements,
+but it also pointed the way to omissions and errors with remarkable
+precision.<p>
+
+In further work, we would continue focusing ACL2's attention on
+low-level segments of TLA+ proofs, refining our tools and lemma
+libraries to increase the prover's power in this restricted
+domain. For the remaining high-level steps of TLA+ proofs, we might
+recruit a different theorem prover with a logic more expressive than
+ACL2's. A future proof checker for TLA+ might, in addition to steps
+labeled ``checked by ACL2,'' also have steps labeled ``checked by
+<i>X</i>'' where <i>X</i> is a different theorem prover. The framework
+for structured proofs we have followed allows for collaboration among
+multiple provers (each with its own particular strengths) in attacking
+a verification project.<p>
+
+<b>A. References</b><p>
+
+[1] Eli Gafni and Leslie Lamport. <i>Disk Paxos.</i> in Maurice
+Herlihy, editor, Distributed Computing: 14th International Conference,
+DISC 2000 Lecture Notes in Computer Science number 1914, pages
+330-344, Springer-Verlag, 2000.
+
+[2] Matt Kaufmann, Panagiotis Manolios, and J Strother Moore,
+<i>Computer-Aided Reasoning: An Approach,</i> Kluwer Academic
+Publishers, 2000.<p>
+
+[3] Leslie Lamport. <i>How to Write a Proof.</i> American Mathematical 
+Monthly 102, 7 (August-September 1993)} pages 600-608.<p>
+
+[4] Leslie Lamport. <i>Specifying Concurrent Systems with TLA+.</i> In
+M. Broy and R. Steinbruggen, editors, Calculational System Design. IOS
+Press, Amsterdam, 1999.<p>
+
+[5] Leslie Lamport. <i>The Temporal Logic of Actions.</i> ACM
+Transactions on Programming Languages and Systems, 16(3):872-923, May
+1994.<p>
+
+[6] J Moore. <i>Finite Set Theory in ACL2.</i> TPHOLS 2001, Edinburgh,
+September 2001.<p>
+
+[7] Carlos Pacheco. <i>Reasoning about TLA Actions.</i> Undergraduate
+Honors Thesis. Technical Report TR01-16, Department of Computer
+Sciences, The University of Texas at Austin, May 2001.<p>
+
+<p>
+<br>
+&nbsp;&nbsp;
+</td>
+</tr>
+</table>
+</center>
+
+</body>
+</html>

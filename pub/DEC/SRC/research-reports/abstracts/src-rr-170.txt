@@ -1,0 +1,18 @@
+"Three-Dimensional Web-Based Algorithm Animations"
+Marc A. Najork and Marc H. Brown
+Report #170, July 31, 2001. 26 pages
+
+Over the past few years, we have developed JCAT, a system for building Web-based
+collaborative active textbooks on algorithms. JCAT augments the expressive power
+of Web pages for publishing passive multimedia information with a full-fledged
+interactive algorithm animation system. Views of a running program can reside
+on different machines; in an electronic classroom or distance learning setting, a
+teacher controls the animation, while students view the animation by pointing their
+Web browsers at the appropriate page.
+
+In this report, we integrate our earlier work on using interactive 3D graphics for
+algorithm animation into the JCAT system, and we present three new animations.
+The JCAT architecture is well-suited for 3D animations because each user can
+interact with the 3D views locally, independent of the views on other machines.
+The ability to interactively control a 3D scene provides motion cues that are crucial
+for resolving ambiguities of 3D scenes displayed on flat screens.

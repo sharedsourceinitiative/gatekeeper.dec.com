@@ -1,0 +1,24 @@
+
+			CRL Technical Report 94/1
+
+		      Spline-Based Image Registration
+
+			     Richard Szeliski
+			      James Coughlan
+
+				April, 1994
+
+The problem of image registration subsumes a number of problems and
+techniques in multiframe image analysis, including the computation of optic
+flow (general pixel-based motion), stereo correspondence, structure from
+motion, and feature tracking.  We present a new registration algorithm
+based on spline representations of the displacement field which can be
+specialized to solve all of the above mentioned problems.  In particular,
+we show how to compute local flow, global (parametric) flow, rigid flow
+resulting from camera egomotion, and multiframe versions of the above
+problems.  Using a spline-based description of the flow removes the need
+for overlapping correlation windows, and produces an explicit measure of
+the correlation between adjacent flow estimates.  We demonstrate our
+algorithm on multiframe image registration and the recovery of 3D
+projective scene geometry.  We also provide results on a number of standard
+motion sequences.

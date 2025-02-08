@@ -1,0 +1,27 @@
+  
+			CRL Technical Report 92/7
+
+
+		TRANSACTIONAL MEMORY: ARCHITECTURAL SUPPORT 
+		       FOR LOCK-FREE DATA STRUCTURES
+				       
+			  Maurice Herlihy
+			  J. Eliot B. Moss
+		
+			  December 1, 1992
+				       
+A shared data structure is lock-free if its operations do not require
+mutual exclusion.  If one process is interrupted in the middle of an
+operation, other processes will not be prevented from operating on that
+object.  In highly concurrent systems, lock-free data structures avoid common
+problems associated with conventional locking techniques, including priority
+inversion, convoying, and difficulty of avoiding deadlock.  This paper
+introduces transactional memory, a new multiprocessor architecture that
+supports lock-free implementations of complex data structures in a simple and
+efficient way.  Transactional memory allows programmers to define customized
+read-modify-write operations that apply to multiple, independently-chosen
+words of memory.  It is implemented by straightforward extensions to any
+ownership-based multiprocessor cache-coherence protocol.  Simulation results
+show that transactional memory outperforms the best known locking techniques
+for simple benchmarks, even in the absence of priority inversion, convoying,
+and deadlock.

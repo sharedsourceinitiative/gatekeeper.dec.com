@@ -1,0 +1,24 @@
+
+                    CRL Technical Report CRL94/3
+                 Order Preserving Key Compression
+                                 by
+         Gennady Antoshenkov   David Lomet   James Murray
+                           June 16, 1994
+
+Order preserving data compression can improve sorting and searching
+performance, and hence the performance of database systems.  We describe a new
+parsing (tokenization) technique that can be effectively applied to ``keys",
+producing substantial compression.  It can be applied to both the uncompressed
+and compressed strings, permiting a more flexible choice of variable length
+dictionary entries and their compressed forms.  The key notion is that the way
+that entries partition the space of strings determines how the entries are to
+be parsed.  The result is economy in the number of encodings that are needed
+in order to preserve order and great flexibility in how they are encoded.  We
+illustrate one use of order preserving compression, padding character
+compression for multifield keys.  This demonstrates the dramatic gains
+possible with the new technique, some of which cannot be achieved by any other
+method.
+
+keywords: compression, order preserving, padding, multifield, searching,
+sorting
+

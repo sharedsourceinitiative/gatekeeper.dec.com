@@ -1,0 +1,32 @@
+conversion_service 1.1 for WinNT/Win9x/Win2k
+program written by Juergen Breitlow jbh.bln@foni.net
+
+The program is released under the GNU Public license.
+It is still under development.
+
+The program can be used to automaticly convert postscript files into 
+differnt other file formats (pdf, jpg, tif). It requires Ghostscript
+6 or higher for the conversion.
+After the program is started it periodicly checks an in directory for
+postscriptfiles. If one appears the program waits for the file to be 
+accessable and starts Ghostscript with the desired driver.
+The output file is put together with the original file to an out directory.
+After the conversion message is placed into the status queue.
+
+
+installation
+
+The program needs TCL 8.3 and Ghostscript 6 or higher versions to be 
+installed. 
+After starting the program searches for an configuration file convert.cnf in 
+the current directory. In and out path, device and resolution and path to gswin32c
+are read from this file. The settings can be chaged in the settings window 
+available via the settings button at the main window.
+
+known bugs and todo's
+- errors are not detected, output of ghostscript is catched but not analysed.
+- ghostscript is called via an batch file because direct calls of the executable 
+  caused problems with path conversion. 
+- inteface is not "tuned" yet
+
+I'd appreciate bug reports, and comments and suggestions to jbh.bln@foni.net

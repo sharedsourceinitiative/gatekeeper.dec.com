@@ -1,0 +1,98 @@
+<HTML><HEAD>
+<!-- This document was created from RTF source by rtftohtml version $Revision: 3.6 $ -->
+<TITLE>The 1995 SQL Reunion: People, Projects, and Politics - VS/QUERY (QMF)</TITLE></HEAD>
+<BODY BACKGROUND="" BGCOLOR="#FFFFFF" TEXT=#000000>
+<A HREF="sqlr95-System-2.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="sqlr95-DB2.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="sqlr95-IBM.html"><IMG SRC="images/upg.gif" ALT="Up " border=0></A>
+ <A HREF="sqlr95.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="sqlr95-Contents.html"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+ <A HREF="sqlr95-Index.html"><IMG SRC="images/indexg.gif" ALT="Index" border=0></A>
+<hr size=4>
+<H2>
+VS/QUERY (QMF)</H2>
+<b>Pat Selinger:</b> So we've got about another decade and a half to go. We're
+in the middle of 1980 or so. We're going to finish up the VS/QUERY, and then
+John Nauman's going to take over the DB2 era. Bob? VS/QUERY<A NAME="Index323"></A><A NAME="Index324"></A>.<p>
+<b>Bob Jolls:</b> Thanks, Pat. After Plan B became Plan A, I was asked to take
+a new job to manage VS/QUERY and languages at Santa Teresa<A NAME="Index325"></A>.
+Maybe you can't be the outcast - the person in charge of the outplan - and then
+when they decide you were right, they can't leave you in charge anymore, it's
+too embarrassing. So I got asked to manage VS/QUERY, which was a project in
+deep trouble. VS/QUERY was the product that the Marketing Division had said for
+the last four or five years, "You know, we don't really understand all the
+things you people out in Santa Teresa are doing, but we want that one. Give us
+that one." And somehow the VS/QUERY group had managed, year after year, not to
+be able to deliver a product. And they were kind of caught in a bit of a trap:
+they would go meet with Mosh&eacute; and other people back in Yorktown, and
+decide that QBE was wonderful and they needed to have all the QBE function that
+could be defined working in release one. And then because they knew SQL was
+important, they needed to have SQL in there, and they had a few other things in
+there as well. So they had about forty people, and a mountain of work to get
+done, and a belief that they had to get it all done for release one. So they
+would always have reasons - I think at one point, Pat was saying to me during
+the break - they had a list of problems with System R. You know, here's the
+reasons we can't get this done; System R has these problems, etc., etc. And
+when this group started reporting to me, I would ask questions like, "Well, so
+what happens when you go meet with the people in System R?" "Oh, we don't do
+that." So they had problems, but they weren't resolving the problems.<p>
+<b>Pat Selinger:</b> I think one of them was that every time there would be a
+disk error, it would stop and say, "YSYSTERR".<p>
+<b>Jim Gray:</b> We had seventeen hundred calls to SYSTERR. It was a big
+barrier.<p>
+<b>Pat Selinger:</b> We put Bruce Lindsay<A NAME="Index326"></A>
+on this problem and he went and he counted them and changed them to some other
+error code.<i> [laughter]</i><p>
+<b>Bob Jolls:</b> And they didn't tell Larry Ellison.<p>
+<b>Jim Gray:</b> They all called one routine, called PANIC, and then that
+routine called ...<p>
+<b>Bob Jolls:</b> I'd say there was a sort of a syndrome that was not unlike
+all the people with the different data models. And I hope I don't sound cynical
+here, but I'd say that a lot of people got into a syndrome that it was OK not
+to make progress as long as you had a reason. And of course there were always
+lots of reasons, so not much progress was made. I'd say that folks on VS/QUERY
+felt trapped by the fact that they thought they had committed all these things
+to Marketing, and that Marketing had told them they had to have all these QBE
+functions, and so on, or they wouldn't "have a product." Finally, after lots of
+debate about this, and going to lots of meetings about what in QBE couldn't be
+translated through SQL, and therefore what functions would be missing that
+Marketing said they had to have, I was frankly confused by this, didn't really
+understand it. So I finally asked for a list of the ten things that wouldn't be
+available in release one, because they couldn't be translated through SQL. I
+then went and met with Marketing, and found out they didn't understand what
+those things were, either, therefore certainly couldn't demand that they be
+there. And we managed frankly to scope the thing down to the point where we
+could get a product out the door. Since I left IBM I don't know exactly how
+that product has done, but at least when it was released it was a pretty
+successful product.<p>
+<b>Pat Selinger:</b> It's a big money-maker.<p>
+<b>Bob Jolls:</b> So they had all the right ingredients for a good product:
+System R, some ideas from QBE, and perhaps from other things ...<p>
+<b>Roger Miller:</b> Bob, QMF is tremendously successful. We had a huge cost
+base, so we had to have a high price. Customers bought it, so it became very
+profitable.<p>
+<b>Bob Jolls:</b> Who says cost-plus pricing isn't the right way? I guess we
+had a lot of trials and tribulations over the years with the VS/QUERY group
+from a System R point of view. Frankly, I think those got ended pretty quickly
+and they wound up with a successful product.<p>
+<b>C. Mohan:</b> So this is different from QMF?<p>
+<b>Bob Jolls:</b> No, VS/QUERY was the code name; sorry: QMF.<p>
+<b>Pat Selinger:</b> And then we went on to DB2.<p>
+<b>Bob Yost:</b> Didn't you actually run that on a bastardized version of
+System R? For a long while, there was no DB2 to run on. You basically took some
+code, made it work over in your environment so that you could actually test the
+query stuff.<p>
+<b>Bob Jolls:</b> Right. I can't remember whether they shipped QMF with that
+black box old version of System R.<p>
+<b>Bob Yost:</b> That was just for testing purposes because the underlying
+system didn't exist at that point.<p>
+<b>Bob Jolls:</b> So we're going to have John tell us about DB2? Good.
+<p>
+<P><hr size=4>
+<A HREF="sqlr95-System-2.html"><IMG SRC="images/leftg.gif" ALT="previous" border=0></A>
+ <A HREF="sqlr95-DB2.html"><IMG SRC="images/rightg.gif" ALT="next" border=0></A>
+ <A HREF="sqlr95-IBM.html"><IMG SRC="images/upg.gif" ALT="Up " border=0></A>
+ <A HREF="sqlr95.html"><IMG SRC="images/topg.gif" ALT="Title " border=0></A>
+ <A HREF="sqlr95-Contents.html"><IMG SRC="images/contg.gif" ALT="Contents " border=0></A>
+ <A HREF="sqlr95-Index.html"><IMG SRC="images/indexg.gif" ALT="Index" border=0></A>
+</body></html>

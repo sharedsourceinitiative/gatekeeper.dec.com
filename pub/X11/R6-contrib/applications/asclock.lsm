@@ -1,0 +1,18 @@
+Begin3
+Title:          asclock (the AfterStep clock)
+Version:        1.0
+Entered-date:   26AUG96
+Description:    The  asclock  is  a clock written to emulate the date/time
+                application on the NEXTSTEP(tm) operating system.  asclock
+                supports  multiple languages, military and AM/PM time for-
+                mats, program execution, and the shape extention to X-Win-
+                dows.
+Keywords:       X11, clock, digital, AfterStep, GnuStep
+Author:         bchriste@iiic.ethz.ch (Beat Christen)
+Primary-site:   ftp.x.org /contrib/applications
+                19085 asclock.tgz
+Alternate-site: sunsite.unc.edu /pub/Linux/X11/xutils/clocks
+                19085 asclock.tgz
+Platforms:      X11
+Copying-policy: Freeware
+End

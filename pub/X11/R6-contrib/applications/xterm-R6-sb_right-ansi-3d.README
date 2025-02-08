@@ -1,0 +1,37 @@
+Welcome to my latest modified xterm.  This new version of xterm is
+inspired by my original mxterm patch that I did a while ago.
+
+This version contains modifications that put the scroll bar to the
+right side, and also full (almost) implementation of the ANSI capability.
+Also see the end of XTerm.ad for my modifications of the color resources.
+
+If you use the Xaw3d widget from:
+	ftp://public.x.org:/contrib/widgets/Xaw3d
+you can make this version of xterm look exactly like mxterm, that is,
+the look and feel of Motif.  Note that you must use the configurations
+found in README.Xaw3d_cfg to emulate that cool Motif 3D look.
+
+The ANSI capability is based on various patches that I collected from
+many sources..... forgive me for not remembering where I got all those
+from :(  But altogether, this turns out to be one of the best, most
+complete xterm ANSI implementation that I can find all over the net.
+
+The scroll-bar-on-the-right capability is defined with SCROLLBAR_RIGHT
+within the Imakefile, so if you just want the ANSI capability with the
+traditional scrollbar on the left, just uncomment it in Imakefile.
+
+This version is based on X11R6 distribution of the xterm, patched with
+the latest XFree86 3.1.1 patches for those PC version of X-windows
+(e.g. Linux, 386BSD).  The development was done on a Linux machine, and
+I didn't have a chance to try it on any other platform.
+
+If you have any problems compiling it, I'll "try" to answer your
+questions by e-mail.
+
+Bruce Cheng
+May 1, 1995
+
+e-mail:
+	bc@phoenix.som.clarkson.edu
+	or chengb@craft.camp.clarkson.edu
+

@@ -1,0 +1,53 @@
+
+                                #####
+                               #     #
+              _                      #     __
+             ' )  /              ####     /  )
+   _   _  _., (  / o _  , , ,        #   /  /
+  /_)_</_/ /\  \/ <_</_(_(_/_  #     #  /__/_
+ /                              #####
+'
+Additions since last version:
+
+ 1. Added support for Athena Widgets
+    NOTE 1: If using Mwm need to add "Mwm*View Obj*clientDecoration: -title 
+            -resizeh -border" in your Mwm defaults file.
+            If you are using Twm add "NoTitle {"View Obj"}" in your .twmrc file
+    NOTE 2: warning.c was not converted to Athena Widgets; Any takers ??
+    NOTE 3: To activate in viewObject/Imakefile change the string "##" to "#"
+ 2. Added a View Editor
+ 3. Added a Depth Cue Editor
+ 4. Added a Melting feature
+ 5. Added a Vanishing feature
+ 6. Added on the fly Visual selection
+ 7. Added SetOfFillAreaSets rendering instead of FillAreaWithData
+    NOTE 1: Counter-clockwise contours only (-sofas option)
+ 8. Added filters to convert from different 3D file formats:
+    obj2off dxf2nff nff2tpoly tpoly2off off2nff AND off2pov-2.2  :-)
+ 9. Added permanent spinning/throwing/zooming, initiated by pressing
+    the Control | Shift | Alt key and
+    the appropriate mouse button, sliding the mouse quickly,
+    and then releasing the button before the mouse comes to a rest
+    The action can be stopped by a button press
+10. Added trackball rotations (-track option). Doesn't work too great.
+11. Improved the user interface
+12. Improved Hardcopy interface for viewObject
+13. Improved alloc/free of space, I hope
+14. Fixed the vertex normal generation code
+15. Sorry, this version has only been compiled on IBM AIX 3.2.5.
+    This doesn't mean it does not work elsewhere though...
+
+Space requirements:
+    Completely build: ~16.5M of which ~4.6M are objects
+    Just source: ~5M
+
+Where can I get it from:
+    Anonymous ftp from ftp.x.org:/contrib/pex/pexView-1.2.tar.Z
+    Anonymous ftp from ftp.x.org:/contrib/pex/objects-1.2.tar.Z
+
+-- 
+Athanasios G. Gaitatzes (Saki)
+                                            gaitat@vnet.ibm.com |
+                                            gaitat@austin.ibm.com
+These statements and/or opinions are not necessarily those of IBM
+

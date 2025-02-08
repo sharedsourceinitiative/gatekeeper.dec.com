@@ -1,0 +1,305 @@
+README for Gem Drop X
+
+Gem Drop X
+beta release 3
+November 21, 1997
+
+by Bill Kendrick
+kendrick@zippy.sonoma.edu
+
+(c) New Breed Software
+http://zippy.sonoma.edu/kendrick/nbs/
+August - November 1997
+
+
+TABLE OF CONTENTS:
+
+  What is Gem Drop X?
+  What Do I Need To Run Gem Drop X?
+  Installing Gem Drop X
+  Playing Gem Drop X
+  Comments Or Questions About Gem Drop X?
+  Changes Since Beta Release 2
+  Planned Additions
+  Gem Drop X's Credits
+
+
+WHAT IS GEM DROP X?
+
+  Gem Drop X is an interesting one-player puzzle game for X-Window.
+  It's been written in C under Unix and requires you to compile the
+  source code to produce the executable program itself.  You'll also
+  of course need an X display terminal or software to actually see
+  the game.  (Although a curses version may be released at one point!)
+
+  Gem Drop X is a direct port of Gem Drop, an Atari 8-bit game
+  written in Action! (a very fast C- and Pascal-like compiled language
+  for the Atari).  The concept of the game Gem Drop is based directly
+  on an arcade game for the NeoGeo system called "Magical Drop III"
+  by SNK.
+
+  If you're familiar with games like Jewels, Klax, Bust-A-Move or Tetris,
+  this game is similar to them all.  I consider it closest to Klax.
+  (Jewels is like a combination of Klax and Tetris.  Bust-A-Move is the
+  least similar, in my opinion, but everyone seems to have heard of it
+  more than the others (except Tetris, of course!))
+
+  The game is played with YOU at the bottom of the screen.  At the
+  top is a random assortment of colored shapes ("gems").  As time
+  goes on, more gems appear at the very top of the screen, pushing the
+  rest downwards.  The game is over when the gems reach the bottom.
+
+  You'll know the gems are about to come down because a small "bomb"
+  icon appears at the bottom of the screen.  (Note that before the gems
+  start moving in a level, you get a little breathing room.  For example,
+  if it typically takes 10 seconds before gems move in the level you're
+  on, it'll take 20 seconds for them to START moving.)
+
+  It's your job to keep the screen from filling up.  You do this by
+  "grabbing" gems from the top of the screen, carrying them around,
+  if need be, and "throwing" them back up.  You automatically grab as
+  many of the same gem as you can that are above you.  You can carry
+  as many of the same gem as you want.  You know how many you're carrying
+  by how many you see next to your character at the bottom of the screen.
+  If you see one, you're carrying one.  If you see two, you're carrying
+  two.  If you see three, you're carrying three OR MORE.  (It doesn't
+  matter how many, since the moment you throw, you'll make a match,
+  explained below.)
+
+  If, when you throw some gems back up, you create a "match" of 3 or more
+  gems in a vertical column, they disappear (with a cool little explosion).
+  At this point, if there are any "matches" of the same gem to the left or
+  right of this column, they disappear too!  And so on.  This is great for
+  cool chain-reactions! You also get more points for the more gems that
+  disappear in a match.  (Matching four is like matching three twice,
+  for example!)
+
+  A "match" (no matter how few (minimum of 3, of course), or how many
+  gems disappear) is also known as a "line."  You beat a level of the game
+  (there are 20 in all) by getting enough lines.  Each level requires
+  you to get more lines than the last.
+
+  Each level also starts out with more gems at the top of the screen,
+  which means you must worry about dying more immediately!
+
+  Each level is also FASTER!
+
+  But, there's hope!  Three special objects help you along the way.
+  These special objects can't be grabbed and thrown.  They are activated
+  by including them as part of a match of three or more.  (If you're
+  carrying two gems, you can throw them on a special object to activate
+  it, for example.)
+
+  The objects are:
+
+  * BOMB - These destroy the four gems adjacent to it.  (Above,
+           below, to the right, and to the left.)
+
+  * CLOCK - This temporarily stops more gems from appearing on the
+            screen.  You'll love this one in the higher levels!
+            A clock icon appears at the bottom of the screen while
+            the clock is activated.
+
+  * WILDCARD - (A questionmark in a small box.)  This matches with
+               all adjacent gems, whether or not they match the line
+               you just created.  This sometimes makes for AWESOME
+               chain reactions!
+
+  There are 20 levels in Gem Drop X.  The first 15 contain four gem
+  shapes.  The last five contain eight shapes (which makes it
+  extremely difficult to get matches quickly).  Level 15 starts a
+  little slower, and with gems a little higher than level 14, to
+  give you a little break.  But don't get used to it!
+
+
+WHAT DO I NEED TO RUN GEM DROP X?
+
+  For a typical install, you'll need telnet access to a Unix machine.
+  This machine needs to have the program "make", a C compiler, like "gcc",
+  and the X libraries.
+
+  You'll also need an X display (like a Sun workstation for example).
+  Programs like Mac X, PC X-Ware, eXodus or MI/X are examples of
+  software-based X displays that you can get for Windows and the Macintosh.
+
+  If you wish to use sound with the game, you should be physically at
+  (or near) the terminal which the game is running (this might not
+  necissarily be the the machine where your display is, but it's probably
+  better that way).  Sound is currently generated by "cat"'ing ".au"
+  files to the machine's "/dev/audio" device.  This is obviously not the
+  best way to do it, but it worked well in a pinch (on a friend's Linux
+  box).  Note that sounds may not always play if the device is busy
+  playing the last sound...
+
+
+INSTALLING GEM DROP X
+
+  You've obviously already extracted the Gem Drop X archive.  Now you
+  need to open up the "makefile" in a text editor and change the variables
+  which are defined in the top of the file:
+
+    CC=gcc
+    POSTPROCESS=strip
+    XLIB=-lX11
+
+  CC is what C compiler to use.  I suggest "gcc" since that's what I used
+  to create the program.
+
+  POSTPROCESS is the command to be ran on the executable after it has
+  been created.  The default here is "strip," a program which streamlines
+  executable binaries by removing redundant and/or unused data from the
+  file.  If, for some reason, you don't have "strip" available on your
+  Unix account, change this to "touch".
+
+  XLIB is the command line swtich(es) to give your C compiler to tell
+  it to link the X-Window library to the program.  You may need to
+  specify the location explicitely, for example.  (If you get
+  "library -lX11: not found" during compliation.)  You can do this
+  by prepending "-L{location of the directory}" to this varibale.
+  For example:
+
+    XLIB=-L/usr/openwin/lib -lX11
+
+  Save and close the "makefile".
+
+  From a telnet session, type "make" while in the "gemdropx" directory.
+  The C files should be compiled with no errors (possibly some warnings).
+
+  At this point, you should be able to run the game!
+
+
+PLAYING GEM DROP X
+
+  First off, you can get a quick help page by invoking the program with
+  the "-help" switch:
+
+    ./gemdropx -help
+
+  You can also find out what version you have with "-version":
+
+    ./gemdropx -version
+
+  Start a game of Gem Drop X up by typing the following at your Unix shell
+  prompt:
+
+    ./gemdropx $DISPLAY
+
+  (It is assumed that the environment varibale "DISPLAY" is set to the
+  display you wish to play the game on.  For example, "fred.com:0.0" or
+  "130.157.36.1:0.0".)
+
+  The script "go" does the exact same thing as this.  Run it with:
+
+    ./go
+
+  If you need to explicitely specify your X display's address, run it
+  as in the first example above, but changing the "$DISPLAY" to your
+  display's address.  (Append ":0.0" or some other appropriate value
+  after the address.)
+
+  If you wish to specify sound (you can always turn it on/off from
+  within the game by pressing [S]), use the switch "-sound" as the
+  first argument.
+
+  The Gem Drop X window should appear.  It should be about 400 pixels
+  high, so it should fit on any display's monitor.  Gem Drop X tries
+  to use a few colors as well.  It defaults to black and white if it can't
+  create them, though.
+
+  In the title screen, you can press [SPACE] or [RETURN] to begin the
+  game at the selected level (displayed at the bottom),
+
+  or you can press [L] to change the level (between 1 and 20).
+
+  Press [Q] or [ESCAPE] to quit Gem Drop X.
+
+
+  While in the game, you can use the arrow keys in the following way:
+
+    LEFT / RIGHT  -  Move the man left and right.  (He will wrap around
+                     at the edges of the screen.)
+    K / L         -  Move the man left and right.  (He will wrap around
+                     at the edges of the screen.)
+    DOWN / Z      -  Grab gems.
+    UP   / A      -  Throw gems.
+    RETURN        -  Cause a row of gems to come down immediately.
+
+  You can also use the mouse:
+
+    LEFT-CLICKING LEFT OR RIGHT OF THE MAN  -  Moves the man left or right.
+    RIGHT-CLICKING LEFT OR RIGHT OF THE MAN -  Moves the man left or right.
+    LEFT-CLICKING ANYWHERE ABOVE THE MAN    -  Grabs gems.
+    RIGHT-CLICKING ANYWHERE ABOVE THE MAN   -  Throws gems.
+
+  You can abort the game by pressing [Q] or [ESCAPE].  (It's like "game over")
+  You can pause the game by pressing [P] or [SPACE].  Press a key to continue.
+  You can toggle sound support by pressing [S].
+
+  Some things to pay attention to while playing the game:
+
+    * How many lines you need.  How many you have made already.
+    * The circled arrow icon at the bottom of the screen - it means
+      more gems are about to come down at you!
+    * The look on the man's face - happy means you're doing alright;
+      sad/frightened means you're getting close to "game over, man! game over!"
+
+
+COMMENTS OR QUESTIONS ABOUT GEM DROP X?
+
+  If you have any suggestions, ideas, comments, praise,
+  or DONATIONS (hint!) for Gem Drop X, please send them by!
+
+  New Breed Software
+  c/o Bill Kendrick
+  7673 Melody Drive
+  Rohnert Park, CA 94948 USA
+
+  e-mail: kendrick@zippy.sonoma.edu
+  web:    http://zippy.sonoma.edu/kendrick/nbs/
+  phone:  1-707-795-1234 ext.2
+  fax:    1-707-795-5678
+
+
+CHANGES SINCE BETA RELEASE 2
+
+  * Sound!!!
+
+CHANGES SINCE BETA RELEASE 1
+
+  * Mouse controls work better.  Clicking ON the man no longer moves him.
+  * Extra key controls added.  [A]/[Z] to throw/grab.  [K]/[L] to move.
+  * A "warning" graphic replaces the bomb icon to warn you when new gems
+    are about to appear.
+  * A cool "brick wall" graphic replaces the plain white wall graphic
+    when the game is over.
+  * "-version" and "-help" switches added to the application.
+  * A spiffy title screen!
+  * You can now pause with [P] or [Space]
+
+
+PLANNED ADDITIONS
+
+  * Add XPM support (for multicolored graphics)
+  * Better sound support
+  * Port to Windows / Mac / Java(!?!?)
+
+
+GEM DROP X'S CREDITS
+
+* "Gem Drop" and "Gem Drop X" are copyright by Bill Kendrick,
+  New Breed Software 1997.
+
+* Original concept, "Magical Drop III" is copyright SNK, 1997(?).
+
+* Original code ("Gem Drop", for the Atari 8-bit computer) is
+  copyright by Bill Kendrick, New Breed Software, August-September, 1997.
+
+* "Gem Drop X" X-Window port is copyright by Bill Kendrick,
+  New Breed Software, November 1997.
+
+* "Gem Drop X" graphics are copyright by Bill Kendrick,
+  New Breed Software, 1997.
+
+* Current "Gem Drop X" sound stolen from "xboing".  Author (currently)
+  unknown.  (I did it in a hurry!)  I hope to create some original
+  sounds soon.  Help would be appreciated!

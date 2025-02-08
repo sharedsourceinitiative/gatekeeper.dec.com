@@ -1,0 +1,50 @@
+Kdrill is a program to help you learn kanji and/or kana characters.
+[ Under X windows, version R5 or later, with "Athena"(Xaw) widgets ]
+
+For those of you who don't know, kanji are used by the Chinese and
+Japanese written languages. Kana are used by the Japanese language only.
+Additionally, kdrill can serve as a dictionary lookup program. It is
+developed for Japanese study, but can be used for Chinese also.
+
+As of Nov 1999, the latest version is kdrill5.9
+This is a very stable version. You are encouraged to upgrade, if you have
+an older version.
+
+The main file, "kdrill5.X.tar.gz", is the actual software, with a
+reference on where to get a dictionary for kanji<->english translations.
+Use gtar, or gzip then tar, to unarchive the source.
+I did not make the dictionaries, and they are quite large, so I only include
+a partial version in the archive. See the README file inside the archive for 
+where to get them. 
+
+   ------------------------------------------------------------
+
+"makedic.tar.gz" is an updated version of the hiragana/katakana
+mini-dictionaries.
+This is in the main archive file. But if for some reason you have an 
+older version of kdrill you want to stick to, they are provided here
+separately.
+
+The makedic suppliment is a collection of very small dictionaries I put
+together myself, to aid in learning the "kana" characters. Included are
+hiragana and kanakana dictionaries, along with a little more information on
+how to make your own.  Single kana characters are NOT available for quizzing
+by kanjidic, the usual dictionary kdrill uses.
+
+   ------------------------------------------------------------
+
+Kdrill requires at minimum the X11 R5-equivalent versions of the 
+Athena Widget Set, otherwise known as Xaw.  It does NOT require any other 
+special software.
+(apart from imake, etc. If for some reason you don't have imake, you may
+ be able to fake it. Let me know if you have any problems)
+
+
+Philip Brown
+phil@bolthole.com
+
+
+PS: the official kdrill www page, with screengrabs, is at
+
+http://www.bolthole.com/kdrill/
+

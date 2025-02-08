@@ -1,0 +1,264 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>The OS Interface: EC</TITLE>
+<META NAME="description" CONTENT="The OS Interface: EC">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node63.html">
+<LINK REL="previous" HREF="node61.html">
+<LINK REL="up" HREF="node61.html">
+<LINK REL="next" HREF="node63.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html958"
+ HREF="node63.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html954"
+ HREF="node61.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html948"
+ HREF="node61.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html956"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html957"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html959"
+ HREF="node63.html">The OSFriends Interface: VC</A>
+<B> Up:</B> <A NAME="tex2html955"
+ HREF="node61.html">Error Code Summary</A>
+<B> Previous:</B> <A NAME="tex2html949"
+ HREF="node61.html">Error Code Summary</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04071000000000000000">
+The OS Interface: EC</A>
+</H2>
+<P><A NAME="2264">&#160;</A>
+This section explains the meaning of each value ec in the set EC.  The
+format of each paragraph is:
+<P><BLOCKQUOTE>
+<B>ec: OS.errMessage[ec]</B> Brief description of ec.
+</BLOCKQUOTE>
+<P>
+Recall that a value of type EC accompanies the exception Error.  Error and
+EC are defined in Section <A HREF="node36.html#Soquel">3.2</A>, page <A HREF="node36.html#Soquel"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="icons.gif/cross_ref_motif.gif"></A>.
+<P><DL>
+<DT><STRONG>BadExecutableEC: StartProcess format error</STRONG>
+<DD>The file passed to
+StartProcess or StartProcessSearch was not recognizable as an
+    a.out file or as an interpreter script.
+<P><DT><STRONG>BadFileEC: Bad file handle</STRONG>
+<DD>The file handle passed to a procedure had
+    already been closed.
+<P><DT><STRONG>BadFileNameEC: Bad remote path name syntax</STRONG>
+<DD>The syntax of a remote path
+    name was incorrect.
+<P><DT><STRONG>BadIOCtlOpEC: Bad IOCtl operation or device</STRONG>
+<DD>The file supplied to IOCtl
+    was not an unstructured device, or else the operation did not
+    apply to the particular device type.
+<P><DT><STRONG>BadPIDEC: No such process</STRONG>
+<DD>A PID or PGRP parameter did not specify any
+    existing process.
+<P><DT><STRONG>BadStateForSignalEC: Invalid signal state</STRONG>
+<DD>An attempt was made to set the
+    signal state for a particular signal to a disallowed value.
+<P><DT><STRONG>CannotLinkToDirectoryEC: HardLink to a directory</STRONG>
+<DD>The new path name
+    supplied to HardLink was a directory.
+<P><DT><STRONG>CannotWriteADirectoryEC: Write to a directory</STRONG>
+<DD>The path name to be opened
+    for writing was that of a directory.
+<P><DT><STRONG>CrossDeviceLinkEC: Cross-device link</STRONG>
+<DD>The parameters to
+    HardLink or Rename would have required creating a link to a
+    file on another logical volume.
+<P><DT><STRONG>DirectoryNotEmptyEC: Directory not empty</STRONG>
+<DD>An attempt was made to delete a
+    directory that was not empty.
+<P><DT><STRONG>DirectoryUnlinkEC: Remove or Rename of a directory</STRONG>
+<DD>The path name of a
+    directory was supplied where that of a file was required (Remove,
+    Rename).
+<P><DT><STRONG>FileBusyEC: File or directory in use</STRONG>
+<DD>An attempt was made to open a file
+    whose exclusive-use flag had been set, or to delete a directory that
+    was the root of a file system or was the mount point for another
+    logical volume.
+<P><DT><STRONG>FileExistsEC: File exists</STRONG>
+<DD>A name proposed for a new directory entry was
+    already in use.
+<P><DT><STRONG>IOErrorEC: I/O error</STRONG>
+<DD>A problem occurred reading or writing
+    the storage medium underlying a file or directory.  This may result
+    in the volume being marked as needing scavenging.  The system should
+    log the specific problem, but isn't currently.
+<P><DT><STRONG>InvalidArgumentEC: Invalid argument</STRONG>
+<DD>The argument for an operation was
+    invalid, e.g., Seek to a negative position, or use of an invalid
+    process template.
+<P><DT><STRONG>InvalidCredentialsEC: Invalid credentials</STRONG>
+<DD>The supplied real user name
+    and password did not agree with the authentication database.
+<P><DT><STRONG>InvalidObjectEC: Operation/file mismatch</STRONG>
+<DD>An attempt was made to do an
+    operation on a type of file that doesn't support it, for example a
+    GetLock, SetLock, or SetExclusiveUse on a pipe or socket.  It is also
+    raised when an operation such as Read or Write (or Close) is applied
+    to a TEm window that has been destroyed.
+<P><DT><STRONG>LookUpEC: No such file or directory</STRONG>
+<DD>A component of the path name was not
+    found in the indicated directory.
+<P><DT><STRONG>MinorDeviceDoesNotExistEC: No such minor device number</STRONG>
+<DD>An attempt was
+    made to open a device, but the minor device number was not known by
+    the driver determined by the major device number.
+<P><DT><STRONG>NameTooLongEC: Name too long</STRONG>
+<DD>A component of a path name was longer than
+    255 characters, or, on Ultrix, an entire path name exceeded 1023
+    characters.
+<P><DT><STRONG>NoDriverForDeviceEC: No such major device number</STRONG>
+<DD>An attempt was made to
+    open a device, but no device driver had been registered for the
+    corresponding major device number.
+<P><DT><STRONG>NoMountedVolumesEC: No mounted volumes</STRONG>
+<DD>An attempt was made to look up a
+    path name before any logical volume had been mounted.
+<P><DT><STRONG>NotADirectoryEC: Not a directory</STRONG>
+<DD>A component of a path name was not a
+    directory.
+<P><DT><STRONG>NotATerminalEC: Not a terminal</STRONG>
+<DD>An attempt was made to specify as a
+    control terminal a file other than a terminal device.
+<P><DT><STRONG>NotEnoughRoomEC: Not enough disk space</STRONG>
+<DD>There was insufficient space to
+    create or extend a file.
+<P><DT><STRONG>NotEnoughVMEC: Not enough VM</STRONG>
+<DD>Starting a process would have required more
+    virtual memory than allowed by the imposed maximum.
+<P><DT><STRONG>NotImplementedEC: Unimplemented operation</STRONG>
+<DD>An attempt was made to perform
+    an operation that is not yet implemented but that should be.  Consult
+    the wrelease notes for details of a particular version.
+<P><DT><STRONG>NotOwnerEC: Not owner</STRONG>
+<DD>An attempt was made to perform an operation only
+    permissible by the owner of a file or a process.
+<P><DT><STRONG>NotSuperUserEC: Not super-user</STRONG>
+<DD>An attempt was made to perform an
+    operation only permissible by the super-user, e.g., supplying an
+    explicit User specification to an operation such as Open.
+<P><DT><STRONG>NotTtyOwnerReadEC: Background write</STRONG>
+<DD>An attempt was made to read or copy
+    from a device without being in its distinguished process group.
+<P><DT><STRONG>NotTtyOwnerWriteEC: Background read</STRONG>
+<DD>An attempt was made to write or copy
+    to a device without being in its distinguished process group.
+<P><DT><STRONG>OkEC: No error</STRONG>
+<DD>No error (never raised).
+<P><DT><STRONG>OperationConflictEC: Operation/open mode mismatch</STRONG>
+<DD>An attempt was made to
+    do an operation that is not compatible with the way the file was
+    opened, e.g., a Write using a file handle opened for reading.
+<P><DT><STRONG>PipeHasNoReaderEC: Broken pipe</STRONG>
+<DD>An attempt was made to write to a pipe
+    whose reading end is no longer open.
+<P><DT><STRONG>ProtectionViolationEC: Permission denied</STRONG>
+<DD>An attempt was made to modify a
+    read-only server set or perform an operation on a file or directory
+    whose current access mode disallowed it.
+<P><DT><STRONG>PvOfflineEC: Physical volume not online</STRONG>
+<DD>A physical disk volume
+    required to perform the operation was offline.  The volume needed
+    should be logged, but isn't currently.
+<P><DT><STRONG>RanOutOfResourcesEC: Ultrix server ran out of file descriptors</STRONG>
+<DD>An
+    open of a file residing on an Ultrix machine failed because of a lack
+    of file descriptors.
+<P><DT><STRONG>RemoteFileEC: Remote file server call failed</STRONG>
+<DD>An RPC call to a remote
+    server failed.  The reason was logged in the tshell window.
+    The call may have been partially executed on the remote
+    machine.
+<P><DT><STRONG>ServerNotAvailableEC: Server not available</STRONG>
+<DD>A server needed to look up a
+    remote path name was not available.
+<P><DT><STRONG>ShortExecutableEC: StartProcess header/file mismatch</STRONG>
+<DD>The a.out file
+    supplied to StartProcess or StartProcessSearch was shorter than
+    its header implied.
+<P><DT><STRONG>TooManyProcessesEC: Too many processes</STRONG>
+<DD>There were no more address spaces
+    (on Taos) or process table entries (on Ultrix) when
+    StartProcess or StartProcessSearch was called.
+<P><DT><STRONG>TooManySymbolicLinksInPathEC: Too many levels of symbolic
+    links</STRONG>
+<DD>A possible loop in symbolic links was encountered (more
+    than 5 remote symbolic links or 16 symbolic links per remote
+    file machine).
+<P><DT><STRONG>UnseekableObjectEC: Illegal seek</STRONG>
+<DD>Seek was called with a pipe.
+<P><DT><STRONG>VolumeNeedsCheckingEC: Volume needs scavenging</STRONG>
+<DD>An
+    inconsistency was found on a disk volume requiring that it be
+    scavenged.
+<P><DT><STRONG>WouldBlockEC: Advisory lock conflict</STRONG>
+<DD>SetLock was called with
+    noBlock equal to TRUE, and there was a conflict over the lock.
+    (Read and Write never raise WouldBlockEC.)
+<P></DL><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html958"
+ HREF="node63.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html954"
+ HREF="node61.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html948"
+ HREF="node61.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html956"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html957"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html959"
+ HREF="node63.html">The OSFriends Interface: VC</A>
+<B> Up:</B> <A NAME="tex2html955"
+ HREF="node61.html">Error Code Summary</A>
+<B> Previous:</B> <A NAME="tex2html949"
+ HREF="node61.html">Error Code Summary</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

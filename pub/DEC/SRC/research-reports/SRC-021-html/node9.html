@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Avoiding Ad Hoc Multiplexing</TITLE>
+<META NAME="description" CONTENT="Avoiding Ad Hoc Multiplexing">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node10.html">
+<LINK REL="previous" HREF="node8.html">
+<LINK REL="up" HREF="node7.html">
+<LINK REL="next" HREF="node10.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html222"
+ HREF="node10.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html218"
+ HREF="node7.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html212"
+ HREF="node8.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html220"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html221"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html223"
+ HREF="node10.html">Cancelling Operations</A>
+<B> Up:</B> <A NAME="tex2html219"
+ HREF="node7.html">Guidelines for Multithreaded Interfaces</A>
+<B> Previous:</B> <A NAME="tex2html213"
+ HREF="node8.html">Sharing Mutable State</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION02032000000000000000">
+Avoiding Ad Hoc Multiplexing</A>
+</H2>
+<A NAME="sec-adhoc">&#160;</A>
+<A NAME="185">&#160;</A>
+<A NAME="186">&#160;</A>
+Although most operating systems provide only a single thread of control
+within each address space, application programs must often deal with a
+variety of asynchronous events.  As a consequence, many operating systems
+have evolved a set of ad hoc techniques for multiplexing the single thread
+within an address space.  These techniques have the disadvantage that they
+add complexity to applications and confuse programmers.  To eliminate the
+ad hoc techniques, multiple threads can be used, resulting in simpler,
+more reliable applications.
+<P>
+The aim of all the ad hoc multiplexing techniques is to avoid blocking
+during a particular call on an operating system procedure when the client
+thread could be doing other useful work (computing, or calling a different
+procedure).  Most of the techniques involve replacing a single operating
+system procedure that performs a lengthy operation with separate methods
+for initiating the operation and for determining its outcome.  The typical
+methods for determining the outcome of such an asynchronous operation
+include:
+<P><DL>
+<DT><STRONG>Polling.</STRONG>
+<DD>Testing whether or not the operation has completed, as by
+checking a status field in a control block that is set by the operation.
+    Polling is useful when the client thread wants to overlap computation with
+    one or more asynchronous operations.  The client must punctuate its
+    computation with periodic calls to the polling procedure; busy waiting
+    results when the client has no other useful computation.  Note that busy
+    waiting is undesirable only when there is a potential for the processor to
+    be used by another process.
+<A NAME="188">&#160;</A>
+<P><DT><STRONG>Waiting.</STRONG>
+<DD>Calling a procedure that blocks until the completion of a
+    specified operation, or more usefully one of a set of operations.  Waiting
+    procedures are useful when the client thread is trying to overlap a
+    bounded amount of computation with one or more asynchronous operations,
+    and must avoid busy waiting.
+<A NAME="189">&#160;</A>
+<P><DT><STRONG>Interrupts.</STRONG>
+<DD>Registering a procedure that is called by borrowing
+    the program counter of the client thread, like a hardware interrupt.
+    Interrupts are useful in overlapping computation with asynchronous
+    operations. They eliminate busy waiting and the inconsistent response
+    times typical of polling.  On the other hand, they make it difficult to
+    maintain the invariants associated with variables that must be shared
+    between the main computation and the interrupt handler.
+<A NAME="190">&#160;</A>
+</DL>
+<P><A NAME="192">&#160;</A>
+<A NAME="193">&#160;</A>
+<A NAME="194">&#160;</A>
+<A NAME="195">&#160;</A>
+<A NAME="196">&#160;</A>
+<A NAME="197">&#160;</A>
+The techniques are often combined.  The VMS <TT>$QIO</TT> service is capable of
+reporting I/O completion via any combination of the following: setting a
+status field, unblocking a wait on an event flag, and delivering an AST
+(software interrupt) [<A
+ HREF="node19.html#vms:systemservices">5</A>].  Polling, waiting, and
+interrupt mechanisms are also used in 4.2BSD UNIX.  When an open file has
+been placed in non-blocking mode, the <TT>read</TT> and <TT>write</TT> operations
+return an error code if a transfer is not currently possible.
+Non-blocking mode is augmented with two ways to determine a propitious
+time to attempt another transfer.  The <TT>select</TT> call waits until a
+transfer is possible on one of a set of open files.  When an open file has
+been placed in asynchronous mode, the system sends a signal (software
+interrupt) when a transfer on that file is possible.
+<P>
+When multiple threads are available, it is best to avoid all these
+techniques and instead model each operation as a single, synchronous
+procedure.  This is simple for naive clients, and allows more
+sophisticated clients to use separate threads to overlap lengthy system
+calls and computation.
+<P><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html222"
+ HREF="node10.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html218"
+ HREF="node7.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html212"
+ HREF="node8.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html220"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html221"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html223"
+ HREF="node10.html">Cancelling Operations</A>
+<B> Up:</B> <A NAME="tex2html219"
+ HREF="node7.html">Guidelines for Multithreaded Interfaces</A>
+<B> Previous:</B> <A NAME="tex2html213"
+ HREF="node8.html">Sharing Mutable State</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

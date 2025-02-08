@@ -1,0 +1,86 @@
+                        __     ____
+              _  ______/ /__  / __/___ ___  ____ _____
+             | |/_/ __  / _ \/ /_/ __ `__ \/ __ `/ __ \
+            _>  </ /_/ /  __/ __/ / / / / / /_/ / /_/ /
+           /_/|_|\__,_/\___/_/ /_/ /_/ /_/\__,_/ .___/  V1.3
+                                              /_/
+            -- the return of the standard colormap ? --
+           
+
+
+In the search of THE solution for colorproblems on pseudocolor X-Servers
+I just stepped over these rarely used standard colormaps again. I got some
+new ideas how to (ab)use this mechanism and wrote a tiny tool, that is in
+first place a tool to install standard colormaps (like xstdcmap).
+
+The original of the tool (13k) is available as:
+   ftp.x.org:/contrib/utilities/xdefmap-1.3.tgz
+
+
+
+ADDITIONAL FEATURES
+
+o  The size of the Standard-Colormaps can be arbitrarily defined,
+      e.g. one could define a 32 color gray ramp with:   xdefmap -gray 32
+      or a 4x4x4 rgb color cube (as default cmap) with:  xdefmap -default 4
+
+o  The maps are allocated as read-only pixels(!) in the standard-colormap.
+   In that way there won't be any colormap-switching and the colors can
+   even be used by other applications. Since standard colormaps have to
+   consist of successive pixels, of the colors (at least 1 for black
+   or white) have to be allocated read/write :-(
+
+o  XCMSDB files with Aliasnames can be created depending on the installed
+   colormaps. (The ultimate database could be the transformation of the
+   whole rgb.txt file to map the all named colors into a standard colormap)
+
+o  ppm-files (to be used as mapfiles in the pnmquant-utility) can be created,
+   that can be used to convert images exactly to the installed colormaps
+   or even all available shared colors.
+   
+o  There are some information options like: showing the whole colormap,
+   querying information about the installed maps and about the allocated pixels.
+
+
+RESTRICTIONS
+
+o   The program is actually a hack and works only on color displays with a
+    PSEUDOCOLOR-default map with 256 entries (since these are the displays
+    where the real problems exist...)
+
+o   The main idea was NOT to have any colormap switching on the screen, so
+    you can only install maps, that fit into the available entries of the
+    default colormap.
+
+
+FUTURE THOUGHTS
+
+o   Even though the handling for applications is much the same than using
+    different visuals, standard colormaps are rarely used. I hope this could
+    be changed, since this tool could be a way to setup the colors of
+    several graphic applications in a unique way (and still have some pixels
+    left for other stuff)
+
+o   This tool is only a side product of my current interests (and I actually
+    wouldn't spent more time than necessary on it). Anyway, please send me
+    your opinion about the tool and your ideas as soon as possible.
+    Can it really be useful or is it just a neat hack?
+
+==> By the way, the ImageMagick-package fully supports standard-colormaps,
+    so you can play a bit with that package to get an impression of the
+    possibilities of this program.
+
+
+COMMENTS
+
+o   are very welcome if you send them to:     Helmut.Hoenig@hub.de
+
+
+ ------------------------------------------------------------------------------
+
+   __ __    __           __   
+  / // /__ / /_ _  __ __/ /_             WANNA PLAY SOME POOL?
+ / _  / -_) /  ' \/ // / __/   -> get flying from ftp.x.org or elsewhere
+/_//_/\__/_/_/_/_/\_,_/\__/   
+e-mail: Helmut.Hoenig@hub.de 
+                            

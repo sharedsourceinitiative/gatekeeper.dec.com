@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Versions</TITLE>
+<META NAME="description" CONTENT="Versions">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="previous" HREF="node37.html">
+<LINK REL="up" HREF="node34.html">
+<LINK REL="next" HREF="node39.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html655"
+ HREF="node39.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html651"
+ HREF="node34.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html647"
+ HREF="node37.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html653"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html654"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html656"
+ HREF="node39.html">The OS Interface: Files</A>
+<B> Up:</B> <A NAME="tex2html652"
+ HREF="node34.html">The OS Interface: Preliminaries</A>
+<B> Previous:</B> <A NAME="tex2html648"
+ HREF="node37.html">Open Array Parameters and</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04034000000000000000">
+Versions</A>
+</H2>
+<P><A NAME="804">&#160;</A>
+<A NAME="805">&#160;</A>
+The Taos implementation of OS uses the Topaz RPC mechanism.  One
+implication of this is that the link-edited form of an application program
+that imports OS will only work with compatible versions of the Taos
+bootfile.  (The symptom of a version mismatch is an unhandled exception
+during initialization of a program.)
+<P>
+As a matter of policy, the maintainers of OS will generally attempt to
+avoid non upward-compatible changes to the interface.  From time to time,
+however, there will be `D-days' requiring a coordinated update of
+link-edited application programs and operating system bootfiles.
+<P><A NAME="1994">&#160;</A>
+<PRE>
+PROCEDURE Version(
+    VAR (* OUT *) string: Text.T;
+    VAR (* OUT *) time: Time.T)
+  RAISES {};
+</PRE>
+<P>
+Version returns the version string and time that were set at the time the
+operating system was built.
+<P><A NAME="807">&#160;</A>
+<A NAME="808">&#160;</A>
+Taos note: See NubMisc.Version for the Nub version, which should always be
+later than the OS version.
+<P>
+<BR><HR>
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

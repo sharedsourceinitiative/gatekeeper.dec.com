@@ -1,0 +1,25 @@
+                       CRL Technical Report 94/7
+	                  Echo Cancellation
+                    Tom Levergood and Mathieu Hans
+			  October 13, 1994
+
+Typically, users of teleconferencing desktop applications must use 
+headphones to eliminate the direct-path echo introduced by having a 
+loudspeaker and a microphone in the same room. Unfortunately, many 
+users prefer not to use headphones. Implementing echo cancelation 
+would be one way for desktop audio conferencing systems to overcome 
+this limitation.
+
+One technique used to remove the echo is to introduce an autoregressive 
+filter to identify the echo path impulse response defined by the system 
+Speaker + Room + Microphone. The signal output to the speaker is then 
+filtered by the estimated echo path impulse response, and the result is 
+subtracted from the degraded input speech to obtain an estimate of the 
+input speech without echoes.
+
+In this paper, we describe the identification process which leads to the 
+least mean square (LMS) algorithms and the recursive least square (RLS) 
+algorithms. We also present an ``Echo-Cancelation Software Lab'' which 
+was implemented and optimized to allow real-time testing of the LMS, 
+normalized  LMS, homogeneous adaptation, and individual adaptation 
+algorithms.

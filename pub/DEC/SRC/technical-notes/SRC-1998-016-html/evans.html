@@ -1,0 +1,130 @@
+<html>
+<head><title> Adding Remote Control Capabilities to a Web Crawler </title> </head>
+<body>
+<center> <h1> <b> Adding Remote Control Capabilities to a Web Crawler
+</b> </h1> <br>
+<h2> <a href="http://www.dcs.gla.ac.uk/~huw/">Huw Evans</a>, 
+University of Glasgow, Scotland </h2>
+</center>
+
+Me?  I'm English, the name is Welsh and I am in my 2nd year of a PhD
+at a Scottish University.  Actually, I am doing the PhD part-time, so
+that the rest of my time can be spent being a research assistant,
+working with my supervisor Peter Dickman on software evolution.  This
+is all about how to update distributed software systems while they are
+still running.
+
+<p>
+
+During my time at the Compaq Systems Research Center, in collaboration
+with my hosts, Allan Heydon and Marc Najork, I extended a Java-based
+Web Crawler (not AltaVista) so that it can be more easily controlled
+from a remote machine, allowing a user to visualize the state of an
+ongoing crawl and interact with the crawler during its operation.
+
+<p>
+
+The problem was two-fold.  Firstly, the machine the crawl runs from is outside
+the Compaq firewall.  Access to such a machine is an error-prone and
+tedious task, involving the use of a crypto-key for user
+authentication.  Secondly, the crawler only outputs information on the
+current state of the crawl into a series of files, stored on the local
+disk.  This information, about download rates, URLs visited and
+so on, grows quite rapidly, at 2.5Mb per hour for some calculations.  Some
+way of displaying this information was required so that trends could 
+be spotted.
+
+<p>
+
+The solution adopted was to add a web server to the web crawler.  This
+allows a user sitting at a web browser to control a crawl using HTTP
+as the transport mechanism, which is proxied through the firewall.  In
+addition, as the Web server is written in Java and resides in the same
+address space as the crawler, it could extract the state of a crawl by
+calling the crawler's Java code.
+
+<p>
+
+I decided to use the Jigsaw web server, the World Wide Web
+Consortium's reference server.  Jigsaw is free from licensing
+restrictions and also free in the best sense of the word!  It was
+quite a challenge to work out how to configure the server by calling
+its configuration API, as this wasn't well documented and is primarily
+for use from a single application, JigAdm.  However, once this was
+deduced, the leverage provided by the Web server proved to be useful
+during the rest of the project.  In other words, a lot of wheel
+reinventing was avoided.  Using the web server approach solved the
+first problem.
+
+<p>
+
+Since a web browser was being used to communicate with the crawler, it
+seemed natural to use URLs to control it and expose its state.  A
+general mechanism was designed so that a URL submitted to the web
+server would cause code to be executed in the crawler.  The URL is of
+the form
+
+<pre>
+http://&lt;host&gt;:&lt;port&gt;/servlets/ServletCentral?&lt;RequestString&gt;.
+</pre>
+The <tt>&lt;RequestString&gt;</tt> is passed to a registration service that
+uses it as a key into a table of registered objects.  On finding a
+match, the associated object is called.  This object retrieves the
+state from the crawler, marks it up with HTML and sends back the
+resulting web page.  The home page for the crawler is downloaded by
+issuing a request using the URL
+<pre>
+http://&lt;host&gt;:&lt;port&gt;/servlets/ServletCentral?HomePage.
+</pre>
+The registered "HomePage" object then calls back into the registration
+service to retrieve information on all the other registered objects.
+This web page is sent back to the user, thus making available
+all the currently registered objects.
+
+<p>
+
+During the course of the project it became clear that this was a
+flexible mechanism, but sending back only textual information was
+limited.  It would be much better to see the data graphically.  This
+was solved by providing users with an applet that shows them the
+data as it was being generated--as a series of graphs, for example.
+
+<p>
+
+It was easy to accomplish this.  A new object was registered and use
+of that URL caused the object to emit a web page containing
+<tt>&lt;applet...&gt; &lt;/applet&gt;</tt> tags.  The web browser retrieves the
+applet, and it is then the applet that submits a different request to
+the web server, which is met by another registered object, which sends
+a data stream to the applet showing the statistical data as a series
+of graphs.  The <tt>&lt;applet ...&gt; &lt;/applet&gt;</tt> tags are
+parameterized to tell the applet how many graphs it should display,
+where it should retrieve the data from, which data to plot on which
+graph and how that data should be displayed (e.g. plot lines or a
+scatter plot).
+
+<p>
+
+By the end of the project the two problems were solved and a general,
+flexible, easily extensible solution was provided.  However, a new
+challenge was discovered along the way.  Getting to the data is now
+easy but presenting the large amount of information gathered
+during a crawl in a way that allows the user to see trends is the new
+challenge.  This requires more serious data visualization capabilities
+than I had time to build but it would make another good intern project.
+Perhaps you would be interested in it?
+
+<p>
+
+I've learned a lot during my three months, some things technical, some
+not.  Technical: how to analyze the performance of a Java program and
+then go about improving it; finding out where a program spends a lot
+of its time and persuading it to do something more constructive; I
+also learned to stop hating NT and just accept it for what it is, a
+huge practical joke!  Non-technical: Don't drive at 80 mph on the
+freeway, the local police officers don't like it :)
+
+</body>
+
+</html>
+

@@ -1,0 +1,44 @@
+<HTML><HEAD><TITLE>
+Digital Systems Research Center: Report 43</TITLE></HEAD>
+<BODY><H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Research Report 43</H1>
+<P>
+<H1>Performance of Firefly RPC.</H1>
+<HR>
+<H2>    Michael D. Schroeder and Michael Burrows.</H2>
+<b>April 15, 1989</b><BR><i> 17 pages</i>
+<P>
+    In this paper, we report on the performance of the remote procedure 
+    call implementation for the Firefly multiprocessor and analyze 
+    the implementation to account precisely for all measured latency.  
+    From the analysis and measurements, we estimate how much faster 
+    RPC could be if certain improvements were made.
+<P>
+    The elapsed time for an inter-machine call to a remote procedure 
+    that accepts no arguments and produces no results is 2.66 
+    milliseconds.  The elapsed time for an RPC that has a single 
+    1440-byte result (the maximum result that will fit in a single 
+    packet) is 6.35 milliseconds.  Maximum inter-machine throughput 
+    using RPC is 4.65 megabits/second, achieved with 4 threads making 
+    parallel RPCs that return the maximum sized single packet result.  
+    CPU utilization at maximum throughput is about 1.2 on the calling 
+    machine and a little less on the server.  
+<P>
+    These measurements are for RPCs from user space on one machine 
+    to user space on another, using the installed system and a 10 
+    megabit/second Ethernet.  The RPC packet exchange protocol is 
+    built on IP/UDP, and the times include calculating and verifying 
+    UDP checksums.  The Fireflies used in the tests had 5 MicroVAX 
+    II processors and a DEQNA Ethernet controller.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-rr.html'>SRC Research Reports main page</a>.
+<HR><B>Download report as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-043.ps.Z">PostScript compressed with UNIX compress</A></B> -- 560 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-043.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 504 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-043.ps.zip">PostScript compressed with ZIP</A></B> -- 504 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-043.ps">PostScript</A></B> -- 1048 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/research-reports/SRC-043.pdf">Portable Document Format (PDF)</A></B> -- 61 Kbytes<BR>
+</UL></P>
+</BODY></HTML>

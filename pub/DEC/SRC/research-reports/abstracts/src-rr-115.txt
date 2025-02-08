@@ -1,0 +1,14 @@
+"Network Objects"
+Andrew Birrell, Greg Nelson, Susan Owicki, and Edward Wobber
+February 28, 1994. Revised December 4, 1995.  48 pages
+
+A network object is an object whose methods can be
+invoked over a network.  This report describes the
+design and implementation of a network objects system
+for Modula-3.  The system is novel for its overall simplicity.
+The report includes a thorough description of realistic marshaling
+algorithms for network objects,  precise informal specifications
+of the major internal interfaces, preliminary experience, and 
+performance results.
+
+

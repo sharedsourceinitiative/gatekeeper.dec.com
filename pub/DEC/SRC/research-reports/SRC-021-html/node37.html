@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--Converted with LaTeX2HTML 97.1 (release) (July 13th, 1997)
+ by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippman, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Open Array Parameters and Subarrays</TITLE>
+<META NAME="description" CONTENT="Open Array Parameters and Subarrays">
+<META NAME="keywords" CONTENT="evolve">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso_8859_1">
+<LINK REL="STYLESHEET" HREF="evolve.css">
+<LINK REL="next" HREF="node38.html">
+<LINK REL="previous" HREF="node36.html">
+<LINK REL="up" HREF="node34.html">
+<LINK REL="next" HREF="node38.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html645"
+ HREF="node38.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html641"
+ HREF="node34.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html635"
+ HREF="node36.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="icons.gif/previous_motif.gif"></A> 
+<A NAME="tex2html643"
+ HREF="node3.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="icons.gif/contents_motif.gif"></A> 
+<A NAME="tex2html644"
+ HREF="node95.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index"
+ SRC="icons.gif/index_motif.gif"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html646"
+ HREF="node38.html">Versions</A>
+<B> Up:</B> <A NAME="tex2html642"
+ HREF="node34.html">The OS Interface: Preliminaries</A>
+<B> Previous:</B> <A NAME="tex2html636"
+ HREF="node36.html">Exceptions</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H2><A NAME="SECTION04033000000000000000">
+Open Array Parameters and Subarrays</A>
+</H2>
+<P><A NAME="798">&#160;</A>
+<A NAME="799">&#160;</A>
+<A NAME="800">&#160;</A>
+Every procedure in OS that accepts a parameter, say buffer, of an open
+array type also accepts a pair of parameters, say start and length,
+designating a subarray.  The start and length parameters always have
+defaults of zero and LAST(CARDINAL), respectively.  We use the notation
+buffer[start FOR length] for the subarray of buffer determined by start
+and length, namely, the elements with indexes:
+<P><BLOCKQUOTE>
+start, start+1, ... MIN(start+length-1, HIGH(buffer))
+</BLOCKQUOTE>
+<P>
+The subarray is empty if length is zero or start is greater than
+HIGH(buffer).
+<P>
+<BR><HR>
+<ADDRESS>
+<I>Paul McJones</I>
+<BR><I>8/28/1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

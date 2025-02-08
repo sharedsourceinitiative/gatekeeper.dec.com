@@ -1,0 +1,26 @@
+<TITLE>Digital Systems Research Center: Note 1997-019</TITLE>
+<H1><IMG SRC=
+"http://www.research.digital.com/digital/pics/DEC-logo.gif" ALT="d i g i t a l">
+ SRC Technical Note 1997-019</H1>
+<H1>Maintaining Minimum Spanning Trees in Dynamic Graphs</H1>
+<HR>
+<H2>Monika Rauch Henzinger and Valerie King</H2>
+Note #1997-019. September 5, 1997.
+<P>
+We present the first fully dynamic algorithm for maintaining a minimum
+spanning tree in time o(sqrt n) per operation.  To be precise, the
+algorithm uses O(n^{1/3} log n) amortized time per update operation.
+The algorithm is fairly simple and deterministic.  An immediate
+consequence is the first fully dynamic deterministic algorithm for
+maintaining connectivity and, bipartiteness in amortized time
+O(n^{1/3} log n) per update, with O(1) worst case time per query.
+<P>
+<p><b>Back to</b> the <a href='http://www.research.digital.com/SRC/publications/src-tn.html'>SRC Technical Notes main page</a>.
+<HR><B>Download note as:</B>
+<P><UL>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-019.ps.Z">PostScript compressed with UNIX compress</A></B> -- 112 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-019.ps.gz">PostScript compressed with GNU compress (gzip)</A></B> -- 96 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-019.ps.zip">PostScript compressed with ZIP</A></B> -- 96 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-019.ps">PostScript</A></B> -- 208 Kbytes<BR>
+<LI><B><A HREF="ftp://gatekeeper.research.compaq.com/pub/DEC/SRC/technical-notes/SRC-1997-019.pdf">Portable Document Format (PDF)</A></B> -- 88 Kbytes<BR>
+</UL></P>

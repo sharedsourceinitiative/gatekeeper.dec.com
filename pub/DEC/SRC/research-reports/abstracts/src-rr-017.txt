@@ -1,0 +1,19 @@
+
+			AVAILABLE ELECTRONICALLY
+
+    "win and sin:  Predicate Transformers for Concurrency."
+    Leslie Lamport.
+    May 1, 1987.  30 pages.
+
+Author's Abstract
+
+    Dijkstra's  weakest liberal precondition and strongest postcondition
+    predicate transformers are generalized to the weakest invariant
+    and strongest invariant.  These new predicate transformers are
+    useful for reasoning about concurrent programs containing operations
+    in which the grain of atomicity is unspecified.  They can also
+    be used to replace behavioral arguments with more rigorous
+    assertional ones.
+
+
+
